@@ -34,8 +34,9 @@ export class LoginComponent implements OnInit {
     this.loginForm.controls['captchaResponse'].patchValue(null);
   }
 
-  onSubmit(){
-    console.log(this.loginForm.valid)
+  async onSubmit(){
+    let login = await this.loginService.logIn(this.loginForm);
+    console.log(login)
   }
 
 }
