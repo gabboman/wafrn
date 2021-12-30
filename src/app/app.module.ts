@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HttpClientModule } from '@angular/common/http';
 import {CommonModule} from '@angular/common';
 import { AppRoutingModule } from './app-routing.module';
@@ -14,13 +15,19 @@ import {ButtonModule} from 'primeng/button';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import {CaptchaModule} from 'primeng/captcha';
 import {RippleModule} from 'primeng/ripple';
+import { RegisterComponent } from './mainpage/register/register.component';
+import {CalendarModule} from 'primeng/calendar';
+import {KeyFilterModule} from 'primeng/keyfilter';
+import {TooltipModule} from 'primeng/tooltip';
 @NgModule({
   declarations: [
     AppComponent,
-    LoginComponent
+    LoginComponent,
+    RegisterComponent
   ],
   imports: [
     BrowserModule,
+    BrowserAnimationsModule,
     CommonModule,
     FormsModule,
     ReactiveFormsModule,
@@ -33,7 +40,10 @@ import {RippleModule} from 'primeng/ripple';
     StyleClassModule,
     ButtonModule,
     CaptchaModule,
-    RippleModule
+    RippleModule,
+    CalendarModule,
+    KeyFilterModule,
+    TooltipModule
 
   ],
   providers: [],
