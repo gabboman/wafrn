@@ -5,7 +5,7 @@
       <img src="/assets/logo.png" alt="Image" height="50" class="mb-3">
       <div class="text-900 text-3xl font-medium mb-3">Welcome Back</div>
       <span class="text-600 font-medium line-height-3">Don't have an account?</span>
-      <a class="font-medium no-underline ml-2 text-blue-500 cursor-pointer">Create today!</a>
+      <a class="font-medium no-underline ml-2 text-blue-500 cursor-pointer">Create one today!</a>
     </div>
 
     <div>
@@ -16,13 +16,14 @@
       <input id="password1" type="password" pInputText class="w-full mb-3">
 
       <div class="flex align-items-center justify-content-between mb-6">
-        <div class="flex align-items-center">
-          <p-checkbox id="rememberme" [binary]="true" styleClass="mr-2"></p-checkbox>
-          <label for="rememberme1">Remember me</label>
-        </div>
         <a class="font-medium no-underline ml-2 text-blue-500 text-right cursor-pointer">Forgot password?</a>
       </div>
-
+      <div class="flex align-items-center justify-content-between mb-3">
+        <p-captcha (onResponse)="captchaResolved($event)"
+        (onExpire)="captchaExpired()"
+        [siteKey]="captchaKey" theme="dark" size="big">
+        </p-captcha>
+      </div>
       <button pButton pRipple label="Sign In" icon="pi pi-user" class="w-full"></button>
     </div>
   </div>

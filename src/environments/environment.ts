@@ -3,7 +3,10 @@
 // The list of file replacements can be found in `angular.json`.
 
 export const environment = {
-  production: false
+  production: false,
+  recaptchaPublic: '6Le0ktUdAAAAAAWqBOEDASEj_8Poxoe_GnVlm3VJ',
+  baseUrl: 'http://localhost:8000',
+  baseMediaUrl: 'http://localhost:8000'
 };
 
 /*
@@ -13,4 +16,4 @@ export const environment = {
  * This import should be commented out in production mode because it will have a negative impact
  * on performance if an error is thrown.
  */
-// import 'zone.js/plugins/zone-error';  // Included with Angular CLI.
+import 'zone.js/plugins/zone-error';  // Included with Angular CLI.

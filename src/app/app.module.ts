@@ -11,7 +11,8 @@ import {PasswordModule} from 'primeng/password';
 import {CheckboxModule} from 'primeng/checkbox';
 import {StyleClassModule} from 'primeng/styleclass';
 import {ButtonModule} from 'primeng/button';
-
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import {CaptchaModule} from 'primeng/captcha';
 @NgModule({
   declarations: [
     AppComponent,
@@ -20,6 +21,8 @@ import {ButtonModule} from 'primeng/button';
   imports: [
     BrowserModule,
     CommonModule,
+    FormsModule,
+    ReactiveFormsModule,
     AppRoutingModule,
     HttpClientModule,
     CardModule,
@@ -27,7 +30,8 @@ import {ButtonModule} from 'primeng/button';
     PasswordModule,
     CheckboxModule,
     StyleClassModule,
-    ButtonModule
+    ButtonModule,
+    CaptchaModule
 
   ],
   providers: [],
