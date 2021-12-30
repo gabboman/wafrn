@@ -12,7 +12,6 @@ export class RegisterComponent implements OnInit {
 
 
   captchaKey = environment.recaptchaPublic;
-  captchaValid = false;
 
   minimumRegistrationDate: Date;
 
@@ -40,11 +39,9 @@ export class RegisterComponent implements OnInit {
 
   captchaResolved(ev: any){
     this.loginForm.controls['captchaResponse'].patchValue(ev.response);
-    this.captchaValid = true;
   }
   captchaExpired(){
     this.loginForm.controls['captchaResponse'].patchValue(null);
-    this.captchaValid = false;
   }
 
   onSubmit(){

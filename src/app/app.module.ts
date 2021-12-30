@@ -19,11 +19,13 @@ import { RegisterComponent } from './mainpage/register/register.component';
 import {CalendarModule} from 'primeng/calendar';
 import {KeyFilterModule} from 'primeng/keyfilter';
 import {TooltipModule} from 'primeng/tooltip';
+import { RecoverPasswordComponent } from './mainpage/recover-password/recover-password.component';
 @NgModule({
   declarations: [
     AppComponent,
     LoginComponent,
-    RegisterComponent
+    RegisterComponent,
+    RecoverPasswordComponent
   ],
   imports: [
     BrowserModule,
