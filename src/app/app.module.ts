@@ -13,6 +13,7 @@ import {StyleClassModule} from 'primeng/styleclass';
 import {ButtonModule} from 'primeng/button';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import {CaptchaModule} from 'primeng/captcha';
+import {RippleModule} from 'primeng/ripple';
 @NgModule({
   declarations: [
     AppComponent,
@@ -31,7 +32,8 @@ import {CaptchaModule} from 'primeng/captcha';
     CheckboxModule,
     StyleClassModule,
     ButtonModule,
-    CaptchaModule
+    CaptchaModule,
+    RippleModule
 
   ],
   providers: [],
