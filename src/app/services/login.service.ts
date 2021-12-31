@@ -15,22 +15,42 @@ export class LoginService {
     private utils: UtilsService
   ) { }
 
-  checkUserLoggedIn():boolean {
+  checkUserLoggedIn(): boolean {
     return localStorage.getItem('authToken') != null;
   }
 
   async logIn(loginForm: FormGroup): Promise<boolean> {
     let success = false;
-    try{
-      let petition:any = await this.http.post(environment.baseUrl + '/login', this.utils.objectToFormData(loginForm.value)).toPromise();
-      if(petition.success) {
+    try {
+      let petition: any = await this.http.post(environment.baseUrl + '/login',
+        this.utils.objectToFormData(loginForm.value)).toPromise();
+      if (petition.success) {
         localStorage.setItem('authToken', petition.token);
         success = true;
         this.router.navigate(['/dashboard']);
       }
-    } catch (exception){
+    } catch (exception) {
       console.error(exception);
-      
+
+    }
+    return success;
+  }
+
+  async register(registerForm: FormGroup, img: File): Promise<boolean> {
+    let success = false;
+    try {
+      let payload =  this.utils.objectToFormData(registerForm.value);
+      payload.append('avatar', img);
+      let petition: any = await this.http.post(environment.baseUrl + '/register',
+       payload).toPromise();
+      if (petition.success) {
+        localStorage.setItem('authToken', petition.token);
+        success = true;
+        this.router.navigate(['/dashboard']);
+      }
+    } catch (exception) {
+      console.error(exception);
+
     }
     return success;
   }

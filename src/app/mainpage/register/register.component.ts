@@ -14,6 +14,8 @@ export class RegisterComponent implements OnInit {
   captchaKey = environment.recaptchaPublic;
 
   minimumRegistrationDate: Date;
+  img: File|null = null;
+
 
   loginForm = new FormGroup({
     email:  new FormControl('', [Validators.required, Validators.email]),
@@ -21,7 +23,8 @@ export class RegisterComponent implements OnInit {
     url: new FormControl('', [Validators.required]),
     description: new FormControl('', [Validators.required]),
     birthDate: new FormControl('', [Validators.required]),
-    captchaResponse:  new FormControl('', [Validators.required])
+    captchaResponse:  new FormControl('', [Validators.required]),
+    avatar:  new FormControl('', [Validators.required])
   });
 
 
@@ -44,8 +47,18 @@ export class RegisterComponent implements OnInit {
     this.loginForm.controls['captchaResponse'].patchValue(null);
   }
 
-  onSubmit(){
-    console.log(this.loginForm.valid)
+  async onSubmit(){
+    if(this.img){
+      let tmp = await this.loginService.register(this.loginForm, this.img);
+      console.log(tmp)
+    }
+
+  }
+
+  imgSelected(filePickerEvent: any){
+    if(filePickerEvent.target.files[0]) {
+      this.img = filePickerEvent.target.files[0];
+    }
   }
 
 }

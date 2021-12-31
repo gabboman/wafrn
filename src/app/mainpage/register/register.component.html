@@ -19,15 +19,19 @@
       <input formControlName="url" pTooltip="Right now we do not allow special characters nor spaces."
         tooltipPosition="top" id="url" type="text" pKeyFilter="alphanum" pInputText class="w-full mb-3">
 
-        <label for="description" class="block text-900 font-medium mb-2">Describe yourself!</label>
-        <input formControlName="description" id="email" type="text" 
-        pTooltip="You can write some tags here so you will appear in some searches"
-        tooltipPosition="top"
-        pInputText class="w-full mb-3">
+      <label for="description" class="block text-900 font-medium mb-2">Describe yourself!</label>
+      <input formControlName="description" id="description" type="text"
+        pTooltip="You can write some tags here so you will appear in some searches" tooltipPosition="top" pInputText
+        class="w-full mb-3">
 
       <label for="birthDate" class="block text-900 font-medium mb-2">Your birth date</label>
       <p-calendar [maxDate]="minimumRegistrationDate" id="birthDate" formControlName="birthDate" [touchUI]="true"
         styleClass="w-full mb-3"></p-calendar>
+
+        <label for="avatar" class="block text-900 font-medium mb-2">Describe yourself!</label>
+        <input formControlName="avatar" id="avatar" type="file" accept="image/*" (change)="imgSelected($event)"
+          pTooltip="Select your avatar" tooltipPosition="top" pInputText
+          class="w-full mb-3">
 
       <div class="flex align-items-center justify-content-between mb-3">
         <p-captcha (onResponse)="captchaResolved($event)" (onExpire)="captchaExpired()" [siteKey]="captchaKey"
