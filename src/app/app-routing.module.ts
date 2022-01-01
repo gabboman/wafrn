@@ -14,6 +14,9 @@ const routes: Routes = [{
 {
   path: 'recoverPassword',
   component: RecoverPasswordComponent
+},{
+  path: 'dashboard',
+  loadChildren: () => import ('./dashboard/dashboard.module').then(m => m.DashboardModule)
 }
 ];
 
