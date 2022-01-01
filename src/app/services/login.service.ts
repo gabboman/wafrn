@@ -4,6 +4,7 @@ import { HttpClient } from '@angular/common/http';
 import { FormGroup } from '@angular/forms';
 import { environment } from 'src/environments/environment';
 import { UtilsService } from './utils.service';
+import { JwtService } from './jwt.service';
 @Injectable({
   providedIn: 'root'
 })
@@ -12,11 +13,12 @@ export class LoginService {
   constructor(
     private http: HttpClient,
     private router: Router,
-    private utils: UtilsService
+    private utils: UtilsService,
+    private jwt: JwtService
   ) { }
 
   checkUserLoggedIn(): boolean {
-    return localStorage.getItem('authToken') != null;
+    return this.jwt.tokenValid();
   }
 
   async logIn(loginForm: FormGroup): Promise<boolean> {

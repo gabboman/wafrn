@@ -21,4 +21,4 @@ import { WafrnMediaComponent } from './wafrn-media/wafrn-media.component';
     WafrnMediaComponent
   ]
 })
-export class SharedModule { }
+export class SharedWafrnModule { }

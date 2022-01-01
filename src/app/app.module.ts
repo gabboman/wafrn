@@ -21,6 +21,7 @@ import {KeyFilterModule} from 'primeng/keyfilter';
 import {TooltipModule} from 'primeng/tooltip';
 import { RecoverPasswordComponent } from './mainpage/recover-password/recover-password.component';
 import { WafrnAuthInterceptor } from './interceptors/wafrn-auth.interceptor';
+import { SharedWafrnModule } from './sharedWafrn/shared-wafrn.module';
 @NgModule({
   declarations: [
     AppComponent,
@@ -46,8 +47,8 @@ import { WafrnAuthInterceptor } from './interceptors/wafrn-auth.interceptor';
     RippleModule,
     CalendarModule,
     KeyFilterModule,
-    TooltipModule
-
+    TooltipModule,
+    SharedWafrnModule
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: WafrnAuthInterceptor, multi: true }
