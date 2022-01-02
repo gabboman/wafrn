@@ -1,8 +1,25 @@
 .blurred {
-    filter: blur(8em);
-    -webkit-filter: blur(8em);
+  filter: blur(8em) grayscale(100%);
+  -webkit-filter: blur(8em) grayscale(100%);
+
 }
 
+
+@keyframes unblur {
+ 0% {
+    filter: blur(8em) grayscale(100%);
+    -webkit-filter: blur(8em) grayscale(100%);
+ }
+  100% {
+    filter: none;
+    -webkit-filter: none;
+  }
+}
+
+.unblurred {
+    animation: unblur;
+    animation-duration: 0.3s;
+}
 img {
-    width: 100%;
+  width: 100%;
 }
