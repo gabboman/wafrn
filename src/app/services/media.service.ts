@@ -1,4 +1,6 @@
 import { Injectable } from '@angular/core';
+import { ProcessedPost } from '../interfaces/processed-post';
+import { WafrnMedia } from '../interfaces/wafrn-media';
 import { JwtService } from './jwt.service';
 import { LoginService } from './login.service';
 
@@ -9,6 +11,8 @@ export class MediaService {
 
 
   disableNSFWFilter = false;
+
+  mediaMap: {[id:  string]: WafrnMedia} = {};
 
   constructor(
     private jwt: JwtService,
@@ -37,6 +41,16 @@ export class MediaService {
     let minimumBirthDate = new Date();
     minimumBirthDate.setFullYear(minimumBirthDate.getFullYear() - 18);
     return minimumBirthDate > birthDate;
+
+  }
+
+  addMediaToMap(post: ProcessedPost): void {
+    
+    if(post.medias) {
+      post.medias.forEach(val => {
+        this.mediaMap[val.id] = val;
+      });
+    }
 
   }
 
