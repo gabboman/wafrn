@@ -8,7 +8,7 @@
       <a routerLink="/register" class="font-medium no-underline ml-2 text-blue-500 cursor-pointer">Register now!</a>
     </div>
 
-    <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" >
+    <form [hidden]="loading" [formGroup]="loginForm" (ngSubmit)="onSubmit()" >
       <label for="email1" class="block text-900 font-medium mb-2">Email</label>
       <input formControlName="email" id="email1" type="text" pInputText class="w-full mb-3">
 

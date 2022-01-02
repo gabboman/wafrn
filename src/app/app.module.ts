@@ -22,6 +22,9 @@ import {TooltipModule} from 'primeng/tooltip';
 import { RecoverPasswordComponent } from './mainpage/recover-password/recover-password.component';
 import { WafrnAuthInterceptor } from './interceptors/wafrn-auth.interceptor';
 import { SharedWafrnModule } from './sharedWafrn/shared-wafrn.module';
+import {ProgressSpinnerModule} from 'primeng/progressspinner';
+import {ToastModule} from 'primeng/toast';
+import { MessageService } from 'primeng/api';
 @NgModule({
   declarations: [
     AppComponent,
@@ -48,10 +51,13 @@ import { SharedWafrnModule } from './sharedWafrn/shared-wafrn.module';
     CalendarModule,
     KeyFilterModule,
     TooltipModule,
-    SharedWafrnModule
+    SharedWafrnModule,
+    ProgressSpinnerModule,
+    ToastModule
   ],
   providers: [
-    { provide: HTTP_INTERCEPTORS, useClass: WafrnAuthInterceptor, multi: true }
+    { provide: HTTP_INTERCEPTORS, useClass: WafrnAuthInterceptor, multi: true },
+    MessageService
   ],
   bootstrap: [AppComponent]
 })

@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { LoginService } from 'src/app/services/login.service';
 import { environment } from 'src/environments/environment';
 import { FormGroup, FormControl, Validators } from '@angular/forms'
-
+import {MessageService} from 'primeng/api';
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
@@ -11,6 +11,7 @@ import { FormGroup, FormControl, Validators } from '@angular/forms'
 export class LoginComponent implements OnInit {
 
   captchaKey = environment.recaptchaPublic;
+  loading = false;
 
   loginForm = new FormGroup({
     email:  new FormControl('', [Validators.required, Validators.email]),
@@ -21,7 +22,9 @@ export class LoginComponent implements OnInit {
 
 
   constructor(
-    private loginService: LoginService
+    private loginService: LoginService,
+    private messages: MessageService
+
   ) { }
 
   ngOnInit(): void {
@@ -35,8 +38,17 @@ export class LoginComponent implements OnInit {
   }
 
   async onSubmit(){
-    let login = await this.loginService.logIn(this.loginForm);
-    console.log(login)
+    try {
+      let login = await this.loginService.logIn(this.loginForm);
+      if(!login) {
+        this.messages.add({severity:'warn', summary:'Login failed', detail:'Check email, passowrd, or if you recived the activation email!'});
+      }
+    } catch (exception) {
+      console.log(exception);
+      this.messages.add({severity:'error', summary:'Something failed!', detail:'Something has failed. Check your internet connection or try again later'});
+
+    }
+
   }
 
 }

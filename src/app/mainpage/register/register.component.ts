@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { MessageService } from 'primeng/api';
 import { LoginService } from 'src/app/services/login.service';
 import { environment } from 'src/environments/environment';
 
@@ -12,6 +13,7 @@ export class RegisterComponent implements OnInit {
 
 
   captchaKey = environment.recaptchaPublic;
+  loading = false;
 
   minimumRegistrationDate: Date;
   img: File|null = null;
@@ -30,7 +32,8 @@ export class RegisterComponent implements OnInit {
 
 
   constructor(
-    private loginService: LoginService
+    private loginService: LoginService,
+    private messages: MessageService
   ) {
     // minimum age: 14
     this.minimumRegistrationDate = new Date();
@@ -49,8 +52,21 @@ export class RegisterComponent implements OnInit {
 
   async onSubmit(){
     if(this.img){
-      let tmp = await this.loginService.register(this.loginForm, this.img);
-      console.log(tmp)
+      try {
+
+        let petition = await this.loginService.register(this.loginForm, this.img);
+        if(petition) {
+          this.messages.add({severity:'success', summary:'Success!', detail:'Please check your email to activate your account'});
+        } else {
+          this.messages.add({severity:'warn', summary:'Email or url in use', detail:'Email or url already in use!'});
+
+        }
+
+      } catch (exception) {
+        this.messages.add({severity:'error', summary:'Something failed!', detail:'Something has failed. Check your internet connection or try again later'});
+      }
+      
+
     }
 
   }

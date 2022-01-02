@@ -46,13 +46,10 @@ export class LoginService {
       let petition: any = await this.http.post(environment.baseUrl + '/register',
        payload).toPromise();
       if (petition.success) {
-        localStorage.setItem('authToken', petition.token);
         success = true;
-        this.router.navigate(['/dashboard']);
       }
     } catch (exception) {
       console.error(exception);
-
     }
     return success;
   }

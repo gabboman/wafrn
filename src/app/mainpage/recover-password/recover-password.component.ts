@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { MessageService } from 'primeng/api';
 import { LoginService } from 'src/app/services/login.service';
 import { environment } from 'src/environments/environment';
 
@@ -13,6 +14,7 @@ export class RecoverPasswordComponent implements OnInit {
 
 
   captchaKey = environment.recaptchaPublic;
+  loading = false;
 
   loginForm = new FormGroup({
     email:  new FormControl('', [Validators.required, Validators.email]),
@@ -20,7 +22,8 @@ export class RecoverPasswordComponent implements OnInit {
   });
 
   constructor(
-    private loginService: LoginService
+    private loginService: LoginService,
+    private messageService: MessageService
   ) { }
 
   ngOnInit(): void {
@@ -34,6 +37,7 @@ export class RecoverPasswordComponent implements OnInit {
   }
 
   onSubmit(){
+    // TODO this and also the activate and reset password 
     console.log(this.loginForm.valid)
   }
 }
