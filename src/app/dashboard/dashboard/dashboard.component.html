@@ -9,7 +9,7 @@
   <div *ngFor="let post of posts" pDefer (onLoad)="countViewedPost()"
     >
     <ng-template>
-      <app-post></app-post>
+      <app-post [post]="post"></app-post>
     </ng-template>
   </div>
 

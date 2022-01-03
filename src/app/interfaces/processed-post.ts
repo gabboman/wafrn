@@ -1,5 +1,6 @@
 import { SimplifiedUser } from "./simplified-user";
 import { WafrnMedia } from "./wafrn-media";
+import { Tag } from "./tag";
 
 export interface ProcessedPost {
 
@@ -11,4 +12,5 @@ export interface ProcessedPost {
     userId:         string;
     user:           SimplifiedUser;
     medias?:        WafrnMedia[];
+    tags:           Tag[];
 }

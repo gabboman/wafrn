@@ -1,5 +1,25 @@
-<div class="align-items-center flex justify-content-center lg:px-8 md:px-6 px-4 py-8 surface-ground ng-star-inserted">
-  <div class="surface-card p-4 shadow-2 border-round w-full lg:w-6">
-    potato
+<div *ngIf="ready"
+  class="align-items-center flex justify-content-center lg:px-8 md:px-6 px-4 py-4 surface-ground ng-star-inserted">
+
+
+<p-card class="w-full">
+  <ng-template *ngIf="post.length > 1" pTemplate="header">
+    <img [src]="mediaBaseUrl + post[post.length - 1].user.avatar" class="avatar"/>
+
+  </ng-template>
+  <div *ngFor="let content of post; index as index">
+    <p-divider *ngIf="post.length > 1"></p-divider>
+
+    <div class="align-items-center flex">
+      <img [src]="mediaBaseUrl + content.user.avatar" class="avatar"/> {{content.user.url}}
+    </div>
+
   </div>
-</div>
+
+  <ng-template pTemplate="footer">
+    <p-divider></p-divider>
+
+      "notes", reblog button, report button
+  </ng-template>
+</p-card>
+  </div>

@@ -1,4 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
+import { ProcessedPost } from 'src/app/interfaces/processed-post';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-post-fragment',
@@ -7,9 +9,14 @@ import { Component, OnInit } from '@angular/core';
 })
 export class PostFragmentComponent implements OnInit {
 
+  @Input() content!: ProcessedPost;
+  ready = false;
+  mediaBaseUrl = environment.baseMediaUrl;
+
   constructor() { }
 
   ngOnInit(): void {
+    this.ready = true;
   }
 
 }

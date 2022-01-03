@@ -1,5 +1,6 @@
 import { SimplifiedUser } from "./simplified-user";
 import { WafrnMedia } from "./wafrn-media";
+import { Tag } from "./tag";
 
 export interface RawPost {
     id:             string;
@@ -11,6 +12,7 @@ export interface RawPost {
     hierarchyLevel: number;
     ancestors?:     RawPost[];
     user:           SimplifiedUser;
-    medias?:         WafrnMedia[];
+    medias?:        WafrnMedia[];
+    tags:           Tag[]
 
 }

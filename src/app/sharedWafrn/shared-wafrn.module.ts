@@ -4,8 +4,11 @@ import { PostFragmentComponent } from './post-fragment/post-fragment.component';
 import { PostComponent } from './post/post.component';
 import { WafrnMediaComponent } from './wafrn-media/wafrn-media.component';
 import {EditorModule} from 'primeng/editor';
-
-
+import {DividerModule} from 'primeng/divider';
+import {AvatarModule} from 'primeng/avatar';
+import { CheckboxModule } from 'primeng/checkbox';
+import {AccordionModule} from 'primeng/accordion';
+import {CardModule} from 'primeng/card';
 @NgModule({
   declarations: [
     PostFragmentComponent,
@@ -14,12 +17,20 @@ import {EditorModule} from 'primeng/editor';
   ],
   imports: [
     CommonModule,
-    EditorModule
+    EditorModule,
+    DividerModule,
+    AvatarModule,
+    CheckboxModule,
+    AccordionModule,
+    CardModule
+    
+    
   ],
   exports: [
     PostFragmentComponent,
     PostComponent,
-    WafrnMediaComponent
+    WafrnMediaComponent,
+    
   ]
 })
 export class SharedWafrnModule { }

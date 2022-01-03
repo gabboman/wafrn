@@ -23,7 +23,7 @@ const routes: Routes = [{
     EditorModule,
     DeferModule,
     SharedWafrnModule,
-    ProgressSpinnerModule
+    ProgressSpinnerModule,
 
   ]
 })
