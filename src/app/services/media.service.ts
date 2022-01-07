@@ -54,6 +54,12 @@ export class MediaService {
 
   }
 
+  getMediaById(id: string): WafrnMedia {
+
+    return this.mediaMap[id];
+
+  }
+
   
 
 

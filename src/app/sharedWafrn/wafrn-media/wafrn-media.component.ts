@@ -10,20 +10,25 @@ import { MediaService } from 'src/app/services/media.service';
 export class WafrnMediaComponent implements OnInit {
 
 
-  @Input() data!: WafrnMedia;
+  @Input() id!: string;
   nsfw = true;
+  data!: WafrnMedia;
   nsfwFilter = true;
+  ready = false;
 
 
   
   constructor(
     private mediaService: MediaService
   ) {
-    this.nsfwFilter = !mediaService.checkNSFWFilterDisabled()
+    this.nsfwFilter = !mediaService.checkNSFWFilterDisabled();
+    console.log('wafrnmedia loaded')
    }
 
   ngOnInit(): void {
-    this.nsfw = this.data.NSFW;
+
+    this.data = this.mediaService.getMediaById(this.id);
+    this.ready = true;
 
   }
 
