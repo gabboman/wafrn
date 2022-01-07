@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { environment } from 'src/environments/environment';
 import { ProcessedPost } from '../interfaces/processed-post';
 import { WafrnMedia } from '../interfaces/wafrn-media';
 import { JwtService } from './jwt.service';
@@ -45,9 +46,9 @@ export class MediaService {
   }
 
   addMediaToMap(post: ProcessedPost): void {
-    
     if(post.medias) {
       post.medias.forEach(val => {
+        val.url = environment.baseMediaUrl + val.url;
         this.mediaMap[val.id] = val;
       });
     }

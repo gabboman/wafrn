@@ -28,7 +28,6 @@ export class WafrnMediaComponent implements OnInit {
   ngOnInit(): void {
 
     this.data = this.mediaService.getMediaById(this.id);
-    this.data.url = environment.baseMediaUrl + this.data.url;
     this.ready = true;
 
   }
