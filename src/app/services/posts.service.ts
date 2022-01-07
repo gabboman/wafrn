@@ -34,7 +34,7 @@ export class PostsService {
   }
 
 
-  getPostHtml(content: string): SafeHtml {
+  getPostHtml(content: string): string {
 
     const replacements: Array<{ wafrnMediaStringToReplace: string, id: string}> = [];
 
@@ -50,13 +50,13 @@ export class PostsService {
     });
 
     replacements.forEach( replacement => {
-      const replacementString = '<ng-template [id]=\'"' + replacement.id + '\'" > </ng-template>'
+      const replacementString = '<app-wafrn-media [id]=\'"' + replacement.id + '\'" > </app-wafrn-media>'
       sanitized = sanitized.replace(replacement.wafrnMediaStringToReplace, replacementString);
       
     })
 
 
-    return this.sanitizer.bypassSecurityTrustHtml(sanitized);
+    return sanitized;
 
   }
 }

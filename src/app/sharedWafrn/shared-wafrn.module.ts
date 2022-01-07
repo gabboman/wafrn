@@ -9,11 +9,14 @@ import {AvatarModule} from 'primeng/avatar';
 import { CheckboxModule } from 'primeng/checkbox';
 import {AccordionModule} from 'primeng/accordion';
 import {CardModule} from 'primeng/card';
+import { InjectHTMLDirective } from '../directives/inject-html.directive';
+
 @NgModule({
   declarations: [
     PostFragmentComponent,
     PostComponent,
     WafrnMediaComponent,
+    InjectHTMLDirective
   ],
   imports: [
     CommonModule,
@@ -30,7 +33,7 @@ import {CardModule} from 'primeng/card';
     PostFragmentComponent,
     PostComponent,
     WafrnMediaComponent,
-    
+    InjectHTMLDirective
   ]
 })
 export class SharedWafrnModule { }
