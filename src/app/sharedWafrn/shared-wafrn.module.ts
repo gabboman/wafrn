@@ -34,6 +34,7 @@ import { InjectHTMLDirective } from '../directives/inject-html.directive';
     PostComponent,
     WafrnMediaComponent,
     InjectHTMLDirective
+
   ]
 })
 export class SharedWafrnModule { }

@@ -50,7 +50,7 @@ export class PostsService {
     });
 
     replacements.forEach( replacement => {
-      const replacementString = '<app-wafrn-media [id]=\'"' + replacement.id + '\'" > </app-wafrn-media>'
+      const replacementString = '<app-wafrn-media id="' + replacement.id + '" > </app-wafrn-media>'
       sanitized = sanitized.replace(replacement.wafrnMediaStringToReplace, replacementString);
       
     })

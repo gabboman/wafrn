@@ -1,6 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { WafrnMedia } from 'src/app/interfaces/wafrn-media';
 import { MediaService } from 'src/app/services/media.service';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-wafrn-media',
@@ -22,12 +23,12 @@ export class WafrnMediaComponent implements OnInit {
     private mediaService: MediaService
   ) {
     this.nsfwFilter = !mediaService.checkNSFWFilterDisabled();
-    console.log('wafrnmedia loaded')
    }
 
   ngOnInit(): void {
 
     this.data = this.mediaService.getMediaById(this.id);
+    this.data.url = environment.baseMediaUrl + this.data.url;
     this.ready = true;
 
   }

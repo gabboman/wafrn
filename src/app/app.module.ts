@@ -28,7 +28,7 @@ import { MessageService } from 'primeng/api';
     AppComponent,
     LoginComponent,
     RegisterComponent,
-    RecoverPasswordComponent
+    RecoverPasswordComponent,
   ],
   imports: [
     BrowserModule,
@@ -49,11 +49,14 @@ import { MessageService } from 'primeng/api';
     TooltipModule,
     ProgressSpinnerModule,
     ToastModule,
+    
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: WafrnAuthInterceptor, multi: true },
     MessageService
   ],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
+  exports: [
+  ]
 })
 export class AppModule { }
