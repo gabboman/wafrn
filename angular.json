@@ -41,7 +41,8 @@
               "src/styles.scss"
             ],
             "scripts": [
-              "node_modules/quill/dist/quill.js"
+              "node_modules/quill/dist/quill.js",
+              "node_modules/dompurify/dist/purify.js"
             ]
           },
           "configurations": {

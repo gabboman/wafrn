@@ -2,24 +2,32 @@
   class="align-items-center flex justify-content-center lg:px-8 md:px-6 px-4 py-4 surface-ground ng-star-inserted">
 
 
-<p-card class="w-full">
-  <ng-template *ngIf="post.length > 1" pTemplate="header">
-    <img [src]="mediaBaseUrl + post[post.length - 1].user.avatar" class="avatar"/>
+  <p-card class="w-full">
+    <ng-template *ngIf="post.length > 1" pTemplate="header">
+      <div>
+        <img [src]="mediaBaseUrl + post[post.length - 1].user.avatar" class="avatar" />
+        {{post[post.length -1].user.url}}
+      </div>
 
-  </ng-template>
-  <div *ngFor="let content of post; index as index">
-    <p-divider *ngIf="post.length > 1"></p-divider>
+    </ng-template>
+    <div *ngFor="let content of post; index as index">
+      <p-divider *ngIf="post.length > 1"></p-divider>
+      <div class="fragment-header">
+        <div class="align-items-center flex">
+          <img [src]="mediaBaseUrl + content.user.avatar" class="avatar" /> {{content.user.url}}
+        </div>
+      </div>
 
-    <div class="align-items-center flex">
-      <img [src]="mediaBaseUrl + content.user.avatar" class="avatar"/> {{content.user.url}}
+      <div class="fragment-content" [innerHtml]="sanitizedPostContent[index]">
+
+      </div>
+
     </div>
 
-  </div>
-
-  <ng-template pTemplate="footer">
-    <p-divider></p-divider>
+    <ng-template pTemplate="footer">
+      <p-divider></p-divider>
 
       "notes", reblog button, report button
-  </ng-template>
-</p-card>
-  </div>
+    </ng-template>
+  </p-card>
+</div>

@@ -22,6 +22,7 @@ import { WafrnAuthInterceptor } from './interceptors/wafrn-auth.interceptor';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { ToastModule } from 'primeng/toast';
 import { MessageService } from 'primeng/api';
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -47,7 +48,7 @@ import { MessageService } from 'primeng/api';
     KeyFilterModule,
     TooltipModule,
     ProgressSpinnerModule,
-    ToastModule
+    ToastModule,
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: WafrnAuthInterceptor, multi: true },
