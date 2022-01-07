@@ -1,6 +1,10 @@
+.parent {
+  overflow: hidden;
+}
+
 .blurred {
-  filter: blur(8em) grayscale(100%);
-  -webkit-filter: blur(8em) grayscale(100%);
+  filter: blur(3em) grayscale(100%);
+  -webkit-filter: blur(3em) grayscale(100%);
 
 }
 

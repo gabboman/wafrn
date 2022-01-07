@@ -1,3 +1,5 @@
-<img *ngIf="ready" (click)="showPicture()" [src]="data.url" [alt]="data.description" loading="lazy"
-[ngClass]="{'blurred': nsfw, 'unblurred': !nsfw}"
->
+<div class="parent">
+    <img *ngIf="ready" (click)="showPicture()" [src]="data.url" [alt]="data.description" loading="lazy"
+    [ngClass]="{'blurred': nsfw, 'unblurred': !nsfw}"
+    >
+</div>
