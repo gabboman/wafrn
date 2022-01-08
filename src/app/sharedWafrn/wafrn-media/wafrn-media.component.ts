@@ -28,6 +28,7 @@ export class WafrnMediaComponent implements OnInit {
   ngOnInit(): void {
 
     this.data = this.mediaService.getMediaById(this.id);
+    this.nsfw = this.data.NSFW;
     this.ready = true;
 
   }
