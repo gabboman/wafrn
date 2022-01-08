@@ -23,12 +23,14 @@ import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { ToastModule } from 'primeng/toast';
 import { MessageService } from 'primeng/api';
 import { YouTubePlayerModule } from "@angular/youtube-player";
+import { WafrnYoutubePlayerComponent } from './shared/wafrn-youtube-player/wafrn-youtube-player.component';
 @NgModule({
   declarations: [
     AppComponent,
     LoginComponent,
     RegisterComponent,
     RecoverPasswordComponent,
+    WafrnYoutubePlayerComponent,
   ],
   imports: [
     BrowserModule,

@@ -15,8 +15,7 @@ export class PostComponent implements OnInit {
   sanitizedPostContent: string[] = [];
 
   mediaBaseUrl = environment.baseMediaUrl;
-  videoWidth: number = 0;
-  videoHeight: number = 0;
+
 
 
   constructor(
@@ -27,38 +26,12 @@ export class PostComponent implements OnInit {
   ngOnInit(): void {
     this.sanitizedPostContent = this.post.map((elem) => this.postService.getPostHtml(elem.content));
 
-    this.onResize();
-
-    window.addEventListener('resize', this.onResize);
-
     this.ready = true;
   }
 
 
 
-  onResize = (): void => {
 
-    // Automatically expand the video to fit the page up to 1200px x 720px
-
-    //first post width:
-
-    let firstPostWidth = document.getElementById('firstPost')?.clientWidth
-
-    this.videoWidth = firstPostWidth ? firstPostWidth * 0.93 : 480;
-
-    this.videoHeight = this.videoWidth * 0.6;
-
-    // this.cdr.detectChanges();
-
-  }
-
-
-
-  ngOnDestroy(): void {
-
-    window.removeEventListener('resize', this.onResize);
-
-  }
 
 }
 

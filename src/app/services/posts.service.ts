@@ -51,7 +51,7 @@ export class PostsService {
           let ids = youtubeString.match(this.youtubeRegex);
           if (ids) {
             const videoId = ids[1];
-            const newString = '<youtube-player [width]="videoWidth" [height]="videoHeight" videoId="' + videoId + '"></youtube-player>';
+            const newString = '<app-wafrn-youtube-player video="' + videoId + '"></app-wafrn-youtube-player>';
             sanitized = sanitized.replace(youtubeString, newString);
           }
         }
