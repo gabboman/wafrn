@@ -7,7 +7,11 @@ import {DeferModule} from 'primeng/defer';
 import { SharedWafrnModule } from '../sharedWafrn/shared-wafrn.module';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { CreatorComponent } from './creator/creator.component';
-import {MenubarModule} from 'primeng/menubar';
+import {SpeedDialModule} from 'primeng/speeddial';
+import {DialogModule} from 'primeng/dialog';
+import { FormsModule } from '@angular/forms';
+import { CaptchaModule } from 'primeng/captcha';
+
 
 const routes: Routes = [{
   path: '',
@@ -27,7 +31,10 @@ const routes: Routes = [{
     DeferModule,
     SharedWafrnModule,
     ProgressSpinnerModule,
-    MenubarModule,
+    SpeedDialModule,
+    DialogModule,
+    FormsModule,
+    CaptchaModule
   ]
 })
 export class DashboardModule { }

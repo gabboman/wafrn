@@ -2,6 +2,7 @@ import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { MenuItem } from 'primeng/api';
 import { ProcessedPost } from 'src/app/interfaces/processed-post';
 import { DashboardService } from 'src/app/services/dashboard.service';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-dashboard',
@@ -13,19 +14,27 @@ export class DashboardComponent implements OnInit {
   posts: ProcessedPost[][] = [];
   viewedPosts = 0;
 
+  idPostToReblog: string | undefined;
+  editorVisible: boolean = true;
+  postCreatorContent: string = ''
+  captchaResponse: string | undefined;
+  captchaKey = environment.recaptchaPublic;
+
+
 
   menuItems: MenuItem[] = [
     {
-      label: 'Home',
-      icon: "pi pi-home"
+      label: 'Write',
+      icon: "pi pi-pencil",
+      command: () => this.newEditor()
+    },
+    {
+      label: 'Upload media',
+      icon: "pi pi-upload"
     },
     {
       label: 'Search',
       icon: "pi pi-search"
-    },
-    {
-      label: 'Write',
-      icon: "pi pi-pencil"
     },
     {
       label: 'My blog',
@@ -60,5 +69,35 @@ export class DashboardComponent implements OnInit {
       this.posts.push(post);
     })
   }
+
+
+  newEditor() {
+    this.idPostToReblog = undefined;
+    this.openEditor();
+  }
+
+
+  openEditor(){
+    this.editorVisible = true;
+  }
+
+  async submitPost() {
+    console.log(this.postCreatorContent);
+  }
+
+  closeEditor() {
+    this.editorVisible = false;
+  }
+
+  captchaResolved(event: any) {
+    this.captchaResponse = event.response;
+
+  }
+
+  captchaExpired() {
+    this.captchaResponse = undefined;
+  }
+
+
 
 }

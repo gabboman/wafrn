@@ -40,7 +40,7 @@ export class PostsService {
 
     const replacements: Array<{ wafrnMediaStringToReplace: string, id: string }> = [];
 
-    let sanitized = DOMPurify.sanitize(content, { ALLOWED_TAGS: ['b', 'i', 'a', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6'] });
+    let sanitized = DOMPurify.sanitize(content, { ALLOWED_TAGS: ['b', 'i', 'u', 'a', 'span', 'br', 'p', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'pre'] });
     // we remove stuff like img and script tags. we only allow certain stuff.
     const youtubeLinks = sanitized.match(this.youtubeLinkRegex);
 

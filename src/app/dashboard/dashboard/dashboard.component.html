@@ -1,6 +1,7 @@
-<p-menubar [model]="menuItems"></p-menubar>
+<p-speedDial [model]="menuItems" direction="down" ></p-speedDial>
 
 <div class="align-items-center flex justify-content-center lg:px-8 md:px-6 px-4 py-8 surface-ground ng-star-inserted">
+
 
   <div id="firstPost" class="surface-card p-4 shadow-2 border-round w-full lg:w-6">
     <span   class="text-600 font-medium line-height-3">Welcome to our public alpha! Please if you experience any kind of
@@ -20,4 +21,34 @@
 
 </div>
 
+<p-dialog [header]="idPostToReblog ? 'Reblog a post' : 'Create new post'" [(visible)]="editorVisible" [modal]="true" [style]="{width: '75vw'}" >
+  <p-editor [(ngModel)]="postCreatorContent" [style]="{'height':'50vh'}">
+    <ng-template pTemplate="header">
+        <span class="ql-formats">
+          <select class="ql-size">
+            <option value="small"></option>
+            <!-- Note a missing, thus falsy value, is used to reset to default -->
+            <option selected></option>
+            <option value="large"></option>
+            <option value="huge"></option>
+          </select>
+            <button type="button" class="ql-bold" aria-label="Bold"></button>
+            <button type="button" class="ql-italic" aria-label="Italic"></button>
+            <button type="button" class="ql-underline" aria-label="Underline"></button>
+            <button type="button" class="ql-link" aria-label="Insert Link"></button>
+            <button type="button" class="ql-code-block" aria-label="Insert Code Block"></button>
+            <button type="button"><i class="pi pi-upload"></i></button>
+            <button type="button"><i class="pi pi-images"></i></button>
 
+
+        </span>
+    </ng-template>
+</p-editor>
+
+<p-captcha (onResponse)="captchaResolved($event)" (onExpire)="captchaExpired()" [siteKey]="captchaKey"
+          theme="dark" size="big">
+        </p-captcha>
+
+<p-button [disabled]="captchaResponse == undefined" (onClick)="submitPost()" >Submit</p-button>
+
+</p-dialog>
