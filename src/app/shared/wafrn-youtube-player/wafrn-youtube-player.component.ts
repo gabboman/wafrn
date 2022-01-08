@@ -20,8 +20,6 @@ export class WafrnYoutubePlayerComponent implements OnInit {
     this.onResize();
 
     window.addEventListener('resize', this.onResize);
-
-    console.log(this.video)
   }
 
   onResize = (): void => {
