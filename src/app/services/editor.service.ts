@@ -54,21 +54,22 @@ export class EditorService {
     return res;
   }
 
-  async uploadMedia(description: string, nsfw: boolean, img: File): Promise<boolean> {
-    let success = false;
+  async uploadMedia(description: string, nsfw: boolean, img: File): Promise<WafrnMedia | undefined > {
+    let res: WafrnMedia | undefined = undefined;
     try {
       let payload =  new FormData();
       payload.append('files', img);
       payload.append('description', description);
       payload.append('nsfw', nsfw.toString());
-      let petition: any = await this.http.post(environment.baseUrl + '/uploadMedia',
+      let petition: any = await this.http.post<Array<WafrnMedia>>(environment.baseUrl + '/uploadMedia',
        payload).toPromise();
-      if (petition.success) {
-        success = true;
+      if (petition) {
+        res = petition[0];
       }
     } catch (exception) {
       console.error(exception);
     }
-    return success;
+
+    return res;
   }
 }

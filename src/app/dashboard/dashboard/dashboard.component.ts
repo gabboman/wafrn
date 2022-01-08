@@ -1,7 +1,8 @@
-import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
-import { MenuItem } from 'primeng/api';
+import { ChangeDetectorRef, Component, OnInit, ViewChild } from '@angular/core';
+import { MenuItem, MessageService } from 'primeng/api';
 import { ProcessedPost } from 'src/app/interfaces/processed-post';
 import { DashboardService } from 'src/app/services/dashboard.service';
+import { EditorService } from 'src/app/services/editor.service';
 import { environment } from 'src/environments/environment';
 
 @Component({
@@ -48,7 +49,9 @@ export class DashboardComponent implements OnInit {
 
   constructor(
     private dashboardService: DashboardService,
-    private cdr: ChangeDetectorRef
+    private editor: EditorService,
+    private cdr: ChangeDetectorRef,
+    private messages: MessageService
   ) { }
 
   async ngOnInit(): Promise<void> {
@@ -71,18 +74,22 @@ export class DashboardComponent implements OnInit {
   }
 
 
+
+  // editor methods
+
   newEditor() {
     this.idPostToReblog = undefined;
     this.openEditor();
   }
 
 
-  openEditor(){
+  openEditor() {
     this.editorVisible = true;
   }
 
   async submitPost() {
     console.log(this.postCreatorContent);
+    console.log(this.uploadImagesPanel)
   }
 
   closeEditor() {
@@ -96,6 +103,41 @@ export class DashboardComponent implements OnInit {
 
   captchaExpired() {
     this.captchaResponse = undefined;
+  }
+
+
+  // upload media variables
+  displayUploadImagePanel = false;
+  newImageDescription = '';
+  newImageNSFW = false;
+  newImageFile: File | undefined;
+  @ViewChild('uploadImagesPanel') uploadImagesPanel: any;
+
+  imgSelected(filePickerEvent: any) {
+    if (filePickerEvent.target.files[0]) {
+      this.newImageFile = filePickerEvent.target.files[0];
+    }
+  }
+
+  async uploadImage() {
+
+    if (this.newImageFile) {
+      let response = await this.editor.uploadMedia(this.newImageDescription, this.newImageNSFW, this.newImageFile);
+      if(response) {
+        this.newImageDescription = '';
+        this.newImageNSFW = false;
+        this.newImageFile = undefined;
+        this.displayUploadImagePanel = false;
+        this.postCreatorContent = this.postCreatorContent + '[wafrnmediaid="'+ response.id +'"]'
+        this.uploadImagesPanel.hide();
+        this.messages.add({ severity: 'success', summary: 'Image uploaded and added to the post!' });
+      } else {
+        this.messages.add({ severity: 'error', summary: 'Image not uploaded! Please make sure it is smaller than the max size, and if the problem persits, email us!' });
+
+      }
+    }
+
+
   }
 
 

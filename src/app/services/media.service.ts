@@ -57,7 +57,18 @@ export class MediaService {
 
   getMediaById(id: string): WafrnMedia {
 
-    return this.mediaMap[id];
+    let res =  this.mediaMap[id];
+
+    if (!res) {
+      res = {
+        id: id,
+        url: '/assets/img/404.png',
+        description: 'The media that you are looking for could not be found. The identifier is wrong. The image is the default 404 that wafrn uses. A stock image for 404. The developer has not thought too much into it, and actually has spend more time writing this message than actually searching for a good 404 image',
+        NSFW: false
+      }
+    }
+
+    return res;
 
   }
 

@@ -11,8 +11,8 @@ import {SpeedDialModule} from 'primeng/speeddial';
 import {DialogModule} from 'primeng/dialog';
 import { FormsModule } from '@angular/forms';
 import { CaptchaModule } from 'primeng/captcha';
-
-
+import {OverlayPanelModule} from 'primeng/overlaypanel';
+import {CheckboxModule} from 'primeng/checkbox';
 const routes: Routes = [{
   path: '',
   component: DashboardComponent
@@ -34,7 +34,9 @@ const routes: Routes = [{
     SpeedDialModule,
     DialogModule,
     FormsModule,
-    CaptchaModule
+    CaptchaModule,
+    OverlayPanelModule,
+    CheckboxModule
   ]
 })
 export class DashboardModule { }
