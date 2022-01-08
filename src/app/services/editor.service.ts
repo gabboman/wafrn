@@ -16,7 +16,6 @@ export class EditorService {
 
   async createPost(content: string, tags?: string, idPostToReblog?: string): Promise<boolean> {
     let success: boolean = false;
-
     try {
       const formdata: FormData = new FormData;
       formdata.append('content', content);
@@ -26,7 +25,7 @@ export class EditorService {
       if (tags) {
         formdata.append('tags', tags);
       }
-      let petitionResponse: any = await this.http.post(this.base_url + '/createPost', formdata);
+      let petitionResponse: any = await this.http.post(this.base_url + '/createPost', formdata).toPromise();
       success = petitionResponse.id;
 
     } catch (exception) {

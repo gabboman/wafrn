@@ -88,8 +88,8 @@ export class DashboardComponent implements OnInit {
   }
 
   async submitPost() {
-    console.log(this.postCreatorContent);
-    console.log(this.uploadImagesPanel)
+    let res = await this.editor.createPost(this.postCreatorContent, '', this.idPostToReblog);
+    console.log(res);
   }
 
   closeEditor() {
