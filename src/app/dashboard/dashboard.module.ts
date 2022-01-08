@@ -13,6 +13,8 @@ import { FormsModule } from '@angular/forms';
 import { CaptchaModule } from 'primeng/captcha';
 import {OverlayPanelModule} from 'primeng/overlaypanel';
 import {CheckboxModule} from 'primeng/checkbox';
+import {CardModule} from 'primeng/card';
+
 const routes: Routes = [{
   path: '',
   component: DashboardComponent
@@ -36,7 +38,8 @@ const routes: Routes = [{
     FormsModule,
     CaptchaModule,
     OverlayPanelModule,
-    CheckboxModule
+    CheckboxModule,
+    CardModule
   ]
 })
 export class DashboardModule { }

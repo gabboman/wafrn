@@ -30,10 +30,6 @@ export class DashboardComponent implements OnInit {
       command: () => this.newEditor()
     },
     {
-      label: 'Upload media',
-      icon: "pi pi-upload"
-    },
-    {
       label: 'Search',
       icon: "pi pi-search"
     },
@@ -43,7 +39,8 @@ export class DashboardComponent implements OnInit {
     },
     {
       label: 'Profile',
-      icon: "pi pi-cog"
+      icon: "pi pi-cog",
+      disabled: true
     }
   ];
 
