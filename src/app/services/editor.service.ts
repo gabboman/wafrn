@@ -14,11 +14,12 @@ export class EditorService {
     private http: HttpClient,
   ) { }
 
-  async createPost(content: string, tags?: string, idPostToReblog?: string): Promise<boolean> {
+  async createPost(content: string, captchaKey: string, tags?: string, idPostToReblog?: string): Promise<boolean> {
     let success: boolean = false;
     try {
       const formdata: FormData = new FormData;
       formdata.append('content', content);
+      formdata.append('captchaKey', captchaKey)
       if(idPostToReblog) {
         formdata.append('parent', idPostToReblog);
       }

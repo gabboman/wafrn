@@ -16,7 +16,7 @@ export class DashboardComponent implements OnInit {
   viewedPosts = 0;
 
   idPostToReblog: string | undefined;
-  editorVisible: boolean = true;
+  editorVisible: boolean = false;
   postCreatorContent: string = ''
   captchaResponse: string | undefined;
   captchaKey = environment.recaptchaPublic;
@@ -88,8 +88,15 @@ export class DashboardComponent implements OnInit {
   }
 
   async submitPost() {
-    let res = await this.editor.createPost(this.postCreatorContent, '', this.idPostToReblog);
-    console.log(res);
+    let res = await this.editor.createPost(this.postCreatorContent, this.captchaKey,  '', this.idPostToReblog);
+    if(res) {
+      this.messages.add({ severity: 'success', summary: 'Your post has been published!' });
+      this.postCreatorContent = '';
+      this.editorVisible = false;
+    } else {
+      this.messages.add({ severity: 'warn', summary: 'Something went wrong and your post was not published. Check your internet connection and try again' });
+
+    }
   }
 
   closeEditor() {
