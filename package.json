@@ -20,6 +20,7 @@
     "@angular/platform-browser": "~13.1.0",
     "@angular/platform-browser-dynamic": "~13.1.0",
     "@angular/router": "~13.1.0",
+    "@angular/youtube-player": "^13.1.1",
     "bootstrap": "^4.6.1",
     "dompurify": "^2.3.4",
     "primeflex": "^3.1.2",

@@ -1,4 +1,5 @@
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { MenuItem } from 'primeng/api';
 import { ProcessedPost } from 'src/app/interfaces/processed-post';
 import { DashboardService } from 'src/app/services/dashboard.service';
 
@@ -11,6 +12,30 @@ export class DashboardComponent implements OnInit {
 
   posts: ProcessedPost[][] = [];
   viewedPosts = 0;
+
+
+  menuItems: MenuItem[] = [
+    {
+      label: 'Home',
+      icon: "pi pi-home"
+    },
+    {
+      label: 'Search',
+      icon: "pi pi-search"
+    },
+    {
+      label: 'Write',
+      icon: "pi pi-pencil"
+    },
+    {
+      label: 'My blog',
+      icon: "pi pi-user"
+    },
+    {
+      label: 'Profile',
+      icon: "pi pi-cog"
+    }
+  ];
 
   constructor(
     private dashboardService: DashboardService,

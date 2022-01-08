@@ -5,8 +5,8 @@
 export const environment = {
   production: false,
   recaptchaPublic: '6Le0ktUdAAAAAAWqBOEDASEj_8Poxoe_GnVlm3VJ',
-  baseUrl: 'http://localhost:8000',
-  baseMediaUrl: 'http://localhost:8000'
+  baseUrl: 'http://192.168.18.27:8000',
+  baseMediaUrl: 'http://192.168.18.27:8000'
 };
 
 /*

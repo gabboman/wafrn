@@ -22,7 +22,7 @@ import { WafrnAuthInterceptor } from './interceptors/wafrn-auth.interceptor';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { ToastModule } from 'primeng/toast';
 import { MessageService } from 'primeng/api';
-
+import { YouTubePlayerModule } from "@angular/youtube-player";
 @NgModule({
   declarations: [
     AppComponent,
@@ -49,6 +49,7 @@ import { MessageService } from 'primeng/api';
     TooltipModule,
     ProgressSpinnerModule,
     ToastModule,
+    YouTubePlayerModule
     
   ],
   providers: [

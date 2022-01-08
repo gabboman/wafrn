@@ -6,6 +6,8 @@ import {EditorModule} from 'primeng/editor';
 import {DeferModule} from 'primeng/defer';
 import { SharedWafrnModule } from '../sharedWafrn/shared-wafrn.module';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
+import { CreatorComponent } from './creator/creator.component';
+import {MenubarModule} from 'primeng/menubar';
 
 const routes: Routes = [{
   path: '',
@@ -16,6 +18,7 @@ const routes: Routes = [{
 @NgModule({
   declarations: [
     DashboardComponent,
+    CreatorComponent,
   ],
   imports: [
     CommonModule,
@@ -24,7 +27,7 @@ const routes: Routes = [{
     DeferModule,
     SharedWafrnModule,
     ProgressSpinnerModule,
-
+    MenubarModule,
   ]
 })
 export class DashboardModule { }

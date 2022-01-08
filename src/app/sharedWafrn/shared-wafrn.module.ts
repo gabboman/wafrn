@@ -10,6 +10,7 @@ import { CheckboxModule } from 'primeng/checkbox';
 import {AccordionModule} from 'primeng/accordion';
 import {CardModule} from 'primeng/card';
 import { InjectHTMLDirective } from '../directives/inject-html.directive';
+import { YouTubePlayerModule } from '@angular/youtube-player';
 
 @NgModule({
   declarations: [
@@ -25,9 +26,8 @@ import { InjectHTMLDirective } from '../directives/inject-html.directive';
     AvatarModule,
     CheckboxModule,
     AccordionModule,
-    CardModule
-    
-    
+    CardModule,   
+    YouTubePlayerModule 
   ],
   exports: [
     PostFragmentComponent,
