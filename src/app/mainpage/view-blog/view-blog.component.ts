@@ -27,7 +27,7 @@ export class ViewBlogComponent implements OnInit {
   async ngOnInit(): Promise<void> {
     let blogUrl = this.activatedRoute.snapshot.paramMap.get('url');
     if(blogUrl) {
-      this.blogUrl =blogUrl;
+      this.blogUrl = blogUrl;
     }
 
     await this.loadPosts(0);

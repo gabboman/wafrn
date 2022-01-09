@@ -1,3 +1,12 @@
+<div *ngIf="!loading"
+  class="align-items-center flex justify-content-center lg:px-8 md:px-6 px-4 py-4 surface-ground ng-star-inserted ">
+  <p-card id="firstPost" class="xs:w-full md:w-75 lg:w-75">
+    <img [src]="mediaUrl + blogDetails.avatar">
+    <div [innerText]="blogDetails.url" class="text-600 font-medium line-height-3"></div>
+    <div [innerText]="blogDetails.description" class="text-600 font-medium line-height-3"></div>
+  </p-card>
+</div>
+
 <app-post *ngIf="!loading" [post]="post"></app-post>
 
 <p-progressSpinner *ngIf="loading" ></p-progressSpinner>
