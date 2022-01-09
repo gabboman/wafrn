@@ -11,6 +11,7 @@ import {AccordionModule} from 'primeng/accordion';
 import {CardModule} from 'primeng/card';
 import { InjectHTMLDirective } from '../directives/inject-html.directive';
 import { YouTubePlayerModule } from '@angular/youtube-player';
+import { ButtonModule } from 'primeng/button';
 
 
 @NgModule({
@@ -28,7 +29,8 @@ import { YouTubePlayerModule } from '@angular/youtube-player';
     CheckboxModule,
     AccordionModule,
     CardModule,   
-    YouTubePlayerModule 
+    YouTubePlayerModule,
+    ButtonModule
   ],
   exports: [
     PostFragmentComponent,

@@ -4,6 +4,9 @@ import { ProcessedPost } from '../interfaces/processed-post';
 import { RawPost } from '../interfaces/raw-post';
 import { MediaService } from './media.service';
 import * as DOMPurify from 'dompurify';
+import { HttpClient } from '@angular/common/http';
+import { environment } from 'src/environments/environment';
+import { BehaviorSubject } from 'rxjs';
 @Injectable({
   providedIn: 'root'
 })
@@ -14,12 +17,55 @@ export class PostsService {
   uuidRegex = /[0-9a-fA-F]{8}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{12}/;
   youtubeLinkRegex = /(?:https?:\/\/)?(?:www\.|m\.)?youtu(?:\.be\/|be.com\/\S*(?:watch|embed)(?:(?:(?=\/[^&\s\?]+(?!\S))\/)|(?:\S*v=|v\/)))([^&\s\?]+)/gm;
   youtubeRegex = /(?:https?:)?(?:\/\/)?(?:www\.)?(?:youtu\.be\/|youtube(?:\-nocookie)?\.(?:[A-Za-z]{2,4}|[A-Za-z]{2,3}\.[A-Za-z]{2})\/)(?:watch|embed\/|vi?\/)*(?:\?[\w=&]*vi?=)?([^#&\?\/]{11}).*?/;
+  public updateFollowers: BehaviorSubject<Boolean> = new BehaviorSubject(new Boolean());
 
+  public followedUserIds: Array<String> = [];
   constructor(
     private mediaService: MediaService,
     private sanitizer: DomSanitizer,
-  ) { }
+    private http: HttpClient
+  ) {
+    this.loadFollowers();
+  }
 
+
+  async loadFollowers() {
+    let followedUsers = await this.http.get<Array<String>>(environment.baseUrl + '/getFollowedUsers').toPromise()
+    if (followedUsers) {
+      this.followedUserIds = followedUsers;
+      this.updateFollowers.next(true);
+    }
+  }
+
+  async followUser(id: string): Promise<boolean> {
+    let res = false;
+    let payload = new FormData();
+    payload.append('userId', id);
+    try {
+      let response = await this.http.post<{ success: boolean }>(environment.baseUrl + '/follow', payload).toPromise();
+      await this.loadFollowers();
+      res = response?.success === true;
+    } catch (exception) {
+      console.log(exception)
+    }
+
+    return res;
+  }
+
+  async unfollowUser(id: string): Promise<boolean> {
+    let res = false;
+    let payload = new FormData();
+    payload.append('userId', id);
+    try {
+      let response = await this.http.post<{ success: boolean }>(environment.baseUrl + '/unfollow', payload).toPromise();
+      await this.loadFollowers();
+      res = response?.success === true;
+    } catch (exception) {
+      console.log(exception)
+    }
+
+    return res;
+  }
 
   processPost(rawPost: RawPost): ProcessedPost[] {
     let result: ProcessedPost[] = [];

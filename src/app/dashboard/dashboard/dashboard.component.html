@@ -23,7 +23,8 @@
 
 </div>
 
-<p-dialog [header]="idPostToReblog ? 'Reblog a post' : 'Create new post'" [(visible)]="editorVisible" [modal]="true"
+<p-dialog *ngIf="editorVisible" [header]="idPostToReblog ? 'Reblog a post' : 'Create new post'"
+  [(visible)]="editorVisible" [modal]="true" 
   [style]="{width: '75vw'}">
 
   <p-overlayPanel #uploadImagesPanel>

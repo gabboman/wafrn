@@ -2,8 +2,8 @@
   class="align-items-center flex justify-content-center lg:px-8 md:px-6 px-4 py-4 surface-ground ng-star-inserted ">
 
 
-  <p-card class="xs:w-full md:w-75 lg:w-75">
-    <ng-template *ngIf="post.length > 1" pTemplate="header">
+  <p-card class="sm:w-full md:w-75 lg:w-75">
+    <ng-template  pTemplate="header">
       <div>
         <img [src]="mediaBaseUrl + post[post.length - 1].user.avatar" class="avatar" />
         {{post[post.length -1].user.url}}
@@ -12,13 +12,23 @@
     </ng-template>
     <div *ngFor="let content of post; index as index">
       <p-divider *ngIf="post.length > 1"></p-divider>
-      <div class="fragment-header">
-        <div class="align-items-center flex">
-          <img [src]="mediaBaseUrl + content.user.avatar" class="avatar" /> {{content.user.url}}
-        </div>
+      <div *ngIf="content.content != ''" class="fragment-header">
+          <div class="grid grid-nogutter" style="width: 100%;">
+            <div class="col-8 " >
+              <img [src]="mediaBaseUrl + content.user.avatar" class="avatar" /> {{content.user.url}}
+            </div>
+            <div class="col-4">
+              <button *ngIf="followedUsers.indexOf(content.userId) === -1"
+                pButton pRipple label="Follow" class="w-full" (click)="followUser(content.userId)"
+              ></button>
+              <button *ngIf="followedUsers.indexOf(content.userId) !== -1"
+                pButton pRipple label="Unfollow" class="w-full" (click)="unfollowUser(content.userId)"
+              ></button>
+            </div>
+          </div>
       </div>
 
-      <div class="fragment-content" [injectHTML]="sanitizedPostContent[index]">
+      <div *ngIf="content.content != ''" class="fragment-content" [injectHTML]="sanitizedPostContent[index]">
 
       </div>
 
