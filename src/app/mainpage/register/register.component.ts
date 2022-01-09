@@ -51,6 +51,7 @@ export class RegisterComponent implements OnInit {
   }
 
   async onSubmit(){
+    this.loading = true;
     if(this.img){
       try {
 
@@ -68,7 +69,7 @@ export class RegisterComponent implements OnInit {
       
 
     }
-
+    this.loading = false;
   }
 
   imgSelected(filePickerEvent: any){

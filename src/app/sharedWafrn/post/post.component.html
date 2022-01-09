@@ -3,35 +3,40 @@
 
 
   <p-card class="sm:w-full md:w-75">
-      <div class="grid">
-        <div class="col-11">
-          <img [src]="mediaBaseUrl + post[post.length - 1].user.avatar" class="avatar" />
-          <a  [href]="'/blog/'+ urls[post.length -1]"  >{{post[post.length -1].user.url}}</a> {{ post.length > 1 ? ' reblogged' : ' posted'}}
-        </div>
-        <div class="col-1 justify-content-end">
-          <i (click)="sharePost()" class="pi pi-share-alt"></i>
-        </div>
+    <div class="grid">
+      <div class="col-11">
+        <img [src]="mediaBaseUrl + post[post.length - 1].user.avatar" class="avatar" />
+        <a [href]="'/blog/'+ urls[post.length -1]">{{post[post.length -1].user.url}}</a>
+        {{ post.length > 1 ? ' reblogged' : ' posted'}}
       </div>
+      <div class="col-1 justify-content-end">
+        <i (click)="sharePost()" class="pi pi-share-alt"></i>
+      </div>
+    </div>
 
     <div *ngFor="let content of post; index as index">
       <p-divider *ngIf="post.length > 1 && content.content != ''"></p-divider>
       <div *ngIf="content.content != ''" class="fragment-header">
-          <div class="grid grid-nogutter" style="width: 100%;">
-            <div class="col-8 " >
-              <img [src]="mediaBaseUrl + content.user.avatar" class="avatar" /> <a  [href]="'/blog/'+ urls[index]" >{{content.user.url}}</a>
-            </div>
-            <div class="col-4">
-              <button *ngIf="followedUsers.indexOf(content.userId) === -1 && userLoggedIn"
-                pButton pRipple label="Follow" class="w-full" (click)="followUser(content.userId)"
-              ></button>
-              <button *ngIf="followedUsers.indexOf(content.userId) !== -1 && userLoggedIn"
-                pButton pRipple label="Unfollow" class="w-full" (click)="unfollowUser(content.userId)"
-              ></button>
-            </div>
+        <div class="grid grid-nogutter" style="width: 100%;">
+          <div class="col-8 ">
+            <img [src]="mediaBaseUrl + content.user.avatar" class="avatar" /> <a
+              [href]="'/blog/'+ urls[index]">{{content.user.url}}</a>
           </div>
+          <div class="col-4">
+            <button *ngIf="followedUsers.indexOf(content.userId) === -1 && userLoggedIn" pButton pRipple label="Follow"
+              class="w-full" (click)="followUser(content.userId)"></button>
+            <button *ngIf="followedUsers.indexOf(content.userId) !== -1 && userLoggedIn" pButton pRipple
+              label="Unfollow" class="w-full" (click)="unfollowUser(content.userId)"></button>
+          </div>
+        </div>
       </div>
       <br>
       <div *ngIf="content.content != ''" class="fragment-content" [injectHTML]="sanitizedPostContent[index]">
+      </div>
+      <div *ngIf="index === post.length -1 && content.tags">
+        <a *ngFor="let tag of content.tags" [routerLink]="'/dashboard/search/' + tag.tagName" >
+          <p-tag [value]="'#' +tag.tagName"></p-tag>
+        </a>
 
       </div>
 
@@ -41,7 +46,7 @@
       <p-divider></p-divider>
 
       <div class="grid">
-        <div class="col-8 flex justify-content-start" >
+        <div class="col-8 flex justify-content-start">
           Reblogs: ---
         </div>
         <div *ngIf="userLoggedIn" class="col-4 flex justify-content-end">

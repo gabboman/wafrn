@@ -3,6 +3,7 @@ import { LoginService } from 'src/app/services/login.service';
 import { environment } from 'src/environments/environment';
 import { FormGroup, FormControl, Validators } from '@angular/forms'
 import {MessageService} from 'primeng/api';
+import { Router } from '@angular/router';
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
@@ -23,11 +24,15 @@ export class LoginComponent implements OnInit {
 
   constructor(
     private loginService: LoginService,
-    private messages: MessageService
+    private messages: MessageService,
+    private router: Router
 
   ) { }
 
   ngOnInit(): void {
+    if(this.loginService.checkUserLoggedIn()) {
+      this.router.navigate(['/dashboard']);
+    }
   }
 
   captchaResolved(ev: any){
@@ -38,6 +43,7 @@ export class LoginComponent implements OnInit {
   }
 
   async onSubmit(){
+    this.loading = true;
     try {
       let login = await this.loginService.logIn(this.loginForm);
       if(!login) {
@@ -48,7 +54,7 @@ export class LoginComponent implements OnInit {
       this.messages.add({severity:'error', summary:'Something failed!', detail:'Something has failed. Check your internet connection or try again later'});
 
     }
-
+    this.loading = false;
   }
 
 }

@@ -36,8 +36,9 @@ export class RecoverPasswordComponent implements OnInit {
     this.loginForm.controls['captchaResponse'].patchValue(null);
   }
 
-  onSubmit(){
-    // TODO this and also the activate and reset password 
-    this.loginService.requestPasswordReset(this.loginForm.value.email, this.loginForm.value.captchaResponse)
+  async onSubmit(){
+    this.loading = true;
+    await this.loginService.requestPasswordReset(this.loginForm.value.email, this.loginForm.value.captchaResponse);
+    this.loading = false;
   }
 }

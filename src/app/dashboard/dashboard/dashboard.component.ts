@@ -1,8 +1,10 @@
 import { ChangeDetectorRef, Component, OnInit, ViewChild } from '@angular/core';
+import { Router } from '@angular/router';
 import { MenuItem, MessageService } from 'primeng/api';
 import { ProcessedPost } from 'src/app/interfaces/processed-post';
 import { DashboardService } from 'src/app/services/dashboard.service';
 import { EditorService } from 'src/app/services/editor.service';
+import { JwtService } from 'src/app/services/jwt.service';
 import { PostsService } from 'src/app/services/posts.service';
 import { environment } from 'src/environments/environment';
 
@@ -18,7 +20,8 @@ export class DashboardComponent implements OnInit {
 
   idPostToReblog: string | undefined;
   editorVisible: boolean = false;
-  postCreatorContent: string = ''
+  postCreatorContent: string = '';
+  tags: string[] = [];
   captchaResponse: string | undefined;
   captchaKey = environment.recaptchaPublic;
 
@@ -32,11 +35,13 @@ export class DashboardComponent implements OnInit {
     },
     {
       label: 'Search',
-      icon: "pi pi-search"
+      icon: "pi pi-search",
+      routerLink: '/dashboard/search'
     },
     {
       label: 'My blog',
-      icon: "pi pi-user"
+      icon: "pi pi-user",
+      routerLink: '/blog/'
     },
     {
       label: 'Profile',
@@ -50,17 +55,25 @@ export class DashboardComponent implements OnInit {
     private editor: EditorService,
     private cdr: ChangeDetectorRef,
     private messages: MessageService,
-    private postsService: PostsService
+    private postsService: PostsService,
+    private jwtService: JwtService,
+    private router: Router
   ) { }
 
   async ngOnInit(): Promise<void> {
+    if(!this.jwtService.tokenValid()) {
+      localStorage.clear();
+      this.router.navigate(['/']);
+    }
+    this.menuItems[2].routerLink = '/blog/' + this.jwtService.getTokenData()['url']
     await this.loadPosts(0);
     this.postsService.launchPostEditorEmitter.subscribe((elem) => {
       if(elem) {
         this.idPostToReblog = elem;
         this.editorVisible = true;
       }
-    })
+    });
+
   }
 
   async countViewedPost() {
@@ -92,8 +105,18 @@ export class DashboardComponent implements OnInit {
     this.editorVisible = true;
   }
 
+  postBeingSubmitted = false;
   async submitPost() {
-    let res = await this.editor.createPost(this.postCreatorContent, this.captchaKey,  '', this.idPostToReblog);
+    this.postBeingSubmitted = true;
+    let tagsToSend = '';
+    this.tags.forEach((elem) => {
+      tagsToSend = tagsToSend + elem.trim() +',' ;
+    });
+    tagsToSend = tagsToSend.slice(0, -1);
+    let res = undefined;
+    if(this.captchaResponse) {
+      res = await this.editor.createPost(this.postCreatorContent, this.captchaResponse, tagsToSend , this.idPostToReblog);
+    }
     if(res) {
       this.messages.add({ severity: 'success', summary: 'Your post has been published!' });
       this.postCreatorContent = '';
@@ -102,6 +125,7 @@ export class DashboardComponent implements OnInit {
       this.messages.add({ severity: 'warn', summary: 'Something went wrong and your post was not published. Check your internet connection and try again' });
 
     }
+    this.postBeingSubmitted = false;
   }
 
   closeEditor() {

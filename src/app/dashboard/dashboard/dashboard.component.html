@@ -45,7 +45,7 @@
     <p-button label="Upload image" (onClick)="uploadImage()"></p-button>
 
   </p-overlayPanel>
-  <p-editor [(ngModel)]="postCreatorContent" [style]="{'height':'50vh'}">
+  <p-editor [(ngModel)]="postCreatorContent" [style]="{'height':'25vh'}">
     <ng-template pTemplate="header">
       <span class="ql-formats">
         <select class="ql-size">
@@ -68,7 +68,10 @@
     </ng-template>
   </p-editor>
 
-  <p-captcha (onResponse)="captchaResolved($event)" (onExpire)="captchaExpired()" [siteKey]="captchaKey" theme="dark"
+  <h5>Tags (coma separated)</h5>
+  <p-chips [(ngModel)]="tags" separator=","></p-chips>
+
+  <p-captcha *ngIf="!postBeingSubmitted" (onResponse)="captchaResolved($event)" (onExpire)="captchaExpired()" [siteKey]="captchaKey" theme="dark"
     size="big">
   </p-captcha>
 

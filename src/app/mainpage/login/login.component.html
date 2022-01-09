@@ -19,8 +19,8 @@
         <a routerLink="/recoverPassword" class="font-medium no-underline ml-2 text-blue-500 text-right cursor-pointer">Forgot password?</a>
       </div>
       <div class="flex align-items-center justify-content-between mb-3">
-        <p-captcha (onResponse)="captchaResolved($event)"
-        (onExpire)="captchaExpired()"
+        <p-captcha *ngIf="!loading" (onResponse)="captchaResolved($event)"
+        (onExpire)="captchaExpired()" initCallback="loadCaptcha"
         [siteKey]="captchaKey" theme="dark" size="big">
         </p-captcha>
       </div>

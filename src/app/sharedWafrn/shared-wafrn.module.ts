@@ -13,7 +13,7 @@ import { InjectHTMLDirective } from '../directives/inject-html.directive';
 import { YouTubePlayerModule } from '@angular/youtube-player';
 import { ButtonModule } from 'primeng/button';
 import { RouterModule } from '@angular/router';
-
+import { TagModule } from 'primeng/tag';
 
 @NgModule({
   declarations: [
@@ -32,7 +32,8 @@ import { RouterModule } from '@angular/router';
     CardModule,   
     YouTubePlayerModule,
     ButtonModule,
-    RouterModule
+    RouterModule,
+    TagModule
   ],
   exports: [
     PostFragmentComponent,

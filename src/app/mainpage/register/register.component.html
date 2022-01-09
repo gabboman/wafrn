@@ -34,7 +34,7 @@
           class="w-full mb-3">
 
       <div class="flex align-items-center justify-content-between mb-3">
-        <p-captcha (onResponse)="captchaResolved($event)" (onExpire)="captchaExpired()" [siteKey]="captchaKey"
+        <p-captcha *ngIf="!loading" (onResponse)="captchaResolved($event)" (onExpire)="captchaExpired()" [siteKey]="captchaKey"
           theme="dark" size="big">
         </p-captcha>
       </div>
