@@ -47,6 +47,11 @@ export class DashboardComponent implements OnInit {
       label: 'Profile',
       icon: "pi pi-cog",
       disabled: true
+    },
+    {
+      label: 'Log out',
+      icon: 'pi pi-sign-out',
+      command: () => {localStorage.clear(); this.router.navigate(['/'])}
     }
   ];
 

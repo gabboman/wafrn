@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { MessageService } from 'primeng/api';
+import { Router } from '@angular/router';
+import { MenuItem, MessageService } from 'primeng/api';
 import { ProcessedPost } from 'src/app/interfaces/processed-post';
 import { SimplifiedUser } from 'src/app/interfaces/simplified-user';
 import { DashboardService } from 'src/app/services/dashboard.service';
@@ -27,12 +28,41 @@ export class SearchComponent implements OnInit {
   viewedUsers = 0;
   followedUsers: Array<String> = [];
   userLoggedIn = false;
+
+  menuItems: MenuItem[] = [
+    {
+      label: 'Write',
+      icon: "pi pi-pencil",
+      command: () => {this.router.navigate(['/dashboard']); setTimeout(()=> {this.postService.launchPostEditorEmitter.next('')}, 500)}
+    },
+    {
+      label: 'Search',
+      icon: "pi pi-search",
+      routerLink: '/dashboard/search'
+    },
+    {
+      label: 'My blog',
+      icon: "pi pi-user",
+      routerLink: '/blog/'
+    },
+    {
+      label: 'Profile',
+      icon: "pi pi-cog",
+      disabled: true
+    },
+    {
+      label: 'Log out',
+      icon: 'pi pi-sign-out',
+      command: () => {localStorage.clear(); this.router.navigate(['/'])}
+    }
+  ];
   
   constructor(
     private dashboardService: DashboardService,
     private messages: MessageService,
     private postService: PostsService,
-    private loginService: LoginService
+    private loginService: LoginService,
+    private router: Router
   ) { }
 
   ngOnInit(): void {
