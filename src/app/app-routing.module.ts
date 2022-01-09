@@ -5,6 +5,8 @@ import { LoginComponent } from './mainpage/login/login.component';
 import { RecoverPasswordComponent } from './mainpage/recover-password/recover-password.component';
 import { RegisterComponent } from './mainpage/register/register.component';
 import { ResetPasswordComponent } from './mainpage/reset-password/reset-password.component';
+import { ViewBlogComponent } from './mainpage/view-blog/view-blog.component';
+import { ViewPostComponent } from './mainpage/view-post/view-post.component';
 import { PostComponent } from './sharedWafrn/post/post.component';
 
 const routes: Routes = [{
@@ -32,8 +34,12 @@ const routes: Routes = [{
   component: ResetPasswordComponent
 },
 {
-  path: 'post',
-  component: PostComponent
+  path: 'post/:id',
+  component: ViewPostComponent
+},
+{
+  path: 'blog/:url',
+  component: ViewBlogComponent
 }
 ];
 

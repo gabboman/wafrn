@@ -26,6 +26,12 @@ import { YouTubePlayerModule } from "@angular/youtube-player";
 import { WafrnYoutubePlayerComponent } from './shared/wafrn-youtube-player/wafrn-youtube-player.component';
 import { ResetPasswordComponent } from './mainpage/reset-password/reset-password.component';
 import { ActivateAccountComponent } from './mainpage/activate-account/activate-account.component';
+import { ViewBlogComponent } from './mainpage/view-blog/view-blog.component';
+import { ViewPostComponent } from './mainpage/view-post/view-post.component';
+import { SharedWafrnModule } from './sharedWafrn/shared-wafrn.module';
+import {DeferModule} from 'primeng/defer';
+import { CardModule } from 'primeng/card';
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -35,6 +41,8 @@ import { ActivateAccountComponent } from './mainpage/activate-account/activate-a
     WafrnYoutubePlayerComponent,
     ResetPasswordComponent,
     ActivateAccountComponent,
+    ViewBlogComponent,
+    ViewPostComponent,
   ],
   imports: [
     BrowserModule,
@@ -55,7 +63,10 @@ import { ActivateAccountComponent } from './mainpage/activate-account/activate-a
     TooltipModule,
     ProgressSpinnerModule,
     ToastModule,
-    YouTubePlayerModule
+    YouTubePlayerModule,
+    SharedWafrnModule,
+    DeferModule,
+    CardModule
     
   ],
   providers: [

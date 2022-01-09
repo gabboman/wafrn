@@ -44,7 +44,7 @@
         <div class="col-8 flex justify-content-start" >
           Reblogs: ---
         </div>
-        <div class="col-4 flex justify-content-end">
+        <div *ngIf="userLoggedIn" class="col-4 flex justify-content-end">
           <div class="grid">
             <i (click)="quickReblog()" class="col-4 pi pi-history"></i>
             <i (click)="launchReblog()" class="col-4 pi pi-replay"></i>
