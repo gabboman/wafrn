@@ -1,4 +1,5 @@
 import { ChangeDetectorRef, Component, Injector, Input, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { MessageService } from 'primeng/api';
 import { BehaviorSubject } from 'rxjs';
 import { ProcessedPost } from 'src/app/interfaces/processed-post';
@@ -21,6 +22,7 @@ export class PostComponent implements OnInit {
   mediaBaseUrl = environment.baseMediaUrl;
   userLoggedIn = false;
   followedUsers: Array<String> = [];
+  urls: string[] = []
 
 
 
@@ -30,7 +32,8 @@ export class PostComponent implements OnInit {
     private cdr: ChangeDetectorRef,
     private loginService: LoginService,
     private messages: MessageService,
-    private editor: EditorService
+    private editor: EditorService,
+    private router: Router
   ) {
     this.userLoggedIn = loginService.checkUserLoggedIn();
    }
@@ -41,6 +44,7 @@ export class PostComponent implements OnInit {
       this.followedUsers = this.postService.followedUserIds;
     } );
     this.sanitizedPostContent = this.post.map((elem) => this.postService.getPostHtml(elem.content));
+    this.urls = this.post.map((elem) => encodeURIComponent(elem.user.url));
     this.ready = true;
   }
 
@@ -82,7 +86,6 @@ export class PostComponent implements OnInit {
     this.messages.add({ severity: 'success', summary: 'The post URL was copied to your clipboard!' });
 
   }
-
 
 
 

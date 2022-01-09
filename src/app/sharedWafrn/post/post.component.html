@@ -6,7 +6,7 @@
       <div class="grid">
         <div class="col-11">
           <img [src]="mediaBaseUrl + post[post.length - 1].user.avatar" class="avatar" />
-          {{post[post.length -1].user.url}} {{ post.length > 1 ? ' reblogged' : ' posted'}}
+          <a  [href]="'/blog/'+ urls[post.length -1]"  >{{post[post.length -1].user.url}}</a> {{ post.length > 1 ? ' reblogged' : ' posted'}}
         </div>
         <div class="col-1 justify-content-end">
           <i (click)="sharePost()" class="pi pi-share-alt"></i>
@@ -18,7 +18,7 @@
       <div *ngIf="content.content != ''" class="fragment-header">
           <div class="grid grid-nogutter" style="width: 100%;">
             <div class="col-8 " >
-              <img [src]="mediaBaseUrl + content.user.avatar" class="avatar" /> {{content.user.url}}
+              <img [src]="mediaBaseUrl + content.user.avatar" class="avatar" /> <a  [href]="'/blog/'+ urls[index]" >{{content.user.url}}</a>
             </div>
             <div class="col-4">
               <button *ngIf="followedUsers.indexOf(content.userId) === -1 && userLoggedIn"

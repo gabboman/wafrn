@@ -7,7 +7,6 @@ import { RegisterComponent } from './mainpage/register/register.component';
 import { ResetPasswordComponent } from './mainpage/reset-password/reset-password.component';
 import { ViewBlogComponent } from './mainpage/view-blog/view-blog.component';
 import { ViewPostComponent } from './mainpage/view-post/view-post.component';
-import { PostComponent } from './sharedWafrn/post/post.component';
 
 const routes: Routes = [{
   path: '',
@@ -39,12 +38,12 @@ const routes: Routes = [{
 },
 {
   path: 'blog/:url',
-  component: ViewBlogComponent
+  component: ViewBlogComponent,
 }
 ];
 
 @NgModule({
-  imports: [RouterModule.forRoot(routes)],
+  imports: [RouterModule.forRoot(routes, { onSameUrlNavigation: 'reload'})],
   exports: [RouterModule]
 })
 export class AppRoutingModule { }
