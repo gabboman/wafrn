@@ -24,6 +24,8 @@ import { ToastModule } from 'primeng/toast';
 import { MessageService } from 'primeng/api';
 import { YouTubePlayerModule } from "@angular/youtube-player";
 import { WafrnYoutubePlayerComponent } from './shared/wafrn-youtube-player/wafrn-youtube-player.component';
+import { ResetPasswordComponent } from './mainpage/reset-password/reset-password.component';
+import { ActivateAccountComponent } from './mainpage/activate-account/activate-account.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -31,6 +33,8 @@ import { WafrnYoutubePlayerComponent } from './shared/wafrn-youtube-player/wafrn
     RegisterComponent,
     RecoverPasswordComponent,
     WafrnYoutubePlayerComponent,
+    ResetPasswordComponent,
+    ActivateAccountComponent,
   ],
   imports: [
     BrowserModule,

@@ -38,6 +38,6 @@ export class RecoverPasswordComponent implements OnInit {
 
   onSubmit(){
     // TODO this and also the activate and reset password 
-    console.log(this.loginForm.valid)
+    this.loginService.requestPasswordReset(this.loginForm.value.email, this.loginForm.value.captchaResponse)
   }
 }

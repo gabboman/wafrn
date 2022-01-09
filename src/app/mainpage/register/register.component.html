@@ -28,7 +28,7 @@
       <p-calendar [maxDate]="minimumRegistrationDate" id="birthDate" formControlName="birthDate" [touchUI]="true"
         styleClass="w-full mb-3"></p-calendar>
 
-        <label for="avatar" class="block text-900 font-medium mb-2">Describe yourself!</label>
+        <label for="avatar" class="block text-900 font-medium mb-2">Upload your avatar</label>
         <input formControlName="avatar" id="avatar" type="file" accept="image/*" (change)="imgSelected($event)"
           pTooltip="Select your avatar" tooltipPosition="top" pInputText
           class="w-full mb-3">
@@ -38,7 +38,7 @@
           theme="dark" size="big">
         </p-captcha>
       </div>
-      <button [disabled]="!loginForm.valid" pButton pRipple label="Sign In" icon="pi pi-user" class="w-full"></button>
+      <button [disabled]="!loginForm.valid" pButton pRipple label="Register" icon="pi pi-user" class="w-full"></button>
     </form>
   </div>
 </div>
