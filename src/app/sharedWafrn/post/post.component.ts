@@ -1,6 +1,8 @@
 import { ChangeDetectorRef, Component, Injector, Input, OnInit } from '@angular/core';
 import { MessageService } from 'primeng/api';
+import { BehaviorSubject } from 'rxjs';
 import { ProcessedPost } from 'src/app/interfaces/processed-post';
+import { EditorService } from 'src/app/services/editor.service';
 import { LoginService } from 'src/app/services/login.service';
 import { PostsService } from 'src/app/services/posts.service';
 import { environment } from 'src/environments/environment';
@@ -21,11 +23,14 @@ export class PostComponent implements OnInit {
   followedUsers: Array<String> = [];
 
 
+
+
   constructor(
     private postService: PostsService,
     private cdr: ChangeDetectorRef,
     private loginService: LoginService,
-    private messages: MessageService
+    private messages: MessageService,
+    private editor: EditorService
   ) {
     this.userLoggedIn = loginService.checkUserLoggedIn();
    }
@@ -55,6 +60,26 @@ export class PostComponent implements OnInit {
     } else {
       this.messages.add({ severity: 'error', summary: 'Something went wrong! Check your internet conectivity and try again' });
     }
+
+  }
+
+  launchReblog() {
+    this.postService.launchPostEditorEmitter.next(this.post[this.post.length - 1].id);
+  }
+
+  async quickReblog() {
+
+    let response = await this.editor.createPost('', '', '', this.post[this.post.length - 1].id );
+    if(response) {
+      this.messages.add({ severity: 'success', summary: 'You reblogged the post succesfully' });
+    } else {
+      this.messages.add({ severity: 'error', summary: 'Something went wrong! Check your internet conectivity and try again' });
+    }
+  }
+
+  sharePost() {
+    navigator.clipboard.writeText(environment.frontUrl + '/post/' + encodeURIComponent(this.post[this.post.length - 1].id) );
+    this.messages.add({ severity: 'success', summary: 'The post URL was copied to your clipboard!' });
 
   }
 

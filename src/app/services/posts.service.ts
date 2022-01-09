@@ -18,6 +18,7 @@ export class PostsService {
   youtubeLinkRegex = /(?:https?:\/\/)?(?:www\.|m\.)?youtu(?:\.be\/|be.com\/\S*(?:watch|embed)(?:(?:(?=\/[^&\s\?]+(?!\S))\/)|(?:\S*v=|v\/)))([^&\s\?]+)/gm;
   youtubeRegex = /(?:https?:)?(?:\/\/)?(?:www\.)?(?:youtu\.be\/|youtube(?:\-nocookie)?\.(?:[A-Za-z]{2,4}|[A-Za-z]{2,3}\.[A-Za-z]{2})\/)(?:watch|embed\/|vi?\/)*(?:\?[\w=&]*vi?=)?([^#&\?\/]{11}).*?/;
   public updateFollowers: BehaviorSubject<Boolean> = new BehaviorSubject(new Boolean());
+  public launchPostEditorEmitter: BehaviorSubject<string> = new BehaviorSubject('');
 
   public followedUserIds: Array<String> = [];
   constructor(

@@ -3,6 +3,7 @@ import { MenuItem, MessageService } from 'primeng/api';
 import { ProcessedPost } from 'src/app/interfaces/processed-post';
 import { DashboardService } from 'src/app/services/dashboard.service';
 import { EditorService } from 'src/app/services/editor.service';
+import { PostsService } from 'src/app/services/posts.service';
 import { environment } from 'src/environments/environment';
 
 @Component({
@@ -48,11 +49,18 @@ export class DashboardComponent implements OnInit {
     private dashboardService: DashboardService,
     private editor: EditorService,
     private cdr: ChangeDetectorRef,
-    private messages: MessageService
+    private messages: MessageService,
+    private postsService: PostsService
   ) { }
 
   async ngOnInit(): Promise<void> {
     await this.loadPosts(0);
+    this.postsService.launchPostEditorEmitter.subscribe((elem) => {
+      if(elem) {
+        this.idPostToReblog = elem;
+        this.editorVisible = true;
+      }
+    })
   }
 
   async countViewedPost() {

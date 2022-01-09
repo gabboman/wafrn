@@ -2,32 +2,35 @@
   class="align-items-center flex justify-content-center lg:px-8 md:px-6 px-4 py-4 surface-ground ng-star-inserted ">
 
 
-  <p-card class="sm:w-full md:w-75 lg:w-75">
-    <ng-template  pTemplate="header">
-      <div>
-        <img [src]="mediaBaseUrl + post[post.length - 1].user.avatar" class="avatar" />
-        {{post[post.length -1].user.url}}
+  <p-card class="sm:w-full md:w-75">
+      <div class="grid">
+        <div class="col-11">
+          <img [src]="mediaBaseUrl + post[post.length - 1].user.avatar" class="avatar" />
+          {{post[post.length -1].user.url}} {{ post.length > 1 ? ' reblogged' : ' posted'}}
+        </div>
+        <div class="col-1 justify-content-end">
+          <i (click)="sharePost()" class="pi pi-share-alt"></i>
+        </div>
       </div>
 
-    </ng-template>
     <div *ngFor="let content of post; index as index">
-      <p-divider *ngIf="post.length > 1"></p-divider>
+      <p-divider *ngIf="post.length > 1 && content.content != ''"></p-divider>
       <div *ngIf="content.content != ''" class="fragment-header">
           <div class="grid grid-nogutter" style="width: 100%;">
             <div class="col-8 " >
               <img [src]="mediaBaseUrl + content.user.avatar" class="avatar" /> {{content.user.url}}
             </div>
             <div class="col-4">
-              <button *ngIf="followedUsers.indexOf(content.userId) === -1"
+              <button *ngIf="followedUsers.indexOf(content.userId) === -1 && userLoggedIn"
                 pButton pRipple label="Follow" class="w-full" (click)="followUser(content.userId)"
               ></button>
-              <button *ngIf="followedUsers.indexOf(content.userId) !== -1"
+              <button *ngIf="followedUsers.indexOf(content.userId) !== -1 && userLoggedIn"
                 pButton pRipple label="Unfollow" class="w-full" (click)="unfollowUser(content.userId)"
               ></button>
             </div>
           </div>
       </div>
-
+      <br>
       <div *ngIf="content.content != ''" class="fragment-content" [injectHTML]="sanitizedPostContent[index]">
 
       </div>
@@ -37,7 +40,18 @@
     <ng-template pTemplate="footer">
       <p-divider></p-divider>
 
-      "notes", reblog button, report button
+      <div class="grid">
+        <div class="col-8 flex justify-content-start" >
+          Reblogs: ---
+        </div>
+        <div class="col-4 flex justify-content-end">
+          <div class="grid">
+            <i (click)="quickReblog()" class="col-4 pi pi-history"></i>
+            <i (click)="launchReblog()" class="col-4 pi pi-replay"></i>
+            <i class="col-4 pi pi-exclamation-triangle"></i>
+          </div>
+        </div>
+      </div>
     </ng-template>
   </p-card>
 </div>
