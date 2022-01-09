@@ -9,7 +9,7 @@ import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { CreatorComponent } from './creator/creator.component';
 import { SpeedDialModule } from 'primeng/speeddial';
 import { DialogModule } from 'primeng/dialog';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CaptchaModule } from 'primeng/captcha';
 import { OverlayPanelModule } from 'primeng/overlaypanel';
 import { CheckboxModule } from 'primeng/checkbox';
@@ -18,6 +18,8 @@ import { SearchComponent } from './search/search.component';
 import { SearchResultsComponent } from './search-results/search-results.component';
 import {ChipsModule} from 'primeng/chips';
 import { InputTextModule } from 'primeng/inputtext';
+import {CarouselModule} from 'primeng/carousel';
+
 const routes: Routes = [
   {
     path: '',
@@ -46,12 +48,14 @@ const routes: Routes = [
     SpeedDialModule,
     DialogModule,
     FormsModule,
+    ReactiveFormsModule,
     CaptchaModule,
     OverlayPanelModule,
     CheckboxModule,
     CardModule,
     ChipsModule,
-    InputTextModule
+    InputTextModule,
+    CarouselModule
   ]
 })
 export class DashboardModule { }

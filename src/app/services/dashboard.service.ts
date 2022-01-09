@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { environment } from 'src/environments/environment';
 import { ProcessedPost } from '../interfaces/processed-post';
 import { RawPost } from '../interfaces/raw-post';
+import { SimplifiedUser } from '../interfaces/simplified-user';
 import { PostsService } from './posts.service';
 
 @Injectable({
@@ -39,6 +40,28 @@ export class DashboardService {
 
   }
 
+
+  async getSearchPage(page: number, term: string): Promise<{posts: ProcessedPost[][], users: SimplifiedUser[]}> {
+    let postResult: ProcessedPost[][] = [];
+    if(page === 0) {
+      //if we are starting the scroll, we store the current date
+      this.startScrollDate = new Date();
+    }
+    let petitionData: FormData = new FormData();
+    petitionData.append('page', page.toString());
+    petitionData.append('startScroll', this.startScrollDate.toString());
+    petitionData.append('term', term);
+    let dashboardPetition: {posts: Array<RawPost>, users: Array<SimplifiedUser> } | undefined = await this.http.post<{posts: Array<RawPost>, users: Array<SimplifiedUser> }>(environment.baseUrl + '/search', petitionData).toPromise();
+    if(dashboardPetition) {
+      postResult = dashboardPetition.posts.map(elem => this.postService.processPost(elem));
+    } else {
+      // TODO show error message
+    }
+
+
+    return {posts: postResult, users: dashboardPetition?.users ? dashboardPetition?.users : []};
+
+  }
 
   async getBlogPage(page: number, blogId: string): Promise<ProcessedPost[][]> {
     console.log(blogId);
