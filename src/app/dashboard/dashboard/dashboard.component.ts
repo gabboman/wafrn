@@ -125,6 +125,7 @@ export class DashboardComponent implements OnInit {
     if(res) {
       this.messages.add({ severity: 'success', summary: 'Your post has been published!' });
       this.postCreatorContent = '';
+      this.tags = [];
       this.editorVisible = false;
     } else {
       this.messages.add({ severity: 'warn', summary: 'Something went wrong and your post was not published. Check your internet connection and try again' });
