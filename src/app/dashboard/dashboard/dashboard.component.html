@@ -68,7 +68,7 @@
     </ng-template>
   </p-editor>
 
-  <h5>Tags (coma separated)</h5>
+  <h5>Tags (comma separated)</h5>
   <p-chips [(ngModel)]="tags" separator=","></p-chips>
 
   <p-captcha *ngIf="!postBeingSubmitted" (onResponse)="captchaResolved($event)" (onExpire)="captchaExpired()" [siteKey]="captchaKey" theme="dark"
