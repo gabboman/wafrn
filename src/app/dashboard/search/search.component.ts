@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { MenuItem, MessageService } from 'primeng/api';
 import { ProcessedPost } from 'src/app/interfaces/processed-post';
 import { SimplifiedUser } from 'src/app/interfaces/simplified-user';
@@ -62,15 +62,22 @@ export class SearchComponent implements OnInit {
     private messages: MessageService,
     private postService: PostsService,
     private loginService: LoginService,
-    private router: Router
+    private router: Router,
+    private activatedRoute: ActivatedRoute
   ) { }
 
-  ngOnInit(): void {
+  async ngOnInit(): Promise<void> {
     this.followedUsers = this.postService.followedUserIds;
     this.postService.updateFollowers.subscribe( () => {
       this.followedUsers = this.postService.followedUserIds;
     } );
     this.userLoggedIn = this.loginService.checkUserLoggedIn();
+    if(this.activatedRoute.snapshot.paramMap.get('term')) {
+      this.searchForm.patchValue({
+        search: this.activatedRoute.snapshot.paramMap.get('term')
+      });
+      await this.submitSearch();
+    }
 
   }
 

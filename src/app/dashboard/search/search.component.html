@@ -15,43 +15,42 @@
     <br>
     <br>
     <form [formGroup]="searchForm" (submit)="submitSearch()">
-        <span class="p-float-label">
-            <input formControlName="search" id="float-input" type="text" pInputText class="w-full" > 
-            <label for="float-input">Search term</label>
-        </span>
-        <button  pButton pRipple label="Search" icon="pi pi-search" class="w-full" type="submit"></button>
+      <span class="p-float-label">
+        <input formControlName="search" id="float-input" type="text" pInputText class="w-full">
+        <label for="float-input">Search term</label>
+      </span>
+      <button pButton pRipple label="Search" icon="pi pi-search" class="w-full" type="submit"></button>
     </form>
 
   </p-card>
 
-  
+
 
 </div>
 
-<div *ngIf="users && users.length > 0"  pDefer (onLoad)="countViewedPost()" class="align-items-center flex justify-content-center lg:px-8 md:px-6 px-4 py-8 surface-ground ng-star-inserted ">
+<div *ngIf="users && users.length > 0" pDefer (onLoad)="countViewedUser()"
+  class="align-items-center flex justify-content-center lg:px-8 md:px-6 px-4 py-8 surface-ground ng-star-inserted ">
 
-
-  <p-carousel [value]="users">
+  <p-carousel style="width: 100%;" [value]="users" [showIndicators]="false">
     <ng-template let-user pTemplate="item">
       <p-card *ngIf="user">
         <div class="product-item-content">
-          <div class="p-mb-3">
-              <img [src]="baseMediaUrl + user.avatar" style="max-width: 30vw">
+          <div class="p-mb-3  flex justify-content-center">
+            <img [src]="baseMediaUrl + user.avatar" style="max-width: 30vw">
           </div>
           <div>
-              <h4 class="p-mb-1">{{user.url}}</h4>
-              <h6 class="p-mt-0 p-mb-3">{{user.description}}</h6>
-              <button *ngIf="followedUsers.indexOf(user.id) === -1 && userLoggedIn" pButton pRipple label="Follow"
+            <h4 class="p-mb-1">{{user.url}}</h4>
+            <h6 class="p-mt-0 p-mb-3">{{user.description}}</h6>
+            <button *ngIf="followedUsers.indexOf(user.id) === -1 && userLoggedIn" pButton pRipple label="Follow"
               class="w-full" (click)="followUser(user.id)"></button>
-            <button *ngIf="followedUsers.indexOf(user.id) !== -1 && userLoggedIn" pButton pRipple
-              label="Unfollow" class="w-full" (click)="unfollowUser(user.id)"></button>
+            <button *ngIf="followedUsers.indexOf(user.id) !== -1 && userLoggedIn" pButton pRipple label="Unfollow"
+              class="w-full" (click)="unfollowUser(user.id)"></button>
           </div>
-      </div>
+        </div>
       </p-card>
-      
-  </ng-template>
-  </p-carousel>
 
+    </ng-template>
+  </p-carousel>
 </div>
 
 <div *ngIf="posts && posts.length > 0">

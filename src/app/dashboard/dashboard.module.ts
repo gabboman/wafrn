@@ -15,7 +15,6 @@ import { OverlayPanelModule } from 'primeng/overlaypanel';
 import { CheckboxModule } from 'primeng/checkbox';
 import { CardModule } from 'primeng/card';
 import { SearchComponent } from './search/search.component';
-import { SearchResultsComponent } from './search-results/search-results.component';
 import {ChipsModule} from 'primeng/chips';
 import { InputTextModule } from 'primeng/inputtext';
 import {CarouselModule} from 'primeng/carousel';
@@ -28,6 +27,10 @@ const routes: Routes = [
   {
     path: 'search',
     component: SearchComponent
+  },
+  {
+    path: 'search/:term',
+    component: SearchComponent
   }
 ];
 
@@ -36,7 +39,6 @@ const routes: Routes = [
     DashboardComponent,
     CreatorComponent,
     SearchComponent,
-    SearchResultsComponent,
   ],
   imports: [
     CommonModule,
