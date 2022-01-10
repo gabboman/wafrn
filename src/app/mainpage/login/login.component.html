@@ -20,7 +20,7 @@
       </div>
       <div class="flex align-items-center justify-content-between mb-3">
         <p-captcha *ngIf="!loading" (onResponse)="captchaResolved($event)"
-        (onExpire)="captchaExpired()" initCallback="loadCaptcha"
+        (onExpire)="captchaExpired()"
         [siteKey]="captchaKey" theme="dark" size="big">
         </p-captcha>
       </div>

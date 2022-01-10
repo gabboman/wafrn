@@ -5,8 +5,8 @@
 export const environment = {
   production: false,
   recaptchaPublic: '6Le0ktUdAAAAAAWqBOEDASEj_8Poxoe_GnVlm3VJ',
-  baseUrl: 'http://192.168.18.27:8000',
-  baseMediaUrl: 'http://192.168.18.27:8000',
+  baseUrl: 'https://api.wafrn.net',
+  baseMediaUrl: 'http://media.wafrn.net',
   frontUrl: 'http://localhost:4200'
 };
 
