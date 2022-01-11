@@ -27,7 +27,7 @@ export class DashboardService {
     }
     let petitionData: FormData = new FormData();
     petitionData.append('page', page.toString());
-    petitionData.append('startScroll', this.startScrollDate.toString());
+    petitionData.append('startScroll', this.startScrollDate.getTime().toString());
     let dashboardPetition: Array<RawPost> | undefined = await this.http.post<Array<RawPost>>(environment.baseUrl + '/dashboard', petitionData).toPromise();
     if(dashboardPetition) {
       result = dashboardPetition.map(elem => this.postService.processPost(elem));
@@ -49,7 +49,7 @@ export class DashboardService {
     }
     let petitionData: FormData = new FormData();
     petitionData.append('page', page.toString());
-    petitionData.append('startScroll', this.startScrollDate.toString());
+    petitionData.append('startScroll', this.startScrollDate.getTime().toString());
     petitionData.append('term', term);
     let dashboardPetition: {posts: Array<RawPost>, users: Array<SimplifiedUser> } | undefined = await this.http.post<{posts: Array<RawPost>, users: Array<SimplifiedUser> }>(environment.baseUrl + '/search', petitionData).toPromise();
     if(dashboardPetition) {
@@ -72,7 +72,7 @@ export class DashboardService {
     }
     let petitionData: FormData = new FormData();
     petitionData.append('page', page.toString());
-    petitionData.append('startScroll', this.startScrollDate.toString());
+    petitionData.append('startScroll', this.startScrollDate.getTime().toString());
     petitionData.append('id', blogId);
     let dashboardPetition: Array<RawPost> | undefined = await this.http.post<Array<RawPost>>(environment.baseUrl + '/blog', petitionData).toPromise();
     if(dashboardPetition) {
