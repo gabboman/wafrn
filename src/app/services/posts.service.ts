@@ -74,6 +74,7 @@ export class PostsService {
       rawPost.ancestors.forEach((post: RawPost) => {
         result.push(post);
       });
+      result = result.reverse()
       result.push(rawPost);
     }
     result.forEach(val => {
