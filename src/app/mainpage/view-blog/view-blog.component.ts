@@ -38,7 +38,7 @@ export class ViewBlogComponent implements OnInit {
   async countViewedPost() {
     this.viewedPosts++;
     if (this.posts.length - 3 < this.viewedPosts) {
-      await this.loadPosts(Math.floor(this.posts.length / 20) + 1);
+      await this.loadPosts(Math.floor(this.posts.length / 20));
     }
   }
 

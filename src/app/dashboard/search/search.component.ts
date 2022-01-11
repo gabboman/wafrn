@@ -103,14 +103,14 @@ export class SearchComponent implements OnInit {
   async countViewedPost() {
     this.viewedPosts++;
     if (this.posts.length - 3 < this.viewedPosts) {
-      await this.loadResults(Math.floor(this.posts.length / 20) + 1,);
+      await this.loadResults(Math.floor(this.posts.length / 20));
     }
   }
 
   async countViewedUser() {
     this.viewedUsers ++;
     if (this.users.length - 3 < this.viewedUsers) {
-      await this.loadResults(Math.floor(this.posts.length / 20) + 1,);
+      await this.loadResults(Math.floor(this.posts.length / 20));
     }
   }
 
