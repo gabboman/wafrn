@@ -18,7 +18,6 @@ export class PostsService {
   youtubeLinkRegex = /(?:https?:\/\/)?(?:www\.|m\.)?youtu(?:\.be\/|be.com\/\S*(?:watch|embed)(?:(?:(?=\/[^&\s\?]+(?!\S))\/)|(?:\S*v=|v\/)))([^&\s\?]+)/gm;
   youtubeRegex = /(?:https?:)?(?:\/\/)?(?:www\.)?(?:youtu\.be\/|youtube(?:\-nocookie)?\.(?:[A-Za-z]{2,4}|[A-Za-z]{2,3}\.[A-Za-z]{2})\/)(?:watch|embed\/|vi?\/)*(?:\?[\w=&]*vi?=)?([^#&\?\/]{11}).*?/;
   public updateFollowers: BehaviorSubject<Boolean> = new BehaviorSubject(new Boolean());
-  public launchPostEditorEmitter: BehaviorSubject<string> = new BehaviorSubject('');
 
   public followedUserIds: Array<String> = [];
   constructor(
@@ -74,7 +73,7 @@ export class PostsService {
       rawPost.ancestors.forEach((post: RawPost) => {
         result.push(post);
       });
-      result = result.reverse()
+      result = result.sort((a, b) => new Date(a.createdAt).getTime() - new Date (b.createdAt).getTime());
       result.push(rawPost);
     }
     result.forEach(val => {
@@ -88,7 +87,7 @@ export class PostsService {
 
     const replacements: Array<{ wafrnMediaStringToReplace: string, id: string }> = [];
 
-    let sanitized = DOMPurify.sanitize(content, { ALLOWED_TAGS: ['b', 'i', 'u', 'a', 'span', 'br', 'p', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'pre'] });
+    let sanitized = DOMPurify.sanitize(content, { ALLOWED_TAGS: ['b', 'i', 'u', 'a', 'span', 'br', 'p', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'pre', 'strong', 'em']});
     // we remove stuff like img and script tags. we only allow certain stuff.
     const youtubeLinks = sanitized.match(this.youtubeLinkRegex);
 

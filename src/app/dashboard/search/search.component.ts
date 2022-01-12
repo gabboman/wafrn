@@ -29,33 +29,6 @@ export class SearchComponent implements OnInit {
   followedUsers: Array<String> = [];
   userLoggedIn = false;
 
-  menuItems: MenuItem[] = [
-    {
-      label: 'Write',
-      icon: "pi pi-pencil",
-      command: () => {this.router.navigate(['/dashboard']); setTimeout(()=> {this.postService.launchPostEditorEmitter.next('')}, 500)}
-    },
-    {
-      label: 'Search',
-      icon: "pi pi-search",
-      routerLink: '/dashboard/search'
-    },
-    {
-      label: 'My blog',
-      icon: "pi pi-user",
-      routerLink: '/blog/'
-    },
-    {
-      label: 'Profile',
-      icon: "pi pi-cog",
-      disabled: true
-    },
-    {
-      label: 'Log out',
-      icon: 'pi pi-sign-out',
-      command: () => {localStorage.clear(); this.router.navigate(['/'])}
-    }
-  ];
   
   constructor(
     private dashboardService: DashboardService,
@@ -103,14 +76,14 @@ export class SearchComponent implements OnInit {
   async countViewedPost() {
     this.viewedPosts++;
     if (this.posts.length - 3 < this.viewedPosts) {
-      await this.loadResults(Math.floor(this.posts.length / 20));
+      await this.loadResults(this.posts.length >=20 ?Math.floor(this.posts.length / 20) : 1);
     }
   }
 
   async countViewedUser() {
     this.viewedUsers ++;
     if (this.users.length - 3 < this.viewedUsers) {
-      await this.loadResults(Math.floor(this.posts.length / 20));
+      await this.loadResults(this.posts.length >=20 ?Math.floor(this.posts.length / 20) : 1);
     }
   }
 

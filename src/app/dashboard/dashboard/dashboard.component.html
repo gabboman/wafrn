@@ -1,5 +1,3 @@
-<p-speedDial [model]="menuItems" direction="down"></p-speedDial>
-
 <div class="align-items-center flex justify-content-center lg:px-8 md:px-6 px-4 py-8 surface-ground ng-star-inserted ">
 
   <p-card id="firstPost" class="xs:w-full md:w-75 lg:w-75">
@@ -29,6 +27,9 @@
           <li><a href="/blog/Furry">Bad news everyone! Someone already registered this URL</a></li>
 
         </ul>
+
+        <h2>Newcomers, when you join you should create a post with the tag "hello wafrn". Later on we will add notifications, worry not</h2>
+        <h4>If you would like to help us grow, please <a target="_blank" href="https://gabbomanestamuyloco.tumblr.com/post/673115316667154432/updates-after-36-hours-open-there-are-43">reblog this in other platforms </a> and bring your friends or enemies here!</h4>
       </div>
   </p-card>
 
@@ -47,58 +48,3 @@
 
 </div>
 
-<p-dialog *ngIf="editorVisible" [header]="idPostToReblog ? 'Reblog a post' : 'Create new post'"
-  [(visible)]="editorVisible" [modal]="true" 
-  [style]="{width: '75vw'}">
-  <h2 *ngIf="idPostToReblog" >You are reblogging the post. Your followers will see the full thread with your reply on it</h2>
-  <p-overlayPanel #uploadImagesPanel>
-    <div>
-      <label for="imgSelected" class="block text-900 font-medium mb-2">Upload your image</label>
-      <input *ngIf="displayUploadImagePanel" id="imgSelected" type="file" accept="image/*"
-        (change)="imgSelected($event)" pTooltip="Select your avatar" tooltipPosition="top" pInputText
-        class="w-full mb-3">
-      <label for="description" class="block text-900 font-medium mb-2">Image description</label>
-      <input [(ngModel)]="newImageDescription" id="description" type="text"
-        pTooltip="Image description. Useful in the case of someone using a screen reader, or when the image does not load properly."
-        tooltipPosition="top" pInputText class="w-full mb-3">
-
-      <p-checkbox [(ngModel)]="newImageNSFW" [binary]="true" label="this is NSFW"
-        pTooltip="Is this image NSFW or does it contain explicit sexual content that is not suited to minors? Just mark this and go nuts"
-        tooltipPosition="top"></p-checkbox>
-    </div>
-    <p-button label="Upload image" (onClick)="uploadImage()"></p-button>
-
-  </p-overlayPanel>
-  <p-editor [(ngModel)]="postCreatorContent" [style]="{'height':'25vh'}">
-    <ng-template pTemplate="header">
-      <span class="ql-formats">
-        <select class="ql-size">
-          <option value="small"></option>
-          <!-- Note a missing, thus falsy value, is used to reset to default -->
-          <option selected></option>
-          <option value="large"></option>
-          <option value="huge"></option>
-        </select>
-        <button type="button" class="ql-bold" aria-label="Bold"></button>
-        <button type="button" class="ql-italic" aria-label="Italic"></button>
-        <button type="button" class="ql-underline" aria-label="Underline"></button>
-        <button type="button" class="ql-link" aria-label="Insert Link"></button>
-        <button type="button" class="ql-code-block" aria-label="Insert Code Block"></button>
-        <button #uploadImages (click)="uploadImagesPanel.show($event, uploadImages); displayUploadImagePanel = true"
-          type="button"><i class="pi pi-upload"></i></button>
-
-
-      </span>
-    </ng-template>
-  </p-editor>
-
-  <h5>Tags (comma separated)</h5>
-  <p-chips [(ngModel)]="tags" separator=","></p-chips>
-
-  <p-captcha *ngIf="!postBeingSubmitted" (onResponse)="captchaResolved($event)" (onExpire)="captchaExpired()" [siteKey]="captchaKey" theme="dark"
-    size="big">
-  </p-captcha>
-
-  <p-button  [disabled]="captchaResponse == undefined"  (onClick)="submitPost()">Submit</p-button>
-
-</p-dialog>

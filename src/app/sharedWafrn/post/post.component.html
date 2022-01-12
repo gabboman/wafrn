@@ -1,5 +1,7 @@
 <div *ngIf="ready"
-  class="align-items-center flex justify-content-center lg:px-8 md:px-6 px-4 py-4 surface-ground ng-star-inserted ">
+  class="align-items-center flex justify-content-center lg:px-8 md:px-6 px-4 py-4 surface-ground ng-star-inserted"
+  style="overflow-x: hidden;"
+  >
 
 
   <p-card class="sm:w-full md:w-75">
@@ -31,7 +33,7 @@
         </div>
       </div>
       <br>
-      <div *ngIf="content.content != ''" class="fragment-content" [injectHTML]="sanitizedPostContent[index]">
+      <div *ngIf="content.content != ''" class="fragment-content ql-editor" [injectHTML]="sanitizedPostContent[index]">
       </div>
       <div *ngIf="index === post.length -1 && content.tags">
         <a *ngFor="let tag of content.tags" [routerLink]="'/dashboard/search/' + tag.tagName" >

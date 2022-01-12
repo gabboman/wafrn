@@ -8,8 +8,10 @@ label {
     color: rgb(255, 255, 255);
 }
 
-.p-speeddial {
-    position: fixed !important
+p-speeddial {
+    position: fixed !important;
+    top: 0;
+    left: 0;
 }
 
 .p-card, p-card {

@@ -4,6 +4,7 @@ import { WafrnMediaComponent } from './sharedWafrn/wafrn-media/wafrn-media.compo
 import { createCustomElement } from '@angular/elements';
 import { WafrnYoutubePlayerComponent } from './shared/wafrn-youtube-player/wafrn-youtube-player.component';
 import { Router } from '@angular/router';
+import { LoginService } from './services/login.service';
 
 @Component({
   selector: 'app-root',
@@ -16,6 +17,7 @@ export class AppComponent implements OnInit {
   constructor(
     private primengConfig: PrimeNGConfig,
     private injector: Injector,
+    private loginService: LoginService
   ) {
 
   }

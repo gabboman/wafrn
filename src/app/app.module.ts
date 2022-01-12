@@ -31,6 +31,14 @@ import { ViewPostComponent } from './mainpage/view-post/view-post.component';
 import { SharedWafrnModule } from './sharedWafrn/shared-wafrn.module';
 import {DeferModule} from 'primeng/defer';
 import { CardModule } from 'primeng/card';
+import { PostEditorComponent } from './mainpage/post-editor/post-editor.component';
+import { OverlayPanelModule } from 'primeng/overlaypanel';
+import { DialogModule } from 'primeng/dialog';
+import { CheckboxModule } from 'primeng/checkbox';
+import { EditorModule } from 'primeng/editor';
+import { NavigationMenuComponent } from './mainpage/navigation-menu/navigation-menu.component';
+import { SpeedDialModule } from 'primeng/speeddial';
+
 
 @NgModule({
   declarations: [
@@ -43,6 +51,8 @@ import { CardModule } from 'primeng/card';
     ActivateAccountComponent,
     ViewBlogComponent,
     ViewPostComponent,
+    PostEditorComponent,
+    NavigationMenuComponent,
   ],
   imports: [
     BrowserModule,
@@ -66,7 +76,13 @@ import { CardModule } from 'primeng/card';
     YouTubePlayerModule,
     SharedWafrnModule,
     DeferModule,
-    CardModule
+    CardModule,
+    OverlayPanelModule,
+    DialogModule,
+    CheckboxModule,
+    EditorModule,
+    SpeedDialModule
+
     
   ],
   providers: [

@@ -33,7 +33,8 @@ export class PostComponent implements OnInit {
     private loginService: LoginService,
     private messages: MessageService,
     private editor: EditorService,
-    private router: Router
+    private router: Router,
+    private editorService: EditorService
   ) {
     this.userLoggedIn = loginService.checkUserLoggedIn();
    }
@@ -68,7 +69,7 @@ export class PostComponent implements OnInit {
   }
 
   launchReblog() {
-    this.postService.launchPostEditorEmitter.next(this.post[this.post.length - 1].id);
+    this.editorService.launchPostEditorEmitter.next(this.post[this.post.length - 1].id);
   }
 
   async quickReblog() {

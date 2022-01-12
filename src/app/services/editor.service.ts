@@ -1,5 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { BehaviorSubject } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { WafrnMedia } from '../interfaces/wafrn-media';
 
@@ -9,6 +10,8 @@ import { WafrnMedia } from '../interfaces/wafrn-media';
 export class EditorService {
 
   base_url = environment.baseUrl;
+  public launchPostEditorEmitter: BehaviorSubject<string> = new BehaviorSubject('');
+
 
   constructor(
     private http: HttpClient,

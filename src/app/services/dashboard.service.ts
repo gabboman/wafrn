@@ -64,7 +64,6 @@ export class DashboardService {
   }
 
   async getBlogPage(page: number, blogId: string): Promise<ProcessedPost[][]> {
-    console.log(blogId);
     let result: ProcessedPost[][] = [];
     if(page === 0) {
       //if we are starting the scroll, we store the current date
