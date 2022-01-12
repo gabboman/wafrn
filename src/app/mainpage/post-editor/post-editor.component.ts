@@ -35,7 +35,6 @@ export class PostEditorComponent implements OnInit {
   ) { 
 
     this.editorService.launchPostEditorEmitter.subscribe((elem) => {
-      console.log(elem)
       if(elem) {
         this.idPostToReblog = elem.length  === 36 ? elem : undefined;
         this.editorVisible = true;
