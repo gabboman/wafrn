@@ -12,6 +12,8 @@
       <span class="text-600 font-medium line-height-3">Still having problems? Send us an email at info @ wafrn.net</span>
 
     </div>
+    
+    <p-progressSpinner *ngIf="loading"></p-progressSpinner>
 
     <form [hidden]="loading" [formGroup]="loginForm" (ngSubmit)="onSubmit()" >
       <label for="email1" class="block text-900 font-medium mb-2">Email</label>

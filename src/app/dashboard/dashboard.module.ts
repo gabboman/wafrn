@@ -10,9 +10,9 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CaptchaModule } from 'primeng/captcha';
 import { CardModule } from 'primeng/card';
 import { SearchComponent } from './search/search.component';
-import {ChipsModule} from 'primeng/chips';
 import { InputTextModule } from 'primeng/inputtext';
 import {CarouselModule} from 'primeng/carousel';
+import { ButtonModule } from 'primeng/button';
 
 const routes: Routes = [
   {
@@ -45,9 +45,9 @@ const routes: Routes = [
     ReactiveFormsModule,
     CaptchaModule,
     CardModule,
-    ChipsModule,
     InputTextModule,
-    CarouselModule
+    CarouselModule,
+    ButtonModule
   ]
 })
 export class DashboardModule { }

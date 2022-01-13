@@ -1,11 +1,10 @@
-import { ChangeDetectorRef, Component, Injector, Input, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { Component, Input, OnInit } from '@angular/core';
 import { MessageService } from 'primeng/api';
-import { BehaviorSubject } from 'rxjs';
 import { ProcessedPost } from 'src/app/interfaces/processed-post';
 import { EditorService } from 'src/app/services/editor.service';
 import { LoginService } from 'src/app/services/login.service';
 import { PostsService } from 'src/app/services/posts.service';
+import { ReportService } from 'src/app/services/report.service';
 import { environment } from 'src/environments/environment';
 
 @Component({
@@ -29,12 +28,11 @@ export class PostComponent implements OnInit {
 
   constructor(
     private postService: PostsService,
-    private cdr: ChangeDetectorRef,
     private loginService: LoginService,
     private messages: MessageService,
     private editor: EditorService,
-    private router: Router,
-    private editorService: EditorService
+    private editorService: EditorService,
+    private reportService: ReportService
   ) {
     this.userLoggedIn = loginService.checkUserLoggedIn();
    }
@@ -86,6 +84,10 @@ export class PostComponent implements OnInit {
     navigator.clipboard.writeText(environment.frontUrl + '/post/' + encodeURIComponent(this.post[this.post.length - 1].id) );
     this.messages.add({ severity: 'success', summary: 'The post URL was copied to your clipboard!' });
 
+  }
+
+  reportPost() {
+    // this.reportService.launchReportScreen.next(this.post[this.post.length - 1].id);
   }
 
 

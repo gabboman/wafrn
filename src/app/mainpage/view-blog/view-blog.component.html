@@ -1,11 +1,16 @@
-<div *ngIf="!loading"
-  class="align-items-center flex justify-content-center lg:px-8 md:px-6 px-4 py-4 surface-ground ng-star-inserted ">
-  <p-card id="firstPost" class="xs:w-full md:w-75 lg:w-75">
-    <img style="max-width: 100%; max-height: 50vh;" [src]="mediaUrl + blogDetails.avatar">
-    <div [innerText]="blogDetails.url" class="text-600 font-medium line-height-3"></div>
-    <div [innerText]="blogDetails.description" class="text-600 font-medium line-height-3"></div>
-  </p-card>
+<div *ngIf="!loading" class="grid">
+  <div class="col-12 sm:col-12 md:col-12 lg:col-6 lg:col-offset-3 pb-6">
+
+
+    <p-card id="firstPost" class="xs:w-full md:w-75 lg:w-75">
+      <img style="max-width: 100%; max-height: 50vh;" [src]="mediaUrl + blogDetails.avatar">
+      <div [innerText]="blogDetails.url" class="text-600 font-medium line-height-3"></div>
+      <div [innerText]="blogDetails.description" class="text-600 font-medium line-height-3"></div>
+    </p-card>
 </div>
+</div>
+
+
 
 <div *ngFor="let post of posts" pDefer (onLoad)="countViewedPost()">
   <ng-template>
@@ -13,10 +18,12 @@
   </ng-template>
 </div>
 
-<div   class="align-items-center flex justify-content-center lg:px-8 md:px-6 px-4 py-4 surface-ground ng-star-inserted ">
 
+<div class="grid pb-6">
+  <div class="col-12 sm:col-12 md:col-12 lg:col-6 lg:col-offset-3">
+    <p-card class="flex justify-content-center flex-wrap">
+      <p-progressSpinner class="flex align-items-center justify-content-center "></p-progressSpinner>
 
-  <p-progressSpinner></p-progressSpinner>
-
+    </p-card>
+  </div>
 </div>
-

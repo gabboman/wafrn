@@ -12,7 +12,7 @@ import { Router } from '@angular/router';
 export class LoginComponent implements OnInit {
 
   captchaKey = environment.recaptchaPublic;
-  loading = false;
+  loading = true;
 
   loginForm = new FormGroup({
     email:  new FormControl('', [Validators.required, Validators.email]),
@@ -32,6 +32,10 @@ export class LoginComponent implements OnInit {
   ngOnInit(): void {
     if(this.loginService.checkUserLoggedIn()) {
       this.router.navigate(['/dashboard']);
+    } else {
+      setTimeout(()=> {
+        this.loading = false;
+      }, 1500);
     }
   }
 

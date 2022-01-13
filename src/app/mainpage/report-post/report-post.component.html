@@ -1,0 +1,13 @@
+<p-dialog [visible]="postToReport" header="Report a post" [modal]="true" 
+[style]="{width: '75vw'}" >
+    <div class="p-grid">
+        <form [formGroup]="reportForm" (submit)="submit()">
+            <span class="p-float-label">
+              <input formControlName="description" id="float-input" type="text" pInputText class="w-full">
+              <label for="float-input">Reason of the report</label>
+            </span>
+            <p-dropdown [options]="[]" formControlName="severity"></p-dropdown>
+            <button pButton pRipple label="Search" icon="pi pi-search" class="w-full" type="submit"></button>
+          </form>
+    </div>
+</p-dialog>

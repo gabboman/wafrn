@@ -1,53 +1,59 @@
-<div class="align-items-center flex justify-content-center lg:px-8 md:px-6 px-4 py-8 surface-ground ng-star-inserted ">
+<div class="grid">
+  <div class="col-12 sm:col-12 md:col-12 lg:col-6 lg:col-offset-3 pb-6">
 
-  <p-card id="firstPost" class="xs:w-full md:w-75 lg:w-75">
-    <span class="text-600 font-medium line-height-3">Welcome to our public alpha! Please if you experience any kind of
-      issues
-      contact us at the email <a href="mailto:suggestions@wafrn.net">suggestions@wafrn.net</a></span>
-    <br>
-    <span class="text-600 font-medium line-height-3">You can search users by url and description, and posts by
-      tags. No need to add # to your search</span>
-    <br>
-    <span class="text-600 font-medium line-height-3">Have fun</span>
-    <br>
-    <br>
-    <form [formGroup]="searchForm" (submit)="submitSearch()">
-      <span class="p-float-label">
-        <input formControlName="search" id="float-input" type="text" pInputText class="w-full">
-        <label for="float-input">Search term</label>
-      </span>
-      <button pButton pRipple label="Search" icon="pi pi-search" class="w-full" type="submit"></button>
-    </form>
+    <p-card id="firstPost" class="xs:w-full md:w-75 lg:w-75">
+      <span class="text-600 font-medium line-height-3">Welcome to our public alpha! Please if you experience any kind of
+        issues
+        contact us at the email <a href="mailto:suggestions@wafrn.net">suggestions@wafrn.net</a></span>
+      <br>
+      <span class="text-600 font-medium line-height-3">You can search users by url and description, and posts by
+        tags. No need to add # to your search</span>
+      <br>
+      <span class="text-600 font-medium line-height-3">Have fun</span>
+      <br>
+      <br>
+      <form [formGroup]="searchForm" (submit)="submitSearch()">
+        <span class="p-float-label">
+          <input formControlName="search" id="float-input" type="text" pInputText class="w-full">
+          <label for="float-input">Search term</label>
+        </span>
+        <button pButton pRipple label="Search" icon="pi pi-search" class="w-full" type="submit"></button>
+      </form>
 
-  </p-card>
+    </p-card>
 
-
-
+  </div>
 </div>
 
-<div *ngIf="users && users.length > 0" pDefer (onLoad)="countViewedUser()"
-  class="align-items-center flex justify-content-center lg:px-8 md:px-6 px-4 py-8 surface-ground ng-star-inserted ">
 
-  <p-carousel style="width: 100%;" [value]="users" [showIndicators]="false">
-    <ng-template let-user pTemplate="item">
-      <p-card *ngIf="user">
-        <div class="product-item-content">
-          <div class="p-mb-3  flex justify-content-center">
-            <img [src]="baseMediaUrl + user.avatar" style="max-width: 30vw">
-          </div>
-          <div>
-            <h4 class="p-mb-1"><a [routerLink]="'/blog/' + user.url" >{{user.url}}</a></h4>
-            <h6 class="p-mt-0 p-mb-3">{{user.description}}</h6>
-            <button *ngIf="followedUsers.indexOf(user.id) === -1 && userLoggedIn" pButton pRipple label="Follow"
-              class="w-full" (click)="followUser(user.id)"></button>
-            <button *ngIf="followedUsers.indexOf(user.id) !== -1 && userLoggedIn" pButton pRipple label="Unfollow"
-              class="w-full" (click)="unfollowUser(user.id)"></button>
-          </div>
-        </div>
-      </p-card>
 
-    </ng-template>
-  </p-carousel>
+
+<div class="grid">
+  <div *ngIf="users && users.length > 0" pDefer (onLoad)="countViewedUser()"
+    class="col-12 sm:col-12 md:col-12 lg:col-6 lg:col-offset-3 pb-6">
+  
+    <p-carousel style="width: 100%;" [value]="users" [showIndicators]="false">
+      <ng-template let-user pTemplate="item">
+        <p-card *ngIf="user">
+          <div class="product-item-content">
+            <div class="p-mb-3  flex justify-content-center">
+              <img [src]="baseMediaUrl + user.avatar" style="max-width: 30vw; max-height: 30vh;">
+            </div>
+            <div>
+              <h4 class="p-mb-1"><a [routerLink]="'/blog/' + user.url">{{user.url}}</a></h4>
+              <h6 class="p-mt-0 p-mb-3">{{user.description}}</h6>
+              <button *ngIf="followedUsers.indexOf(user.id) === -1 && userLoggedIn" pButton pRipple label="Follow"
+                class="w-full" (click)="followUser(user.id)"></button>
+              <button *ngIf="followedUsers.indexOf(user.id) !== -1 && userLoggedIn" pButton pRipple label="Unfollow"
+                class="w-full" (click)="unfollowUser(user.id)"></button>
+            </div>
+          </div>
+        </p-card>
+  
+      </ng-template>
+    </p-carousel>
+  </div>
+
 </div>
 
 <div *ngIf="posts && posts.length > 0">
@@ -60,9 +66,11 @@
 </div>
 
 
-<div class="align-items-center flex justify-content-center lg:px-8 md:px-6 px-4 py-8 surface-ground ng-star-inserted">
-  <p-progressSpinner></p-progressSpinner>
+<div class="grid pb-6">
+  <div class="col-12 sm:col-12 md:col-12 lg:col-6 lg:col-offset-3">
+    <p-card class="flex justify-content-center flex-wrap">
+      <p-progressSpinner class="flex align-items-center justify-content-center "></p-progressSpinner>
 
+    </p-card>
+  </div>
 </div>
-
-

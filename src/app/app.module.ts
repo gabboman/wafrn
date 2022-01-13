@@ -38,7 +38,9 @@ import { CheckboxModule } from 'primeng/checkbox';
 import { EditorModule } from 'primeng/editor';
 import { NavigationMenuComponent } from './mainpage/navigation-menu/navigation-menu.component';
 import { SpeedDialModule } from 'primeng/speeddial';
-
+import { ChipsModule } from 'primeng/chips';
+import { ReportPostComponent } from './mainpage/report-post/report-post.component';
+import {DropdownModule} from 'primeng/dropdown';
 
 @NgModule({
   declarations: [
@@ -53,6 +55,7 @@ import { SpeedDialModule } from 'primeng/speeddial';
     ViewPostComponent,
     PostEditorComponent,
     NavigationMenuComponent,
+    ReportPostComponent,
   ],
   imports: [
     BrowserModule,
@@ -81,9 +84,9 @@ import { SpeedDialModule } from 'primeng/speeddial';
     DialogModule,
     CheckboxModule,
     EditorModule,
-    SpeedDialModule
-
-    
+    SpeedDialModule,
+    ChipsModule,
+    DropdownModule
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: WafrnAuthInterceptor, multi: true },
