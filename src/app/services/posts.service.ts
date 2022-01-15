@@ -67,6 +67,22 @@ export class PostsService {
     return res;
   }
 
+  async getDetails(id: string): Promise<number> {
+    let res = 0;
+    let payload = new FormData();
+    payload.append('id', id);
+    try {
+      let response = await this.http.post<{ reblogs: number }>(environment.baseUrl + '/postDetails', payload).toPromise();
+      if(response?.reblogs) {
+        res = response.reblogs;
+      }
+    } catch (exception) {
+      console.log(exception)
+    }
+
+    return res;
+  }
+
   processPost(rawPost: RawPost): ProcessedPost[] {
     let result: ProcessedPost[] = [];
     if (rawPost.ancestors) {

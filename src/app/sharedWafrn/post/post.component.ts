@@ -21,7 +21,8 @@ export class PostComponent implements OnInit {
   mediaBaseUrl = environment.baseMediaUrl;
   userLoggedIn = false;
   followedUsers: Array<String> = [];
-  urls: string[] = []
+  urls: string[] = [];
+  notes: string = '---'
 
 
 
@@ -37,7 +38,7 @@ export class PostComponent implements OnInit {
     this.userLoggedIn = loginService.checkUserLoggedIn();
    }
 
-  ngOnInit(): void {
+  async ngOnInit(): Promise<void> {
     this.followedUsers = this.postService.followedUserIds;
     this.postService.updateFollowers.subscribe( () => {
       this.followedUsers = this.postService.followedUserIds;
@@ -45,6 +46,8 @@ export class PostComponent implements OnInit {
     this.sanitizedPostContent = this.post.map((elem) => this.postService.getPostHtml(elem.content));
     this.urls = this.post.map((elem) => encodeURIComponent(elem.user.url));
     this.ready = true;
+    let notes = await this.postService.getDetails(this.post[0].id);
+    this.notes = notes.toString();
   }
 
   async followUser(id: string) {
