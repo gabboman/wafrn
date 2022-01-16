@@ -41,7 +41,7 @@ export class DashboardComponent implements OnInit {
 
   async countViewedPost() {
     this.viewedPosts++;
-    if (this.posts.length - 3 < this.viewedPosts) {
+    if (this.posts.length - 1 < this.viewedPosts) {
       await this.loadPosts(this.posts.length >=20 ?Math.floor(this.posts.length / 20) : 1);
     }
   }

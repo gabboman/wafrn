@@ -1,16 +1,9 @@
-@import "primeflex/primeflex.css";
 
-a:visited {
-    color: blue;
-}
 
 html {
     background-color: rgb(32, 38, 46);
 }
 
-label {
-    color: rgb(255, 255, 255);
-}
 
 p-speeddial {
     position: fixed !important;
@@ -18,9 +11,6 @@ p-speeddial {
     left: 0;
 }
 
-.p-card, p-card {
-    width: 100% !important;
-}
 
 #script-warn{
     width: 100%;
