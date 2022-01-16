@@ -29,7 +29,7 @@ export class DashboardService {
     petitionData.append('page', page.toString());
     petitionData.append('startScroll', this.startScrollDate.getTime().toString());
     const url = explore ? environment.baseUrl + '/explore' : environment.baseUrl + '/dashboard' 
-    let dashboardPetition: Array<RawPost> | undefined = await this.http.post<Array<RawPost>>(environment.baseUrl + '/dashboard', petitionData).toPromise();
+    let dashboardPetition: Array<RawPost> | undefined = await this.http.post<Array<RawPost>>(url, petitionData).toPromise();
     if(dashboardPetition) {
       result = dashboardPetition.map(elem => this.postService.processPost(elem));
     } else {
