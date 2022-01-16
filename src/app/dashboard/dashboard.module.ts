@@ -24,6 +24,10 @@ const routes: Routes = [
     component: SearchComponent
   },
   {
+    path: 'explore',
+    component: DashboardComponent
+  },
+  {
     path: 'search/:term',
     component: SearchComponent
   }

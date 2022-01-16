@@ -16,6 +16,7 @@ export class DashboardComponent implements OnInit {
 
   posts: ProcessedPost[][] = [];
   viewedPosts = 0;
+  explore = false;
 
 
 
@@ -27,6 +28,9 @@ export class DashboardComponent implements OnInit {
   ) { }
 
   async ngOnInit(): Promise<void> {
+    if(this.router.url.indexOf('explore') != -1) {
+      this.explore = true;
+    }
     if(!this.jwtService.tokenValid()) {
       localStorage.clear();
       this.router.navigate(['/']);
@@ -44,7 +48,7 @@ export class DashboardComponent implements OnInit {
 
   async loadPosts(page: number) {
 
-    let tmpPosts = await this.dashboardService.getDashboardPage(page);
+    let tmpPosts = await this.dashboardService.getDashboardPage(page, this.explore);
     tmpPosts.forEach(post => {
       this.posts.push(post);
     })

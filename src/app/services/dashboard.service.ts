@@ -19,7 +19,7 @@ export class DashboardService {
   ) { }
 
 
-  async getDashboardPage(page: number): Promise<ProcessedPost[][]> {
+  async getDashboardPage(page: number, explore: boolean): Promise<ProcessedPost[][]> {
     let result: ProcessedPost[][] = [];
     if(page === 0) {
       //if we are starting the scroll, we store the current date
@@ -28,6 +28,7 @@ export class DashboardService {
     let petitionData: FormData = new FormData();
     petitionData.append('page', page.toString());
     petitionData.append('startScroll', this.startScrollDate.getTime().toString());
+    const url = explore ? environment.baseUrl + '/explore' : environment.baseUrl + '/dashboard' 
     let dashboardPetition: Array<RawPost> | undefined = await this.http.post<Array<RawPost>>(environment.baseUrl + '/dashboard', petitionData).toPromise();
     if(dashboardPetition) {
       result = dashboardPetition.map(elem => this.postService.processPost(elem));

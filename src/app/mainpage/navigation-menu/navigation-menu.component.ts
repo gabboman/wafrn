@@ -60,6 +60,11 @@ export class NavigationMenuComponent implements OnInit {
           command: () => this.editorService.launchPostEditorEmitter.next('NEW_POST')
         },
         {
+          label: 'explore',
+          icon: "pi pi-compass",
+          routerLink: '/dashboard/explore'
+        },
+        {
           label: 'Search',
           icon: "pi pi-search",
           routerLink: '/dashboard/search'
