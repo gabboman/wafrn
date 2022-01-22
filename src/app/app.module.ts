@@ -40,8 +40,7 @@ import { NavigationMenuComponent } from './mainpage/navigation-menu/navigation-m
 import { SpeedDialModule } from 'primeng/speeddial';
 import { ChipsModule } from 'primeng/chips';
 import { ReportPostComponent } from './mainpage/report-post/report-post.component';
-import {DropdownModule} from 'primeng/dropdown';
-
+import {ListboxModule} from 'primeng/listbox';
 @NgModule({
   declarations: [
     AppComponent,
@@ -86,7 +85,7 @@ import {DropdownModule} from 'primeng/dropdown';
     EditorModule,
     SpeedDialModule,
     ChipsModule,
-    DropdownModule
+    ListboxModule
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: WafrnAuthInterceptor, multi: true },

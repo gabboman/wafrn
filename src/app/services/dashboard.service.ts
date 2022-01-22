@@ -32,6 +32,7 @@ export class DashboardService {
     let dashboardPetition: Array<RawPost> | undefined = await this.http.post<Array<RawPost>>(url, petitionData).toPromise();
     if(dashboardPetition) {
       result = dashboardPetition.map(elem => this.postService.processPost(elem));
+      result = result.filter(post => !this.postService.postContainsBlocked(post));
     } else {
       // TODO show error message
     }
@@ -55,6 +56,8 @@ export class DashboardService {
     let dashboardPetition: {posts: Array<RawPost>, users: Array<SimplifiedUser> } | undefined = await this.http.post<{posts: Array<RawPost>, users: Array<SimplifiedUser> }>(environment.baseUrl + '/search', petitionData).toPromise();
     if(dashboardPetition) {
       postResult = dashboardPetition.posts.map(elem => this.postService.processPost(elem));
+      postResult = postResult.filter(post => !this.postService.postContainsBlocked(post));
+
     } else {
       // TODO show error message
     }
@@ -77,6 +80,7 @@ export class DashboardService {
     let dashboardPetition: Array<RawPost> | undefined = await this.http.post<Array<RawPost>>(environment.baseUrl + '/blog', petitionData).toPromise();
     if(dashboardPetition) {
       result = dashboardPetition.map(elem => this.postService.processPost(elem));
+      result = result.filter(post => !this.postService.postContainsBlocked(post));
     } else {
       // TODO show error message
     }

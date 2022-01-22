@@ -20,6 +20,7 @@ export class PostsService {
   public updateFollowers: BehaviorSubject<Boolean> = new BehaviorSubject(new Boolean());
 
   public followedUserIds: Array<String> = [];
+  public blockedUserIds: Array<string> = [];
   constructor(
     private mediaService: MediaService,
     private sanitizer: DomSanitizer,
@@ -30,9 +31,13 @@ export class PostsService {
 
 
   async loadFollowers() {
-    let followedUsers = await this.http.get<Array<String>>(environment.baseUrl + '/getFollowedUsers').toPromise()
-    if (followedUsers) {
-      this.followedUserIds = followedUsers;
+    let followsAndBlocks = await this.http.get<{
+      followedUsers: string[],
+      blockedUsers: string[]
+    }>(environment.baseUrl + '/getFollowedUsers').toPromise()
+    if (followsAndBlocks) {
+      this.followedUserIds = followsAndBlocks.followedUsers;
+      this.blockedUserIds = followsAndBlocks.blockedUsers;
       this.updateFollowers.next(true);
     }
   }
@@ -73,7 +78,7 @@ export class PostsService {
     payload.append('id', id);
     try {
       let response = await this.http.post<{ reblogs: number }>(environment.baseUrl + '/postDetails', payload).toPromise();
-      if(response?.reblogs) {
+      if (response?.reblogs) {
         res = response.reblogs;
       }
     } catch (exception) {
@@ -89,7 +94,7 @@ export class PostsService {
       rawPost.ancestors.forEach((post: RawPost) => {
         result.push(post);
       });
-      result = result.sort((a, b) => new Date(a.createdAt).getTime() - new Date (b.createdAt).getTime());
+      result = result.sort((a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime());
       result.push(rawPost);
     }
     result.forEach(val => {
@@ -103,7 +108,7 @@ export class PostsService {
 
     const replacements: Array<{ wafrnMediaStringToReplace: string, id: string }> = [];
 
-    let sanitized = DOMPurify.sanitize(content, { ALLOWED_TAGS: ['b', 'i', 'u', 'a', 'span', 'br', 'p', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'pre', 'strong', 'em', 'ul', 'li']});
+    let sanitized = DOMPurify.sanitize(content, { ALLOWED_TAGS: ['b', 'i', 'u', 'a', 'span', 'br', 'p', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'pre', 'strong', 'em', 'ul', 'li'] });
     // we remove stuff like img and script tags. we only allow certain stuff.
     const youtubeLinks = sanitized.match(this.youtubeLinkRegex);
 
@@ -141,5 +146,17 @@ export class PostsService {
 
     return sanitized;
 
+  }
+
+  postContainsBlocked(processedPost: ProcessedPost[]): boolean {
+    let res = false;
+    processedPost.forEach(fragment => {
+      if (
+        this.blockedUserIds.indexOf(fragment.userId) != -1
+      ) {
+        res = true;
+      }
+    })
+    return res;
   }
 }
