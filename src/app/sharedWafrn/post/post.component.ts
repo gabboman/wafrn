@@ -90,7 +90,7 @@ export class PostComponent implements OnInit {
   }
 
   reportPost() {
-    // this.reportService.launchReportScreen.next(this.post[this.post.length - 1].id);
+    this.reportService.launchReportScreen.next(this.post);
   }
 
 

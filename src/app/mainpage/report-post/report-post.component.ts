@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { ReportService } from 'src/app/services/report.service';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { MessageService } from 'primeng/api';
+import { ProcessedPost } from 'src/app/interfaces/processed-post';
 
 
 @Component({
@@ -11,21 +12,45 @@ import { MessageService } from 'primeng/api';
 })
 export class ReportPostComponent implements OnInit {
 
-  postToReport: string = '';
+  postToReport!: ProcessedPost[] | undefined;
   loading = false;
-  reportForm: FormGroup = new FormGroup({
-    description: new FormControl('', [Validators.required]),
-    severity: new FormControl('', [Validators.required]),
+  reportForm: FormGroup;
 
-  });
+
+  reportOptions: Array<{label: string, value: number}> = [
+    {
+      label: 'This post is spam',
+      value: 0
+    },
+    {
+      label: 'This post contains NSFW media and is not labelled as such',
+      value: 1
+    },
+    {
+      label: 'This post is inciting hate against a person or collective',
+      value: 5
+    },
+    {
+      label: 'This post contains illegal content',
+      value: 10
+    }
+  ];
 
   constructor(
     private reportService: ReportService,
-    private messages: MessageService
-  ) { }
+    private messages: MessageService,
+    private readonly formBuilder: FormBuilder
+  ) { 
+    // I could call clearForm, but that will calm typescript typechecker
+    this.reportForm =  this.formBuilder.group({
+      description: ['', [Validators.required]],
+      severity: ['', [Validators.required]],
+      block: ['']
+    });
+    
+  }
 
   ngOnInit(): void {
-
     this.reportService.launchReportScreen.subscribe( (reportedPost) => {
       if(reportedPost) {
         this.postToReport = reportedPost;
@@ -34,9 +59,32 @@ export class ReportPostComponent implements OnInit {
   }
 
   async submit() {
+    if(this.postToReport) {
+      const reportDone = this.reportService.reportPost(this.postToReport, this.reportForm);
+      if(this.reportForm.value['block'].length == 1){
+        const userBlocked = this.reportService.blockUser(this.postToReport[this.postToReport.length -1].userId);
+        Promise.all([reportDone, userBlocked]);
+      }
+      if(await reportDone) {
+        this.messages.add({ severity: 'success', summary: 'The post has been reported and we will take action against it' });
 
-    this.reportService.reportPost(this.postToReport, this.reportForm.value['severity'], this.reportForm.value['description'] )
+        this.postToReport = undefined;
+        this.clearForm();
+      }
+    }
+  }
 
+  cancelReport(){
+    this.postToReport = undefined;
+    this.clearForm();
+  }
+
+  clearForm() {
+    this.reportForm =  this.formBuilder.group({
+      description: ['', [Validators.required]],
+      severity: ['', [Validators.required]],
+      block: ['']
+    });
   }
 
 }
