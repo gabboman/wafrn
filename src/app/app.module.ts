@@ -41,6 +41,8 @@ import { SpeedDialModule } from 'primeng/speeddial';
 import { ChipsModule } from 'primeng/chips';
 import { ReportPostComponent } from './mainpage/report-post/report-post.component';
 import {ListboxModule} from 'primeng/listbox';
+import { NotificationsComponent } from './mainpage/notifications/notifications.component';
+import {BadgeModule} from 'primeng/badge';
 @NgModule({
   declarations: [
     AppComponent,
@@ -55,6 +57,7 @@ import {ListboxModule} from 'primeng/listbox';
     PostEditorComponent,
     NavigationMenuComponent,
     ReportPostComponent,
+    NotificationsComponent,
   ],
   imports: [
     BrowserModule,
@@ -85,7 +88,8 @@ import {ListboxModule} from 'primeng/listbox';
     EditorModule,
     SpeedDialModule,
     ChipsModule,
-    ListboxModule
+    ListboxModule,
+    BadgeModule
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: WafrnAuthInterceptor, multi: true },
