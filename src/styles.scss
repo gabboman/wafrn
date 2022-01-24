@@ -11,9 +11,18 @@ p-speeddial {
     left: 0;
 }
 
+a:visited, a {
+    color:  white,
+}
 
 #script-warn{
     width: 100%;
     color: rgb(56, 254, 241); //Wafrn blue
     text-align: center;
+}
+
+#notifications {
+    position: fixed !important;
+    top: 0;
+    right: 0;
 }
