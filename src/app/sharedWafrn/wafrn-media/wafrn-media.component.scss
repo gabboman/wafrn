@@ -5,6 +5,7 @@
 .blurred {
   filter: blur(3em) grayscale(100%);
   -webkit-filter: blur(3em) grayscale(100%);
+  max-height: 550px;
 
 }
 

@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, ViewChild } from '@angular/core';
 import { WafrnMedia } from 'src/app/interfaces/wafrn-media';
 import { MediaService } from 'src/app/services/media.service';
 import { environment } from 'src/environments/environment';
@@ -15,6 +15,7 @@ export class WafrnMediaComponent implements OnInit {
   nsfw = true;
   data!: WafrnMedia;
   nsfwFilter = true;
+  @ViewChild('wafrnMedia') wafrnMedia: any;
   ready = false;
 
 
@@ -35,6 +36,13 @@ export class WafrnMediaComponent implements OnInit {
 
   showPicture(){
     this.nsfw = false;
+  }
+
+
+  imgLoaded() {
+    if(this.wafrnMedia.nativeElement.offsetHeight > 850) {
+      this.nsfw = true;
+    }
   }
 
 }
