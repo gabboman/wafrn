@@ -43,7 +43,7 @@ import { ReportPostComponent } from './mainpage/report-post/report-post.componen
 import {ListboxModule} from 'primeng/listbox';
 import { NotificationsComponent } from './mainpage/notifications/notifications.component';
 import {BadgeModule} from 'primeng/badge';
-@NgModule({
+import {DataViewModule} from 'primeng/dataview';@NgModule({
   declarations: [
     AppComponent,
     LoginComponent,
@@ -89,7 +89,8 @@ import {BadgeModule} from 'primeng/badge';
     SpeedDialModule,
     ChipsModule,
     ListboxModule,
-    BadgeModule
+    BadgeModule,
+    DataViewModule
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: WafrnAuthInterceptor, multi: true },

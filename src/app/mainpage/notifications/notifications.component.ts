@@ -1,7 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
+import { Follower } from 'src/app/interfaces/follower';
+import { Reblog } from 'src/app/interfaces/reblog';
 import { JwtService } from 'src/app/services/jwt.service';
 import { NotificationsService } from 'src/app/services/notifications.service';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-notifications',
@@ -10,8 +13,12 @@ import { NotificationsService } from 'src/app/services/notifications.service';
 })
 export class NotificationsComponent implements OnInit {
 
-
-  visible = false;
+  badgeVisible = false;
+  modalVisible = false;
+  buttonReadNotificationsClickable = true;
+  notifications!: { follows: Follower[]; reblogs: Reblog[]; };
+  baseMediaUrl = environment.baseMediaUrl;
+  numberNotifications = '';
 
   constructor(
     private router: Router,
@@ -39,12 +46,26 @@ export class NotificationsComponent implements OnInit {
       }
     });
 
-    const notifications = await this.notificationsService.getNotifications();
-    console.log(notifications);
+    this.notifications = await this.notificationsService.getNotifications();
+    this.numberNotifications = (this.notifications.follows.length + this.notifications.reblogs.length).toString();
+    //console.log(notifications);
   }
 
   checkMenu(ev: NavigationEnd) {
-    this.visible = ['/', '/register', '/recoverPassword'].indexOf(ev.url) === -1 && this.jwtService.tokenValid() ;
+    this.badgeVisible = ['/', '/register', '/recoverPassword'].indexOf(ev.url) === -1 && this.jwtService.tokenValid() ;
+  }
+
+  async readNotifications() {
+    this.buttonReadNotificationsClickable = false;
+    await this.notificationsService.markNotificationsRead();
+    this.notifications = await this.notificationsService.getNotifications();
+    this.numberNotifications = (this.notifications.follows.length + this.notifications.reblogs.length).toString();
+    this.buttonReadNotificationsClickable = true;
+    this.modalVisible = false;
+  }
+
+  notificationsBadgeClick() {
+    this.modalVisible = true;
   }
 
 }
