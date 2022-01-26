@@ -5,7 +5,7 @@
   <p-overlayPanel #uploadImagesPanel>
     <div>
       <label for="imgSelected" class="block text-900 font-medium mb-2">Upload your image</label>
-      <input *ngIf="displayUploadImagePanel" id="imgSelected" type="file" accept="image/*"
+      <input *ngIf="displayUploadImagePanel" id="imgSelected" type="file" accept="image/jpeg,image/png,image/webp,image/gif"
         (change)="imgSelected($event)" pTooltip="Select your avatar" tooltipPosition="top" pInputText
         class="w-full mb-3">
       <label for="description" class="block text-900 font-medium mb-2">Image description</label>
