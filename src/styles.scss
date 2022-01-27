@@ -1,5 +1,5 @@
 $wafrn-blue: rgb(56, 254, 241);
-$wafrn-dark: rgb(18, 95, 90);
+// $wafrn-dark: rgb(18, 95, 90);
 
 html {
     background-color: rgb(32, 38, 46);
@@ -12,13 +12,10 @@ p-speeddial {
     left: 0;
 }
 
-a {
+a, a:visited {
     color:  $wafrn-blue,
 }
 
-a:visited {
-    color: $wafrn-dark;
-}
 
 #script-warn{
     width: 100%;
