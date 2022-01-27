@@ -7,6 +7,7 @@ import { RegisterComponent } from './mainpage/register/register.component';
 import { ResetPasswordComponent } from './mainpage/reset-password/reset-password.component';
 import { ViewBlogComponent } from './mainpage/view-blog/view-blog.component';
 import { ViewPostComponent } from './mainpage/view-post/view-post.component';
+import { PagenotfoundComponent } from './pagenotfound/pagenotfound.component';
 
 const routes: Routes = [{
   path: '',
@@ -39,6 +40,10 @@ const routes: Routes = [{
 {
   path: 'blog/:url',
   component: ViewBlogComponent,
+},
+{
+  path: '**',
+  component: PagenotfoundComponent
 }
 ];
 

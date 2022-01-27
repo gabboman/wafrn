@@ -43,7 +43,8 @@ import { ReportPostComponent } from './mainpage/report-post/report-post.componen
 import {ListboxModule} from 'primeng/listbox';
 import { NotificationsComponent } from './mainpage/notifications/notifications.component';
 import {BadgeModule} from 'primeng/badge';
-import {DataViewModule} from 'primeng/dataview';@NgModule({
+import {DataViewModule} from 'primeng/dataview';
+import { PagenotfoundComponent } from './pagenotfound/pagenotfound.component';@NgModule({
   declarations: [
     AppComponent,
     LoginComponent,
@@ -58,6 +59,7 @@ import {DataViewModule} from 'primeng/dataview';@NgModule({
     NavigationMenuComponent,
     ReportPostComponent,
     NotificationsComponent,
+    PagenotfoundComponent,
   ],
   imports: [
     BrowserModule,
