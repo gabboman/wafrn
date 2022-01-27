@@ -2,9 +2,10 @@
   [value]="numberNotifications"></p-badge>
 
 
-<p-dialog *ngIf="modalVisible && notifications" [(visible)]="modalVisible" [style]="{width: '75vw'}" header="Your notifications">
-  <h2>Your new followers</h2>
-  <p-dataView [value]="notifications.follows">
+<p-dialog *ngIf="modalVisible && notifications" [(visible)]="modalVisible" [style]="{width: '75vw'}"
+  header="Your notifications">
+  <h2 *ngIf="notifications.follows?.length != 0">Your new followers</h2>
+  <p-dataView *ngIf="notifications.follows?.length != 0" [value]="notifications.follows">
     <ng-template let-follow pTemplate="listItem">
       <div class="w-full">
         <a [href]="'/blog/' + follow.url ">
@@ -14,17 +15,18 @@
       </div>
     </ng-template>
   </p-dataView>
-  <h2>The new reblogs you got!</h2>
-  <p-dataView [value]="notifications.reblogs">
+  <h2 *ngIf="notifications.reblogs?.length != 0">The new reblogs you got!</h2>
+  <p-dataView *ngIf="notifications.reblogs?.length != 0" [value]="notifications.reblogs">
     <ng-template let-reblog pTemplate="listItem">
       <div class="w-full">
         <a [href]="'/post/' + reblog.id ">
           <img [src]="baseMediaUrl + reblog.user.avatar" style="max-height: 64px; max-width: 64px;">
-          <div style="font-size:14px;float:right;margin:15px 5px 0 0">{{reblog.user.url}} has reblogged one of your posts</div>
+          <div style="font-size:14px;float:right;margin:15px 5px 0 0">{{reblog.user.url}} has reblogged one of your
+            posts</div>
         </a>
       </div>
     </ng-template>
   </p-dataView>
-  <p-button [disabled]="!buttonReadNotificationsClickable"
-  (onClick)="readNotifications()" label="Mark all my notifications as read" class="w-full"></p-button>
+  <p-button [disabled]="!buttonReadNotificationsClickable" (onClick)="readNotifications()"
+    label="Mark all my notifications as read" class="w-full"></p-button>
 </p-dialog>

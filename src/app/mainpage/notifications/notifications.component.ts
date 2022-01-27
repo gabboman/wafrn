@@ -46,9 +46,18 @@ export class NotificationsComponent implements OnInit {
       }
     });
 
-    this.notifications = await this.notificationsService.getNotifications();
-    this.numberNotifications = (this.notifications.follows.length + this.notifications.reblogs.length).toString();
-    //console.log(notifications);
+    await this.updateNotifications();
+    if(this.jwtService.tokenValid()) {
+      // TODO 
+      // This would create some inconsistencies when user joins in for the first time!
+      // Maybe add an event to onuserlogin or something like that
+      // its not like a major bug
+      // but it can create a "one in a million" annoyance
+      // and we all know that one in a million posibility happends one of every 5 times as a programmer
+      setTimeout(async () => {
+        await this.updateNotifications();
+      }, 60000);
+    }
   }
 
   checkMenu(ev: NavigationEnd) {
@@ -58,14 +67,18 @@ export class NotificationsComponent implements OnInit {
   async readNotifications() {
     this.buttonReadNotificationsClickable = false;
     await this.notificationsService.markNotificationsRead();
-    this.notifications = await this.notificationsService.getNotifications();
-    this.numberNotifications = (this.notifications.follows.length + this.notifications.reblogs.length).toString();
+    await this.updateNotifications();
     this.buttonReadNotificationsClickable = true;
     this.modalVisible = false;
   }
 
   notificationsBadgeClick() {
     this.modalVisible = true;
+  }
+
+  async updateNotifications() {
+    this.notifications = await this.notificationsService.getNotifications();
+    this.numberNotifications = (this.notifications.follows.length + this.notifications.reblogs.length).toString();
   }
 
 }
