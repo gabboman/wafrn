@@ -3,9 +3,15 @@
 
 
     <p-card class="xs:w-full md:w-75 lg:w-75">
-      <img style="max-width: 100%; max-height: 50vh;" [src]="mediaUrl + blogDetails.avatar">
-      <div [innerText]="blogDetails.url" class="text-600 font-medium line-height-3"></div>
-      <div [innerText]="blogDetails.description" class="text-600 font-medium line-height-3"></div>
+      <div class="flex justify-content-center flex-wrap">
+        <img style="max-width: 100%; max-height: 15vh;" [src]="mediaUrl + blogDetails.avatar">
+      </div>
+      <div class="flex justify-content-center flex-wrap">
+        <div [innerText]="blogDetails.url" class="text-600 font-medium line-height-3"></div>
+      </div>
+      <div class="flex justify-content-center flex-wrap">
+        <div [innerText]="blogDetails.description" class="text-600 font-medium line-height-3"></div>
+      </div>
     </p-card>
 </div>
 </div>
