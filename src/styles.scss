@@ -8,8 +8,13 @@ html {
 
 p-speeddial {
     position: fixed !important;
-    top: 0;
-    left: 0;
+    top: 0.5em;
+    left: 0.5em;
+}
+
+.p-speeddial-button.p-button.p-button-icon-only {
+    width: 2.5em ;
+    height: 2.5em ;
 }
 
 a, a:visited {
