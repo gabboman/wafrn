@@ -68,6 +68,7 @@ export class PostEditorComponent implements OnInit {
     tagsToSend = tagsToSend.slice(0, -1);
     let res = undefined;
     if(this.captchaResponse) {
+      this.fixNullPosting()
       res = await this.editorService.createPost(this.postCreatorContent, this.captchaResponse, tagsToSend , this.idPostToReblog);
     }
     if(res) {
@@ -95,6 +96,12 @@ export class PostEditorComponent implements OnInit {
     this.captchaResponse = undefined;
   }
 
+  fixNullPosting() {
+    if (!this.postCreatorContent){
+      this.postCreatorContent = '';
+    }
+  }
+
   imgSelected(filePickerEvent: any) {
     if (filePickerEvent.target.files[0]) {
       this.newImageFile = filePickerEvent.target.files[0];
@@ -110,6 +117,7 @@ export class PostEditorComponent implements OnInit {
         this.newImageNSFW = false;
         this.newImageFile = undefined;
         this.displayUploadImagePanel = false;
+        this.fixNullPosting()
         this.postCreatorContent = this.postCreatorContent + '[wafrnmediaid="'+ response.id +'"]'
         this.uploadImagesPanel.hide();
         this.messages.add({ severity: 'success', summary: 'Image uploaded and added to the post!' });
