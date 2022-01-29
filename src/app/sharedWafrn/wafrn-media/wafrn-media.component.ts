@@ -40,7 +40,7 @@ export class WafrnMediaComponent implements OnInit {
 
 
   imgLoaded() {
-    if(this.wafrnMedia.nativeElement.offsetHeight/this.wafrnMedia.nativeElement.offsetWidth > 2) {
+    if(this.wafrnMedia.nativeElement.offsetHeight/this.wafrnMedia.nativeElement.offsetWidth > 3) {
       this.nsfw = true;
     }
   }
