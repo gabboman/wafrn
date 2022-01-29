@@ -13,6 +13,7 @@ export class DashboardComponent implements OnInit {
 
   posts: ProcessedPost[][] = [];
   viewedPosts = 0;
+  currentPage= 0;
   explore = false;
 
 
@@ -31,14 +32,15 @@ export class DashboardComponent implements OnInit {
       localStorage.clear();
       this.router.navigate(['/']);
     }
-    await this.loadPosts(0);
+    await this.loadPosts(this.currentPage);
 
   }
 
   async countViewedPost() {
     this.viewedPosts++;
     if (this.posts.length - 1 < this.viewedPosts) {
-      await this.loadPosts(this.posts.length >=20 ?Math.floor(this.posts.length / 20) : 1);
+      this.currentPage ++;
+      await this.loadPosts(this.currentPage);
     }
   }
 
