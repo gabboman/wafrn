@@ -10,9 +10,10 @@ import { environment } from 'src/environments/environment';
   styleUrls: ['./view-blog.component.scss']
 })
 export class ViewBlogComponent implements OnInit {
-
+  //TODO try to put the logic of search, viewblog, dashboard, explore in the same thingy
   loading = true;
   viewedPosts = 0;
+  currentPage = 0;
   mediaUrl = environment.baseMediaUrl;
   posts: ProcessedPost[][] = [];
   blogUrl: string = '';
@@ -30,7 +31,7 @@ export class ViewBlogComponent implements OnInit {
       this.blogUrl = blogUrl;
     }
 
-    await this.loadPosts(0);
+    await this.loadPosts(this.currentPage);
     this.blogDetails = await this.dashboardService.getBlogDetails(this.blogUrl);
     this.loading = false;
   }
@@ -38,7 +39,8 @@ export class ViewBlogComponent implements OnInit {
   async countViewedPost() {
     this.viewedPosts++;
     if (this.posts.length - 3 < this.viewedPosts) {
-      await this.loadPosts(this.posts.length >=20 ?Math.floor(this.posts.length / 20) : 1);
+      this.currentPage++;
+      await this.loadPosts(this.currentPage);
     }
   }
 

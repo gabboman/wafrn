@@ -28,6 +28,7 @@ export class SearchComponent implements OnInit {
   viewedUsers = 0;
   followedUsers: Array<String> = [];
   userLoggedIn = false;
+  currentPage = 0;
 
   
   constructor(
@@ -57,7 +58,7 @@ export class SearchComponent implements OnInit {
   async submitSearch() {
 
     this.currentSearch = this.searchForm.value['search'];
-    let searchResult = await this.dashboardService.getSearchPage(0, this.currentSearch);
+    let searchResult = await this.dashboardService.getSearchPage(this.currentPage, this.currentSearch);
     this.viewedPosts = 0;
     this.viewedUsers = 0;
     this.posts = searchResult.posts;
@@ -76,14 +77,16 @@ export class SearchComponent implements OnInit {
   async countViewedPost() {
     this.viewedPosts++;
     if (this.posts.length - 3 < this.viewedPosts) {
-      await this.loadResults(this.posts.length >=20 ?Math.floor(this.posts.length / 20) : 1);
+      this.currentPage++;
+      await this.loadResults(this.currentPage);
     }
   }
 
   async countViewedUser() {
     this.viewedUsers ++;
     if (this.users.length - 3 < this.viewedUsers) {
-      await this.loadResults(this.posts.length >=20 ?Math.floor(this.posts.length / 20) : 1);
+      this.currentPage++;
+      await this.loadResults(this.currentPage);
     }
   }
 
