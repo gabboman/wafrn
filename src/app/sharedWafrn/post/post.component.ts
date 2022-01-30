@@ -22,7 +22,13 @@ export class PostComponent implements OnInit {
   userLoggedIn = false;
   followedUsers: Array<String> = [];
   urls: string[] = [];
-  notes: string = '---'
+  notes: string = '---';
+  quickReblogPanelVisible = false;
+  quickReblogBeingDone = false;
+  quickReblogDoneSuccessfully = false;
+  captchaKey = environment.recaptchaPublic;
+  captchaResponse: string | undefined;
+
 
 
 
@@ -75,11 +81,13 @@ export class PostComponent implements OnInit {
 
   async quickReblog() {
 
-    let response = await this.editor.createPost('', '', '', this.post[this.post.length - 1].id );
-    if(response) {
-      this.messages.add({ severity: 'success', summary: 'You reblogged the post succesfully' });
-    } else {
-      this.messages.add({ severity: 'error', summary: 'Something went wrong! Check your internet conectivity and try again' });
+    if(this.captchaResponse) {
+      let response = await this.editor.createPost('', this.captchaResponse, '', this.post[this.post.length - 1].id );
+      if(response) {
+        this.messages.add({ severity: 'success', summary: 'You reblogged the post succesfully' });
+      } else {
+        this.messages.add({ severity: 'error', summary: 'Something went wrong! Check your internet conectivity and try again' });
+      }
     }
   }
 
@@ -93,7 +101,22 @@ export class PostComponent implements OnInit {
     this.reportService.launchReportScreen.next(this.post);
   }
 
+  showQuickReblogOverlay() {
+    this.quickReblogPanelVisible = true;
+  }
 
+  hideQuickReblogOverlay() {
+    this.quickReblogPanelVisible = false;
+  }
+
+  captchaResolved(event: any) {
+    this.captchaResponse = event.response;
+
+  }
+
+  captchaExpired() {
+    this.captchaResponse = undefined;
+  }
 
 
 }

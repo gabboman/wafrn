@@ -53,7 +53,10 @@
           </div>
           <div *ngIf="userLoggedIn" class="col-4 flex justify-content-end">
             <div class="grid">
-              <i (click)="quickReblog()" class="col-4 pi pi-history"></i>
+              <i
+               #quickReblogButton (click)="quickReblogPanel.show($event, quickReblogButton)"
+               *ngIf="!quickReblogDoneSuccessfully"
+               class="col-4 pi pi-history"></i>
               <i (click)="launchReblog()" class="col-4 pi pi-replay"></i>
               <i (click)="reportPost()" class="col-4 pi pi-exclamation-triangle"></i>
             </div>
@@ -63,3 +66,24 @@
     </p-card>
   </div>
 </div>
+
+<p-overlayPanel (onShow)="showQuickReblogOverlay()"
+(onHide)="hideQuickReblogOverlay()"
+#quickReblogPanel >
+  <ng-template pTemplate>
+      <div>
+        Quick reblog
+      </div>
+      <p-captcha *ngIf="!quickReblogBeingDone && quickReblogPanelVisible"
+      (onResponse)="captchaResolved($event)" (onExpire)="captchaExpired()"
+      [siteKey]="captchaKey" theme="dark"
+      size="big"
+      >
+    </p-captcha>
+      <button pButton pRipple
+        label="Quick reblog" class="w-full"
+        (click)="quickReblogPanel.hide()" (click)="quickReblog()"
+        [disabled]="captchaResponse == undefined"
+        ></button>
+  </ng-template>
+</p-overlayPanel>

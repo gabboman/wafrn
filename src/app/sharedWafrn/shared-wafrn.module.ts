@@ -14,6 +14,8 @@ import { YouTubePlayerModule } from '@angular/youtube-player';
 import { ButtonModule } from 'primeng/button';
 import { RouterModule } from '@angular/router';
 import { TagModule } from 'primeng/tag';
+import {OverlayPanelModule} from 'primeng/overlaypanel';
+import { CaptchaModule } from 'primeng/captcha';
 
 @NgModule({
   declarations: [
@@ -33,7 +35,9 @@ import { TagModule } from 'primeng/tag';
     YouTubePlayerModule,
     ButtonModule,
     RouterModule,
-    TagModule
+    TagModule,
+    OverlayPanelModule,
+    CaptchaModule
   ],
   exports: [
     PostFragmentComponent,
