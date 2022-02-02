@@ -1,8 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { MessageService } from 'primeng/api';
 import { ProcessedPost } from 'src/app/interfaces/processed-post';
 import { DashboardService } from 'src/app/services/dashboard.service';
 import { JwtService } from 'src/app/services/jwt.service';
+import { PostsService } from 'src/app/services/posts.service';
 
 @Component({
   selector: 'app-dashboard',
@@ -21,7 +23,10 @@ export class DashboardComponent implements OnInit {
   constructor(
     private dashboardService: DashboardService,
     private jwtService: JwtService,
-    private router: Router
+    private router: Router,
+    private postService: PostsService,
+    private messages: MessageService,
+
   ) { }
 
   async ngOnInit(): Promise<void> {
@@ -32,6 +37,13 @@ export class DashboardComponent implements OnInit {
       localStorage.clear();
       this.router.navigate(['/']);
     }
+    this.postService.updateFollowers.subscribe( () => {
+      if(this.postService.followedUserIds.length === 1 ){
+        // if the user follows NO ONE we take them to the explore page!
+        this.messages.add({ severity: 'info', summary: 'You follow no one, so we took you to the explore page' });
+        this.router.navigate(['/dashboard/explore']);
+      }
+    } );
     await this.loadPosts(this.currentPage);
 
   }
