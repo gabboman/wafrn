@@ -91,8 +91,8 @@ export class PostComponent implements OnInit {
     }
   }
 
-  sharePost() {
-    navigator.clipboard.writeText(environment.frontUrl + '/post/' + encodeURIComponent(this.post[this.post.length - 1].id) );
+  sharePost(id: string) {
+    navigator.clipboard.writeText(environment.frontUrl + '/post/' + id);
     this.messages.add({ severity: 'success', summary: 'The post URL was copied to your clipboard!' });
 
   }
