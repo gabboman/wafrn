@@ -17,7 +17,7 @@
         pTooltip="Is this image NSFW or does it contain explicit sexual content that is not suited to minors? Just mark this and go nuts"
         tooltipPosition="top"></p-checkbox>
     </div>
-    <p-button label="Upload image" (onClick)="uploadImage()"></p-button>
+    <p-button label="Upload image" [disabled]="disableImageUploadButton" (onClick)="uploadImage()"></p-button>
 
   </p-overlayPanel>
   <p-editor [(ngModel)]="postCreatorContent" [style]="{'height':'25vh'}">
