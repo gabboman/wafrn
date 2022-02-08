@@ -23,6 +23,7 @@ export class PostEditorComponent implements OnInit {
   newImageDescription = '';
   newImageNSFW = false;
   newImageFile: File | undefined;
+  disableImageUploadButton = false;
   @ViewChild('uploadImagesPanel') uploadImagesPanel: any;
 
 
@@ -109,7 +110,7 @@ export class PostEditorComponent implements OnInit {
   }
 
   async uploadImage() {
-
+    this.disableImageUploadButton = true;
     if (this.newImageFile) {
       let response = await this.editorService.uploadMedia(this.newImageDescription, this.newImageNSFW, this.newImageFile);
       if(response) {
@@ -126,6 +127,8 @@ export class PostEditorComponent implements OnInit {
 
       }
     }
+
+    this.disableImageUploadButton = false;
 
 
   }
