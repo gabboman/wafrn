@@ -16,9 +16,9 @@
     </p-card>
   </div>
 </div>
-<div *ngFor="let post of posts" pDefer (onLoad)="countViewedPost()">
+<div *ngFor="let post of posts; let indexOfelement=index;" pDefer (onLoad)="countViewedPost(indexOfelement)">
   <ng-template>
-    <app-post [post]="post"></app-post>
+    <app-post *ngIf="!postsToHideArray[indexOfelement]" [post]="post"></app-post>
   </ng-template>
 </div>
 

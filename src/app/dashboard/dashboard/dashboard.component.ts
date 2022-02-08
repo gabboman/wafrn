@@ -14,7 +14,9 @@ import { PostsService } from 'src/app/services/posts.service';
 export class DashboardComponent implements OnInit {
 
   posts: ProcessedPost[][] = [];
-  viewedPosts = 0;
+  viewedPostsNumber = 0;
+  viewedPostsIds: string[] = [];
+  postsToHideArray: boolean[] = [];
   currentPage= 0;
   explore = false;
 
@@ -48,11 +50,25 @@ export class DashboardComponent implements OnInit {
 
   }
 
-  async countViewedPost() {
-    this.viewedPosts++;
-    if (this.posts.length - 1 < this.viewedPosts) {
+  async countViewedPost(index: number) {
+    const post: ProcessedPost[] = this.posts[index];
+    this.viewedPostsNumber++;
+    if (this.posts.length - 1 < this.viewedPostsNumber) {
       this.currentPage ++;
       await this.loadPosts(this.currentPage);
+    }
+    let allFragmentsSeen = true;
+    post.forEach(component => {
+      const thisFragmentSeen = this.viewedPostsIds.indexOf(component.id) !== -1;
+      allFragmentsSeen =  thisFragmentSeen && allFragmentsSeen;
+      if(!thisFragmentSeen) {
+        this.viewedPostsIds.push(component.id)
+      }
+    });
+    if(allFragmentsSeen) {
+      if(index >= 0) {
+        this.postsToHideArray[index] = true;
+      }
     }
   }
 
@@ -60,6 +76,7 @@ export class DashboardComponent implements OnInit {
 
     let tmpPosts = await this.dashboardService.getDashboardPage(page, this.explore);
     tmpPosts.forEach(post => {
+      this.postsToHideArray.push(false);
       this.posts.push(post);
     })
   }
