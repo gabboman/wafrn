@@ -4,4 +4,5 @@ export interface Reblog {
     user: SimplifiedUser,
     content: string,
     id: string,
+    createdAt: string
 }
