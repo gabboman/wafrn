@@ -21,7 +21,7 @@ export class NotificationsService {
     const notificaitons: {follows: Follower[], reblogs: Reblog[]} | undefined = await this.http.post<{follows: Follower[], reblogs: Reblog[]}>(environment.baseUrl + '/notifications', {}).toPromise();
     if(notificaitons) {
       res = notificaitons;
-      res.reblogs = res.reblogs.sort((a, b) => new Date(b.createdAt).getDate() - new Date(a.createdAt).getDate() )
+      res.reblogs = [...new Set(res.reblogs)].sort((a, b) => new Date(b.createdAt).getDate() - new Date(a.createdAt).getDate() )
     }
     return res;
   }
