@@ -56,7 +56,7 @@ export class NotificationsComponent implements OnInit {
       // and we all know that one in a million posibility happends one of every 5 times as a programmer
       setTimeout(async () => {
         await this.updateNotifications();
-      }, 60000);
+      }, 300000);
     }
   }
 
