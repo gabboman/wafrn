@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { environment } from 'src/environments/environment';
 import { Follower } from '../interfaces/follower';
 import { Reblog } from '../interfaces/reblog';
+import { JwtService } from './jwt.service';
 
 @Injectable({
   providedIn: 'root'
@@ -12,7 +13,8 @@ export class NotificationsService {
   lastTimeChecked: Date = new Date();
 
   constructor(
-    private http: HttpClient
+    private http: HttpClient,
+    private jwt: JwtService
   ) { }
 
   async getNotifications(): Promise<{follows: Follower[], reblogs: Reblog[]}> {
@@ -21,7 +23,7 @@ export class NotificationsService {
     const notificaitons: {follows: Follower[], reblogs: Reblog[]} | undefined = await this.http.post<{follows: Follower[], reblogs: Reblog[]}>(environment.baseUrl + '/notifications', {}).toPromise();
     if(notificaitons) {
       res = notificaitons;
-      res.reblogs = [...new Set(res.reblogs)].sort((a, b) => new Date(b.createdAt).getDate() - new Date(a.createdAt).getDate() )
+      res.reblogs = res.reblogs.filter((elem) => elem.user.id != this.jwt.getTokenData().userId ).sort((a, b) => new Date(b.createdAt).getDate() - new Date(a.createdAt).getDate() )
     }
     return res;
   }
