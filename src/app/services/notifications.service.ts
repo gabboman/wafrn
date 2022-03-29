@@ -24,8 +24,8 @@ export class NotificationsService {
     if(notificaitons) {
       res = notificaitons;
       res.reblogs = res.reblogs.filter((elem) => elem.user.id != this.jwt.getTokenData().userId ).sort((a, b) => new Date(b.createdAt).getDate() - new Date(a.createdAt).getDate() );
-      const parents = res.reblogs.map((elem) => elem.parentId);
-      res.reblogs = res.reblogs.filter((elem, index) => parents.indexOf(elem.parentId) === index);
+      const postIds = res.reblogs.map((elem) => elem.id);
+      res.reblogs = res.reblogs.filter((elem, index) => postIds.indexOf(elem.id) === index);
     }
     return res;
   }
