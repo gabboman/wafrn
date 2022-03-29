@@ -23,7 +23,9 @@ export class NotificationsService {
     const notificaitons: {follows: Follower[], reblogs: Reblog[]} | undefined = await this.http.post<{follows: Follower[], reblogs: Reblog[]}>(environment.baseUrl + '/notifications', {}).toPromise();
     if(notificaitons) {
       res = notificaitons;
-      res.reblogs = res.reblogs.filter((elem) => elem.user.id != this.jwt.getTokenData().userId ).sort((a, b) => new Date(b.createdAt).getDate() - new Date(a.createdAt).getDate() )
+      res.reblogs = res.reblogs.filter((elem) => elem.user.id != this.jwt.getTokenData().userId ).sort((a, b) => new Date(b.createdAt).getDate() - new Date(a.createdAt).getDate() );
+      const parents = res.reblogs.map((elem) => elem.parentId);
+      res.reblogs = res.reblogs.filter((elem, index) => parents.indexOf(elem.parentId) === index);
     }
     return res;
   }
