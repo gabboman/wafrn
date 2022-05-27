@@ -20,7 +20,7 @@
     "@angular/platform-browser": "~13.2.4",
     "@angular/platform-browser-dynamic": "~13.2.4",
     "@angular/router": "~13.2.4",
-    "@angular/youtube-player": "^13.1.1",
+    "@angular/youtube-player": "^13.3.8",
     "@typescript-eslint/parser": "^5.9.1",
     "bootstrap": "^4.6.1",
     "dompurify": "^2.3.4",
