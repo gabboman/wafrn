@@ -6,13 +6,10 @@
   
     <p-card>
       <div class="grid">
-        <div class="col-11 ">
+        <div *ngIf=" post.length > 1" class="col-12 ">
           <img [src]="mediaBaseUrl + post[post.length - 1].user.avatar" class="avatar" />
           <a [href]="'/blog/'+ urls[post.length -1]">{{post[post.length -1].user.url}}</a>
-          {{ post.length > 1 ? ' reblogged' : ' posted'}}
-        </div>
-        <div class="col-1 justify-content-end">
-          <i (click)="sharePost(post[post.length - 1].id)" class="pi pi-share-alt"></i>
+          reblogged
         </div>
       </div>
   
@@ -24,14 +21,12 @@
               <img [src]="mediaBaseUrl + content.user.avatar" class="avatar" /> <a
                 [href]="'/blog/'+ urls[index]">{{content.user.url}}</a>
             </div>
-            <div class="col-1">
-              <i (click)="sharePost(content.id)" class="pi pi-share-alt"></i>
-            </div>
             <div class="col-4">
               <button *ngIf="followedUsers.indexOf(content.userId) === -1 && userLoggedIn" pButton pRipple label="Follow"
                 class="w-full" (click)="followUser(content.userId)"></button>
-              <button *ngIf="followedUsers.indexOf(content.userId) !== -1 && userLoggedIn" pButton pRipple
-                label="Unfollow" class="w-full" (click)="unfollowUser(content.userId)"></button>
+            </div>
+            <div class="col-1">
+              <i (click)="sharePost(content.id)" class="pi pi-share-alt"></i>
             </div>
           </div>
         </div>

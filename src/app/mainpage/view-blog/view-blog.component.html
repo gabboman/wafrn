@@ -12,6 +12,10 @@
       <div class="flex justify-content-center flex-wrap">
         <div [innerText]="blogDetails.description" class="text-600 font-medium line-height-3"></div>
       </div>
+      <button *ngIf="followedUsers.indexOf(blogDetails.id) === -1 && userLoggedIn" pButton pRipple label="Follow"
+                class="w-full" (click)="followUser(blogDetails.id)"></button>
+      <button *ngIf="followedUsers.indexOf(blogDetails.id) !== -1 && userLoggedIn" pButton pRipple label="Unfollow"
+                class="w-full" (click)="unfollowUser(blogDetails.id)"></button>
     </p-card>
 </div>
 </div>

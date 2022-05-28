@@ -1,7 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { MessageService } from 'primeng/api';
 import { ProcessedPost } from 'src/app/interfaces/processed-post';
 import { DashboardService } from 'src/app/services/dashboard.service';
+import { LoginService } from 'src/app/services/login.service';
+import { PostsService } from 'src/app/services/posts.service';
 import { environment } from 'src/environments/environment';
 
 @Component({
@@ -18,14 +21,27 @@ export class ViewBlogComponent implements OnInit {
   posts: ProcessedPost[][] = [];
   blogUrl: string = '';
   blogDetails: any;
+  followedUsers: Array<String> = [];
+  userLoggedIn = false;
+
 
 
   constructor(
     private activatedRoute: ActivatedRoute,
-    private dashboardService: DashboardService
-  ) { }
+    private dashboardService: DashboardService,
+    private postService: PostsService,
+    private messages: MessageService,
+    private loginService: LoginService
+  ) { 
+    this.userLoggedIn = loginService.checkUserLoggedIn();
+
+  }
 
   async ngOnInit(): Promise<void> {
+    this.followedUsers = this.postService.followedUserIds;
+    this.postService.updateFollowers.subscribe( () => {
+      this.followedUsers = this.postService.followedUserIds;
+    } );
     let blogUrl = this.activatedRoute.snapshot.paramMap.get('url');
     if(blogUrl) {
       this.blogUrl = blogUrl;
@@ -33,6 +49,7 @@ export class ViewBlogComponent implements OnInit {
 
     await this.loadPosts(this.currentPage);
     this.blogDetails = await this.dashboardService.getBlogDetails(this.blogUrl);
+    console.log(this.blogDetails)
     this.loading = false;
   }
 
@@ -49,6 +66,25 @@ export class ViewBlogComponent implements OnInit {
     tmpPosts.forEach(post => {
       this.posts.push(post);
     });
+  }
+
+  async unfollowUser(id: string) {
+    let response = await this.postService.unfollowUser(id);
+    if(response) {
+      this.messages.add({ severity: 'success', summary: 'You no longer follow this user!' });
+    } else {
+      this.messages.add({ severity: 'error', summary: 'Something went wrong! Check your internet conectivity and try again' });
+    }
+
+  }
+
+  async followUser(id: string) {
+    let response = await this.postService.followUser(id);
+    if(response) {
+      this.messages.add({ severity: 'success', summary: 'You now follow this user!' });
+    } else {
+      this.messages.add({ severity: 'error', summary: 'Something went wrong! Check your internet conectivity and try again' });
+    }
   }
 
 }
