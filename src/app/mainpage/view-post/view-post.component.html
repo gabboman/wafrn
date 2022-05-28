@@ -1,3 +1,10 @@
 <app-post *ngIf="!loading" [post]="post"></app-post>
 
 <p-progressSpinner *ngIf="loading"></p-progressSpinner>
+
+
+<p-dialog header="If you like what you see please register and enjoy this hellhole" [(visible)]="!userLoggedIn"  position="bottom">
+    <p>You can register by clicking <a [routerLink]="'/register'">here</a>, or if you already have an account click <a [routerLink]="'/'">here</a>!</p>
+    <p>If you just feel like doing this later, just use the menu icon on the top right of the screen</p>
+    <p>You can also ignore this and just be a loser who hasn't joined wafrn. Have fun anyways</p>
+</p-dialog>

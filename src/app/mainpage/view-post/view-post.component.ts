@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { ProcessedPost } from 'src/app/interfaces/processed-post';
 import { DashboardService } from 'src/app/services/dashboard.service';
+import { LoginService } from 'src/app/services/login.service';
 import { PostsService } from 'src/app/services/posts.service';
 import { environment } from 'src/environments/environment';
 
@@ -18,12 +19,18 @@ export class ViewPostComponent implements OnInit {
   blogUrl: string = '';
   blogDetails: any;
   mediaUrl = environment.baseMediaUrl;
+  userLoggedIn = false;
+
 
 
   constructor(
     private activatedRoute: ActivatedRoute,
-    private dashboardService: DashboardService
-  ) { }
+    private dashboardService: DashboardService,
+    private loginService: LoginService,
+    private router: Router
+  ) { 
+    this.userLoggedIn = loginService.checkUserLoggedIn();
+  }
 
   async ngOnInit(): Promise<void> {
     let postId = this.activatedRoute.snapshot.paramMap.get('id');

@@ -1,21 +1,3 @@
-<div class="grid">
-  <div id="firstPost" class="col-12 sm:col-12 md:col-12 lg:col-6 lg:col-offset-3 pb-6">
-    <p-card>
-      <span class="text-600 font-medium line-height-3">Welcome to our public alpha! Please if you experience any kind of
-        issues
-        contact us at the email <a href="mailto:suggestions@wafrn.net">suggestions@wafrn.net</a></span>
-      <div>
-        <h2>You should follow:</h2>
-        <ul>
-          <li><a href="/blog/admin">The administrative blog</a></li>
-        </ul>
-        <h2>You should also try the <a [routerLink]="['/dashboard','explore']"> EXPLORE </a> function! It's the compass icon in the + menu!</h2>
-        <h1><a href="https://www.patreon.com/wafrn" target="_blank">We have a patreon if you have some bucks to spare!</a></h1>
-        <h3>And the source code of the frontend is avaiable <a href="https://github.com/gabboman/wafrn" target="_blank">here</a> if you'd like to improve it</h3>
-      </div>
-    </p-card>
-  </div>
-</div>
 <div *ngFor="let post of posts; let indexOfelement=index;" pDefer (onLoad)="countViewedPost(indexOfelement)">
   <ng-template>
     <app-post *ngIf="!postsToHideArray[indexOfelement]" [post]="post"></app-post>
