@@ -39,7 +39,7 @@
         <div *ngIf="content.content != ''" class="fragment-content ql-editor" [injectHTML]="sanitizedPostContent[index]">
         </div>
         <div *ngIf="(index === post.length -1 || content.content != '') && content.tags">
-          <a *ngFor="let tag of content.tags" [routerLink]="'/dashboard/search/' + tag.tagName" >
+          <a class="wafrn-tag" *ngFor="let tag of content.tags" [routerLink]="'/dashboard/search/' + tag.tagName" >
             <p-tag [value]="'#' +tag.tagName"></p-tag>
           </a>
   
