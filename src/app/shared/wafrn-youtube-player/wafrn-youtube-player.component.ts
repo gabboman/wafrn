@@ -30,7 +30,7 @@ export class WafrnYoutubePlayerComponent implements OnInit {
 
     let postWidth = document.getElementsByClassName('wafrn-post')[0]?.clientWidth;
 
-    this.videoWidth = postWidth ? postWidth * 0.93 : 480;
+    this.videoWidth = postWidth ? postWidth * 0.87 : 480;
 
     this.videoHeight = this.videoWidth * 0.6;
 
