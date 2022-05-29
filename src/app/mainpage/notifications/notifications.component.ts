@@ -45,18 +45,8 @@ export class NotificationsComponent implements OnInit {
 
       }
     });
-
-    await this.updateNotifications();
     if(this.jwtService.tokenValid()) {
-      // TODO 
-      // This would create some inconsistencies when user joins in for the first time!
-      // Maybe add an event to onuserlogin or something like that
-      // its not like a major bug
-      // but it can create a "one in a million" annoyance
-      // and we all know that one in a million posibility happends one of every 5 times as a programmer
-      setTimeout(async () => {
-        await this.updateNotifications();
-      }, 300000);
+      await this.updateNotifications();
     }
   }
 

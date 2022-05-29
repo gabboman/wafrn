@@ -7,6 +7,7 @@ import * as DOMPurify from 'dompurify';
 import { HttpClient } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
 import { BehaviorSubject } from 'rxjs';
+import { JwtService } from './jwt.service';
 @Injectable({
   providedIn: 'root'
 })
@@ -24,21 +25,24 @@ export class PostsService {
   constructor(
     private mediaService: MediaService,
     private sanitizer: DomSanitizer,
-    private http: HttpClient
+    private http: HttpClient,
+    private jwtService: JwtService
   ) {
     this.loadFollowers();
   }
 
 
   async loadFollowers() {
-    let followsAndBlocks = await this.http.get<{
-      followedUsers: string[],
-      blockedUsers: string[]
-    }>(environment.baseUrl + '/getFollowedUsers').toPromise()
-    if (followsAndBlocks) {
-      this.followedUserIds = followsAndBlocks.followedUsers;
-      this.blockedUserIds = followsAndBlocks.blockedUsers;
-      this.updateFollowers.next(true);
+    if(this.jwtService.tokenValid()) {
+      let followsAndBlocks = await this.http.get<{
+        followedUsers: string[],
+        blockedUsers: string[]
+      }>(environment.baseUrl + '/getFollowedUsers').toPromise()
+      if (followsAndBlocks) {
+        this.followedUserIds = followsAndBlocks.followedUsers;
+        this.blockedUserIds = followsAndBlocks.blockedUsers;
+        this.updateFollowers.next(true);
+      }
     }
   }
 

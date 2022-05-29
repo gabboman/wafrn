@@ -19,7 +19,7 @@ export class ViewPostComponent implements OnInit {
   blogUrl: string = '';
   blogDetails: any;
   mediaUrl = environment.baseMediaUrl;
-  userLoggedIn = false;
+  visible = true;
 
 
 
@@ -29,7 +29,7 @@ export class ViewPostComponent implements OnInit {
     private loginService: LoginService,
     private router: Router
   ) { 
-    this.userLoggedIn = loginService.checkUserLoggedIn();
+    this.visible = !loginService.checkUserLoggedIn();
   }
 
   async ngOnInit(): Promise<void> {
