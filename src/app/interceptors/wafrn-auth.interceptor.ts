@@ -33,6 +33,4 @@ export class WafrnAuthInterceptor implements HttpInterceptor {
       })
     )
   }
-
-x
 }
