@@ -101,8 +101,14 @@ export class NavigationMenuComponent implements OnInit {
     } else {
       this.menuItems = [
         {
-          label: 'Homepage',
+          label: 'Log in',
           icon: "pi pi-home",
+          command: () => this.hideMenu(),
+          routerLink: '/'
+        },
+        {
+          label: 'Register',
+          icon: "pi pi-user",
           command: () => this.hideMenu(),
           routerLink: '/'
         },
