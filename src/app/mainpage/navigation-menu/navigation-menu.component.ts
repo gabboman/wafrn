@@ -94,7 +94,7 @@ export class NavigationMenuComponent implements OnInit {
         {
           label: 'Log out',
           icon: 'pi pi-sign-out',
-          command: () => {localStorage.clear(); this.router.navigate(['/'])}
+          command: () => {localStorage.clear(); this.router.navigate(['/']); this.hideMenu();}
         }
       ];
 
