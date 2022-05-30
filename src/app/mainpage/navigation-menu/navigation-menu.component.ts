@@ -13,7 +13,8 @@ export class NavigationMenuComponent implements OnInit {
 
 
   menuItems: MenuItem[] = [];
-  visible = false;
+  buttonVisible = false;
+  menuVisible = false;
 
 
   constructor(
@@ -42,40 +43,51 @@ export class NavigationMenuComponent implements OnInit {
 
   }
 
+  showMenu() {
+    this.menuVisible = true;
+  }
+  hideMenu() {
+    this.menuVisible = false;
+  }
+
 
   checkMenu(ev: NavigationEnd) {
-    this.visible = ['/', '/register', '/recoverPassword'].indexOf(ev.url) === -1;
+    this.buttonVisible = ['/', '/register', '/recoverPassword'].indexOf(ev.url) === -1;
 
     if(this.jwtService.tokenValid()) {
 
       this.menuItems = [
         {
-          label: 'Home',
+          label: 'Dashboard',
           icon: "pi pi-home",
+          command: () => this.hideMenu(),
           routerLink: '/dashboard'
         },
         {
-          label: 'Write',
+          label: 'Write new post',
           icon: "pi pi-pencil",
           command: () => this.editorService.launchPostEditorEmitter.next('NEW_POST')
         },
         {
-          label: 'explore',
+          label: 'Explore',
           icon: "pi pi-compass",
+          command: () => this.hideMenu(),
           routerLink: '/dashboard/explore'
         },
         {
           label: 'Search',
           icon: "pi pi-search",
+          command: () => this.hideMenu(),
           routerLink: '/dashboard/search'
         },
         {
           label: 'My blog',
           icon: "pi pi-user",
-          routerLink: '/blog/' + this.jwtService.getTokenData()['url']
+          command: () => this.hideMenu(),
+          routerLink: ['/blog', this.jwtService.getTokenData()['url']]
         },
         {
-          label: 'Profile',
+          label: 'Edit profile [in progress]',
           icon: "pi pi-cog",
           disabled: true
         },
@@ -89,13 +101,15 @@ export class NavigationMenuComponent implements OnInit {
     } else {
       this.menuItems = [
         {
-          label: 'Home',
+          label: 'Homepage',
           icon: "pi pi-home",
+          command: () => this.hideMenu(),
           routerLink: '/'
         },
         {
-          label: 'Search',
+          label: 'Search a blog!',
           icon: "pi pi-search",
+          command: () => this.hideMenu(),
           routerLink: '/dashboard/search'
         }
       ];

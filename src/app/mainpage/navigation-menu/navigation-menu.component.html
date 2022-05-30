@@ -1,1 +1,8 @@
-<p-speedDial *ngIf="visible" showIcon="pi pi-bars" hideIcon="pi pi-times" [model]="menuItems" direction="down"></p-speedDial>
+<button pButton *ngIf="buttonVisible" icon="pi pi-bars" 
+type="button" class="p-button-raised p-button-rounded show-sidebar-menu-button"
+(click)="showMenu()"
+></button>
+
+<p-sidebar [(visible)]="menuVisible">
+    <p-panelMenu [model]="menuItems" [style]="{'width':'100%'}"></p-panelMenu>
+</p-sidebar>

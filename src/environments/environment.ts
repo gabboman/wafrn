@@ -5,7 +5,7 @@
 export const environment = {
   production: false,
   recaptchaPublic: '6Le0ktUdAAAAAAWqBOEDASEj_8Poxoe_GnVlm3VJ',
-  baseUrl: 'http://localhost:8000',
+  baseUrl: 'http://localhost:3000',
   baseMediaUrl: 'http://media.wafrn.net',
   frontUrl: 'http://localhost:4200'
 };

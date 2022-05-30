@@ -37,14 +37,18 @@ import { DialogModule } from 'primeng/dialog';
 import { CheckboxModule } from 'primeng/checkbox';
 import { EditorModule } from 'primeng/editor';
 import { NavigationMenuComponent } from './mainpage/navigation-menu/navigation-menu.component';
-import { SpeedDialModule } from 'primeng/speeddial';
 import { ChipsModule } from 'primeng/chips';
 import { ReportPostComponent } from './mainpage/report-post/report-post.component';
 import {ListboxModule} from 'primeng/listbox';
 import { NotificationsComponent } from './mainpage/notifications/notifications.component';
 import {BadgeModule} from 'primeng/badge';
 import {DataViewModule} from 'primeng/dataview';
-import { PagenotfoundComponent } from './pagenotfound/pagenotfound.component';@NgModule({
+import { PagenotfoundComponent } from './pagenotfound/pagenotfound.component';
+import {SidebarModule} from 'primeng/sidebar';
+import {PanelMenuModule} from 'primeng/panelmenu';
+
+
+@NgModule({
   declarations: [
     AppComponent,
     LoginComponent,
@@ -88,11 +92,12 @@ import { PagenotfoundComponent } from './pagenotfound/pagenotfound.component';@N
     DialogModule,
     CheckboxModule,
     EditorModule,
-    SpeedDialModule,
     ChipsModule,
     ListboxModule,
     BadgeModule,
-    DataViewModule
+    DataViewModule,
+    SidebarModule,
+    PanelMenuModule
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: WafrnAuthInterceptor, multi: true },
