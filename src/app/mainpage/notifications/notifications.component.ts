@@ -3,6 +3,7 @@ import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { Follower } from 'src/app/interfaces/follower';
 import { Reblog } from 'src/app/interfaces/reblog';
 import { JwtService } from 'src/app/services/jwt.service';
+import { LoginService } from 'src/app/services/login.service';
 import { NotificationsService } from 'src/app/services/notifications.service';
 import { environment } from 'src/environments/environment';
 
@@ -24,10 +25,15 @@ export class NotificationsComponent implements OnInit {
     private router: Router,
     private activatedRoute: ActivatedRoute,
     private jwtService: JwtService,
-    private notificationsService: NotificationsService
+    private notificationsService: NotificationsService,
+    private loginService: LoginService,
 
 
-  ) { }
+  ) {
+    this.loginService.logingEventEmitter.subscribe( async (ev: string) => {
+      await this.updateNotifications();
+    });
+  }
 
   async ngOnInit(): Promise<void> {
 

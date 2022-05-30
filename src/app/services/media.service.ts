@@ -17,11 +17,12 @@ export class MediaService {
 
   constructor(
     private jwt: JwtService,
-    private login: LoginService
+    //private login: LoginService,
+    private jwtService: JwtService
   ) {
     if (
       localStorage.getItem('disableNSFWFilter') == "true"
-      && this.login.checkUserLoggedIn() && this.checkAge()) {
+      && this.jwtService.tokenValid() && this.checkAge()) {
         this.disableNSFWFilter = true;
 
 
