@@ -46,6 +46,7 @@ export class NavigationMenuComponent implements OnInit {
   showMenu() {
     this.menuVisible = true;
   }
+
   hideMenu() {
     this.menuVisible = false;
   }
@@ -66,11 +67,12 @@ export class NavigationMenuComponent implements OnInit {
         {
           label: 'Write new post',
           icon: "pi pi-pencil",
-          command: () => this.editorService.launchPostEditorEmitter.next('NEW_POST')
+          command: () => {this.editorService.launchPostEditorEmitter.next('NEW_POST'); this.hideMenu();}
         },
         {
           label: 'Explore',
           icon: "pi pi-compass",
+          title: 'See ALL the posts that are public! not only the ones of people you follow!',
           command: () => this.hideMenu(),
           routerLink: '/dashboard/explore'
         },
@@ -92,8 +94,16 @@ export class NavigationMenuComponent implements OnInit {
           disabled: true
         },
         {
+          label: 'Check the source code!',
+          icon: "pi pi-code",
+          title: 'The frontend is made in angular, you can check the code here',
+          target: "_blank",
+          url: "https://github.com/gabboman/wafrn"
+        },
+        {
           label: 'Log out',
           icon: 'pi pi-sign-out',
+          title: 'nintendo this button is for you, and your 25000000 alt accounts',
           command: () => {localStorage.clear(); this.router.navigate(['/']); this.hideMenu();}
         }
       ];
@@ -117,6 +127,13 @@ export class NavigationMenuComponent implements OnInit {
           icon: "pi pi-search",
           command: () => this.hideMenu(),
           routerLink: '/dashboard/search'
+        },
+        {
+          label: 'Check the source code!',
+          title: 'The frontend is made in angular, you can check the code here',
+          icon: "pi pi-code",
+          target: "_blank",
+          url: "https://github.com/gabboman/wafrn"
         }
       ];
     }
