@@ -123,6 +123,13 @@ export class NavigationMenuComponent implements OnInit {
           routerLink: '/'
         },
         {
+          label: 'Explore',
+          icon: "pi pi-compass",
+          title: 'See ALL the posts that are public! Yes, you can be a lurker',
+          command: () => this.hideMenu(),
+          routerLink: '/dashboard/explore'
+        },
+        {
           label: 'Search a blog!',
           icon: "pi pi-search",
           command: () => this.hideMenu(),

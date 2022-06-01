@@ -35,7 +35,7 @@ export class DashboardComponent implements OnInit {
     if(this.router.url.indexOf('explore') != -1) {
       this.explore = true;
     }
-    if(!this.jwtService.tokenValid()) {
+    else if(!this.jwtService.tokenValid()) {
       localStorage.clear();
       this.router.navigate(['/']);
     }
@@ -72,9 +72,49 @@ export class DashboardComponent implements OnInit {
     }
   }
 
+  generateUUID() { // Public Domain/MIT
+    var d = new Date().getTime();//Timestamp
+    var d2 = ((typeof performance !== 'undefined') && performance.now && (performance.now()*1000)) || 0;//Time in microseconds since page-load or 0 if unsupported
+    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+        var r = Math.random() * 16;//random number between 0 and 16
+        if(d > 0){//Use timestamp until depleted
+            r = (d + r)%16 | 0;
+            d = Math.floor(d/16);
+        } else {//Use microseconds since page-load if supported
+            r = (d2 + r)%16 | 0;
+            d2 = Math.floor(d2/16);
+        }
+        return (c === 'x' ? r : (r & 0x3 | 0x8)).toString(16);
+    });
+}
+
+  
+
   async loadPosts(page: number) {
 
     let tmpPosts = await this.dashboardService.getDashboardPage(page, this.explore);
+    // internal posts, and stuff could be added here.
+    // also some ads for RAID SHADOW LEGENDS. This is a joke.
+    // but hey if you dont like it you delete that very easily ;D
+    if(!this.jwtService.tokenValid()) {
+      this.posts.push([{
+        id: this.generateUUID() ,
+        NSFW: false,
+        content: "<p>Hey, if you're seeing this it means that you have seen a bunch of posts and you would like to see even more posts!</p><p><br></p><p>To fully enjoy this hellsite, please consider joining us, <a href=\"/register\" rel=\"noopener noreferrer\" target=\"_blank\">register into wafrn!</a></p><p><br></p><p>bring your twisted ideas onto others, share recipies of cake that swap the flour for mayo or hot sauce!</p><p><br></p><p><br></p><p>Consider joining wafrn! join us!</p>",
+        createdAt:      new Date(),
+        updatedAt:      new Date(),
+        userId: "40472b5b-b668-4156-b795-a60f2986e928",
+        user: {
+          avatar: "/1641804617334_2f7de58d61c79f0bca67869c5b375f74a3787a17.png",
+          url: "admin",
+          description: "admin",
+          id: "admin",
+        },
+        medias: [],
+        tags: [],
+        
+      }]);
+    }
     tmpPosts.forEach(post => {
       this.postsToHideArray.push(false);
       this.posts.push(post);
