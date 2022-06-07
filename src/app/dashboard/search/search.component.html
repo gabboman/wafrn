@@ -29,10 +29,10 @@
 
 
 <div class="grid">
-  <div *ngIf="users && users.length > 0" pDefer (onLoad)="countViewedUser()"
+  <div [hidden]="!(users && users.length > 0)"
     class="col-12 sm:col-12 md:col-12 lg:col-6 lg:col-offset-3 pb-6">
   
-    <p-carousel style="width: 100%;" [value]="users" [showIndicators]="false">
+    <p-carousel [value]="users" [showIndicators]="false">
       <ng-template let-user pTemplate="item">
         <p-card *ngIf="user">
           <div class="product-item-content">
@@ -56,7 +56,7 @@
 
 </div>
 
-<div *ngIf="posts && posts.length > 0">
+<div [hidden]="!(posts && posts.length > 0)">
 
   <div *ngFor="let post of posts" pDefer (onLoad)="countViewedPost()">
     <ng-template>
@@ -66,7 +66,7 @@
 </div>
 
 
-<div class="grid pb-6">
+<div class="grid pb-6" *ngIf="loading">
   <div class="col-12 sm:col-12 md:col-12 lg:col-6 lg:col-offset-3">
     <p-card class="flex justify-content-center flex-wrap">
       <p-progressSpinner class="flex align-items-center justify-content-center "></p-progressSpinner>

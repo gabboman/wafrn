@@ -29,6 +29,7 @@ export class SearchComponent implements OnInit {
   followedUsers: Array<String> = [];
   userLoggedIn = false;
   currentPage = 0;
+  loading = false;
 
   
   constructor(
@@ -38,7 +39,12 @@ export class SearchComponent implements OnInit {
     private loginService: LoginService,
     private router: Router,
     private activatedRoute: ActivatedRoute
-  ) { }
+  ) {
+    // override the route reuse strategy
+    this.router.routeReuseStrategy.shouldReuseRoute = function() {
+      return false;
+  };
+  }
 
   async ngOnInit(): Promise<void> {
     this.followedUsers = this.postService.followedUserIds;
@@ -56,16 +62,15 @@ export class SearchComponent implements OnInit {
   }
 
   async submitSearch() {
-
-    this.currentSearch = this.searchForm.value['search'];
-    let searchResult = await this.dashboardService.getSearchPage(this.currentPage, this.currentSearch);
+    this.loading = true;
     this.viewedPosts = 0;
     this.viewedUsers = 0;
+    this.currentPage = 0;
+    this.currentSearch = this.searchForm.value['search'];
+    let searchResult = await this.dashboardService.getSearchPage(this.currentPage, this.currentSearch);
     this.posts = searchResult.posts;
     this.users = searchResult.users;
-
-
-    
+    this.loading = false;
   }
 
   async loadResults(page: number) {
