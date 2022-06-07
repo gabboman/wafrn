@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { MessageService } from 'primeng/api';
 import { ProcessedPost } from 'src/app/interfaces/processed-post';
 import { DashboardService } from 'src/app/services/dashboard.service';
@@ -31,9 +31,14 @@ export class ViewBlogComponent implements OnInit {
     private dashboardService: DashboardService,
     private postService: PostsService,
     private messages: MessageService,
-    private loginService: LoginService
+    private loginService: LoginService,
+    private router: Router
   ) { 
     this.userLoggedIn = loginService.checkUserLoggedIn();
+    // override the route reuse strategy
+    this.router.routeReuseStrategy.shouldReuseRoute = function() {
+      return false;
+  };
 
   }
 

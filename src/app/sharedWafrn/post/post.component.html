@@ -8,7 +8,7 @@
       <div class="grid">
         <div *ngIf=" post.length > 1" class="col-12 ">
           <img [src]="mediaBaseUrl + post[post.length - 1].user.avatar" class="avatar" />
-          <a [href]="'/blog/'+ urls[post.length -1]">{{post[post.length -1].user.url}}</a>
+          <a [routerLink]="'/blog/'+ urls[post.length -1]">{{post[post.length -1].user.url}}</a>
           reblogged
         </div>
       </div>
@@ -19,7 +19,7 @@
           <div class="grid grid-nogutter" style="width: 100%;">
             <div class="col-7 ">
               <img [src]="mediaBaseUrl + content.user.avatar" class="avatar" /> <a
-                [href]="'/blog/'+ urls[index]">{{content.user.url}}</a>
+                [routerLink]="'/blog/'+ urls[index]">{{content.user.url}}</a>
             </div>
             <div class="col-4">
               <button *ngIf="followedUsers.indexOf(content.userId) === -1 && userLoggedIn" pButton pRipple label="Follow"
