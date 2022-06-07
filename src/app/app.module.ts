@@ -44,6 +44,7 @@ import {ListboxModule} from 'primeng/listbox';
 import { NotificationsComponent } from './mainpage/notifications/notifications.component';
 import {BadgeModule} from 'primeng/badge';
 import {DataViewModule} from 'primeng/dataview';
+import {FileUploadModule} from 'primeng/fileupload';
 import { PagenotfoundComponent } from './pagenotfound/pagenotfound.component';@NgModule({
   declarations: [
     AppComponent,
@@ -92,7 +93,8 @@ import { PagenotfoundComponent } from './pagenotfound/pagenotfound.component';@N
     ChipsModule,
     ListboxModule,
     BadgeModule,
-    DataViewModule
+    DataViewModule,
+    FileUploadModule
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: WafrnAuthInterceptor, multi: true },
