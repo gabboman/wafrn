@@ -36,8 +36,10 @@
         <button type="button" class="ql-underline" aria-label="Underline"></button>
         <button type="button" class="ql-link" aria-label="Insert Link"></button>
         <button type="button" class="ql-code-block" aria-label="Insert Code Block"></button>
-        <button pButton #uploadImages (click)="uploadImagesPanel.show($event, uploadImages); displayUploadImagePanel = true"
-          type="button"><i class="pi pi-upload"></i></button>
+        <button pButton #uploadImages
+        (click)="uploadImagesPanel.show($event, uploadImages); displayUploadImagePanel = true"
+        [icon]="'pi pi-upload'" label="Upload image"
+          type="button"></button>
 
 
       </span>
