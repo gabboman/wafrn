@@ -1,23 +1,24 @@
 <p-dialog [hidden]="!editorVisible" [header]="idPostToReblog ? 'Reblog a post' : 'Create new post'"
-  [(visible)]="editorVisible" [modal]="true" 
-  [style]="{width: '75vw'}">
-  <h2 *ngIf="idPostToReblog" >You are reblogging the post. Your followers will see the full thread with your reply on it</h2>
+  [(visible)]="editorVisible" [modal]="true" [style]="{width: '75vw'}">
+  <h2 *ngIf="idPostToReblog">You are reblogging the post. Your followers will see the full thread with your reply on it
+  </h2>
   <p-overlayPanel #uploadImagesPanel>
     <div>
-      <label for="imgSelected" class="block text-900 font-medium mb-2">Upload your image</label>
-      <input *ngIf="displayUploadImagePanel" id="imgSelected" type="file" accept="image/jpeg,image/png,image/webp,image/gif"
-        (change)="imgSelected($event)" pTooltip="Select your avatar" tooltipPosition="top" pInputText
-        class="w-full mb-3">
-      <label for="description" class="block text-900 font-medium mb-2">Image description</label>
+      <label for="description" class="block text-900 font-medium mb-2">Images description</label>
       <input [(ngModel)]="newImageDescription" id="description" type="text"
         pTooltip="Image description. Useful in the case of someone using a screen reader, or when the image does not load properly."
         tooltipPosition="top" pInputText class="w-full mb-3">
 
-      <p-checkbox [(ngModel)]="newImageNSFW" [binary]="true" label="this is NSFW"
+      <p-checkbox [(ngModel)]="newImageNSFW" [binary]="true" label="This images are NSFW"
         pTooltip="Is this image NSFW or does it contain explicit sexual content that is not suited to minors? Just mark this and go nuts"
         tooltipPosition="top"></p-checkbox>
     </div>
-    <p-button label="Upload image" [disabled]="disableImageUploadButton" (onClick)="uploadImage()"></p-button>
+    <p-fileUpload name="image" [url]="uploadImageUrl" [multiple]="false"
+      accept="image/jpeg,image/png,image/webp,image/gif" [auto]="true" (onUpload)="uploadImage($event)"
+      
+      [maxFileSize]="10000000" chooseLabel="Upload image"
+      >
+    </p-fileUpload>
 
   </p-overlayPanel>
   <p-editor [(ngModel)]="postCreatorContent" [style]="{'height':'25vh'}">
@@ -35,7 +36,7 @@
         <button type="button" class="ql-underline" aria-label="Underline"></button>
         <button type="button" class="ql-link" aria-label="Insert Link"></button>
         <button type="button" class="ql-code-block" aria-label="Insert Code Block"></button>
-        <button #uploadImages (click)="uploadImagesPanel.show($event, uploadImages); displayUploadImagePanel = true"
+        <button pButton #uploadImages (click)="uploadImagesPanel.show($event, uploadImages); displayUploadImagePanel = true"
           type="button"><i class="pi pi-upload"></i></button>
 
 
@@ -46,10 +47,10 @@
   <h5>Tags (comma separated)</h5>
   <p-chips [(ngModel)]="tags" separator=","></p-chips>
 
-  <p-captcha *ngIf="!postBeingSubmitted && editorVisible" (onResponse)="captchaResolved($event)" (onExpire)="captchaExpired()" [siteKey]="captchaKey" theme="dark"
-    size="big">
+  <p-captcha *ngIf="!postBeingSubmitted && editorVisible" (onResponse)="captchaResolved($event)"
+    (onExpire)="captchaExpired()" [siteKey]="captchaKey" theme="dark" size="big">
   </p-captcha>
 
-  <p-button  [disabled]="captchaResponse == undefined"  (onClick)="submitPost()">Submit</p-button>
+  <p-button [disabled]="captchaResponse == undefined" (onClick)="submitPost()">Submit</p-button>
 
 </p-dialog>

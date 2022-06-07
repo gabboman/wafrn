@@ -46,6 +46,8 @@ import {DataViewModule} from 'primeng/dataview';
 import { PagenotfoundComponent } from './pagenotfound/pagenotfound.component';
 import {SidebarModule} from 'primeng/sidebar';
 import {PanelMenuModule} from 'primeng/panelmenu';
+import {FileUploadModule} from 'primeng/fileupload';
+
 
 
 @NgModule({
@@ -97,7 +99,8 @@ import {PanelMenuModule} from 'primeng/panelmenu';
     BadgeModule,
     DataViewModule,
     SidebarModule,
-    PanelMenuModule
+    PanelMenuModule,
+    FileUploadModule
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: WafrnAuthInterceptor, multi: true },
