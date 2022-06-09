@@ -49,9 +49,7 @@
   <h5>Tags (comma separated)</h5>
   <p-chips [(ngModel)]="tags" separator=","></p-chips>
 
-  <p-captcha *ngIf="!postBeingSubmitted && editorVisible" (onResponse)="captchaResolved($event)"
-    (onExpire)="captchaExpired()" [siteKey]="captchaKey" theme="dark" size="big">
-  </p-captcha>
+  <ng-hcaptcha *ngIf="!postBeingSubmitted && editorVisible" (verify)="captchaResolved($event)" (expired)="captchaExpired()"  ></ng-hcaptcha>
 
   <p-button [disabled]="captchaResponse == undefined" (onClick)="submitPost()">Submit</p-button>
 

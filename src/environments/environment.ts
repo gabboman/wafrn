@@ -4,7 +4,7 @@
 
 export const environment = {
   production: false,
-  recaptchaPublic: '6Le0ktUdAAAAAAWqBOEDASEj_8Poxoe_GnVlm3VJ',
+  recaptchaPublic: '10000000-ffff-ffff-ffff-000000000001',
   baseUrl: 'http://localhost:3000',
   baseMediaUrl: 'http://media.wafrn.net',
   frontUrl: 'http://localhost:4200'

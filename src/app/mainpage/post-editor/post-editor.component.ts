@@ -107,7 +107,7 @@ export class PostEditorComponent implements OnInit {
   }
 
   captchaResolved(event: any) {
-    this.captchaResponse = event.response;
+    this.captchaResponse = event;
 
   }
 

@@ -44,7 +44,7 @@ export class RegisterComponent implements OnInit {
   }
 
   captchaResolved(ev: any){
-    this.loginForm.controls['captchaResponse'].patchValue(ev.response);
+    this.loginForm.controls['captchaResponse'].patchValue(ev);
   }
   captchaExpired(){
     this.loginForm.controls['captchaResponse'].patchValue(null);

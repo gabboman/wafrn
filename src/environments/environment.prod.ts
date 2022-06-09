@@ -1,6 +1,6 @@
 export const environment = {
   production: true,
-  recaptchaPublic: '6Le0ktUdAAAAAAWqBOEDASEj_8Poxoe_GnVlm3VJ',
+  recaptchaPublic: 'e8726edd-1c9b-4c5a-b6a8-4744b0e74cc4',
   baseUrl: 'https://api.wafrn.net',
   baseMediaUrl: 'https://media.wafrn.net',
   frontUrl: 'https://app.wafrn.net'

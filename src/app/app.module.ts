@@ -11,7 +11,6 @@ import { PasswordModule } from 'primeng/password';
 import { StyleClassModule } from 'primeng/styleclass';
 import { ButtonModule } from 'primeng/button';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { CaptchaModule } from 'primeng/captcha';
 import { RippleModule } from 'primeng/ripple';
 import { RegisterComponent } from './mainpage/register/register.component';
 import { CalendarModule } from 'primeng/calendar';
@@ -47,9 +46,9 @@ import { PagenotfoundComponent } from './pagenotfound/pagenotfound.component';
 import {SidebarModule} from 'primeng/sidebar';
 import {PanelMenuModule} from 'primeng/panelmenu';
 import {FileUploadModule} from 'primeng/fileupload';
+import { NgHcaptchaModule } from 'ng-hcaptcha';
 
-
-
+import { environment } from 'src/environments/environment';
 @NgModule({
   declarations: [
     AppComponent,
@@ -70,6 +69,9 @@ import {FileUploadModule} from 'primeng/fileupload';
   imports: [
     BrowserModule,
     BrowserAnimationsModule,
+    NgHcaptchaModule.forRoot({
+      siteKey: environment.recaptchaPublic
+  }),
     CommonModule,
     FormsModule,
     ReactiveFormsModule,
@@ -79,7 +81,6 @@ import {FileUploadModule} from 'primeng/fileupload';
     PasswordModule,
     StyleClassModule,
     ButtonModule,
-    CaptchaModule,
     RippleModule,
     CalendarModule,
     KeyFilterModule,

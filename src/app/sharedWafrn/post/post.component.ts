@@ -110,7 +110,7 @@ export class PostComponent implements OnInit {
   }
 
   captchaResolved(event: any) {
-    this.captchaResponse = event.response;
+    this.captchaResponse = event;
 
   }
 
