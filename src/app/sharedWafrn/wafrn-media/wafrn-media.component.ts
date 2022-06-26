@@ -14,7 +14,8 @@ export class WafrnMediaComponent implements OnInit {
   @Input() id!: string;
   nsfw = true;
   data!: WafrnMedia;
-  nsfwFilter = true;
+  displayUrl: string = '';
+  disableNSFWFilter = true;
   @ViewChild('wafrnMedia') wafrnMedia: any;
   ready = false;
 
@@ -23,25 +24,26 @@ export class WafrnMediaComponent implements OnInit {
   constructor(
     private mediaService: MediaService
   ) {
-    this.nsfwFilter = !mediaService.checkNSFWFilterDisabled();
+    this.disableNSFWFilter = mediaService.checkNSFWFilterDisabled();
    }
 
   ngOnInit(): void {
 
     this.data = this.mediaService.getMediaById(this.id);
-    this.nsfw = this.data.NSFW;
+    this.nsfw = this.data.NSFW && ! this.disableNSFWFilter;
     this.ready = true;
 
   }
 
   showPicture(){
     this.nsfw = false;
+    this.displayUrl = this.data.url;
   }
 
 
   imgLoaded() {
     if(this.wafrnMedia.nativeElement.offsetHeight/this.wafrnMedia.nativeElement.offsetWidth > 3) {
-      this.nsfw = true;
+      this.displayUrl = '';
     }
   }
 
