@@ -100,7 +100,7 @@ export class DashboardComponent implements OnInit {
       this.posts.push([{
         id: this.generateUUID() ,
         NSFW: false,
-        content: "<p>Hey, if you're seeing this it means that you have seen a bunch of posts and you would like to see even more posts!</p><p><br></p><p>To fully enjoy this hellsite, please consider joining us, <a href=\"/register\" rel=\"noopener noreferrer\" target=\"_blank\">register into wafrn!</a></p><p><br></p><p>bring your twisted ideas onto others, share recipies of cake that swap the flour for mayo or hot sauce!</p><p><br></p><p><br></p><p>Consider joining wafrn! join us!</p>",
+        content: "<p>To fully enjoy this hellsite, please consider joining us, <a href=\"/register\" rel=\"noopener noreferrer\" target=\"_blank\">register into wafrn!</a></p><p><br></p><p>bring your twisted ideas onto others, share recipies of cake that swap the flour for mayo or hot sauce!</p><p><br></p><p><br></p><p>Consider <a href=\"/register\" rel=\"noopener noreferrer\" target=\"_blank\">joining wafrn</a>!</p>",
         createdAt:      new Date(),
         updatedAt:      new Date(),
         userId: "40472b5b-b668-4156-b795-a60f2986e928",
