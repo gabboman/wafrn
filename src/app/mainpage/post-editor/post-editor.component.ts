@@ -137,10 +137,10 @@ export class PostEditorComponent implements OnInit {
           if(this.newImageDescription != '' || this.newImageNSFW ){
             await this.mediaService.updateMedia(response.id, this.newImageDescription, this.newImageNSFW);
           }
+          this.fixNullPosting();
           this.postCreatorContent = this.postCreatorContent + '[wafrnmediaid="' + response.id + '"]'
         }
       });
-      this.fixNullPosting();
       this.newImageDescription = '';
       this.newImageNSFW = false;
       this.newImageFile = undefined;
