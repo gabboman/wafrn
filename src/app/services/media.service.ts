@@ -1,9 +1,11 @@
+import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { environment } from 'src/environments/environment';
 import { ProcessedPost } from '../interfaces/processed-post';
 import { WafrnMedia } from '../interfaces/wafrn-media';
 import { JwtService } from './jwt.service';
 import { LoginService } from './login.service';
+import { UtilsService } from './utils.service';
 
 @Injectable({
   providedIn: 'root'
@@ -18,7 +20,10 @@ export class MediaService {
   constructor(
     private jwt: JwtService,
     //private login: LoginService,
-    private jwtService: JwtService
+    private jwtService: JwtService,
+    private http: HttpClient,
+    private utils: UtilsService,
+
   ) {
     if (
       localStorage.getItem('disableNSFWFilter') == "true"
@@ -70,6 +75,13 @@ export class MediaService {
     }
 
     return res;
+
+  }
+
+  async updateMedia(id: string, description: string, nsfw: boolean) {
+    let payload: FormData = this.utils.objectToFormData({id: id, description: description, nsfw: nsfw});
+    let response = await this.http.post(environment.baseUrl + '/updateMedia', payload).toPromise();
+    return response;
 
   }
 

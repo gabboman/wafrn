@@ -9,6 +9,7 @@ import {
 import {
   EditorService
 } from 'src/app/services/editor.service';
+import { MediaService } from 'src/app/services/media.service';
 import {
   PostsService
 } from 'src/app/services/posts.service';
@@ -43,7 +44,8 @@ export class PostEditorComponent implements OnInit {
   constructor(
     private editorService: EditorService,
     private postsService: PostsService,
-    private messages: MessageService
+    private messages: MessageService,
+    private mediaService: MediaService
 
 
   ) {
@@ -127,22 +129,33 @@ export class PostEditorComponent implements OnInit {
     }
   }
 
-  uploadImage(event: any) {
-    let response = event.originalEvent.body[0];
-    if (response) {
+  async uploadImage(event: any) {
+    try {
+      let responses = event.originalEvent.body;
+      responses.forEach(async (response: any) => {
+        if (response) {
+          if(this.newImageDescription != '' || this.newImageNSFW ){
+            await this.mediaService.updateMedia(response.id, this.newImageDescription, this.newImageNSFW);
+          }
+          this.postCreatorContent = this.postCreatorContent + '[wafrnmediaid="' + response.id + '"]'
+        }
+      });
+      this.fixNullPosting();
       this.newImageDescription = '';
       this.newImageNSFW = false;
       this.newImageFile = undefined;
       this.displayUploadImagePanel = false;
-      this.fixNullPosting()
-      this.postCreatorContent = this.postCreatorContent + '[wafrnmediaid="' + response.id + '"]'
       this.uploadImagesPanel.hide();
       this.messages.add({
         severity: 'success',
-        summary: 'Image uploaded and added to the post!'
+        summary: responses.length === 1 ? 'Image uploaded and added to the post!' : 'Images uploaded and added to the post'
+      });
+    } catch (error) {
+      this.messages.add({
+        severity: 'error',
+        summary: 'Oh no! something went wrong'
       });
     }
-
     this.disableImageUploadButton = false;
   }
 
