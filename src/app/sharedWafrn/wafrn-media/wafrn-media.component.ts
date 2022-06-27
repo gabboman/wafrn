@@ -53,7 +53,9 @@ export class WafrnMediaComponent implements OnInit {
   }
 
   private checkIfVideo(){
-    return this.displayUrl.split('.')[1] === 'mp4'
+    let mediaUrl = this.displayUrl.split('.');
+
+    return mediaUrl[mediaUrl.length -1].toLowerCase() == 'mp4';
   }
 
 }
