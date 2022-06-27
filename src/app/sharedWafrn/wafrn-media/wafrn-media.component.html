@@ -1,7 +1,12 @@
 <div class="parent">
-    <img #wafrnMedia *ngIf="ready"
+    <img #wafrnMedia *ngIf="ready && !video"
     (click)="showPicture()" [src]="displayUrl"
     [alt]="data.description" loading="lazy"
     (load)="imgLoaded()"
     >
+
+    <video *ngIf="ready && video" controls >
+        <source [src]="displayUrl" type="video/mp4">
+    </video>
+
 </div>

@@ -17,6 +17,7 @@ export class WafrnMediaComponent implements OnInit {
   displayUrl: string = '';
   disableNSFWFilter = true;
   @ViewChild('wafrnMedia') wafrnMedia: any;
+  video = false;
   ready = false;
 
 
@@ -32,6 +33,7 @@ export class WafrnMediaComponent implements OnInit {
     this.data = this.mediaService.getMediaById(this.id);
     this.nsfw = this.data.NSFW && ! this.disableNSFWFilter;
     this.displayUrl = this.nsfw ? '/assets/img/nsfw_image.webp' : this.data.url;
+    this.video = !this.nsfw && this.checkIfVideo();
     this.ready = true;
 
   }
@@ -39,6 +41,8 @@ export class WafrnMediaComponent implements OnInit {
   showPicture(){
     this.nsfw = false;
     this.displayUrl = this.data.url;
+    this.video = this.checkIfVideo();
+
   }
 
 
@@ -46,6 +50,10 @@ export class WafrnMediaComponent implements OnInit {
     if(this.wafrnMedia.nativeElement.offsetHeight/this.wafrnMedia.nativeElement.offsetWidth > 3) {
       this.displayUrl = this.nsfw ? '/assets/img/nsfw_image.webp' : '/assets/img/long_image.jpg'
     }
+  }
+
+  private checkIfVideo(){
+    return this.displayUrl.split('.')[1] === 'mp4'
   }
 
 }
