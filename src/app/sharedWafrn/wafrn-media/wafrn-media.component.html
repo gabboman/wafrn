@@ -1,8 +1,7 @@
 <div class="parent">
     <img #wafrnMedia *ngIf="ready"
-    (click)="showPicture()" [src]="data.url"
+    (click)="showPicture()" [src]="displayUrl"
     [alt]="data.description" loading="lazy"
-    [ngClass]="{'blurred': nsfw, 'unblurred': !nsfw}"
     (load)="imgLoaded()"
     >
 </div>
