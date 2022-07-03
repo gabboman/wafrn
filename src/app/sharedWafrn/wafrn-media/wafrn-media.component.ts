@@ -19,6 +19,7 @@ export class WafrnMediaComponent implements OnInit {
   @ViewChild('wafrnMedia') wafrnMedia: any;
   video = false;
   ready = false;
+  viewLongImage = false;
 
 
   
@@ -41,13 +42,14 @@ export class WafrnMediaComponent implements OnInit {
   showPicture(){
     this.nsfw = false;
     this.displayUrl = this.data.url;
+    this.viewLongImage = true;
     this.video = this.checkIfVideo();
 
   }
 
 
   imgLoaded() {
-    if(this.wafrnMedia.nativeElement.offsetHeight/this.wafrnMedia.nativeElement.offsetWidth > 3) {
+    if(!this.viewLongImage && this.wafrnMedia.nativeElement.offsetHeight/this.wafrnMedia.nativeElement.offsetWidth > 3) {
       this.displayUrl = this.nsfw ? '/assets/img/nsfw_image.webp' : '/assets/img/long_image.jpg'
     }
   }
