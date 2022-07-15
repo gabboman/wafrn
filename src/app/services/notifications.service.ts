@@ -23,10 +23,10 @@ export class NotificationsService {
     const notificaitons: {follows: Follower[], reblogs: Reblog[]} | undefined = await this.http.post<{follows: Follower[], reblogs: Reblog[]}>(environment.baseUrl + '/notifications', {}).toPromise();
     if(notificaitons) {
       res = notificaitons;
-      res.reblogs = res.reblogs.filter((elem) => elem.user.id != this.jwt.getTokenData().userId ).sort((a, b) => new Date(b.createdAt).getDate() - new Date(a.createdAt).getDate() );
+      res.reblogs = res.reblogs.filter((elem) => elem.user.id != this.jwt.getTokenData().userId );
       const postIds = res.reblogs.map((elem) => elem.id);
       res.reblogs = res.reblogs.filter((elem, index) => postIds.indexOf(elem.id) === index);
-      res.reblogs = res.reblogs.reverse();
+      res.reblogs = res.reblogs.sort((a, b) => new Date(b.createdAt).getDate() - new Date(a.createdAt).getDate());
     }
     return res;
   }
