@@ -1,0 +1,20 @@
+<div class="grid">
+    <div class="col-12 sm:col-12 md:col-12 lg:col-6 lg:col-offset-3 pb-6">
+      <p-card>      
+      <p-progressSpinner *ngIf="loading"></p-progressSpinner>
+  
+      <form [hidden]="loading" [formGroup]="editProfileForm" (ngSubmit)="onSubmit()" >
+        <label for="avatar" class="block text-900 font-medium mb-2"> Select a new avatar</label>
+        <input formControlName="avatar" id="avatar" type="file" accept="image/jpeg,image/png,image/webp,image/gif" (change)="imgSelected($event)"
+          pTooltip="Select your avatar" tooltipPosition="top" pInputText
+          class="w-full mb-3">
+        <label for="description" class="block text-900 font-medium mb-2">Description</label>
+        <input formControlName="description" id="description" type="text" pInputText class="w-full mb-3">
+        <div class="flex align-items-center justify-content-between mb-6">
+          <a routerLink="/recoverPassword" class="font-medium no-underline ml-2 text-blue-500 text-right cursor-pointer">To change your password, please use the reset password form</a>
+        </div>
+        <button [disabled]="!editProfileForm.valid" pButton pRipple label="Update profile" icon="pi pi-user" class="w-full"></button>
+      </form>
+    </p-card>
+    </div>
+  </div>

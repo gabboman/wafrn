@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
+import { EditProfileComponent } from './dashboard/edit-profile/edit-profile.component';
 import { ActivateAccountComponent } from './mainpage/activate-account/activate-account.component';
 import { LoginComponent } from './mainpage/login/login.component';
 import { RecoverPasswordComponent } from './mainpage/recover-password/recover-password.component';
@@ -40,6 +41,10 @@ const routes: Routes = [{
 {
   path: 'blog/:url',
   component: ViewBlogComponent,
+},
+{
+  path: 'editProfile',
+  component: EditProfileComponent
 },
 {
   path: '**',

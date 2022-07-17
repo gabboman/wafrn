@@ -13,6 +13,7 @@ import { SearchComponent } from './search/search.component';
 import { InputTextModule } from 'primeng/inputtext';
 import {CarouselModule} from 'primeng/carousel';
 import { ButtonModule } from 'primeng/button';
+import { EditProfileComponent } from './edit-profile/edit-profile.component';
 
 const routes: Routes = [
   {
@@ -30,6 +31,10 @@ const routes: Routes = [
   {
     path: 'search/:term',
     component: SearchComponent
+  },
+  {
+    path: 'profile',
+    component: EditProfileComponent
   }
 ];
 
@@ -38,6 +43,7 @@ const routes: Routes = [
     DashboardComponent,
     CreatorComponent,
     SearchComponent,
+    EditProfileComponent,
   ],
   imports: [
     CommonModule,

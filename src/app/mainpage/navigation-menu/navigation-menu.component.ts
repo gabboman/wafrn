@@ -89,9 +89,9 @@ export class NavigationMenuComponent implements OnInit {
           routerLink: ['/blog', this.jwtService.getTokenData()['url']]
         },
         {
-          label: 'Edit profile [in progress]',
+          label: 'Edit profile',
           icon: "pi pi-cog",
-          disabled: true
+          routerLink: ['/editProfile']
         },
         {
           label: 'Check the source code!',

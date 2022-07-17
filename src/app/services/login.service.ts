@@ -100,4 +100,23 @@ export class LoginService {
 
     return res;
   }
+
+  async updateProfile(updateProfileForm: FormGroup, img: File | undefined): Promise<boolean> {
+    let success = false;
+    try {
+      let payload =  this.utils.objectToFormData(updateProfileForm.value);
+      if(img){
+        payload.append('avatar', img);
+      }
+      let petition: any = await this.http.post(environment.baseUrl + '/editProfile',
+       payload).toPromise();
+      if (petition.success) {
+        success = true;
+      }
+    } catch (exception) {
+      console.error(exception);
+    }
+    return success;
+
+  }
 }
