@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { MessageService } from 'primeng/api';
 import { DashboardService } from 'src/app/services/dashboard.service';
 import { JwtService } from 'src/app/services/jwt.service';
 import { LoginService } from 'src/app/services/login.service';
@@ -26,6 +27,7 @@ export class EditProfileComponent implements OnInit {
     private dashboardService: DashboardService,
     private mediaService: MediaService,
     private loginService: LoginService,
+    private messages: MessageService,
   ) { }
 
   async ngOnInit(): Promise<void> {
@@ -44,8 +46,15 @@ export class EditProfileComponent implements OnInit {
   }
 
   async onSubmit() {
-    let res = await this.loginService.updateProfile(this.editProfileForm, this.img);
-    console.log(res);
+    this.loading = true;
+    try {
+      let res = await this.loginService.updateProfile(this.editProfileForm, this.img);
+      this.messages.add({severity:'success', summary:'Your profile was updated!'});
+    }catch(error){
+      this.messages.add({severity:'error', summary:'Something went wrong', detail:'If you know what you are doing check the console and let us know!'});
+      console.error(error);
+    }
+    this.loading = false;
   }
 
 }
