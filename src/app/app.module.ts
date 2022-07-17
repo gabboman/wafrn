@@ -67,7 +67,7 @@ import { environment } from 'src/environments/environment';
     PagenotfoundComponent,
   ],
   imports: [
-    BrowserModule,
+    BrowserModule.withServerTransition({ appId: 'serverApp' }),
     BrowserAnimationsModule,
     NgHcaptchaModule.forRoot({
       siteKey: environment.recaptchaPublic
