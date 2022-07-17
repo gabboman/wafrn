@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { UntypedFormGroup, UntypedFormControl, Validators } from '@angular/forms';
 import { MessageService } from 'primeng/api';
 import { LoginService } from 'src/app/services/login.service';
 import { environment } from 'src/environments/environment';
@@ -16,9 +16,9 @@ export class RecoverPasswordComponent implements OnInit {
   captchaKey = environment.recaptchaPublic;
   loading = false;
 
-  loginForm = new FormGroup({
-    email:  new FormControl('', [Validators.required, Validators.email]),
-    captchaResponse:  new FormControl('', [Validators.required])
+  loginForm = new UntypedFormGroup({
+    email:  new UntypedFormControl('', [Validators.required, Validators.email]),
+    captchaResponse:  new UntypedFormControl('', [Validators.required])
   });
 
   constructor(

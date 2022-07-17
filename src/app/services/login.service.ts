@@ -1,7 +1,7 @@
 import { EventEmitter, Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
-import { FormGroup } from '@angular/forms';
+import { UntypedFormGroup } from '@angular/forms';
 import { environment } from 'src/environments/environment';
 import { UtilsService } from './utils.service';
 import { JwtService } from './jwt.service';
@@ -25,7 +25,7 @@ export class LoginService {
     return this.jwt.tokenValid();
   }
 
-  async logIn(loginForm: FormGroup): Promise<boolean> {
+  async logIn(loginForm: UntypedFormGroup): Promise<boolean> {
     let success = false;
     try {
       let petition: any = await this.http.post(environment.baseUrl + '/login',
@@ -44,7 +44,7 @@ export class LoginService {
     return success;
   }
 
-  async register(registerForm: FormGroup, img: File): Promise<boolean> {
+  async register(registerForm: UntypedFormGroup, img: File): Promise<boolean> {
     let success = false;
     try {
       let payload =  this.utils.objectToFormData(registerForm.value);
@@ -101,7 +101,7 @@ export class LoginService {
     return res;
   }
 
-  async updateProfile(updateProfileForm: FormGroup, img: File | undefined): Promise<boolean> {
+  async updateProfile(updateProfileForm: UntypedFormGroup, img: File | undefined): Promise<boolean> {
     let success = false;
     try {
       let payload =  this.utils.objectToFormData(updateProfileForm.value);

@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MenuItem, MessageService } from 'primeng/api';
 import { ProcessedPost } from 'src/app/interfaces/processed-post';
@@ -18,8 +18,8 @@ export class SearchComponent implements OnInit {
 
 
   baseMediaUrl = environment.baseMediaUrl;
-  searchForm: FormGroup = new FormGroup({
-    search: new FormControl('', [Validators.required])
+  searchForm: UntypedFormGroup = new UntypedFormGroup({
+    search: new UntypedFormControl('', [Validators.required])
   });
   currentSearch = '';
   posts: ProcessedPost[][] = [];

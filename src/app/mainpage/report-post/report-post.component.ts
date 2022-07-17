@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ReportService } from 'src/app/services/report.service';
-import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormBuilder, FormControl, UntypedFormGroup, Validators } from '@angular/forms';
 import { MessageService } from 'primeng/api';
 import { ProcessedPost } from 'src/app/interfaces/processed-post';
 
@@ -14,7 +14,7 @@ export class ReportPostComponent implements OnInit {
 
   postToReport!: ProcessedPost[] | undefined;
   loading = false;
-  reportForm: FormGroup;
+  reportForm: UntypedFormGroup;
 
 
   reportOptions: Array<{label: string, value: number}> = [
@@ -39,7 +39,7 @@ export class ReportPostComponent implements OnInit {
   constructor(
     private reportService: ReportService,
     private messages: MessageService,
-    private readonly formBuilder: FormBuilder
+    private readonly formBuilder: UntypedFormBuilder
   ) { 
     // I could call clearForm, but that will calm typescript typechecker
     this.reportForm =  this.formBuilder.group({

@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
 import { MessageService } from 'primeng/api';
 import { DashboardService } from 'src/app/services/dashboard.service';
 import { JwtService } from 'src/app/services/jwt.service';
@@ -15,11 +15,11 @@ export class EditProfileComponent implements OnInit {
 
   loading = true;
   img: File| undefined = undefined;
-  editProfileForm = new FormGroup({
-    description: new FormControl('', [Validators.required]),
-    avatar:  new FormControl('', []),
-    disableNSFWFilter:  new FormControl(false, []),
-    disableGifsByDefault:  new FormControl(false, [])
+  editProfileForm = new UntypedFormGroup({
+    description: new UntypedFormControl('', [Validators.required]),
+    avatar:  new UntypedFormControl('', []),
+    disableNSFWFilter:  new UntypedFormControl(false, []),
+    disableGifsByDefault:  new UntypedFormControl(false, [])
   });
 
   constructor(

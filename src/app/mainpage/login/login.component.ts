@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { LoginService } from 'src/app/services/login.service';
 import { environment } from 'src/environments/environment';
-import { FormGroup, FormControl, Validators } from '@angular/forms'
+import { UntypedFormGroup, UntypedFormControl, Validators } from '@angular/forms'
 import {MessageService} from 'primeng/api';
 import { Router } from '@angular/router';
 @Component({
@@ -14,10 +14,10 @@ export class LoginComponent implements OnInit {
   captchaKey = environment.recaptchaPublic;
   loading = true;
 
-  loginForm = new FormGroup({
-    email:  new FormControl('', [Validators.required, Validators.email]),
-    password: new FormControl('', [Validators.required]),
-    captchaResponse:  new FormControl('', [Validators.required])
+  loginForm = new UntypedFormGroup({
+    email:  new UntypedFormControl('', [Validators.required, Validators.email]),
+    password: new UntypedFormControl('', [Validators.required]),
+    captchaResponse:  new UntypedFormControl('', [Validators.required])
   });
 
 

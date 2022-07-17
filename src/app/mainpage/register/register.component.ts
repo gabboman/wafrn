@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
 import { MessageService } from 'primeng/api';
 import { LoginService } from 'src/app/services/login.service';
 import { environment } from 'src/environments/environment';
@@ -19,14 +19,14 @@ export class RegisterComponent implements OnInit {
   img: File|null = null;
 
 
-  loginForm = new FormGroup({
-    email:  new FormControl('', [Validators.required, Validators.email]),
-    password: new FormControl('', [Validators.required]),
-    url: new FormControl('', [Validators.required]),
-    description: new FormControl('', [Validators.required]),
-    birthDate: new FormControl('', [Validators.required]),
-    captchaResponse:  new FormControl('', [Validators.required]),
-    avatar:  new FormControl('', [Validators.required])
+  loginForm = new UntypedFormGroup({
+    email:  new UntypedFormControl('', [Validators.required, Validators.email]),
+    password: new UntypedFormControl('', [Validators.required]),
+    url: new UntypedFormControl('', [Validators.required]),
+    description: new UntypedFormControl('', [Validators.required]),
+    birthDate: new UntypedFormControl('', [Validators.required]),
+    captchaResponse:  new UntypedFormControl('', [Validators.required]),
+    avatar:  new UntypedFormControl('', [Validators.required])
   });
 
 

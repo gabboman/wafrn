@@ -41,7 +41,8 @@ export class NotificationsComponent implements OnInit {
     this.checkMenu({
       url: '/' + this.activatedRoute.snapshot.url.toString(),
       urlAfterRedirects: '',
-      id: -1
+      id: -1,
+      type: 1,
     })
 
     this.router.events.subscribe((ev) => {

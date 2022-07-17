@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { FormGroup } from '@angular/forms';
+import { UntypedFormGroup } from '@angular/forms';
 import { MessageService } from 'primeng/api';
 import { ReplaySubject } from 'rxjs';
 import { environment } from 'src/environments/environment';
@@ -20,7 +20,7 @@ export class ReportService {
   ) { }
 
 
-  async reportPost(post: ProcessedPost[], report: FormGroup): Promise<boolean> {
+  async reportPost(post: ProcessedPost[], report: UntypedFormGroup): Promise<boolean> {
     let success = false;
     try {
       const formData: FormData = new FormData();
