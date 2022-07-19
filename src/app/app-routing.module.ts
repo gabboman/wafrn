@@ -9,6 +9,7 @@ import { ResetPasswordComponent } from './mainpage/reset-password/reset-password
 import { ViewBlogComponent } from './mainpage/view-blog/view-blog.component';
 import { ViewPostComponent } from './mainpage/view-post/view-post.component';
 import { PagenotfoundComponent } from './pagenotfound/pagenotfound.component';
+import { PostResolver } from './resolvers/post.resolver';
 
 const routes: Routes = [{
   path: '',
@@ -36,6 +37,7 @@ const routes: Routes = [{
 },
 {
   path: 'post/:id',
+  resolve: { posts: PostResolver },
   component: ViewPostComponent
 },
 {

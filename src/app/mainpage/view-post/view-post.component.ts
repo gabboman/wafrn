@@ -6,6 +6,8 @@ import { LoginService } from 'src/app/services/login.service';
 import { PostsService } from 'src/app/services/posts.service';
 import { environment } from 'src/environments/environment';
 import { Title, Meta } from '@angular/platform-browser';
+import { Observable } from 'rxjs';
+import { map, tap } from "rxjs/operators";
 @Component({
   selector: 'app-view-post',
   templateUrl: './view-post.component.html',
@@ -27,15 +29,21 @@ export class ViewPostComponent implements OnInit {
     private dashboardService: DashboardService,
     private loginService: LoginService,
     private router: Router,
+    private route: ActivatedRoute,
     private titleService: Title,
     private metaTagService: Meta
   ) { 
+    // resolve posts with resolver so we get the data before the route
+    this.route.data.subscribe((elem) => {
+      console.log(elem['posts']);
+      this.loadSeo();
+    });
   }
   async ngOnInit(): Promise<void> {
-    let postId = this.activatedRoute.snapshot.paramMap.get('id');
-    if(postId) {
-      this.post = await this.dashboardService.getPost(postId);
-      const lastPostFragment = this.post[this.post.length -1];
+  }
+
+  loadSeo(){
+    const lastPostFragment = this.post[this.post.length -1];
       this.titleService.setTitle('wafrn - Post by ' + lastPostFragment.user.url);
       this.metaTagService.addTags([
         {name: 'description', content: 'Post by'},
@@ -43,7 +51,6 @@ export class ViewPostComponent implements OnInit {
         {name: 'image', content: this.getImage(this.post)}
       ]);
       this.loading = false;
-    }
   }
   // gets either the first non video image from the last post, the fist non video image from the initial post OR the wafrn logo
   getImage(processedPost: ProcessedPost[]): string{
