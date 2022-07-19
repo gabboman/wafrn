@@ -21,12 +21,23 @@
     </p-fileUpload>
 
   </p-overlayPanel>
-  <p-editor [(ngModel)]="postCreatorContent" [style]="{'height':'25vh'}">
+
+  <div class="NgxEditor__Wrapper">
+    <ngx-editor-menu [editor]="editor"> </ngx-editor-menu>
+    <ngx-editor
+      [editor]="editor"
+      [ngModel]="postCreatorContent"
+      [disabled]="false"
+      [placeholder]="'Type here...'"
+    ></ngx-editor>
+  </div>
+  <!--
+    
+  <quill-editor [(ngModel)]="postCreatorContent" [style]="{'height':'25vh'}">
     <ng-template pTemplate="header">
       <span class="ql-formats">
         <select class="ql-size">
           <option value="small"></option>
-          <!-- Note a missing, thus falsy value, is used to reset to default -->
           <option selected></option>
           <option value="large"></option>
           <option value="huge"></option>
@@ -44,7 +55,8 @@
 
       </span>
     </ng-template>
-  </p-editor>
+  </quill-editor>
+  -->
 
   <h5>Tags (comma separated)</h5>
   <p-chips [(ngModel)]="tags" separator=","></p-chips>

@@ -16,7 +16,7 @@ import {
 import {
   environment
 } from 'src/environments/environment';
-
+import { Editor } from 'ngx-editor';
 @Component({
   selector: 'app-post-editor',
   templateUrl: './post-editor.component.html',
@@ -38,6 +38,7 @@ export class PostEditorComponent implements OnInit {
   newImageFile: File | undefined;
   disableImageUploadButton = false;
   uploadImageUrl = environment.baseUrl + '/uploadMedia';
+  editor: Editor;
   @ViewChild('uploadImagesPanel') uploadImagesPanel: any;
 
 
@@ -45,11 +46,11 @@ export class PostEditorComponent implements OnInit {
     private editorService: EditorService,
     private postsService: PostsService,
     private messages: MessageService,
-    private mediaService: MediaService
+    private mediaService: MediaService,
 
 
   ) {
-
+    this.editor = new Editor();
     this.editorService.launchPostEditorEmitter.subscribe((elem) => {
       if (elem) {
         this.idPostToReblog = elem.length === 36 ? elem : undefined;
@@ -58,7 +59,8 @@ export class PostEditorComponent implements OnInit {
     });
   }
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+  }
 
 
   // editor methods

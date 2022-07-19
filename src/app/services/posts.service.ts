@@ -3,7 +3,7 @@ import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { ProcessedPost } from '../interfaces/processed-post';
 import { RawPost } from '../interfaces/raw-post';
 import { MediaService } from './media.service';
-import * as DOMPurify from 'isomorphic-dompurify';
+import * as sanitizeHtml from 'sanitize-html';
 import { HttpClient } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
 import { BehaviorSubject } from 'rxjs';
@@ -111,7 +111,7 @@ export class PostsService {
 
     const replacements: Array<{ wafrnMediaStringToReplace: string, id: string }> = [];
 
-    let sanitized = DOMPurify.sanitize(content, { ALLOWED_TAGS: ['b', 'i', 'u', 'a', 'span', 'br', 'p', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'pre', 'strong', 'em', 'ul', 'li'] });
+    let sanitized = sanitizeHtml(content, { allowedTags: ['b', 'i', 'u', 'a', 'span', 'br', 'p', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'pre', 'strong', 'em', 'ul', 'li'] });
     // we remove stuff like img and script tags. we only allow certain stuff.
     const youtubeLinks = sanitized.matchAll(this.youtubeRegex);
 

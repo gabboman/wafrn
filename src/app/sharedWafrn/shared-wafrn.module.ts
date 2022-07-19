@@ -3,7 +3,6 @@ import { CommonModule } from '@angular/common';
 import { PostFragmentComponent } from './post-fragment/post-fragment.component';
 import { PostComponent } from './post/post.component';
 import { WafrnMediaComponent } from './wafrn-media/wafrn-media.component';
-import {EditorModule} from 'primeng/editor';
 import {DividerModule} from 'primeng/divider';
 import {AvatarModule} from 'primeng/avatar';
 import { CheckboxModule } from 'primeng/checkbox';
@@ -16,7 +15,7 @@ import { RouterModule } from '@angular/router';
 import { TagModule } from 'primeng/tag';
 import {OverlayPanelModule} from 'primeng/overlaypanel';
 import { CaptchaModule } from 'primeng/captcha';
-
+import { NgxEditorModule } from 'ngx-editor';
 @NgModule({
   declarations: [
     PostFragmentComponent,
@@ -26,7 +25,7 @@ import { CaptchaModule } from 'primeng/captcha';
   ],
   imports: [
     CommonModule,
-    EditorModule,
+    NgxEditorModule,
     DividerModule,
     AvatarModule,
     CheckboxModule,

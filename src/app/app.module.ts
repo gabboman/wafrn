@@ -34,7 +34,6 @@ import { PostEditorComponent } from './mainpage/post-editor/post-editor.componen
 import { OverlayPanelModule } from 'primeng/overlaypanel';
 import { DialogModule } from 'primeng/dialog';
 import { CheckboxModule } from 'primeng/checkbox';
-import { EditorModule } from 'primeng/editor';
 import { NavigationMenuComponent } from './mainpage/navigation-menu/navigation-menu.component';
 import { ChipsModule } from 'primeng/chips';
 import { ReportPostComponent } from './mainpage/report-post/report-post.component';
@@ -49,6 +48,7 @@ import {FileUploadModule} from 'primeng/fileupload';
 import { NgHcaptchaModule } from 'ng-hcaptcha';
 
 import { environment } from 'src/environments/environment';
+import { NgxEditorModule } from 'ngx-editor';
 @NgModule({
   declarations: [
     AppComponent,
@@ -94,7 +94,7 @@ import { environment } from 'src/environments/environment';
     OverlayPanelModule,
     DialogModule,
     CheckboxModule,
-    EditorModule,
+    NgxEditorModule,
     ChipsModule,
     ListboxModule,
     BadgeModule,
