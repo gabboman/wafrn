@@ -5,7 +5,7 @@ import { DashboardService } from 'src/app/services/dashboard.service';
 import { LoginService } from 'src/app/services/login.service';
 import { PostsService } from 'src/app/services/posts.service';
 import { environment } from 'src/environments/environment';
-
+import { Title, Meta } from '@angular/platform-browser';
 @Component({
   selector: 'app-view-post',
   templateUrl: './view-post.component.html',
@@ -19,7 +19,6 @@ export class ViewPostComponent implements OnInit {
   blogUrl: string = '';
   blogDetails: any;
   mediaUrl = environment.baseMediaUrl;
-  visible = true;
 
 
 
@@ -27,18 +26,48 @@ export class ViewPostComponent implements OnInit {
     private activatedRoute: ActivatedRoute,
     private dashboardService: DashboardService,
     private loginService: LoginService,
-    private router: Router
+    private router: Router,
+    private titleService: Title,
+    private metaTagService: Meta
   ) { 
-    this.visible = !loginService.checkUserLoggedIn();
   }
-
   async ngOnInit(): Promise<void> {
     let postId = this.activatedRoute.snapshot.paramMap.get('id');
     if(postId) {
       this.post = await this.dashboardService.getPost(postId);
-      this.blogDetails = await this.dashboardService.getBlogDetails(this.post[this.post.length -1].user.url)
+      const lastPostFragment = this.post[this.post.length -1];
+      this.titleService.setTitle('wafrn - Post by ' + lastPostFragment.user.url);
+      this.metaTagService.addTags([
+        {name: 'description', content: 'Post by'},
+        {name: 'author', content: lastPostFragment.user.url },
+        {name: 'image', content: this.getImage(this.post)}
+      ]);
       this.loading = false;
     }
+  }
+  // gets either the first non video image from the last post, the fist non video image from the initial post OR the wafrn logo
+  getImage(processedPost: ProcessedPost[]): string{
+    let res: string = 'https://app.wafrn.net/favicon.ico';
+    let firstPostMedias = processedPost[0]?.medias;
+    if(firstPostMedias){
+      for (let i = 0; i < firstPostMedias.length; i++){
+        if(!firstPostMedias[i].url.endsWith('mp4')){
+          res = firstPostMedias[i].url;
+          break;
+        }
+      }
+    }
+
+    let lastPostMedias = processedPost[processedPost.length]?.medias;
+    if(lastPostMedias){
+      for (let i = 0; i < lastPostMedias.length; i++){
+        if(!lastPostMedias[i].url.endsWith('mp4')){
+          res = lastPostMedias[i].url;
+          break;
+        }
+      }
+    }
+    return res;
   }
 
 }

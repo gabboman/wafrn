@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Meta, Title } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MessageService } from 'primeng/api';
 import { ProcessedPost } from 'src/app/interfaces/processed-post';
@@ -32,7 +33,9 @@ export class ViewBlogComponent implements OnInit {
     private postService: PostsService,
     private messages: MessageService,
     private loginService: LoginService,
-    private router: Router
+    private router: Router,
+    private titleService: Title,
+    private metaTagService: Meta
   ) { 
     this.userLoggedIn = loginService.checkUserLoggedIn();
     // override the route reuse strategy
@@ -54,7 +57,12 @@ export class ViewBlogComponent implements OnInit {
 
     await this.loadPosts(this.currentPage);
     this.blogDetails = await this.dashboardService.getBlogDetails(this.blogUrl);
-    console.log(this.blogDetails)
+    this.titleService.setTitle(this.blogDetails.url + '\'s wafrn blog');
+      this.metaTagService.addTags([
+        {name: 'description', content: this.blogDetails.url + '\'s wafrn blog'},
+        {name: 'author', content: this.blogDetails.url },
+        {name: 'image', content: this.blogDetails.avatar}
+      ]);
     this.loading = false;
   }
 
