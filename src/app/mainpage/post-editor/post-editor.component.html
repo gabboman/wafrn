@@ -21,42 +21,31 @@
     </p-fileUpload>
 
   </p-overlayPanel>
-
-  <div class="NgxEditor__Wrapper">
-    <ngx-editor-menu [editor]="editor"> </ngx-editor-menu>
-    <ngx-editor
-      [editor]="editor"
-      [ngModel]="postCreatorContent"
-      [disabled]="false"
-      [placeholder]="'Type here...'"
-    ></ngx-editor>
-  </div>
-  <!--
     
-  <quill-editor [(ngModel)]="postCreatorContent" [style]="{'height':'25vh'}">
-    <ng-template pTemplate="header">
-      <span class="ql-formats">
-        <select class="ql-size">
-          <option value="small"></option>
-          <option selected></option>
-          <option value="large"></option>
-          <option value="huge"></option>
-        </select>
-        <button type="button" class="ql-bold" aria-label="Bold"></button>
-        <button type="button" class="ql-italic" aria-label="Italic"></button>
-        <button type="button" class="ql-underline" aria-label="Underline"></button>
-        <button type="button" class="ql-link" aria-label="Insert Link"></button>
-        <button type="button" class="ql-code-block" aria-label="Insert Code Block"></button>
-        <button pButton #uploadImages
-        (click)="uploadImagesPanel.show($event, uploadImages); displayUploadImagePanel = true"
-        [icon]="'pi pi-upload'" label="Upload image"
-          type="button"></button>
+  <quill-editor [(ngModel)]="postCreatorContent" 
+    [modules]="modules" 
+  >
+  <div quill-editor-toolbar style="border-top-left-radius: 5px; border-top-right-radius: 5px;">
+      <select class="ql-size">
+        <option value="small"></option>
+        <option selected></option>
+        <option value="large"></option>
+        <option value="huge"></option>
+      </select>
+      <button pButton type="button" class="ql-bold" aria-label="Bold"></button>
+      <button pButton type="button" class="ql-italic" aria-label="Italic"></button>
+      <button pButton type="button" class="ql-underline" aria-label="Underline"></button>
+      <button pButton type="button" class="ql-strike" aria-label="Strike"></button>
+      <button pButton type="button" class="ql-link" aria-label="Insert Link"></button>
+    <button pButton #uploadImages
+    (click)="uploadImagesPanel.show($event, uploadImages); displayUploadImagePanel = true"
+    [icon]="'pi pi-upload'" label="Upload image" class="uploadImageButton"
+      type="button"></button>
 
-
-      </span>
-    </ng-template>
+  </div>
   </quill-editor>
-  -->
+
+
 
   <h5>Tags (comma separated)</h5>
   <p-chips [(ngModel)]="tags" separator=","></p-chips>

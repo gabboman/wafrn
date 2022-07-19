@@ -15,7 +15,6 @@ import { RouterModule } from '@angular/router';
 import { TagModule } from 'primeng/tag';
 import {OverlayPanelModule} from 'primeng/overlaypanel';
 import { CaptchaModule } from 'primeng/captcha';
-import { NgxEditorModule } from 'ngx-editor';
 @NgModule({
   declarations: [
     PostFragmentComponent,
@@ -25,7 +24,6 @@ import { NgxEditorModule } from 'ngx-editor';
   ],
   imports: [
     CommonModule,
-    NgxEditorModule,
     DividerModule,
     AvatarModule,
     CheckboxModule,

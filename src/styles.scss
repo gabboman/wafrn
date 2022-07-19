@@ -1,5 +1,6 @@
 $wafrn-blue: rgb(56, 254, 241);
 // $wafrn-dark: rgb(18, 95, 90);
+$editor-buttons:  #ffffffde;
 
 html {
     background-color: rgb(32, 38, 46);
@@ -32,4 +33,28 @@ a, a:visited {
 .p-tag-value {
     max-width: 100%;
     word-break: break-word;
+}
+
+.ql-snow .ql-stroke {
+    fill: none;
+    stroke: $editor-buttons;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    stroke-width: 2;
+  }
+
+.ql-snow .ql-fill, .ql-snow .ql-stroke.ql-fill {
+    fill: $editor-buttons;
+  }
+
+.ql-snow .ql-picker{
+    color: $editor-buttons;
+}
+
+.uploadImageButton {
+    color: $editor-buttons
+}
+
+.ql-snow > .ql-editor{
+    background: #20262e !important;
 }

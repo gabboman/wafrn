@@ -16,7 +16,8 @@ import {
 import {
   environment
 } from 'src/environments/environment';
-import { Editor } from 'ngx-editor';
+import { QuillModule } from 'ngx-quill'
+
 @Component({
   selector: 'app-post-editor',
   templateUrl: './post-editor.component.html',
@@ -38,9 +39,17 @@ export class PostEditorComponent implements OnInit {
   newImageFile: File | undefined;
   disableImageUploadButton = false;
   uploadImageUrl = environment.baseUrl + '/uploadMedia';
-  editor: Editor;
   @ViewChild('uploadImagesPanel') uploadImagesPanel: any;
 
+  modules = {
+    toolbar: [
+      ['bold', 'italic', 'underline', 'strike'],        // toggled buttons
+      [{ 'list': 'ordered'}, { 'list': 'bullet' }],  
+      [{ 'header': [1, 2, 3, 4, 5, 6, false] }],  
+      ['link'],                       // link
+      ['clean'],                                         // remove formatting button
+    ]
+  };
 
   constructor(
     private editorService: EditorService,
@@ -50,7 +59,6 @@ export class PostEditorComponent implements OnInit {
 
 
   ) {
-    this.editor = new Editor();
     this.editorService.launchPostEditorEmitter.subscribe((elem) => {
       if (elem) {
         this.idPostToReblog = elem.length === 36 ? elem : undefined;

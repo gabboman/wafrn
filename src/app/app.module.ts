@@ -46,9 +46,8 @@ import {SidebarModule} from 'primeng/sidebar';
 import {PanelMenuModule} from 'primeng/panelmenu';
 import {FileUploadModule} from 'primeng/fileupload';
 import { NgHcaptchaModule } from 'ng-hcaptcha';
-
+import { QuillModule } from 'ngx-quill'
 import { environment } from 'src/environments/environment';
-import { NgxEditorModule } from 'ngx-editor';
 @NgModule({
   declarations: [
     AppComponent,
@@ -94,14 +93,14 @@ import { NgxEditorModule } from 'ngx-editor';
     OverlayPanelModule,
     DialogModule,
     CheckboxModule,
-    NgxEditorModule,
     ChipsModule,
     ListboxModule,
     BadgeModule,
     DataViewModule,
     SidebarModule,
     PanelMenuModule,
-    FileUploadModule
+    FileUploadModule,
+    QuillModule.forRoot(),
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: WafrnAuthInterceptor, multi: true },
