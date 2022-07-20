@@ -3,11 +3,8 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { ProcessedPost } from 'src/app/interfaces/processed-post';
 import { DashboardService } from 'src/app/services/dashboard.service';
 import { LoginService } from 'src/app/services/login.service';
-import { PostsService } from 'src/app/services/posts.service';
 import { environment } from 'src/environments/environment';
 import { Title, Meta } from '@angular/platform-browser';
-import { Observable } from 'rxjs';
-import { map, tap } from "rxjs/operators";
 @Component({
   selector: 'app-view-post',
   templateUrl: './view-post.component.html',
@@ -63,7 +60,7 @@ export class ViewPostComponent implements OnInit {
     let firstPostMedias = processedPost[0]?.medias;
     if(firstPostMedias){
       for (let i = 0; i < firstPostMedias.length; i++){
-        if(!firstPostMedias[i].url.endsWith('mp4')){
+        if(!firstPostMedias[i].url.endsWith('mp4') && !firstPostMedias[i].NSFW === false ){
           res = firstPostMedias[i].url;
           break;
         }
@@ -73,7 +70,7 @@ export class ViewPostComponent implements OnInit {
     let lastPostMedias = processedPost[processedPost.length -1 ]?.medias;
     if(lastPostMedias){
       for (let i = 0; i < lastPostMedias.length; i++){
-        if(!lastPostMedias[i].url.endsWith('mp4')){
+        if(!lastPostMedias[i].url.endsWith('mp4') && !lastPostMedias[i].NSFW === false){
           res = lastPostMedias[i].url;
           break;
         }
