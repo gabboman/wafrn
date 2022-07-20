@@ -44,11 +44,14 @@ export class ViewPostComponent implements OnInit {
   loadSeo(){
     if(this.post.length > 0){
       const lastPostFragment = this.post[this.post.length -1];
-      this.titleService.setTitle('wafrn - Post by ' + lastPostFragment.user.url + ': ' + lastPostFragment.content);
+      this.titleService.setTitle('wafrn - Post by ' + lastPostFragment.user.url);
       this.metaTagService.addTags([
-        {name: 'description', content: 'Wafrn post by ' + lastPostFragment.user.url },
+        {name: 'description', content: 'Wafrn post by ' + lastPostFragment.user.url + ': ' + lastPostFragment.content },
         {name: 'author', content: lastPostFragment.user.url },
-        {name: 'image', content: this.getImage(this.post)}
+        {name: 'image', content: this.getImage(this.post)},
+        {name: 'og:description', content: 'Wafrn post by ' + lastPostFragment.user.url + ': ' + lastPostFragment.content },
+        {name: 'og:author', content: lastPostFragment.user.url },
+        {name: 'og:image', content: this.getImage(this.post)}
       ]);
     }
       this.loading = false;
