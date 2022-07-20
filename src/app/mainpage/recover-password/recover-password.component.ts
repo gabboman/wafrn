@@ -3,6 +3,7 @@ import { UntypedFormGroup, UntypedFormControl, Validators } from '@angular/forms
 import { MessageService } from 'primeng/api';
 import { LoginService } from 'src/app/services/login.service';
 import { environment } from 'src/environments/environment';
+import { ReCaptchaV3Service } from 'ng-recaptcha';
 
 @Component({
   selector: 'app-recover-password',
@@ -18,26 +19,22 @@ export class RecoverPasswordComponent implements OnInit {
 
   loginForm = new UntypedFormGroup({
     email:  new UntypedFormControl('', [Validators.required, Validators.email]),
-    captchaResponse:  new UntypedFormControl('', [Validators.required])
+    captchaResponse:  new UntypedFormControl('', [])
   });
 
   constructor(
     private loginService: LoginService,
-    private messageService: MessageService
+    private messageService: MessageService,
+    private recaptchaV3Service: ReCaptchaV3Service
   ) { }
 
   ngOnInit(): void {
   }
 
-  captchaResolved(ev: any){
-    this.loginForm.controls['captchaResponse'].patchValue(ev);
-  }
-  captchaExpired(){
-    this.loginForm.controls['captchaResponse'].patchValue(null);
-  }
 
   async onSubmit(){
     this.loading = true;
+    this.loginForm.controls['captchaResponse'].patchValue(await this.recaptchaV3Service.execute('importantAction').toPromise());
     await this.loginService.requestPasswordReset(this.loginForm.value.email, this.loginForm.value.captchaResponse);
     this.loading = false;
   }

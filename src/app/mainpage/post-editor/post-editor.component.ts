@@ -17,7 +17,7 @@ import {
   environment
 } from 'src/environments/environment';
 import { QuillModule } from 'ngx-quill'
-
+import { ReCaptchaV3Service } from 'ng-recaptcha';
 @Component({
   selector: 'app-post-editor',
   templateUrl: './post-editor.component.html',
@@ -56,6 +56,7 @@ export class PostEditorComponent implements OnInit {
     private postsService: PostsService,
     private messages: MessageService,
     private mediaService: MediaService,
+    private recaptchaV3Service: ReCaptchaV3Service
 
 
   ) {
@@ -86,6 +87,7 @@ export class PostEditorComponent implements OnInit {
   postBeingSubmitted = false;
   async submitPost() {
     this.postBeingSubmitted = true;
+    this.captchaResponse =  await this.recaptchaV3Service.execute('importantAction').toPromise();
     let tagsToSend = '';
     this.tags.forEach((elem) => {
       tagsToSend = tagsToSend + elem.trim() + ',';
@@ -124,14 +126,6 @@ export class PostEditorComponent implements OnInit {
     this.submitPost();
 
   }
-
-captchaError(event: any){
-  this.messages.add({
-    severity: 'error',
-    summary: 'Oh no! hcaptcha thinks you are a bot. Please mail us at info at wafrn dot net if the issue is persistent'
-  });
-  console.log('hcaptcha issue', event)
-}
 
   captchaExpired() {
     this.captchaResponse = undefined;

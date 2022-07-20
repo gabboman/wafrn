@@ -45,9 +45,9 @@ import { PagenotfoundComponent } from './pagenotfound/pagenotfound.component';
 import {SidebarModule} from 'primeng/sidebar';
 import {PanelMenuModule} from 'primeng/panelmenu';
 import {FileUploadModule} from 'primeng/fileupload';
-import { NgHcaptchaModule } from 'ng-hcaptcha';
 import { QuillModule } from 'ngx-quill'
 import { environment } from 'src/environments/environment';
+import { RECAPTCHA_V3_SITE_KEY, RecaptchaV3Module } from 'ng-recaptcha';
 @NgModule({
   declarations: [
     AppComponent,
@@ -68,9 +68,7 @@ import { environment } from 'src/environments/environment';
   imports: [
     BrowserModule.withServerTransition({ appId: 'serverApp' }),
     BrowserAnimationsModule,
-    NgHcaptchaModule.forRoot({
-      siteKey: environment.recaptchaPublic
-  }),
+    RecaptchaV3Module,
     CommonModule,
     FormsModule,
     ReactiveFormsModule,
@@ -104,7 +102,11 @@ import { environment } from 'src/environments/environment';
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: WafrnAuthInterceptor, multi: true },
-    MessageService
+    MessageService,
+    {
+      provide: RECAPTCHA_V3_SITE_KEY,
+      useValue: environment.recaptchaPublic,
+    }
   ],
   bootstrap: [AppComponent],
   exports: [

@@ -6,6 +6,7 @@ import { LoginService } from 'src/app/services/login.service';
 import { PostsService } from 'src/app/services/posts.service';
 import { ReportService } from 'src/app/services/report.service';
 import { environment } from 'src/environments/environment';
+import { ReCaptchaV3Service } from 'ng-recaptcha';
 
 @Component({
   selector: 'app-post',
@@ -28,6 +29,7 @@ export class PostComponent implements OnInit {
   quickReblogDoneSuccessfully = false;
   captchaKey = environment.recaptchaPublic;
   captchaResponse: string | undefined;
+  reblogging = false;
 
 
 
@@ -39,7 +41,8 @@ export class PostComponent implements OnInit {
     private messages: MessageService,
     private editor: EditorService,
     private editorService: EditorService,
-    private reportService: ReportService
+    private reportService: ReportService,
+    private recaptchaV3Service: ReCaptchaV3Service
   ) {
     this.userLoggedIn = loginService.checkUserLoggedIn();
    }
@@ -80,7 +83,8 @@ export class PostComponent implements OnInit {
   }
 
   async quickReblog() {
-
+    this.reblogging = true;
+    this.captchaResponse = await this.recaptchaV3Service.execute('importantAction').toPromise();
     if(this.captchaResponse) {
       let response = await this.editor.createPost('', this.captchaResponse, '', this.post[this.post.length - 1].id );
       if(response) {
@@ -89,6 +93,7 @@ export class PostComponent implements OnInit {
         this.messages.add({ severity: 'error', summary: 'Something went wrong! Check your internet conectivity and try again' });
       }
     }
+    this.reblogging = false;
   }
 
   sharePost(id: string) {
@@ -108,16 +113,6 @@ export class PostComponent implements OnInit {
   hideQuickReblogOverlay() {
     this.quickReblogPanelVisible = false;
   }
-
-  captchaResolved(event: any) {
-    this.captchaResponse = event;
-
-  }
-
-  captchaExpired() {
-    this.captchaResponse = undefined;
-  }
-
 
 }
 

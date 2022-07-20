@@ -26,12 +26,8 @@
         <a routerLink="/recoverPassword" class="font-medium no-underline ml-2 text-blue-500 text-right cursor-pointer">Forgot password?</a>
       </div>
       <div class="flex align-items-center justify-content-between mb-3">
-          <ng-hcaptcha *ngIf="!loading" (verify)="captchaResolved($event)"
-          (expired)="captchaExpired()"
-           theme="dark" size="big">
-          </ng-hcaptcha>
       </div>
-      <button [disabled]="!loginForm.valid" pButton pRipple label="Sign In" icon="pi pi-user" class="w-full"></button>
+      <button [disabled]="loading || !loginForm.valid" pButton pRipple label="Sign In" icon="pi pi-user" class="w-full"></button>
     </form>
   </p-card>
   </div>

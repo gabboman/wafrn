@@ -4,6 +4,8 @@ import { environment } from 'src/environments/environment';
 import { UntypedFormGroup, UntypedFormControl, Validators } from '@angular/forms'
 import {MessageService} from 'primeng/api';
 import { Router } from '@angular/router';
+import { ReCaptchaV3Service } from 'ng-recaptcha';
+
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
@@ -17,7 +19,7 @@ export class LoginComponent implements OnInit {
   loginForm = new UntypedFormGroup({
     email:  new UntypedFormControl('', [Validators.required, Validators.email]),
     password: new UntypedFormControl('', [Validators.required]),
-    captchaResponse:  new UntypedFormControl('', [Validators.required])
+    captchaResponse:  new UntypedFormControl('', [])
   });
 
 
@@ -25,7 +27,9 @@ export class LoginComponent implements OnInit {
   constructor(
     private loginService: LoginService,
     private messages: MessageService,
-    private router: Router
+    private router: Router,
+    private recaptchaV3Service: ReCaptchaV3Service
+
 
   ) { }
 
@@ -33,21 +37,13 @@ export class LoginComponent implements OnInit {
     if(this.loginService.checkUserLoggedIn()) {
       this.router.navigate(['/dashboard']);
     } else {
-      setTimeout(()=> {
-        this.loading = false;
-      }, 1500);
+      this.loading = false;
     }
-  }
-
-  captchaResolved(ev: any){
-    this.loginForm.controls['captchaResponse'].patchValue(ev);
-  }
-  captchaExpired(){
-    this.loginForm.controls['captchaResponse'].patchValue(null);
   }
 
   async onSubmit(){
     this.loading = true;
+    this.loginForm.controls['captchaResponse'].patchValue(await this.recaptchaV3Service.execute('importantAction').toPromise());
     try {
       let login = await this.loginService.logIn(this.loginForm);
       if(!login) {

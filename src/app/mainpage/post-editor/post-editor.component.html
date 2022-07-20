@@ -51,9 +51,8 @@
   <p-chips [(ngModel)]="tags" separator=","></p-chips>
 
   <p-button
-    ngHcaptchaInvisibleButton *ngIf="editorVisible"
-    (verify)="captchaResolved($event)" (expired)="captchaExpired()"
-    [disabled]="postBeingSubmitted" 
+    [disabled]="postBeingSubmitted"
+    (onClick)="submitPost()"
     >Submit</p-button>
 
 </p-dialog>

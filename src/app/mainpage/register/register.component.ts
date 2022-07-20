@@ -3,6 +3,7 @@ import { UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms
 import { MessageService } from 'primeng/api';
 import { LoginService } from 'src/app/services/login.service';
 import { environment } from 'src/environments/environment';
+import { ReCaptchaV3Service } from 'ng-recaptcha';
 
 @Component({
   selector: 'app-register',
@@ -25,7 +26,7 @@ export class RegisterComponent implements OnInit {
     url: new UntypedFormControl('', [Validators.required]),
     description: new UntypedFormControl('', [Validators.required]),
     birthDate: new UntypedFormControl('', [Validators.required]),
-    captchaResponse:  new UntypedFormControl('', [Validators.required]),
+    captchaResponse:  new UntypedFormControl('', []),
     avatar:  new UntypedFormControl('', [Validators.required])
   });
 
@@ -33,7 +34,8 @@ export class RegisterComponent implements OnInit {
 
   constructor(
     private loginService: LoginService,
-    private messages: MessageService
+    private messages: MessageService,
+    private recaptchaV3Service: ReCaptchaV3Service
   ) {
     // minimum age: 14
     this.minimumRegistrationDate = new Date();
@@ -43,15 +45,11 @@ export class RegisterComponent implements OnInit {
   ngOnInit(): void {
   }
 
-  captchaResolved(ev: any){
-    this.loginForm.controls['captchaResponse'].patchValue(ev);
-  }
-  captchaExpired(){
-    this.loginForm.controls['captchaResponse'].patchValue(null);
-  }
+
 
   async onSubmit(){
     this.loading = true;
+    this.loginForm.controls['captchaResponse'].patchValue(await this.recaptchaV3Service.execute('importantAction').toPromise())
     if(this.img){
       try {
 

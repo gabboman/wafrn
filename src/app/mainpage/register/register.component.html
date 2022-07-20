@@ -34,11 +34,8 @@
           class="w-full mb-3">
 
       <div class="flex align-items-center justify-content-between mb-3">
-        <ng-hcaptcha *ngIf="!loading" (verify)="captchaResolved($event)" (expired)="captchaExpired()" 
-          theme="dark" size="big">
-        </ng-hcaptcha>
       </div>
-      <button [disabled]="!loginForm.valid" pButton pRipple label="Register" icon="pi pi-user" class="w-full"></button>
+      <button [disabled]="loading || !loginForm.valid" pButton pRipple label="Register" icon="pi pi-user" class="w-full"></button>
     </form>
     </p-card>
   </div>

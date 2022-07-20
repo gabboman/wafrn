@@ -7,7 +7,6 @@ import { SharedWafrnModule } from '../sharedWafrn/shared-wafrn.module';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { CreatorComponent } from './creator/creator.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { CaptchaModule } from 'primeng/captcha';
 import { CardModule } from 'primeng/card';
 import { SearchComponent } from './search/search.component';
 import { InputTextModule } from 'primeng/inputtext';
@@ -53,7 +52,6 @@ const routes: Routes = [
     ProgressSpinnerModule,
     FormsModule,
     ReactiveFormsModule,
-    CaptchaModule,
     CardModule,
     InputTextModule,
     CarouselModule,

@@ -72,16 +72,10 @@
       <div>
         Quick reblog
       </div>
-      <p-captcha *ngIf="!quickReblogBeingDone && quickReblogPanelVisible"
-      (onResponse)="captchaResolved($event)" (onExpire)="captchaExpired()"
-      [siteKey]="captchaKey" theme="dark"
-      size="big"
-      >
-    </p-captcha>
       <button pButton pRipple
         label="Quick reblog" class="w-full"
         (click)="quickReblogPanel.hide()" (click)="quickReblog()"
-        [disabled]="captchaResponse == undefined"
+        [disabled]="reblogging"
         ></button>
   </ng-template>
 </p-overlayPanel>
