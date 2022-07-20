@@ -44,7 +44,7 @@ export class ViewPostComponent implements OnInit {
   loadSeo(){
     if(this.post.length > 0){
       const lastPostFragment = this.post[this.post.length -1];
-      this.titleService.setTitle('wafrn - Post by ' + lastPostFragment.user.url);
+      this.titleService.setTitle('wafrn - Post by ' + lastPostFragment.user.url + ': ' + lastPostFragment.content);
       this.metaTagService.addTags([
         {name: 'description', content: 'Wafrn post by ' + lastPostFragment.user.url },
         {name: 'author', content: lastPostFragment.user.url },
@@ -66,7 +66,7 @@ export class ViewPostComponent implements OnInit {
       }
     }
 
-    let lastPostMedias = processedPost[processedPost.length]?.medias;
+    let lastPostMedias = processedPost[processedPost.length -1 ]?.medias;
     if(lastPostMedias){
       for (let i = 0; i < lastPostMedias.length; i++){
         if(!lastPostMedias[i].url.endsWith('mp4')){
