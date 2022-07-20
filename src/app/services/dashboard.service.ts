@@ -5,7 +5,6 @@ import { ProcessedPost } from '../interfaces/processed-post';
 import { RawPost } from '../interfaces/raw-post';
 import { SimplifiedUser } from '../interfaces/simplified-user';
 import { PostsService } from './posts.service';
-import * as FormData from 'form-data';
 import { Observable } from 'rxjs';
 import { map, tap } from "rxjs/operators";
 

@@ -58,7 +58,8 @@ export class ViewPostComponent implements OnInit {
   }
   // gets either the first non video image from the last post, the fist non video image from the initial post OR the wafrn logo
   getImage(processedPost: ProcessedPost[]): string{
-    let res: string = 'https://app.wafrn.net/favicon.ico';
+    const posterAvatar = processedPost[processedPost.length -1 ]?.user.avatar;
+    let res: string = posterAvatar? posterAvatar : 'https://app.wafrn.net/favicon.ico';
     let firstPostMedias = processedPost[0]?.medias;
     if(firstPostMedias){
       for (let i = 0; i < firstPostMedias.length; i++){
