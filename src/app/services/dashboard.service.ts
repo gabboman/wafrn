@@ -111,7 +111,7 @@ export class DashboardService {
 
   getPost(id: string): Observable<ProcessedPost[]> {
     let petition: Observable<RawPost> = this.http.get<RawPost>(this.baseUrl + '/singlePost/' + id);
-    return petition.pipe(map (elem => {
+    return petition.pipe(map ((elem: RawPost) => {
       return this.postService.processPost(elem);
     }))
   }
