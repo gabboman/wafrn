@@ -26,15 +26,11 @@ export class AppComponent implements OnInit {
   ngOnInit() {
     this.primengConfig.ripple = true;
 
-    if (isPlatformBrowser(platformId)) {
-      // you can use createCustomElement here
       const mediaElement = createCustomElement(WafrnMediaComponent, { injector: this.injector });
       customElements.define('app-wafrn-media', mediaElement);
   
       const youtubeElement = createCustomElement(WafrnYoutubePlayerComponent,  { injector: this.injector });
       customElements.define('app-wafrn-youtube-player', youtubeElement);
-    } else {
-    }
   }
 }
 
