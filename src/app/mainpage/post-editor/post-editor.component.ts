@@ -119,9 +119,19 @@ export class PostEditorComponent implements OnInit {
   }
 
   captchaResolved(event: any) {
+    this.postBeingSubmitted = true;
     this.captchaResponse = event;
+    this.submitPost();
 
   }
+
+captchaError(event: any){
+  this.messages.add({
+    severity: 'error',
+    summary: 'Oh no! hcaptcha thinks you are a bot. Please mail us at info at wafrn dot net if the issue is persistent'
+  });
+  console.log('hcaptcha issue', event)
+}
 
   captchaExpired() {
     this.captchaResponse = undefined;
