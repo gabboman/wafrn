@@ -5,6 +5,9 @@ import { ProcessedPost } from '../interfaces/processed-post';
 import { RawPost } from '../interfaces/raw-post';
 import { SimplifiedUser } from '../interfaces/simplified-user';
 import { PostsService } from './posts.service';
+import * as FormData from 'form-data';
+import { Observable } from 'rxjs';
+import { map, tap } from "rxjs/operators";
 
 @Injectable({
   providedIn: 'root'
@@ -12,11 +15,14 @@ import { PostsService } from './posts.service';
 export class DashboardService {
 
   startScrollDate: Date = new Date();
+  baseUrl: string;
 
   constructor(
     private http : HttpClient,
     private postService: PostsService
-  ) { }
+  ) {
+    this.baseUrl = environment.baseUrl;
+  }
 
 
   async getDashboardPage(page: number, explore: boolean): Promise<ProcessedPost[][]> {
@@ -104,16 +110,11 @@ export class DashboardService {
     }
   }
 
-  async getPost(id: string): Promise<ProcessedPost[]> {
-    let res: ProcessedPost[] = [];
-    let petitionData: FormData = new FormData();
-    petitionData.append('id', id);
-    let petition: RawPost | undefined = await this.http.post<RawPost>(environment.baseUrl + '/singlePost', petitionData).toPromise();
-    if(petition) {
-      res = this.postService.processPost(petition);
-    }
-
-    return res;
+  getPost(id: string): Observable<ProcessedPost[]> {
+    let petition: Observable<RawPost> = this.http.get<RawPost>(this.baseUrl + '/singlePost/' + id);
+    return petition.pipe(map (elem => {
+      return this.postService.processPost(elem);
+    }))
   }
 
 }

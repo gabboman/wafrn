@@ -32,24 +32,25 @@ export class ViewPostComponent implements OnInit {
     private route: ActivatedRoute,
     private titleService: Title,
     private metaTagService: Meta
-  ) { 
-    // resolve posts with resolver so we get the data before the route
-    this.route.data.subscribe((elem) => {
-      console.log(elem['posts']);
+  ) {
+    this.route.data.subscribe((data) => {
+      this.post = data['posts'];
       this.loadSeo();
-    });
+    })
   }
-  async ngOnInit(): Promise<void> {
+  ngOnInit(): void {
   }
 
   loadSeo(){
-    const lastPostFragment = this.post[this.post.length -1];
+    if(this.post.length > 0){
+      const lastPostFragment = this.post[this.post.length -1];
       this.titleService.setTitle('wafrn - Post by ' + lastPostFragment.user.url);
       this.metaTagService.addTags([
-        {name: 'description', content: 'Post by'},
+        {name: 'description', content: 'Wafrn post by ' + lastPostFragment.user.url },
         {name: 'author', content: lastPostFragment.user.url },
         {name: 'image', content: this.getImage(this.post)}
       ]);
+    }
       this.loading = false;
   }
   // gets either the first non video image from the last post, the fist non video image from the initial post OR the wafrn logo

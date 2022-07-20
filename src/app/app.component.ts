@@ -5,6 +5,7 @@ import { createCustomElement } from '@angular/elements';
 import { WafrnYoutubePlayerComponent } from './shared/wafrn-youtube-player/wafrn-youtube-player.component';
 import { Router } from '@angular/router';
 import { LoginService } from './services/login.service';
+import { isPlatformBrowser } from '@angular/common';
 
 @Component({
   selector: 'app-root',
@@ -24,11 +25,20 @@ export class AppComponent implements OnInit {
 
   ngOnInit() {
     this.primengConfig.ripple = true;
-    const mediaElement = createCustomElement(WafrnMediaComponent, { injector: this.injector });
-    customElements.define('app-wafrn-media', mediaElement);
 
-    const youtubeElement = createCustomElement(WafrnYoutubePlayerComponent,  { injector: this.injector });
-    customElements.define('app-wafrn-youtube-player', youtubeElement);
+    if (isPlatformBrowser(platformId)) {
+      // you can use createCustomElement here
+      const mediaElement = createCustomElement(WafrnMediaComponent, { injector: this.injector });
+      customElements.define('app-wafrn-media', mediaElement);
+  
+      const youtubeElement = createCustomElement(WafrnYoutubePlayerComponent,  { injector: this.injector });
+      customElements.define('app-wafrn-youtube-player', youtubeElement);
+    } else {
+    }
   }
+}
+
+function platformId(platformId: any) {
+  throw new Error('Function not implemented.');
 }
 

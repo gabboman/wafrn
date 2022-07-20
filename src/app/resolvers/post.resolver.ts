@@ -8,6 +8,7 @@ import { from, Observable, of } from 'rxjs';
 import { ProcessedPost } from '../interfaces/processed-post';
 import { DashboardService } from '../services/dashboard.service';
 import { PostsService } from '../services/posts.service';
+//import {  } from "rxjs/operators";
 
 @Injectable({
   providedIn: 'root'
@@ -20,13 +21,7 @@ export class PostResolver implements Resolve<ProcessedPost[]> {
 
   resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<ProcessedPost[]> {
     const id = route.paramMap.get('id');
-    let res: Promise<ProcessedPost[]> = new Promise(function(resolve, reject) {
-      resolve([]);
-    })
-    if(id){
-      res =  this.dashboardService.getPost(id);
-
-    }
+    const res =  this.dashboardService.getPost(id? id : '');
     return from(res);
   }
 }
