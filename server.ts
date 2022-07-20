@@ -47,7 +47,7 @@ export function app(): express.Express {
   }));
 
     // non ssr routes
-    server.get(['/dashboard/', '/dashboard/explore', '/', '/register', '/recoverPassword'], (req, res) => {
+    server.get(['/dashboard/', '/', '/register', '/recoverPassword'], (req, res) => {
       res.sendFile(distFolder + '/index.html');
     });
 

@@ -5,6 +5,7 @@ import { ProcessedPost } from 'src/app/interfaces/processed-post';
 import { DashboardService } from 'src/app/services/dashboard.service';
 import { JwtService } from 'src/app/services/jwt.service';
 import { PostsService } from 'src/app/services/posts.service';
+import { Title, Meta } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-dashboard',
@@ -28,8 +29,16 @@ export class DashboardComponent implements OnInit {
     private router: Router,
     private postService: PostsService,
     private messages: MessageService,
+    private titleService: Title,
+    private metaTagService: Meta
 
-  ) { }
+  ) {
+    this.titleService.setTitle('Wafrn - the social network that respects you');
+    this.metaTagService.addTags([
+      {name: 'description', content: 'Explore the posts in wafrn and if it looks cool join us!'},
+      {name: 'og:description', content: 'Explore the posts in wafrn and if it looks cool join us!' },
+    ]);
+   }
 
   async ngOnInit(): Promise<void> {
     if(this.router.url.indexOf('explore') != -1) {
