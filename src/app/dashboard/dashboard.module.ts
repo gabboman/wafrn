@@ -5,7 +5,6 @@ import { DashboardComponent } from './dashboard/dashboard.component';
 import { DeferModule } from 'primeng/defer';
 import { SharedWafrnModule } from '../sharedWafrn/shared-wafrn.module';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
-import { CreatorComponent } from './creator/creator.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CardModule } from 'primeng/card';
 import { SearchComponent } from './search/search.component';
@@ -40,7 +39,6 @@ const routes: Routes = [
 @NgModule({
   declarations: [
     DashboardComponent,
-    CreatorComponent,
     SearchComponent,
     EditProfileComponent,
   ],

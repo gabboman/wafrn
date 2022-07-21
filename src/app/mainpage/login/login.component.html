@@ -1,34 +1,41 @@
 <div class="grid">
   <div class="col-12 sm:col-12 md:col-12 lg:col-6 lg:col-offset-3 pb-6">
     <p-card>
-    <div class="text-center mb-5">
-      <img src="/assets/logo.png" alt="Image" height="50" class="mb-3">
-      <div class="text-900 text-3xl font-medium mb-3">Welcome Back</div>
-      <span class="text-600 font-medium line-height-3">Don't have an account?</span>
-      <a routerLink="/register" class="font-medium no-underline ml-2 text-blue-500 cursor-pointer">Register now!</a>
-      <br>
-      <span class="text-600 font-medium line-height-3">If you have any issue please check your spam folder!</span>
-      <br>
-      <span class="text-600 font-medium line-height-3">Still having problems? Send us an email at info @ wafrn.net</span>
+      <div class="text-center mb-5">
+        <img src="/assets/logo.png" alt="Image" height="50" class="mb-3">
+        <div class="text-900 text-3xl font-medium mb-3">Welcome Back</div>
+        <span class="text-600 font-medium line-height-3">Don't have an account?</span>
+        <a routerLink="/register" class="font-medium no-underline ml-2 text-blue-500 cursor-pointer">Register now!</a>
+        <br>
+        <span class="text-600 font-medium line-height-3">If you have any issue please check your spam folder!</span>
+        <br>
+        <span class="text-600 font-medium line-height-3">Still having problems? Send us an email at info @
+          wafrn.net</span>
 
-    </div>
-    
-    <p-progressSpinner *ngIf="loading"></p-progressSpinner>
-
-    <form [hidden]="loading" [formGroup]="loginForm" (ngSubmit)="onSubmit()" >
-      <label for="email1" class="block text-900 font-medium mb-2">Email</label>
-      <input formControlName="email" id="email1" type="text" pInputText class="w-full mb-3">
-
-      <label for="password1" class="block text-900 font-medium mb-2">Password</label>
-      <input formControlName="password" id="password1" type="password" pInputText class="w-full mb-3">
-
-      <div class="flex align-items-center justify-content-between mb-6">
-        <a routerLink="/recoverPassword" class="font-medium no-underline ml-2 text-blue-500 text-right cursor-pointer">Forgot password?</a>
       </div>
-      <div class="flex align-items-center justify-content-between mb-3">
-      </div>
-      <button [disabled]="loading || !loginForm.valid" pButton pRipple label="Sign In" icon="pi pi-user" class="w-full"></button>
-    </form>
-  </p-card>
+
+      <p-progressSpinner *ngIf="loading"></p-progressSpinner>
+
+      <form [hidden]="loading" [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+        <label for="email1" class="block text-900 font-medium mb-2">Email</label>
+        <input formControlName="email" id="email1" type="text" pInputText class="w-full mb-3">
+
+        <label for="password1" class="block text-900 font-medium mb-2">Password</label>
+        <input formControlName="password" id="password1" type="password" pInputText class="w-full mb-3">
+
+        <div class="flex align-items-center justify-content-between mb-6">
+          <a routerLink="/recoverPassword"
+            class="font-medium no-underline ml-2 text-blue-500 text-right cursor-pointer">Forgot password?</a>
+        </div>
+        <div class="mb-3">
+          This site is protected by reCAPTCHA and the Google
+          <a href="https://policies.google.com/privacy">Privacy Policy</a> and
+          <a href="https://policies.google.com/terms">Terms of Service</a> apply.
+        </div>
+
+        <button [disabled]="loading || !loginForm.valid" pButton pRipple label="Sign In" icon="pi pi-user"
+          class="w-full"></button>
+      </form>
+    </p-card>
   </div>
 </div>
