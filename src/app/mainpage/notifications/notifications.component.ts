@@ -75,7 +75,7 @@ export class NotificationsComponent implements OnInit {
 
   async updateNotifications() {
     this.notifications = await this.notificationsService.getNotifications();
-    this.numberNotifications = (this.notifications.follows.length + this.notifications.reblogs.length).toString();
+    this.numberNotifications = (this.notifications.follows.length + this.notifications.reblogs.length + this.notifications.mentions.length).toString();
   }
 
 }
