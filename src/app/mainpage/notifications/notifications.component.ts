@@ -17,7 +17,7 @@ export class NotificationsComponent implements OnInit {
   badgeVisible = false;
   modalVisible = false;
   buttonReadNotificationsClickable = true;
-  notifications!: { follows: Follower[]; reblogs: Reblog[]; };
+  notifications!: { follows: Follower[]; reblogs: Reblog[]; mentions: Reblog[] };
   baseMediaUrl = environment.baseMediaUrl;
   numberNotifications = '';
 

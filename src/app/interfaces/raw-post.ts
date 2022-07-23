@@ -1,6 +1,7 @@
 import { SimplifiedUser } from "./simplified-user";
 import { WafrnMedia } from "./wafrn-media";
 import { Tag } from "./tag";
+import { WafrnMention } from "./wafrn-mention";
 
 export interface RawPost {
     id:             string;
@@ -13,6 +14,7 @@ export interface RawPost {
     ancestors?:     RawPost[];
     user:           SimplifiedUser;
     medias?:        WafrnMedia[];
-    tags:           Tag[]
+    tags:           Tag[];
+    postMentionsUserRelations?: WafrnMention[];
 
 }

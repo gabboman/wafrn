@@ -15,6 +15,17 @@
       </div>
     </ng-template>
   </p-dataView>
+  <h2 *ngIf="notifications.reblogs?.length != 0">The new mentions you got!</h2>
+  <p-dataView *ngIf="notifications.reblogs?.length != 0" [value]="notifications.mentions">
+    <ng-template let-mention pTemplate="listItem">
+      <div class="w-full">
+        <a [href]="'/post/' + mention.id ">
+          <img [src]="baseMediaUrl + mention.user.avatar" style="max-height: 64px; max-width: 64px;">
+          <div style="font-size:14px;float:right;margin:15px 5px 0 0">{{mention.user.url}} has mentioned you in this posts</div>
+        </a>
+      </div>
+    </ng-template>
+  </p-dataView>
   <h2 *ngIf="notifications.reblogs?.length != 0">The new reblogs you got!</h2>
   <p-dataView *ngIf="notifications.reblogs?.length != 0" [value]="notifications.reblogs">
     <ng-template let-reblog pTemplate="listItem">

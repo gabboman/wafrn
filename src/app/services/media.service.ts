@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { environment } from 'src/environments/environment';
 import { ProcessedPost } from '../interfaces/processed-post';
 import { WafrnMedia } from '../interfaces/wafrn-media';
+import { WafrnMention } from '../interfaces/wafrn-mention';
 import { JwtService } from './jwt.service';
 import { LoginService } from './login.service';
 import { UtilsService } from './utils.service';
@@ -16,6 +17,7 @@ export class MediaService {
   disableNSFWFilter = false;
 
   mediaMap: {[id:  string]: WafrnMedia} = {};
+  mentionsMap: {[id:  string]: WafrnMention} = {};
 
   constructor(
     private jwt: JwtService,
@@ -50,12 +52,19 @@ export class MediaService {
     return minimumBirthDate > birthDate;
 
   }
-
+  
+  // TODO rename this component and rename this method, as due the similarities we are gona use for more stuff
   addMediaToMap(post: ProcessedPost): void {
     if(post.medias) {
       post.medias.forEach(val => {
         val.url = environment.baseMediaUrl + val.url;
         this.mediaMap[val.id] = val;
+      });
+    }
+    if(post.postMentionsUserRelations) {
+      post.postMentionsUserRelations.forEach(val => {
+        console.log(val);
+        this.mentionsMap[val.userId] = val;
       });
     }
 

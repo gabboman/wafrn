@@ -15,6 +15,7 @@ export class PostsService {
 
 
   wafrnMediaRegex = /\[wafrnmediaid="[0-9a-fA-F]{8}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{12}"\]/gm;
+  wafrnMentionRegex = /\[mentionuserid="[0-9a-fA-F]{8}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{12}"\]/gm;
   uuidRegex = /[0-9a-fA-F]{8}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{12}/;
   youtubeRegex = /(?:https?:)?(?:\/\/)?(?:www\.)?(?:youtu\.be\/|youtube(?:\-nocookie)?\.(?:[A-Za-z]{2,4}|[A-Za-z]{2,3}\.[A-Za-z]{2})\/)(?:watch|embed\/|vi?\/)*(?:\?[\w=&]*vi?=)?([^#&\?\/]{11}).*?/g;
   public updateFollowers: BehaviorSubject<Boolean> = new BehaviorSubject(new Boolean());
@@ -108,8 +109,8 @@ export class PostsService {
 
 
   getPostHtml(content: string): string {
-
-    const replacements: Array<{ wafrnMediaStringToReplace: string, id: string }> = [];
+    const replacementsWafrnMedia: Array<{ wafrnMediaStringToReplace: string, id: string }> = [];
+    const replacementsWafrnMentions: Array<{ wafrnMentionstringToReplace: string, url: string }> = [];
 
     let sanitized = sanitizeHtml(content, { allowedTags: ['b', 'i', 'u', 'a','s', 'span', 'br', 'p', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'pre', 'strong', 'em', 'ul', 'li'] });
     // we remove stuff like img and script tags. we only allow certain stuff.
@@ -125,21 +126,32 @@ export class PostsService {
     
 
 
-
     sanitized.match(this.wafrnMediaRegex)?.forEach((media) => {
       let id = '0';
       const uuid = media.match(this.uuidRegex);
       if (uuid) {
         id = uuid[0]
       }
-      replacements.push({ wafrnMediaStringToReplace: media, id: id });
+      replacementsWafrnMedia.push({ wafrnMediaStringToReplace: media, id: id });
     });
 
-    replacements.forEach(replacement => {
+    sanitized.match(this.wafrnMentionRegex)?.forEach((mention) => {
+      let id = '0';
+      const uuid = mention.match(this.uuidRegex);
+      if (uuid) {
+        id = uuid[0]
+      }
+      replacementsWafrnMentions.push({ wafrnMentionstringToReplace: mention, url: this.mediaService.mentionsMap[id]?.user.url });
+    });
+    replacementsWafrnMedia.forEach(replacement => {
       const replacementString = '<app-wafrn-media id="' + replacement.id + '" > </app-wafrn-media>'
       sanitized = sanitized.replace(replacement.wafrnMediaStringToReplace, replacementString);
+    });
 
-    })
+    replacementsWafrnMentions.forEach(replacement => {
+      const replacementString = '<a href="/blog/' + replacement.url + '" >@' + replacement.url +'</a>'
+      sanitized = sanitized.replace(replacement.wafrnMentionstringToReplace, replacement.url ? replacementString: '_error_in_mention_');
+    });
 
 
     return sanitized;

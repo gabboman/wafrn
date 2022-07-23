@@ -33,13 +33,19 @@ export class PostEditorComponent implements OnInit {
   captchaKey = environment.recaptchaPublic;
 
   // upload media variables
-  displayUploadImagePanel = false;
   newImageDescription = '';
   newImageNSFW = false;
   newImageFile: File | undefined;
   disableImageUploadButton = false;
   uploadImageUrl = environment.baseUrl + '/uploadMedia';
   @ViewChild('uploadImagesPanel') uploadImagesPanel: any;
+
+  // add mention variables
+  @ViewChild('mentionUserSearchPanel') mentionUserSearchPanel: any;
+  mentionSuggestions: any[] = [];
+  baseMediaUrl = environment.baseMediaUrl;
+  userSelectionMentionValue = '';
+
 
   modules = {
     toolbar: [
@@ -158,7 +164,6 @@ export class PostEditorComponent implements OnInit {
       this.newImageDescription = '';
       this.newImageNSFW = false;
       this.newImageFile = undefined;
-      this.displayUploadImagePanel = false;
       this.uploadImagesPanel.hide();
       this.messages.add({
         severity: 'success',
@@ -178,6 +183,23 @@ export class PostEditorComponent implements OnInit {
       severity: 'error',
       summary: 'Image upload failed! Please send us details'
     });
+  }
+
+  async updateMentionsSuggestions(ev: any){
+    if(ev.query){
+      const backendResponse: any = await this.editorService.searchUser(ev.query);
+      if(backendResponse){
+        this.mentionSuggestions = backendResponse.users? backendResponse.users : [];
+      }
+    } else {
+      this.mentionSuggestions = [];
+    }
+  }
+
+  mentionUserSelected(selected: any){
+    this.postCreatorContent = this.postCreatorContent + '[mentionuserid="' + selected.id + '"]';
+    this.userSelectionMentionValue = '';
+    this.mentionUserSearchPanel.hide();
   }
 
 

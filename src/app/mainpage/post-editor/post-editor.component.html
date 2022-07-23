@@ -20,6 +20,22 @@
 
   </p-overlayPanel>
 
+
+  <p-overlayPanel #mentionUserSearchPanel>
+
+    <p-autoComplete [(ngModel)]="userSelectionMentionValue"
+     [suggestions]="mentionSuggestions" (onSelect)="mentionUserSelected($event)"
+     (completeMethod)="updateMentionsSuggestions($event)" 
+     [dropdown]="true">
+      <ng-template let-suggest pTemplate="item">
+          <div class="w-full">
+              <img [src]="baseMediaUrl + '/' + suggest.avatar" style="max-height: 3em; max-width: 3em;" />
+              <div>{{suggest.url}}</div>
+          </div>
+      </ng-template>
+  </p-autoComplete>
+  </p-overlayPanel>
+
   <quill-editor [(ngModel)]="postCreatorContent" [modules]="modules">
     <div quill-editor-toolbar style="border-top-left-radius: 5px; border-top-right-radius: 5px;">
       <select class="ql-size">
@@ -34,7 +50,10 @@
       <button pButton type="button" class="ql-strike" aria-label="Strike"></button>
       <button pButton type="button" class="ql-link" aria-label="Insert Link"></button>
       <button pButton #uploadImages
-        (click)="uploadImagesPanel.show($event, uploadImages); displayUploadImagePanel = true" [icon]="'pi pi-upload'"
+        (click)="uploadImagesPanel.show($event, uploadImages)" [icon]="'pi pi-upload'"
+        label="Upload image" class="uploadImageButton" type="button"></button>
+        <button pButton #addMention
+        (click)="mentionUserSearchPanel.show($event, addMention)" [icon]="'pi pi-at'"
         label="Upload image" class="uploadImageButton" type="button"></button>
 
     </div>

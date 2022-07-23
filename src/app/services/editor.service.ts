@@ -75,4 +75,8 @@ export class EditorService {
 
     return res;
   }
+
+  async searchUser(url: string) {
+    return await this.http.get(environment.baseUrl + '/userSearch/' + encodeURIComponent(url)).toPromise();
+  }
 }

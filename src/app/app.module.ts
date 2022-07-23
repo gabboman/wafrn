@@ -48,6 +48,7 @@ import {FileUploadModule} from 'primeng/fileupload';
 import { QuillModule } from 'ngx-quill'
 import { environment } from 'src/environments/environment';
 import { RECAPTCHA_V3_SITE_KEY, RecaptchaV3Module } from 'ng-recaptcha';
+import {AutoCompleteModule} from 'primeng/autocomplete';
 @NgModule({
   declarations: [
     AppComponent,
@@ -99,6 +100,7 @@ import { RECAPTCHA_V3_SITE_KEY, RecaptchaV3Module } from 'ng-recaptcha';
     PanelMenuModule,
     FileUploadModule,
     QuillModule.forRoot(),
+    AutoCompleteModule
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: WafrnAuthInterceptor, multi: true },

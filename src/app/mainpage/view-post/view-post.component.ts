@@ -5,6 +5,7 @@ import { DashboardService } from 'src/app/services/dashboard.service';
 import { LoginService } from 'src/app/services/login.service';
 import { environment } from 'src/environments/environment';
 import { Title, Meta } from '@angular/platform-browser';
+import { UtilsService } from 'src/app/services/utils.service';
 @Component({
   selector: 'app-view-post',
   templateUrl: './view-post.component.html',
@@ -27,32 +28,18 @@ export class ViewPostComponent implements OnInit {
     private loginService: LoginService,
     private router: Router,
     private route: ActivatedRoute,
-    private titleService: Title,
-    private metaTagService: Meta
+    private utilsService: UtilsService
   ) {
     this.route.data.subscribe((data) => {
       this.post = data['posts'];
-      this.loadSeo();
+      const lastPostFragment = this.post[this.post.length -1];
+      this.utilsService.setSEOTags('Wafrn - Post by ' + lastPostFragment.user.url, 'Wafrn post by ' + lastPostFragment.user.url + ': ' + lastPostFragment.content, lastPostFragment.user.url, this.getImage(this.post));
+      this.loading = false;
     })
   }
   ngOnInit(): void {
   }
 
-  loadSeo(){
-    if(this.post.length > 0){
-      const lastPostFragment = this.post[this.post.length -1];
-      this.titleService.setTitle('wafrn - Post by ' + lastPostFragment.user.url);
-      this.metaTagService.addTags([
-        {name: 'description', content: 'Wafrn post by ' + lastPostFragment.user.url + ': ' + lastPostFragment.content },
-        {name: 'author', content: lastPostFragment.user.url },
-        {name: 'image', content: this.getImage(this.post)},
-        {name: 'og:description', content: 'Wafrn post by ' + lastPostFragment.user.url + ': ' + lastPostFragment.content },
-        {name: 'og:author', content: lastPostFragment.user.url },
-        {name: 'og:image', content: this.getImage(this.post)}
-      ]);
-    }
-      this.loading = false;
-  }
   // gets either the first non video image from the last post, the fist non video image from the initial post OR the wafrn logo
   getImage(processedPost: ProcessedPost[]): string{
     const posterAvatar = processedPost[processedPost.length -1 ]?.user.avatar;
