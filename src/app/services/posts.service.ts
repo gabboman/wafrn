@@ -112,7 +112,18 @@ export class PostsService {
     const replacementsWafrnMedia: Array<{ wafrnMediaStringToReplace: string, id: string }> = [];
     const replacementsWafrnMentions: Array<{ wafrnMentionstringToReplace: string, url: string }> = [];
 
-    let sanitized = sanitizeHtml(content, { allowedTags: ['b', 'i', 'u', 'a','s', 'span', 'br', 'p', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'pre', 'strong', 'em', 'ul', 'li'] });
+    let sanitized = sanitizeHtml(content, {
+      allowedTags: ['b', 'i', 'u', 'a','s', 'span', 'br', 'p', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'pre', 'strong', 'em', 'ul', 'li'],
+      allowedClasses: {
+        '*': ['*'],
+      },
+      allowedStyles: {
+        '*': {
+          'color': [/^#(0x)?[0-9a-f]+$/i, /^rgb\(\s*(\d{1,3})\s*,\s*(\d{1,3})\s*,\s*(\d{1,3})\s*\)$/],
+          'background-color': [/^#(0x)?[0-9a-f]+$/i, /^rgb\(\s*(\d{1,3})\s*,\s*(\d{1,3})\s*,\s*(\d{1,3})\s*\)$/]
+        }
+      }
+    });
     // we remove stuff like img and script tags. we only allow certain stuff.
     const youtubeLinks = sanitized.matchAll(this.youtubeRegex);
 

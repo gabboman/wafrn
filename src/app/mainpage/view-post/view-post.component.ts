@@ -48,7 +48,7 @@ export class ViewPostComponent implements OnInit {
     if(firstPostMedias){
       for (let i = 0; i < firstPostMedias.length; i++){
         if(!firstPostMedias[i].url.endsWith('mp4') && !firstPostMedias[i].NSFW === false ){
-          res = firstPostMedias[i].url;
+          res = environment.baseMediaUrl + firstPostMedias[i].url;
           break;
         }
       }
@@ -58,7 +58,7 @@ export class ViewPostComponent implements OnInit {
     if(lastPostMedias){
       for (let i = 0; i < lastPostMedias.length; i++){
         if(!lastPostMedias[i].url.endsWith('mp4') && !lastPostMedias[i].NSFW === false){
-          res = lastPostMedias[i].url;
+          res = environment.baseMediaUrl + lastPostMedias[i].url;
           break;
         }
       }
