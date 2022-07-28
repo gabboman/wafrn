@@ -44,11 +44,13 @@ export class LoginService {
     return success;
   }
 
-  async register(registerForm: UntypedFormGroup, img: File): Promise<boolean> {
+  async register(registerForm: UntypedFormGroup, img: File | null): Promise<boolean> {
     let success = false;
     try {
       let payload =  this.utils.objectToFormData(registerForm.value);
-      payload.append('avatar', img);
+      if ( img ) {
+        payload.append('avatar', img);
+      }
       let petition: any = await this.http.post(environment.baseUrl + '/register',
        payload).toPromise();
       if (petition.success) {

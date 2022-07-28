@@ -50,7 +50,6 @@ export class RegisterComponent implements OnInit {
   async onSubmit(){
     this.loading = true;
     this.loginForm.controls['captchaResponse'].patchValue(await this.recaptchaV3Service.execute('importantAction').toPromise())
-    if(this.img){
       try {
 
         let petition = await this.loginService.register(this.loginForm, this.img);
@@ -66,7 +65,6 @@ export class RegisterComponent implements OnInit {
       }
       
 
-    }
     this.loading = false;
   }
 
