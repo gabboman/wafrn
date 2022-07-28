@@ -27,7 +27,7 @@ export class RegisterComponent implements OnInit {
     description: new UntypedFormControl('', [Validators.required]),
     birthDate: new UntypedFormControl('', [Validators.required]),
     captchaResponse:  new UntypedFormControl('', []),
-    avatar:  new UntypedFormControl('', [Validators.required])
+    avatar:  new UntypedFormControl('', [])
   });
 
 
