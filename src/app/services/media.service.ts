@@ -63,7 +63,6 @@ export class MediaService {
     }
     if(post.postMentionsUserRelations) {
       post.postMentionsUserRelations.forEach(val => {
-        console.log(val);
         this.mentionsMap[val.userId] = val;
       });
     }
