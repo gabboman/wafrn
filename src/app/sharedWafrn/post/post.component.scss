@@ -3,3 +3,10 @@
     max-width: 2em;
     border-radius: 25%;
 }
+
+.center-text {
+    display: flex; 
+    flex-direction: row;
+    align-items: center;
+    gap: 0.25em;
+}

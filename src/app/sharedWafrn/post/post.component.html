@@ -6,7 +6,7 @@
   
     <p-card>
       <div class="grid">
-        <div *ngIf=" post.length > 1" class="col-12 ">
+        <div *ngIf=" post.length > 1" class="col-12 center-text">
           <img [src]="mediaBaseUrl + post[post.length - 1].user.avatar" class="avatar" />
           <a [routerLink]="'/blog/'+ urls[post.length -1]">{{post[post.length -1].user.url}}</a>
           reblogged
@@ -17,7 +17,7 @@
         <p-divider *ngIf="post.length > 1 && content.content != ''"></p-divider>
         <div *ngIf="content.content != '' || index == 0" class="fragment-header">
           <div class="grid grid-nogutter" style="width: 100%;">
-            <div class="col-7 ">
+            <div class="col-7 center-text">
               <img [src]="mediaBaseUrl + content.user.avatar" class="avatar" /> <a
                 [routerLink]="'/blog/'+ urls[index]">{{content.user.url}}</a>
             </div>
@@ -26,7 +26,7 @@
                 class="w-full" (click)="followUser(content.userId)"></button>
             </div>
             <div class="col-1">
-              <i (click)="sharePost(content.id)" class="pi pi-share-alt"></i>
+              <i (click)="sharePost(content.id)" class="pi pi-share-alt hover-cursor"></i>
             </div>
           </div>
         </div>
@@ -54,9 +54,9 @@
               <i
                #quickReblogButton (click)="quickReblogPanel.show($event, quickReblogButton)"
                *ngIf="!quickReblogDoneSuccessfully"
-               class="col-4 pi pi-history"></i>
-              <i (click)="launchReblog()" class="col-4 pi pi-replay"></i>
-              <i (click)="reportPost()" class="col-4 pi pi-exclamation-triangle"></i>
+               class="col-4 pi pi-history hover-cursor"></i>
+              <i (click)="launchReblog()" class="col-4 pi pi-replay hover-cursor"></i>
+              <i (click)="reportPost()" class="col-4 pi pi-exclamation-triangle hover-cursor"></i>
             </div>
           </div>
         </div>
