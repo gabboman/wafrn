@@ -6,6 +6,7 @@ import { LoginService } from 'src/app/services/login.service';
 import { environment } from 'src/environments/environment';
 import { Title, Meta } from '@angular/platform-browser';
 import { UtilsService } from 'src/app/services/utils.service';
+import { PostsService } from 'src/app/services/posts.service';
 @Component({
   selector: 'app-view-post',
   templateUrl: './view-post.component.html',
@@ -25,6 +26,7 @@ export class ViewPostComponent implements OnInit {
   constructor(
     private activatedRoute: ActivatedRoute,
     private dashboardService: DashboardService,
+    private postService: PostsService,
     private loginService: LoginService,
     private router: Router,
     private route: ActivatedRoute,
@@ -33,7 +35,7 @@ export class ViewPostComponent implements OnInit {
     this.route.data.subscribe((data) => {
       this.post = data['posts'];
       const lastPostFragment = this.post[this.post.length -1];
-      this.utilsService.setSEOTags('Wafrn - Post by ' + lastPostFragment.user.url, 'Wafrn post by ' + lastPostFragment.user.url + ': ' + lastPostFragment.content, lastPostFragment.user.url, this.getImage(this.post));
+      this.utilsService.setSEOTags('Wafrn - Post by ' + lastPostFragment.user.url, 'Wafrn post by ' + lastPostFragment.user.url + ': ' + this.postService.getPostContentSanitized(lastPostFragment.content), lastPostFragment.user.url, this.getImage(this.post));
       this.loading = false;
     })
   }

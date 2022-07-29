@@ -49,7 +49,7 @@ export class DashboardComponent implements OnInit {
       this.router.navigate(['/']);
     }
     this.postService.updateFollowers.subscribe( () => {
-      if(this.postService.followedUserIds.length === 1 ){
+      if(this.postService.followedUserIds.length <= 1 && !this.explore ){
         // if the user follows NO ONE we take them to the explore page!
         this.messages.add({ severity: 'info', summary: 'You follow no one, so we took you to the explore page' });
         this.router.navigate(['/dashboard/explore']);

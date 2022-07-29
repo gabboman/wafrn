@@ -160,7 +160,7 @@ export class PostsService {
     });
 
     replacementsWafrnMentions.forEach(replacement => {
-      const replacementString = '<a href="/blog/' + replacement.url + '" >@' + replacement.url +'</a>'
+      const replacementString = '<a href="/blog/' + sanitizeHtml(replacement.url) + '" >@' + sanitizeHtml(replacement.url) +'</a>'
       sanitized = sanitized.replace(replacement.wafrnMentionstringToReplace, replacement.url ? replacementString: '_error_in_mention_');
     });
 
@@ -179,5 +179,9 @@ export class PostsService {
       }
     })
     return res;
+  }
+
+  getPostContentSanitized(content: string): string {
+    return sanitizeHtml(content);
   }
 }
