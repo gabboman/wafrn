@@ -51,7 +51,7 @@ export class LoginComponent implements OnInit {
     try {
       let login = await this.loginService.logIn(this.loginForm);
       if(!login) {
-        this.messages.add({severity:'warn', summary:'Login failed', detail:'Check email, passowrd, or if you recived the activation email!'});
+        this.messages.add({severity:'warn', summary:'Login failed', detail:'Check email, password, or if you recived the activation email!'});
       }
     } catch (exception) {
       console.log(exception);
