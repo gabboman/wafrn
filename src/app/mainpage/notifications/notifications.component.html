@@ -8,7 +8,7 @@
   <p-dataView *ngIf="notifications.follows?.length != 0" [value]="notifications.follows">
     <ng-template let-follow pTemplate="listItem">
       <div class="w-full">
-        <a [href]="'/blog/' + follow.url ">
+        <a (click)="modalVisible = false" [routerLink]="'/blog/' + follow.url ">
           <img [src]="baseMediaUrl + follow.avatar" style="max-height: 64px; max-width: 64px;">
           <div style="font-size:14px;float:right;margin:15px 5px 0 0">{{follow.url}}</div>
         </a>
@@ -19,7 +19,7 @@
   <p-dataView *ngIf="notifications.mentions?.length != 0" [value]="notifications.mentions">
     <ng-template let-mention pTemplate="listItem">
       <div class="w-full">
-        <a [href]="'/post/' + mention.id ">
+        <a (click)="modalVisible = false" [routerLink]="'/post/' + mention.id ">
           <img [src]="baseMediaUrl + mention.user.avatar" style="max-height: 64px; max-width: 64px;">
           <div style="font-size:14px;float:right;margin:15px 5px 0 0">{{mention.user.url}} has mentioned you in this posts</div>
         </a>
@@ -30,7 +30,7 @@
   <p-dataView *ngIf="notifications.reblogs?.length != 0" [value]="notifications.reblogs">
     <ng-template let-reblog pTemplate="listItem">
       <div class="w-full">
-        <a [href]="'/post/' + reblog.id ">
+        <a (click)="modalVisible = false" [routerLink]="'/post/' + reblog.id ">
           <img [src]="baseMediaUrl + reblog.user.avatar" style="max-height: 64px; max-width: 64px;">
           <div style="font-size:14px;float:right;margin:15px 5px 0 0">{{reblog.user.url}} has reblogged one of your
             posts</div>
