@@ -16,7 +16,7 @@ import {
 import {
   environment
 } from 'src/environments/environment';
-import { QuillModule } from 'ngx-quill'
+import { QuillEditorComponent, QuillModule } from 'ngx-quill'
 import { ReCaptchaV3Service } from 'ng-recaptcha';
 @Component({
   selector: 'app-post-editor',
@@ -31,6 +31,7 @@ export class PostEditorComponent implements OnInit {
   tags: string[] = [];
   captchaResponse: string | undefined;
   captchaKey = environment.recaptchaPublic;
+  @ViewChild('quill') quill!: QuillEditorComponent;
 
   // upload media variables
   newImageDescription = '';
@@ -158,6 +159,7 @@ export class PostEditorComponent implements OnInit {
             await this.mediaService.updateMedia(response.id, this.newImageDescription, this.newImageNSFW);
           }
           this.fixNullPosting();
+          console.log(this.quill.quillEditor.getSelection())
           this.postCreatorContent = this.postCreatorContent + '[wafrnmediaid="' + response.id + '"]'
         }
       });
@@ -197,6 +199,7 @@ export class PostEditorComponent implements OnInit {
   }
 
   mentionUserSelected(selected: any){
+    console.log(this.quill.quillEditor.getSelection());
     this.postCreatorContent = this.postCreatorContent + '[mentionuserid="' + selected.id + '"]';
     this.userSelectionMentionValue = '';
     this.mentionUserSearchPanel.hide();

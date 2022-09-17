@@ -14,8 +14,8 @@
         tooltipPosition="top"></p-checkbox>
     </div>
     <p-fileUpload name="image" [url]="uploadImageUrl" [multiple]="false"
-      accept="image/jpeg,image/png,image/webp,image/gif,video/mp4" [auto]="true" (onUpload)="uploadImage($event)"
-      [maxFileSize]="10000000" chooseLabel="Upload image or video">
+      accept="image/jpeg,image/png,image/webp,image/gif,video/mp4,video/mov,video/webm" [auto]="true" (onUpload)="uploadImage($event)"
+      [maxFileSize]="15 * 1024 * 1024" chooseLabel="Upload image or video">
     </p-fileUpload>
 
   </p-overlayPanel>
@@ -36,7 +36,7 @@
   </p-autoComplete>
   </p-overlayPanel>
 
-  <quill-editor [(ngModel)]="postCreatorContent" [modules]="modules">
+  <quill-editor #quill [(ngModel)]="postCreatorContent" [modules]="modules">
     <div quill-editor-toolbar style="border-top-left-radius: 5px; border-top-right-radius: 5px;">
       <select class="ql-size">
         <option value="small"></option>
