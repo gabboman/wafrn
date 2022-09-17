@@ -117,12 +117,14 @@ export class NavigationMenuComponent implements OnInit {
       this.menuItems = [
         {
           label: 'Log in',
+          title: 'Log in',
           icon: "pi pi-home",
           command: () => this.hideMenu(),
           routerLink: '/'
         },
         {
           label: 'Register',
+          title: 'Register',
           icon: "pi pi-user",
           command: () => this.hideMenu(),
           routerLink: '/'
@@ -136,6 +138,7 @@ export class NavigationMenuComponent implements OnInit {
         },
         {
           label: 'Search a blog!',
+          title: 'Search',
           icon: "pi pi-search",
           command: () => this.hideMenu(),
           routerLink: '/dashboard/search'
