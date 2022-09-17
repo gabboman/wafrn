@@ -60,12 +60,14 @@ export class NavigationMenuComponent implements OnInit {
       this.menuItems = [
         {
           label: 'Dashboard',
+          title: "View your dashboard",
           icon: "pi pi-home",
           command: () => this.hideMenu(),
           routerLink: '/dashboard'
         },
         {
           label: 'Write new post',
+          title: 'Write a post',
           icon: "pi pi-pencil",
           command: () => {this.editorService.launchPostEditorEmitter.next('NEW_POST'); this.hideMenu();}
         },
@@ -78,6 +80,7 @@ export class NavigationMenuComponent implements OnInit {
         },
         {
           label: 'Search',
+          title: 'Search',
           icon: "pi pi-search",
           command: () => this.hideMenu(),
           routerLink: '/dashboard/search'
@@ -85,12 +88,14 @@ export class NavigationMenuComponent implements OnInit {
         {
           label: 'My blog',
           icon: "pi pi-user",
+          title: "View your blog",
           command: () => this.hideMenu(),
           routerLink: ['/blog', this.jwtService.getTokenData()['url']]
         },
         {
           label: 'Edit profile',
           icon: "pi pi-cog",
+          title: "Edit your profile",
           routerLink: ['/editProfile']
         },
         {
