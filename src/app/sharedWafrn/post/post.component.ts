@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { MessageService } from 'primeng/api';
+import { MenuItem, MessageService } from 'primeng/api';
 import { ProcessedPost } from 'src/app/interfaces/processed-post';
 import { EditorService } from 'src/app/services/editor.service';
 import { LoginService } from 'src/app/services/login.service';
@@ -30,6 +30,7 @@ export class PostComponent implements OnInit {
   captchaKey = environment.recaptchaPublic;
   captchaResponse: string | undefined;
   reblogging = false;
+  buttonItems: any = [];
 
 
 
@@ -58,6 +59,7 @@ export class PostComponent implements OnInit {
     this.sanitizedPostContent = this.post.map((elem) => this.postService.getPostHtml(elem.content));
     this.urls = this.post.map((elem) => encodeURIComponent(elem.user.url));
     this.ready = true;
+    this.updateButtonItems();
     let notes = await this.postService.getDetails(this.post[0].id);
     this.notes = notes.toString();
   }
@@ -115,6 +117,37 @@ export class PostComponent implements OnInit {
 
   hideQuickReblogOverlay() {
     this.quickReblogPanelVisible = false;
+  }
+
+  updateButtonItems(){
+    for (const content of this.post) {
+      const buttonsForFragment: MenuItem[] = [
+        {
+          label: "Share this post",
+          title: "Copy the link of the post to the clipboard",
+          icon: 'pi pi-share-alt',
+          command: () => this.sharePost(content.id) 
+        },
+      ];
+      const loggedInButtons = [
+        {
+          label: "Reblog",
+          title: "Open the reblog editor, reblogging this post",
+          icon: 'pi pi-replay',
+          command: () => this.editorService.launchPostEditorEmitter.next(content.id)
+        },
+        {
+          label: "Report",
+          title: "Open the report panel for this post",
+          icon: 'pi pi-exclamation-triangle',
+          // TODO this is stupid this is ugly but I am sleepy and I shall not fix this now
+          command: () => this.reportService.launchReportScreen.next([content])
+        }
+      ]
+      this.buttonItems[content.id] = this.userLoggedIn ? buttonsForFragment.concat(loggedInButtons) :  buttonsForFragment;
+      
+    }
+    
   }
 
 }

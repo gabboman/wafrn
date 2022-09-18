@@ -15,6 +15,7 @@ import { RouterModule } from '@angular/router';
 import { TagModule } from 'primeng/tag';
 import {OverlayPanelModule} from 'primeng/overlaypanel';
 import { CaptchaModule } from 'primeng/captcha';
+import {SplitButtonModule} from 'primeng/splitbutton';
 @NgModule({
   declarations: [
     PostFragmentComponent,
@@ -34,7 +35,8 @@ import { CaptchaModule } from 'primeng/captcha';
     RouterModule,
     TagModule,
     OverlayPanelModule,
-    CaptchaModule
+    CaptchaModule,
+    SplitButtonModule
   ],
   exports: [
     PostFragmentComponent,

@@ -137,7 +137,7 @@ export class NavigationMenuComponent implements OnInit {
           routerLink: '/'
         },
         {
-          label: 'Explore',
+          label: 'Explore without an account',
           icon: "pi pi-compass",
           title: 'See ALL the posts that are public! Yes, you can be a lurker',
           command: () => this.hideMenu(),

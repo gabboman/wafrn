@@ -23,10 +23,10 @@
             </div>
             <div class="col-4">
               <button *ngIf="followedUsers.indexOf(content.userId) === -1 && userLoggedIn" pButton pRipple label="Follow"
-                class="w-full" (click)="followUser(content.userId)"></button>
+                class="w-80" (click)="followUser(content.userId)"></button>
             </div>
             <div class="col-1 center-text" style="justify-content: center;">
-              <i (click)="sharePost(content.id)" class="pi pi-share-alt hover-cursor"></i>
+              <p-splitButton (onClick)="sharePost(content.id)" icon="pi pi-share-alt" [model]="buttonItems[content.id]" styleClass="p-button-sm mr-2 mb-2"></p-splitButton>
             </div>
           </div>
         </div>
