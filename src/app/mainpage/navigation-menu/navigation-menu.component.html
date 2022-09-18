@@ -3,6 +3,11 @@ type="button" class="p-button-raised p-button-rounded show-sidebar-menu-button"
 (click)="showMenu()"
 ></button>
 
-<p-sidebar [(visible)]="menuVisible">
+<p-sidebar [(visible)]="menuVisible" [modal]="true">
+    <p-panelMenu [model]="menuItems" [style]="{'width':'100%'}"></p-panelMenu>
+</p-sidebar>
+
+<!-- This is a little bit of a dirty trick, should actually check stuff, but fuck it -->
+<p-sidebar [visible]="true" [modal]="false" class="left-menu-hidden-mobile" [showCloseIcon]="false">
     <p-panelMenu [model]="menuItems" [style]="{'width':'100%'}"></p-panelMenu>
 </p-sidebar>

@@ -101,6 +101,12 @@ export class NavigationMenuComponent implements OnInit {
           url: "https://github.com/gabboman/wafrn"
         },
         {
+          label: "Give us some money",
+          title: "Give us some money through patreon",
+          target: "_blank",
+          url: "https://patreon.com/gabboman"
+        },
+        {
           label: 'Log out',
           icon: 'pi pi-sign-out',
           title: 'nintendo this button is for you, and your 25000000 alt accounts',
@@ -141,6 +147,12 @@ export class NavigationMenuComponent implements OnInit {
           icon: "pi pi-code",
           target: "_blank",
           url: "https://github.com/gabboman/wafrn"
+        },
+        {
+          label: "Give us some money",
+          title: "Give us some money through patreon",
+          target: "_blank",
+          url: "https://patreon.com/gabboman"
         }
       ];
     }
