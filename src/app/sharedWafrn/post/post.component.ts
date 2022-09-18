@@ -52,6 +52,9 @@ export class PostComponent implements OnInit {
     this.postService.updateFollowers.subscribe( () => {
       this.followedUsers = this.postService.followedUserIds;
     } );
+  }
+
+  async ngOnChanges(): Promise<void> {
     this.sanitizedPostContent = this.post.map((elem) => this.postService.getPostHtml(elem.content));
     this.urls = this.post.map((elem) => encodeURIComponent(elem.user.url));
     this.ready = true;
