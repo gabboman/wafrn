@@ -1,6 +1,14 @@
 {
     "version": 2,
     "public": true,
-    "name": "wafrn"
+    "name": "wafrn",
+    "rewrites": [
+        { "source": "/(.*)", "destination": "/api" }
+      ],
+      "functions": {
+        "api/index.js": {
+          "includeFiles": "dist/YOUR_PROJECT_NAME/browser/**"
+        }
+      }
   }
   
