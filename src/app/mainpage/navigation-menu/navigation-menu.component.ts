@@ -108,6 +108,7 @@ export class NavigationMenuComponent implements OnInit {
         {
           label: "Give us some money",
           title: "Give us some money through patreon",
+          icon: 'pi-euro',
           target: "_blank",
           url: "https://patreon.com/gabboman"
         },
@@ -159,6 +160,7 @@ export class NavigationMenuComponent implements OnInit {
         {
           label: "Give us some money",
           title: "Give us some money through patreon",
+          icon: 'pi-euro',
           target: "_blank",
           url: "https://patreon.com/gabboman"
         }
