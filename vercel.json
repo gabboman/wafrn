@@ -7,7 +7,7 @@
       ],
       "functions": {
         "api/index.js": {
-          "includeFiles": "dist/YOUR_PROJECT_NAME/browser/**"
+          "includeFiles": "dist/wafrn/browser/**"
         }
       }
   }
