@@ -10,7 +10,8 @@
     "dev:ssr": "ng run wafrn:serve-ssr",
     "serve:ssr": "node dist/wafrn/server/main.js",
     "build:ssr": "ng build && ng run wafrn:server",
-    "prerender": "ng run wafrn:prerender"
+    "prerender": "ng run wafrn:prerender",
+    "vercel-build": "npm run build:ssr"
   },
   "private": true,
   "dependencies": {
