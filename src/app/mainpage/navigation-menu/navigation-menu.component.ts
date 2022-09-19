@@ -110,7 +110,7 @@ export class NavigationMenuComponent implements OnInit {
           title: "Give us some money through patreon",
           icon: 'pi pi-euro',
           target: "_blank",
-          url: "https://patreon.com/gabboman"
+          url: "https://patreon.com/wafrn"
         },
         {
           label: 'Log out',
@@ -162,7 +162,7 @@ export class NavigationMenuComponent implements OnInit {
           title: "Give us some money through patreon",
           icon: 'pi pi-euro',
           target: "_blank",
-          url: "https://patreon.com/gabboman"
+          url: "https://patreon.com/wafrn"
         }
       ];
     }
