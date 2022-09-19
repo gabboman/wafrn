@@ -96,6 +96,7 @@ export class NavigationMenuComponent implements OnInit {
           label: 'Edit profile',
           title: 'Edit profile',
           icon: "pi pi-cog",
+          command: () => this.hideMenu(),
           routerLink: ['/editProfile']
         },
         {
