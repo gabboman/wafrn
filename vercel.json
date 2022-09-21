@@ -1,5 +1,5 @@
 {
-    "version": 2,
+    "version": 3,
     "public": true,
     "name": "wafrn",
     "rewrites": [
@@ -9,6 +9,12 @@
         "api/index.js": {
           "includeFiles": "dist/wafrn/browser/**"
         }
+      },
+      "images": {
+        "domains": ["media.wafrn.net"],
+        "sizes": [640, 750, 828, 1080, 1200],
+        "minimumCacheTTL": 60,
+        "formats": ["image/webp", "image/avif"]
       }
   }
   
