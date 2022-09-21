@@ -1,5 +1,4 @@
 import { Injectable, SecurityContext } from '@angular/core';
-import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { ProcessedPost } from '../interfaces/processed-post';
 import { RawPost } from '../interfaces/raw-post';
 import { MediaService } from './media.service';
@@ -24,7 +23,6 @@ export class PostsService {
   public blockedUserIds: Array<string> = [];
   constructor(
     private mediaService: MediaService,
-    private sanitizer: DomSanitizer,
     private http: HttpClient,
     private jwtService: JwtService
   ) {
