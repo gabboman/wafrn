@@ -58,6 +58,8 @@ export class PostEditorComponent implements OnInit {
     ]
   };
 
+  maxFileUploadSize = parseInt(environment.maxUploadSize) * 1024 * 1024;
+
   constructor(
     private editorService: EditorService,
     private postsService: PostsService,
