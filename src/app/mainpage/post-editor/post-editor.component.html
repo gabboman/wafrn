@@ -14,8 +14,8 @@
         tooltipPosition="top"></p-checkbox>
     </div>
     <p-fileUpload name="image" [url]="uploadImageUrl" [multiple]="false"
-      accept="image/jpeg,image/png,image/webp,image/gif,video/mp4,video/quicktime,video/webm" [auto]="true" (onUpload)="uploadImage($event)"
-      [maxFileSize]="15 * 1024 * 1024" chooseLabel="Upload image or video">
+      accept="image/jpeg,image/png,image/webp,image/gif,video/mp4,video/quicktime,video/webm" [auto]="false" (onUpload)="uploadImage($event)"
+      [maxFileSize]="maxFileUploadSize" chooseLabel="Upload image or video">
     </p-fileUpload>
 
   </p-overlayPanel>
