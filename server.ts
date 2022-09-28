@@ -24,6 +24,8 @@ import {
   ISRHandler
 } from 'ngx-isr';
 
+import { FileSystemCacheHandler } from 'ngx-isr';
+
 global['localStorage'] = localStorage;
 const domino = require('domino');
 const fs = require('fs');
@@ -47,9 +49,15 @@ export function app(): express.Express {
   const indexHtml = existsSync(join(distFolder, 'index.original.html')) ? 'index.original.html' : 'index';
 
 
+  const fsCacheHandler = new FileSystemCacheHandler({
+    cacheFolderPath: join(distFolder, '/cache'),
+    prerenderedPagesPath: distFolder,
+    addPrerenderedPagesToCache: true, // set this to true in order to add prerendered pages with `prerenderer` to the cache
+  });
   const isr = new ISRHandler({
     indexHtml,
     invalidateSecretToken: 'NOT_USED_I_WISH_I_COULD_NOT_SET_THIS_VAR',
+    cache: fsCacheHandler,
     enableLogging: !environment.production
   });
   // Our Universal express-engine (found @ https://github.com/angular/universal/tree/main/modules/express-engine)
