@@ -38,6 +38,7 @@ const routes: Routes = [{
 {
   path: 'post/:id',
   resolve: { posts: PostResolver },
+  data: { revalidate: 3600 },
   component: ViewPostComponent
 },
 {

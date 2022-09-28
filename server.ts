@@ -1,11 +1,28 @@
 import 'zone.js/dist/zone-node';
 
-import {APP_BASE_HREF} from '@angular/common';
-import {ngExpressEngine} from '@nguniversal/express-engine';
+import {
+  APP_BASE_HREF
+} from '@angular/common';
+import {
+  ngExpressEngine
+} from '@nguniversal/express-engine';
 import * as express from 'express';
-import {existsSync} from 'fs';
-import {join} from 'path';
-import 'localstorage-polyfill'
+import {
+  existsSync
+} from 'fs';
+import {
+  join
+} from 'path';
+import 'localstorage-polyfill';
+import {
+  AppServerModule
+} from './src/main.server';
+import {
+  environment
+} from 'src/environments/environment';
+import {
+  ISRHandler
+} from 'ngx-isr';
 
 global['localStorage'] = localStorage;
 const domino = require('domino');
@@ -23,14 +40,18 @@ global['window'] = window;
 global['document'] = window.document;
 
 
-import {AppServerModule} from './src/main.server';
-
 // The Express app is exported so that it can be used by serverless Functions.
 export function app(): express.Express {
   const server = express();
   const distFolder = join(process.cwd(), 'dist/wafrn/browser');
   const indexHtml = existsSync(join(distFolder, 'index.original.html')) ? 'index.original.html' : 'index';
 
+
+  const isr = new ISRHandler({
+    indexHtml,
+    invalidateSecretToken: 'NOT_USED_I_WISH_I_COULD_NOT_SET_THIS_VAR',
+    enableLogging: !environment.production
+  });
   // Our Universal express-engine (found @ https://github.com/angular/universal/tree/main/modules/express-engine)
   server.engine('html', ngExpressEngine({
     bootstrap: AppServerModule,
@@ -46,15 +67,18 @@ export function app(): express.Express {
     maxAge: '1y'
   }));
 
-    // non ssr routes
-    server.get(['/dashboard/', '/', '/register', '/recoverPassword'], (req, res) => {
-      res.sendFile(distFolder + '/index.html');
-    });
+  // non ssr routes
+  server.get(['/dashboard/', '/', '/register', '/recoverPassword'], (req, res) => {
+    res.sendFile(distFolder + '/index.html');
+  });
 
   // All regular routes use the Universal engine
-  server.get('*', (req, res) => {
-    res.render(indexHtml, { req, providers: [{ provide: APP_BASE_HREF, useValue: req.baseUrl }] });
-  });
+  server.get('*',
+    // Serve page if it exists in cache
+    async (req, res, next) => await isr.serveFromCache(req, res, next),
+      // Server side render the page and add to cache if needed
+      async (req, res, next) => await isr.render(req, res, next),
+  );
 
   return server;
 }
