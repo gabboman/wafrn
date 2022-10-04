@@ -21,7 +21,7 @@
       <div class="w-full">
         <a (click)="modalVisible = false" [routerLink]="'/post/' + mention.id ">
           <img [src]="baseMediaUrl + mention.user.avatar" style="max-height: 64px; max-width: 64px;">
-          <div style="font-size:14px;float:right;margin:15px 5px 0 0">{{mention.user.url}} has mentioned you in this posts</div>
+          <div style="font-size:14px;float:right;margin:15px 5px 0 0">{{mention.user.url}} has mentioned you in this post</div>
         </a>
       </div>
     </ng-template>
