@@ -13,8 +13,8 @@
         pTooltip="Is this image NSFW or does it contain explicit sexual content that is not suited to minors? Just mark this and go nuts"
         tooltipPosition="top"></p-checkbox>
     </div>
-    <p-fileUpload name="image" [url]="uploadImageUrl" [multiple]="false"
-      accept="image/jpeg,image/png,image/webp,image/gif,video/mp4,video/quicktime,video/webm" [auto]="false" (onUpload)="uploadImage($event)"
+    <p-fileUpload name="image" [url]="uploadImageUrl" [multiple]="true"
+      accept="image/jpeg,image/png,image/webp,image/gif,video/mp4,video/quicktime,video/webm,.mkv" [auto]="false" (onUpload)="uploadImage($event)"
       [maxFileSize]="maxFileUploadSize" chooseLabel="Upload image or video">
     </p-fileUpload>
 
