@@ -25,7 +25,7 @@
 
     <p-autoComplete [(ngModel)]="userSelectionMentionValue"
      [suggestions]="mentionSuggestions" (onSelect)="mentionUserSelected($event)"
-     (completeMethod)="updateMentionsSuggestions($event)" 
+     (completeMethod)="updateMentionsSuggestions($event)"
      [dropdown]="true">
       <ng-template let-suggest pTemplate="item">
           <div class="w-full">
@@ -38,29 +38,29 @@
 
   <quill-editor #quill [(ngModel)]="postCreatorContent" [modules]="modules">
     <div quill-editor-toolbar style="border-top-left-radius: 5px; border-top-right-radius: 5px;">
-      <select class="ql-size">
+      <select class="ql-size" title="Text Size">
         <option value="small"></option>
         <option selected></option>
         <option value="large"></option>
         <option value="huge"></option>
       </select>
-      <select class="ql-align" [title]="'Aligment'">
+      <select class="ql-align" title="Aligment">
         <option selected></option>
         <option value="center"></option>
         <option value="right"></option>
         <option value="justify"></option>
       </select>
-      <button pButton type="button" class="ql-bold" aria-label="Bold"></button>
-      <button pButton type="button" class="ql-italic" aria-label="Italic"></button>
-      <button pButton type="button" class="ql-underline" aria-label="Underline"></button>
-      <button pButton type="button" class="ql-strike" aria-label="Strike"></button>
-      <button pButton type="button" class="ql-link" aria-label="Insert Link"></button>
+      <button pButton type="button" class="ql-bold" aria-label="Bold" title="Bold"></button>
+      <button pButton type="button" class="ql-italic" aria-label="Italic" title="Italic"></button>
+      <button pButton type="button" class="ql-underline" aria-label="Underline" title="Underline"></button>
+      <button pButton type="button" class="ql-strike" aria-label="Strike" title="Strike"></button>
+      <button pButton type="button" class="ql-link" aria-label="Insert Link" title="Insert Link"></button>
       <button pButton #uploadImages
         (click)="uploadImagesPanel.show($event, uploadImages)" [icon]="'pi pi-upload'"
-        label="Upload image" class="uploadImageButton" type="button"></button>
+        title="Upload Image" class="uploadImageButton" type="button"></button>
         <button pButton #addMention
         (click)="mentionUserSearchPanel.show($event, addMention)" [icon]="'pi pi-at'"
-        label="Upload image" class="uploadImageButton" type="button"></button>
+        title="Mention User" class="uploadImageButton" type="button"></button>
 
     </div>
   </quill-editor>
