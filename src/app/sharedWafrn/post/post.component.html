@@ -1,9 +1,9 @@
 <div *ngIf="ready" class="grid pb-6 scalein animation-duration-400">
-  <div 
+  <div
     class="col-12 sm:col-12 md:col-12 lg:col-5 margin-auto wafrn-post"
     >
-  
-  
+
+
     <p-card>
       <div class="grid">
         <div *ngIf=" post.length > 1" class="col-12 center-text">
@@ -12,7 +12,7 @@
           reblogged
         </div>
       </div>
-  
+
       <div *ngFor="let content of post; index as index">
         <p-divider *ngIf="post.length > 1 && content.content != ''"></p-divider>
         <div *ngIf="content.content != '' || index == 0" class="fragment-header">
@@ -37,14 +37,14 @@
           <a *ngFor="let tag of content.tags" [routerLink]="'/dashboard/search/' + tag.tagName" >
             <p-tag class="wafrn-tag" [value]="'#' +tag.tagName"></p-tag>
           </a>
-  
+
         </div>
-  
+
       </div>
-  
+
       <ng-template pTemplate="footer">
         <p-divider></p-divider>
-  
+
         <div class="grid">
           <div class="col-8 flex justify-content-start">
             Notes: {{notes}}
@@ -54,9 +54,9 @@
               <i
                #quickReblogButton (click)="quickReblogPanel.show($event, quickReblogButton)"
                *ngIf="!quickReblogDoneSuccessfully"
-               class="col-4 pi pi-history hover-cursor"></i>
-              <i (click)="launchReblog()" class="col-4 pi pi-replay hover-cursor"></i>
-              <i (click)="reportPost()" class="col-4 pi pi-exclamation-triangle hover-cursor"></i>
+               class="col-4 pi pi-history hover-cursor" title="Quick Reblog"></i>
+              <i (click)="launchReblog()" class="col-4 pi pi-replay hover-cursor" title="Reblog"></i>
+              <i (click)="reportPost()" class="col-4 pi pi-exclamation-triangle hover-cursor" title="Report Post"></i>
             </div>
           </div>
         </div>
