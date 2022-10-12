@@ -45,10 +45,13 @@ export class MediaService {
     return this.disableNSFWFilter
   }
   checkAge(): boolean {
-    let tokenData = this.jwt.getTokenData();
-    let birthDate = new Date(tokenData.birthDate);
-    let minimumBirthDate = new Date();
+    const tokenData = this.jwt.getTokenData();
+    const birthDate = new Date(tokenData.birthDate);
+    const minimumBirthDate = new Date();
     minimumBirthDate.setFullYear(minimumBirthDate.getFullYear() - 18);
+    if( !birthDate ) {
+      return false;
+    }
     return minimumBirthDate > birthDate;
 
   }
@@ -78,7 +81,8 @@ export class MediaService {
         id: id,
         url: '/assets/img/404.png',
         description: 'The media that you are looking for could not be found. The identifier is wrong. The image is the default 404 that wafrn uses. A stock image for 404. The developer has not thought too much into it, and actually has spend more time writing this message than actually searching for a good 404 image',
-        NSFW: false
+        NSFW: false,
+        adultContent: false
       }
     }
 

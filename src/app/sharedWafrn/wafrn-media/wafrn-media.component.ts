@@ -1,4 +1,5 @@
 import { Component, Input, OnInit, ViewChild } from '@angular/core';
+import { MessageService } from 'primeng/api';
 import { WafrnMedia } from 'src/app/interfaces/wafrn-media';
 import { MediaService } from 'src/app/services/media.service';
 import { environment } from 'src/environments/environment';
@@ -13,6 +14,7 @@ export class WafrnMediaComponent implements OnInit {
 
   @Input() id!: string;
   nsfw = true;
+  adultContent = true;
   data!: WafrnMedia;
   displayUrl: string = '';
   disableNSFWFilter = true;
@@ -24,7 +26,8 @@ export class WafrnMediaComponent implements OnInit {
 
   
   constructor(
-    private mediaService: MediaService
+    private mediaService: MediaService,
+    private messagesService: MessageService,
   ) {
     this.disableNSFWFilter = mediaService.checkNSFWFilterDisabled();
    }
@@ -32,7 +35,8 @@ export class WafrnMediaComponent implements OnInit {
   ngOnInit(): void {
 
     this.data = this.mediaService.getMediaById(this.id);
-    this.nsfw = this.data.NSFW && ! this.disableNSFWFilter;
+    this.nsfw = this.data.adultContent ? true : this.data.NSFW && ! this.disableNSFWFilter;
+    this.adultContent = this.data.adultContent;
     this.displayUrl = this.nsfw ? '/assets/img/nsfw_image.webp' : this.data.url;
     this.video = !this.nsfw && this.checkIfVideo();
     this.ready = true;
@@ -40,10 +44,19 @@ export class WafrnMediaComponent implements OnInit {
   }
 
   showPicture(){
-    this.nsfw = false;
-    this.displayUrl = this.data.url;
-    this.viewLongImage = true;
-    this.video = this.checkIfVideo();
+    if(!(this.adultContent && !this.mediaService.checkAge())) {
+      this.nsfw = false;
+      this.adultContent = false;
+      this.displayUrl = this.data.url;
+      this.viewLongImage = true;
+      this.video = this.checkIfVideo();
+    } else {
+      this.messagesService.add({
+        severity: 'warn',
+        detail: 'This image has been flagged as adult content and you are a minor, or you are not logged in'
+      })
+    }
+    
 
   }
 
