@@ -36,6 +36,7 @@ export class PostEditorComponent implements OnInit {
   // upload media variables
   newImageDescription = '';
   newImageNSFW = false;
+  newImageAdult = false;
   newImageFile: File | undefined;
   disableImageUploadButton = false;
   uploadImageUrl = environment.baseUrl + '/uploadMedia';
@@ -157,8 +158,8 @@ export class PostEditorComponent implements OnInit {
       let responses = event.originalEvent.body;
       responses.forEach(async (response: any) => {
         if (response) {
-          if(this.newImageDescription != '' || this.newImageNSFW ){
-            await this.mediaService.updateMedia(response.id, this.newImageDescription, this.newImageNSFW);
+          if(this.newImageDescription != '' || this.newImageNSFW || this.newImageAdult ){
+            await this.mediaService.updateMedia(response.id, this.newImageDescription, this.newImageNSFW, this.newImageAdult);
           }
           this.fixNullPosting();
           console.log(this.quill.quillEditor.getSelection())
@@ -167,6 +168,7 @@ export class PostEditorComponent implements OnInit {
       });
       this.newImageDescription = '';
       this.newImageNSFW = false;
+      this.newImageAdult = false;
       this.newImageFile = undefined;
       this.uploadImagesPanel.hide();
       this.messages.add({
@@ -207,6 +209,9 @@ export class PostEditorComponent implements OnInit {
     this.mentionUserSearchPanel.hide();
   }
 
+  adultContentUpdated() {
+    this.newImageNSFW = this.newImageAdult ? true : this.newImageNSFW;
+  }
 
 
 }

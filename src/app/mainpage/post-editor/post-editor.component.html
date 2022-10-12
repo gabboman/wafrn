@@ -6,11 +6,17 @@
     <div>
       <label for="description" class="block text-900 font-medium mb-2">Images description</label>
       <input [(ngModel)]="newImageDescription" id="description" type="text"
-        pTooltip="Image description. Useful in the case of someone using a screen reader, or when the image does not load properly."
+        pTooltip="Images description. Useful in the case of someone using a screen reader, or when the image does not load properly. Applies to ALL images uploaded in the batch"
         tooltipPosition="top" pInputText class="w-full mb-3">
 
-      <p-checkbox [(ngModel)]="newImageNSFW" [binary]="true" label="This images are NSFW"
-        pTooltip="Is this image NSFW or does it contain explicit sexual content that is not suited to minors? Just mark this and go nuts"
+      <p-checkbox [(ngModel)]="newImageNSFW" [binary]="true" label="This medias are NSFW"
+        pTooltip="Are these images NSFW? as in 'this is a spicy post and is better to not see it in a classroom or a work environment'"
+        tooltipPosition="top"
+        [disabled]="newImageAdult"
+        ></p-checkbox>
+        <p-checkbox [(ngModel)]="newImageAdult" [binary]="true" label="This medias containt adult content"
+        (ngModelChange)="adultContentUpdated()"
+        pTooltip="Not a spicy post, but actual adult NSFW content. This media will not be visible to minors nor people who is not logged in"
         tooltipPosition="top"></p-checkbox>
     </div>
     <p-fileUpload name="image" [url]="uploadImageUrl" [multiple]="true"

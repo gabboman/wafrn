@@ -90,8 +90,8 @@ export class MediaService {
 
   }
 
-  async updateMedia(id: string, description: string, nsfw: boolean) {
-    let payload: FormData = this.utils.objectToFormData({id: id, description: description, nsfw: nsfw});
+  async updateMedia(id: string, description: string, nsfw: boolean, adult: boolean) {
+    let payload: FormData = this.utils.objectToFormData({id: id, description: description, nsfw: nsfw, adultContent: adult});
     let response = await this.http.post(environment.baseUrl + '/updateMedia', payload).toPromise();
     return response;
 
