@@ -135,7 +135,7 @@ export class NavigationMenuComponent implements OnInit {
           title: 'Register',
           icon: "pi pi-user",
           command: () => this.hideMenu(),
-          routerLink: '/'
+          routerLink: '/register'
         },
         {
           label: 'Explore without an account',
