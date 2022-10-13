@@ -6,8 +6,6 @@ import { LoginComponent } from './mainpage/login/login.component';
 import { RecoverPasswordComponent } from './mainpage/recover-password/recover-password.component';
 import { RegisterComponent } from './mainpage/register/register.component';
 import { ResetPasswordComponent } from './mainpage/reset-password/reset-password.component';
-import { ViewBlogComponent } from './mainpage/view-blog/view-blog.component';
-import { ViewPostComponent } from './mainpage/view-post/view-post.component';
 import { PagenotfoundComponent } from './pagenotfound/pagenotfound.component';
 import { PostResolver } from './resolvers/post.resolver';
 
@@ -36,14 +34,12 @@ const routes: Routes = [{
   component: ResetPasswordComponent
 },
 {
-  path: 'post/:id',
-  resolve: { posts: PostResolver },
-  data: { revalidate: 3600 },
-  component: ViewPostComponent
+  path: 'post',
+  loadChildren: () => import ('./single-post/single-post.module').then(m => m.SinglePostModule),
 },
 {
-  path: 'blog/:url',
-  component: ViewBlogComponent,
+  path: 'blog',
+  loadChildren: () => import ('./view-blog/view-blog.module').then(m => m.ViewBlogModule),
 },
 {
   path: 'editProfile',

@@ -21,13 +21,8 @@ import { WafrnAuthInterceptor } from './interceptors/wafrn-auth.interceptor';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { ToastModule } from 'primeng/toast';
 import { MessageService } from 'primeng/api';
-import { YouTubePlayerModule } from "@angular/youtube-player";
-import { WafrnYoutubePlayerComponent } from './shared/wafrn-youtube-player/wafrn-youtube-player.component';
 import { ResetPasswordComponent } from './mainpage/reset-password/reset-password.component';
 import { ActivateAccountComponent } from './mainpage/activate-account/activate-account.component';
-import { ViewBlogComponent } from './mainpage/view-blog/view-blog.component';
-import { ViewPostComponent } from './mainpage/view-post/view-post.component';
-import { SharedWafrnModule } from './sharedWafrn/shared-wafrn.module';
 import {DeferModule} from 'primeng/defer';
 import { CardModule } from 'primeng/card';
 import { PostEditorComponent } from './mainpage/post-editor/post-editor.component';
@@ -55,11 +50,8 @@ import {AutoCompleteModule} from 'primeng/autocomplete';
     LoginComponent,
     RegisterComponent,
     RecoverPasswordComponent,
-    WafrnYoutubePlayerComponent,
     ResetPasswordComponent,
     ActivateAccountComponent,
-    ViewBlogComponent,
-    ViewPostComponent,
     PostEditorComponent,
     NavigationMenuComponent,
     ReportPostComponent,
@@ -85,8 +77,6 @@ import {AutoCompleteModule} from 'primeng/autocomplete';
     TooltipModule,
     ProgressSpinnerModule,
     ToastModule,
-    YouTubePlayerModule,
-    SharedWafrnModule,
     DeferModule,
     CardModule,
     OverlayPanelModule,

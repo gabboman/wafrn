@@ -16,12 +16,16 @@ import { TagModule } from 'primeng/tag';
 import {OverlayPanelModule} from 'primeng/overlaypanel';
 import { CaptchaModule } from 'primeng/captcha';
 import {SplitButtonModule} from 'primeng/splitbutton';
+import { ProgressSpinnerModule } from 'primeng/progressspinner';
+import { WafrnYoutubePlayerComponent } from './wafrn-youtube-player/wafrn-youtube-player.component';
+
 @NgModule({
   declarations: [
     PostFragmentComponent,
     PostComponent,
     WafrnMediaComponent,
-    InjectHTMLDirective
+    InjectHTMLDirective,
+    WafrnYoutubePlayerComponent,
   ],
   imports: [
     CommonModule,
@@ -36,13 +40,18 @@ import {SplitButtonModule} from 'primeng/splitbutton';
     TagModule,
     OverlayPanelModule,
     CaptchaModule,
-    SplitButtonModule
+    SplitButtonModule,
+    ProgressSpinnerModule,
+    
   ],
   exports: [
     PostFragmentComponent,
     PostComponent,
     WafrnMediaComponent,
-    InjectHTMLDirective
+    InjectHTMLDirective,
+    ProgressSpinnerModule,
+    CardModule,
+    WafrnYoutubePlayerComponent,
 
   ]
 })

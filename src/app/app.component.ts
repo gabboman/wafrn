@@ -2,10 +2,10 @@ import { Component, Injector, OnInit } from '@angular/core';
 import { PrimeNGConfig } from 'primeng/api';
 import { WafrnMediaComponent } from './sharedWafrn/wafrn-media/wafrn-media.component';
 import { createCustomElement } from '@angular/elements';
-import { WafrnYoutubePlayerComponent } from './shared/wafrn-youtube-player/wafrn-youtube-player.component';
 import { Router } from '@angular/router';
 import { LoginService } from './services/login.service';
 import { isPlatformBrowser } from '@angular/common';
+import { WafrnYoutubePlayerComponent } from './sharedWafrn/wafrn-youtube-player/wafrn-youtube-player.component';
 
 @Component({
   selector: 'app-root',

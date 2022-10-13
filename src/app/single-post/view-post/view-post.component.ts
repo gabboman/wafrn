@@ -5,8 +5,8 @@ import { DashboardService } from 'src/app/services/dashboard.service';
 import { LoginService } from 'src/app/services/login.service';
 import { environment } from 'src/environments/environment';
 import { Title, Meta } from '@angular/platform-browser';
-import { UtilsService } from 'src/app/services/utils.service';
 import { PostsService } from 'src/app/services/posts.service';
+import { SanitizedSeoService } from 'src/app/services/sanitized-seo.service';
 @Component({
   selector: 'app-view-post',
   templateUrl: './view-post.component.html',
@@ -30,12 +30,12 @@ export class ViewPostComponent implements OnInit {
     private loginService: LoginService,
     private router: Router,
     private route: ActivatedRoute,
-    private utilsService: UtilsService
+    private seoService: SanitizedSeoService
   ) {
     this.route.data.subscribe((data) => {
       this.post = data['posts'];
       const lastPostFragment = this.post[this.post.length -1];
-      this.utilsService.setSEOTags('Wafrn - Post by ' + lastPostFragment.user.url, 'Wafrn post by ' + lastPostFragment.user.url + ': ' + this.postService.getPostContentSanitized(lastPostFragment.content), lastPostFragment.user.url, this.getImage(this.post));
+      this.seoService.setSEOTags('Wafrn - Post by ' + lastPostFragment.user.url, 'Wafrn post by ' + lastPostFragment.user.url + ': ' + this.postService.getPostContentSanitized(lastPostFragment.content), lastPostFragment.user.url, this.getImage(this.post));
       this.loading = false;
     })
   }
