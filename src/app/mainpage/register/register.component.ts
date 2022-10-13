@@ -17,6 +17,7 @@ export class RegisterComponent implements OnInit {
   loading = false;
 
   minimumRegistrationDate: Date;
+  minDate: Date;
   img: File|null = null;
 
 
@@ -40,6 +41,9 @@ export class RegisterComponent implements OnInit {
     // minimum age: 14
     this.minimumRegistrationDate = new Date();
     this.minimumRegistrationDate.setFullYear(this.minimumRegistrationDate.getFullYear() - 14);
+    // do not accept dates before 1900
+    this.minDate = new Date();
+    this.minDate.setFullYear(1900, 0, 1);
    }
 
   ngOnInit(): void {

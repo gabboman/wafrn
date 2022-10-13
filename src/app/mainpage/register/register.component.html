@@ -25,7 +25,7 @@
           class="w-full mb-3">
 
         <label for="birthDate" class="block text-900 font-medium mb-2">Your birth date</label>
-        <p-calendar [maxDate]="minimumRegistrationDate" id="birthDate" formControlName="birthDate" [touchUI]="true"
+        <p-calendar [maxDate]="minimumRegistrationDate" id="birthDate" [minDate]="minDate" [defaultDate]="minimumRegistrationDate" formControlName="birthDate" [readonlyInput]="true" [touchUI]="true"
           styleClass="w-full mb-3"></p-calendar>
 
         <label for="avatar" class="block text-900 font-medium mb-2">Upload your avatar</label>
