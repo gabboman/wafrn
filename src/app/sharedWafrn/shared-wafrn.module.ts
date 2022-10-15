@@ -18,6 +18,7 @@ import { CaptchaModule } from 'primeng/captcha';
 import {SplitButtonModule} from 'primeng/splitbutton';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { WafrnYoutubePlayerComponent } from './wafrn-youtube-player/wafrn-youtube-player.component';
+import {DeferModule} from 'primeng/defer';
 
 @NgModule({
   declarations: [
@@ -42,6 +43,8 @@ import { WafrnYoutubePlayerComponent } from './wafrn-youtube-player/wafrn-youtub
     CaptchaModule,
     SplitButtonModule,
     ProgressSpinnerModule,
+    DeferModule,
+    ButtonModule
     
   ],
   exports: [
@@ -52,6 +55,8 @@ import { WafrnYoutubePlayerComponent } from './wafrn-youtube-player/wafrn-youtub
     ProgressSpinnerModule,
     CardModule,
     WafrnYoutubePlayerComponent,
+    DeferModule,
+    ButtonModule
 
   ]
 })

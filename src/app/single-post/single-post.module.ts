@@ -4,7 +4,6 @@ import { RouterModule, Routes } from '@angular/router';
 import { ViewPostComponent } from './view-post/view-post.component';
 import { PostResolver } from '../resolvers/post.resolver';
 import { SharedWafrnModule } from '../sharedWafrn/shared-wafrn.module';
-import { ProgressSpinnerModule } from 'primeng/progressspinner';
 
 const routes: Routes = [
   {
