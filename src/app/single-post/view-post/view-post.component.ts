@@ -4,7 +4,6 @@ import { ProcessedPost } from 'src/app/interfaces/processed-post';
 import { DashboardService } from 'src/app/services/dashboard.service';
 import { LoginService } from 'src/app/services/login.service';
 import { environment } from 'src/environments/environment';
-import { Title, Meta } from '@angular/platform-browser';
 import { PostsService } from 'src/app/services/posts.service';
 import { SanitizedSeoService } from 'src/app/services/sanitized-seo.service';
 @Component({
@@ -36,10 +35,12 @@ export class ViewPostComponent implements OnInit {
       this.post = data['posts'];
       const lastPostFragment = this.post[this.post.length -1];
       this.seoService.setSEOTags('Wafrn - Post by ' + lastPostFragment.user.url, 'Wafrn post by ' + lastPostFragment.user.url + ': ' + this.postService.getPostContentSanitized(lastPostFragment.content), lastPostFragment.user.url, this.getImage(this.post));
-      this.loading = false;
     })
   }
   ngOnInit(): void {
+    
+    this.loading = false;
+
   }
 
   // gets either the first non video image from the last post, the fist non video image from the initial post OR the wafrn logo
@@ -69,7 +70,6 @@ export class ViewPostComponent implements OnInit {
         }
       }
     }
-    console.log(res)
     return res;
   }
 
