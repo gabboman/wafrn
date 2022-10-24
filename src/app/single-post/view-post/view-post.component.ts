@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Inject, OnInit, PLATFORM_ID } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ProcessedPost } from 'src/app/interfaces/processed-post';
 import { DashboardService } from 'src/app/services/dashboard.service';
@@ -6,6 +6,7 @@ import { LoginService } from 'src/app/services/login.service';
 import { environment } from 'src/environments/environment';
 import { PostsService } from 'src/app/services/posts.service';
 import { SanitizedSeoService } from 'src/app/services/sanitized-seo.service';
+import { isPlatformBrowser, isPlatformServer } from '@angular/common';
 @Component({
   selector: 'app-view-post',
   templateUrl: './view-post.component.html',
@@ -29,7 +30,8 @@ export class ViewPostComponent implements OnInit {
     private loginService: LoginService,
     private router: Router,
     private route: ActivatedRoute,
-    private seoService: SanitizedSeoService
+    private seoService: SanitizedSeoService,
+    @Inject(PLATFORM_ID) private platformId: Object
   ) {
     this.route.data.subscribe((data) => {
       this.post = data['posts'];
@@ -38,8 +40,9 @@ export class ViewPostComponent implements OnInit {
     })
   }
   ngOnInit(): void {
-    
-    this.loading = false;
+    if(isPlatformBrowser(this.platformId)) {
+      this.loading = false;
+    }
 
   }
 
