@@ -1,3 +1,6 @@
 <app-post *ngIf="!loading" [post]="post"></app-post>
 
 <p-progressSpinner *ngIf="loading"></p-progressSpinner>
+<div *ngIf="loading">
+    The post is being rendered using javascript. If you have javascript disabled, we get that, but js is needed for wafrn. Since you have js disabled, I am going to guess that you care a lot about privacy, so before tyou enable it, you must know: we use google captcha v3 (the invisible one), and the youtube js is loaded by default right now. Please ask for a screenshot if someone insist on this post being really funy
+</div>
