@@ -1,4 +1,4 @@
-<p-dialog [visible]="postToReport" header="Report a post" [modal]="true"  >
+<p-dialog [(visible)]="postToReport" header="Report a post" [modal]="true"  >
     <div style="width: 75vw; min-height: 35vh" class="p-grid">
         <form [formGroup]="reportForm" (submit)="submit()">
             <span class="p-float-label">
