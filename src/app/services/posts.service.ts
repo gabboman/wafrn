@@ -79,7 +79,7 @@ export class PostsService {
     let payload = new FormData();
     payload.append('id', id);
     try {
-      let response = await this.http.post<{ reblogs: number }>(environment.baseUrl + '/postDetails', payload).toPromise();
+      let response = await this.http.get<{ reblogs: number }>(environment.baseUrl + '/postDetails/' + id).toPromise();
       if (response?.reblogs) {
         res = response.reblogs;
       }

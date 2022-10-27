@@ -20,6 +20,7 @@ export class ViewPostComponent implements OnInit {
   blogUrl: string = '';
   blogDetails: any;
   mediaUrl = environment.baseMediaUrl;
+  forceSSR = false;
 
 
 
@@ -34,13 +35,14 @@ export class ViewPostComponent implements OnInit {
     @Inject(PLATFORM_ID) private platformId: Object
   ) {
     this.route.data.subscribe((data) => {
+      this.forceSSR = route.snapshot.queryParams['force-ssr'] === 'true';
       this.post = data['posts'];
       const lastPostFragment = this.post[this.post.length -1];
       this.seoService.setSEOTags('Wafrn - Post by ' + lastPostFragment.user.url, 'Wafrn post by ' + lastPostFragment.user.url + ': ' + this.postService.getPostContentSanitized(lastPostFragment.content), lastPostFragment.user.url, this.getImage(this.post));
     })
   }
   ngOnInit(): void {
-    if(isPlatformBrowser(this.platformId)) {
+    if(isPlatformBrowser(this.platformId) || this.forceSSR) {
       this.loading = false;
     }
 
