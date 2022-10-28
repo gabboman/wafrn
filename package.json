@@ -28,6 +28,8 @@
     "@angular/router": "^14.0.6",
     "@angular/youtube-player": "^14.1.0",
     "@nguniversal/express-engine": "^14.0.3",
+    "@sentry/angular": "^7.17.2",
+    "@sentry/tracing": "^7.17.2",
     "@typescript-eslint/parser": "^5.9.1",
     "bootstrap": "^4.6.1",
     "core-js": "^3.25.3",

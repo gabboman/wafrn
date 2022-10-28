@@ -1,5 +1,4 @@
-import { NgModule } from '@angular/core';
-import { BrowserModule } from '@angular/platform-browser';
+import { APP_INITIALIZER, ErrorHandler, NgModule } from "@angular/core";import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
@@ -44,6 +43,9 @@ import { QuillModule } from 'ngx-quill'
 import { environment } from 'src/environments/environment';
 import { RECAPTCHA_V3_SITE_KEY, RecaptchaV3Module } from 'ng-recaptcha';
 import {AutoCompleteModule} from 'primeng/autocomplete';
+import { Router } from "@angular/router";
+import * as Sentry from "@sentry/angular";
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -98,7 +100,23 @@ import {AutoCompleteModule} from 'primeng/autocomplete';
     {
       provide: RECAPTCHA_V3_SITE_KEY,
       useValue: environment.recaptchaPublic,
-    }
+    },
+    {
+      provide: ErrorHandler,
+      useValue: Sentry.createErrorHandler({
+        showDialog: true,
+      }),
+    },
+    {
+      provide: Sentry.TraceService,
+      deps: [Router],
+    },
+    {
+      provide: APP_INITIALIZER,
+      useFactory: () => () => {},
+      deps: [Sentry.TraceService],
+      multi: true,
+    },
   ],
   bootstrap: [AppComponent],
   exports: [
