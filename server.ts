@@ -30,6 +30,7 @@ global['localStorage'] = localStorage;
 const domino = require('domino');
 const fs = require('fs');
 const path = require('path');
+const cache = require('memory-cache');
 
 // Use the browser index.html as template for the mock window
 const template = fs
@@ -49,17 +50,6 @@ export function app(): express.Express {
   const indexHtml = existsSync(join(distFolder, 'index.original.html')) ? 'index.original.html' : 'index';
 
 
-  const fsCacheHandler = new FileSystemCacheHandler({
-    cacheFolderPath: join(distFolder, '/cache'),
-    prerenderedPagesPath: distFolder,
-    addPrerenderedPagesToCache: true, // set this to true in order to add prerendered pages with `prerenderer` to the cache
-  });
-  const isr = new ISRHandler({
-    indexHtml,
-    invalidateSecretToken: 'NOT_USED_I_WISH_I_COULD_NOT_SET_THIS_VAR',
-    cache: fsCacheHandler,
-    enableLogging: !environment.production
-  });
   // Our Universal express-engine (found @ https://github.com/angular/universal/tree/main/modules/express-engine)
   server.engine('html', ngExpressEngine({
     bootstrap: AppServerModule,
@@ -80,12 +70,30 @@ export function app(): express.Express {
     res.sendFile(distFolder + '/index.html');
   });
 
-  // All regular routes use the Universal engine
-  server.get('*',
-    // Serve page if it exists in cache
-    async (req, res, next) => await isr.serveFromCache(req, res, next),
-      // Server side render the page and add to cache if needed
-      async (req, res, next) => await isr.render(req, res, next),
+  // All regular routes that use the Universal engine
+  server.get('*', (req, res, next) => {
+    // we check if the page we want to render has been cached
+    if (cache.get(req.url)) {
+      res.send(cache.get(req.url));
+    } else {
+      next();
+    }
+  },
+  (req, res) => {
+    // if it has not been cached, we render it and we add it to cache
+    res.render(
+        indexHtml,
+        {
+            req,
+            providers: [{ provide: APP_BASE_HREF, useValue: req.baseUrl }],
+        },
+        (err: Error, html: string) => {
+            // Cache the rendered `html` for this request url to use for subsequent requests
+            cache.put(req.url, html, 3600);
+            res.send(html);
+        },
+    );
+},
   );
 
   return server;

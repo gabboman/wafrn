@@ -7,8 +7,8 @@ export const environment = {
   recaptchaPublic: '6LcrwQchAAAAADcgr0bLQ45AknhAQLkzX2RYNavT',
   maxUploadSize: '50',
   baseUrl: 'http://localhost:3000',
-  // baseMediaUrl: 'https://media.wafrn.net',
-  baseMediaUrl: 'http://localhost:3000',
+  baseMediaUrl: 'https://media.wafrn.net',
+  //baseMediaUrl: 'http://localhost:3000',
   frontUrl: 'http://localhost:4200'
 };
 
