@@ -20,11 +20,6 @@ import {
 import {
   environment
 } from 'src/environments/environment';
-import {
-  ISRHandler
-} from 'ngx-isr';
-
-import { FileSystemCacheHandler } from 'ngx-isr';
 
 global['localStorage'] = localStorage;
 const domino = require('domino');
