@@ -11,49 +11,31 @@ import { SearchComponent } from './search/search.component';
 import { InputTextModule } from 'primeng/inputtext';
 import {CarouselModule} from 'primeng/carousel';
 import { ButtonModule } from 'primeng/button';
-import { EditProfileComponent } from './edit-profile/edit-profile.component';
 
 const routes: Routes = [
-  {
-    path: '',
-    component: DashboardComponent
-  },
+
   {
     path: 'search',
-    component: SearchComponent
-  },
-  {
-    path: 'explore',
-    component: DashboardComponent
-  },
-  {
-    path: 'search/:term',
-    component: SearchComponent
+    loadChildren: () => import ('./search/search.module').then(m => m.SearchModule)
+
   },
   {
     path: 'profile',
-    component: EditProfileComponent
-  }
+    loadChildren: () => import ('./edit-profile/edit-profile.module').then(m => m.EditProfileModule)
+  },
+  {
+    path: '',
+    loadChildren: () => import ('./dashboard/dashboard.module').then(m => m.DashboardModule)
+
+  },
 ];
 
 @NgModule({
   declarations: [
-    DashboardComponent,
-    SearchComponent,
-    EditProfileComponent,
   ],
   imports: [
     CommonModule,
     RouterModule.forChild(routes),
-    DeferModule,
-    SharedWafrnModule,
-    ProgressSpinnerModule,
-    FormsModule,
-    ReactiveFormsModule,
-    CardModule,
-    InputTextModule,
-    CarouselModule,
-    ButtonModule
   ]
 })
 export class DashboardModule { }
