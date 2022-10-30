@@ -21,6 +21,7 @@ const routes: Routes = [
   imports: [
     CommonModule,
     RouterModule.forChild(routes),
+    // TODO delete this resource hog
     SharedWafrnModule,
   ]
 })
