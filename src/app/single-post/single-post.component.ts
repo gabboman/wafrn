@@ -8,11 +8,11 @@ import { PostsService } from 'src/app/services/posts.service';
 import { SanitizedSeoService } from 'src/app/services/sanitized-seo.service';
 import { isPlatformBrowser, isPlatformServer } from '@angular/common';
 @Component({
-  selector: 'app-view-post',
-  templateUrl: './view-post.component.html',
-  styleUrls: ['./view-post.component.scss']
+  selector: 'app-single-post',
+  templateUrl: './single-post.component.html',
+  styleUrls: ['./single-post.component.scss']
 })
-export class ViewPostComponent implements OnInit {
+export class SinglePostComponent implements OnInit {
 
 
   post: ProcessedPost[] = [];
