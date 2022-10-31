@@ -2,8 +2,9 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule, Routes } from '@angular/router';
 import { PostResolver } from '../resolvers/post.resolver';
-import { SharedWafrnModule } from '../sharedWafrn/shared-wafrn.module';
 import { SinglePostComponent } from './single-post.component';
+import { ProgressSpinnerModule } from 'primeng/progressspinner';
+import { PostModule } from '../post/post.module';
 
 const routes: Routes = [
   {
@@ -21,8 +22,8 @@ const routes: Routes = [
   imports: [
     CommonModule,
     RouterModule.forChild(routes),
-    // TODO delete this resource hog
-    SharedWafrnModule,
+    ProgressSpinnerModule,
+    PostModule
   ]
 })
 export class SinglePostModule { }

@@ -4,7 +4,8 @@ import { DashboardComponent } from './dashboard.component';
 import { RouterModule, Routes } from '@angular/router';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { CardModule } from 'primeng/card';
-import { SharedWafrnModule } from 'src/app/sharedWafrn/shared-wafrn.module';
+import { DeferModule } from 'primeng/defer';
+import { PostModule } from 'src/app/post/post.module';
 
 
 const routes: Routes = [
@@ -27,7 +28,8 @@ const routes: Routes = [
     RouterModule.forChild(routes),
     ProgressSpinnerModule,
     CardModule,
-    SharedWafrnModule
+    DeferModule,
+    PostModule
 
   ]
 })

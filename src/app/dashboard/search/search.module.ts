@@ -6,9 +6,10 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CardModule } from 'primeng/card';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { CarouselModule } from 'primeng/carousel';
-import { SharedWafrnModule } from 'src/app/sharedWafrn/shared-wafrn.module';
 import { DeferModule } from 'primeng/defer';
 import { InputTextModule } from 'primeng/inputtext';
+import { ButtonModule } from 'primeng/button';
+import { PostModule } from 'src/app/post/post.module';
 
 
 const routes: Routes = [
@@ -36,8 +37,9 @@ const routes: Routes = [
     RouterModule.forChild(routes),
     DeferModule,
     InputTextModule,
-    // TODO remove the shared module, its a resource hog!
-    SharedWafrnModule
+    ButtonModule,
+    DeferModule,
+    PostModule
 
   ]
 })

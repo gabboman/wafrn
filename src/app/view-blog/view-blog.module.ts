@@ -1,8 +1,12 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule, Routes } from '@angular/router';
-import { SharedWafrnModule } from '../sharedWafrn/shared-wafrn.module';
 import { ViewBlogComponent } from './view-blog.component';
+import { ProgressSpinnerModule } from 'primeng/progressspinner';
+import { CardModule } from 'primeng/card';
+import { ButtonModule } from 'primeng/button';
+import { DeferModule } from 'primeng/defer';
+import { PostModule } from '../post/post.module';
 
 
 
@@ -20,8 +24,11 @@ const routes: Routes = [
   imports: [
     CommonModule,
     RouterModule.forChild(routes),
-    // TODO delete this resource hog
-    SharedWafrnModule,
+    ProgressSpinnerModule,
+    CardModule,
+    ButtonModule,
+    DeferModule,
+    PostModule
   ]
 })
 export class ViewBlogModule { }
