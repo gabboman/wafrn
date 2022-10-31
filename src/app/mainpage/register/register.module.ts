@@ -1,37 +1,37 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { EditProfileComponent } from './edit-profile.component';
+import { RegisterComponent } from './register.component';
 import { RouterModule, Routes } from '@angular/router';
+import { CalendarModule } from 'primeng/calendar';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { CardModule } from 'primeng/card';
 import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
+import { KeyFilterModule } from 'primeng/keyfilter';
 import { TooltipModule } from 'primeng/tooltip';
-
-
 
 const routes: Routes = [
   {
     path: '',
-    component: EditProfileComponent
+    component: RegisterComponent
   }
 ];
 
 @NgModule({
   declarations: [
-    EditProfileComponent
+    RegisterComponent
   ],
   imports: [
     CommonModule,
-    RouterModule.forChild(routes),
     FormsModule,
     ReactiveFormsModule,
-    ProgressSpinnerModule,
+    CalendarModule,
     CardModule,
     ButtonModule,
     InputTextModule,
-    TooltipModule
+    KeyFilterModule,
+    TooltipModule,
+    RouterModule.forChild(routes)
   ]
 })
-export class EditProfileModule { }
+export class RegisterModule { }

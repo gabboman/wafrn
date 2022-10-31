@@ -1,37 +1,34 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { EditProfileComponent } from './edit-profile.component';
+import { LoginComponent } from './login.component';
 import { RouterModule, Routes } from '@angular/router';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { CardModule } from 'primeng/card';
-import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
-import { TooltipModule } from 'primeng/tooltip';
-
+import { ButtonModule } from 'primeng/button';
 
 
 const routes: Routes = [
   {
     path: '',
-    component: EditProfileComponent
+    component: LoginComponent
   }
 ];
 
 @NgModule({
   declarations: [
-    EditProfileComponent
+    LoginComponent
   ],
   imports: [
     CommonModule,
-    RouterModule.forChild(routes),
     FormsModule,
     ReactiveFormsModule,
     ProgressSpinnerModule,
     CardModule,
-    ButtonModule,
     InputTextModule,
-    TooltipModule
+    ButtonModule,
+    RouterModule.forChild(routes)
   ]
 })
-export class EditProfileModule { }
+export class LoginModule { }

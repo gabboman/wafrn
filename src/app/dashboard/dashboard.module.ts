@@ -10,10 +10,6 @@ const routes: Routes = [
 
   },
   {
-    path: 'profile',
-    loadChildren: () => import ('./edit-profile/edit-profile.module').then(m => m.EditProfileModule)
-  },
-  {
     path: '',
     loadChildren: () => import ('./dashboard/dashboard.module').then(m => m.DashboardModule)
 

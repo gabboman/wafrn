@@ -1,37 +1,29 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { EditProfileComponent } from './dashboard/edit-profile/edit-profile.component';
-import { ActivateAccountComponent } from './mainpage/activate-account/activate-account.component';
-import { LoginComponent } from './mainpage/login/login.component';
-import { RecoverPasswordComponent } from './mainpage/recover-password/recover-password.component';
-import { RegisterComponent } from './mainpage/register/register.component';
-import { ResetPasswordComponent } from './mainpage/reset-password/reset-password.component';
-import { PagenotfoundComponent } from './pagenotfound/pagenotfound.component';
-import { PostResolver } from './resolvers/post.resolver';
 
-const routes: Routes = [{
-  path: '',
-  component: LoginComponent
-},{
+const routes: Routes = [
+{
   path: 'register',
-  component: RegisterComponent
+  loadChildren: () => import ('./mainpage/register/register.module').then(m => m.RegisterModule)
 },
 {
   path: 'recoverPassword',
-  component: RecoverPasswordComponent
+  loadChildren: () => import ('./mainpage/recover-password/recover-password.module').then(m => m.RecoverPasswordModule)
 },
 {
   path: 'dashboard',
   loadChildren: () => import ('./dashboard/dashboard.module').then(m => m.DashboardModule)
 },
 {
-  path: 'activate/:email/:activationCode',
-  component: ActivateAccountComponent
+  path: 'activate',
+  loadChildren: () => import ('./mainpage/activate-account/activate-account.module').then(m => m.ActivateAccountModule)
+
 
 },
 {
-  path: 'resetPassword/:email/:resetCode',
-  component: ResetPasswordComponent
+  path: 'resetPassword',
+  loadChildren: () => import ('./mainpage/reset-password/reset-password.module').then(m => m.ResetPasswordModule)
 },
 {
   path: 'post',
@@ -43,11 +35,16 @@ const routes: Routes = [{
 },
 {
   path: 'editProfile',
-  component: EditProfileComponent
+  loadChildren: () => import ('./dashboard/edit-profile/edit-profile.module').then(m => m.EditProfileModule)
+
+},
+{
+  path: '',
+  loadChildren: () => import ('./mainpage/login/login.module').then(m => m.LoginModule)
 },
 {
   path: '**',
-  component: PagenotfoundComponent
+  loadChildren: () => import ('./pagenotfound/pagenotfound.module').then(m => m.PagenotfoundModule),
 }
 ];
 
