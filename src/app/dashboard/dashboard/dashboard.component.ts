@@ -114,7 +114,7 @@ export class DashboardComponent implements OnInit {
         updatedAt:      new Date(),
         userId: "40472b5b-b668-4156-b795-a60f2986e928",
         user: {
-          avatar: "/1641804617334_2f7de58d61c79f0bca67869c5b375f74a3787a17.png",
+          avatar: "/1641804617334_2f7de58d61c79f0bca67869c5b375f74a3787a17.webp",
           url: "admin",
           description: "admin",
           id: "admin",
