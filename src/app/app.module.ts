@@ -39,11 +39,6 @@ import { ReportPostModule } from "./mainpage/report-post/report-post.module";
     ReactiveFormsModule,
     AppRoutingModule,
     HttpClientModule,
-    InputTextModule,
-    PasswordModule,
-    ButtonModule,
-    CalendarModule,
-    KeyFilterModule,
     ToastModule,
   ],
   providers: [
