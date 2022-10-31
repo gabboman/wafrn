@@ -1,10 +1,8 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { PostFragmentComponent } from './post-fragment/post-fragment.component';
 import { PostComponent } from './post/post.component';
 import { WafrnMediaComponent } from './wafrn-media/wafrn-media.component';
 import {DividerModule} from 'primeng/divider';
-import {AvatarModule} from 'primeng/avatar';
 import { CheckboxModule } from 'primeng/checkbox';
 import {AccordionModule} from 'primeng/accordion';
 import {CardModule} from 'primeng/card';
@@ -22,7 +20,6 @@ import {DeferModule} from 'primeng/defer';
 
 @NgModule({
   declarations: [
-    PostFragmentComponent,
     PostComponent,
     WafrnMediaComponent,
     InjectHTMLDirective,
@@ -31,7 +28,6 @@ import {DeferModule} from 'primeng/defer';
   imports: [
     CommonModule,
     DividerModule,
-    AvatarModule,
     CheckboxModule,
     AccordionModule,
     CardModule,   
@@ -48,7 +44,6 @@ import {DeferModule} from 'primeng/defer';
     
   ],
   exports: [
-    PostFragmentComponent,
     PostComponent,
     WafrnMediaComponent,
     InjectHTMLDirective,
