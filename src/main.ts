@@ -11,7 +11,7 @@ if (environment.production) {
     dsn: "https://ec85dd660fc94a12a2b1a41bc9911f24@o4504061383802880.ingest.sentry.io/4504061385048064",
     integrations: [
       new BrowserTracing({
-        tracingOrigins: ["localhost", "https://app.wafrn.net", "https://api.wafrn.net"],
+        tracingOrigins: ["https://app.wafrn.net", "https://api.wafrn.net"],
         routingInstrumentation: Sentry.routingInstrumentation,
       }),
     ],
