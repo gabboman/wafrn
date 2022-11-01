@@ -21,7 +21,6 @@ import { TooltipModule } from 'primeng/tooltip';
   ],
   imports: [
     CommonModule,
-    BrowserModule,
     FormsModule,
     ReactiveFormsModule,
     ButtonModule,

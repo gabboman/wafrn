@@ -5,13 +5,20 @@ import { PostResolver } from '../../resolvers/post.resolver';
 import { SinglePostComponent } from './single-post.component';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { PostModule } from '../../components/post/post.module';
+import { NavigationMenuModule } from 'src/app/components/navigation-menu/navigation-menu.module';
+import { NavigationMenuComponent } from 'src/app/components/navigation-menu/navigation-menu.component';
 
 const routes: Routes = [
   {
-    path: ':id',
-    resolve: { posts: PostResolver },
-    data: { revalidate: 3600 },
-    component: SinglePostComponent
+    path: '',
+    component: NavigationMenuComponent,
+    children: [
+      {
+        path: ':id',
+        resolve: { posts: PostResolver },
+        component: SinglePostComponent
+      }
+    ]
   }
 ];
 
@@ -23,7 +30,8 @@ const routes: Routes = [
     CommonModule,
     RouterModule.forChild(routes),
     ProgressSpinnerModule,
-    PostModule
+    PostModule,
+    NavigationMenuModule
   ]
 })
 export class SinglePostModule { }

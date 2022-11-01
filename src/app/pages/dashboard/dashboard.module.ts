@@ -6,16 +6,24 @@ import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { CardModule } from 'primeng/card';
 import { DeferModule } from 'primeng/defer';
 import { PostModule } from 'src/app/components/post/post.module';
+import { NavigationMenuModule } from 'src/app/components/navigation-menu/navigation-menu.module';
+import { NavigationMenuComponent } from 'src/app/components/navigation-menu/navigation-menu.component';
 
 
 const routes: Routes = [
   {
     path: '',
-    component: DashboardComponent
-  },
-  {
-    path: 'explore',
-    component: DashboardComponent
+    component: NavigationMenuComponent,
+    children: [
+      {
+        path: '',
+        component: DashboardComponent
+      },
+      {
+        path: 'explore',
+        component: DashboardComponent
+      }
+    ]
   }
 ];
 
@@ -29,7 +37,8 @@ const routes: Routes = [
     ProgressSpinnerModule,
     CardModule,
     DeferModule,
-    PostModule
+    PostModule,
+    NavigationMenuModule
 
   ]
 })

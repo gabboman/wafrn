@@ -13,7 +13,7 @@ export class NavigationMenuComponent implements OnInit {
 
 
   menuItems: MenuItem[] = [];
-  buttonVisible = false;
+  buttonVisible = true;
   menuVisible = false;
 
 
@@ -53,7 +53,6 @@ export class NavigationMenuComponent implements OnInit {
 
 
   checkMenu(ev: NavigationEnd) {
-    this.buttonVisible = ['/', '/register', '/recoverPassword'].indexOf(ev.url) === -1;
 
     if(this.jwtService.tokenValid()) {
 

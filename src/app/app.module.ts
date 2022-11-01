@@ -12,8 +12,6 @@ import { environment } from 'src/environments/environment';
 import { RECAPTCHA_V3_SITE_KEY, RecaptchaV3Module } from 'ng-recaptcha';
 import { Router } from "@angular/router";
 import * as Sentry from "@sentry/angular";
-import { NavigationMenuModule } from "./components/navigation-menu/navigation-menu.module";
-import { NotificationsModule } from "./components/notifications/notifications.module";
 
 @NgModule({
   declarations: [
@@ -21,8 +19,6 @@ import { NotificationsModule } from "./components/notifications/notifications.mo
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'serverApp' }),
-    NavigationMenuModule,
-    NotificationsModule,
     BrowserAnimationsModule,
     RecaptchaV3Module,
     CommonModule,
