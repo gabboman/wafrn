@@ -4,6 +4,8 @@ import { NavigationMenuComponent } from './navigation-menu.component';
 import { SidebarModule } from 'primeng/sidebar';
 import { PanelMenuModule } from 'primeng/panelmenu';
 import { ButtonModule } from 'primeng/button';
+import { PostEditorModule } from '../post-editor/post-editor.module';
+import { ReportPostModule } from '../report-post/report-post.module';
 
 
 
@@ -15,7 +17,9 @@ import { ButtonModule } from 'primeng/button';
     CommonModule,
     SidebarModule,
     PanelMenuModule,
-    ButtonModule
+    ButtonModule,
+    PostEditorModule,
+    ReportPostModule,
   ],
   exports: [
     NavigationMenuComponent

@@ -38,8 +38,6 @@
               "node_modules/primeng/resources/themes/bootstrap4-dark-purple/theme.css",
               "node_modules/primeng/resources/primeng.min.css",
               "node_modules/primeflex/primeflex.css",
-              "node_modules/quill/dist/quill.snow.css",
-              "node_modules/quill/dist/quill.core.css",
               "src/styles.scss"
             ],
             "scripts": [
@@ -55,8 +53,8 @@
                 },
                 {
                   "type": "anyComponentStyle",
-                  "maximumWarning": "2kb",
-                  "maximumError": "4kb"
+                  "maximumWarning": "32kb",
+                  "maximumError": "64kb"
                 }
               ],
               "fileReplacements": [

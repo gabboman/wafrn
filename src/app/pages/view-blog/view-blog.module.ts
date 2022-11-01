@@ -6,7 +6,7 @@ import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { CardModule } from 'primeng/card';
 import { ButtonModule } from 'primeng/button';
 import { DeferModule } from 'primeng/defer';
-import { PostModule } from '../post/post.module';
+import { PostModule } from '../../components/post/post.module';
 
 
 

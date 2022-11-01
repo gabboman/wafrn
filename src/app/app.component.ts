@@ -4,8 +4,9 @@ import { createCustomElement } from '@angular/elements';
 import { Router } from '@angular/router';
 import { LoginService } from './services/login.service';
 import { isPlatformBrowser } from '@angular/common';
-import { WafrnMediaComponent } from './wafrn-media/wafrn-media.component';
-import { WafrnYoutubePlayerComponent } from './wafrn-youtube-player/wafrn-youtube-player.component';
+import { WafrnMediaComponent } from './components/wafrn-media/wafrn-media.component';
+import { WafrnYoutubePlayerComponent } from './components/wafrn-youtube-player/wafrn-youtube-player.component';
+
 
 @Component({
   selector: 'app-root',

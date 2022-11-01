@@ -4,12 +4,7 @@ import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { InputTextModule } from 'primeng/inputtext';
-import { PasswordModule } from 'primeng/password';
-import { ButtonModule } from 'primeng/button';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { CalendarModule } from 'primeng/calendar';
-import { KeyFilterModule } from 'primeng/keyfilter';
 import { WafrnAuthInterceptor } from './interceptors/wafrn-auth.interceptor';
 import { ToastModule } from 'primeng/toast';
 import { MessageService } from 'primeng/api';
@@ -17,10 +12,8 @@ import { environment } from 'src/environments/environment';
 import { RECAPTCHA_V3_SITE_KEY, RecaptchaV3Module } from 'ng-recaptcha';
 import { Router } from "@angular/router";
 import * as Sentry from "@sentry/angular";
-import { NavigationMenuModule } from "./mainpage/navigation-menu/navigation-menu.module";
-import { NotificationsModule } from "./mainpage/notifications/notifications.module";
-import { PostEditorModule } from "./mainpage/post-editor/post-editor.module";
-import { ReportPostModule } from "./mainpage/report-post/report-post.module";
+import { NavigationMenuModule } from "./components/navigation-menu/navigation-menu.module";
+import { NotificationsModule } from "./components/notifications/notifications.module";
 
 @NgModule({
   declarations: [
@@ -30,8 +23,6 @@ import { ReportPostModule } from "./mainpage/report-post/report-post.module";
     BrowserModule.withServerTransition({ appId: 'serverApp' }),
     NavigationMenuModule,
     NotificationsModule,
-    PostEditorModule,
-    ReportPostModule,
     BrowserAnimationsModule,
     RecaptchaV3Module,
     CommonModule,

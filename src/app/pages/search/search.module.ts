@@ -9,7 +9,7 @@ import { CarouselModule } from 'primeng/carousel';
 import { DeferModule } from 'primeng/defer';
 import { InputTextModule } from 'primeng/inputtext';
 import { ButtonModule } from 'primeng/button';
-import { PostModule } from 'src/app/post/post.module';
+import { PostModule } from 'src/app/components/post/post.module';
 
 
 const routes: Routes = [
