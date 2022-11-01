@@ -7,11 +7,19 @@ import { RouterModule, Routes } from '@angular/router';
 import { ButtonModule } from 'primeng/button';
 import { KeyFilterModule } from 'primeng/keyfilter';
 import { InputTextModule } from 'primeng/inputtext';
+import { NavigationMenuBasicComponent } from 'src/app/components/navigation-menu-basic/navigation-menu-basic.component';
+import { NavigationMenuBasicModule } from 'src/app/components/navigation-menu-basic/navigation-menu-basic.module';
 
 const routes: Routes = [
   {
     path: '',
-    component: RecoverPasswordComponent
+    component: NavigationMenuBasicComponent,
+    children: [
+      {
+        path: '',
+        component: RecoverPasswordComponent
+      }
+    ]
   }
 ];
 
@@ -28,6 +36,7 @@ const routes: Routes = [
     ButtonModule,
     KeyFilterModule,
     InputTextModule,
+    NavigationMenuBasicModule,
     RouterModule.forChild(routes)
   ],
   exports: [

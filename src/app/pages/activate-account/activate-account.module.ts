@@ -3,14 +3,22 @@ import { CommonModule } from '@angular/common';
 import { ActivateAccountComponent } from './activate-account.component';
 import { ButtonModule } from 'primeng/button';
 import { RouterModule, Routes } from '@angular/router';
+import { NavigationMenuBasicComponent } from 'src/app/components/navigation-menu-basic/navigation-menu-basic.component';
+import { NavigationMenuBasicModule } from 'src/app/components/navigation-menu-basic/navigation-menu-basic.module';
 
 
 
 
 const routes: Routes = [
   {
-    path: ':email/:activationCode',
-    component: ActivateAccountComponent
+    path: '',
+    component: NavigationMenuBasicComponent,
+    children: [
+      {
+        path: ':email/:activationCode',
+        component: ActivateAccountComponent
+      }
+    ]
   }
 ];
 
@@ -21,6 +29,7 @@ const routes: Routes = [
   imports: [
     CommonModule,
     ButtonModule,
+    NavigationMenuBasicModule,
     RouterModule.forChild(routes)
   ]
 })

@@ -7,12 +7,20 @@ import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { CardModule } from 'primeng/card';
 import { InputTextModule } from 'primeng/inputtext';
 import { ButtonModule } from 'primeng/button';
+import { NavigationMenuBasicComponent } from 'src/app/components/navigation-menu-basic/navigation-menu-basic.component';
+import { NavigationMenuBasicModule } from 'src/app/components/navigation-menu-basic/navigation-menu-basic.module';
 
 
 const routes: Routes = [
   {
     path: '',
-    component: LoginComponent
+    component: NavigationMenuBasicComponent,
+    children: [
+      {
+        path: '',
+        component: LoginComponent
+      }
+    ]
   }
 ];
 
@@ -28,6 +36,7 @@ const routes: Routes = [
     CardModule,
     InputTextModule,
     ButtonModule,
+    NavigationMenuBasicModule,
     RouterModule.forChild(routes)
   ]
 })

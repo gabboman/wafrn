@@ -7,13 +7,21 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
 import { PasswordModule } from 'primeng/password';
+import { NavigationMenuBasicComponent } from 'src/app/components/navigation-menu-basic/navigation-menu-basic.component';
+import { NavigationMenuBasicModule } from 'src/app/components/navigation-menu-basic/navigation-menu-basic.module';
 
 
 
 const routes: Routes = [
   {
-    path: ':email/:resetCode',
-    component: ResetPasswordComponent
+    path: '',
+    component: NavigationMenuBasicComponent,
+    children: [
+      {
+        path: ':email/:resetCode',
+        component: ResetPasswordComponent
+      }
+    ]
   }
 ];
 
@@ -29,6 +37,7 @@ const routes: Routes = [
     ButtonModule,
     InputTextModule,
     PasswordModule,
+    NavigationMenuBasicModule,
     RouterModule.forChild(routes)
   ]
 })

@@ -73,7 +73,7 @@ export class PostEditorComponent implements OnInit {
     this.editorService.launchPostEditorEmitter.subscribe((elem) => {
       if (elem) {
         this.idPostToReblog = elem.length === 36 ? elem : undefined;
-        this.editorVisible = true;
+        this.openEditor()
       }
     });
   }
@@ -162,7 +162,6 @@ export class PostEditorComponent implements OnInit {
             await this.mediaService.updateMedia(response.id, this.newImageDescription, this.newImageNSFW, this.newImageAdult);
           }
           this.fixNullPosting();
-          console.log(this.quill.quillEditor.getSelection())
           this.postCreatorContent = this.postCreatorContent + '[wafrnmediaid="' + response.id + '"]'
         }
       });
@@ -203,7 +202,6 @@ export class PostEditorComponent implements OnInit {
   }
 
   mentionUserSelected(selected: any){
-    console.log(this.quill.quillEditor.getSelection());
     this.postCreatorContent = this.postCreatorContent + '[mentionuserid="' + selected.id + '"]';
     this.userSelectionMentionValue = '';
     this.mentionUserSearchPanel.hide();
@@ -212,6 +210,5 @@ export class PostEditorComponent implements OnInit {
   adultContentUpdated() {
     this.newImageNSFW = this.newImageAdult ? true : this.newImageNSFW;
   }
-
 
 }
