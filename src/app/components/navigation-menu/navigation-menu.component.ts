@@ -49,6 +49,7 @@ export class NavigationMenuComponent implements OnInit {
 
   hideMenu() {
     this.menuVisible = false;
+    this.editorService.launchPostEditorEmitter.next('CLOSE');
   }
 
 
@@ -68,7 +69,7 @@ export class NavigationMenuComponent implements OnInit {
           label: 'Write new post',
           title: 'Write a post',
           icon: "pi pi-pencil",
-          command: () => {this.editorService.launchPostEditorEmitter.next('NEW_POST'); this.hideMenu();}
+          command: () => {this.editorService.launchPostEditorEmitter.next('NEW_POST'); this.menuVisible = false;}
         },
         {
           label: 'Explore',

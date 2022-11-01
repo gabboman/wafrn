@@ -1,5 +1,6 @@
 import {
   Component,
+  OnDestroy,
   OnInit,
   ViewChild
 } from '@angular/core';
@@ -18,12 +19,13 @@ import {
 } from 'src/environments/environment';
 import { QuillEditorComponent, QuillModule } from 'ngx-quill'
 import { ReCaptchaV3Service } from 'ng-recaptcha';
+import { Subscription } from 'rxjs';
 @Component({
   selector: 'app-post-editor',
   templateUrl: './post-editor.component.html',
   styleUrls: ['./post-editor.component.scss']
 })
-export class PostEditorComponent implements OnInit {
+export class PostEditorComponent implements OnInit, OnDestroy {
 
   idPostToReblog: string | undefined;
   editorVisible: boolean = false;
@@ -48,6 +50,8 @@ export class PostEditorComponent implements OnInit {
   baseMediaUrl = environment.baseMediaUrl;
   userSelectionMentionValue = '';
 
+  showEditorSubscription: Subscription;
+
 
   modules = {
     toolbar: [
@@ -70,8 +74,8 @@ export class PostEditorComponent implements OnInit {
 
 
   ) {
-    this.editorService.launchPostEditorEmitter.subscribe((elem) => {
-      if (elem) {
+    this.showEditorSubscription = this.editorService.launchPostEditorEmitter.subscribe((elem) => {
+      if (elem === 'NEW_POST') {
         this.idPostToReblog = elem.length === 36 ? elem : undefined;
         this.openEditor()
       }
@@ -209,6 +213,10 @@ export class PostEditorComponent implements OnInit {
 
   adultContentUpdated() {
     this.newImageNSFW = this.newImageAdult ? true : this.newImageNSFW;
+  }
+
+  ngOnDestroy(): void {
+    this.showEditorSubscription.unsubscribe();
   }
 
 }
