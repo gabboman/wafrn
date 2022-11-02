@@ -14,8 +14,8 @@
       </div>
 
       <div *ngFor="let content of post; index as index">
-        <p-divider *ngIf="post.length > 1 && content.content != ''"></p-divider>
-        <div *ngIf="content.content != '' || index == 0" class="fragment-header">
+        <p-divider *ngIf="post.length > 1 && content.content != '' || content.tags.length"></p-divider>
+        <div *ngIf="content.content != '' || index == 0 || content.tags.length > 0" class="fragment-header">
           <div class="grid grid-nogutter" style="width: 100%;">
             <div class="col-7 center-text">
               <img [src]="mediaBaseUrl + content.user.avatar" class="avatar" /> <a
@@ -31,7 +31,7 @@
           </div>
         </div>
         <br>
-        <div *ngIf="content.content != ''" class="fragment-content ql-editor" [injectHTML]="sanitizedPostContent[index]">
+        <div *ngIf="content.content != '' || content.tags.length" class="fragment-content ql-editor" [injectHTML]="sanitizedPostContent[index]">
         </div>
         <div *ngIf="content.tags">
           <a *ngFor="let tag of content.tags" [routerLink]="'/dashboard/search/' + tag.tagName" >
