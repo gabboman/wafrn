@@ -20,7 +20,7 @@ export class NotificationsService {
   async getNotifications(): Promise<{follows: Follower[], reblogs: Reblog[], mentions: Reblog[]}> {
     this.lastTimeChecked = new Date();
     let res: {follows: Follower[], reblogs: Reblog[], mentions: Reblog[]} = { follows: [], reblogs: [], mentions: []};
-    const notificaitons: {follows: Follower[], reblogs: Reblog[], mentions: Reblog[]} | undefined = await this.http.post<{follows: Follower[], reblogs: Reblog[], mentions: Reblog[]}>(environment.baseUrl + '/notifications', {}).toPromise();
+    const notificaitons: {follows: Follower[], reblogs: Reblog[], mentions: Reblog[]} | undefined = await this.http.get<{follows: Follower[], reblogs: Reblog[], mentions: Reblog[]}>(environment.baseUrl + '/notifications', {}).toPromise();
     if(notificaitons) {
       res = notificaitons;
       res.reblogs = res.reblogs.filter((elem) => elem.user.id != this.jwt.getTokenData().userId );

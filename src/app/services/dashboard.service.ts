@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { environment } from 'src/environments/environment';
 import { ProcessedPost } from '../interfaces/processed-post';
@@ -30,11 +30,12 @@ export class DashboardService {
       //if we are starting the scroll, we store the current date
       this.startScrollDate = new Date();
     }
-    let petitionData: FormData = new FormData();
-    petitionData.append('page', page.toString());
-    petitionData.append('startScroll', this.startScrollDate.getTime().toString());
-    const url = explore ? environment.baseUrl + '/explore' : environment.baseUrl + '/dashboard' 
-    let dashboardPetition: Array<RawPost> | undefined = await this.http.post<Array<RawPost>>(url, petitionData).toPromise();
+    let petitionData: HttpParams = new HttpParams();
+    petitionData = petitionData.set('page', page.toString());
+    petitionData = petitionData.set('startScroll', this.startScrollDate.getTime().toString());
+    const url = explore ? environment.baseUrl + '/explore' : environment.baseUrl + '/dashboard';
+    console.log(petitionData.get('page'))
+    let dashboardPetition: Array<RawPost> | undefined = await this.http.get<Array<RawPost>>(url, {params: petitionData}).toPromise();
     if(dashboardPetition) {
       result = dashboardPetition.map(elem => this.postService.processPost(elem));
       result = result.filter(post => !this.postService.postContainsBlocked(post));
@@ -54,11 +55,11 @@ export class DashboardService {
       //if we are starting the scroll, we store the current date
       this.startScrollDate = new Date();
     }
-    let petitionData: FormData = new FormData();
-    petitionData.append('page', page.toString());
-    petitionData.append('startScroll', this.startScrollDate.getTime().toString());
-    petitionData.append('term', term);
-    let dashboardPetition: {posts: Array<RawPost>, users: Array<SimplifiedUser> } | undefined = await this.http.post<{posts: Array<RawPost>, users: Array<SimplifiedUser> }>(environment.baseUrl + '/search', petitionData).toPromise();
+    let petitionData: HttpParams = new HttpParams();
+    petitionData = petitionData.set('page', page.toString());
+    petitionData = petitionData.set('startScroll', this.startScrollDate.getTime().toString());
+    petitionData = petitionData.set('term', term);
+    let dashboardPetition: {posts: Array<RawPost>, users: Array<SimplifiedUser> } | undefined = await this.http.get<{posts: Array<RawPost>, users: Array<SimplifiedUser> }>(environment.baseUrl + '/search', {params: petitionData}).toPromise();
     if(dashboardPetition) {
       postResult = dashboardPetition.posts.map(elem => this.postService.processPost(elem));
       postResult = postResult.filter(post => !this.postService.postContainsBlocked(post));
@@ -78,11 +79,11 @@ export class DashboardService {
       //if we are starting the scroll, we store the current date
       this.startScrollDate = new Date();
     }
-    let petitionData: FormData = new FormData();
-    petitionData.append('page', page.toString());
-    petitionData.append('startScroll', this.startScrollDate.getTime().toString());
-    petitionData.append('id', blogId);
-    let dashboardPetition: Array<RawPost> | undefined = await this.http.post<Array<RawPost>>(environment.baseUrl + '/blog', petitionData).toPromise();
+    let petitionData: HttpParams = new HttpParams();
+    petitionData = petitionData.set('page', page.toString());
+    petitionData = petitionData.set('startScroll', this.startScrollDate.getTime().toString());
+    petitionData = petitionData.set('id', blogId);
+    let dashboardPetition: Array<RawPost> | undefined = await this.http.get<Array<RawPost>>(environment.baseUrl + '/blog', {params: petitionData}).toPromise();
     if(dashboardPetition) {
       result = dashboardPetition.map(elem => this.postService.processPost(elem));
       result = result.filter(post => !this.postService.postContainsBlocked(post));
