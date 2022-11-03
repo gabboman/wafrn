@@ -22,6 +22,8 @@ export class SimpleSeoService {
       {name: 'og:description', content: sanitizedDescription },
       {name: 'og:author', author },
       {name: 'og:image', content: image},
+      {name: 'og:title', content: title},
+      {name: 'og:site_name', content: 'app.wafrn.net'},
       {name: 'twitter:card', content: 'summary' },
       {name: 'twitter:title', content: title },
       {name: 'twitter:site', content: 'https://app.wafrn.net' },
