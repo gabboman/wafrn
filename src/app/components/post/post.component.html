@@ -1,9 +1,5 @@
-<div *ngIf="ready" class="grid pb-6 scalein animation-duration-400">
-  <div
-    class="col-12 sm:col-12 md:col-12 lg:col-5 margin-auto wafrn-post"
-    >
-
-
+<div *ngIf="ready" class="grid pb-6 lg:px-4 scalein animation-duration-400 wafrn-container">
+  <div class="col-12 wafrn-post">
     <p-card>
       <div class="grid">
         <div *ngIf=" post.length > 1" class="col-12 center-text">
@@ -16,30 +12,39 @@
       <div *ngFor="let content of post; index as index">
         <p-divider *ngIf="post.length > 1 && content.content != '' || content.tags.length"></p-divider>
         <div *ngIf="content.content != '' || index == 0 || content.tags.length > 0" class="fragment-header">
-          <div class="grid grid-nogutter" style="width: 100%;">
-            <div class="col-7 center-text">
-              <img [src]="mediaBaseUrl + content.user.avatar" class="avatar" /> <a
-                [routerLink]="'/blog/'+ urls[index]">{{content.user.url}}</a>
+          <div class="flex gap-1 md:gap-3 align-items-center" style="width: 100%;">
+            <div class="center-text py-2 flex-grow-1 flex-shrink-1 min-w-0">
+              <img [src]="mediaBaseUrl + content.user.avatar" class="avatar" />
+              <a class="max-w-full white-space-nowrap overflow-hidden text-overflow-ellipsis" [routerLink]="'/blog/'+ urls[index]">{{content.user.url}}</a>
             </div>
-            <div class="col-4">
-              <button *ngIf="followedUsers.indexOf(content.userId) === -1 && userLoggedIn" pButton pRipple label="Follow"
-                class="w-80" (click)="followUser(content.userId)"></button>
-            </div>
-            <div class="col-1 center-text" style="justify-content: center;">
-              <p-splitButton (onClick)="sharePost(content.id)" icon="pi pi-share-alt" [model]="buttonItems[content.id]" styleClass="p-button-sm mr-2 mb-2"></p-splitButton>
-            </div>
+            <button
+              *ngIf="followedUsers.indexOf(content.userId) === -1 && userLoggedIn"
+              pButton
+              pRipple
+              label="Follow"
+              class="w-80 p-button-sm flex-shrink-0"
+              (click)="followUser(content.userId)">
+            </button>
+            <p-splitButton
+              (onClick)="sharePost(content.id)"
+              icon="pi pi-share-alt"
+              [model]="buttonItems[content.id]"
+              styleClass="p-button-sm flex-shrink-0">
+            </p-splitButton>
           </div>
         </div>
-        <br>
-        <div *ngIf="content.content != '' || content.tags.length" class="fragment-content ql-editor" [injectHTML]="sanitizedPostContent[index]">
+        <br />
+        <div
+          *ngIf="content.content != '' || content.tags.length"
+          class="fragment-content ql-editor -mx-3"
+          [injectHTML]="sanitizedPostContent[index]"
+        >
         </div>
         <div *ngIf="content.tags">
           <a *ngFor="let tag of content.tags" [routerLink]="'/dashboard/search/' + tag.tagName" >
             <p-tag class="wafrn-tag" [value]="'#' +tag.tagName"></p-tag>
           </a>
-
         </div>
-
       </div>
 
       <ng-template pTemplate="footer">

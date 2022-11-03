@@ -1,15 +1,13 @@
-<div *ngIf="!loading" class="grid">
-  <div id="firstPost"  class="col-12 sm:col-12 md:col-12 lg:col-5 margin-auto pb-6">
-
-
-    <p-card class="xs:w-full md:w-75 lg:w-75">
+<div *ngIf="!loading" class="wafrn-container lg:px-4">
+  <div id="firstPost" class="col-12 pb-6">
+    <p-card>
       <div class="flex justify-content-center flex-wrap">
         <img style="max-width: 100%; max-height: 15vh;" [src]="mediaUrl + blogDetails.avatar">
       </div>
       <div class="flex justify-content-center flex-wrap">
-        <div [innerText]="blogDetails.url" class="text-600 font-medium line-height-3"></div>
+        <div [innerText]="blogDetails.url" class="text-600 text-xl font-medium line-height-3"></div>
       </div>
-      <div class="flex justify-content-center flex-wrap">
+      <div class="flex justify-content-center flex-wrap mt-4 mb-2">
         <div [innerText]="blogDetails.description" class="text-600 font-medium line-height-3"></div>
       </div>
       <button *ngIf="followedUsers.indexOf(blogDetails.id) === -1 && userLoggedIn" pButton pRipple label="Follow"
@@ -17,9 +15,8 @@
       <button *ngIf="followedUsers.indexOf(blogDetails.id) !== -1 && userLoggedIn" pButton pRipple label="Unfollow"
                 class="w-full" (click)="unfollowUser(blogDetails.id)"></button>
     </p-card>
+  </div>
 </div>
-</div>
-
 
 
 <div *ngFor="let post of posts" pDefer (onLoad)="countViewedPost()">

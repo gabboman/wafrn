@@ -66,8 +66,22 @@ a, a:visited {
     color: $editor-buttons
 }
 
+.ql-snow.ql-container {
+    border-radius: 0 0 5px 5px;
+}
+
 .ql-snow > .ql-editor{
     background: #20262e !important;
+    border-radius: 0 0 5px 5px;
+    font-size: 16px;
+    min-height: 100px;
+    max-height: 400px;
+    overflow-y: auto;
+}
+
+.ql-snow > .ql-editor.ql-blank::before {
+    color: white;
+    opacity: 0.5;
 }
 
 .grecaptcha-badge { 
@@ -80,4 +94,14 @@ a, a:visited {
 
 .margin-auto {
     margin:auto;
+}
+
+.wafrn-container {
+    max-width: 800px;
+}
+
+@media (min-width: 991px) {
+    .wafrn-container {
+        margin-left: 360px;
+    }
 }
