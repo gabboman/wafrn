@@ -1,7 +1,14 @@
-<p-dialog [hidden]="!editorVisible" [header]="idPostToReblog ? 'Reblog a post' : 'Create new post'"
-  [(visible)]="editorVisible" [modal]="true" [style]="{width: '75vw'}">
-  <h2 *ngIf="idPostToReblog">You are reblogging the post. Your followers will see the full thread with your reply on it
+<p-dialog 
+  [hidden]="!editorVisible"
+  [header]="idPostToReblog ? 'Reblog a post' : 'Create new post'"
+  [(visible)]="editorVisible"
+  [modal]="true" 
+  style="max-width: min(1000px, 75vw)">
+  
+  <h2 *ngIf="idPostToReblog">
+    You are reblogging the post. Your followers will see the full thread with your reply on it
   </h2>
+
   <p-overlayPanel #uploadImagesPanel>
     <div>
       <label for="description" class="block text-900 font-medium mb-2">Images description</label>
@@ -26,9 +33,7 @@
 
   </p-overlayPanel>
 
-
   <p-overlayPanel #mentionUserSearchPanel>
-
     <p-autoComplete [(ngModel)]="userSelectionMentionValue"
      [suggestions]="mentionSuggestions" (onSelect)="mentionUserSelected($event)"
      (completeMethod)="updateMentionsSuggestions($event)"
@@ -39,7 +44,7 @@
               <div>{{suggest.url}}</div>
           </div>
       </ng-template>
-  </p-autoComplete>
+    </p-autoComplete>
   </p-overlayPanel>
 
   <quill-editor #quill [(ngModel)]="postCreatorContent" [modules]="modules">
@@ -71,11 +76,13 @@
     </div>
   </quill-editor>
 
-
-
-  <h5>Tags (comma separated)</h5>
+  <div class="mt-4 mb-2">
+    <label>
+      Tags (comma separated)
+    </label>
+  </div>
   <p-chips [(ngModel)]="tags" separator=","></p-chips>
-  <div class="mb-3">
+  <div class="my-3">
     This site is protected by reCAPTCHA and the Google
     <a href="https://policies.google.com/privacy">Privacy Policy</a> and
     <a href="https://policies.google.com/terms">Terms of Service</a> apply.
