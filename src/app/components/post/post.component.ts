@@ -7,6 +7,7 @@ import { PostsService } from 'src/app/services/posts.service';
 import { ReportService } from 'src/app/services/report.service';
 import { environment } from 'src/environments/environment';
 import { ReCaptchaV3Service } from 'ng-recaptcha';
+import { DeletePostService } from 'src/app/services/delete-post.service';
 
 @Component({
   selector: 'app-post',
@@ -31,6 +32,7 @@ export class PostComponent implements OnInit {
   captchaResponse: string | undefined;
   reblogging = false;
   buttonItems: any = [];
+  myId: string = '';
 
 
 
@@ -43,9 +45,13 @@ export class PostComponent implements OnInit {
     private editor: EditorService,
     private editorService: EditorService,
     private reportService: ReportService,
-    private recaptchaV3Service: ReCaptchaV3Service
+    private recaptchaV3Service: ReCaptchaV3Service,
+    private deletePostService: DeletePostService
   ) {
     this.userLoggedIn = loginService.checkUserLoggedIn();
+    if(this.userLoggedIn) {
+      this.myId = loginService.getLoggedUserUUID();
+    }
    }
 
   async ngOnInit(): Promise<void> {
@@ -111,6 +117,10 @@ export class PostComponent implements OnInit {
     this.reportService.launchReportScreen.next(this.post);
   }
 
+  deletePost(id: string) {
+    this.deletePostService.launchDeleteScreen.next(id);
+  }
+
   showQuickReblogOverlay() {
     this.quickReblogPanelVisible = true;
   }
@@ -136,6 +146,14 @@ export class PostComponent implements OnInit {
           icon: 'pi pi-replay',
           command: () => this.editorService.launchPostEditorEmitter.next(content.id)
         },
+        content.userId == this.myId ? 
+        {
+          label: "Delete",
+          title: "Open the delete panel for this post",
+          icon: 'pi pi-trash',
+          // TODO this is stupid this is ugly but I am sleepy and I shall not fix this now
+          command: () => this.deletePostService.launchDeleteScreen.next(content.id)
+        } :
         {
           label: "Report",
           title: "Open the report panel for this post",

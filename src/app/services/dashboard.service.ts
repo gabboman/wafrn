@@ -34,7 +34,6 @@ export class DashboardService {
     petitionData = petitionData.set('page', page.toString());
     petitionData = petitionData.set('startScroll', this.startScrollDate.getTime().toString());
     const url = explore ? environment.baseUrl + '/explore' : environment.baseUrl + '/dashboard';
-    console.log(petitionData.get('page'))
     let dashboardPetition: Array<RawPost> | undefined = await this.http.get<Array<RawPost>>(url, {params: petitionData}).toPromise();
     if(dashboardPetition) {
       result = dashboardPetition.map(elem => this.postService.processPost(elem));

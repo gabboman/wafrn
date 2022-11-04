@@ -59,7 +59,9 @@
                *ngIf="!quickReblogDoneSuccessfully"
                class="col-4 pi pi-history hover-cursor" title="Quick Reblog"></i>
               <i (click)="launchReblog()" class="col-4 pi pi-replay hover-cursor" title="Reblog"></i>
-              <i (click)="reportPost()" class="col-4 pi pi-exclamation-triangle hover-cursor" title="Report Post"></i>
+              <i *ngIf="!(post[post.length - 1].userId == myId)" (click)="reportPost()" class="col-4 pi pi-exclamation-triangle hover-cursor" title="Report Post"></i>
+              <i *ngIf="(post[post.length - 1].userId == myId)" (click)="deletePost(post[post.length - 1].id)" class="col-4 pi pi-trash hover-cursor" title="Delete Post"></i>
+
             </div>
           </div>
         </div>

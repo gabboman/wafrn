@@ -8,6 +8,7 @@ import { PostEditorModule } from '../post-editor/post-editor.module';
 import { ReportPostModule } from '../report-post/report-post.module';
 import { NotificationsModule } from '../notifications/notifications.module';
 import { RouterModule } from '@angular/router';
+import { DeletePostModule } from '../delete-post/delete-post.module';
 
 
 
@@ -24,6 +25,7 @@ import { RouterModule } from '@angular/router';
     ReportPostModule,
     NotificationsModule,
     RouterModule,
+    DeletePostModule,
   ],
   exports: [
     NavigationMenuComponent
