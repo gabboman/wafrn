@@ -75,7 +75,6 @@ export class PostEditorComponent implements OnInit, OnDestroy {
 
   ) {
     this.showEditorSubscription = this.editorService.launchPostEditorEmitter.subscribe((elem) => {
-      console.log(elem)
       if (elem != 'CLOSE' && elem != '') {
         this.idPostToReblog = elem.length === 36 ? elem : undefined;
         this.openEditor()

@@ -68,7 +68,6 @@ export class LoginService {
     payload.append('email', email);
     payload.append('captchaResponse', captchaResponse);
     let response: any = await this.http.post(environment.baseUrl + '/forgotPassword', payload).toPromise();
-    console.log(response.success);
     if(response && response.success) {
       this.router.navigate(['/']);
     }
@@ -120,5 +119,10 @@ export class LoginService {
     }
     return success;
 
+  }
+
+  getLoggedUserUUID(): string {
+    const res = this.jwt.getTokenData().userId;
+    return res ? res : '';
   }
 }
