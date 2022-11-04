@@ -83,8 +83,8 @@ export function app(): express.Express {
             providers: [{ provide: APP_BASE_HREF, useValue: req.baseUrl }],
         },
         (err: Error, html: string) => {
-            // Cache the rendered `html` for this request url to use for subsequent requests
-            cache.put(req.url, html, 3600);
+            // Cache the rendered `html` for this request url to use for subsequent requests. No time limit on cache
+            cache.put(req.url, html);
             res.send(html);
         },
     );
