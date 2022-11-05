@@ -100,8 +100,13 @@ a, a:visited {
     max-width: 800px;
 }
 
-@media (min-width: 991px) {
+@media (min-width: 992px) {
     .wafrn-container {
         margin-left: 360px;
     }
+}
+
+.p-dialog {
+    max-width: 768px;
+    width: 100%;
 }
