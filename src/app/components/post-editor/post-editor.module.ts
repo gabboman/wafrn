@@ -12,6 +12,8 @@ import { FileUploadModule } from 'primeng/fileupload';
 import { CheckboxModule } from 'primeng/checkbox';
 import { DialogModule } from 'primeng/dialog';
 import { TooltipModule } from 'primeng/tooltip';
+import { PostModule } from '../post/post.module';
+import { TagModule } from 'primeng/tag';
 
 
 
@@ -32,6 +34,7 @@ import { TooltipModule } from 'primeng/tooltip';
     CheckboxModule,
     DialogModule,
     TooltipModule,
+    TagModule
   ],
   exports: [
     PostEditorComponent
