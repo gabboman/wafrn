@@ -2,8 +2,7 @@
 
 <p-progressSpinner *ngIf="loading"></p-progressSpinner>
 
-<div *ngIf="loading">
-    {{post.length}}
-    The post is being rendered using javascript. If you have javascript disabled, we can try to force rendering this post on the server, but this place is better with javascript.
+<noscript>
+    The post is rendered using javascript. If you have javascript disabled, we can try to force rendering this post on the server, but this place is better with javascript.
     <a [href]="'/post/' + post[post.length -1].id  + '?force-ssr=true'">Click here to try to see the server side rendered version of the post</a>
-</div>
+</noscript>
