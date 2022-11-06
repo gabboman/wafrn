@@ -74,30 +74,15 @@ export class PostsService {
     return res;
   }
 
-  async getDetails(id: string): Promise<number> {
-    let res = 0;
-    let payload = new FormData();
-    payload.append('id', id);
-    try {
-      let response = await this.http.get<{ reblogs: number }>(environment.baseUrl + '/postDetails/' + id).toPromise();
-      if (response?.reblogs) {
-        res = response.reblogs;
-      }
-    } catch (exception) {
-      console.log(exception)
-    }
-
-    return res;
-  }
-
   processPost(rawPost: RawPost): ProcessedPost[] {
     let result: ProcessedPost[] = [];
+    const notes = rawPost.notes;
     if (rawPost.ancestors) {
       rawPost.ancestors.forEach((post: RawPost) => {
-        result.push(post);
+        result.push({...post, notes: notes});
       });
       result = result.sort((a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime());
-      result.push(rawPost);
+      result.push({...rawPost, notes: notes});
     }
     result.forEach(val => {
       this.mediaService.addMediaToMap(val);

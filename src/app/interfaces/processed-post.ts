@@ -15,4 +15,5 @@ export interface ProcessedPost {
     medias?:        WafrnMedia[];
     tags:           Tag[];
     postMentionsUserRelations?: WafrnMention[];
+    notes:          number;
 }

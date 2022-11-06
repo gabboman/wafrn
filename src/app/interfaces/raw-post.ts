@@ -16,5 +16,6 @@ export interface RawPost {
     medias?:        WafrnMedia[];
     tags:           Tag[];
     postMentionsUserRelations?: WafrnMention[];
+    notes:          number;
 
 }

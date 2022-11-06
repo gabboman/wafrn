@@ -66,7 +66,7 @@ export class PostComponent implements OnInit {
     this.urls = this.post.map((elem) => encodeURIComponent(elem.user.url));
     this.ready = true;
     this.updateButtonItems();
-    let notes = await this.postService.getDetails(this.post[0].id);
+    let notes = this.post[this.post.length - 1].notes;
     this.notes = notes.toString();
   }
 
