@@ -21,6 +21,7 @@ export class SinglePostComponent implements OnInit {
   blogDetails: any;
   mediaUrl = environment.baseMediaUrl;
   forceSSR = false;
+  postFound = true;
 
 
 
@@ -38,7 +39,12 @@ export class SinglePostComponent implements OnInit {
       this.forceSSR = route.snapshot.queryParams['force-ssr'] === 'true';
       this.post = data['posts'];
       const lastPostFragment = this.post[this.post.length -1];
-      this.seoService.setSEOTags('Wafrn - Post by ' + lastPostFragment.user.url, 'Wafrn post by ' + lastPostFragment.user.url + ': ' + this.postService.getPostContentSanitized(lastPostFragment.content), lastPostFragment.user.url, this.getImage(this.post));
+      if(lastPostFragment) {
+        this.postFound = true;
+        this.seoService.setSEOTags('Wafrn - Post by ' + lastPostFragment.user.url, 'Wafrn post by ' + lastPostFragment.user.url + ': ' + this.postService.getPostContentSanitized(lastPostFragment.content), lastPostFragment.user.url, this.getImage(this.post));
+      } else {
+        this.postFound = false;
+      }
     })
   }
   ngOnInit(): void {

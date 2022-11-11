@@ -7,6 +7,7 @@ import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { PostModule } from '../../components/post/post.module';
 import { NavigationMenuModule } from 'src/app/components/navigation-menu/navigation-menu.module';
 import { NavigationMenuComponent } from 'src/app/components/navigation-menu/navigation-menu.component';
+import { PagenotfoundModule } from '../pagenotfound/pagenotfound.module';
 
 const routes: Routes = [
   {
@@ -31,6 +32,7 @@ const routes: Routes = [
     RouterModule.forChild(routes),
     ProgressSpinnerModule,
     PostModule,
+    PagenotfoundModule,
     NavigationMenuModule
   ]
 })

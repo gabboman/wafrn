@@ -29,6 +29,9 @@ const routes: Routes = [
     CardModule,
     NavigationMenuModule,
     RouterModule.forChild(routes)
+  ],
+  exports: [
+    PagenotfoundComponent
   ]
 })
 export class PagenotfoundModule { }
