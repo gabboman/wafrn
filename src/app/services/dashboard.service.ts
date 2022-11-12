@@ -96,9 +96,9 @@ export class DashboardService {
   }
 
   async getBlogDetails(url: string) {
-    let petitionData: FormData = new FormData();
-    petitionData.append('id', url);
-    let res: any = await this.http.post(environment.baseUrl + '/userDetails', petitionData).toPromise();
+    let petitionData: HttpParams = new HttpParams();
+    petitionData = petitionData.append('id', url);
+    let res: any = await this.http.get(environment.baseUrl + '/user', {params: petitionData}).toPromise();
     if(res.id) {
       return res;
     }
