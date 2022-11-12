@@ -80,7 +80,7 @@ export class NavigationMenuComponent implements OnInit {
         },
         {
           label: 'Search',
-          title: 'search',
+          title: 'Search',
           icon: "pi pi-search",
           command: () => this.hideMenu(),
           routerLink: '/dashboard/search'
