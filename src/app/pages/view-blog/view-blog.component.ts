@@ -16,6 +16,7 @@ import { environment } from 'src/environments/environment';
 export class ViewBlogComponent implements OnInit {
   //TODO try to put the logic of search, viewblog, dashboard, explore in the same thingy
   loading = true;
+  found = true;
   viewedPosts = 0;
   currentPage = 0;
   mediaUrl = environment.baseMediaUrl;
@@ -55,8 +56,13 @@ export class ViewBlogComponent implements OnInit {
       this.blogUrl = blogUrl;
     }
 
+    const blogResponse =  await this.dashboardService.getBlogDetails(this.blogUrl);
+    if(blogResponse.success === false){
+      this.found = false;
+    } else {
+      this.blogDetails = blogResponse;
     await this.loadPosts(this.currentPage);
-    this.blogDetails = await this.dashboardService.getBlogDetails(this.blogUrl);
+    console.log(this.blogDetails)
     this.titleService.setTitle(this.blogDetails.url + '\'s wafrn blog');
       this.metaTagService.addTags([
         {name: 'description', content: this.blogDetails.url + '\'s wafrn blog'},
@@ -64,6 +70,7 @@ export class ViewBlogComponent implements OnInit {
         {name: 'image', content: this.blogDetails.avatar}
       ]);
     this.loading = false;
+    }
   }
 
   async countViewedPost() {

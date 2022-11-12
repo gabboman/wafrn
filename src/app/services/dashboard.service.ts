@@ -100,11 +100,11 @@ export class DashboardService {
     petitionData = petitionData.append('id', url);
     let res: any = await this.http.get(environment.baseUrl + '/user', {params: petitionData}).toPromise();
     if(res.id) {
-      return res;
+      return {...res, success: true};
     }
     else {
       return {
-        error: true
+        success: false
       }
     }
   }

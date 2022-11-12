@@ -1,4 +1,4 @@
-<div *ngIf="!loading" class="wafrn-container lg:px-4">
+<div *ngIf="!loading && found" class="wafrn-container lg:px-4">
   <div id="firstPost" class="col-12 pb-6">
     <p-card>
       <div class="flex justify-content-center flex-wrap">
@@ -26,7 +26,7 @@
 </div>
 
 
-<div class="grid pb-6">
+<div *ngIf="found" class="grid pb-6">
   <div class="col-12 sm:col-12 md:col-12 lg:col-5 margin-auto">
     <p-card class="flex justify-content-center flex-wrap">
       <p-progressSpinner class="flex align-items-center justify-content-center "></p-progressSpinner>
@@ -34,3 +34,5 @@
     </p-card>
   </div>
 </div>
+
+<app-pagenotfound *ngIf="!found" ></app-pagenotfound>
