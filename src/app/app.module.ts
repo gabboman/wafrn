@@ -12,6 +12,7 @@ import { environment } from 'src/environments/environment';
 import { RECAPTCHA_V3_SITE_KEY, RecaptchaV3Module } from 'ng-recaptcha';
 import { Router } from "@angular/router";
 import * as Sentry from "@sentry/angular";
+import { QuillConfigModule } from "ngx-quill";
 
 @NgModule({
   declarations: [
@@ -27,6 +28,12 @@ import * as Sentry from "@sentry/angular";
     AppRoutingModule,
     HttpClientModule,
     ToastModule,
+    QuillConfigModule.forRoot({
+      theme: 'snow',
+      sanitize: true,
+      format: 'html',
+      strict: true,
+    }),
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: WafrnAuthInterceptor, multi: true },

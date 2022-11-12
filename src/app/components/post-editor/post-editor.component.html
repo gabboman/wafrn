@@ -47,7 +47,7 @@
     </p-autoComplete>
   </p-overlayPanel>
 
-  <quill-editor #quill [(ngModel)]="postCreatorContent" [modules]="modules">
+  <quill-editor #quill [(ngModel)]="postCreatorContent" >
     <div quill-editor-toolbar style="border-top-left-radius: 5px; border-top-right-radius: 5px;">
       <select class="ql-size" title="Text Size">
         <option value="small"></option>
@@ -55,12 +55,17 @@
         <option value="large"></option>
         <option value="huge"></option>
       </select>
-      <select class="ql-align" title="Aligment">
-        <option selected></option>
-        <option value="center"></option>
-        <option value="right"></option>
-        <option value="justify"></option>
-      </select>
+      <span class="ql-align">
+        <button class="ql-list" value="bullet"></button>
+        <select class="ql-align">
+          <option selected></option>
+          <option value="center"></option>
+          <option value="right"></option>
+          <option value="justify"></option>
+        </select>
+        <select class="ql-color"></select>
+        <select class="ql-background"></select>
+      </span>
       <button pButton type="button" class="ql-bold" aria-label="Bold" title="Bold"></button>
       <button pButton type="button" class="ql-italic" aria-label="Italic" title="Italic"></button>
       <button pButton type="button" class="ql-underline" aria-label="Underline" title="Underline"></button>

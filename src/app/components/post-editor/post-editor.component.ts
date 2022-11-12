@@ -17,7 +17,7 @@ import {
 import {
   environment
 } from 'src/environments/environment';
-import { QuillEditorComponent, QuillModule } from 'ngx-quill'
+import { QuillEditorComponent } from 'ngx-quill'
 import { ReCaptchaV3Service } from 'ng-recaptcha';
 import { Subscription } from 'rxjs';
 @Component({
@@ -53,15 +53,6 @@ export class PostEditorComponent implements OnInit, OnDestroy {
   showEditorSubscription: Subscription;
 
 
-  modules = {
-    toolbar: [
-      ['bold', 'italic', 'underline', 'strike'],        // toggled buttons
-      [{ 'list': 'ordered'}, { 'list': 'bullet' }],  
-      [{ 'header': [1, 2, 3, 4, 5, 6, false] }],  
-      ['link'],                       // link
-      ['clean'],                                         // remove formatting button
-    ]
-  };
 
   maxFileUploadSize = parseInt(environment.maxUploadSize) * 1024 * 1024;
 
