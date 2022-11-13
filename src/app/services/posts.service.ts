@@ -101,7 +101,7 @@ export class PostsService {
         '*': ['*'],
       },
       allowedAttributes: {
-        'span': ["style"],
+        '*': ["style"],
       },
       allowedStyles: {
         '*': {
