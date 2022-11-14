@@ -3,7 +3,7 @@ export const environment = {
   recaptchaPublic: '6LcrwQchAAAAADcgr0bLQ45AknhAQLkzX2RYNavT',
   maxUploadSize: '250',
   baseUrl: 'https://api.wafrn.net',
-  baseMediaUrl: 'https://media.wafrn.net',
+  baseMediaUrl: 'https://wafrn.b-cdn.net',
   frontUrl: 'https://app.wafrn.net'
 
 };

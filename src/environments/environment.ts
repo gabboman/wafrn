@@ -9,6 +9,7 @@ export const environment = {
   baseUrl: 'http://localhost:3000',
   //baseUrl: 'https://api.wafrn.net',
   //baseMediaUrl: 'https://media.wafrn.net',
+  //baseMediaUrl: 'https://wafrn.b-cdn.net',
   baseMediaUrl: 'http://localhost:3000',
   frontUrl: 'http://localhost:4200'
 };
