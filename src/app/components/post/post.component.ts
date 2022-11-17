@@ -17,6 +17,8 @@ import { DeletePostService } from 'src/app/services/delete-post.service';
 export class PostComponent implements OnInit {
 
   @Input() post!: ProcessedPost[];
+  @Input() showFull: boolean = false;
+  originalPostContent: ProcessedPost[] = [];
   ready = false;
   sanitizedPostContent: string[] = [];
 
@@ -59,6 +61,15 @@ export class PostComponent implements OnInit {
     this.postService.updateFollowers.subscribe( () => {
       this.followedUsers = this.postService.followedUserIds;
     } );
+    if(!this.showFull){
+      this.originalPostContent = this.post;
+      this.post = this.post.slice(0, 3);
+
+      if(this.originalPostContent.length == this.post.length) {
+        this.showFull = true;
+      }
+    }
+
   }
 
   async ngOnChanges(): Promise<void> {
@@ -166,6 +177,11 @@ export class PostComponent implements OnInit {
       
     }
     
+  }
+
+  expandPost() {
+    this.post = this.originalPostContent;
+    this.showFull =true
   }
 
 }

@@ -1,4 +1,4 @@
-<app-post *ngIf="!loading && postFound" [post]="post"></app-post>
+<app-post [showFull]="true" *ngIf="!loading && postFound" [post]="post"></app-post>
 
 <p-progressSpinner *ngIf="loading"></p-progressSpinner>
 

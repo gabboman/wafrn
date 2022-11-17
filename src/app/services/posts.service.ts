@@ -87,7 +87,7 @@ export class PostsService {
     result.forEach(val => {
       this.mediaService.addMediaToMap(val);
     });
-    return result;
+    return result.filter((post)=> post.content != '' || post.tags.length );
   }
 
 
