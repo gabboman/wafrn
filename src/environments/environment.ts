@@ -11,7 +11,8 @@ export const environment = {
   //baseMediaUrl: 'https://media.wafrn.net',
   //baseMediaUrl: 'https://wafrn.b-cdn.net',
   baseMediaUrl: 'http://localhost:3000',
-  frontUrl: 'http://localhost:4200'
+  frontUrl: 'http://localhost:4200',
+  shortenPosts: 5,
 };
 
 /*

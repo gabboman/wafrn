@@ -63,7 +63,7 @@ export class PostComponent implements OnInit {
     } );
     if(!this.showFull){
       this.originalPostContent = this.post;
-      this.post = this.post.slice(0, 3);
+      this.post = this.post.slice(0, environment.shortenPosts);
 
       if(this.originalPostContent.length == this.post.length) {
         this.showFull = true;
