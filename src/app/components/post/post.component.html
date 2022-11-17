@@ -2,8 +2,8 @@
   <div class="col-12 wafrn-post">
     <p-card>
       <div *ngIf="post.length > 1" class="center-text">
-        <img [src]="mediaBaseUrl + post[post.length - 1].user.avatar" class="avatar"/>
-        <a [routerLink]="'/blog/'+ urls[post.length -1]">{{post[post.length -1].user.url}}</a>
+        <img [src]="mediaBaseUrl + originalPoster.avatar" class="avatar"/>
+        <a [routerLink]="'/blog/'+ originalPoster.url">{{originalPoster.url}}</a>
         reblogged
       </div>
 

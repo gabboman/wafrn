@@ -8,6 +8,7 @@ import { ReportService } from 'src/app/services/report.service';
 import { environment } from 'src/environments/environment';
 import { ReCaptchaV3Service } from 'ng-recaptcha';
 import { DeletePostService } from 'src/app/services/delete-post.service';
+import { SimplifiedUser } from 'src/app/interfaces/simplified-user';
 
 @Component({
   selector: 'app-post',
@@ -18,6 +19,7 @@ export class PostComponent implements OnInit {
 
   @Input() post!: ProcessedPost[];
   @Input() showFull: boolean = false;
+  originalPoster!: SimplifiedUser;
   originalPostContent: ProcessedPost[] = [];
   ready = false;
   sanitizedPostContent: string[] = [];
@@ -57,6 +59,7 @@ export class PostComponent implements OnInit {
    }
 
   async ngOnInit(): Promise<void> {
+    this.originalPoster = this.post[this.post.length - 1].user
     this.followedUsers = this.postService.followedUserIds;
     this.postService.updateFollowers.subscribe( () => {
       this.followedUsers = this.postService.followedUserIds;
