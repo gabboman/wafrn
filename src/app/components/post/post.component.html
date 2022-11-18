@@ -23,7 +23,7 @@
               class="w-80 p-button-sm flex-shrink-0"
               (click)="followUser(content.userId)">
             </button>
-            {{content.createdAt | date : 'short'}}
+            <div class="timestamp flex-shrink-0">{{content.createdAt | date : 'shortDate'}}</div>
             <p-splitButton
               (onClick)="sharePost(content.id)"
               icon="pi pi-share-alt"
