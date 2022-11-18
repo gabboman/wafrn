@@ -101,7 +101,8 @@ export class PostsService {
         '*': ['*'],
       },
       allowedAttributes: {
-        '*': ["style"],
+        '*': ['style', 'class'],
+        'a': ['href'],
       },
       allowedStyles: {
         '*': {
