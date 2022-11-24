@@ -100,6 +100,13 @@ export class NavigationMenuComponent implements OnInit {
           routerLink: ['/editProfile']
         },
         {
+          label: 'Privacy policy',
+          title: 'Privacy policy',
+          icon: "pi pi-user",
+          command: () => this.hideMenu(),
+          routerLink: '/privacy'
+        },
+        {
           label: 'Check the source code!',
           icon: "pi pi-code",
           title: 'The frontend is made in angular, you can check the code here',
@@ -150,6 +157,13 @@ export class NavigationMenuComponent implements OnInit {
           icon: "pi pi-search",
           command: () => this.hideMenu(),
           routerLink: '/dashboard/search'
+        },
+        {
+          label: 'Privacy policy',
+          title: 'Privacy policy',
+          icon: "pi pi-user",
+          command: () => this.hideMenu(),
+          routerLink: '/privacy'
         },
         {
           label: 'Check the source code!',

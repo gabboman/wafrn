@@ -40,6 +40,13 @@ export class NavigationMenuBasicComponent implements OnInit {
       routerLink: '/dashboard/search'
     },
     {
+      label: 'Privacy policy',
+      title: 'Privacy policy',
+      icon: "pi pi-user",
+      command: () => this.hideMenu(),
+      routerLink: '/privacy'
+    },
+    {
       label: 'Check the source code!',
       title: 'The frontend is made in angular, you can check the code here',
       icon: "pi pi-code",

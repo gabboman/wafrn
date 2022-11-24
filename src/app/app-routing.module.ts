@@ -7,6 +7,11 @@ const routes: Routes = [
   loadChildren: () => import ('./pages/register/register.module').then(m => m.RegisterModule)
 },
 {
+  path: 'privacy',
+  loadChildren: () => import ('./pages/privacy/privacy.module').then(m => m.PrivacyModule)
+
+},
+{
   path: 'recoverPassword',
   loadChildren: () => import ('./pages/recover-password/recover-password.module').then(m => m.RecoverPasswordModule)
 },
