@@ -46,8 +46,9 @@ export class PostsService {
 
   async followUser(id: string): Promise<boolean> {
     let res = false;
-    let payload = new FormData();
-    payload.append('userId', id);
+    let payload = {
+      userId: id
+    }
     try {
       let response = await this.http.post<{ success: boolean }>(environment.baseUrl + '/follow', payload).toPromise();
       await this.loadFollowers();
@@ -61,8 +62,9 @@ export class PostsService {
 
   async unfollowUser(id: string): Promise<boolean> {
     let res = false;
-    let payload = new FormData();
-    payload.append('userId', id);
+    let payload = {
+      userId: id
+    }
     try {
       let response = await this.http.post<{ success: boolean }>(environment.baseUrl + '/unfollow', payload).toPromise();
       await this.loadFollowers();

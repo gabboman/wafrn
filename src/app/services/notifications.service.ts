@@ -33,8 +33,9 @@ export class NotificationsService {
 
   async markNotificationsRead(): Promise<boolean> {
     let res = false;
-    const payload: FormData = new FormData();
-    payload.append('time', this.lastTimeChecked.getTime().toString());
+    const payload = {
+      time: this.lastTimeChecked.getTime().toString()
+    }
     const response = await this.http.post(environment.baseUrl + '/readNotifications', payload).toPromise();
     if(response) {
       res = true;

@@ -23,13 +23,11 @@ export class ReportService {
   async reportPost(post: ProcessedPost[], report: UntypedFormGroup): Promise<boolean> {
     let success = false;
     try {
-      const formData: FormData = new FormData();
-      formData.append('severity',report.value['severity'].value);
-      formData.append('description',report.value['description']);
-      formData.append('postId',post[post.length -1].id);
+      const formData = {
+        ... report.value,
+        postId : post[post.length -1].id
+      }
 
-
-  
       const response = await this.http.post(environment.baseUrl + '/reportPost', formData).toPromise();
       success = true;
 
@@ -47,11 +45,11 @@ export class ReportService {
   async blockUser(id: string): Promise<boolean> {
     let success = false;
     try {
-      const formData: FormData = new FormData();
-      formData.append('userId', id);  
+      const formData = {
+        userId: id
+      }
       const response = await this.http.post(environment.baseUrl + '/block', formData).toPromise();
       success = true;
-
     } catch (error) {
       console.error(error)
       this.messages.add({ severity: 'error', summary: 'Something went wrong blocking the user! Check your internet conectivity and try again.' });

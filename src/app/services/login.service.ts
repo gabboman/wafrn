@@ -28,8 +28,7 @@ export class LoginService {
   async logIn(loginForm: UntypedFormGroup): Promise<boolean> {
     let success = false;
     try {
-      let petition: any = await this.http.post(environment.baseUrl + '/login',
-        this.utils.objectToFormData(loginForm.value)).toPromise();
+      let petition: any = await this.http.post(environment.baseUrl + '/login', loginForm.value).toPromise();
       if (petition.success) {
         localStorage.setItem('authToken', petition.token);
         await this.postsService.loadFollowers();
@@ -63,10 +62,11 @@ export class LoginService {
   }
 
   async requestPasswordReset(email: string, captchaResponse: string) {
-    const payload = new FormData();
     let res = false;
-    payload.append('email', email);
-    payload.append('captchaResponse', captchaResponse);
+    const payload = {
+      email: email,
+      captchaResponse: captchaResponse
+    }
     let response: any = await this.http.post(environment.baseUrl + '/forgotPassword', payload).toPromise();
     if(response && response.success) {
       this.router.navigate(['/']);
@@ -76,11 +76,12 @@ export class LoginService {
   }
 
   async resetPassword(email: string, code: string, password: string) {
-    const payload = new FormData();
     let res = false;
-    payload.append('email', email);
-    payload.append('code', code);
-    payload.append('password', password);
+    const payload = {
+      email: email,
+      code: code,
+      password: password
+    }
     let response: any = await this.http.post(environment.baseUrl + '/resetPassword', payload).toPromise();
     if(response && response.success) {
       this.router.navigate(['/']);
@@ -90,10 +91,11 @@ export class LoginService {
   }
 
   async activateAccount(email: string, code: string) {
-    const payload = new FormData();
     let res = false;
-    payload.append('email', email);
-    payload.append('code', code);
+    const payload = {
+      email: email,
+      code: code
+    }
     let response: any = await this.http.post(environment.baseUrl + '/activateUser', payload).toPromise();
     if(response && response.success) {
       this.router.navigate(['/']);

@@ -20,15 +20,12 @@ export class EditorService {
   async createPost(content: string, captchaKey: string, tags?: string, idPostToReblog?: string): Promise<boolean> {
     let success: boolean = false;
     try {
-      const formdata: FormData = new FormData;
-      formdata.append('content', content);
-      formdata.append('captchaKey', captchaKey)
-      if(idPostToReblog) {
-        formdata.append('parent', idPostToReblog);
-      }
-      if (tags) {
-        formdata.append('tags', tags);
-      }
+      const formdata = {
+        content: content,
+        captchaKey: captchaKey,
+        parent: idPostToReblog,
+        tags: tags
+      };
       let petitionResponse: any = await this.http.post(this.base_url + '/createPost', formdata).toPromise();
       success = petitionResponse.id;
 
@@ -38,23 +35,6 @@ export class EditorService {
 
 
     return success;
-  }
-
-  async getMedia(page: number): Promise<WafrnMedia[]> {
-    let res: WafrnMedia[] = [];
-    try {
-      let formData: FormData = new FormData();
-      formData.append('page', Math.floor(page).toString());
-      let response = await  this.http.post<WafrnMedia[]> (this.base_url + '/myRecentMedia', formData).toPromise();
-      if(response) {
-        res = response;
-      }
-
-    } catch (exception) {
-      console.log(exception);
-    }
-
-    return res;
   }
 
   async uploadMedia(description: string, nsfw: boolean, img: File): Promise<WafrnMedia | undefined > {
