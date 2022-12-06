@@ -40,14 +40,14 @@
      [dropdown]="true">
       <ng-template let-suggest pTemplate="item">
           <div class="w-full">
-              <img [src]="baseMediaUrl + '/' + suggest.avatar" style="max-height: 3em; max-width: 3em;" />
+              <img [alt]="suggest.url" [src]="baseMediaUrl + '/' + suggest.avatar" style="max-height: 3em; max-width: 3em;" />
               <div>{{suggest.url}}</div>
           </div>
       </ng-template>
     </p-autoComplete>
   </p-overlayPanel>
 
-  <quill-editor #quill [(ngModel)]="postCreatorContent" >
+  <quill-editor #quill class="w-full" [(ngModel)]="postCreatorContent" >
     <div quill-editor-toolbar style="border-top-left-radius: 5px; border-top-right-radius: 5px;">
       <select class="ql-size" title="Text Size">
         <option value="small"></option>
