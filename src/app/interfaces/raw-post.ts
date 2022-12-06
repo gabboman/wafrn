@@ -5,7 +5,7 @@ import { WafrnMention } from "./wafrn-mention";
 
 export interface RawPost {
     id:             string;
-    NSFW:           boolean;
+    content_warning:           string;
     content:        string;
     createdAt:      Date;
     updatedAt:      Date;

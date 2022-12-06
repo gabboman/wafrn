@@ -108,7 +108,7 @@ export class DashboardComponent implements OnInit {
     if(!this.jwtService.tokenValid()) {
       this.posts.push([{
         id: this.generateUUID() ,
-        NSFW: false,
+        content_warning: '',
         content: "<p>To fully enjoy this hellsite, please consider joining us, <a href=\"/register\" rel=\"noopener noreferrer\" target=\"_blank\">register into wafrn!</a></p><p><br></p><p>bring your twisted ideas onto others, share recipies of cake that swap the flour for mayo or hot sauce!</p><p><br></p><p><br></p><p>Consider <a href=\"/register\" rel=\"noopener noreferrer\" target=\"_blank\">joining wafrn</a>!</p>",
         createdAt:      new Date(),
         updatedAt:      new Date(),

@@ -6,7 +6,7 @@ import { WafrnMention } from "./wafrn-mention";
 export interface ProcessedPost {
 
     id:             string;
-    NSFW:           boolean;
+    content_warning: string;
     content:        string;
     createdAt:      Date;
     updatedAt:      Date;

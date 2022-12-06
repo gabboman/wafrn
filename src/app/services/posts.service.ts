@@ -98,7 +98,7 @@ export class PostsService {
     const replacementsWafrnMentions: Array<{ wafrnMentionstringToReplace: string, url: string }> = [];
 
     let sanitized = sanitizeHtml(content, {
-      allowedTags: ['b', 'i', 'u', 'a','s', 'span', 'br', 'p', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'pre', 'strong', 'em', 'ul', 'li'],
+      allowedTags: ['b', 'i', 'u', 'a','s', 'span', 'br', 'p', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'pre', 'strong', 'em', 'ul', 'li', 'marquee'],
       allowedClasses: {
         '*': ['*'],
       },
