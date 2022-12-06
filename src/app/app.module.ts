@@ -11,7 +11,6 @@ import { MessageService } from 'primeng/api';
 import { environment } from 'src/environments/environment';
 import { RECAPTCHA_V3_SITE_KEY, RecaptchaV3Module } from 'ng-recaptcha';
 import { Router } from "@angular/router";
-import * as Sentry from "@sentry/angular";
 import { QuillConfigModule } from "ngx-quill";
 
 @NgModule({
@@ -41,23 +40,7 @@ import { QuillConfigModule } from "ngx-quill";
     {
       provide: RECAPTCHA_V3_SITE_KEY,
       useValue: environment.recaptchaPublic,
-    },
-    {
-      provide: ErrorHandler,
-      useValue: Sentry.createErrorHandler({
-        showDialog: true,
-      }),
-    },
-    {
-      provide: Sentry.TraceService,
-      deps: [Router],
-    },
-    {
-      provide: APP_INITIALIZER,
-      useFactory: () => () => {},
-      deps: [Sentry.TraceService],
-      multi: true,
-    },
+    }
   ],
   bootstrap: [AppComponent],
   exports: [
