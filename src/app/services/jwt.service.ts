@@ -19,7 +19,6 @@ export class JwtService {
       let token = this.decodeToken(tokenString);
       res = new Date().getTime() < token.exp * 1000;
       if(!res) {
-        debugger;
         localStorage.clear();
         this.router.navigate(['/']);
       }
