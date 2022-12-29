@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { environment } from 'src/environments/environment';
 import { ProcessedPost } from '../interfaces/processed-post';
@@ -91,8 +91,12 @@ export class MediaService {
   }
 
   async updateMedia(id: string, description: string, nsfw: boolean, adult: boolean) {
-    let payload: FormData = this.utils.objectToFormData({id: id, description: description, nsfw: nsfw, adultContent: adult});
-    let response = await this.http.post(environment.baseUrl + '/updateMedia', payload).toPromise();
+    let payload: HttpParams = new HttpParams();
+    payload = payload.set('id', id);
+    payload = payload.set('description', description);
+    payload = payload.set('NSFW', nsfw);
+    payload = payload.set('adultContent', adult)
+    let response = await this.http.get(environment.baseUrl + '/updateMedia', {params: payload}).toPromise();
     return response;
 
   }
