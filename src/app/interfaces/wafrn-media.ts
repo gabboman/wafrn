@@ -3,5 +3,6 @@ export interface WafrnMedia {
     adultContent: boolean,
     NSFW: boolean,
     description: string,
-    url: string
+    url: string,
+    external: boolean
 }
