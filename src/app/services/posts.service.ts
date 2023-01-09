@@ -16,7 +16,7 @@ export class PostsService {
   wafrnMediaRegex = /\[wafrnmediaid="[0-9a-fA-F]{8}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{12}"\]/gm;
   wafrnMentionRegex = /\[mentionuserid="[0-9a-fA-F]{8}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{12}"\]/gm;
   uuidRegex = /[0-9a-fA-F]{8}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{12}/;
-  youtubeRegex = /(?:https?:)?(?:\/\/)?(?:www\.)?(?:youtu\.be\/|youtube(?:\-nocookie)?\.(?:[A-Za-z]{2,4}|[A-Za-z]{2,3}\.[A-Za-z]{2})\/)(?:watch|embed\/|vi?\/)*(?:\?[\w=&]*vi?=)?([^#&\?\/]{11}).*?/g;
+  youtubeRegex = /((?:https?:\/\/)?(www.|m.)?(youtube(\-nocookie)?\.com|youtu\.be)\/(v\/|watch\?v=|embed\/)?([\S]{11}))([^\S]|\?[\S]*|\&[\S]*|\b)/g;
   public updateFollowers: BehaviorSubject<Boolean> = new BehaviorSubject(new Boolean());
 
   public followedUserIds: Array<String> = [];
@@ -123,8 +123,9 @@ export class PostsService {
     if (youtubeLinks) {
       Array.from(youtubeLinks).forEach(youtubeString => {
         // some exception, like when its on a href or stuff
-            const newString = '<app-wafrn-youtube-player video="' + youtubeString[1] + '"></app-wafrn-youtube-player>';
+            const newString = '<app-wafrn-youtube-player video="' + youtubeString[6] + '"></app-wafrn-youtube-player>';
             sanitized = sanitized.replace(youtubeString[0], newString);
+            console.log(sanitized)
         });
       }
     
