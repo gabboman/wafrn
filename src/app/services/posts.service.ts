@@ -125,7 +125,6 @@ export class PostsService {
         // some exception, like when its on a href or stuff
             const newString = '<app-wafrn-youtube-player video="' + youtubeString[6] + '"></app-wafrn-youtube-player>';
             sanitized = sanitized.replace(youtubeString[0], newString);
-            console.log(sanitized)
         });
       }
     
