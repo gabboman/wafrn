@@ -77,7 +77,7 @@ export class PostComponent implements OnInit {
 
   async ngOnChanges(): Promise<void> {
     this.sanitizedPostContent = this.post.map((elem) => this.postService.getPostHtml(elem.content));
-    this.urls = this.post.map((elem) => encodeURIComponent(elem.user.url));
+    this.urls = this.post.map((elem) => elem.user.url);
     this.ready = true;
     this.updateButtonItems();
     let notes = this.post[this.post.length - 1].notes;
