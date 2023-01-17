@@ -4,6 +4,7 @@ export const environment = {
   maxUploadSize: '250',
   baseUrl: 'https://api.wafrn.net',
   baseMediaUrl: 'https://media.wafrn.net',
+  externalCacheurl: 'https://cache.wafrn.net/?media=',
   frontUrl: 'https://app.wafrn.net',
   shortenPosts: 5,
 };

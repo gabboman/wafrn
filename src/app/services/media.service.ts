@@ -60,7 +60,7 @@ export class MediaService {
   addMediaToMap(post: ProcessedPost): void {
     if(post.medias) {
       post.medias.forEach(val => {
-        val.url = val.external ? val.url : environment.baseMediaUrl + val.url;
+        val.url = val.external ? environment.externalCacheurl + encodeURIComponent(val.url) : environment.baseMediaUrl + val.url;
         this.mediaMap[val.id] = val;
       });
     }

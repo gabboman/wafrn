@@ -25,9 +25,11 @@ export class PostComponent implements OnInit {
   sanitizedPostContent: string[] = [];
 
   mediaBaseUrl = environment.baseMediaUrl;
+  cacheurl = environment.externalCacheurl;
   userLoggedIn = false;
   followedUsers: Array<String> = [];
   urls: string[] = [];
+  avatars: string[] = [];
   notes: string = '---';
   quickReblogPanelVisible = false;
   quickReblogBeingDone = false;
@@ -78,6 +80,7 @@ export class PostComponent implements OnInit {
   async ngOnChanges(): Promise<void> {
     this.sanitizedPostContent = this.post.map((elem) => this.postService.getPostHtml(elem.content));
     this.urls = this.post.map((elem) => elem.user.url);
+    this.avatars = this.post.map((elem) => elem.user.url.startsWith('@') ? this.cacheurl + encodeURIComponent(elem.user.avatar) : this.mediaBaseUrl + elem.user.avatar)
     this.ready = true;
     this.updateButtonItems();
     let notes = this.post[this.post.length - 1].notes;
