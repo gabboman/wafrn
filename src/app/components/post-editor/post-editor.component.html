@@ -40,7 +40,7 @@
      [dropdown]="true">
       <ng-template let-suggest pTemplate="item">
           <div class="w-full">
-              <img [alt]="suggest.url" [src]="baseMediaUrl + '/' + suggest.avatar" style="max-height: 3em; max-width: 3em;" />
+              <img [alt]="suggest.url" [src]="suggest.avatar" style="max-height: 3em; max-width: 3em;" />
               <div>{{suggest.url}}</div>
           </div>
       </ng-template>

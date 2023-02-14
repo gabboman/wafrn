@@ -16,7 +16,7 @@ import { environment } from 'src/environments/environment';
 })
 export class SearchComponent implements OnInit {
 
-
+  cacheurl = environment.externalCacheurl;
   baseMediaUrl = environment.baseMediaUrl;
   searchForm: UntypedFormGroup = new UntypedFormGroup({
     search: new UntypedFormControl('', [Validators.required])
@@ -25,6 +25,7 @@ export class SearchComponent implements OnInit {
   posts: ProcessedPost[][] = [];
   viewedPosts = 0;
   users: SimplifiedUser[] = [];
+  avatars: any = {};
   viewedUsers = 0;
   followedUsers: Array<String> = [];
   userLoggedIn = false;
@@ -70,13 +71,20 @@ export class SearchComponent implements OnInit {
     let searchResult = await this.dashboardService.getSearchPage(this.currentPage, this.currentSearch);
     this.posts = searchResult.posts;
     this.users = searchResult.users;
+    searchResult.users.forEach((user) => {
+      this.avatars[user.url] = user.url.startsWith('@') ? this.cacheurl + encodeURIComponent(user.avatar) : this.baseMediaUrl + user.avatar;
+    })
     this.loading = false;
   }
 
   async loadResults(page: number) {
     let searchResult = await this.dashboardService.getSearchPage(page, this.currentSearch);
     searchResult.posts.forEach((post) => this.posts.push(post));
-    searchResult.users.forEach((user) => this.users.push(user));
+    searchResult.users.forEach((user) => {
+      this.users.push(user);
+      this.avatars[user.url] = user.url.startsWith('@') ? this.cacheurl + encodeURIComponent(user.avatar) : this.baseMediaUrl + user.avatar;
+    });
+    console.log(this.avatars)
   }
 
   async countViewedPost() {
