@@ -48,6 +48,7 @@ export class PostEditorComponent implements OnInit, OnDestroy {
   @ViewChild('mentionUserSearchPanel') mentionUserSearchPanel: any;
   mentionSuggestions: any[] = [];
   baseMediaUrl = environment.baseMediaUrl;
+  cacheurl = environment.externalCacheurl;
   userSelectionMentionValue = '';
 
   showEditorSubscription: Subscription;
@@ -190,6 +191,10 @@ export class PostEditorComponent implements OnInit, OnDestroy {
       const backendResponse: any = await this.editorService.searchUser(ev.query);
       if(backendResponse){
         this.mentionSuggestions = backendResponse.users? backendResponse.users : [];
+        this.mentionSuggestions = this.mentionSuggestions.map((user) => {
+          user.avatar = user.url.startsWith('@') ? this.cacheurl + encodeURIComponent(user.avatar) : this.baseMediaUrl + user.avatar;
+          return user;
+        })
       }
     } else {
       this.mentionSuggestions = [];

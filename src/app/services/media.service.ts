@@ -60,7 +60,7 @@ export class MediaService {
   addMediaToMap(post: ProcessedPost): void {
     if(post.medias) {
       post.medias.forEach(val => {
-        val.url = environment.baseMediaUrl + val.url;
+        val.url = val.external ? environment.externalCacheurl + encodeURIComponent(val.url) : environment.baseMediaUrl + val.url;
         this.mediaMap[val.id] = val;
       });
     }
@@ -82,7 +82,8 @@ export class MediaService {
         url: '/assets/img/404.png',
         description: 'The media that you are looking for could not be found. The identifier is wrong. The image is the default 404 that wafrn uses. A stock image for 404. The developer has not thought too much into it, and actually has spend more time writing this message than actually searching for a good 404 image',
         NSFW: false,
-        adultContent: false
+        adultContent: false,
+        external: false
       }
     }
 
