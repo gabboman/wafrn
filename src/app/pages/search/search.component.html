@@ -41,7 +41,7 @@
             </div>
             <div>
               <h4 class="p-mb-1"><a [routerLink]="'/blog/' + user.url">{{user.url}}</a></h4>
-              <h6 class="p-mt-0 p-mb-3">{{user.description}}</h6>
+              <div class="p-mt-0 p-mb-3" [innerHTML]="user.description"></div>
               <button *ngIf="followedUsers.indexOf(user.id) === -1 && userLoggedIn" pButton pRipple label="Follow"
                 class="w-full" (click)="followUser(user.id)"></button>
               <button *ngIf="followedUsers.indexOf(user.id) !== -1 && userLoggedIn" pButton pRipple label="Unfollow"

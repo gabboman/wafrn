@@ -62,7 +62,6 @@ export class ViewBlogComponent implements OnInit {
     } else {
       this.blogDetails = blogResponse;
     await this.loadPosts(this.currentPage);
-    console.log(this.blogDetails)
     this.titleService.setTitle(this.blogDetails.url + '\'s wafrn blog');
       this.metaTagService.addTags([
         {name: 'description', content: this.blogDetails.url + '\'s wafrn blog'},
