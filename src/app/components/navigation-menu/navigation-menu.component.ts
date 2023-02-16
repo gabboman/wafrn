@@ -79,6 +79,13 @@ export class NavigationMenuComponent implements OnInit {
           routerLink: '/dashboard/explore'
         },
         {
+          label: 'Private messages',
+          icon: "pi pi-envelope",
+          title: 'Private messages are here!',
+          command: () => this.hideMenu(),
+          routerLink: '/dashboard/private'
+        },
+        {
           label: 'Search',
           title: 'Search',
           icon: "pi pi-search",
