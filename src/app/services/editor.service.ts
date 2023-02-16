@@ -17,14 +17,15 @@ export class EditorService {
     private http: HttpClient,
   ) { }
 
-  async createPost(content: string, captchaKey: string, tags?: string, idPostToReblog?: string): Promise<boolean> {
+  async createPost(content: string, captchaKey: string,privacy: number, tags?: string, idPostToReblog?: string): Promise<boolean> {
     let success: boolean = false;
     try {
       const formdata = {
         content: content,
         captchaKey: captchaKey,
         parent: idPostToReblog,
-        tags: tags
+        tags: tags,
+        privacy: privacy
       };
       let petitionResponse: any = await this.http.post(this.base_url + '/createPost', formdata).toPromise();
       success = petitionResponse.id;

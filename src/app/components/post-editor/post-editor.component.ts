@@ -33,6 +33,7 @@ export class PostEditorComponent implements OnInit, OnDestroy {
   tags: string[] = [];
   captchaResponse: string | undefined;
   captchaKey = environment.recaptchaPublic;
+  privacy = 0;
   @ViewChild('quill') quill!: QuillEditorComponent;
 
   // upload media variables
@@ -102,7 +103,7 @@ export class PostEditorComponent implements OnInit, OnDestroy {
     let res = undefined;
     if (this.captchaResponse) {
       this.fixNullPosting()
-      res = await this.editorService.createPost(this.postCreatorContent, this.captchaResponse, tagsToSend, this.idPostToReblog);
+      res = await this.editorService.createPost(this.postCreatorContent, this.captchaResponse, this.privacy, tagsToSend, this.idPostToReblog);
     }
     if (res) {
       this.messages.add({

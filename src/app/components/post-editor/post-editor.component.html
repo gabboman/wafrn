@@ -85,10 +85,20 @@
 
   <div class="mt-4 mb-2">
     <label>
-      Tags (comma separated)
+      Tags (comma separated). ATTENTION, TAGS ARE NOT SEND TO THE FEDIVERSE, TAGS ARE USE ONLY LOCALLY
     </label>
   </div>
   <p-chips [(ngModel)]="tags" separator=","></p-chips>
+  <div class="mt-4 mb-2">
+    <label>
+      Privacy level (Attention: the admins can read the private messages, as they are not end to end encrypted)
+    </label>
+    <select [(ngModel)]="privacy">
+      <option value="0">Public</option>
+      <option value="10">Only mentioned users</option>
+
+    </select>
+  </div>
   <div class="my-3">
     This site is protected by reCAPTCHA and the Google
     <a href="https://policies.google.com/privacy">Privacy Policy</a> and

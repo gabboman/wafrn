@@ -114,7 +114,7 @@ export class PostComponent implements OnInit {
     this.reblogging = true;
     this.captchaResponse = await this.recaptchaV3Service.execute('importantAction').toPromise();
     if(this.captchaResponse) {
-      let response = await this.editor.createPost('', this.captchaResponse, '', this.post[this.post.length - 1].id );
+      let response = await this.editor.createPost('', this.captchaResponse, 0,  '',this.post[this.post.length - 1].id );
       if(response) {
         this.messages.add({ severity: 'success', summary: 'You reblogged the post succesfully' });
       } else {
