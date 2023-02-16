@@ -124,7 +124,8 @@ export class DashboardComponent implements OnInit {
         },
         medias: [],
         tags: [],
-        notes: 0
+        notes: 0,
+        privacy: 0
         
       }]);
     }

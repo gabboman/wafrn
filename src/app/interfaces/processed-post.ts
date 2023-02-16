@@ -16,4 +16,5 @@ export interface ProcessedPost {
     tags:           Tag[];
     postMentionsUserRelations?: WafrnMention[];
     notes:          number;
+    privacy:        number;
 }

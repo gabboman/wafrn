@@ -17,5 +17,6 @@ export interface RawPost {
     tags:           Tag[];
     postMentionsUserRelations?: WafrnMention[];
     notes:          number;
+    privacy:        number;
 
 }
