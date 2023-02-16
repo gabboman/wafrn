@@ -19,7 +19,7 @@ export class DashboardComponent implements OnInit {
   viewedPostsIds: string[] = [];
   postsToHideArray: boolean[] = [];
   currentPage= 0;
-  explore = false;
+  level = 1;
 
 
 
@@ -41,15 +41,18 @@ export class DashboardComponent implements OnInit {
    }
 
   async ngOnInit(): Promise<void> {
-    if(this.router.url.indexOf('explore') != -1) {
-      this.explore = true;
+    if(this.router.url.endsWith('explore')) {
+      this.level = 0;
+    }
+    if(this.router.url.endsWith('private')) {
+      this.level = 10;
     }
     else if(!this.jwtService.tokenValid()) {
       localStorage.clear();
       this.router.navigate(['/']);
     }
     this.postService.updateFollowers.subscribe( () => {
-      if(this.postService.followedUserIds.length === 1 && !this.explore ){
+      if(this.postService.followedUserIds.length === 1 && !(this.level == 0 || this.level == 10) ){
         // if the user follows NO ONE we take them to the explore page!
         this.messages.add({ severity: 'info', summary: 'You aren\'t following anyone, so we took you to the explore page' });
         this.router.navigate(['/dashboard/explore']);
@@ -101,7 +104,7 @@ export class DashboardComponent implements OnInit {
 
   async loadPosts(page: number) {
 
-    let tmpPosts = await this.dashboardService.getDashboardPage(page, this.explore);
+    let tmpPosts = await this.dashboardService.getDashboardPage(page, this.level);
     // internal posts, and stuff could be added here.
     // also some ads for RAID SHADOW LEGENDS. This is a joke.
     // but hey if you dont like it you delete that very easily ;D

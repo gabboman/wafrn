@@ -22,6 +22,10 @@ const routes: Routes = [
       {
         path: 'explore',
         component: DashboardComponent
+      },
+      {
+        path: 'private',
+        component: DashboardComponent
       }
     ]
   }
