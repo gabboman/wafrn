@@ -44,6 +44,9 @@ export class DashboardComponent implements OnInit {
     if(this.router.url.endsWith('explore')) {
       this.level = 0;
     }
+    if(this.router.url.endsWith('exploreLocal')) {
+      this.level = 2;
+    }
     if(this.router.url.endsWith('private')) {
       this.level = 10;
     }

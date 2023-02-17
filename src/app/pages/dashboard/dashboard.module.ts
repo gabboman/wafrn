@@ -24,6 +24,10 @@ const routes: Routes = [
         component: DashboardComponent
       },
       {
+        path: 'exploreLocal',
+        component: DashboardComponent
+      },
+      {
         path: 'private',
         component: DashboardComponent
       }

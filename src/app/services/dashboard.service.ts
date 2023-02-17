@@ -24,6 +24,24 @@ export class DashboardService {
   }
 
 
+  getDashboardUrl(level: number): string{
+    let res = ''
+    switch(level) {
+      case 0:
+        res =  environment.baseUrl + '/explore'
+        break
+      case 1:
+        res =  environment.baseUrl + '/dashboard'
+        break
+      case 2:
+        res =  environment.baseUrl + '/exploreLocal'
+        break
+      default:
+      res =  environment.baseUrl + '/private'
+    }
+    return res;
+  }
+
   async getDashboardPage(page: number, level: number): Promise<ProcessedPost[][]> {
     let result: ProcessedPost[][] = [];
     if(page === 0) {
@@ -33,7 +51,7 @@ export class DashboardService {
     let petitionData: HttpParams = new HttpParams();
     petitionData = petitionData.set('page', page.toString());
     petitionData = petitionData.set('startScroll', this.startScrollDate.getTime().toString());
-    const url = level == 0 ? environment.baseUrl + '/explore' : level == 1 ?  environment.baseUrl + '/dashboard' : environment.baseUrl + '/private' ;
+    const url = this.getDashboardUrl(level);
     let dashboardPetition: Array<RawPost> | undefined = await this.http.get<Array<RawPost>>(url, {params: petitionData}).toPromise();
     if(dashboardPetition) {
       result = dashboardPetition.map(elem => this.postService.processPost(elem));
