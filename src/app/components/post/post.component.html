@@ -1,7 +1,7 @@
 <div *ngIf="ready" class="grid pb-6 lg:px-4 scalein animation-duration-400 wafrn-container">
   <div class="col-12 wafrn-post">
     <p-card>
-      <div *ngIf="post.length > 1" class="center-text">
+      <div *ngIf="post.length > 1" class="center-text overflow-hidden">
         <img [src]="avatars[avatars.length - 1]" class="avatar"/>
         <a [routerLink]="'/blog/'+ originalPoster.url">{{originalPoster.url}}</a>
         reblogged
