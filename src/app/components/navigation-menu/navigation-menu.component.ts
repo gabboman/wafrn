@@ -72,6 +72,13 @@ export class NavigationMenuComponent implements OnInit {
           command: () => {this.editorService.launchPostEditorEmitter.next('NEW_POST'); this.menuVisible = false;}
         },
         {
+          label: 'Local explore',
+          icon: "pi pi-server",
+          title: 'See the local posts of the server!',
+          command: () => this.hideMenu(),
+          routerLink: '/dashboard/exploreLocal'
+        },
+        {
           label: 'Explore',
           icon: "pi pi-compass",
           title: 'See ALL the posts that are public! not only the ones of people you follow!',
