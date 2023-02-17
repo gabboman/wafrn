@@ -9,7 +9,7 @@
     <ng-template let-follow pTemplate="listItem">
       <div class="w-full">
         <a (click)="modalVisible = false" [routerLink]="'/blog/' + follow.url ">
-          <img [src]="baseMediaUrl + follow.avatar" style="max-height: 64px; max-width: 64px;">
+          <img [src]="follow.avatar" style="max-height: 64px; max-width: 64px;">
           <div style="font-size:14px;float:right;margin:15px 5px 0 0">{{follow.url}}</div>
         </a>
       </div>
@@ -20,7 +20,7 @@
     <ng-template let-mention pTemplate="listItem">
       <div class="w-full">
         <a (click)="modalVisible = false" [routerLink]="'/post/' + mention.id ">
-          <img [src]="baseMediaUrl + mention.user.avatar" style="max-height: 64px; max-width: 64px;">
+          <img [src]="mention.user.avatar" style="max-height: 64px; max-width: 64px;">
           <div style="font-size:14px;float:right;margin:15px 5px 0 0">{{mention.user.url}} has mentioned you in this post</div>
         </a>
       </div>
@@ -31,7 +31,7 @@
     <ng-template let-reblog pTemplate="listItem">
       <div class="w-full">
         <a (click)="modalVisible = false" [routerLink]="'/post/' + reblog.id ">
-          <img [src]="baseMediaUrl + reblog.user.avatar" style="max-height: 64px; max-width: 64px;">
+          <img [src]="reblog.user.avatar" style="max-height: 64px; max-width: 64px;">
           <div style="font-size:14px;float:right;margin:15px 5px 0 0">{{reblog.user.url}} has reblogged one of your
             posts</div>
         </a>

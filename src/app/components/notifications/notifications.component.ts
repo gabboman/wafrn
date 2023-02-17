@@ -18,6 +18,7 @@ export class NotificationsComponent implements OnInit {
   buttonReadNotificationsClickable = true;
   notifications!: { follows: Follower[]; reblogs: Reblog[]; mentions: Reblog[] };
   baseMediaUrl = environment.baseMediaUrl;
+  mediaCacher = environment.externalCacheurl;
   numberNotifications = '';
 
   constructor(
@@ -53,6 +54,25 @@ export class NotificationsComponent implements OnInit {
 
   async updateNotifications() {
     this.notifications = await this.notificationsService.getNotifications();
+    this.notifications.follows = this.notifications.follows.map((follower) => {
+      const res = follower;
+      res.avatar = res.url.startsWith('@') ? this.mediaCacher + encodeURIComponent(res.avatar): this.baseMediaUrl + res.avatar
+      return res;
+    })
+    this.notifications.mentions = this.notifications.mentions.map((mention) => {
+      const res = mention;
+      res.user.avatar = res.user.url.startsWith('@') ? this.mediaCacher + encodeURIComponent(res.user.avatar): this.baseMediaUrl + res.user.avatar;
+      console.log(res.user.avatar)
+      return res;
+    });
+
+    this.notifications.reblogs = this.notifications.reblogs.map((reblog) => {
+      const res = reblog;
+      res.user.avatar = res.user.url.startsWith('@') ? this.mediaCacher + encodeURIComponent(res.user.avatar): this.baseMediaUrl + res.user.avatar;
+      console.log(res.user.avatar)
+      return res;
+    });
+    
     this.numberNotifications = (this.notifications.follows.length + this.notifications.reblogs.length + this.notifications.mentions.length).toString();
     this.badgeVisible = this.numberNotifications != '0';
   }
