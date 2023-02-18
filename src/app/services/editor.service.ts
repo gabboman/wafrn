@@ -3,6 +3,8 @@ import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { WafrnMedia } from '../interfaces/wafrn-media';
+import { ProcessedPost } from '../interfaces/processed-post';
+import { Action, EditorLauncherData } from '../interfaces/editor-launcher-data';
 
 @Injectable({
   providedIn: 'root'
@@ -10,7 +12,9 @@ import { WafrnMedia } from '../interfaces/wafrn-media';
 export class EditorService {
 
   base_url = environment.baseUrl;
-  public launchPostEditorEmitter: BehaviorSubject<string> = new BehaviorSubject('');
+  public launchPostEditorEmitter: BehaviorSubject<EditorLauncherData> = new BehaviorSubject<EditorLauncherData>({
+    action: Action.None
+  });
 
 
   constructor(

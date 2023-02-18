@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { MenuItem } from 'primeng/api';
+import { Action } from 'src/app/interfaces/editor-launcher-data';
 import { EditorService } from 'src/app/services/editor.service';
 import { JwtService } from 'src/app/services/jwt.service';
 
@@ -49,7 +50,7 @@ export class NavigationMenuComponent implements OnInit {
 
   hideMenu() {
     this.menuVisible = false;
-    this.editorService.launchPostEditorEmitter.next('CLOSE');
+    this.editorService.launchPostEditorEmitter.next({action: Action.Close});
   }
 
 
@@ -69,7 +70,7 @@ export class NavigationMenuComponent implements OnInit {
           label: 'Write new post',
           title: 'Write a post',
           icon: "pi pi-pencil",
-          command: () => {this.editorService.launchPostEditorEmitter.next('NEW_POST'); this.menuVisible = false;}
+          command: () => {this.editorService.launchPostEditorEmitter.next({action: Action.New}); this.menuVisible = false;}
         },
         {
           label: 'Local explore',

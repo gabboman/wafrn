@@ -9,6 +9,7 @@ import { environment } from 'src/environments/environment';
 import { ReCaptchaV3Service } from 'ng-recaptcha';
 import { DeletePostService } from 'src/app/services/delete-post.service';
 import { SimplifiedUser } from 'src/app/interfaces/simplified-user';
+import { Action } from 'src/app/interfaces/editor-launcher-data';
 
 @Component({
   selector: 'app-post',
@@ -107,7 +108,10 @@ export class PostComponent implements OnInit {
   }
 
   launchReblog() {
-    this.editorService.launchPostEditorEmitter.next(this.post[this.post.length - 1].id);
+    this.editorService.launchPostEditorEmitter.next({
+      post: this.post[this.post.length - 1],
+      action: Action.Response
+    });
   }
 
   async quickReblog() {
@@ -161,7 +165,10 @@ export class PostComponent implements OnInit {
           label: "Reblog",
           title: "Open the reblog editor, reblogging this post",
           icon: 'pi pi-replay',
-          command: () => this.editorService.launchPostEditorEmitter.next(content.id)
+          command: () => this.editorService.launchPostEditorEmitter.next({
+            action: Action.Response,
+            post: content
+          })
         },
         content.userId == this.myId ? 
         {

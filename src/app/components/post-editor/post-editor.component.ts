@@ -20,6 +20,7 @@ import {
 import { QuillEditorComponent } from 'ngx-quill'
 import { ReCaptchaV3Service } from 'ng-recaptcha';
 import { Subscription } from 'rxjs';
+import { Action } from 'src/app/interfaces/editor-launcher-data';
 @Component({
   selector: 'app-post-editor',
   templateUrl: './post-editor.component.html',
@@ -68,8 +69,22 @@ export class PostEditorComponent implements OnInit, OnDestroy {
 
   ) {
     this.showEditorSubscription = this.editorService.launchPostEditorEmitter.subscribe((elem) => {
-      if (elem != 'CLOSE' && elem != '') {
-        this.idPostToReblog = elem.length === 36 ? elem : undefined;
+      if (elem.action == Action.New || elem.action == Action.Response) {
+        this.privacy = 0;
+        this.idPostToReblog = elem.post?.id;
+        const inResponseTo = elem.post;
+        this.postCreatorContent = '';
+        if(inResponseTo) {
+          this.privacy = inResponseTo.privacy;
+          if(inResponseTo.user.url.startsWith('@')) {
+            this.postCreatorContent = this.postCreatorContent + `[mentionuserid="${inResponseTo.user.id}"]`
+          }
+          inResponseTo.postMentionsUserRelations?.forEach((mention) => {
+            if(mention.user.url.startsWith('@')) {
+              this.postCreatorContent = this.postCreatorContent + `[mentionuserid="${mention.userId}"]`
+            }
+          });
+        }
         this.openEditor()
       }
     });
