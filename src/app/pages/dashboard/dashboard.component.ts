@@ -50,7 +50,7 @@ export class DashboardComponent implements OnInit {
     if(this.router.url.endsWith('private')) {
       this.level = 10;
     }
-    else if(!this.jwtService.tokenValid()) {
+    if(!this.jwtService.tokenValid() && !(this.router.url.endsWith('explore') || this.router.url.endsWith('exploreLocal'))) {
       localStorage.clear();
       this.router.navigate(['/']);
     }
