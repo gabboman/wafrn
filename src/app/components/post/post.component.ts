@@ -197,8 +197,13 @@ export class PostComponent implements OnInit {
     this.showFull =true
   }
 
-  dismissContentWarning(id: string) {
-    // TODO working in new feature hehe
+  dismissContentWarning() {
+    this.post.forEach(elem => {
+      elem.content_warning = '';
+    })
+    this.originalPostContent.forEach(elem => {
+      elem.content_warning = ''
+    })
     
   }
 
