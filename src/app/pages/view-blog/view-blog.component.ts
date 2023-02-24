@@ -19,12 +19,12 @@ export class ViewBlogComponent implements OnInit {
   found = true;
   viewedPosts = 0;
   currentPage = 0;
-  mediaUrl = environment.baseMediaUrl;
   posts: ProcessedPost[][] = [];
   blogUrl: string = '';
   blogDetails: any;
   followedUsers: Array<String> = [];
   userLoggedIn = false;
+  avatarUrl = '';
 
 
 
@@ -62,11 +62,12 @@ export class ViewBlogComponent implements OnInit {
     } else {
       this.blogDetails = blogResponse;
     await this.loadPosts(this.currentPage);
+    this.avatarUrl = this.blogDetails.url.startsWith('@') ? environment.externalCacheurl + encodeURIComponent(this.blogDetails.avatar) : environment.baseMediaUrl + this.blogDetails.avatar
     this.titleService.setTitle(this.blogDetails.url + '\'s wafrn blog');
       this.metaTagService.addTags([
         {name: 'description', content: this.blogDetails.url + '\'s wafrn blog'},
         {name: 'author', content: this.blogDetails.url },
-        {name: 'image', content: this.blogDetails.avatar}
+        {name: 'image', content: this.avatarUrl}
       ]);
     this.loading = false;
     }
