@@ -19,7 +19,15 @@ export class EditorService {
 
   constructor(
     private http: HttpClient,
-  ) { }
+  ) {
+    this.launchPostEditorEmitter.subscribe((data)=> {
+      if (data.action != Action.None) {
+        this.launchPostEditorEmitter.next({
+          action: Action.None
+        })
+      }
+    })
+  }
 
   async createPost(content: string, captchaKey: string,privacy: number, tags?: string, idPostToReblog?: string): Promise<boolean> {
     let success: boolean = false;
