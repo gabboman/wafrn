@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
+import { first } from 'rxjs/operators';
 import { MessageService } from 'primeng/api';
 import { LoginService } from 'src/app/services/login.service';
 import { environment } from 'src/environments/environment';
@@ -53,7 +54,9 @@ export class RegisterComponent implements OnInit {
 
   async onSubmit(){
     this.loading = true;
-    this.loginForm.controls['captchaResponse'].patchValue(await this.recaptchaV3Service.execute('importantAction').toPromise())
+    this.recaptchaV3Service.execute('importantAction').pipe(first()).subscribe((captchaResponse: string) => {
+      this.loginForm.controls['captchaResponse'].patchValue(captchaResponse);
+    });
       try {
 
         let petition = await this.loginService.register(this.loginForm, this.img);
