@@ -54,9 +54,8 @@ export class RegisterComponent implements OnInit {
 
   async onSubmit(){
     this.loading = true;
-    this.recaptchaV3Service.execute('importantAction').pipe(first()).subscribe((captchaResponse: string) => {
+    this.recaptchaV3Service.execute('register').pipe(first()).subscribe(async (captchaResponse: string) => {
       this.loginForm.controls['captchaResponse'].patchValue(captchaResponse);
-    });
       try {
 
         let petition = await this.loginService.register(this.loginForm, this.img);
@@ -70,9 +69,10 @@ export class RegisterComponent implements OnInit {
       } catch (exception) {
         this.messages.add({severity:'error', summary:'Something failed!', detail:'Something has failed. Check your internet connection or try again later'});
       }
-      
+
 
     this.loading = false;
+    });
   }
 
   imgSelected(filePickerEvent: any){

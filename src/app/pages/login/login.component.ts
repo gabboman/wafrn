@@ -43,7 +43,7 @@ export class LoginComponent implements OnInit {
 
   async onSubmit(){
     this.loading = true;
-    this.loginForm.controls['captchaResponse'].patchValue(await this.recaptchaV3Service.execute('importantAction').toPromise());
+    this.loginForm.controls['captchaResponse'].patchValue(await this.recaptchaV3Service.execute('login').toPromise());
     try {
       let login = await this.loginService.logIn(this.loginForm);
       if(!login) {

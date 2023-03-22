@@ -116,7 +116,7 @@ export class PostComponent implements OnInit {
 
   async quickReblog() {
     this.reblogging = true;
-    this.captchaResponse = await this.recaptchaV3Service.execute('importantAction').toPromise();
+    this.captchaResponse = await this.recaptchaV3Service.execute('quick_reblog').toPromise();
     if(this.captchaResponse) {
       let response = await this.editor.createPost('', this.captchaResponse, 0,  '',this.post[this.post.length - 1].id );
       if(response) {
@@ -157,7 +157,7 @@ export class PostComponent implements OnInit {
           label: "Share this post",
           title: "Copy the link of the post to the clipboard",
           icon: 'pi pi-share-alt',
-          command: () => this.sharePost(content.id) 
+          command: () => this.sharePost(content.id)
         },
       ];
       const loggedInButtons = [
@@ -170,7 +170,7 @@ export class PostComponent implements OnInit {
             post: content
           })
         },
-        content.userId == this.myId ? 
+        content.userId == this.myId ?
         {
           label: "Delete",
           title: "Open the delete panel for this post",
@@ -187,9 +187,9 @@ export class PostComponent implements OnInit {
         }
       ]
       this.buttonItems[content.id] = this.userLoggedIn ? buttonsForFragment.concat(loggedInButtons) :  buttonsForFragment;
-      
+
     }
-    
+
   }
 
   expandPost() {
@@ -204,7 +204,7 @@ export class PostComponent implements OnInit {
     this.originalPostContent.forEach(elem => {
       elem.content_warning = ''
     })
-    
+
   }
 
 }

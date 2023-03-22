@@ -109,7 +109,7 @@ export class PostEditorComponent implements OnInit, OnDestroy {
   postBeingSubmitted = false;
   async submitPost() {
     this.postBeingSubmitted = true;
-    this.captchaResponse =  await this.recaptchaV3Service.execute('importantAction').toPromise();
+    this.captchaResponse =  await this.recaptchaV3Service.execute('create_post').toPromise();
     let tagsToSend = '';
     this.tags.forEach((elem) => {
       tagsToSend = tagsToSend + elem.trim() + ',';
