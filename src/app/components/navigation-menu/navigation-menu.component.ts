@@ -36,7 +36,7 @@ export class NavigationMenuComponent implements OnInit {
       }
     });
     this.checkMenu({
-      url: '/' + this.activatedRoute.snapshot.url.toString(),
+      url: `/${this.activatedRoute.snapshot.url.toString()}`,
       urlAfterRedirects: '',
       id: -1,
       type: 1

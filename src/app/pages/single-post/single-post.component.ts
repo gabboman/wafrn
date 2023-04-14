@@ -41,7 +41,7 @@ export class SinglePostComponent implements OnInit {
       const lastPostFragment = this.post[this.post.length -1];
       if(lastPostFragment) {
         this.postFound = true;
-        this.seoService.setSEOTags('Wafrn - Post by ' + lastPostFragment.user.url, 'Wafrn post by ' + lastPostFragment.user.url + ': ' + this.postService.getPostContentSanitized(lastPostFragment.content), lastPostFragment.user.url, this.getImage(this.post));
+        this.seoService.setSEOTags(`Wafrn - Post by ${lastPostFragment.user.url}`, `Wafrn post by ${lastPostFragment.user.url}: ${this.postService.getPostContentSanitized(lastPostFragment.content)}`, lastPostFragment.user.url, this.getImage(this.post));
       } else {
         this.postFound = false;
       }
@@ -63,7 +63,7 @@ export class SinglePostComponent implements OnInit {
       for (let i = 0; i < firstPostMedias.length; i++){
         const mp4 = firstPostMedias[i].url.toLowerCase().endsWith('mp4');
         const nsfw = firstPostMedias[i].NSFW
-        if(!mp4 && !nsfw){
+        if(!(mp4 || nsfw)){
           res = firstPostMedias[i].url;
           break;
         }
@@ -75,7 +75,7 @@ export class SinglePostComponent implements OnInit {
       for (let i = 0; i < lastPostMedias.length; i++){
         const mp4 = lastPostMedias[i].url.toLowerCase().endsWith('mp4');
         const nsfw = lastPostMedias[i].NSFW
-        if(!mp4 && !nsfw){
+        if(!(mp4 || nsfw)){
           res = lastPostMedias[i].url;
           break;
         }

@@ -28,7 +28,7 @@ export class ReportService {
         postId : post[post.length -1].id
       }
 
-      const response = await this.http.post(environment.baseUrl + '/reportPost', formData).toPromise();
+      const response = await this.http.post(`${environment.baseUrl}/reportPost`, formData).toPromise();
       success = true;
 
     } catch (error) {
@@ -48,7 +48,7 @@ export class ReportService {
       const formData = {
         userId: id
       }
-      const response = await this.http.post(environment.baseUrl + '/block', formData).toPromise();
+      const response = await this.http.post(`${environment.baseUrl}/block`, formData).toPromise();
       success = true;
     } catch (error) {
       console.error(error)

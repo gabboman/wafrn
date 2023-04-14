@@ -50,12 +50,12 @@ export class DashboardComponent implements OnInit {
     if(this.router.url.endsWith('private')) {
       this.level = 10;
     }
-    if(!this.jwtService.tokenValid() && !(this.router.url.endsWith('explore') || this.router.url.endsWith('exploreLocal'))) {
+    if(!(this.jwtService.tokenValid() || (this.router.url.endsWith('explore') || this.router.url.endsWith('exploreLocal')))) {
       localStorage.clear();
       this.router.navigate(['/']);
     }
     this.postService.updateFollowers.subscribe( () => {
-      if(this.postService.followedUserIds.length === 1 && !(this.level == 0 || this.level == 10) ){
+      if(this.postService.followedUserIds.length === 1 && !(this.level === 0 || this.level === 10) ){
         // if the user follows NO ONE we take them to the explore page!
         this.messages.add({ severity: 'info', summary: 'You aren\'t following anyone, so we took you to the explore page' });
         this.router.navigate(['/dashboard/explore']);
@@ -74,7 +74,7 @@ export class DashboardComponent implements OnInit {
     }
     let allFragmentsSeen = true;
     post.forEach(component => {
-      const thisFragmentSeen = this.viewedPostsIds.indexOf(component.id) !== -1 ||  component.content == '';
+      const thisFragmentSeen = this.viewedPostsIds.indexOf(component.id) !== -1 ||  component.content === '';
       allFragmentsSeen =  thisFragmentSeen && allFragmentsSeen;
       if(!thisFragmentSeen) {
         this.viewedPostsIds.push(component.id)
@@ -103,7 +103,7 @@ export class DashboardComponent implements OnInit {
     });
 }
 
-  
+
 
   async loadPosts(page: number) {
 
@@ -128,8 +128,9 @@ export class DashboardComponent implements OnInit {
         medias: [],
         tags: [],
         notes: 0,
+        remotePostId: '',
         privacy: 0
-        
+
       }]);
     }
     tmpPosts.forEach(post => {

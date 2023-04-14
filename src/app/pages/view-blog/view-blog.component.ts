@@ -63,9 +63,9 @@ export class ViewBlogComponent implements OnInit {
       this.blogDetails = blogResponse;
     await this.loadPosts(this.currentPage);
     this.avatarUrl = this.blogDetails.url.startsWith('@') ? environment.externalCacheurl + encodeURIComponent(this.blogDetails.avatar) : environment.baseMediaUrl + this.blogDetails.avatar
-    this.titleService.setTitle(this.blogDetails.url + '\'s wafrn blog');
+    this.titleService.setTitle(`${this.blogDetails.url}\'s wafrn blog`);
       this.metaTagService.addTags([
-        {name: 'description', content: this.blogDetails.url + '\'s wafrn blog'},
+        {name: 'description', content: `${this.blogDetails.url}\'s wafrn blog`},
         {name: 'author', content: this.blogDetails.url },
         {name: 'image', content: this.avatarUrl}
       ]);

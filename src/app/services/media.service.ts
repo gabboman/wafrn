@@ -28,7 +28,7 @@ export class MediaService {
 
   ) {
     if (
-      localStorage.getItem('disableNSFWFilter') == "true"
+      localStorage.getItem('disableNSFWFilter') === "true"
       && this.jwtService.tokenValid() && this.checkAge()) {
         this.disableNSFWFilter = true;
 
@@ -97,7 +97,7 @@ export class MediaService {
     payload = payload.set('description', description);
     payload = payload.set('NSFW', nsfw);
     payload = payload.set('adultContent', adult)
-    let response = await this.http.get(environment.baseUrl + '/updateMedia', {params: payload}).toPromise();
+    let response = await this.http.get(`${environment.baseUrl}/updateMedia`, {params: payload}).toPromise();
     return response;
 
   }

@@ -61,7 +61,7 @@ export class ReportPostComponent implements OnInit {
   async submit() {
     if(this.postToReport) {
       const reportDone = this.reportService.reportPost(this.postToReport, this.reportForm);
-      if(this.reportForm.value['block'].length == 1){
+      if(this.reportForm.value['block'].length === 1){
         const userBlocked = this.reportService.blockUser(this.postToReport[this.postToReport.length -1].userId);
         Promise.all([reportDone, userBlocked]);
       }

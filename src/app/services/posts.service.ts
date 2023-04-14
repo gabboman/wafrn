@@ -35,7 +35,7 @@ export class PostsService {
       let followsAndBlocks = await this.http.get<{
         followedUsers: string[],
         blockedUsers: string[]
-      }>(environment.baseUrl + '/getFollowedUsers').toPromise()
+      }>(`${environment.baseUrl}/getFollowedUsers`).toPromise()
       if (followsAndBlocks) {
         this.followedUserIds = followsAndBlocks.followedUsers;
         this.blockedUserIds = followsAndBlocks.blockedUsers;
@@ -50,7 +50,7 @@ export class PostsService {
       userId: id
     }
     try {
-      let response = await this.http.post<{ success: boolean }>(environment.baseUrl + '/follow', payload).toPromise();
+      let response = await this.http.post<{ success: boolean }>(`${environment.baseUrl}/follow`, payload).toPromise();
       await this.loadFollowers();
       res = response?.success === true;
     } catch (exception) {
@@ -66,7 +66,7 @@ export class PostsService {
       userId: id
     }
     try {
-      let response = await this.http.post<{ success: boolean }>(environment.baseUrl + '/unfollow', payload).toPromise();
+      let response = await this.http.post<{ success: boolean }>(`${environment.baseUrl}/unfollow`, payload).toPromise();
       await this.loadFollowers();
       res = response?.success === true;
     } catch (exception) {
@@ -81,10 +81,10 @@ export class PostsService {
     const notes = rawPost.notes;
     if (rawPost.ancestors) {
       rawPost.ancestors.forEach((post: RawPost) => {
-        result.push({...post, notes: notes});
+        result.push({...post, remotePostId: post.remotePostId? post.remotePostId : `${environment.frontUrl}/post/${post.id}` , notes: notes});
       });
       result = result.sort((a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime());
-      result.push({...rawPost, notes: notes});
+      result.push({...rawPost, remotePostId: rawPost.remotePostId? rawPost.remotePostId : `${environment.frontUrl}/post/${rawPost.id}`, notes: notes});
     }
     result.forEach(val => {
       this.mediaService.addMediaToMap(val);
@@ -123,11 +123,11 @@ export class PostsService {
     if (youtubeLinks) {
       Array.from(youtubeLinks).forEach(youtubeString => {
         // some exception, like when its on a href or stuff
-            const newString = '<app-wafrn-youtube-player video="' + youtubeString[6] + '"></app-wafrn-youtube-player>';
+            const newString = `<app-wafrn-youtube-player video="${youtubeString[6]}"></app-wafrn-youtube-player>`;
             sanitized = sanitized.replace(youtubeString[0], newString);
         });
       }
-    
+
 
 
     sanitized.match(this.wafrnMediaRegex)?.forEach((media) => {
@@ -148,12 +148,12 @@ export class PostsService {
       replacementsWafrnMentions.push({ wafrnMentionstringToReplace: mention, url: this.mediaService.mentionsMap[id]?.user.url });
     });
     replacementsWafrnMedia.forEach(replacement => {
-      const replacementString = '<app-wafrn-media id="' + replacement.id + '" > </app-wafrn-media>'
+      const replacementString = `<app-wafrn-media id="${replacement.id}" > </app-wafrn-media>`
       sanitized = sanitized.replace(replacement.wafrnMediaStringToReplace, replacementString);
     });
 
     replacementsWafrnMentions.forEach(replacement => {
-      const replacementString = '<a href="/blog/' + sanitizeHtml(replacement.url) + '" >@' + sanitizeHtml(replacement.url.startsWith('@') ? replacement.url.substring(1): replacement.url) +'</a>'
+      const replacementString = `<a href="/blog/${sanitizeHtml(replacement.url)}" >@${sanitizeHtml(replacement.url.startsWith('@') ? replacement.url.substring(1): replacement.url)}</a>`
       sanitized = sanitized.replace(replacement.wafrnMentionstringToReplace, replacement.url ? replacementString: '_error_in_mention_');
     });
 
@@ -166,7 +166,7 @@ export class PostsService {
     let res = false;
     processedPost.forEach(fragment => {
       if (
-        this.blockedUserIds.indexOf(fragment.userId) != -1
+        this.blockedUserIds.indexOf(fragment.userId) !== -1
       ) {
         res = true;
       }

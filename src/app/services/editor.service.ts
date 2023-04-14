@@ -21,7 +21,7 @@ export class EditorService {
     private http: HttpClient,
   ) {
     this.launchPostEditorEmitter.subscribe((data)=> {
-      if (data.action != Action.None) {
+      if (data.action !== Action.None) {
         this.launchPostEditorEmitter.next({
           action: Action.None
         })
@@ -39,7 +39,7 @@ export class EditorService {
         tags: tags,
         privacy: privacy
       };
-      let petitionResponse: any = await this.http.post(this.base_url + '/createPost', formdata).toPromise();
+      let petitionResponse: any = await this.http.post(`${this.base_url}/createPost`, formdata).toPromise();
       success = petitionResponse.id;
 
     } catch (exception) {
@@ -57,7 +57,7 @@ export class EditorService {
       payload.append('files', img);
       payload.append('description', description);
       payload.append('nsfw', nsfw.toString());
-      let petition: any = await this.http.post<Array<WafrnMedia>>(environment.baseUrl + '/uploadMedia',
+      let petition: any = await this.http.post<Array<WafrnMedia>>(`${environment.baseUrl}/uploadMedia`,
        payload).toPromise();
       if (petition) {
         res = petition[0];
@@ -70,6 +70,6 @@ export class EditorService {
   }
 
   async searchUser(url: string) {
-    return await this.http.get(environment.baseUrl + '/userSearch/' + encodeURIComponent(url)).toPromise();
+    return await this.http.get(`${environment.baseUrl}/userSearch/${encodeURIComponent(url)}`).toPromise();
   }
 }

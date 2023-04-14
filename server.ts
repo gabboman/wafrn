@@ -62,7 +62,7 @@ export function app(): express.Express {
 
   // non ssr routes
   server.get(['/dashboard/', '/', '/register', '/recoverPassword'], (req, res) => {
-    res.sendFile(distFolder + '/index.html');
+    res.sendFile(`${distFolder}/index.html`);
   });
 
   // All regular routes that use the Universal engine
@@ -109,7 +109,7 @@ function run(): void {
 // The below code is to ensure that the server is run only when not requiring the bundle.
 declare const __non_webpack_require__: NodeRequire;
 const mainModule = __non_webpack_require__.main;
-const moduleFilename = mainModule && mainModule.filename || '';
+const moduleFilename = mainModule?.filename || '';
 if (moduleFilename === __filename || moduleFilename.includes('iisnode')) {
   run();
 }

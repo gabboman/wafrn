@@ -18,5 +18,7 @@ export interface RawPost {
     postMentionsUserRelations?: WafrnMention[];
     notes:          number;
     privacy:        number;
+    remotePostId?:   string;
+
 
 }

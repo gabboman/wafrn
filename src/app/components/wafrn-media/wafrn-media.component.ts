@@ -70,7 +70,7 @@ export class WafrnMediaComponent implements OnInit {
   private checkIfVideo(){
     let mediaUrl = this.displayUrl.split('.');
 
-    return mediaUrl[mediaUrl.length -1].toLowerCase() == 'mp4';
+    return mediaUrl[mediaUrl.length -1].toLowerCase() === 'mp4';
   }
 
 }

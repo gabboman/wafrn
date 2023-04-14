@@ -32,7 +32,7 @@ export class EditProfileComponent implements OnInit {
 
   async ngOnInit(): Promise<void> {
     const blogDetails = await this.dashboardService.getBlogDetails(this.jwtService.getTokenData()['url']);
-    delete blogDetails['avatar'];
+    blogDetails['avatar'] = undefined;
     this.editProfileForm.patchValue(blogDetails);
     this.editProfileForm.controls['disableNSFWFilter'].patchValue(this.mediaService.checkNSFWFilterDisabled);
     this.loading = false;

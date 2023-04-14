@@ -43,7 +43,7 @@ export class PostEditorComponent implements OnInit, OnDestroy {
   newImageAdult = false;
   newImageFile: File | undefined;
   disableImageUploadButton = false;
-  uploadImageUrl = environment.baseUrl + '/uploadMedia';
+  uploadImageUrl = `${environment.baseUrl}/uploadMedia`;
   @ViewChild('uploadImagesPanel') uploadImagesPanel: any;
 
   // add mention variables
@@ -69,7 +69,7 @@ export class PostEditorComponent implements OnInit, OnDestroy {
 
   ) {
     this.showEditorSubscription = this.editorService.launchPostEditorEmitter.subscribe((elem) => {
-      if (elem.action == Action.New || elem.action == Action.Response) {
+      if (elem.action === Action.New || elem.action === Action.Response) {
         this.privacy = 0;
         this.idPostToReblog = elem.post?.id;
         const inResponseTo = elem.post;
@@ -77,11 +77,11 @@ export class PostEditorComponent implements OnInit, OnDestroy {
         if(inResponseTo) {
           this.privacy = inResponseTo.privacy;
           if(inResponseTo.user.url.startsWith('@')) {
-            this.postCreatorContent = this.postCreatorContent + `[mentionuserid="${inResponseTo.user.id}"]`
+            this.postCreatorContent = `${this.postCreatorContent}[mentionuserid="${inResponseTo.user.id}"]`
           }
           inResponseTo.postMentionsUserRelations?.forEach((mention) => {
             if(mention.user.url.startsWith('@')) {
-              this.postCreatorContent = this.postCreatorContent + `[mentionuserid="${mention.userId}"]`
+              this.postCreatorContent = `${this.postCreatorContent}[mentionuserid="${mention.userId}"]`
             }
           });
         }
@@ -112,7 +112,7 @@ export class PostEditorComponent implements OnInit, OnDestroy {
     this.captchaResponse =  await this.recaptchaV3Service.execute('create_post').toPromise();
     let tagsToSend = '';
     this.tags.forEach((elem) => {
-      tagsToSend = tagsToSend + elem.trim() + ',';
+      tagsToSend = `${tagsToSend}${elem.trim()},`;
     });
     tagsToSend = tagsToSend.slice(0, -1);
     let res = undefined;
@@ -170,11 +170,11 @@ export class PostEditorComponent implements OnInit, OnDestroy {
       let responses = event.originalEvent.body;
       responses.forEach(async (response: any) => {
         if (response) {
-          if(this.newImageDescription != '' || this.newImageNSFW || this.newImageAdult ){
+          if(this.newImageDescription !== '' || this.newImageNSFW || this.newImageAdult ){
             await this.mediaService.updateMedia(response.id, this.newImageDescription, this.newImageNSFW, this.newImageAdult);
           }
           this.fixNullPosting();
-          this.postCreatorContent = this.postCreatorContent + '[wafrnmediaid="' + response.id + '"]'
+          this.postCreatorContent = `${this.postCreatorContent}[wafrnmediaid="${response.id}"]`
         }
       });
       this.newImageDescription = '';
@@ -218,7 +218,7 @@ export class PostEditorComponent implements OnInit, OnDestroy {
   }
 
   mentionUserSelected(selected: any){
-    this.postCreatorContent = this.postCreatorContent + '[mentionuserid="' + selected.id + '"]';
+    this.postCreatorContent = `${this.postCreatorContent}[mentionuserid="${selected.id}"]`;
     this.userSelectionMentionValue = '';
     this.mentionUserSearchPanel.hide();
   }

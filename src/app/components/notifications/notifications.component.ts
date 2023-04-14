@@ -74,7 +74,7 @@ export class NotificationsComponent implements OnInit {
     });
     
     this.numberNotifications = (this.notifications.follows.length + this.notifications.reblogs.length + this.notifications.mentions.length).toString();
-    this.badgeVisible = this.numberNotifications != '0';
+    this.badgeVisible = this.numberNotifications !== '0';
   }
 
 }

@@ -20,8 +20,8 @@ export class WafrnAuthInterceptor implements HttpInterceptor {
   intercept(req: HttpRequest<unknown>, next: HttpHandler): Observable<HttpEvent<unknown>> {
     let authReq = req;
     const token = localStorage.getItem('authToken');
-    if (token != null && req.url.indexOf(environment.baseUrl) != -1) {
-      authReq = req.clone({ headers: req.headers.set('Authorization', 'Bearer ' + token) });
+    if (token != null && req.url.indexOf(environment.baseUrl) !== -1) {
+      authReq = req.clone({ headers: req.headers.set('Authorization', `Bearer ${token}`) });
     }
     return next.handle(authReq).pipe(
       catchError((error: HttpErrorResponse) => {

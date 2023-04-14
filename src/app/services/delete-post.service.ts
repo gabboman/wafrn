@@ -18,6 +18,6 @@ export class DeletePostService {
   public deletePost(id: string): Observable<boolean> {
     let petitionData: HttpParams = new HttpParams();
     petitionData = petitionData.set('id', id);
-    return this.http.delete<boolean>(environment.baseUrl + '/deletePost', {params: petitionData});
+    return this.http.delete<boolean>(`${environment.baseUrl}/deletePost`, {params: petitionData});
   }
 }

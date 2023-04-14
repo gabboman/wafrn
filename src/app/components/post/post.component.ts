@@ -71,7 +71,7 @@ export class PostComponent implements OnInit {
       this.originalPostContent = this.post;
       this.post = this.post.slice(0, environment.shortenPosts);
 
-      if(this.originalPostContent.length == this.post.length) {
+      if(this.originalPostContent.length === this.post.length) {
         this.showFull = true;
       }
     }
@@ -129,8 +129,14 @@ export class PostComponent implements OnInit {
   }
 
   sharePost(id: string) {
-    navigator.clipboard.writeText(environment.frontUrl + '/post/' + id);
+    navigator.clipboard.writeText(`${environment.frontUrl}/post/${id}`);
     this.messages.add({ severity: 'success', summary: 'The post URL was copied to your clipboard!' });
+
+  }
+
+  shareOriginalPost(url: string) {
+    navigator.clipboard.writeText(url);
+    this.messages.add({ severity: 'success', summary: 'The external url has been copied!' });
 
   }
 
@@ -154,10 +160,16 @@ export class PostComponent implements OnInit {
     for (const content of this.post) {
       const buttonsForFragment: MenuItem[] = [
         {
-          label: "Share this post",
-          title: "Copy the link of the post to the clipboard",
+          label: "Share with wafrn",
+          title: "Copy the wafrn url of the post to the clipboard",
           icon: 'pi pi-share-alt',
           command: () => this.sharePost(content.id)
+        },
+        {
+          label: "Share external url",
+          title: "Copy the post external url",
+          icon: 'pi pi-external-link',
+          command: () => this.shareOriginalPost(content.remotePostId)
         },
       ];
       const loggedInButtons = [
@@ -170,7 +182,7 @@ export class PostComponent implements OnInit {
             post: content
           })
         },
-        content.userId == this.myId ?
+        content.userId === this.myId ?
         {
           label: "Delete",
           title: "Open the delete panel for this post",

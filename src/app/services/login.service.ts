@@ -28,7 +28,7 @@ export class LoginService {
   async logIn(loginForm: UntypedFormGroup): Promise<boolean> {
     let success = false;
     try {
-      let petition: any = await this.http.post(environment.baseUrl + '/login', loginForm.value).toPromise();
+      let petition: any = await this.http.post(`${environment.baseUrl}/login`, loginForm.value).toPromise();
       if (petition.success) {
         localStorage.setItem('authToken', petition.token);
         await this.postsService.loadFollowers();
@@ -50,7 +50,7 @@ export class LoginService {
       if ( img ) {
         payload.append('avatar', img);
       }
-      let petition: any = await this.http.post(environment.baseUrl + '/register',
+      let petition: any = await this.http.post(`${environment.baseUrl}/register`,
        payload).toPromise();
       if (petition.success) {
         success = true;
@@ -67,8 +67,8 @@ export class LoginService {
       email: email,
       captchaResponse: captchaResponse
     }
-    let response: any = await this.http.post(environment.baseUrl + '/forgotPassword', payload).toPromise();
-    if(response && response.success) {
+    let response: any = await this.http.post(`${environment.baseUrl}/forgotPassword`, payload).toPromise();
+    if(response?.success) {
       this.router.navigate(['/']);
     }
 
@@ -82,8 +82,8 @@ export class LoginService {
       code: code,
       password: password
     }
-    let response: any = await this.http.post(environment.baseUrl + '/resetPassword', payload).toPromise();
-    if(response && response.success) {
+    let response: any = await this.http.post(`${environment.baseUrl}/resetPassword`, payload).toPromise();
+    if(response?.success) {
       this.router.navigate(['/']);
     }
 
@@ -96,8 +96,8 @@ export class LoginService {
       email: email,
       code: code
     }
-    let response: any = await this.http.post(environment.baseUrl + '/activateUser', payload).toPromise();
-    if(response && response.success) {
+    let response: any = await this.http.post(`${environment.baseUrl}/activateUser`, payload).toPromise();
+    if(response?.success) {
       this.router.navigate(['/']);
     }
 
@@ -111,7 +111,7 @@ export class LoginService {
       if(img){
         payload.append('avatar', img);
       }
-      let petition: any = await this.http.post(environment.baseUrl + '/editProfile',
+      let petition: any = await this.http.post(`${environment.baseUrl}/editProfile`,
        payload).toPromise();
       if (petition.success) {
         success = true;

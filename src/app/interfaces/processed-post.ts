@@ -17,4 +17,5 @@ export interface ProcessedPost {
     postMentionsUserRelations?: WafrnMention[];
     notes:          number;
     privacy:        number;
+    remotePostId:   string;
 }
