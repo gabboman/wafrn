@@ -16,7 +16,7 @@ export class NotificationsComponent implements OnInit {
   badgeVisible = false;
   modalVisible = false;
   buttonReadNotificationsClickable = true;
-  notifications!: { follows: Follower[]; reblogs: Reblog[]; mentions: Reblog[] };
+  notifications!: { follows: Follower[]; reblogs: Reblog[]; mentions: Reblog[], likes: Reblog[] };
   baseMediaUrl = environment.baseMediaUrl;
   mediaCacher = environment.externalCacheurl;
   numberNotifications = '';
@@ -72,7 +72,6 @@ export class NotificationsComponent implements OnInit {
       console.log(res.user.avatar)
       return res;
     });
-    
     this.numberNotifications = (this.notifications.follows.length + this.notifications.reblogs.length + this.notifications.mentions.length).toString();
     this.badgeVisible = this.numberNotifications !== '0';
   }

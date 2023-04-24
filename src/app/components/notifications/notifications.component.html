@@ -38,6 +38,18 @@
       </div>
     </ng-template>
   </p-dataView>
+  <h2 *ngIf="notifications.likes?.length != 0">The new likes you got!</h2>
+  <p-dataView *ngIf="notifications.likes?.length != 0" [value]="notifications.likes">
+    <ng-template let-like pTemplate="listItem">
+      <div class="w-full">
+        <a (click)="modalVisible = false" [routerLink]="'/post/' + like.id ">
+          <img [src]="like.user.avatar" style="max-height: 64px; max-width: 64px;">
+          <div style="font-size:14px;float:right;margin:15px 5px 0 0">{{like.user.url}} has liked one of your
+            posts</div>
+        </a>
+      </div>
+    </ng-template>
+  </p-dataView>
   <p-button [disabled]="!buttonReadNotificationsClickable" (onClick)="readNotifications()"
     label="Mark all my notifications as read" class="w-full"></p-button>
 </p-dialog>

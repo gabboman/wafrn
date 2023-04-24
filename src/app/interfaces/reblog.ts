@@ -5,5 +5,5 @@ export interface Reblog {
     content: string,
     id: string,
     createdAt: string,
-    parentId: string
+    parentId?: string
 }

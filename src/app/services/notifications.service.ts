@@ -17,10 +17,10 @@ export class NotificationsService {
     private jwt: JwtService
   ) { }
 
-  async getNotifications(): Promise<{follows: Follower[], reblogs: Reblog[], mentions: Reblog[]}> {
+  async getNotifications(): Promise<{follows: Follower[], reblogs: Reblog[], mentions: Reblog[], likes: Reblog[]}> {
     this.lastTimeChecked = new Date();
-    let res: {follows: Follower[], reblogs: Reblog[], mentions: Reblog[]} = { follows: [], reblogs: [], mentions: []};
-    const notificaitons: {follows: Follower[], reblogs: Reblog[], mentions: Reblog[]} | undefined = await this.http.get<{follows: Follower[], reblogs: Reblog[], mentions: Reblog[]}>(`${environment.baseUrl}/notifications`, {}).toPromise();
+    let res: {follows: Follower[], reblogs: Reblog[], mentions: Reblog[], likes: Reblog[]} = { follows: [], reblogs: [], mentions: [], likes: []};
+    const notificaitons: {follows: Follower[], reblogs: Reblog[], mentions: Reblog[], likes: Reblog[]} | undefined = await this.http.get<{follows: Follower[], reblogs: Reblog[], mentions: Reblog[], likes: Reblog[]}>(`${environment.baseUrl}/notifications`, {}).toPromise();
     if(notificaitons) {
       res = notificaitons;
       res.reblogs = res.reblogs.filter((elem) => elem.user.id !== this.jwt.getTokenData().userId );
