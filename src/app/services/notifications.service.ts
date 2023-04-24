@@ -20,13 +20,20 @@ export class NotificationsService {
   async getNotifications(): Promise<{follows: Follower[], reblogs: Reblog[], mentions: Reblog[], likes: Reblog[]}> {
     this.lastTimeChecked = new Date();
     let res: {follows: Follower[], reblogs: Reblog[], mentions: Reblog[], likes: Reblog[]} = { follows: [], reblogs: [], mentions: [], likes: []};
-    const notificaitons: {follows: Follower[], reblogs: Reblog[], mentions: Reblog[], likes: Reblog[]} | undefined = await this.http.get<{follows: Follower[], reblogs: Reblog[], mentions: Reblog[], likes: Reblog[]}>(`${environment.baseUrl}/notifications`, {}).toPromise();
+    const notificaitons: {follows: Follower[], reblogs: Reblog[], mentions: Reblog[], likes: any[]} | undefined = await this.http.get<{follows: Follower[], reblogs: Reblog[], mentions: Reblog[], likes: any[]}>(`${environment.baseUrl}/notifications`, {}).toPromise();
     if(notificaitons) {
       res = notificaitons;
       res.reblogs = res.reblogs.filter((elem) => elem.user.id !== this.jwt.getTokenData().userId );
       const postIds = res.reblogs.map((elem) => elem.id);
       res.reblogs = res.reblogs.filter((elem, index) => postIds.indexOf(elem.id) === index);
       res.reblogs = res.reblogs.sort((a, b) => new Date(b.createdAt).getDate() - new Date(a.createdAt).getDate());
+      res.likes = notificaitons.likes.map((elem: any)=> {return {
+        user: elem.user,
+        content: '',
+        id: elem.postId,
+        createdAt: elem.createdAt
+      }
+      })
     }
     return res;
   }
