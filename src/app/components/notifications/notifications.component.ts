@@ -72,7 +72,7 @@ export class NotificationsComponent implements OnInit {
       console.log(res.user.avatar)
       return res;
     });
-    this.numberNotifications = (this.notifications.follows.length + this.notifications.reblogs.length + this.notifications.mentions.length).toString();
+    this.numberNotifications = (this.notifications.follows.length + this.notifications.reblogs.length + this.notifications.mentions.length + this.notifications.likes.length ).toString();
     this.badgeVisible = this.numberNotifications !== '0';
   }
 
