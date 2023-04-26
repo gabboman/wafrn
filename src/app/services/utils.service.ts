@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-import * as sanitizeHtml from 'sanitize-html';
 
 @Injectable({
   providedIn: 'root'

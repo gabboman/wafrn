@@ -26,7 +26,7 @@ export class NavigationMenuComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    
+
     this.router.events.subscribe((ev) => {
       if( ev instanceof NavigationEnd) {
 
@@ -164,7 +164,7 @@ export class NavigationMenuComponent implements OnInit {
           icon: "pi pi-compass",
           title: 'See ALL the posts that are public! Yes, you can be a lurker',
           command: () => this.hideMenu(),
-          routerLink: '/dashboard/explore'
+          routerLink: '/dashboard/localExplore'
         },
         {
           label: 'Search a blog!',

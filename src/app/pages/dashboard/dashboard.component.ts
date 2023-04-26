@@ -55,10 +55,10 @@ export class DashboardComponent implements OnInit {
       this.router.navigate(['/']);
     }
     this.postService.updateFollowers.subscribe( () => {
-      if(this.postService.followedUserIds.length === 1 && !(this.level === 0 || this.level === 10) ){
+      if(this.postService.followedUserIds.length === 1 && this.level === 1  ){
         // if the user follows NO ONE we take them to the explore page!
         this.messages.add({ severity: 'info', summary: 'You aren\'t following anyone, so we took you to the explore page' });
-        this.router.navigate(['/dashboard/explore']);
+        this.router.navigate(['/dashboard/localExplore']);
       }
     } );
     await this.loadPosts(this.currentPage);
