@@ -58,7 +58,7 @@ export class DashboardComponent implements OnInit {
       if(this.postService.followedUserIds.length === 1 && this.level === 1  ){
         // if the user follows NO ONE we take them to the explore page!
         this.messages.add({ severity: 'info', summary: 'You aren\'t following anyone, so we took you to the explore page' });
-        this.router.navigate(['/dashboard/localExplore']);
+        this.router.navigate(['/dashboard/exploreLocal']);
       }
     } );
     await this.loadPosts(this.currentPage);

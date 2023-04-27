@@ -171,7 +171,7 @@ export class NavigationMenuComponent implements OnInit {
           icon: "pi pi-compass",
           title: 'See ALL the posts that are public! Yes, you can be a lurker',
           command: () => this.hideMenu(),
-          routerLink: '/dashboard/localExplore'
+          routerLink: '/dashboard/exploreLocal'
         },
         {
           label: 'Search a blog!',

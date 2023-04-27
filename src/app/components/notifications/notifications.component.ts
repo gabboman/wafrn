@@ -62,20 +62,17 @@ export class NotificationsComponent implements OnInit {
     this.notifications.mentions = this.notifications.mentions.map((mention) => {
       const res = mention;
       res.user.avatar = res.user.url.startsWith('@') ? this.mediaCacher + encodeURIComponent(res.user.avatar): this.baseMediaUrl + res.user.avatar;
-      console.log(res.user.avatar)
       return res;
     });
 
     this.notifications.reblogs = this.notifications.reblogs.map((reblog) => {
       const res = reblog;
       res.user.avatar = res.user.url.startsWith('@') ? this.mediaCacher + encodeURIComponent(res.user.avatar): this.baseMediaUrl + res.user.avatar;
-      console.log(res.user.avatar)
       return res;
     });
     this.notifications.likes = this.notifications.likes.map((like) => {
       const res = like;
       res.user.avatar = res.user.url.startsWith('@') ? this.mediaCacher + encodeURIComponent(res.user.avatar): this.baseMediaUrl + res.user.avatar;
-      console.log(res.user.avatar)
       return res;
     });
     this.numberNotifications = (this.notifications.follows.length + this.notifications.reblogs.length + this.notifications.mentions.length + this.notifications.likes.length ).toString();
