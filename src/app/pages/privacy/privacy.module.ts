@@ -3,15 +3,15 @@ import { CommonModule } from '@angular/common';
 import { PrivacyComponent } from './privacy.component';
 import { CardModule } from 'primeng/card';
 import { Route, RouterModule } from '@angular/router';
-import { NavigationMenuBasicComponent } from 'src/app/components/navigation-menu-basic/navigation-menu-basic.component';
-import { NavigationMenuBasicModule } from 'src/app/components/navigation-menu-basic/navigation-menu-basic.module';
+import { NavigationMenuModule } from 'src/app/components/navigation-menu/navigation-menu.module';
+import { NavigationMenuComponent } from 'src/app/components/navigation-menu/navigation-menu.component';
 
 
 const routes: Route[] = [
 {
 
   path: '',
-  component: NavigationMenuBasicComponent,
+  component: NavigationMenuComponent,
   children: [
     {
       path: '',
@@ -19,7 +19,7 @@ const routes: Route[] = [
     }
   ]
 }
-  
+
 ];
 
 @NgModule({
@@ -29,7 +29,7 @@ const routes: Route[] = [
   imports: [
     CommonModule,
     CardModule,
-    NavigationMenuBasicModule,
+    NavigationMenuModule,
     RouterModule.forChild(routes)
 
   ]
