@@ -1,0 +1,14 @@
+<div *ngFor="let notification of notificationsToShow; let indexOfelement=index;" pDefer (onLoad)="countViewedNotifications(indexOfelement)">
+  <ng-template>
+    <app-single-notification [notification]="notificationsToShow[indexOfelement]"></app-single-notification>
+  </ng-template>
+</div>
+
+<div class="grid pb-6">
+  <div class="col-12 sm:col-12 md:col-12 lg:col-4 margin-auto">
+    <p-card class="flex justify-content-center flex-wrap">
+      <p-progressSpinner class="flex align-items-center justify-content-center "></p-progressSpinner>
+
+    </p-card>
+  </div>
+</div>

@@ -20,6 +20,10 @@ const routes: Routes = [
   loadChildren: () => import ('./pages/search/search.module').then(m => m.SearchModule)
 },
 {
+  path: 'dashboard/notifications',
+  loadChildren: () => import('./pages/notifications/notifications.module').then(m => m.NotificationsModule)
+},
+{
   path: 'dashboard',
   loadChildren: () => import ('./pages/dashboard/dashboard.module').then(m => m.DashboardModule)
 },

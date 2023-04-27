@@ -73,6 +73,13 @@ export class NavigationMenuComponent implements OnInit {
           command: () => {this.editorService.launchPostEditorEmitter.next({action: Action.New}); this.menuVisible = false;}
         },
         {
+          label: 'Notifications',
+          icon: "pi pi-bell",
+          title: 'Check your notifications',
+          command: () => this.hideMenu(),
+          routerLink: '/dashboard/notifications'
+        },
+        {
           label: 'Local explore',
           icon: "pi pi-server",
           title: 'See the local posts of the server!',
@@ -117,7 +124,7 @@ export class NavigationMenuComponent implements OnInit {
         {
           label: 'Privacy policy',
           title: 'Privacy policy',
-          icon: "pi pi-user",
+          icon: "pi pi-eye-slash",
           command: () => this.hideMenu(),
           routerLink: '/privacy'
         },
@@ -176,7 +183,7 @@ export class NavigationMenuComponent implements OnInit {
         {
           label: 'Privacy policy',
           title: 'Privacy policy',
-          icon: "pi pi-user",
+          icon: "pi pi-eye-slash",
           command: () => this.hideMenu(),
           routerLink: '/privacy'
         },

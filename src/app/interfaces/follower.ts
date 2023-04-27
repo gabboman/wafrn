@@ -1,4 +1,5 @@
 export interface Follower {
     url: string,
-    avatar: string
+    avatar: string,
+    createdAt: Date
 }

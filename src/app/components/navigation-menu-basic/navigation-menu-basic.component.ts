@@ -42,7 +42,7 @@ export class NavigationMenuBasicComponent implements OnInit {
     {
       label: 'Privacy policy',
       title: 'Privacy policy',
-      icon: "pi pi-user",
+      icon: "pi pi-eye-slash",
       command: () => this.hideMenu(),
       routerLink: '/privacy'
     },
@@ -65,7 +65,7 @@ export class NavigationMenuBasicComponent implements OnInit {
 
   ngOnInit(): void {
   }
-  
+
   showMenu() {
     this.menuVisible = true;
   }

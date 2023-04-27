@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { environment } from 'src/environments/environment';
 import { Follower } from '../interfaces/follower';
@@ -11,8 +11,8 @@ import { JwtService } from './jwt.service';
 export class NotificationsService {
 
   lastTimeChecked: Date = new Date();
-
-  constructor(
+  notificationsScrollTime: Date = new Date();
+    constructor(
     private http: HttpClient,
     private jwt: JwtService
   ) { }
@@ -36,6 +36,23 @@ export class NotificationsService {
       })
     }
     return res;
+  }
+
+  async getNotificationsScroll(page: number): Promise<{follows: Follower[], reblogs: Reblog[], mentions: Reblog[], likes: Reblog[]}> {
+    if(page === 0) {
+      this.notificationsScrollTime = new Date();
+    }
+    let petitionData: HttpParams = new HttpParams();
+    petitionData = petitionData.set('page', page.toString());
+    petitionData = petitionData.set('startScroll', this.notificationsScrollTime.getTime().toString());
+    const tmp = await this.http.get<{follows: Follower[], reblogs: Reblog[], mentions: Reblog[], likes: Reblog[]}>(`${environment.baseUrl}/notificationsScroll`, {params: petitionData}).toPromise();
+    if(tmp){
+      tmp.follows = tmp.follows.map((follow) => {return {createdAt: new Date(follow.createdAt), url: follow.url, avatar: follow.avatar }});
+      tmp.likes = tmp.likes.map((like)=> {return {user: like.user, content: '', id: like.id, createdAt: new Date(like.createdAt)}});
+      tmp.mentions = tmp.mentions.map((mention)=> {return {user: mention.user, content: '', id: mention.id, createdAt: new Date(mention.createdAt)}});
+      tmp.reblogs = tmp.reblogs.map((reblog)=> {return {user: reblog.user, content: '', id: reblog.id, createdAt: new Date(reblog.createdAt)}});
+    }
+    return tmp ? tmp : { follows: [], reblogs: [], mentions: [], likes: []};
   }
 
   async markNotificationsRead(): Promise<boolean> {
