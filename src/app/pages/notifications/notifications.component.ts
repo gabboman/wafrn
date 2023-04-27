@@ -70,10 +70,15 @@ export class NotificationsComponent implements OnInit {
     processedNotifications = processedNotifications.concat(this.reblogs.map(elem => this.reblogToNotification(elem, NotificationType.REBLOG)))
     processedNotifications = processedNotifications.concat(this.likes.map(elem => this.reblogToNotification(elem, NotificationType.LIKE)))
     processedNotifications.sort((b,a)=> a.date.getTime() - b.date.getTime());
-    this.notificationsToShow.splice(0, this.notificationsToShow.length  + 50 )
-    processedNotifications.forEach(elem => {
-      this.notificationsToShow.push(elem)
-    })
+    if(page === 0) {
+      processedNotifications.forEach(elem => this.notificationsToShow.push(elem))
+    } else {
+      const notSeenNotifications = processedNotifications.slice(this.seen.total + 1)
+      this.notificationsToShow.splice(this.seen.total + 1)
+      notSeenNotifications.forEach(elem => {
+        this.notificationsToShow.push(elem)
+      })
+    }
   }
 
   async countViewedNotifications(index: number) {
