@@ -4,6 +4,7 @@ import { MenuItem } from 'primeng/api';
 import { Action } from 'src/app/interfaces/editor-launcher-data';
 import { EditorService } from 'src/app/services/editor.service';
 import { JwtService } from 'src/app/services/jwt.service';
+import { NotificationsService } from 'src/app/services/notifications.service';
 
 @Component({
   selector: 'app-navigation-menu',
@@ -16,23 +17,30 @@ export class NavigationMenuComponent implements OnInit {
   menuItems: MenuItem[] = [];
   buttonVisible = true;
   menuVisible = false;
+  notifications = '';
 
 
   constructor(
     private editorService: EditorService,
     private router: Router,
     private jwtService: JwtService,
-    private activatedRoute: ActivatedRoute
+    private activatedRoute: ActivatedRoute,
+    private notificationsService: NotificationsService
   ) { }
 
-  ngOnInit(): void {
+  async ngOnInit(): Promise<void> {
 
-    this.router.events.subscribe((ev) => {
+    this.notifications = await this.notificationsService.getUnseenNotifications()
+    //setTimeout(()=> {this.notifications = '420'}, 2500)
+
+    this.router.events.subscribe(async (ev) => {
       if( ev instanceof NavigationEnd) {
 
         this.checkMenu(ev);
-
-
+        this.notifications = await this.notificationsService.getUnseenNotifications();
+        if(this.jwtService.tokenValid()) {
+          this.menuItems[2].badge = this.notifications
+        }
       }
     });
     this.checkMenu({
@@ -77,7 +85,8 @@ export class NavigationMenuComponent implements OnInit {
           icon: "pi pi-bell",
           title: 'Check your notifications',
           command: () => this.hideMenu(),
-          routerLink: '/dashboard/notifications'
+          routerLink: '/dashboard/notifications',
+          badge: this.notifications
         },
         {
           label: 'Local explore',

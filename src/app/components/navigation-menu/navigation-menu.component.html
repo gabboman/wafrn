@@ -1,7 +1,7 @@
-<button pButton *ngIf="buttonVisible" icon="pi pi-bars" 
-type="button" class="p-button-raised p-button-rounded show-sidebar-menu-button"
+<p-button *ngIf="buttonVisible" icon="pi pi-bars" [label]="notifications"
+type="button" class="show-sidebar-menu-button" styleClass="p-button-raised p-button-rounded "
 (click)="showMenu()"
-></button>
+></p-button>
 
 <p-sidebar [(visible)]="menuVisible" [modal]="true">
     <img src="/assets/logo.png" class="w-full">
@@ -17,7 +17,6 @@ type="button" class="p-button-raised p-button-rounded show-sidebar-menu-button"
 
 <app-post-editor></app-post-editor>
 <app-report-post></app-report-post>
-<app-notifications></app-notifications>
 <app-delete-post></app-delete-post>
 <div class="pt-7">
     <router-outlet></router-outlet>

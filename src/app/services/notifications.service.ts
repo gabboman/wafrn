@@ -10,41 +10,51 @@ import { JwtService } from './jwt.service';
 })
 export class NotificationsService {
 
-  lastTimeChecked: Date = new Date();
+  //lastTimeChecked: Date = new Date();
   notificationsScrollTime: Date = new Date();
     constructor(
     private http: HttpClient,
     private jwt: JwtService
   ) { }
 
-  async getNotifications(): Promise<{follows: Follower[], reblogs: Reblog[], mentions: Reblog[], likes: Reblog[]}> {
-    this.lastTimeChecked = new Date();
-    let res: {follows: Follower[], reblogs: Reblog[], mentions: Reblog[], likes: Reblog[]} = { follows: [], reblogs: [], mentions: [], likes: []};
-    const notificaitons: {follows: Follower[], reblogs: Reblog[], mentions: Reblog[], likes: any[]} | undefined = await this.http.get<{follows: Follower[], reblogs: Reblog[], mentions: Reblog[], likes: any[]}>(`${environment.baseUrl}/notifications`, {}).toPromise();
-    if(notificaitons) {
-      res = notificaitons;
-      res.reblogs = res.reblogs.filter((elem) => elem.user.id !== this.jwt.getTokenData().userId );
-      const postIds = res.reblogs.map((elem) => elem.id);
-      res.reblogs = res.reblogs.filter((elem, index) => postIds.indexOf(elem.id) === index);
-      res.reblogs = res.reblogs.sort((a, b) => new Date(b.createdAt).getDate() - new Date(a.createdAt).getDate());
-      res.likes = notificaitons.likes.map((elem: any)=> {return {
-        user: elem.user,
-        content: '',
-        id: elem.postId,
-        createdAt: elem.createdAt
+  async getUnseenNotifications(): Promise<string> {
+    let res = '';
+    let total = 0;
+    try {
+      const lastTimeCheckedString = localStorage.getItem('lastTimeCheckNotifications')
+      const lastTimeChecked = lastTimeCheckedString ? new Date(lastTimeCheckedString) : new Date(0)
+      const notifications = await this.getNotificationsScroll(0, false);
+      total = total + notifications.follows.filter(elem => new Date(elem.createdAt) > lastTimeChecked).length
+      total = total + notifications.reblogs.filter(elem => new Date(elem.createdAt) > lastTimeChecked).length
+      total = total + notifications.mentions.filter(elem => new Date(elem.createdAt) > lastTimeChecked).length
+      total = total + notifications.likes.filter(elem => new Date(elem.createdAt) > lastTimeChecked).length
+      if(total > 0) {
+        res = total.toString();
+        if(total > 10) {
+          res = '10+'
+        }
       }
-      })
+
+    } catch (error) {
+      console.warn('error processing notifications')
     }
+
     return res;
   }
 
-  async getNotificationsScroll(page: number): Promise<{follows: Follower[], reblogs: Reblog[], mentions: Reblog[], likes: Reblog[]}> {
+  async getNotificationsScroll(page: number, resetDate=true): Promise<{follows: Follower[], reblogs: Reblog[], mentions: Reblog[], likes: Reblog[]}> {
+    let dateToCheck = this.notificationsScrollTime;
     if(page === 0) {
-      this.notificationsScrollTime = new Date();
+      if (resetDate && this.notificationsScrollTime) {
+        this.notificationsScrollTime = new Date();
+        dateToCheck = this.notificationsScrollTime;
+      } else {
+        dateToCheck = new Date()
+      }
     }
     let petitionData: HttpParams = new HttpParams();
     petitionData = petitionData.set('page', page.toString());
-    petitionData = petitionData.set('startScroll', this.notificationsScrollTime.getTime().toString());
+    petitionData = petitionData.set('startScroll', dateToCheck.getTime().toString());
     const tmp = await this.http.get<{follows: Follower[], reblogs: Reblog[], mentions: Reblog[], likes: any[]}>(`${environment.baseUrl}/notificationsScroll`, {params: petitionData}).toPromise();
     if(tmp){
       tmp.follows = tmp.follows.map((follow) => {return {createdAt: new Date(follow.createdAt), url: follow.url, avatar: follow.avatar }});
@@ -55,15 +65,4 @@ export class NotificationsService {
     return tmp ? tmp : { follows: [], reblogs: [], mentions: [], likes: []};
   }
 
-  async markNotificationsRead(): Promise<boolean> {
-    let res = false;
-    const payload = {
-      time: this.lastTimeChecked.getTime().toString()
-    }
-    const response = await this.http.post(`${environment.baseUrl}/readNotifications`, payload).toPromise();
-    if(response) {
-      res = true;
-    }
-    return res;
-  }
 }

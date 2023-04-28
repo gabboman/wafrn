@@ -35,7 +35,8 @@ export class NotificationsComponent implements OnInit {
   }
 
   async ngOnInit () : Promise<void> {
-    this.loadNotifications(0);
+    localStorage.setItem('lastTimeCheckNotifications', new Date().toISOString())
+    await this.loadNotifications(0);
   }
 
   async loadNotifications(page: number) {
