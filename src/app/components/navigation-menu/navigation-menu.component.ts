@@ -1,6 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { MenuItem } from 'primeng/api';
+import { Subscription } from 'rxjs';
 import { Action } from 'src/app/interfaces/editor-launcher-data';
 import { EditorService } from 'src/app/services/editor.service';
 import { JwtService } from 'src/app/services/jwt.service';
@@ -11,13 +12,15 @@ import { NotificationsService } from 'src/app/services/notifications.service';
   templateUrl: './navigation-menu.component.html',
   styleUrls: ['./navigation-menu.component.scss']
 })
-export class NavigationMenuComponent implements OnInit {
+export class NavigationMenuComponent implements OnInit, OnDestroy {
 
 
   menuItems: MenuItem[] = [];
   buttonVisible = true;
   menuVisible = false;
   notifications = '';
+
+  navigationSubscription: Subscription;
 
 
   constructor(
@@ -26,23 +29,25 @@ export class NavigationMenuComponent implements OnInit {
     private jwtService: JwtService,
     private activatedRoute: ActivatedRoute,
     private notificationsService: NotificationsService
-  ) { }
-
-  async ngOnInit(): Promise<void> {
-
-    this.notifications = await this.notificationsService.getUnseenNotifications()
-    //setTimeout(()=> {this.notifications = '420'}, 2500)
-
-    this.router.events.subscribe(async (ev) => {
+  ) {
+    this.navigationSubscription = this.router.events.subscribe(async (ev) => {
       if( ev instanceof NavigationEnd) {
-
         this.checkMenu(ev);
-        this.notifications = await this.notificationsService.getUnseenNotifications();
         if(this.jwtService.tokenValid()) {
+          this.notifications = await this.notificationsService.getUnseenNotifications();
+          this.notifications = ev.url === '/dashboard/notifications' ? '' : this.notifications
           this.menuItems[2].badge = this.notifications
         }
       }
     });
+  }
+
+
+  async ngOnInit(): Promise<void> {
+
+    this.notifications = await this.notificationsService.getUnseenNotifications()
+
+
     this.checkMenu({
       url: `/${this.activatedRoute.snapshot.url.toString()}`,
       urlAfterRedirects: '',
@@ -50,6 +55,10 @@ export class NavigationMenuComponent implements OnInit {
       type: 1
     })
 
+  }
+
+  ngOnDestroy(): void {
+    this.navigationSubscription.unsubscribe();
   }
 
   showMenu() {
