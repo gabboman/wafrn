@@ -56,7 +56,7 @@ export class NotificationsComponent implements OnInit {
     const allNotifications = await this.notificationsService.getNotificationsScroll(page);
     this.follows = this.follows.concat(allNotifications.follows);
     this.mentions = this.mentions.concat(allNotifications.mentions);
-    this.reblogs = this.reblogs.concat(allNotifications.reblogs.filter((reblog)=> this.mentions.indexOf(reblog) === -1))
+    this.reblogs = this.reblogs.concat(allNotifications.reblogs.filter((reblog)=> this.mentions.map(mention => mention.id).indexOf(reblog.id) === -1))
     this.likes = this.likes.concat(allNotifications.likes)
     let processedNotifications: UserNotifications[] = this.follows.map((follow)=> {return {
       type: NotificationType.FOLLOW,
