@@ -9,11 +9,11 @@
   RewriteRule (.*) https://%{HTTP_HOST}%{REQUEST_URI} [R=301,L]
 
   # Redirection of requests to index.html
-  RewriteCond %{DOCUMENT_ROOT}%{REQUEST_URI} -f [OR]
-  RewriteCond %{DOCUMENT_ROOT}%{REQUEST_URI} -d
-  RewriteRule ^.*$ - [NC,L]
-  # Redirect all non-file routes to index.html
-  RewriteRule ^(?!.*\.).*$ index.html [NC,L]
+  RewriteBase /
+  RewriteRule ^index\.html$ - [L]
+  RewriteCond %{REQUEST_FILENAME} !-f
+  RewriteCond %{REQUEST_FILENAME} !-d
+  RewriteRule . /index.html [L]
 </IfModule>
 
 # Disable browser caching for all files that don't get a hash string by Angular.
