@@ -43,6 +43,9 @@ export class NotificationsService {
   }
 
   async getNotificationsScroll(page: number, resetDate=true): Promise<{follows: Follower[], reblogs: Reblog[], mentions: Reblog[], likes: Reblog[]}> {
+    if (!this.jwt.tokenValid()) {
+      return {follows: [], reblogs: [], mentions: [], likes: []}
+    }
     let dateToCheck = this.notificationsScrollTime;
     if(page === 0) {
       if (resetDate && this.notificationsScrollTime) {
