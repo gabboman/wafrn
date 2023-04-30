@@ -31,7 +31,7 @@ export class PostEditorComponent implements OnInit, OnDestroy {
   privacyOptions = [
     {level: 0, name: 'Public'},
     {level: 1, name: 'Followers only'},
-    {level: 10, name: 'Only mentioned users (Private message)'},
+    {level: 10, name: 'Direct Message (ATTENTION: ADMINS CAN READ PRIVATE MESSAGES)'},
   ]
   idPostToReblog: string | undefined;
   editorVisible: boolean = false;

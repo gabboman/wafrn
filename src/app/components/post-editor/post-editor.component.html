@@ -8,7 +8,9 @@
   <h2 *ngIf="idPostToReblog">
     You are reblogging the post. Your followers will see the full thread with your reply on it
   </h2>
-
+  <div class="mt-4 mb-2">
+    <input [(ngModel)]="contentWarning" pInputText class="w-full" placeholder="Content warning">
+  </div>
   <p-overlayPanel #uploadImagesPanel>
     <div>
       <label for="description" class="block text-900 font-medium mb-2">Images description</label>
@@ -82,22 +84,8 @@
   </quill-editor>
   <p-tag severity="danger" *ngIf="postCreatorContent?.indexOf('<img') !== -1"   value="You seem to have pasted images in the editor. The image will NOT be visible once you post. Please use the upload tool on the top bar of the editor"></p-tag>
   <p-tag severity="warning" *ngIf="postCreatorContent?.indexOf('@') !== -1"  value="To mention a user do not just write @username, use the mention tool on the top of the editor"></p-tag>
+  <p-chips class="p-fluid" [(ngModel)]="tags" separator="," placeholder="Tags separated by commas. LOCAL ONLY"></p-chips>
   <div class="mt-4 mb-2">
-    <label>
-      Content warning: if you consider what you speak about in the post requires a warning before reading, this is the place to tell people
-    </label>
-    <input [(ngModel)]="contentWarning" pInputText class="w-full">
-  </div>
-  <div class="mt-4 mb-2">
-    <label>
-      Tags (comma separated). Attention, tags are still not federated and will not be seen in posts
-    </label>
-  </div>
-  <p-chips class="p-fluid" [(ngModel)]="tags" separator=","></p-chips>
-  <div class="mt-4 mb-2">
-    <label>
-      Privacy level (Attention: the admins can read the private messages, as they are not end to end encrypted)
-    </label><br>
     <p-dropdown class="p-fluid" [options]="privacyOptions" [(ngModel)]="privacy" optionLabel="name"></p-dropdown>
 
   </div>
