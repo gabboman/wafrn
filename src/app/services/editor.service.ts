@@ -29,7 +29,7 @@ export class EditorService {
     })
   }
 
-  async createPost(content: string, captchaKey: string,privacy: number, tags?: string, idPostToReblog?: string): Promise<boolean> {
+  async createPost(content: string, captchaKey: string,privacy: number, tags?: string, idPostToReblog?: string, contentWarning?: string): Promise<boolean> {
     let success: boolean = false;
     try {
       const formdata = {
@@ -37,7 +37,8 @@ export class EditorService {
         captchaKey: captchaKey,
         parent: idPostToReblog,
         tags: tags,
-        privacy: privacy
+        privacy: privacy,
+        content_warning: contentWarning ? contentWarning : ''
       };
       let petitionResponse: any = await this.http.post(`${this.base_url}/createPost`, formdata).toPromise();
       success = petitionResponse.id;

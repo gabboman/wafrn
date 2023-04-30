@@ -32,7 +32,7 @@ export class SearchComponent implements OnInit {
   currentPage = 0;
   loading = false;
 
-  
+
   constructor(
     private dashboardService: DashboardService,
     private messages: MessageService,
@@ -84,7 +84,6 @@ export class SearchComponent implements OnInit {
       this.users.push(user);
       this.avatars[user.url] = user.url.startsWith('@') ? this.cacheurl + encodeURIComponent(user.avatar) : this.baseMediaUrl + user.avatar;
     });
-    console.log(this.avatars)
   }
 
   async countViewedPost() {

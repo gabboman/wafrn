@@ -28,13 +28,18 @@ import { Action } from 'src/app/interfaces/editor-launcher-data';
 })
 export class PostEditorComponent implements OnInit, OnDestroy {
 
+  privacyOptions = [
+    {level: 0, name: 'Public'},
+    {level: 1, name: 'Followers only'},
+    {level: 10, name: 'Only mentioned users (Private message)'},
+  ]
   idPostToReblog: string | undefined;
   editorVisible: boolean = false;
   postCreatorContent: string = '';
   tags: string[] = [];
   captchaResponse: string | undefined;
   captchaKey = environment.recaptchaPublic;
-  privacy = 0;
+  privacy;
   @ViewChild('quill') quill!: QuillEditorComponent;
 
   // upload media variables
@@ -52,6 +57,7 @@ export class PostEditorComponent implements OnInit, OnDestroy {
   baseMediaUrl = environment.baseMediaUrl;
   cacheurl = environment.externalCacheurl;
   userSelectionMentionValue = '';
+  contentWarning = '';
 
   showEditorSubscription: Subscription;
 
@@ -65,17 +71,19 @@ export class PostEditorComponent implements OnInit, OnDestroy {
     private messages: MessageService,
     private mediaService: MediaService,
     private recaptchaV3Service: ReCaptchaV3Service
-
-
   ) {
+    this.privacy = this.privacyOptions[0]
     this.showEditorSubscription = this.editorService.launchPostEditorEmitter.subscribe((elem) => {
       if (elem.action === Action.New || elem.action === Action.Response) {
-        this.privacy = 0;
+        this.privacy = this.privacyOptions[0];
+        this.contentWarning = '';
         this.idPostToReblog = elem.post?.id;
         const inResponseTo = elem.post;
         this.postCreatorContent = '';
         if(inResponseTo) {
-          this.privacy = inResponseTo.privacy;
+          this.contentWarning = inResponseTo.content_warning
+          const parentPrivacy = this.privacyOptions.find(elem => elem.level === inResponseTo.privacy);
+          this.privacy = parentPrivacy ? parentPrivacy : this.privacyOptions[0]
           if(inResponseTo.user.url.startsWith('@')) {
             this.postCreatorContent = `${this.postCreatorContent}[mentionuserid="${inResponseTo.user.id}"]`
           }
@@ -91,14 +99,6 @@ export class PostEditorComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-  }
-
-
-  // editor methods
-
-  newEditor() {
-    this.idPostToReblog = undefined;
-    this.openEditor();
   }
 
 
@@ -118,7 +118,7 @@ export class PostEditorComponent implements OnInit, OnDestroy {
     let res = undefined;
     if (this.captchaResponse) {
       this.fixNullPosting()
-      res = await this.editorService.createPost(this.postCreatorContent, this.captchaResponse, this.privacy, tagsToSend, this.idPostToReblog);
+      res = await this.editorService.createPost(this.postCreatorContent, this.captchaResponse, this.privacy.level, tagsToSend, this.idPostToReblog, this.contentWarning);
     }
     if (res) {
       this.messages.add({
