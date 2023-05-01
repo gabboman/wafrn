@@ -21,6 +21,7 @@ export class NavigationMenuComponent implements OnInit, OnDestroy {
   notifications = '';
 
   navigationSubscription: Subscription;
+  interval: ReturnType<typeof setInterval>;;
 
 
   constructor(
@@ -33,13 +34,12 @@ export class NavigationMenuComponent implements OnInit, OnDestroy {
     this.navigationSubscription = this.router.events.subscribe(async (ev) => {
       if( ev instanceof NavigationEnd) {
         this.checkMenu(ev);
-        if(this.jwtService.tokenValid()) {
-          this.notifications = await this.notificationsService.getUnseenNotifications();
-          this.notifications = ev.url === '/dashboard/notifications' ? '' : this.notifications
-          this.menuItems[2].badge = this.notifications
-        }
+        this.updateNotifications(ev.url)
       }
     });
+    this.interval = setInterval(()=> {
+      this.updateNotifications(this.router.url)
+    }, 60000)
   }
 
 
@@ -220,6 +220,14 @@ export class NavigationMenuComponent implements OnInit, OnDestroy {
           url: "https://patreon.com/wafrn"
         }
       ];
+    }
+  }
+
+  async updateNotifications(url: string) {
+    if(this.jwtService.tokenValid()) {
+      this.notifications = await this.notificationsService.getUnseenNotifications();
+      this.notifications = url === '/dashboard/notifications' ? '' : this.notifications
+      this.menuItems[2].badge = this.notifications
     }
   }
 
