@@ -82,10 +82,11 @@
 
     </div>
   </quill-editor>
-  <p-tag severity="danger" *ngIf="postCreatorContent?.indexOf('<img') !== -1"   value="You seem to have pasted images in the editor. The image will NOT be visible once you post. Please use the upload tool on the top bar of the editor"></p-tag>
-  <p-tag severity="warning" *ngIf="postCreatorContent?.indexOf('@') !== -1"  value="To mention a user do not just write @username, use the mention tool on the top of the editor"></p-tag>
+  <p-tag severity="danger" *ngIf="postCreatorContent && postCreatorContent?.indexOf('<img') !== -1"   value="You seem to have pasted images in the editor. The image will NOT be visible once you post. Please use the upload tool on the top bar of the editor"></p-tag>
+  <p-tag severity="warning" *ngIf="postCreatorContent && postCreatorContent?.indexOf('@') !== -1"  value="To mention a user do not just write @username, use the mention tool on the top of the editor"></p-tag>
   <p-chips class="p-fluid" [(ngModel)]="tags" separator="," placeholder="Tags separated by commas. LOCAL ONLY"></p-chips>
   <div class="mt-4 mb-2">
+    <p-tag class="p-fluid" severity="info" *ngIf="privacy.level === 10"  value="Attention! ADMINS both of your instance and the target instance can read the DMs"></p-tag>
     <p-dropdown class="p-fluid" [options]="privacyOptions" [(ngModel)]="privacy" optionLabel="name"></p-dropdown>
 
   </div>
