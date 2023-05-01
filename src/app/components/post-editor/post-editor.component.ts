@@ -21,6 +21,8 @@ import { QuillEditorComponent } from 'ngx-quill'
 import { ReCaptchaV3Service } from 'ng-recaptcha';
 import { Subscription } from 'rxjs';
 import { Action } from 'src/app/interfaces/editor-launcher-data';
+import 'quill-mention'
+
 @Component({
   selector: 'app-post-editor',
   templateUrl: './post-editor.component.html',
@@ -58,6 +60,39 @@ export class PostEditorComponent implements OnInit, OnDestroy {
   cacheurl = environment.externalCacheurl;
   userSelectionMentionValue = '';
   contentWarning = '';
+
+  modules = {
+    mention: {
+      allowedChars: /^[A-Z0-9a-z_@.]*$/,
+      onSelect: (item: any, insertItem: any) => {
+        item.denotationChar = ''
+        item.value = `[mentionuserid="${item.id}"]`
+        const editor = this.quill.quillEditor
+        insertItem(item)
+        // necessary because quill-mention triggers changes as 'api' instead of 'user'
+        editor.insertText(editor.getLength() - 1, '', 'user')
+      },
+      source: async (searchTerm: string, renderList: any) => {
+        await this.updateMentionsSuggestions(searchTerm)
+        const values = this.mentionSuggestions.map(elem => {return {id: elem.id, value: elem.url, avatar: elem.avatar}})
+
+        if (searchTerm.length === 0) {
+          console.log(renderList)
+          renderList(values, searchTerm)
+        } else {
+          const matches: any = []
+
+          values.forEach((entry) => {
+            if (entry.value.toLowerCase().indexOf(searchTerm.toLowerCase()) !== -1) {
+              matches.push(entry)
+            }
+          })
+          renderList(matches, searchTerm)
+        }
+      }
+    },
+    toolbar: []
+  }
 
   showEditorSubscription: Subscription;
 
@@ -202,9 +237,9 @@ export class PostEditorComponent implements OnInit, OnDestroy {
     });
   }
 
-  async updateMentionsSuggestions(ev: any){
-    if(ev.query){
-      const backendResponse: any = await this.editorService.searchUser(ev.query);
+  async updateMentionsSuggestions(query: string){
+    if(query){
+      const backendResponse: any = await this.editorService.searchUser(query);
       if(backendResponse){
         this.mentionSuggestions = backendResponse.users? backendResponse.users : [];
         this.mentionSuggestions = this.mentionSuggestions.map((user) => {

@@ -41,6 +41,7 @@
               "node_modules/primeflex/primeflex.css",
               "node_modules/quill/dist/quill.snow.css",
               "node_modules/quill/dist/quill.core.css",
+              "node_modules/quill-mention/dist/quill.mention.min.css",
               "src/styles.scss"
             ],
             "scripts": [

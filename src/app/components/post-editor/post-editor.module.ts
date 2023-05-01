@@ -4,7 +4,6 @@ import { PostEditorComponent } from './post-editor.component';
 import { ButtonModule } from 'primeng/button';
 import { ChipsModule } from 'primeng/chips';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { AutoCompleteModule } from 'primeng/autocomplete';
 import { QuillModule } from 'ngx-quill';
 import { OverlayPanelModule } from 'primeng/overlaypanel';
 import { FileUploadModule } from 'primeng/fileupload';
@@ -25,7 +24,6 @@ import { DropdownModule } from 'primeng/dropdown';
     ReactiveFormsModule,
     ButtonModule,
     ChipsModule,
-    AutoCompleteModule,
     QuillModule,
     OverlayPanelModule,
     FileUploadModule,

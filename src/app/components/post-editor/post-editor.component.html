@@ -36,20 +36,10 @@
   </p-overlayPanel>
 
   <p-overlayPanel #mentionUserSearchPanel>
-    <p-autoComplete [(ngModel)]="userSelectionMentionValue"
-     [suggestions]="mentionSuggestions" (onSelect)="mentionUserSelected($event)"
-     (completeMethod)="updateMentionsSuggestions($event)"
-     [dropdown]="true">
-      <ng-template let-suggest pTemplate="item">
-          <div class="w-full">
-              <img [alt]="suggest.url" [src]="suggest.avatar" style="max-height: 3em; max-width: 3em;" />
-              <div>{{suggest.url}}</div>
-          </div>
-      </ng-template>
-    </p-autoComplete>
+    just write @ we are doing cool stuff now
   </p-overlayPanel>
 
-  <quill-editor #quill class="w-full" [(ngModel)]="postCreatorContent" >
+  <quill-editor #quill class="w-full" [(ngModel)]="postCreatorContent"  [modules]="modules" >
     <div quill-editor-toolbar style="border-top-left-radius: 5px; border-top-right-radius: 5px;">
       <select class="ql-size" title="Text Size">
         <option value="small"></option>
@@ -83,7 +73,6 @@
     </div>
   </quill-editor>
   <p-tag severity="danger" *ngIf="postCreatorContent && postCreatorContent?.indexOf('<img') !== -1"   value="You seem to have pasted images in the editor. The image will NOT be visible once you post. Please use the upload tool on the top bar of the editor"></p-tag>
-  <p-tag severity="warning" *ngIf="postCreatorContent && postCreatorContent?.indexOf('@') !== -1"  value="To mention a user do not just write @username, use the mention tool on the top of the editor"></p-tag>
   <p-chips class="p-fluid" [(ngModel)]="tags" separator="," placeholder="Tags separated by commas. LOCAL ONLY"></p-chips>
   <div class="mt-4 mb-2">
     <p-tag class="p-fluid" severity="info" *ngIf="privacy.level === 10"  value="Attention! ADMINS both of your instance and the target instance can read the DMs"></p-tag>

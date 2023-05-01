@@ -84,7 +84,7 @@ a, a:visited {
     opacity: 0.5;
 }
 
-.grecaptcha-badge { 
+.grecaptcha-badge {
     visibility: hidden;
 }
 
@@ -109,4 +109,22 @@ a, a:visited {
 .p-dialog {
     max-width: 768px;
     width: 100%;
+}
+
+.mention {
+  height: unset;
+  width: unset;
+  border-radius: unset;
+  background-color: unset;
+  padding: unset;
+  margin-right: unset;
+  -webkit-user-select: unset;
+  user-select: unset;
+}
+
+.ql-mention-list-item.selected {
+  background-color: #20262e;
+}
+.ql-mention-list-container {
+  background-color: #2a323d;
 }
