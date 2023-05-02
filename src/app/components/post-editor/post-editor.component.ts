@@ -61,7 +61,7 @@ export class PostEditorComponent implements OnInit, OnDestroy {
   cacheurl = environment.externalCacheurl;
   userSelectionMentionValue = '';
   contentWarning = '';
-
+  enablePrivacyEdition = true;
   modules = {
     mention: {
       allowedChars: /^[A-Z0-9a-z_@.]*$/,
@@ -111,6 +111,7 @@ export class PostEditorComponent implements OnInit, OnDestroy {
     this.privacy = this.privacyOptions[0]
     this.showEditorSubscription = this.editorService.launchPostEditorEmitter.subscribe((elem) => {
       if (elem.action === Action.New || elem.action === Action.Response) {
+        this.enablePrivacyEdition = true;
         this.privacy = this.privacyOptions[0];
         this.contentWarning = '';
         this.idPostToReblog = elem.post?.id;
@@ -119,6 +120,9 @@ export class PostEditorComponent implements OnInit, OnDestroy {
         if(inResponseTo) {
           this.contentWarning = inResponseTo.content_warning
           const parentPrivacy = this.privacyOptions.find(elem => elem.level === inResponseTo.privacy);
+          if(parentPrivacy?.level !== 0) {
+            this.enablePrivacyEdition = false;
+          }
           this.privacy = parentPrivacy ? parentPrivacy : this.privacyOptions[0]
           if(inResponseTo.user.url.startsWith('@')) {
             this.postCreatorContent = `${this.postCreatorContent}[mentionuserid="${inResponseTo.user.id}"]`
