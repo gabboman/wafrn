@@ -21,7 +21,6 @@ export class NavigationMenuComponent implements OnInit, OnDestroy {
   notifications = '';
 
   navigationSubscription: Subscription;
-  interval: ReturnType<typeof setInterval>;;
 
 
   constructor(
@@ -37,9 +36,6 @@ export class NavigationMenuComponent implements OnInit, OnDestroy {
         this.updateNotifications(ev.url)
       }
     });
-    this.interval = setInterval(()=> {
-      this.updateNotifications(this.router.url)
-    }, 60000)
   }
 
 
@@ -59,7 +55,6 @@ export class NavigationMenuComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.navigationSubscription.unsubscribe();
-    clearInterval(this.interval)
   }
 
   showMenu() {
@@ -226,8 +221,14 @@ export class NavigationMenuComponent implements OnInit, OnDestroy {
 
   updateNotifications(url: string) {
     if(this.jwtService.tokenValid()) {
+      if(url === '/dashboard/notifications') {
+
+      } else {
+        this.notifications = '';
+        this.menuItems[2].badge = ''
+      }
       this.notificationsService.getUnseenNotifications().then(response => {
-        this.notifications = url === '/dashboard/notifications' ? '' : response
+        this.notifications =  response
         this.menuItems[2].badge = response
       })
 
