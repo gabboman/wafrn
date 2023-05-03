@@ -22,17 +22,13 @@ export class NotificationsService {
     let total = 0;
     try {
       const lastTimeCheckedString = localStorage.getItem('lastTimeCheckNotifications')
-      const lastTimeChecked = lastTimeCheckedString ? new Date(lastTimeCheckedString) : new Date(0)
-      const notifications = await this.getNotificationsScroll(0, false);
-      total = total + notifications.follows.filter(elem => new Date(elem.createdAt) > lastTimeChecked).length
-      total = total + notifications.reblogs.filter(elem => new Date(elem.createdAt) > lastTimeChecked).length
-      total = total + notifications.mentions.filter(elem => new Date(elem.createdAt) > lastTimeChecked).length
-      total = total + notifications.likes.filter(elem => new Date(elem.createdAt) > lastTimeChecked).length
+      const lastTimeChecked = lastTimeCheckedString ? new Date(lastTimeCheckedString) : new Date(1);
+      let petitionData: HttpParams = new HttpParams();
+      petitionData = petitionData.set('startScroll', lastTimeChecked.getTime().toString());
+      const notifications = await this.http.get<{notifications: number}>(`${environment.baseUrl}/notificationsCount`, {params: petitionData}).toPromise();
+      total = notifications ? notifications.notifications : 0;
       if(total > 0) {
         res = total.toString();
-        if(total > 10) {
-          res = '10+'
-        }
       }
 
     } catch (error) {
@@ -67,5 +63,7 @@ export class NotificationsService {
     }
     return tmp ? tmp : { follows: [], reblogs: [], mentions: [], likes: []};
   }
+
+
 
 }

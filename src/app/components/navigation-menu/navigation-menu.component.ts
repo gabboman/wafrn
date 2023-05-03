@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { MenuItem } from 'primeng/api';
 import { Subscription } from 'rxjs';
@@ -28,7 +28,8 @@ export class NavigationMenuComponent implements OnInit, OnDestroy {
     private router: Router,
     private jwtService: JwtService,
     private activatedRoute: ActivatedRoute,
-    private notificationsService: NotificationsService
+    private notificationsService: NotificationsService,
+    private cdr: ChangeDetectorRef
   ) {
     this.navigationSubscription = this.router.events.subscribe(async (ev) => {
       if( ev instanceof NavigationEnd) {
@@ -40,8 +41,6 @@ export class NavigationMenuComponent implements OnInit, OnDestroy {
 
 
   async ngOnInit(): Promise<void> {
-
-    this.notifications = await this.notificationsService.getUnseenNotifications()
 
 
     this.checkMenu({
@@ -219,18 +218,15 @@ export class NavigationMenuComponent implements OnInit, OnDestroy {
     }
   }
 
-  updateNotifications(url: string) {
+  async updateNotifications(url: string) {
     if(this.jwtService.tokenValid()) {
       if(url === '/dashboard/notifications') {
-
-      } else {
         this.notifications = '';
-        this.menuItems[2].badge = ''
+      } else {
+        const response = await this.notificationsService.getUnseenNotifications()
+        this.notifications =  response;
+        console.log(url, this.notifications)
       }
-      this.notificationsService.getUnseenNotifications().then(response => {
-        this.notifications =  response
-        this.menuItems[2].badge = response
-      })
 
     }
   }
