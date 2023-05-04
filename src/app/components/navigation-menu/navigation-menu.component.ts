@@ -33,8 +33,10 @@ export class NavigationMenuComponent implements OnInit, OnDestroy {
   ) {
     this.navigationSubscription = this.router.events.subscribe(async (ev) => {
       if( ev instanceof NavigationEnd) {
-        this.checkMenu(ev);
-        this.updateNotifications(ev.url)
+        console.log('navigationEnd')
+        this.updateNotifications(ev.url).then(()=> {
+          this.checkMenu(ev);
+        })
       }
     });
   }
