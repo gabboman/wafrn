@@ -225,7 +225,6 @@ export class NavigationMenuComponent implements OnInit, OnDestroy {
       } else {
         const response = await this.notificationsService.getUnseenNotifications()
         this.notifications =  response;
-        console.log(url, this.notifications)
       }
 
     }
