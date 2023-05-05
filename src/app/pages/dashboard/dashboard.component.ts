@@ -17,7 +17,6 @@ export class DashboardComponent implements OnInit {
   posts: ProcessedPost[][] = [];
   viewedPostsNumber = 0;
   viewedPostsIds: string[] = [];
-  postsToHideArray: boolean[] = [];
   currentPage= 0;
   level = 1;
 
@@ -66,54 +65,37 @@ export class DashboardComponent implements OnInit {
   }
 
   async countViewedPost(index: number) {
-    const post: ProcessedPost[] = this.posts[index];
     this.viewedPostsNumber++;
     if (this.posts.length - 1 < this.viewedPostsNumber) {
       this.currentPage ++;
       await this.loadPosts(this.currentPage);
     }
-    let allFragmentsSeen = true;
-    post.forEach(component => {
-      const thisFragmentSeen = this.viewedPostsIds.indexOf(component.id) !== -1 ||  component.content === '';
-      allFragmentsSeen =  thisFragmentSeen && allFragmentsSeen;
-      if(!thisFragmentSeen) {
-        this.viewedPostsIds.push(component.id)
-      }
-    });
-    if(allFragmentsSeen) {
-      if(index >= 0) {
-        this.postsToHideArray[index] = true;
-      }
-    }
   }
-
-  generateUUID() { // Public Domain/MIT
-    var d = new Date().getTime();//Timestamp
-    var d2 = ((typeof performance !== 'undefined') && performance.now && (performance.now()*1000)) || 0;//Time in microseconds since page-load or 0 if unsupported
-    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
-        var r = Math.random() * 16;//random number between 0 and 16
-        if(d > 0){//Use timestamp until depleted
-            r = (d + r)%16 | 0;
-            d = Math.floor(d/16);
-        } else {//Use microseconds since page-load if supported
-            r = (d2 + r)%16 | 0;
-            d2 = Math.floor(d2/16);
-        }
-        return (c === 'x' ? r : (r & 0x3 | 0x8)).toString(16);
-    });
-}
-
-
 
   async loadPosts(page: number) {
 
-    let tmpPosts = await this.dashboardService.getDashboardPage(page, this.level);
+    const tmpPosts = await this.dashboardService.getDashboardPage(page, this.level);
+    const filteredPosts = tmpPosts.filter((post: ProcessedPost[]) => {
+      let allFragmentsSeen = true;
+      post.forEach(component => {
+        const thisFragmentSeen = this.viewedPostsIds.indexOf(component.id) !== -1 ||  component.content === '';
+        allFragmentsSeen =  thisFragmentSeen && allFragmentsSeen;
+        if(!thisFragmentSeen) {
+          this.viewedPostsIds.push(component.id)
+        }
+      });
+      return !allFragmentsSeen
+    });
+
+
+    // we do the filtering here to avoid repeating posts. Also by doing it here we avoid flickering
+
     // internal posts, and stuff could be added here.
     // also some ads for RAID SHADOW LEGENDS. This is a joke.
     // but hey if you dont like it you delete that very easily ;D
     if(!this.jwtService.tokenValid()) {
       this.posts.push([{
-        id: this.generateUUID() ,
+        id: '872c9649-5043-460e-a9df-c35a568c8aef' ,
         content_warning: '',
         content: "<p>To fully enjoy this hellsite, please consider joining us, <a href=\"/register\" rel=\"noopener noreferrer\" target=\"_blank\">register into wafrn!</a></p><p><br></p><p>bring your twisted ideas onto others, share recipies of cake that swap the flour for mayo or hot sauce!</p><p><br></p><p><br></p><p>Consider <a href=\"/register\" rel=\"noopener noreferrer\" target=\"_blank\">joining wafrn</a>!</p>",
         createdAt:      new Date(),
@@ -133,10 +115,14 @@ export class DashboardComponent implements OnInit {
 
       }]);
     }
-    tmpPosts.forEach(post => {
-      this.postsToHideArray.push(false);
+    filteredPosts.forEach(post => {
       this.posts.push(post);
-    })
+    });
+    // if we get a lot of filtered posts, we might want to load the next page
+    if(tmpPosts.length > 5  && filteredPosts.length < 5) {
+      this.currentPage = this.currentPage + 1;
+      await this.loadPosts(this.currentPage);
+    }
   }
 
 
