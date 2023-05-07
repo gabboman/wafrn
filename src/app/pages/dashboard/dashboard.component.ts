@@ -39,7 +39,7 @@ export class DashboardComponent implements OnInit {
     ]);
    }
 
-  async ngOnInit(): Promise<void> {
+  ngOnInit(): void {
     if(this.router.url.endsWith('explore')) {
       this.level = 0;
     }
@@ -60,7 +60,7 @@ export class DashboardComponent implements OnInit {
         this.router.navigate(['/dashboard/exploreLocal']);
       }
     } );
-    await this.loadPosts(this.currentPage);
+    this.loadPosts(this.currentPage);
 
   }
 

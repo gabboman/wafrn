@@ -61,7 +61,7 @@ export class PostComponent implements OnInit {
     }
    }
 
-  async ngOnInit(): Promise<void> {
+  ngOnInit(): void {
     this.originalPoster = this.post[this.post.length - 1].user
     this.followedUsers = this.postService.followedUserIds;
     this.postService.updateFollowers.subscribe( () => {

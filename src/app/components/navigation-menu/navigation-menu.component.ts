@@ -31,7 +31,7 @@ export class NavigationMenuComponent implements OnInit, OnDestroy {
     private notificationsService: NotificationsService,
     private cdr: ChangeDetectorRef
   ) {
-    this.navigationSubscription = this.router.events.subscribe(async (ev) => {
+    this.navigationSubscription = this.router.events.subscribe((ev) => {
       if( ev instanceof NavigationEnd) {
         this.updateNotifications(ev.url).then(()=> {
           this.checkMenu(ev);
@@ -41,9 +41,7 @@ export class NavigationMenuComponent implements OnInit, OnDestroy {
   }
 
 
-  async ngOnInit(): Promise<void> {
-
-
+  ngOnInit(): void {
     this.checkMenu({
       url: `/${this.activatedRoute.snapshot.url.toString()}`,
       urlAfterRedirects: '',

@@ -30,13 +30,13 @@ export class EditProfileComponent implements OnInit {
     private messages: MessageService,
   ) { }
 
-  async ngOnInit(): Promise<void> {
-    const blogDetails = await this.dashboardService.getBlogDetails(this.jwtService.getTokenData()['url']);
-    blogDetails['avatar'] = undefined;
-    this.editProfileForm.patchValue(blogDetails);
-    this.editProfileForm.controls['disableNSFWFilter'].patchValue(this.mediaService.checkNSFWFilterDisabled);
-    this.loading = false;
-  
+  ngOnInit(): void {
+    this.dashboardService.getBlogDetails(this.jwtService.getTokenData()['url']).then( blogDetails => {
+      blogDetails['avatar'] = undefined;
+      this.editProfileForm.patchValue(blogDetails);
+      this.editProfileForm.controls['disableNSFWFilter'].patchValue(this.mediaService.checkNSFWFilterDisabled);
+      this.loading = false;
+    })
   }
 
   imgSelected(filePickerEvent: any){

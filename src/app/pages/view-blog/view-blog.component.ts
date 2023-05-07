@@ -37,7 +37,7 @@ export class ViewBlogComponent implements OnInit {
     private router: Router,
     private titleService: Title,
     private metaTagService: Meta
-  ) { 
+  ) {
     this.userLoggedIn = loginService.checkUserLoggedIn();
     // override the route reuse strategy
     this.router.routeReuseStrategy.shouldReuseRoute = function() {
@@ -46,7 +46,7 @@ export class ViewBlogComponent implements OnInit {
 
   }
 
-  async ngOnInit(): Promise<void> {
+  ngOnInit(): void {
     this.followedUsers = this.postService.followedUserIds;
     this.postService.updateFollowers.subscribe( () => {
       this.followedUsers = this.postService.followedUserIds;
@@ -55,22 +55,22 @@ export class ViewBlogComponent implements OnInit {
     if(blogUrl) {
       this.blogUrl = blogUrl;
     }
+    this.dashboardService.getBlogDetails(this.blogUrl).then(blogResponse => {
+      if(blogResponse.success === false){
+        this.found = false;
+      } else {
+        this.blogDetails = blogResponse;
+      this.loadPosts(this.currentPage).then(() => this.loading = false);
+      this.avatarUrl = this.blogDetails.url.startsWith('@') ? environment.externalCacheurl + encodeURIComponent(this.blogDetails.avatar) : environment.baseMediaUrl + this.blogDetails.avatar
+      this.titleService.setTitle(`${this.blogDetails.url}\'s blog`);
+        this.metaTagService.addTags([
+          {name: 'description', content: `${this.blogDetails.url}\'s wafrn blog`},
+          {name: 'author', content: this.blogDetails.url },
+          {name: 'image', content: this.avatarUrl}
+        ]);
+      }
+    })
 
-    const blogResponse =  await this.dashboardService.getBlogDetails(this.blogUrl);
-    if(blogResponse.success === false){
-      this.found = false;
-    } else {
-      this.blogDetails = blogResponse;
-    await this.loadPosts(this.currentPage);
-    this.avatarUrl = this.blogDetails.url.startsWith('@') ? environment.externalCacheurl + encodeURIComponent(this.blogDetails.avatar) : environment.baseMediaUrl + this.blogDetails.avatar
-    this.titleService.setTitle(`${this.blogDetails.url}\'s wafrn blog`);
-      this.metaTagService.addTags([
-        {name: 'description', content: `${this.blogDetails.url}\'s wafrn blog`},
-        {name: 'author', content: this.blogDetails.url },
-        {name: 'image', content: this.avatarUrl}
-      ]);
-    this.loading = false;
-    }
   }
 
   async countViewedPost() {

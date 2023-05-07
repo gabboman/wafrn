@@ -47,7 +47,7 @@ export class SearchComponent implements OnInit {
   };
   }
 
-  async ngOnInit(): Promise<void> {
+  ngOnInit(): void {
     this.followedUsers = this.postService.followedUserIds;
     this.postService.updateFollowers.subscribe( () => {
       this.followedUsers = this.postService.followedUserIds;
@@ -57,7 +57,7 @@ export class SearchComponent implements OnInit {
       this.searchForm.patchValue({
         search: this.activatedRoute.snapshot.paramMap.get('term')
       });
-      await this.submitSearch();
+      this.submitSearch();
     }
 
   }
