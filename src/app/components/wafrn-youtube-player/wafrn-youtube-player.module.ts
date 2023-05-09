@@ -1,7 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { WafrnYoutubePlayerComponent } from './wafrn-youtube-player.component';
-import { YouTubePlayerModule } from '@angular/youtube-player';
 
 
 
@@ -11,8 +10,6 @@ import { YouTubePlayerModule } from '@angular/youtube-player';
   ],
   imports: [
     CommonModule,
-    YouTubePlayerModule,
-
   ],
   exports: [
     WafrnYoutubePlayerComponent

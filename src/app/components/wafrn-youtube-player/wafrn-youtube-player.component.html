@@ -1,3 +1,17 @@
-<div style="width: 100%;">
-    <youtube-player [width]="videoWidth" [height]="videoHeight" [videoId]="video"></youtube-player>
-</div>
+<a [href]="'https://www.youtube.com/watch?v=' + video" target="_blank">
+  <div class="watermark">
+    <!-- Watermark container -->
+    <div class="watermark__inner">
+        <!-- The watermark -->
+        <div class="watermark__body">
+          <img src="/assets/img/youtube_logo.png">
+        </div>
+    </div>
+
+    <img
+     [src]="videoThumbnail"
+      loading="lazy"
+      >
+  </div>
+</a>
+

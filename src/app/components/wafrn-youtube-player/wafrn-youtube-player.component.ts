@@ -1,4 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-wafrn-youtube-player',
@@ -9,41 +10,14 @@ export class WafrnYoutubePlayerComponent implements OnInit {
 
 
   @Input() video!: string;
-  videoWidth: number = 0;
-  videoHeight: number = 0;
+  videoThumbnail = ""
 
-  
+
   constructor() { }
 
   ngOnInit(): void {
-
-    this.onResize();
-
-    window.addEventListener('resize', this.onResize);
-  }
-
-  onResize = (): void => {
-
-    // Automatically expand the video to fit the page up to 1200px x 720px
-
-    //first post width:
-
-    let postWidth = document.getElementsByClassName('wafrn-post')[0]?.clientWidth;
-
-    this.videoWidth = postWidth ? postWidth * 0.85 : 480;
-
-    this.videoHeight = this.videoWidth * 0.6;
-
-    // this.cdr.detectChanges();
+    const remoteThumbnail = `https://img.youtube.com/vi/${this.video}/maxresdefault.jpg`
+    this.videoThumbnail = environment.externalCacheurl + encodeURIComponent(remoteThumbnail)
 
   }
-
-
-
-  ngOnDestroy(): void {
-
-    window.removeEventListener('resize', this.onResize);
-
-  }
-
 }

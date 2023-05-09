@@ -26,7 +26,6 @@
     "@angular/platform-browser-dynamic": "^15.2.8",
     "@angular/platform-server": "^15.2.8",
     "@angular/router": "^15.2.8",
-    "@angular/youtube-player": "15.0.1",
     "@nguniversal/express-engine": "^15.2.1",
     "@typescript-eslint/parser": "^5.9.1",
     "bootstrap": "^4.6.1",
