@@ -16,7 +16,6 @@ export class NavigationMenuComponent implements OnInit, OnDestroy {
 
 
   menuItems: MenuItem[] = [];
-  buttonVisible = true;
   menuVisible = false;
   notifications = '';
 

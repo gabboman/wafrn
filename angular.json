@@ -35,12 +35,41 @@
               "src/.htaccess"
             ],
             "styles": [
-              "node_modules/primeicons/primeicons.css",
-              "node_modules/primeng/resources/themes/bootstrap4-dark-purple/theme.css",
-              "node_modules/primeng/resources/primeng.min.css",
-              "node_modules/quill/dist/quill.snow.css",
-              "node_modules/quill/dist/quill.core.css",
-              "node_modules/quill-mention/dist/quill.mention.min.css",
+              {
+                "input": "node_modules/primeicons/primeicons.css",
+                "inject": false,
+                "bundleName": "primeng-data"
+              },
+              {
+                "input": "node_modules/primeng/resources/themes/bootstrap4-dark-purple/theme.css",
+                "inject": false,
+                "bundleName": "primeng-data"
+              },
+              {
+                "input": "node_modules/primeng/resources/primeng.min.css",
+                "inject": false,
+                "bundleName": "primeng-data"
+              },
+              {
+                "input": "node_modules/primeflex/primeflex.min.css",
+                "inject": false,
+                "bundleName": "primeng-data"
+              },
+              {
+                "input": "node_modules/quill/dist/quill.snow.css",
+                "inject": false,
+                "bundleName": "quill-css"
+              },
+              {
+                "input": "node_modules/quill/dist/quill.core.css",
+                "inject": false,
+                "bundleName": "quill-css"
+              },
+              {
+                "input": "node_modules/quill-mention/dist/quill.mention.min.css",
+                "inject": false,
+                "bundleName": "quill-css"
+              },
               "src/styles.scss"
             ],
             "scripts": [
@@ -51,7 +80,7 @@
               "budgets": [
                 {
                   "type": "initial",
-                  "maximumWarning": "1mb",
+                  "maximumWarning": "768kb",
                   "maximumError": "5mb"
                 },
                 {
