@@ -32,12 +32,6 @@
         <input formControlName="avatar" id="avatar" type="file" accept="image/jpeg,image/png,image/webp,image/gif"
           (change)="imgSelected($event)" pTooltip="Select your avatar" tooltipPosition="top" pInputText
           class="w-full mb-3">
-
-        <div class="mb-3">
-          This site is protected by reCAPTCHA and the Google
-          <a href="https://policies.google.com/privacy">Privacy Policy</a> and
-          <a href="https://policies.google.com/terms">Terms of Service</a> apply.
-        </div>
         <button [disabled]="loading || !loginForm.valid" pButton pRipple label="Register" icon="pi pi-user"
           class="w-full"></button>
       </form>

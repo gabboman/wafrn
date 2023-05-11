@@ -9,7 +9,6 @@ import { WafrnAuthInterceptor } from './interceptors/wafrn-auth.interceptor';
 import { ToastModule } from 'primeng/toast';
 import { MessageService } from 'primeng/api';
 import { environment } from 'src/environments/environment';
-import { RECAPTCHA_V3_SITE_KEY, RecaptchaV3Module } from 'ng-recaptcha';
 import { Router } from "@angular/router";
 import { QuillConfigModule } from "ngx-quill";
 
@@ -20,7 +19,6 @@ import { QuillConfigModule } from "ngx-quill";
   imports: [
     BrowserModule.withServerTransition({ appId: 'serverApp' }),
     BrowserAnimationsModule,
-    RecaptchaV3Module,
     CommonModule,
     FormsModule,
     ReactiveFormsModule,
@@ -37,10 +35,6 @@ import { QuillConfigModule } from "ngx-quill";
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: WafrnAuthInterceptor, multi: true },
     MessageService,
-    {
-      provide: RECAPTCHA_V3_SITE_KEY,
-      useValue: environment.recaptchaPublic,
-    }
   ],
   bootstrap: [AppComponent],
   exports: [

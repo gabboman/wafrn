@@ -4,7 +4,7 @@
 
 export const environment = {
   production: false,
-  recaptchaPublic: '6LcrwQchAAAAADcgr0bLQ45AknhAQLkzX2RYNavT',
+  //recaptchaPublic: '6LcrwQchAAAAADcgr0bLQ45AknhAQLkzX2RYNavT',
   maxUploadSize: '250',
   baseUrl: 'http://localhost:3000/api',
   //baseUrl: 'https://api.wafrn.net/api',

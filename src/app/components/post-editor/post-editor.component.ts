@@ -18,7 +18,6 @@ import {
   environment
 } from 'src/environments/environment';
 import { QuillEditorComponent } from 'ngx-quill'
-import { ReCaptchaV3Service } from 'ng-recaptcha';
 import { Subscription } from 'rxjs';
 import { Action } from 'src/app/interfaces/editor-launcher-data';
 import 'quill-mention'
@@ -40,8 +39,6 @@ export class PostEditorComponent implements OnInit, OnDestroy {
   editorVisible: boolean = false;
   postCreatorContent: string = '';
   tags: string[] = [];
-  captchaResponse: string | undefined;
-  captchaKey = environment.recaptchaPublic;
   privacy;
   @ViewChild('quill') quill!: QuillEditorComponent;
 
@@ -106,7 +103,6 @@ export class PostEditorComponent implements OnInit, OnDestroy {
     private postsService: PostsService,
     private messages: MessageService,
     private mediaService: MediaService,
-    private recaptchaV3Service: ReCaptchaV3Service
   ) {
     this.privacy = this.privacyOptions[0]
     this.showEditorSubscription = this.editorService.launchPostEditorEmitter.subscribe((elem) => {
@@ -149,17 +145,14 @@ export class PostEditorComponent implements OnInit, OnDestroy {
   postBeingSubmitted = false;
   async submitPost() {
     this.postBeingSubmitted = true;
-    this.captchaResponse =  await this.recaptchaV3Service.execute('create_post').toPromise();
     let tagsToSend = '';
     this.tags.forEach((elem) => {
       tagsToSend = `${tagsToSend}${elem.trim()},`;
     });
     tagsToSend = tagsToSend.slice(0, -1);
     let res = undefined;
-    if (this.captchaResponse) {
-      this.fixNullPosting()
-      res = await this.editorService.createPost(this.postCreatorContent, this.captchaResponse, this.privacy.level, tagsToSend, this.idPostToReblog, this.contentWarning);
-    }
+    this.fixNullPosting()
+    res = await this.editorService.createPost(this.postCreatorContent, this.privacy.level, tagsToSend, this.idPostToReblog, this.contentWarning);
     if (res) {
       this.messages.add({
         severity: 'success',
@@ -180,17 +173,6 @@ export class PostEditorComponent implements OnInit, OnDestroy {
 
   closeEditor() {
     this.editorVisible = false;
-  }
-
-  captchaResolved(event: any) {
-    this.postBeingSubmitted = true;
-    this.captchaResponse = event;
-    this.submitPost();
-
-  }
-
-  captchaExpired() {
-    this.captchaResponse = undefined;
   }
 
   fixNullPosting() {

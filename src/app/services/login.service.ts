@@ -61,13 +61,12 @@ export class LoginService {
     return success;
   }
 
-  async requestPasswordReset(email: string, captchaResponse: string) {
-    let res = false;
+  async requestPasswordReset(email: string) {
+    const res = false;
     const payload = {
       email: email,
-      captchaResponse: captchaResponse
     }
-    let response: any = await this.http.post(`${environment.baseUrl}/forgotPassword`, payload).toPromise();
+    const response: any = await this.http.post(`${environment.baseUrl}/forgotPassword`, payload).toPromise();
     if(response?.success) {
       this.router.navigate(['/']);
     }

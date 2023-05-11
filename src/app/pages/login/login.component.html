@@ -29,11 +29,6 @@
           <a routerLink="/recoverPassword"
             class="font-medium no-underline ml-2 text-blue-500 text-right cursor-pointer">Forgot password?</a>
         </div>
-        <div class="mb-3">
-          This site is protected by reCAPTCHA and the Google
-          <a href="https://policies.google.com/privacy">Privacy Policy</a> and
-          <a href="https://policies.google.com/terms">Terms of Service</a> apply.
-        </div>
 
         <button [disabled]="loading || !loginForm.valid" pButton pRipple label="Sign In" icon="pi pi-user"
           class="w-full"></button>

@@ -6,7 +6,6 @@ import { LoginService } from 'src/app/services/login.service';
 import { PostsService } from 'src/app/services/posts.service';
 import { ReportService } from 'src/app/services/report.service';
 import { environment } from 'src/environments/environment';
-import { ReCaptchaV3Service } from 'ng-recaptcha';
 import { DeletePostService } from 'src/app/services/delete-post.service';
 import { SimplifiedUser } from 'src/app/interfaces/simplified-user';
 import { Action } from 'src/app/interfaces/editor-launcher-data';
@@ -35,8 +34,6 @@ export class PostComponent implements OnInit {
   quickReblogPanelVisible = false;
   quickReblogBeingDone = false;
   quickReblogDoneSuccessfully = false;
-  captchaKey = environment.recaptchaPublic;
-  captchaResponse: string | undefined;
   reblogging = false;
   buttonItems: any = [];
   myId: string = '';
@@ -52,7 +49,6 @@ export class PostComponent implements OnInit {
     private editor: EditorService,
     private editorService: EditorService,
     private reportService: ReportService,
-    private recaptchaV3Service: ReCaptchaV3Service,
     private deletePostService: DeletePostService
   ) {
     this.userLoggedIn = loginService.checkUserLoggedIn();
@@ -116,15 +112,12 @@ export class PostComponent implements OnInit {
 
   async quickReblog() {
     this.reblogging = true;
-    this.captchaResponse = await this.recaptchaV3Service.execute('quick_reblog').toPromise();
-    if(this.captchaResponse) {
-      let response = await this.editor.createPost('', this.captchaResponse, 0,  '',this.post[this.post.length - 1].id );
+      const response = await this.editor.createPost('', 0,  '',this.post[this.post.length - 1].id );
       if(response) {
         this.messages.add({ severity: 'success', summary: 'You reblogged the post succesfully' });
       } else {
         this.messages.add({ severity: 'error', summary: 'Something went wrong! Check your internet conectivity and try again' });
       }
-    }
     this.reblogging = false;
   }
 

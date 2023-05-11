@@ -29,12 +29,11 @@ export class EditorService {
     })
   }
 
-  async createPost(content: string, captchaKey: string,privacy: number, tags?: string, idPostToReblog?: string, contentWarning?: string): Promise<boolean> {
+  async createPost(content: string,privacy: number, tags?: string, idPostToReblog?: string, contentWarning?: string): Promise<boolean> {
     let success: boolean = false;
     try {
       const formdata = {
         content: content,
-        captchaKey: captchaKey,
         parent: idPostToReblog,
         tags: tags,
         privacy: privacy,

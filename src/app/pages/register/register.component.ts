@@ -3,8 +3,6 @@ import { UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms
 import { first } from 'rxjs/operators';
 import { MessageService } from 'primeng/api';
 import { LoginService } from 'src/app/services/login.service';
-import { environment } from 'src/environments/environment';
-import { ReCaptchaV3Service } from 'ng-recaptcha';
 
 @Component({
   selector: 'app-register',
@@ -14,7 +12,6 @@ import { ReCaptchaV3Service } from 'ng-recaptcha';
 export class RegisterComponent implements OnInit {
 
 
-  captchaKey = environment.recaptchaPublic;
   loading = false;
 
   minimumRegistrationDate: Date;
@@ -36,8 +33,7 @@ export class RegisterComponent implements OnInit {
 
   constructor(
     private loginService: LoginService,
-    private messages: MessageService,
-    private recaptchaV3Service: ReCaptchaV3Service
+    private messages: MessageService
   ) {
     // minimum age: 14
     this.minimumRegistrationDate = new Date();
@@ -54,25 +50,19 @@ export class RegisterComponent implements OnInit {
 
   async onSubmit(){
     this.loading = true;
-    this.recaptchaV3Service.execute('register').pipe(first()).subscribe(async (captchaResponse: string) => {
-      this.loginForm.controls['captchaResponse'].patchValue(captchaResponse);
-      try {
+    try {
 
-        let petition = await this.loginService.register(this.loginForm, this.img);
-        if(petition) {
-          this.messages.add({severity:'success', summary:'Success!', detail:'Please check your email to activate your account'});
-        } else {
-          this.messages.add({severity:'warn', summary:'Email or url in use', detail:'Email or url already in use!'});
+      let petition = await this.loginService.register(this.loginForm, this.img);
+      if(petition) {
+        this.messages.add({severity:'success', summary:'Success!', detail:'Please check your email to activate your account'});
+      } else {
+        this.messages.add({severity:'warn', summary:'Email or url in use', detail:'Email or url already in use!'});
 
-        }
-
-      } catch (exception) {
-        this.messages.add({severity:'error', summary:'Something failed!', detail:'Something has failed. Check your internet connection or try again later'});
       }
 
-
-    this.loading = false;
-    });
+    } catch (exception) {
+      this.messages.add({severity:'error', summary:'Something failed!', detail:'Something has failed. Check your internet connection or try again later'});
+    }
   }
 
   imgSelected(filePickerEvent: any){
