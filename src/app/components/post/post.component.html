@@ -2,7 +2,7 @@
   <div class="col-12 wafrn-post">
     <p-card>
       <div *ngIf="post.length > 1" class="center-text overflow-hidden">
-        <img [src]="avatars[avatars.length - 1]" class="avatar"/>
+        <img loading="lazy" [src]="avatars[avatars.length - 1]" class="avatar"/>
         <a [routerLink]="'/blog/'+ originalPoster.url">{{originalPoster.url}}</a>
         reblogged
       </div>
@@ -12,7 +12,7 @@
         <div *ngIf="content.content != '' || index == 0 || content.tags.length > 0" class="fragment-header">
           <div class="flex gap-1 md:gap-3 align-items-center" style="width: 100%;">
             <div class="center-text py-2 flex-grow-1 flex-shrink-1 min-w-0">
-              <img [src]="avatars[index]" class="avatar" />
+              <img loading="lazy" [src]="avatars[index]" class="avatar" />
               <a class="max-w-full white-space-nowrap overflow-hidden text-overflow-ellipsis" [routerLink]="'/blog/'+ urls[index]">{{content.user.url}}</a>
             </div>
             <button

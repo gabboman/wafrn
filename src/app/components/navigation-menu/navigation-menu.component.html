@@ -4,13 +4,13 @@ type="button" class="show-sidebar-menu-button" styleClass="p-button-raised p-but
 ></p-button>
 
 <p-sidebar [(visible)]="menuVisible" [modal]="true">
-    <img src="/assets/logo.png" class="w-full">
+    <img  loading="lazy" src="/assets/logo.png" class="w-full">
     <p-panelMenu [model]="menuItems" [style]="{'width':'100%'}"></p-panelMenu>
 </p-sidebar>
 
 <!-- This is a little bit of a dirty trick, should actually check stuff, but fuck it -->
 <p-sidebar [visible]="true" [modal]="false" class="left-menu-hidden-mobile" [showCloseIcon]="false">
-    <img src="/assets/logo.png" class="w-full">
+    <img  loading="lazy" src="/assets/logo.png" class="w-full">
     <p-panelMenu [model]="menuItems" [style]="{'width':'100%'}"></p-panelMenu>
 </p-sidebar>
 

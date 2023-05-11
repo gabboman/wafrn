@@ -31,13 +31,13 @@
 <div class="grid">
   <div [hidden]="!(users && users.length > 0)"
     class="col-12 sm:col-12 md:col-12 lg:col-4 margin-auto pb-6">
-  
+
     <p-carousel [value]="users" [showIndicators]="false">
       <ng-template let-user pTemplate="item">
         <p-card *ngIf="user">
           <div class="product-item-content">
             <div class="p-mb-3  flex justify-content-center">
-              <img [src]="avatars[user.url]" style="max-width: 30vw; max-height: 30vh;">
+              <img loading="lazy" [src]="avatars[user.url]" style="max-width: 30vw; max-height: 30vh;">
             </div>
             <div>
               <h4 class="p-mb-1"><a [routerLink]="'/blog/' + user.url">{{user.url}}</a></h4>
@@ -49,7 +49,7 @@
             </div>
           </div>
         </p-card>
-  
+
       </ng-template>
     </p-carousel>
   </div>

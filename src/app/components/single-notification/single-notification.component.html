@@ -3,7 +3,7 @@
     <a [routerLink]="notification.url">
       <p-card *ngIf="notification.type === notificationType.REBLOG">
         <div class="flex align-items-center">
-          <img [src]="notification.avatar" style="height: 64px; max-width: 64px;">
+          <img loading="lazy" [src]="notification.avatar" style="height: 64px; max-width: 64px;">
           <div class="p-3">
             User {{notification.userUrl}} reblogged one of your posts!
           </div>
@@ -11,7 +11,7 @@
       </p-card>
       <p-card *ngIf="notification.type === notificationType.LIKE">
         <div class="flex align-items-center">
-          <img [src]="notification.avatar" style="height: 64px; max-width: 64px;">
+          <img loading="lazy" [src]="notification.avatar" style="height: 64px; max-width: 64px;">
           <div class="p-3">
             User {{notification.userUrl}} liked one of your posts!
           </div>
@@ -19,7 +19,7 @@
       </p-card>
       <p-card *ngIf="notification.type === notificationType.MENTION">
         <div class="flex align-items-center">
-          <img [src]="notification.avatar" style="height: 64px; max-width: 64px;">
+          <img loading="lazy" [src]="notification.avatar" style="height: 64px; max-width: 64px;">
           <div class="p-3">
             User {{notification.userUrl}} mentioned you in a post!
           </div>
@@ -27,7 +27,7 @@
       </p-card>
       <p-card *ngIf="notification.type === notificationType.FOLLOW">
         <div class="flex align-items-center">
-          <img [src]="notification.avatar" style="height: 64px; max-width: 64px;">
+          <img loading="lazy" [src]="notification.avatar" style="height: 64px; max-width: 64px;">
           <div class="p-3">
             Hoorray! {{notification.userUrl}} now follows you!
           </div>
@@ -35,7 +35,7 @@
       </p-card>
       <p-card *ngIf="notification.type === notificationType.PRIVATE">
         <div class="flex align-items-center">
-          <img [src]="notification.avatar" style="height: 64px; max-width: 64px;">
+          <img loading="lazy" [src]="notification.avatar" style="height: 64px; max-width: 64px;">
           <div class="p-3">
             {{notification.userUrl}} has sent you a private message
           </div>
