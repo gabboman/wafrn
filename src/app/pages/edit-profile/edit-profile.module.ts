@@ -8,23 +8,13 @@ import { CardModule } from 'primeng/card';
 import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
 import { TooltipModule } from 'primeng/tooltip';
-import { NavigationMenuModule } from 'src/app/components/navigation-menu/navigation-menu.module';
-import { NavigationMenuComponent } from 'src/app/components/navigation-menu/navigation-menu.component';
-
-
 
 const routes: Routes = [
-  {
-    path: '',
-    component: NavigationMenuComponent,
-    children: [
       {
         path: '',
         component: EditProfileComponent
       }
-    ]
-  }
-];
+    ];
 
 @NgModule({
   declarations: [
@@ -39,8 +29,7 @@ const routes: Routes = [
     CardModule,
     ButtonModule,
     InputTextModule,
-    TooltipModule,
-    NavigationMenuModule
+    TooltipModule
   ]
 })
 export class EditProfileModule { }

@@ -9,21 +9,13 @@ import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
 import { KeyFilterModule } from 'primeng/keyfilter';
 import { TooltipModule } from 'primeng/tooltip';
-import { NavigationMenuBasicComponent } from 'src/app/components/navigation-menu-basic/navigation-menu-basic.component';
-import { NavigationMenuBasicModule } from 'src/app/components/navigation-menu-basic/navigation-menu-basic.module';
 
 const routes: Routes = [
-  {
-    path: '',
-    component: NavigationMenuBasicComponent,
-    children: [
       {
         path: '',
         component: RegisterComponent
       }
-    ]
-  }
-];
+    ];
 
 @NgModule({
   declarations: [
@@ -39,7 +31,6 @@ const routes: Routes = [
     InputTextModule,
     KeyFilterModule,
     TooltipModule,
-    NavigationMenuBasicModule,
     RouterModule.forChild(routes)
   ]
 })

@@ -10,16 +10,8 @@ import { DeferModule } from 'primeng/defer';
 import { InputTextModule } from 'primeng/inputtext';
 import { ButtonModule } from 'primeng/button';
 import { PostModule } from 'src/app/components/post/post.module';
-import { NavigationMenuModule } from 'src/app/components/navigation-menu/navigation-menu.module';
-import { NavigationMenuComponent } from 'src/app/components/navigation-menu/navigation-menu.component';
-
 
 const routes: Routes = [
-
-  {
-    path: '',
-    component: NavigationMenuComponent,
-    children: [
       {
         path: '',
         component: SearchComponent
@@ -28,9 +20,7 @@ const routes: Routes = [
         path: ':term',
         component: SearchComponent
       }
-    ]
-  }
-];
+    ];
 
 @NgModule({
   declarations: [
@@ -49,8 +39,6 @@ const routes: Routes = [
     ButtonModule,
     DeferModule,
     PostModule,
-    NavigationMenuModule,
-
   ]
 })
 export class SearchModule { }

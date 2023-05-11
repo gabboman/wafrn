@@ -7,25 +7,16 @@ import { CardModule } from 'primeng/card';
 import { ButtonModule } from 'primeng/button';
 import { DeferModule } from 'primeng/defer';
 import { PostModule } from '../../components/post/post.module';
-import { NavigationMenuModule } from 'src/app/components/navigation-menu/navigation-menu.module';
-import { NavigationMenuComponent } from 'src/app/components/navigation-menu/navigation-menu.component';
 import { PagenotfoundModule } from '../pagenotfound/pagenotfound.module';
 
 
 
 const routes: Routes = [
-  {
-    path: '',
-    component: NavigationMenuComponent,
-    children: [
       {
         path: ':url',
         component: ViewBlogComponent
       }
-    ]
-  }
-
-];
+    ];
 
 @NgModule({
   declarations: [
@@ -39,7 +30,6 @@ const routes: Routes = [
     ButtonModule,
     DeferModule,
     PostModule,
-    NavigationMenuModule,
     PagenotfoundModule,
   ]
 })
