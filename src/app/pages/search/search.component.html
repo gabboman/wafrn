@@ -19,14 +19,10 @@
 
 
 
-<div class="grid">
-  <div [hidden]="!(users && users.length > 0)"
-    class="col-12 sm:col-12 md:col-12 lg:col-4 margin-auto pb-6">
-
+<div  [hidden]="!(users && users.length > 0)" class="grid pb-6 lg:px-4 scalein animation-duration-400 wafrn-container" >
     <p-carousel [value]="users" [showIndicators]="false">
       <ng-template let-user pTemplate="item">
         <p-card *ngIf="user">
-          <div class="product-item-content">
             <div class="p-mb-3  flex justify-content-center">
               <img loading="lazy" [src]="avatars[user.url]" style="max-width: 30vw; max-height: 30vh;">
             </div>
@@ -38,12 +34,10 @@
               <button *ngIf="followedUsers.indexOf(user.id) !== -1 && userLoggedIn" pButton pRipple label="Unfollow"
                 class="w-full" (click)="unfollowUser(user.id)"></button>
             </div>
-          </div>
         </p-card>
 
       </ng-template>
     </p-carousel>
-  </div>
 
 </div>
 
