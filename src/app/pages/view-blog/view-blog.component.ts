@@ -1,7 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Meta, Title } from '@angular/platform-browser';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { MessageService } from 'primeng/api';
+import { filter } from 'rxjs';
 import { ProcessedPost } from 'src/app/interfaces/processed-post';
 import { DashboardService } from 'src/app/services/dashboard.service';
 import { LoginService } from 'src/app/services/login.service';
@@ -13,8 +14,7 @@ import { environment } from 'src/environments/environment';
   templateUrl: './view-blog.component.html',
   styleUrls: ['./view-blog.component.scss']
 })
-export class ViewBlogComponent implements OnInit {
-  //TODO try to put the logic of search, viewblog, dashboard, explore in the same thingy
+export class ViewBlogComponent implements OnInit, OnDestroy {
   loading = true;
   found = true;
   viewedPosts = 0;
@@ -25,7 +25,7 @@ export class ViewBlogComponent implements OnInit {
   followedUsers: Array<String> = [];
   userLoggedIn = false;
   avatarUrl = '';
-
+  navigationSubscription: Subscription;
 
 
   constructor(
@@ -39,11 +39,20 @@ export class ViewBlogComponent implements OnInit {
     private metaTagService: Meta
   ) {
     this.userLoggedIn = loginService.checkUserLoggedIn();
-    // override the route reuse strategy
-    this.router.routeReuseStrategy.shouldReuseRoute = function() {
-      return false;
-  };
+    this.navigationSubscription = router.events.pipe(filter(event => event instanceof NavigationEnd)).subscribe((ev)=> {
+      this.loading = true;
+      this.found = true;
+      this.viewedPosts = 0;
+      this.currentPage = 0;
+      this.posts = [];
+      this.blogUrl = '';
+      this.avatarUrl = '';
+      this.ngOnInit()
+    })
 
+  }
+  ngOnDestroy(): void {
+    this.navigationSubscription.unsubscribe();
   }
 
   ngOnInit(): void {
@@ -51,7 +60,7 @@ export class ViewBlogComponent implements OnInit {
     this.postService.updateFollowers.subscribe( () => {
       this.followedUsers = this.postService.followedUserIds;
     } );
-    let blogUrl = this.activatedRoute.snapshot.paramMap.get('url');
+    const blogUrl = this.activatedRoute.snapshot.paramMap.get('url');
     if(blogUrl) {
       this.blogUrl = blogUrl;
     }

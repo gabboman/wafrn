@@ -9,6 +9,7 @@ import { environment } from 'src/environments/environment';
 import { DeletePostService } from 'src/app/services/delete-post.service';
 import { SimplifiedUser } from 'src/app/interfaces/simplified-user';
 import { Action } from 'src/app/interfaces/editor-launcher-data';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-post',
@@ -49,7 +50,8 @@ export class PostComponent implements OnInit {
     private editor: EditorService,
     private editorService: EditorService,
     private reportService: ReportService,
-    private deletePostService: DeletePostService
+    private deletePostService: DeletePostService,
+    private router: Router
   ) {
     this.userLoggedIn = loginService.checkUserLoggedIn();
     if(this.userLoggedIn) {

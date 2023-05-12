@@ -43,6 +43,12 @@ export class LoginService {
     return success;
   }
 
+  logOut() {
+    localStorage.clear();
+    this.router.navigate(['/']);
+    this.logingEventEmitter.emit('logged out')
+  }
+
   async register(registerForm: UntypedFormGroup, img: File | null): Promise<boolean> {
     let success = false;
     try {

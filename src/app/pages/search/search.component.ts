@@ -1,20 +1,20 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { MenuItem, MessageService } from 'primeng/api';
+import { filter } from 'rxjs';
 import { ProcessedPost } from 'src/app/interfaces/processed-post';
 import { SimplifiedUser } from 'src/app/interfaces/simplified-user';
 import { DashboardService } from 'src/app/services/dashboard.service';
 import { LoginService } from 'src/app/services/login.service';
 import { PostsService } from 'src/app/services/posts.service';
 import { environment } from 'src/environments/environment';
-
 @Component({
   selector: 'app-search',
   templateUrl: './search.component.html',
   styleUrls: ['./search.component.scss']
 })
-export class SearchComponent implements OnInit {
+export class SearchComponent implements OnInit, OnDestroy {
 
   cacheurl = environment.externalCacheurl;
   baseMediaUrl = environment.baseMediaUrl;
@@ -31,7 +31,7 @@ export class SearchComponent implements OnInit {
   userLoggedIn = false;
   currentPage = 0;
   loading = false;
-
+  navigationSubscription;
 
   constructor(
     private dashboardService: DashboardService,
@@ -41,10 +41,12 @@ export class SearchComponent implements OnInit {
     private router: Router,
     private activatedRoute: ActivatedRoute
   ) {
-    // override the route reuse strategy
-    this.router.routeReuseStrategy.shouldReuseRoute = function() {
-      return false;
-  };
+    this.navigationSubscription = router.events.pipe(filter(event => event instanceof NavigationEnd)).subscribe((ev)=> {
+      this.ngOnInit()
+    })
+  }
+  ngOnDestroy(): void {
+    this.navigationSubscription.unsubscribe();
   }
 
   ngOnInit(): void {

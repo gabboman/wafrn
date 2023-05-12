@@ -5,6 +5,7 @@ import { Subscription } from 'rxjs';
 import { Action } from 'src/app/interfaces/editor-launcher-data';
 import { EditorService } from 'src/app/services/editor.service';
 import { JwtService } from 'src/app/services/jwt.service';
+import { LoginService } from 'src/app/services/login.service';
 import { NotificationsService } from 'src/app/services/notifications.service';
 
 @Component({
@@ -20,38 +21,35 @@ export class NavigationMenuComponent implements OnInit, OnDestroy {
   notifications = '';
 
   navigationSubscription: Subscription;
-
+  loginSubscription: Subscription;
 
   constructor(
     private editorService: EditorService,
     private router: Router,
     private jwtService: JwtService,
+    private loginService: LoginService,
     private activatedRoute: ActivatedRoute,
     private notificationsService: NotificationsService,
     private cdr: ChangeDetectorRef
   ) {
+    this.loginSubscription = this.loginService.logingEventEmitter.subscribe(() => {
+      this.drawMenu();
+    })
     this.navigationSubscription = this.router.events.subscribe((ev) => {
       if( ev instanceof NavigationEnd) {
-        this.updateNotifications(ev.url).then(()=> {
-          this.checkMenu(ev);
-        })
+        this.updateNotifications(ev.url)
       }
     });
   }
 
 
   ngOnInit(): void {
-    this.checkMenu({
-      url: `/${this.activatedRoute.snapshot.url.toString()}`,
-      urlAfterRedirects: '',
-      id: -1,
-      type: 1
-    })
-
+    this.drawMenu();
   }
 
   ngOnDestroy(): void {
     this.navigationSubscription.unsubscribe();
+    this.loginSubscription.unsubscribe();
   }
 
   showMenu() {
@@ -64,8 +62,7 @@ export class NavigationMenuComponent implements OnInit, OnDestroy {
   }
 
 
-  checkMenu(ev: NavigationEnd) {
-
+  drawMenu() {
     if(this.jwtService.tokenValid()) {
 
       this.menuItems = [
@@ -157,7 +154,7 @@ export class NavigationMenuComponent implements OnInit, OnDestroy {
           label: 'Log out',
           icon: 'pi pi-sign-out',
           title: 'nintendo this button is for you, and your 25000000 alt accounts',
-          command: () => {localStorage.clear(); this.router.navigate(['/']); this.hideMenu();}
+          command: () => {this.loginService.logOut(); this.hideMenu();}
         }
       ];
 
@@ -224,7 +221,8 @@ export class NavigationMenuComponent implements OnInit, OnDestroy {
         const response = await this.notificationsService.getUnseenNotifications()
         this.notifications =  response;
       }
-
+      this.menuItems[2].badge = this.notifications;
+      this.cdr.detectChanges();
     }
   }
 

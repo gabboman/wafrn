@@ -75,7 +75,6 @@ export class PostEditorComponent implements OnInit, OnDestroy {
         const values = this.mentionSuggestions.map(elem => {return {id: elem.id, value: elem.url, avatar: elem.avatar}})
 
         if (searchTerm.length === 0) {
-          console.log(renderList)
           renderList(values, searchTerm)
         } else {
           const matches: any = []
