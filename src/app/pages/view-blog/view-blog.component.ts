@@ -25,7 +25,7 @@ export class ViewBlogComponent implements OnInit, OnDestroy {
   followedUsers: Array<String> = [];
   userLoggedIn = false;
   avatarUrl = '';
-  navigationSubscription: Subscription;
+  navigationSubscription;
 
 
   constructor(
