@@ -1,17 +1,9 @@
-<div class="grid">
-  <div id="firstPost" class="col-12 sm:col-12 md:col-12 lg:col-5 margin-auto pb-6">
+  <div class="grid pb-6 lg:px-4 scalein animation-duration-400 wafrn-container">
 
-    <p-card  class="xs:w-full md:w-75 lg:w-75">
-      <span class="text-600 font-medium line-height-3">Welcome to our public alpha! If you experience any kind of
-        issues, please
-        contact us at the email <a href="mailto:suggestions@wafrn.net">suggestions@wafrn.net</a></span>
-      <br>
+    <p-card >
       <span class="text-600 font-medium line-height-3">You can search for users by url and description, and posts by
-        tags. No need to add # to your search</span>
-      <br>
-      <span class="text-600 font-medium line-height-3">Have fun!</span>
-      <br>
-      <br>
+        tags. No need to add # to your search.
+        To force the server to search for a remote user in the fediverse, put their full username starting with an @. As example, @torvalds@social.kernel.org<br><br></span>
       <form [formGroup]="searchForm" (submit)="submitSearch()">
         <span class="p-float-label">
           <input formControlName="search" id="float-input" type="text" pInputText class="w-full">
@@ -23,7 +15,6 @@
     </p-card>
 
   </div>
-</div>
 
 
 
