@@ -1,5 +1,5 @@
-import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
-import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
+import { ChangeDetectorRef, Component, HostListener, OnDestroy, OnInit } from '@angular/core';
+import { NavigationEnd, Router } from '@angular/router';
 import { MenuItem } from 'primeng/api';
 import { Subscription } from 'rxjs';
 import { Action } from 'src/app/interfaces/editor-launcher-data';
@@ -19,16 +19,15 @@ export class NavigationMenuComponent implements OnInit, OnDestroy {
   menuItems: MenuItem[] = [];
   menuVisible = false;
   notifications = '';
+  mobile = false;
 
   navigationSubscription: Subscription;
   loginSubscription: Subscription;
-
   constructor(
     private editorService: EditorService,
     private router: Router,
     private jwtService: JwtService,
     private loginService: LoginService,
-    private activatedRoute: ActivatedRoute,
     private notificationsService: NotificationsService,
     private cdr: ChangeDetectorRef
   ) {
@@ -40,11 +39,13 @@ export class NavigationMenuComponent implements OnInit, OnDestroy {
         this.updateNotifications(ev.url)
       }
     });
+
   }
 
 
   ngOnInit(): void {
     this.drawMenu();
+    this.onResize();
   }
 
   ngOnDestroy(): void {
@@ -225,5 +226,14 @@ export class NavigationMenuComponent implements OnInit, OnDestroy {
       this.cdr.detectChanges();
     }
   }
+
+  @HostListener('window:resize', ['$event'])
+  onResize() {
+  this.mobile = window.innerWidth <= 992;
+}
+
+onCloseMenu () {
+  this.menuVisible = false;
+}
 
 }

@@ -3,13 +3,7 @@ type="button" class="show-sidebar-menu-button" styleClass="p-button-raised p-but
 (click)="showMenu()"
 ></p-button>
 
-<p-sidebar [(visible)]="menuVisible" [modal]="true">
-    <img  loading="lazy" src="/assets/logo.png" class="w-full">
-    <p-panelMenu [model]="menuItems" [style]="{'width':'100%'}"></p-panelMenu>
-</p-sidebar>
-
-<!-- This is a little bit of a dirty trick, should actually check stuff, but fuck it -->
-<p-sidebar [visible]="true" [modal]="false" class="left-menu-hidden-mobile" [showCloseIcon]="false">
+<p-sidebar (onHide)="onCloseMenu()" [visible]="menuVisible || !mobile" [modal]="mobile" [showCloseIcon]="mobile">
     <img  loading="lazy" src="/assets/logo.png" class="w-full">
     <p-panelMenu [model]="menuItems" [style]="{'width':'100%'}"></p-panelMenu>
 </p-sidebar>
