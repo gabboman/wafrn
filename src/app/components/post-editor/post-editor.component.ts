@@ -123,7 +123,7 @@ export class PostEditorComponent implements OnInit, OnDestroy {
             this.postCreatorContent = `${this.postCreatorContent}[mentionuserid="${inResponseTo.user.id}"]`
           }
           inResponseTo.postMentionsUserRelations?.forEach((mention) => {
-            if(mention.user.url.startsWith('@')) {
+            if(mention?.user?.url.startsWith('@')) {
               this.postCreatorContent = `${this.postCreatorContent}[mentionuserid="${mention.userId}"]`
             }
           });
