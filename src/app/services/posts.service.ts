@@ -86,7 +86,8 @@ export class PostsService {
       result = result.sort((a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime());
       result.push({...rawPost, remotePostId: rawPost.remotePostId? rawPost.remotePostId : `${environment.frontUrl}/post/${rawPost.id}`, notes: notes});
     }
-    result.forEach(val => {
+    result = result.filter((elem, index) => elem.content != '' || index === result.length -1 )
+    result.forEach((val, index) => {
       this.mediaService.addMediaToMap(val);
     });
     return result;
