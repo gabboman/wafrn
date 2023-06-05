@@ -12,7 +12,7 @@ import { JwtService } from './jwt.service';
 })
 export class PostsService {
 
-
+  parser = new DOMParser();
   wafrnMediaRegex = /\[wafrnmediaid="[0-9a-fA-F]{8}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{12}"\]/gm;
   wafrnMentionRegex = /\[mentionuserid="[0-9a-fA-F]{8}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{12}"\]/gm;
   uuidRegex = /[0-9a-fA-F]{8}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{12}/;
@@ -119,16 +119,23 @@ export class PostsService {
       }
     });
     // we remove stuff like img and script tags. we only allow certain stuff.
-    const youtubeLinks = sanitized.matchAll(this.youtubeRegex);
+    const parsedAsHTML = this.parser.parseFromString(sanitized, 'text/html')
+    const links = parsedAsHTML.getElementsByTagName('a')
+    const youtubeLinks: string[] = [];
 
-    if (youtubeLinks) {
-      Array.from(youtubeLinks).forEach(youtubeString => {
-        // some exception, like when its on a href or stuff
-            const newString = `<app-wafrn-youtube-player video="${youtubeString[6]}"></app-wafrn-youtube-player>`;
-            sanitized = sanitized.replace(youtubeString[0], newString);
-        });
+    Array.from(links).forEach((link) => {
+      const youtubeMatch = link.href.matchAll(this.youtubeRegex)
+      if(link.innerText === link.href && youtubeMatch) {
+          Array.from(youtubeMatch).forEach(youtubeString => {
+            const ytPlayer = document.createElement("app-wafrn-youtube-player")
+            ytPlayer.setAttribute('video',youtubeString[6] )
+            link.replaceWith(ytPlayer)
+          })
+      } else {
+        link.target = "_blank"
       }
-
+      sanitized = parsedAsHTML.documentElement.innerHTML
+    });
 
 
     sanitized.match(this.wafrnMediaRegex)?.forEach((media) => {
