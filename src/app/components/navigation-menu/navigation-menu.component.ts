@@ -222,7 +222,7 @@ export class NavigationMenuComponent implements OnInit, OnDestroy {
         const response = await this.notificationsService.getUnseenNotifications()
         this.notifications =  response;
       }
-      this.menuItems[2].badge = this.notifications;
+      this.drawMenu();
       this.cdr.detectChanges();
     }
   }
