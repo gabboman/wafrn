@@ -1,43 +1,88 @@
-<div *ngIf="notification" class="grid pb-6 lg:px-4 scalein animation-duration-400 wafrn-container">
+<div *ngIf="notification" class="grid pb-3 lg:px-4 scalein animation-duration-400 wafrn-container">
   <div class="col-12 wafrn-post">
     <a [routerLink]="notification.url">
       <p-card *ngIf="notification.type === notificationType.REBLOG">
-        <div class="flex align-items-center">
-          <img loading="lazy" [src]="notification.avatar" style="height: 64px; max-width: 64px;">
-          <div class="p-3">
-            User {{notification.userUrl}} reblogged one of your posts!
+        <div class="flex align-items-start -my-2">
+          <div style="width: 64px;" class="border-1 border-gray-700 border-round">
+            <img
+              loading="lazy"
+              [src]="notification.avatar"
+              style="height: 64px; margin: 0 auto; display: block"
+            />
+          </div>
+          <div class="p-1 px-3">
+            <p class="m-0 mb-2 no-underline text-sm text-gray-300">{{(notification.date).toLocaleString()}}</p>
+            <p class="m-0">
+              User {{notification.userUrl}} reblogged one of your posts!
+            </p>
           </div>
         </div>
       </p-card>
       <p-card *ngIf="notification.type === notificationType.LIKE">
-        <div class="flex align-items-center">
-          <img loading="lazy" [src]="notification.avatar" style="height: 64px; max-width: 64px;">
-          <div class="p-3">
-            User {{notification.userUrl}} liked one of your posts!
+        <div class="flex align-items-start -my-2">
+          <div style="width: 64px;" class="border-1 border-gray-700 border-round">
+            <img
+              loading="lazy"
+              [src]="notification.avatar"
+              style="height: 64px; margin: 0 auto; display: block"
+            />
+          </div>
+          <div class="p-1 px-3">
+            <p class="m-0 mb-2 no-underline text-sm text-gray-300">{{(notification.date).toLocaleString()}}</p>
+            <p class="m-0">
+              User {{notification.userUrl}} liked one of your posts!
+            </p>
           </div>
         </div>
       </p-card>
       <p-card *ngIf="notification.type === notificationType.MENTION">
-        <div class="flex align-items-center">
-          <img loading="lazy" [src]="notification.avatar" style="height: 64px; max-width: 64px;">
-          <div class="p-3">
-            User {{notification.userUrl}} mentioned you in a post!
+        <div class="flex align-items-start -my-2">
+          <div style="width: 64px;" class="border-1 border-gray-700 border-round">
+            <img
+              loading="lazy"
+              [src]="notification.avatar"
+              style="height: 64px; margin: 0 auto; display: block"
+            />
+          </div>
+          <div class="p-1 px-3">
+            <p class="m-0 mb-2 no-underline text-sm text-gray-300">{{(notification.date).toLocaleString()}}</p>
+            <p class="m-0">
+              User {{notification.userUrl}} mentioned you in a post!
+            </p>
           </div>
         </div>
       </p-card>
       <p-card *ngIf="notification.type === notificationType.FOLLOW">
-        <div class="flex align-items-center">
-          <img loading="lazy" [src]="notification.avatar" style="height: 64px; max-width: 64px;">
-          <div class="p-3">
-            Hoorray! {{notification.userUrl}} now follows you!
+        <div class="flex align-items-start -my-2">
+          <div style="width: 64px;" class="border-1 border-gray-700 border-round">
+            <img
+              loading="lazy"
+              [src]="notification.avatar"
+              style="height: 64px; margin: 0 auto; display: block"
+            />
+          </div>
+          <div class="p-1 px-3">
+            <p class="m-0 mb-2 no-underline text-sm text-gray-300">{{(notification.date).toLocaleString()}}</p>
+            <p class="m-0">
+              Hoorray! {{notification.userUrl}} now follows you!
+            </p>
           </div>
         </div>
       </p-card>
       <p-card *ngIf="notification.type === notificationType.PRIVATE">
-        <div class="flex align-items-center">
-          <img loading="lazy" [src]="notification.avatar" style="height: 64px; max-width: 64px;">
-          <div class="p-3">
-            {{notification.userUrl}} has sent you a private message
+        <div class="flex align-items-start -my-2">
+          <div style="width: 64px;" class="border-1 border-gray-700 border-round">
+            <img
+              loading="lazy"
+              [src]="notification.avatar"
+              style="height: 64px; margin: 0 auto; display: block"
+            />
+          </div>
+          <div class="p-1 px-3">
+            <p class="m-0 mb-2 no-underline text-sm text-gray-300">{{(notification.date).toLocaleString()}}</p>
+            <p class="m-0">
+              {{notification.userUrl}} has sent you a private message
+            </p>
           </div>
         </div>
       </p-card>
