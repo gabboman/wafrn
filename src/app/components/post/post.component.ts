@@ -201,7 +201,7 @@ export class PostComponent implements OnInit {
           label: "Like this post",
           title: "Add a like to this post",
           icon: 'pi pi-heart',
-          command: () => this.unlikePost(content)
+          command: () => this.likePost(content)
         }
         : {
           label: 'NULL'
