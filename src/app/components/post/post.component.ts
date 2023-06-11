@@ -9,7 +9,6 @@ import { environment } from 'src/environments/environment';
 import { DeletePostService } from 'src/app/services/delete-post.service';
 import { SimplifiedUser } from 'src/app/interfaces/simplified-user';
 import { Action } from 'src/app/interfaces/editor-launcher-data';
-import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-post',
@@ -38,10 +37,10 @@ export class PostComponent implements OnInit {
   reblogging = false;
   buttonItems: any = [];
   myId: string = '';
-
-
-
-
+  loadingAction = false;
+  // 0 no display at all 1 display like 2 display dislike
+  showLikeFinalPost: number = 0;
+  finalPost!: ProcessedPost;
 
   constructor(
     private postService: PostsService,
@@ -51,7 +50,6 @@ export class PostComponent implements OnInit {
     private editorService: EditorService,
     private reportService: ReportService,
     private deletePostService: DeletePostService,
-    private router: Router
   ) {
     this.userLoggedIn = loginService.checkUserLoggedIn();
     if(this.userLoggedIn) {
@@ -84,6 +82,19 @@ export class PostComponent implements OnInit {
     this.updateButtonItems();
     let notes = this.post[this.post.length - 1].notes;
     this.notes = notes.toString();
+
+    // if the last post is an EMPTY reblog we evaluate the like of the parent.
+    const postToEvaluate = this.post[this.post.length - 1].content == '' && this.post[this.post.length - 1].tags.length == 0 && this.post.length > 1 ?
+      this.post[this.post.length -2] : this.post[this.post.length -1]
+    this.finalPost = postToEvaluate;
+
+    this.showLikeFinalPost = postToEvaluate.userLikesPostRelations.includes(this.myId) ? 2 : 1
+
+    if(postToEvaluate.userId === this.myId) {
+      this.showLikeFinalPost = 0;
+    }
+
+
   }
 
   async followUser(id: string) {
@@ -113,14 +124,14 @@ export class PostComponent implements OnInit {
   }
 
   async quickReblog() {
-    this.reblogging = true;
+    this.loadingAction = true;
       const response = await this.editor.createPost('', 0,  '',this.post[this.post.length - 1].id );
       if(response) {
         this.messages.add({ severity: 'success', summary: 'You reblogged the post succesfully' });
       } else {
         this.messages.add({ severity: 'error', summary: 'Something went wrong! Check your internet conectivity and try again' });
       }
-    this.reblogging = false;
+    this.loadingAction = false;
   }
 
   sharePost(id: string) {
@@ -167,7 +178,7 @@ export class PostComponent implements OnInit {
           command: () => this.shareOriginalPost(content.remotePostId)
         },
       ];
-      const loggedInButtons = [
+      const loggedInButtons: MenuItem[] = [
         {
           label: "Reblog",
           title: "Open the reblog editor, reblogging this post",
@@ -176,6 +187,24 @@ export class PostComponent implements OnInit {
             action: Action.Response,
             post: content
           })
+        },
+        (content.content !== '' || content.tags.length != 0) && content.userId != this.myId  ?
+        content.userLikesPostRelations.includes(this.myId) ?
+        {
+          label: "Remove like",
+          title: "Remove your like to this post",
+          icon: 'pi pi-heart-fill',
+          command: () => this.unlikePost(content)
+        }
+        :
+        {
+          label: "Like this post",
+          title: "Add a like to this post",
+          icon: 'pi pi-heart',
+          command: () => this.unlikePost(content)
+        }
+        : {
+          label: 'NULL'
         },
         content.userId === this.myId ?
         {
@@ -192,7 +221,7 @@ export class PostComponent implements OnInit {
           // TODO this is stupid this is ugly but I am sleepy and I shall not fix this now
           command: () => this.reportService.launchReportScreen.next([content])
         }
-      ]
+      ].filter(elem => elem.label != 'NULL')
       this.buttonItems[content.id] = this.userLoggedIn ? buttonsForFragment.concat(loggedInButtons) :  buttonsForFragment;
 
     }
@@ -211,7 +240,33 @@ export class PostComponent implements OnInit {
     this.originalPostContent.forEach(elem => {
       elem.content_warning = ''
     })
+  }
 
+
+  async likePost( postToLike: ProcessedPost) {
+    this.loadingAction = true;
+    if(await this.postService.likePost(postToLike.id)) {
+      postToLike.userLikesPostRelations.push(this.myId);
+      this.ngOnChanges();
+      this.messages.add({ severity: 'success', summary: 'You successfully liked this post' });
+    } else {
+      this.messages.add({ severity: 'error', summary: 'Something went wrong. Please try again' });
+
+    }
+    this.loadingAction = false;
+
+  }
+
+  async unlikePost(postToUnlike: ProcessedPost) {
+    this.loadingAction = true;
+    if(await this.postService.unlikePost(postToUnlike.id)) {
+      postToUnlike.userLikesPostRelations =  postToUnlike.userLikesPostRelations.filter(elem => elem != this.myId)
+      this.ngOnChanges();
+      this.messages.add({ severity: 'success', summary: 'You no longer like this post' });
+    } else {
+      this.messages.add({ severity: 'error', summary: 'Something went wrong. Please try again' });
+    }
+    this.loadingAction = false;
   }
 
 }

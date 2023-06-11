@@ -19,6 +19,7 @@ export interface RawPost {
     notes:          number;
     privacy:        number;
     remotePostId?:   string;
+    userLikesPostRelations: {userId: string}[]
 
 
 }

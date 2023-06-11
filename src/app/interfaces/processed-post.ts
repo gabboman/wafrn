@@ -18,4 +18,5 @@ export interface ProcessedPost {
     notes:          number;
     privacy:        number;
     remotePostId:   string;
+    userLikesPostRelations: string[]
 }

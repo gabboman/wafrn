@@ -62,15 +62,18 @@
             Notes: {{notes}}
           </div>
           <div *ngIf="userLoggedIn" class="col-4 flex justify-content-end">
-            <div class="grid">
+            <div class="grid" *ngIf="!loadingAction">
               <i
-               #quickReblogButton (click)="quickReblogPanel.show($event, quickReblogButton)"
-               *ngIf="!quickReblogDoneSuccessfully"
-               class="col-4 pi pi-history hover-cursor" title="Quick Reblog"></i>
-              <i (click)="launchReblog()" class="col-4 pi pi-replay hover-cursor" title="Reblog"></i>
-              <i *ngIf="!(post[post.length - 1].userId == myId)" (click)="reportPost()" class="col-4 pi pi-exclamation-triangle hover-cursor" title="Report Post"></i>
-              <i *ngIf="(post[post.length - 1].userId == myId)" (click)="deletePost(post[post.length - 1].id)" class="col-4 pi pi-trash hover-cursor" title="Delete Post"></i>
-
+               (click)="quickReblog()"
+               class="col-3 pi pi-history hover-cursor" title="Quick Reblog"></i>
+              <i (click)="launchReblog()" class="col-3 pi pi-replay hover-cursor" title="Reblog"></i>
+              <i *ngIf="showLikeFinalPost === 1" (click)="likePost(finalPost)" class="col-3 pi pi-heart hover-cursor" title="Like Post"></i>
+              <i *ngIf="showLikeFinalPost === 2" (click)="unlikePost(finalPost)" class="col-3 pi pi-heart-fill hover-cursor" title="Unlike Post"></i>
+              <i *ngIf="!(post[post.length - 1].userId == myId)" (click)="reportPost()" class="col-3 pi pi-exclamation-triangle hover-cursor" title="Report Post"></i>
+              <i *ngIf="(post[post.length - 1].userId == myId)" (click)="deletePost(post[post.length - 1].id)" class="col-3 pi pi-trash hover-cursor" title="Delete Post"></i>
+            </div>
+            <div class="grid" *ngIf="loadingAction">
+              <i class="pi pi-spin pi-spinner" style="height: 1em;"></i>
             </div>
           </div>
         </div>
@@ -79,17 +82,3 @@
   </div>
 </div>
 
-<p-overlayPanel (onShow)="showQuickReblogOverlay()"
-(onHide)="hideQuickReblogOverlay()"
-#quickReblogPanel >
-  <ng-template pTemplate>
-      <div>
-        Quick reblog
-      </div>
-      <button pButton pRipple
-        label="Quick reblog" class="w-full"
-        (click)="quickReblogPanel.hide()" (click)="quickReblog()"
-        [disabled]="reblogging"
-        ></button>
-  </ng-template>
-</p-overlayPanel>

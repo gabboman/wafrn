@@ -76,15 +76,47 @@ export class PostsService {
     return res;
   }
 
+  async likePost(id: string): Promise<boolean> {
+    let res = false;
+    let payload = {
+      postId: id
+    }
+    try {
+      let response = await this.http.post<{ success: boolean }>(`${environment.baseUrl}/like`, payload).toPromise();
+      await this.loadFollowers();
+      res = response?.success === true;
+    } catch (exception) {
+      console.log(exception)
+    }
+
+    return res;
+  }
+
+  async unlikePost(id: string): Promise<boolean> {
+    let res = false;
+    let payload = {
+      postId: id
+    }
+    try {
+      let response = await this.http.post<{ success: boolean }>(`${environment.baseUrl}/unlike`, payload).toPromise();
+      await this.loadFollowers();
+      res = response?.success === true;
+    } catch (exception) {
+      console.log(exception)
+    }
+
+    return res;
+  }
+
   processPost(rawPost: RawPost): ProcessedPost[] {
     let result: ProcessedPost[] = [];
     const notes = rawPost.notes;
     if (rawPost.ancestors) {
       rawPost.ancestors.forEach((post: RawPost) => {
-        result.push({...post, remotePostId: post.remotePostId? post.remotePostId : `${environment.frontUrl}/post/${post.id}` , notes: notes});
+        result.push({...post, remotePostId: post.remotePostId? post.remotePostId : `${environment.frontUrl}/post/${post.id}` ,userLikesPostRelations: post.userLikesPostRelations.map(elem => elem.userId) , notes: notes});
       });
       result = result.sort((a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime());
-      result.push({...rawPost, remotePostId: rawPost.remotePostId? rawPost.remotePostId : `${environment.frontUrl}/post/${rawPost.id}`, notes: notes});
+      result.push({...rawPost, userLikesPostRelations: rawPost.userLikesPostRelations.map(elem => elem.userId), remotePostId: rawPost.remotePostId? rawPost.remotePostId : `${environment.frontUrl}/post/${rawPost.id}`, notes: notes});
     }
     result = result.filter((elem, index) => elem.content != '' || index === result.length -1 )
     result.forEach((val, index) => {
