@@ -186,7 +186,7 @@ export class PostsService {
       if (uuid) {
         id = uuid[0]
       }
-      replacementsWafrnMentions.push({ wafrnMentionstringToReplace: mention, url: this.mediaService.mentionsMap[id]?.user.url });
+      replacementsWafrnMentions.push({ wafrnMentionstringToReplace: mention, url: this.mediaService.mentionsMap[id]?.url });
     });
     replacementsWafrnMedia.forEach(replacement => {
       const replacementString = `<app-wafrn-media id="${replacement.id}" > </app-wafrn-media>`

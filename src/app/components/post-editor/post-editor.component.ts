@@ -113,6 +113,7 @@ export class PostEditorComponent implements OnInit, OnDestroy {
         const inResponseTo = elem.post;
         this.postCreatorContent = '';
         if(inResponseTo) {
+          console.log(inResponseTo)
           this.contentWarning = inResponseTo.content_warning
           const parentPrivacy = this.privacyOptions.find(elem => elem.level === inResponseTo.privacy);
           if(parentPrivacy?.level !== 0) {
@@ -122,9 +123,9 @@ export class PostEditorComponent implements OnInit, OnDestroy {
           if(inResponseTo.user.url.startsWith('@')) {
             this.postCreatorContent = `${this.postCreatorContent}[mentionuserid="${inResponseTo.user.id}"]`
           }
-          inResponseTo.postMentionsUserRelations?.forEach((mention) => {
-            if(mention?.user?.url.startsWith('@')) {
-              this.postCreatorContent = `${this.postCreatorContent}[mentionuserid="${mention.userId}"]`
+          inResponseTo.mentionPost?.forEach((mention) => {
+            if(mention?.url.startsWith('@')) {
+              this.postCreatorContent = `${this.postCreatorContent}[mentionuserid="${mention.id}"]`
             }
           });
         }

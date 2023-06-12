@@ -7,6 +7,7 @@ import { WafrnMention } from '../interfaces/wafrn-mention';
 import { JwtService } from './jwt.service';
 import { LoginService } from './login.service';
 import { UtilsService } from './utils.service';
+import { SimplifiedUser } from '../interfaces/simplified-user';
 
 @Injectable({
   providedIn: 'root'
@@ -17,7 +18,7 @@ export class MediaService {
   disableNSFWFilter = false;
 
   mediaMap: {[id:  string]: WafrnMedia} = {};
-  mentionsMap: {[id:  string]: WafrnMention} = {};
+  mentionsMap: {[id:  string]: SimplifiedUser} = {};
 
   constructor(
     private jwt: JwtService,
@@ -39,7 +40,7 @@ export class MediaService {
   changeDisableFilterValue( newVal: boolean) {
     this.disableNSFWFilter = newVal;
     localStorage.setItem('disableNSFWFilter', newVal.toString().toLowerCase());
-  } 
+  }
 
   checkNSFWFilterDisabled(): boolean {
     return this.disableNSFWFilter
@@ -55,7 +56,7 @@ export class MediaService {
     return minimumBirthDate > birthDate;
 
   }
-  
+
   // TODO rename this component and rename this method, as due the similarities we are gona use for more stuff
   addMediaToMap(post: ProcessedPost): void {
     if(post.medias) {
@@ -64,9 +65,9 @@ export class MediaService {
         this.mediaMap[val.id] = val;
       });
     }
-    if(post.postMentionsUserRelations) {
-      post.postMentionsUserRelations.forEach(val => {
-        this.mentionsMap[val.userId] = val;
+    if(post.mentionPost) {
+      post.mentionPost.forEach(val => {
+        this.mentionsMap[val.id] = val;
       });
     }
 
@@ -102,7 +103,7 @@ export class MediaService {
 
   }
 
-  
+
 
 
 }

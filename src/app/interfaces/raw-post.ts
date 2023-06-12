@@ -15,7 +15,7 @@ export interface RawPost {
     user:           SimplifiedUser;
     medias?:        WafrnMedia[];
     tags:           Tag[];
-    postMentionsUserRelations?: WafrnMention[];
+    mentionPost?: SimplifiedUser[];
     notes:          number;
     privacy:        number;
     remotePostId?:   string;
