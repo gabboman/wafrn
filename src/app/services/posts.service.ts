@@ -164,9 +164,8 @@ export class PostsService {
             console.log(ytPlayer)
             link.innerHTML =  `<app-wafrn-youtube-player video="${youtubeString[6]}" > </app-wafrn-youtube-player>`
           })
-      } else {
-        link.target = "_blank"
       }
+      link.target = "_blank"
       sanitized = parsedAsHTML.documentElement.innerHTML
     });
 
