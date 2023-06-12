@@ -103,12 +103,15 @@ a, a:visited {
     }
 }
 
-/*
+
 .p-dialog {
     max-width: 768px;
     width: 100%;
 }
-*/
+
+.p-dialog-maximized {
+  max-width: 100vw !important;
+}
 .mention {
   height: unset;
   width: unset;
