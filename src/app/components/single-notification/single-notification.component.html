@@ -3,7 +3,7 @@
     <a [routerLink]="notification.url">
       <p-card *ngIf="notification.type === notificationType.REBLOG">
         <div class="flex align-items-start -my-2">
-          <div style="width: 64px;" class="border-1 border-gray-700 border-round">
+          <div style="width: 64px; max-height: 64px" class="border-1 border-gray-700 border-round">
             <img
               loading="lazy"
               [src]="notification.avatar"
@@ -20,7 +20,7 @@
       </p-card>
       <p-card *ngIf="notification.type === notificationType.LIKE">
         <div class="flex align-items-start -my-2">
-          <div style="width: 64px;" class="border-1 border-gray-700 border-round">
+          <div style="width: 64px; max-height: 64px" class="border-1 border-gray-700 border-round">
             <img
               loading="lazy"
               [src]="notification.avatar"
@@ -37,7 +37,7 @@
       </p-card>
       <p-card *ngIf="notification.type === notificationType.MENTION">
         <div class="flex align-items-start -my-2">
-          <div style="width: 64px;" class="border-1 border-gray-700 border-round">
+          <div style="width: 64px; max-height: 64px" class="border-1 border-gray-700 border-round">
             <img
               loading="lazy"
               [src]="notification.avatar"
@@ -54,7 +54,7 @@
       </p-card>
       <p-card *ngIf="notification.type === notificationType.FOLLOW">
         <div class="flex align-items-start -my-2">
-          <div style="width: 64px;" class="border-1 border-gray-700 border-round">
+          <div style="width: 64px; max-height: 64px" class="border-1 border-gray-700 border-round">
             <img
               loading="lazy"
               [src]="notification.avatar"
@@ -71,7 +71,7 @@
       </p-card>
       <p-card *ngIf="notification.type === notificationType.PRIVATE">
         <div class="flex align-items-start -my-2">
-          <div style="width: 64px;" class="border-1 border-gray-700 border-round">
+          <div style="width: 64px; max-height: 64px" class="border-1 border-gray-700 border-round">
             <img
               loading="lazy"
               [src]="notification.avatar"
