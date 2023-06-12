@@ -3,7 +3,8 @@
   [header]="idPostToReblog ? 'Reblog a post' : 'Create new post'"
   [(visible)]="editorVisible"
   [modal]="true"
-  style="max-width: min(1000px, 75vw)">
+  [maximizable]="true"
+>
 
   <h2 *ngIf="idPostToReblog">
     You are reblogging the post. Your followers will see the full thread with your reply on it
