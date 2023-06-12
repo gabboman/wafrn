@@ -16,7 +16,7 @@ export class WafrnYoutubePlayerComponent implements OnInit {
   constructor() { }
 
   ngOnInit(): void {
-    const remoteThumbnail = `https://img.youtube.com/vi/${this.video}/maxresdefault.jpg`
+    const remoteThumbnail = `https://img.youtube.com/vi/${this.video}/default.jpg`
     this.videoThumbnail = environment.externalCacheurl + encodeURIComponent(remoteThumbnail)
 
   }
