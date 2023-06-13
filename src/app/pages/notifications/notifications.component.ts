@@ -4,6 +4,7 @@ import { Follower } from 'src/app/interfaces/follower';
 import { Reblog } from 'src/app/interfaces/reblog';
 import { UserNotifications } from 'src/app/interfaces/user-notifications';
 import { NotificationsService } from 'src/app/services/notifications.service';
+import { ThemeService } from 'src/app/services/theme.service';
 import { environment } from 'src/environments/environment';
 
 @Component({
@@ -29,8 +30,10 @@ export class NotificationsComponent implements OnInit {
   notificationsToShow: UserNotifications[] = []
 
   constructor(
-    private notificationsService: NotificationsService
+    private notificationsService: NotificationsService,
+    private themeService: ThemeService
   ) {
+    this.themeService.setMyTheme()
 
   }
 

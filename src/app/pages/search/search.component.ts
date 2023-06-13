@@ -8,6 +8,7 @@ import { SimplifiedUser } from 'src/app/interfaces/simplified-user';
 import { DashboardService } from 'src/app/services/dashboard.service';
 import { LoginService } from 'src/app/services/login.service';
 import { PostsService } from 'src/app/services/posts.service';
+import { ThemeService } from 'src/app/services/theme.service';
 import { environment } from 'src/environments/environment';
 @Component({
   selector: 'app-search',
@@ -39,8 +40,10 @@ export class SearchComponent implements OnInit, OnDestroy {
     private postService: PostsService,
     private loginService: LoginService,
     private router: Router,
-    private activatedRoute: ActivatedRoute
+    private activatedRoute: ActivatedRoute,
+    private themeService: ThemeService
   ) {
+    this.themeService.setMyTheme()
     this.navigationSubscription = router.events.pipe(filter(event => event instanceof NavigationEnd)).subscribe((ev)=> {
       this.ngOnInit()
     })

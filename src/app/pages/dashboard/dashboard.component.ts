@@ -6,6 +6,8 @@ import { DashboardService } from 'src/app/services/dashboard.service';
 import { JwtService } from 'src/app/services/jwt.service';
 import { PostsService } from 'src/app/services/posts.service';
 import { Title, Meta } from '@angular/platform-browser';
+import { ThemeService } from 'src/app/services/theme.service';
+import { LoginService } from 'src/app/services/login.service';
 
 @Component({
   selector: 'app-dashboard',
@@ -29,8 +31,8 @@ export class DashboardComponent implements OnInit {
     private postService: PostsService,
     private messages: MessageService,
     private titleService: Title,
-    private metaTagService: Meta
-
+    private metaTagService: Meta,
+    private themeService: ThemeService
   ) {
     this.titleService.setTitle('Wafrn - the social network that respects you');
     this.metaTagService.addTags([
@@ -61,6 +63,8 @@ export class DashboardComponent implements OnInit {
       }
     } );
     this.loadPosts(this.currentPage);
+    this.themeService.setMyTheme()
+
 
   }
 

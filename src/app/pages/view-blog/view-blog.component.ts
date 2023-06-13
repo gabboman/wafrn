@@ -7,6 +7,7 @@ import { ProcessedPost } from 'src/app/interfaces/processed-post';
 import { DashboardService } from 'src/app/services/dashboard.service';
 import { LoginService } from 'src/app/services/login.service';
 import { PostsService } from 'src/app/services/posts.service';
+import { ThemeService } from 'src/app/services/theme.service';
 import { environment } from 'src/environments/environment';
 
 @Component({
@@ -26,6 +27,7 @@ export class ViewBlogComponent implements OnInit, OnDestroy {
   userLoggedIn = false;
   avatarUrl = '';
   navigationSubscription;
+  showModalTheme = false;
 
 
   constructor(
@@ -36,7 +38,8 @@ export class ViewBlogComponent implements OnInit, OnDestroy {
     private loginService: LoginService,
     private router: Router,
     private titleService: Title,
-    private metaTagService: Meta
+    private metaTagService: Meta,
+    private themeService: ThemeService
   ) {
     this.userLoggedIn = loginService.checkUserLoggedIn();
     this.navigationSubscription = router.events.pipe(filter(event => event instanceof NavigationEnd)).subscribe((ev)=> {
@@ -68,7 +71,7 @@ export class ViewBlogComponent implements OnInit, OnDestroy {
       if(blogResponse.success === false){
         this.found = false;
       } else {
-        this.blogDetails = blogResponse;
+      this.blogDetails = blogResponse;
       this.loadPosts(this.currentPage).then(() => this.loading = false);
       this.avatarUrl = this.blogDetails.url.startsWith('@') ? environment.externalCacheurl + encodeURIComponent(this.blogDetails.avatar) : environment.baseMediaUrl + this.blogDetails.avatar
       this.titleService.setTitle(`${this.blogDetails.url}\'s blog`);
@@ -78,7 +81,23 @@ export class ViewBlogComponent implements OnInit, OnDestroy {
           {name: 'image', content: this.avatarUrl}
         ]);
       }
+      this.themeService.checkThemeExists(this.blogDetails.id).then((userHasCustomTheme) => {
+        if(userHasCustomTheme){
+          const userResponseToCustomThemes = this.themeService.hasUserAcceptedCustomThemes();
+          if ( userResponseToCustomThemes === 2) {
+            this.themeService.setTheme(this.blogDetails.id)
+          }
+
+          if (userResponseToCustomThemes === 0) {
+            this.showModalTheme = true;
+          }
+        } else {
+          this.themeService.setTheme('');
+        }
+      })
     })
+
+
 
   }
 
@@ -114,6 +133,15 @@ export class ViewBlogComponent implements OnInit, OnDestroy {
     } else {
       this.messages.add({ severity: 'error', summary: 'Something went wrong! Check your internet conectivity and try again' });
     }
+  }
+
+
+  answerCustomThemeModal(response: number) {
+    localStorage.setItem('acceptsCustomThemes', response.toString());
+    if (response === 2) {
+      this.themeService.setTheme(this.blogDetails.id)
+    }
+    this.showModalTheme = false;
   }
 
 }

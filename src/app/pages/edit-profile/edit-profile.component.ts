@@ -5,6 +5,7 @@ import { DashboardService } from 'src/app/services/dashboard.service';
 import { JwtService } from 'src/app/services/jwt.service';
 import { LoginService } from 'src/app/services/login.service';
 import { MediaService } from 'src/app/services/media.service';
+import { ThemeService } from 'src/app/services/theme.service';
 
 @Component({
   selector: 'app-edit-profile',
@@ -19,7 +20,8 @@ export class EditProfileComponent implements OnInit {
     description: new UntypedFormControl('', [Validators.required]),
     avatar:  new UntypedFormControl('', []),
     disableNSFWFilter:  new UntypedFormControl(false, []),
-    disableGifsByDefault:  new UntypedFormControl(false, [])
+    disableGifsByDefault:  new UntypedFormControl(false, []),
+    css: new UntypedFormControl('')
   });
 
   constructor(
@@ -28,13 +30,17 @@ export class EditProfileComponent implements OnInit {
     private mediaService: MediaService,
     private loginService: LoginService,
     private messages: MessageService,
-  ) { }
+    private themeService: ThemeService
+  ) {
+    this.themeService.setTheme('')
+   }
 
   ngOnInit(): void {
-    this.dashboardService.getBlogDetails(this.jwtService.getTokenData()['url']).then( blogDetails => {
+    this.dashboardService.getBlogDetails(this.jwtService.getTokenData()['url']).then( async (blogDetails) => {
       blogDetails['avatar'] = undefined;
       this.editProfileForm.patchValue(blogDetails);
       this.editProfileForm.controls['disableNSFWFilter'].patchValue(this.mediaService.checkNSFWFilterDisabled);
+      this.editProfileForm.controls['css'].patchValue(await this.themeService.getMyThemeAsSting())
       this.loading = false;
     })
   }

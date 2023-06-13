@@ -8,6 +8,7 @@ import { ButtonModule } from 'primeng/button';
 import { DeferModule } from 'primeng/defer';
 import { PostModule } from '../../components/post/post.module';
 import { PagenotfoundModule } from '../pagenotfound/pagenotfound.module';
+import { DialogModule } from 'primeng/dialog';
 
 
 
@@ -31,6 +32,7 @@ const routes: Routes = [
     DeferModule,
     PostModule,
     PagenotfoundModule,
+    DialogModule,
   ]
 })
 export class ViewBlogModule { }

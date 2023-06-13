@@ -7,6 +7,7 @@ import { environment } from 'src/environments/environment';
 import { PostsService } from 'src/app/services/posts.service';
 import { SanitizedSeoService } from 'src/app/services/sanitized-seo.service';
 import { isPlatformBrowser, isPlatformServer } from '@angular/common';
+import { ThemeService } from 'src/app/services/theme.service';
 @Component({
   selector: 'app-single-post',
   templateUrl: './single-post.component.html',
@@ -33,8 +34,11 @@ export class SinglePostComponent implements OnInit {
     private router: Router,
     private route: ActivatedRoute,
     private seoService: SanitizedSeoService,
-    @Inject(PLATFORM_ID) private platformId: Object
+    @Inject(PLATFORM_ID) private platformId: Object,
+    private themeService: ThemeService
   ) {
+    this.themeService.setMyTheme()
+
     this.route.data.subscribe((data) => {
       this.forceSSR = route.snapshot.queryParams['force-ssr'] === 'true';
       this.post = data['posts'];
