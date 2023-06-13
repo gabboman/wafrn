@@ -10,14 +10,16 @@ import { DeletePostService } from 'src/app/services/delete-post.service';
 export class DeletePostComponent implements OnInit {
 
 
-  postToDelete!: string | undefined;
+  postToDelete: string | undefined = undefined;
+  visible = false;
 
   constructor(
     private deletePostService: DeletePostService,
     private messages: MessageService
-  ) { 
+  ) {
     this.deletePostService.launchDeleteScreen.subscribe((id) => {
       this.postToDelete = id;
+      this.visible = true;
     })
   }
 
@@ -26,6 +28,7 @@ export class DeletePostComponent implements OnInit {
 
   cancelDelete() {
     this.postToDelete = undefined;
+    this.visible = false;
   }
 
   deletePost() {
@@ -40,13 +43,14 @@ export class DeletePostComponent implements OnInit {
             }, 1000);
           }else{
             this.messages.add({ severity: 'error', summary: 'There was an error deleting the post. Please, try again and let us know about the issue' });
+            this.visible = false;
           }
 
         }
       }, (err) => {
         console.error(err);
         this.messages.add({ severity: 'error', summary: 'There was an error deleting the post. Please, try again and let us know about the issue' });
-
+        this.visible = false;
       });
     }
   }

@@ -1,5 +1,5 @@
-<p-dialog [(visible)]="postToReport" header="Report a post" [modal]="true"  >
-    <div style="width: 75vw; min-height: 35vh" class="p-grid">
+<p-dialog [(visible)]="visible" header="Report a post" [modal]="true"  >
+    <div class="p-grid ">
         <form [formGroup]="reportForm" (submit)="submit()">
             <span class="p-float-label">
               <input formControlName="description" id="float-input" type="text" pInputText class="w-full">

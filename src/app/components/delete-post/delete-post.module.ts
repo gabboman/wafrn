@@ -3,7 +3,6 @@ import { CommonModule } from '@angular/common';
 import { DeletePostComponent } from './delete-post.component';
 import { ButtonModule } from 'primeng/button';
 import { DialogModule } from 'primeng/dialog';
-import { PostModule } from '../post/post.module';
 
 
 

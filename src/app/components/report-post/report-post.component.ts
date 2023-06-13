@@ -14,6 +14,7 @@ export class ReportPostComponent implements OnInit {
 
   postToReport!: ProcessedPost[] | undefined;
   loading = false;
+  visible = false;
   reportForm: UntypedFormGroup;
 
 
@@ -40,20 +41,21 @@ export class ReportPostComponent implements OnInit {
     private reportService: ReportService,
     private messages: MessageService,
     private readonly formBuilder: UntypedFormBuilder
-  ) { 
+  ) {
     // I could call clearForm, but that will calm typescript typechecker
     this.reportForm =  this.formBuilder.group({
       description: ['', [Validators.required]],
       severity: ['', [Validators.required]],
       block: ['']
     });
-    
+
   }
 
   ngOnInit(): void {
     this.reportService.launchReportScreen.subscribe( (reportedPost) => {
       if(reportedPost) {
         this.postToReport = reportedPost;
+        this.visible = true;
       }
     })
   }
@@ -69,6 +71,7 @@ export class ReportPostComponent implements OnInit {
         this.messages.add({ severity: 'success', summary: 'The post has been reported and we will take action against it' });
 
         this.postToReport = undefined;
+        this.visible = false;
         this.clearForm();
       }
     }
@@ -76,6 +79,7 @@ export class ReportPostComponent implements OnInit {
 
   cancelReport(){
     this.postToReport = undefined;
+    this.visible = false;
     this.clearForm();
   }
 
