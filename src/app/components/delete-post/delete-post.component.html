@@ -1,5 +1,5 @@
 <p-dialog [(visible)]="visible" header="Are you sure that you want to delete that post?" [modal]="true"  >
-    <div style="width: 75vw; min-height: 35vh" class="p-grid">
+    <div  class="p-grid">
         <p>Your post will be deleted. If the post has no reblogs, it will be totally deleted. If it has reblogs, the content will be changed to "This post has been deleted"</p>
         <button (click)="deletePost()" pButton pRipple label="Delete" icon="pi pi-trash" class="w-full"></button>
         <br>
