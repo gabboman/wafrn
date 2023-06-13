@@ -112,6 +112,7 @@ export class PostEditorComponent implements OnInit, OnDestroy {
         this.idPostToReblog = elem.post?.id;
         const inResponseTo = elem.post;
         this.postCreatorContent = '';
+        this.tags = [];
         if(inResponseTo) {
           console.log(inResponseTo)
           this.contentWarning = inResponseTo.content_warning
