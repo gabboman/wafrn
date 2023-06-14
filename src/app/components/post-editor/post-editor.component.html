@@ -12,7 +12,7 @@
   <div class="mt-4 mb-2">
     <input [(ngModel)]="contentWarning" pInputText class="w-full" placeholder="Content warning">
   </div>
-  <p-overlayPanel #uploadImagesPanel>
+  <p-overlayPanel appendTo="body" #uploadImagesPanel>
     <div>
       <label for="description" class="block text-900 font-medium mb-2">Images description</label>
       <input [(ngModel)]="newImageDescription" id="description" type="text"
@@ -36,7 +36,7 @@
 
   </p-overlayPanel>
 
-  <p-overlayPanel #mentionUserSearchPanel>
+  <p-overlayPanel appendTo="body" #mentionUserSearchPanel>
     just write @ we are doing cool stuff now
   </p-overlayPanel>
 
