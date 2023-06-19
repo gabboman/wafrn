@@ -76,6 +76,7 @@ export class WafrnMediaComponent implements OnInit {
         break;
       }
       default: {
+        this.mimeType= 'UNKNOWN'
 
       }
     }

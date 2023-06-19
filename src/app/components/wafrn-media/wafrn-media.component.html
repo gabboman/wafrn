@@ -1,15 +1,15 @@
 <div class="parent">
-    <img #wafrnMedia *ngIf="nsfw || ! extensionsToHideImgTag.includes(extension)"
+    <img #wafrnMedia *ngIf="nsfw || ! extensionsToHideImgTag.includes(extension) || mimeType === 'UNKNOWN'"
     (click)="showPicture()" [src]="displayUrl"
     [alt]="data.description" loading="lazy"
     (load)="imgLoaded()"
     >
 
-    <video *ngIf="!nsfw && extension ==='mp4'" controls >
+    <video *ngIf="!nsfw &&  mimeType.startsWith('video')" controls >
         <source [src]="displayUrl" [type]="mimeType">
     </video>
 
-    <audio controls>
+    <audio *ngIf="!nsfw && mimeType.startsWith('audio')" controls>
       <source [src]="displayUrl" [type]="mimeType" />
     </audio>
 
