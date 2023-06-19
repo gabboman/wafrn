@@ -1,12 +1,16 @@
 <div class="parent">
-    <img #wafrnMedia *ngIf="ready && !video"
+    <img #wafrnMedia *ngIf="nsfw || ! extensionsToHideImgTag.includes(extension)"
     (click)="showPicture()" [src]="displayUrl"
     [alt]="data.description" loading="lazy"
     (load)="imgLoaded()"
     >
 
-    <video *ngIf="ready && video" controls >
-        <source [src]="displayUrl" type="video/mp4">
+    <video *ngIf="!nsfw && extension ==='mp4'" controls >
+        <source [src]="displayUrl" [type]="mimeType">
     </video>
+
+    <audio controls>
+      <source [src]="displayUrl" [type]="mimeType" />
+    </audio>
 
 </div>
