@@ -3,7 +3,6 @@ import { CommonModule } from '@angular/common';
 import { PostComponent } from './post.component';
 import { CheckboxModule } from 'primeng/checkbox';
 import { CardModule } from 'primeng/card';
-import { OverlayPanelModule } from 'primeng/overlaypanel';
 import { TagModule } from 'primeng/tag';
 import {DividerModule} from 'primeng/divider';
 import {SplitButtonModule} from 'primeng/splitbutton';
@@ -21,9 +20,8 @@ import { WafrnYoutubePlayerModule } from '../wafrn-youtube-player/wafrn-youtube-
     CommonModule,
     DividerModule,
     CheckboxModule,
-    CardModule,   
+    CardModule,
     TagModule,
-    OverlayPanelModule,
     SplitButtonModule,
     WafrnMediaModule,
     WafrnYoutubePlayerModule,
