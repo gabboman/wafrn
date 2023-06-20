@@ -2,6 +2,17 @@ $wafrn-blue: rgb(56, 254, 241);
 // $wafrn-dark: rgb(18, 95, 90);
 $editor-buttons:  #ffffffde;
 
+
+@font-face {
+  font-family: noto-emoji-color;
+  src: url(/assets/fonts/NotoColorEmoji-Regular.ttf);
+}
+
+@font-face {
+  font-family: noto-sans;
+  src: url(/assets/fonts/NotoSans-Regular.ttf);
+}
+
 html {
     background-color: rgb(32, 38, 46);
 }
@@ -132,4 +143,9 @@ a, a:visited {
 
 .p-carousel, p-carousel {
   width: 100%;
+}
+
+body, html, .p-component {
+  font-family: "noto-sans", "noto-emoji-color", sans-serif;
+
 }
