@@ -1,16 +1,34 @@
-<p-dialog [(visible)]="visible" header="Report a post" [modal]="true"  >
-    <div class="p-grid ">
-        <form [formGroup]="reportForm" (submit)="submit()">
-            <span class="p-float-label">
-              <input formControlName="description" id="float-input" type="text" pInputText class="w-full">
-              <label for="float-input">We need some extra details</label>
-            </span>
-            <p-listbox [options]="reportOptions" optionLabel="label" formControlName="severity"></p-listbox>
-            <p-checkbox [formControl]="$any(reportForm).controls['block']"  value="block" label="Block this user"></p-checkbox>
-            <button [disabled]="!reportForm.valid" pButton pRipple label="Report" icon="pi pi-exclamation-triangle" class="w-full" type="submit"></button>
-            <br>
-            <button (click)="cancelReport()" pButton pRipple label="Cancel report"  class="w-full"></button>
-
-          </form>
-    </div>
+<p-dialog [(visible)]="visible" header="Report a post" [modal]="true">
+  <div class="p-grid pt-4">
+    <form [formGroup]="reportForm" (submit)="submit()">
+      <span class="p-float-label mb-4">
+        <input formControlName="description" id="float-input" type="text" pInputText class="w-full">
+        <label for="float-input">We need some extra details</label>
+      </span>
+      <p-listbox
+        [options]="reportOptions"
+        optionLabel="label"
+        formControlName="severity"></p-listbox>
+      <p-checkbox
+        class="py-4"
+        [formControl]="$any(reportForm).controls['block']"
+        value="block"
+        label="Block this user"></p-checkbox>
+      <div class="flex items-center" style="gap: 8px">
+        <button
+          [disabled]="!reportForm.valid"
+          pButton
+          pRipple
+          label="Report"
+          icon="pi pi-exclamation-triangle"
+          type="submit"></button>
+        <button
+          (click)="cancelReport()"
+          pButton
+          pRipple
+          label="Cancel"
+          class="p-button-secondary"></button>
+      </div>
+    </form>
+  </div>
 </p-dialog>
