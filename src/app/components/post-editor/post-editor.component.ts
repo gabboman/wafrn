@@ -114,7 +114,6 @@ export class PostEditorComponent implements OnInit, OnDestroy {
         this.postCreatorContent = '';
         this.tags = [];
         if(inResponseTo) {
-          console.log(inResponseTo)
           this.contentWarning = inResponseTo.content_warning
           const parentPrivacy = this.privacyOptions.find(elem => elem.level === inResponseTo.privacy);
           if(parentPrivacy?.level !== 0) {
