@@ -126,7 +126,8 @@ export class PostsService {
   }
 
 
-  getPostHtml(content: string): string {
+  getPostHtml(post: ProcessedPost): string {
+    const content = post.content;
     const replacementsWafrnMedia: Array<{ wafrnMediaStringToReplace: string, id: string }> = [];
     const replacementsWafrnMentions: Array<{ wafrnMentionstringToReplace: string, url: string }> = [];
 
@@ -153,7 +154,6 @@ export class PostsService {
     // we remove stuff like img and script tags. we only allow certain stuff.
     const parsedAsHTML = this.parser.parseFromString(sanitized, 'text/html')
     const links = parsedAsHTML.getElementsByTagName('a')
-    const youtubeLinks: string[] = [];
 
     Array.from(links).forEach((link) => {
       const youtubeMatch = link.href.matchAll(this.youtubeRegex)
@@ -199,6 +199,14 @@ export class PostsService {
       const replacementString = `<a href="/blog/${sanitizeHtml(replacement.url)}" >@${sanitizeHtml(replacement.url.startsWith('@') ? replacement.url.substring(1): replacement.url)}</a>`
       sanitized = sanitized.replace(replacement.wafrnMentionstringToReplace, replacement.url ? replacementString: '_error_in_mention_');
     });
+
+    post.emojis.forEach(emoji => {
+      if(emoji.name.startsWith(':') && emoji.name.endsWith(':')) {
+        sanitized = sanitized.replaceAll(emoji.name,
+          `<img src="${environment.externalCacheurl + encodeURIComponent(emoji.url)}" class="post-emoji"/>`
+          )
+      }
+    })
 
 
     return sanitized;

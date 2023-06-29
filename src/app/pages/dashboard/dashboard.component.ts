@@ -116,7 +116,8 @@ export class DashboardComponent implements OnInit {
         notes: 0,
         remotePostId: '',
         privacy: 0,
-        userLikesPostRelations: []
+        userLikesPostRelations: [],
+        emojis: []
 
       }]);
     }

@@ -2,6 +2,7 @@ import { SimplifiedUser } from "./simplified-user";
 import { WafrnMedia } from "./wafrn-media";
 import { Tag } from "./tag";
 import { WafrnMention } from "./wafrn-mention";
+import { Emoji } from "./emoji";
 
 export interface ProcessedPost {
 
@@ -18,5 +19,6 @@ export interface ProcessedPost {
     notes:          number;
     privacy:        number;
     remotePostId:   string;
-    userLikesPostRelations: string[]
+    userLikesPostRelations: string[];
+    emojis:         Emoji[];
 }
