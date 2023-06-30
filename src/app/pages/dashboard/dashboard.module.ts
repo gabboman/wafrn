@@ -17,7 +17,8 @@ const routes: Routes = [
       },
       {
         path: 'explore',
-        component: DashboardComponent
+        component: DashboardComponent,
+        canActivate: [loginRequiredGuard]
       },
       {
         path: 'exploreLocal',
