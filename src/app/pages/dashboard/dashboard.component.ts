@@ -51,10 +51,6 @@ export class DashboardComponent implements OnInit {
     if(this.router.url.endsWith('private')) {
       this.level = 10;
     }
-    if(!(this.jwtService.tokenValid() || (this.router.url.endsWith('explore') || this.router.url.endsWith('exploreLocal')))) {
-      localStorage.clear();
-      this.router.navigate(['/']);
-    }
     this.postService.updateFollowers.subscribe( () => {
       if(this.postService.followedUserIds.length === 1 && this.level === 1  ){
         // if the user follows NO ONE we take them to the explore page!

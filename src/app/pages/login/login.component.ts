@@ -12,7 +12,7 @@ import { Router } from '@angular/router';
 })
 export class LoginComponent implements OnInit {
 
-  loading = true;
+  loading = false;
 
   loginForm = new UntypedFormGroup({
     email:  new UntypedFormControl('', [Validators.required, Validators.email]),
@@ -25,14 +25,12 @@ export class LoginComponent implements OnInit {
     private loginService: LoginService,
     private messages: MessageService,
     private router: Router,
-  ) { }
+  ) {
+
+    }
 
   ngOnInit(): void {
-    if(this.loginService.checkUserLoggedIn()) {
-      this.router.navigate(['/dashboard']);
-    } else {
-      this.loading = false;
-    }
+
   }
 
   async onSubmit(){

@@ -6,13 +6,15 @@ import { CardModule } from 'primeng/card';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { SingleNotificationModule } from 'src/app/components/single-notification/single-notification.module';
 import { DeferModule } from 'primeng/defer';
+import { loginRequiredGuard } from 'src/app/guards/login-required.guard';
 
 
 
 const routes: Route[] = [
       {
         path: '',
-        component: NotificationsComponent
+        component: NotificationsComponent,
+        canActivate: [loginRequiredGuard]
       }
     ];
 @NgModule({

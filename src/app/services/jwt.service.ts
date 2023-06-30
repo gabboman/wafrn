@@ -20,8 +20,15 @@ export class JwtService {
       res = new Date().getTime() < token.exp * 1000;
       if(!res) {
         localStorage.clear();
-        this.router.navigate(['/']);
       }
+    }
+    return res;
+  }
+
+  adminToken(): boolean {
+    let res = false;
+    if(this.tokenValid()) {
+      return parseInt(this.getTokenData().role) === 10
     }
     return res;
   }

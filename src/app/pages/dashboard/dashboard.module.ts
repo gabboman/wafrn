@@ -6,11 +6,14 @@ import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { CardModule } from 'primeng/card';
 import { DeferModule } from 'primeng/defer';
 import { PostModule } from 'src/app/components/post/post.module';
+import { loginRequiredGuard } from 'src/app/guards/login-required.guard';
 
 const routes: Routes = [
       {
         path: '',
-        component: DashboardComponent
+        component: DashboardComponent,
+        canActivate: [loginRequiredGuard],
+
       },
       {
         path: 'explore',
@@ -22,7 +25,8 @@ const routes: Routes = [
       },
       {
         path: 'private',
-        component: DashboardComponent
+        component: DashboardComponent,
+        canActivate: [loginRequiredGuard]
       }
     ];
 

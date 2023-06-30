@@ -9,11 +9,13 @@ import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
 import { KeyFilterModule } from 'primeng/keyfilter';
 import { TooltipModule } from 'primeng/tooltip';
+import { userLoggedGuard } from 'src/app/guards/user-logged.guard';
 
 const routes: Routes = [
       {
         path: '',
-        component: RegisterComponent
+        component: RegisterComponent,
+        canActivate: [userLoggedGuard]
       }
     ];
 

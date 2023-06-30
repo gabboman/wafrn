@@ -7,11 +7,14 @@ import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { CardModule } from 'primeng/card';
 import { InputTextModule } from 'primeng/inputtext';
 import { ButtonModule } from 'primeng/button';
+import { userLoggedGuard } from 'src/app/guards/user-logged.guard';
 
 const routes: Routes = [
       {
         path: '',
-        component: LoginComponent
+        component: LoginComponent,
+        canActivate: [userLoggedGuard]
+
       }
     ];
 

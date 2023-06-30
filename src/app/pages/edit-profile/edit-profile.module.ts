@@ -9,10 +9,12 @@ import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
 import { TooltipModule } from 'primeng/tooltip';
 import { InputTextareaModule } from 'primeng/inputtextarea';
+import { loginRequiredGuard } from 'src/app/guards/login-required.guard';
 const routes: Routes = [
       {
         path: '',
-        component: EditProfileComponent
+        component: EditProfileComponent,
+        canActivate: [loginRequiredGuard]
       }
     ];
 
