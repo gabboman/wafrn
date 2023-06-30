@@ -117,28 +117,31 @@ export class NavigationMenuComponent implements OnInit, OnDestroy {
         label: 'Admin',
         icon: "pi pi-power-off",
         title: 'Check your notifications',
-        command: () => this.hideMenu(),
-        routerLink: '/dashboard/notifications',
         badge: this.notifications,
-        visible: false,//this.jwtService.adminToken(),
+        visible: this.jwtService.adminToken(),
         items: [
           {
             label: 'Server list',
             icon: "pi pi-server",
             title: 'List of all the servers',
             command: () => this.hideMenu(),
-            routerLink: '/dashboard/exploreLocal',
+            routerLink: '/admin/server-list',
           }
         ]
       },
       {
-        label: 'Local explore',
-        icon: "pi pi-server",
-        title: 'See the local posts of the server!',
-        command: () => this.hideMenu(),
-        routerLink: '/dashboard/exploreLocal',
+        label: 'Explore',
+        title: 'See the local posts of the server or the fediverse!',
         visible: this.jwtService.tokenValid(),
         items: [
+          {
+            label: 'Local explore',
+            icon: "pi pi-server",
+            title: 'See the local posts of the server!',
+            command: () => this.hideMenu(),
+            routerLink: '/dashboard/exploreLocal',
+            visible: this.jwtService.tokenValid(),
+          },
           {
             label: 'Explore',
             icon: "pi pi-compass",
@@ -167,13 +170,18 @@ export class NavigationMenuComponent implements OnInit, OnDestroy {
       },
 
       {
-        label: 'Edit profile',
-        title: 'Edit profile',
-        icon: "pi pi-cog",
-        command: () => this.hideMenu(),
-        routerLink: ['/editProfile'],
+        label: 'Settings',
+        title: 'Your blog, your profile',
         visible: this.jwtService.tokenValid(),
         items: [
+          {
+            label: 'Edit profile',
+            title: 'Edit profile',
+            icon: "pi pi-cog",
+            command: () => this.hideMenu(),
+            routerLink: ['/editProfile'],
+            visible: this.jwtService.tokenValid(),
+          },
           {
             label: 'My blog',
             title: 'View your own blog',

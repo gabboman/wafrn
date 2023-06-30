@@ -1,1 +1,33 @@
-<p>server-list works!</p>
+<div class="grid pb-6 lg:px-4 scalein animation-duration-400 wafrn-container">
+  <div class="col-12 wafrn-post">
+    <p-card>
+      <p-table
+      [value]="servers"
+      [paginator]="true"
+      [rows]="5"
+      [rowsPerPageOptions]="[5, 10, 25, 50]"
+      [globalFilterFields]="['displayName', 'blocked', 'comment']"
+      [loading]="!ready"
+      >
+        <ng-template pTemplate="header">
+          <tr>
+            <th>Server
+              <p-columnFilter type="text" field="displayName" display="menu"></p-columnFilter>
+            </th>
+            <th>Blocked</th>
+            <th>Comment</th>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-server>
+          <tr>
+            <td>{{server.displayName}}</td>
+            <td><p-inputSwitch [(ngModel)]="server.blocked"></p-inputSwitch></td>
+            <td><input type="text" pInputText [(ngModel)]="server.detail" /></td>
+
+          </tr>
+        </ng-template>
+      </p-table>
+      <button pButton [icon]="'pi pi-save'" [label]="'Save changes'" (click)="save()"></button>
+    </p-card>
+  </div>
+</div>

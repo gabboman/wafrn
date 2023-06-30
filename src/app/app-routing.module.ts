@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { NavigationMenuComponent } from './components/navigation-menu/navigation-menu.component';
 import { NavigationMenuModule } from './components/navigation-menu/navigation-menu.module';
+import { isAdminGuard } from './guards/is-admin.guard';
 
 const routes: Routes = [
   {
@@ -59,6 +60,11 @@ const routes: Routes = [
       {
         path: '',
         loadChildren: () => import ('./pages/login/login.module').then(m => m.LoginModule)
+      },
+      {
+        path: 'admin',
+        loadChildren: () => import('./pages/admin/admin.module').then(m => m.AdminModule),
+        canActivate: [isAdminGuard]
       },
       {
         path: '**',
