@@ -70,7 +70,7 @@ export class NavigationMenuComponent implements OnInit, OnDestroy {
         title: 'Log in',
         icon: "pi pi-home",
         command: () => this.hideMenu(),
-        routerLink: '/',
+        routerLink: '/login',
         visible: !this.jwtService.tokenValid()
       },
       {
@@ -78,7 +78,7 @@ export class NavigationMenuComponent implements OnInit, OnDestroy {
         title: 'Register',
         icon: "pi pi-user",
         command: () => this.hideMenu(),
-        routerLink: '/register',
+        routerLink: '/',
         visible: !this.jwtService.tokenValid()
       },
       {
@@ -117,7 +117,7 @@ export class NavigationMenuComponent implements OnInit, OnDestroy {
         label: 'Admin',
         icon: "pi pi-power-off",
         title: 'Check your notifications',
-        badge: this.notifications,
+        // badge: this.notifications,
         visible: this.jwtService.adminToken(),
         items: [
           {
@@ -143,9 +143,9 @@ export class NavigationMenuComponent implements OnInit, OnDestroy {
             visible: this.jwtService.tokenValid(),
           },
           {
-            label: 'Explore',
+            label: 'Explore the fediverse',
             icon: "pi pi-compass",
-            title: 'See ALL the posts that are public! not only the ones of people you follow!',
+            title: 'Take a look to all the public posts avaiable to us, not only of people in this servers',
             command: () => this.hideMenu(),
             routerLink: '/dashboard/explore',
             visible: this.jwtService.tokenValid()
@@ -171,7 +171,7 @@ export class NavigationMenuComponent implements OnInit, OnDestroy {
 
       {
         label: 'Settings',
-        title: 'Your blog, your profile',
+        title: 'Your blog, your profile, blocks, and other stuff',
         visible: this.jwtService.tokenValid(),
         items: [
           {

@@ -17,7 +17,7 @@ import { QuillConfigModule } from "ngx-quill";
     AppComponent,
   ],
   imports: [
-    BrowserModule.withServerTransition({ appId: 'serverApp' }),
+    BrowserModule,
     BrowserAnimationsModule,
     CommonModule,
     FormsModule,
@@ -25,12 +25,6 @@ import { QuillConfigModule } from "ngx-quill";
     AppRoutingModule,
     HttpClientModule,
     ToastModule,
-    QuillConfigModule.forRoot({
-      theme: 'snow',
-      sanitize: true,
-      format: 'html',
-      strict: true,
-    }),
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: WafrnAuthInterceptor, multi: true },

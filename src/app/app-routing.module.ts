@@ -10,7 +10,7 @@ const routes: Routes = [
     component: NavigationMenuComponent,
     children:[
       {
-        path: 'register',
+        path: '',
         loadChildren: () => import ('./pages/register/register.module').then(m => m.RegisterModule)
       },
       {
@@ -54,11 +54,11 @@ const routes: Routes = [
       },
       {
         path: 'editProfile',
-        loadChildren: () => import ('./pages/edit-profile/edit-profile.module').then(m => m.EditProfileModule)
+        loadChildren: () => import ('./pages/profile/edit-profile/edit-profile.module').then(m => m.EditProfileModule)
 
       },
       {
-        path: '',
+        path: 'login',
         loadChildren: () => import ('./pages/login/login.module').then(m => m.LoginModule)
       },
       {
