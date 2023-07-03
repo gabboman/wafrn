@@ -5,7 +5,7 @@
         <img loading="lazy" src="/assets/logo.png" alt="Image" height="50" class="mb-3">
         <div class="text-900 text-3xl font-medium mb-3">Welcome! We hope you enjoy this place!</div>
         <span class="text-600 font-medium line-height-3">Do you have an account?</span>
-        <a routerLink="/" class="font-medium no-underline ml-2 text-blue-500 cursor-pointer">Just log in!</a>
+        <a routerLink="/login" class="font-medium no-underline ml-2 text-blue-500 cursor-pointer">Just log in!</a>
       </div>
 
       <form [hidden]="loading" [formGroup]="loginForm" (ngSubmit)="onSubmit()">
