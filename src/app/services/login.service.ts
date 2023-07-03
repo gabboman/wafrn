@@ -59,7 +59,7 @@ export class LoginService {
       let petition: any = await this.http.post(`${environment.baseUrl}/register`,
        payload).toPromise();
       if (petition.success) {
-        success = true;
+        success = petition.success;
       }
     } catch (exception) {
       console.error(exception);
