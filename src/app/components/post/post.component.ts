@@ -118,14 +118,14 @@ export class PostComponent implements OnInit {
 
   launchReblog() {
     this.editorService.launchPostEditorEmitter.next({
-      post: this.post[this.post.length - 1],
+      post: this.finalPost,
       action: Action.Response
     });
   }
 
   async quickReblog() {
     this.loadingAction = true;
-      const response = await this.editor.createPost('', 0,  '',this.post[this.post.length - 1].id );
+      const response = await this.editor.createPost('', 0,  '',this.finalPost.id );
       if(response) {
         this.messages.add({ severity: 'success', summary: 'You reblogged the post succesfully' });
       } else {
@@ -163,6 +163,7 @@ export class PostComponent implements OnInit {
   }
 
   updateButtonItems(){
+    let index = 0;
     for (const content of this.post) {
       const buttonsForFragment: MenuItem[] = [
         {
@@ -185,7 +186,7 @@ export class PostComponent implements OnInit {
           icon: 'pi pi-replay',
           command: () => this.editorService.launchPostEditorEmitter.next({
             action: Action.Response,
-            post: content
+            post: index === this.post.length ? this.finalPost : content
           })
         },
         (content.content !== '' || content.tags.length != 0) && content.userId != this.myId  ?
@@ -223,7 +224,7 @@ export class PostComponent implements OnInit {
         }
       ].filter(elem => elem.label != 'NULL')
       this.buttonItems[content.id] = this.userLoggedIn ? buttonsForFragment.concat(loggedInButtons) :  buttonsForFragment;
-
+      index = index +1 ;
     }
 
   }
