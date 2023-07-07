@@ -186,7 +186,7 @@ export class PostComponent implements OnInit {
           icon: 'pi pi-replay',
           command: () => this.editorService.launchPostEditorEmitter.next({
             action: Action.Response,
-            post: index === this.post.length ? this.finalPost : content
+            post: content
           })
         },
         (content.content !== '' || content.tags.length != 0) && content.userId != this.myId  ?
