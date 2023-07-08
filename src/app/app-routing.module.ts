@@ -53,8 +53,8 @@ const routes: Routes = [
         loadChildren: () => import ('./pages/view-blog/view-blog.module').then(m => m.ViewBlogModule),
       },
       {
-        path: 'editProfile',
-        loadChildren: () => import ('./pages/profile/edit-profile/edit-profile.module').then(m => m.EditProfileModule)
+        path: 'profile',
+        loadChildren: () => import ('./pages/profile/profile.module').then(m => m.ProfileModule)
 
       },
       {

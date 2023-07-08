@@ -177,9 +177,17 @@ export class NavigationMenuComponent implements OnInit, OnDestroy {
           {
             label: 'Edit profile',
             title: 'Edit profile',
-            icon: "pi pi-cog",
+            icon: "pi pi-user-edit",
             command: () => this.hideMenu(),
-            routerLink: ['/editProfile'],
+            routerLink: ['/profile/edit'],
+            visible: this.jwtService.tokenValid(),
+          },
+          {
+            label: 'Manage blocked users',
+            title: 'Manage blocked users',
+            icon: "pi pi-ban",
+            command: () => this.hideMenu(),
+            routerLink: ['/profile/blocks'],
             visible: this.jwtService.tokenValid(),
           },
           {
@@ -189,7 +197,6 @@ export class NavigationMenuComponent implements OnInit, OnDestroy {
             command: () => this.hideMenu(),
             routerLink: ['/blog', this.jwtService.tokenValid() ? this.jwtService.getTokenData()['url'] : ''],
             visible: this.jwtService.tokenValid()
-
           },
         ]
       },
