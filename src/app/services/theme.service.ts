@@ -44,7 +44,7 @@ export class ThemeService {
     async getMyThemeAsSting(): Promise<string>{
       let res = '';
       try {
-        const themeResponse = await this.http.get( `${environment.baseMediaUrl}/themes/${this.loginService.getLoggedUserUUID()}.css`, { responseType: 'text' }).toPromise()
+        const themeResponse = await this.http.get( `${environment.baseUrl}/api/uploads/themes/${this.loginService.getLoggedUserUUID()}.css`, { responseType: 'text' }).toPromise()
         if(themeResponse && themeResponse.length > 0) {
           res = themeResponse;
         }
@@ -59,7 +59,7 @@ export class ThemeService {
     setTheme(themeToSet: string) {
       this.setStyle(
         "customUserTheme",
-        `${environment.baseUrl}/uploads/themes/${themeToSet}.css`
+        `${environment.baseUrl}/api/uploads/themes/${themeToSet}.css`
       );
     }
 
