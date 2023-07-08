@@ -22,7 +22,7 @@
           <tr>
             <td>{{server.displayName}}</td>
             <td><p-inputSwitch [(ngModel)]="server.blocked"></p-inputSwitch></td>
-            <td><input type="text" pInputText [(ngModel)]="server.detail" /></td>
+            <td><textarea type="text" class="w-full" pInputTextarea [(ngModel)]="server.detail"></textarea></td>
 
           </tr>
         </ng-template>

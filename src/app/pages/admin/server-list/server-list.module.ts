@@ -7,7 +7,7 @@ import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { TableModule } from 'primeng/table';
 import { InputSwitchModule } from 'primeng/inputswitch';
 import { FormsModule } from '@angular/forms';
-import { InputTextModule } from 'primeng/inputtext';
+import { InputTextareaModule } from 'primeng/inputtextarea';
 import { ButtonModule } from 'primeng/button';
 
 const routes: Route[] = [
@@ -28,8 +28,8 @@ const routes: Route[] = [
     ProgressSpinnerModule,
     TableModule,
     InputSwitchModule,
-    InputTextModule,
     ButtonModule,
+    InputTextareaModule,
     RouterModule.forChild(routes)
   ]
 })
