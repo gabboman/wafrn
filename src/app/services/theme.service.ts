@@ -59,7 +59,7 @@ export class ThemeService {
     setTheme(themeToSet: string) {
       this.setStyle(
         "customUserTheme",
-        `${environment.baseMediaUrl}/themes/${themeToSet}.css`
+        `${environment.baseUrl}/uploads/themes/${themeToSet}.css`
       );
     }
 
