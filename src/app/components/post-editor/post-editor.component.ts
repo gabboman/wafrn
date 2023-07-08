@@ -121,11 +121,11 @@ export class PostEditorComponent implements OnInit, OnDestroy {
           }
           this.privacy = parentPrivacy ? parentPrivacy : this.privacyOptions[0]
           if(inResponseTo.user.url.startsWith('@')) {
-            this.postCreatorContent = `${this.postCreatorContent}[mentionuserid="${inResponseTo.user.id}"]`
+            this.postCreatorContent = `${this.postCreatorContent}[mentionuserid="${inResponseTo.user.id}"] `
           }
           inResponseTo.mentionPost?.forEach((mention) => {
             if(mention?.url.startsWith('@')) {
-              this.postCreatorContent = `${this.postCreatorContent}[mentionuserid="${mention.id}"]`
+              this.postCreatorContent = `${this.postCreatorContent}[mentionuserid="${mention.id}"] `
             }
           });
         }
