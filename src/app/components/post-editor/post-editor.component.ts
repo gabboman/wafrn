@@ -61,7 +61,11 @@ export class PostEditorComponent implements OnInit, OnDestroy {
   enablePrivacyEdition = true;
   modules = {
     mention: {
-      allowedChars: /^[A-Z0-9a-z_@.]*$/,
+      allowedChars: /^[A-Z0-9a-z_.]*$/,
+      mentionDenotationChars: ['@'],
+      maxChars: 128,
+      fixMentionsToQuill: true,
+      defaultMenuOrientation: 'bottom',
       onSelect: (item: any, insertItem: any) => {
         item.denotationChar = ''
         item.value = `[mentionuserid="${item.id}"]`
@@ -72,7 +76,7 @@ export class PostEditorComponent implements OnInit, OnDestroy {
       },
       source: async (searchTerm: string, renderList: any) => {
         await this.updateMentionsSuggestions(searchTerm)
-        const values = this.mentionSuggestions.map(elem => {return {id: elem.id, value: elem.url, avatar: elem.avatar}})
+        const values = this.mentionSuggestions.map(elem => {return {id: elem.id, value: elem.url.replaceAll('@', '_').replace('_','@'), avatar: elem.avatar}})
 
         if (searchTerm.length === 0) {
           renderList(values, searchTerm)
@@ -99,7 +103,6 @@ export class PostEditorComponent implements OnInit, OnDestroy {
 
   constructor(
     private editorService: EditorService,
-    private postsService: PostsService,
     private messages: MessageService,
     private mediaService: MediaService,
   ) {
@@ -226,7 +229,7 @@ export class PostEditorComponent implements OnInit, OnDestroy {
 
   async updateMentionsSuggestions(query: string){
     if(query){
-      const backendResponse: any = await this.editorService.searchUser(query);
+      const backendResponse: any = await this.editorService.searchUser(query.replaceAll('_', '@'));
       if(backendResponse){
         this.mentionSuggestions = backendResponse.users? backendResponse.users : [];
         this.mentionSuggestions = this.mentionSuggestions.map((user) => {
