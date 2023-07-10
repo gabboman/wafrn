@@ -41,22 +41,4 @@ export class ReportService {
     return success;
 
   }
-
-  async blockUser(id: string): Promise<boolean> {
-    let success = false;
-    try {
-      const formData = {
-        userId: id
-      }
-      const response = await this.http.post(`${environment.baseUrl}/block`, formData).toPromise();
-      success = true;
-    } catch (error) {
-      console.error(error)
-      this.messages.add({ severity: 'error', summary: 'Something went wrong blocking the user! Check your internet conectivity and try again.' });
-
-    }
-
-    return success;
-
-  }
 }

@@ -161,7 +161,6 @@ export class PostsService {
           Array.from(youtubeMatch).forEach(youtubeString => {
             const ytPlayer = document.createElement("app-wafrn-youtube-player")
             ytPlayer.setAttribute('video',youtubeString[6] )
-            console.log(ytPlayer)
             link.innerHTML =  `<app-wafrn-youtube-player video="${youtubeString[6]}" > </app-wafrn-youtube-player>`
           })
       }

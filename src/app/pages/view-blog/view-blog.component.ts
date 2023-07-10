@@ -1,9 +1,10 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Meta, Title } from '@angular/platform-browser';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
-import { MessageService } from 'primeng/api';
+import { MenuItem, MessageService } from 'primeng/api';
 import { filter } from 'rxjs';
 import { ProcessedPost } from 'src/app/interfaces/processed-post';
+import { BlocksService } from 'src/app/services/blocks.service';
 import { DashboardService } from 'src/app/services/dashboard.service';
 import { LoginService } from 'src/app/services/login.service';
 import { PostsService } from 'src/app/services/posts.service';
@@ -29,6 +30,8 @@ export class ViewBlogComponent implements OnInit, OnDestroy {
   navigationSubscription;
   showModalTheme = false;
 
+  splitButtonItems: MenuItem[] = [];
+
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -39,7 +42,8 @@ export class ViewBlogComponent implements OnInit, OnDestroy {
     private router: Router,
     private titleService: Title,
     private metaTagService: Meta,
-    private themeService: ThemeService
+    private themeService: ThemeService,
+    private blockService: BlocksService
   ) {
     this.userLoggedIn = loginService.checkUserLoggedIn();
     this.navigationSubscription = router.events.pipe(filter(event => event instanceof NavigationEnd)).subscribe((ev)=> {
@@ -72,6 +76,50 @@ export class ViewBlogComponent implements OnInit, OnDestroy {
         this.found = false;
       } else {
       this.blogDetails = blogResponse;
+      this.splitButtonItems = [
+
+        blogResponse.muted ?
+        {
+          disabled: true,
+          title: 'You muted this user',
+          label: 'You muted this user',
+          icon: 'pi pi-volume-off',
+        } : {
+          title: 'Mute user',
+          label: 'Mute user',
+          command: () => this.blockService.muteUser(this.blogDetails.id),
+          icon: 'pi pi-volume-off',
+        },
+        blogResponse.blocked ?
+        {
+          disabled: true,
+          title: 'You blocked this user',
+          label: 'You blocked this user',
+          icon: 'pi pi-ban',
+
+        } : {
+          title: 'Block user',
+          label: 'Block user',
+          command: () => this.blockService.blockUser(this.blogDetails.id),
+          icon: 'pi pi-ban',
+
+        },
+        blogResponse.url.startsWith('@') && !blogResponse.serverBlocked ?
+        {
+          // TODO make visible once is done
+          visible: false,
+          title: 'Block server',
+          label: 'Block server',
+          command: () => this.blockService.blockServer(this.blogDetails.id)
+        } : {
+          disabled: true,
+          // TODO make visible once is done
+          visible: false,
+          //visible: blogResponse.url.startsWith('@'),
+          title: `You have blocked this user's server`,
+          label: `You have blocked this user's server`
+        } ,
+      ]
       this.loadPosts(this.currentPage).then(() => this.loading = false);
       this.avatarUrl = this.blogDetails.url.startsWith('@') ? environment.externalCacheurl + encodeURIComponent(this.blogDetails.avatar) : environment.baseMediaUrl + this.blogDetails.avatar
       this.titleService.setTitle(`${this.blogDetails.url}\'s blog`);

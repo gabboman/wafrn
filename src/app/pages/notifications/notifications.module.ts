@@ -7,7 +7,7 @@ import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { SingleNotificationModule } from 'src/app/components/single-notification/single-notification.module';
 import { DeferModule } from 'primeng/defer';
 import { loginRequiredGuard } from 'src/app/guards/login-required.guard';
-
+import { DataViewModule, DataViewLayoutOptions } from 'primeng/dataview';
 
 
 const routes: Route[] = [
@@ -27,7 +27,8 @@ const routes: Route[] = [
     CardModule,
     ProgressSpinnerModule,
     SingleNotificationModule,
-    DeferModule
+    DeferModule,
+    DataViewModule
 
   ]
 })

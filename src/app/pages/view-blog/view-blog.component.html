@@ -1,6 +1,6 @@
 <div *ngIf="!loading && found" class="wafrn-container lg:px-4">
   <div id="firstPost" class="col-12 pb-6">
-    <p-card>
+    <p-card class="align-items-center">
       <div class="flex justify-content-center flex-wrap">
         <img loading="lazy" style="max-width: 100%; max-height: 15vh;" [src]="avatarUrl">
       </div>
@@ -10,10 +10,13 @@
       <div class="flex justify-content-center flex-wrap mt-4 mb-2">
         <div [innerHtml]="blogDetails.description" class="text-600 font-medium line-height-3"></div>
       </div>
-      <button *ngIf="followedUsers.indexOf(blogDetails.id) === -1 && userLoggedIn" pButton pRipple label="Follow"
-                class="w-full" (click)="followUser(blogDetails.id)"></button>
-      <button *ngIf="followedUsers.indexOf(blogDetails.id) !== -1 && userLoggedIn" pButton pRipple label="Unfollow"
-                class="w-full" (click)="unfollowUser(blogDetails.id)"></button>
+      <div class="flex align-items-center justify-content-center w-full">
+        <p-splitButton [model]="splitButtonItems" *ngIf="followedUsers.indexOf(blogDetails.id) === -1 && userLoggedIn" pRipple label="Follow"
+        (onClick)="followUser(blogDetails.id)"></p-splitButton>
+<p-splitButton [model]="splitButtonItems" *ngIf="followedUsers.indexOf(blogDetails.id) !== -1 && userLoggedIn" pRipple label="Unfollow"
+        (onClick)="unfollowUser(blogDetails.id)"></p-splitButton>
+      </div>
+
     </p-card>
   </div>
 </div>

@@ -9,7 +9,7 @@ export const environment = {
   baseUrl: 'http://localhost:3000/api',
   //baseUrl: 'https://app.wafrn.net/api',
   //baseMediaUrl: 'https://media.wafrn.net',
-  externalCacheurl: 'https://app.wafrn.net/cache?media=',
+  externalCacheurl: 'https://cache.wafrn.net/?media=',
   //baseMediaUrl: 'https://wafrn.b-cdn.net',
   baseMediaUrl: 'http://localhost:3000/uploads',
   frontUrl: 'http://localhost:4200',

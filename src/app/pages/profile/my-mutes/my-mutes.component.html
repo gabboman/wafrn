@@ -1,0 +1,28 @@
+<div class="grid pb-6 lg:px-4 scalein animation-duration-400 wafrn-container">
+  <div class="col-12 wafrn-post">
+    <p-card>
+      <p-table
+      [value]="mutedUsers"
+      [paginator]="true"
+      [rows]="5"
+      [rowsPerPageOptions]="[5, 10, 25, 50]"
+      [loading]="loading"
+      >
+        <ng-template pTemplate="header">
+          <tr>
+            <th>Muted user</th>
+            <th>Reason</th>
+            <th></th>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-userMuted>
+          <tr>
+            <td class="user-muted"><img class="avatar" [src]="userMuted.avatar"> {{userMuted.url}}</td>
+            <td>{{userMuted.reason}}</td>
+            <td><button (click)="unmuteUser(userMuted.id)" class="w-full" pButton label="Unmute"></button></td>
+          </tr>
+        </ng-template>
+      </p-table>
+    </p-card>
+  </div>
+</div>
