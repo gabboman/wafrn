@@ -183,6 +183,14 @@ export class NavigationMenuComponent implements OnInit, OnDestroy {
             visible: this.jwtService.tokenValid(),
           },
           {
+            label: 'Edit my theme',
+            title: 'Edit my theme',
+            icon: "pi pi-user-edit",
+            command: () => this.hideMenu(),
+            routerLink: ['/profile/css'],
+            visible: this.jwtService.tokenValid(),
+          },
+          {
             label: 'Manage muted users',
             title: 'Manage muted users',
             icon: "pi pi-volume-off",

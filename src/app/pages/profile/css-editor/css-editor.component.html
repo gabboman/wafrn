@@ -1,7 +1,15 @@
 <div class="grid">
   <div class="col-12 sm:col-12 md:col-12 lg:col-5 margin-auto pb-6">
     <p-card>
-    <p-progressSpinner></p-progressSpinner>
+    <p-progressSpinner *ngIf="!ready"></p-progressSpinner>
+
+    <quill-editor format="text" *ngIf="ready" #quill [(ngModel)]="myCSS" class="w-full" [modules]="modules" >
+      <div quill-editor-toolbar style="border-top-left-radius: 5px; border-top-right-radius: 5px;">
+        Edit your css
+      </div>
+    </quill-editor>
+    <button  *ngIf="ready"  (click)="submit()" pButton pRipple label="Update your theme" class="w-full"></button>
+
   </p-card>
   </div>
 </div>

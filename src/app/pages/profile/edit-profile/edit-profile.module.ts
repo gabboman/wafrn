@@ -10,6 +10,8 @@ import { InputTextModule } from 'primeng/inputtext';
 import { TooltipModule } from 'primeng/tooltip';
 import { InputTextareaModule } from 'primeng/inputtextarea';
 import { loginRequiredGuard } from 'src/app/guards/login-required.guard';
+import { QuillModule } from 'ngx-quill';
+
 const routes: Routes = [
       {
         path: '',
@@ -32,7 +34,7 @@ const routes: Routes = [
     ButtonModule,
     InputTextModule,
     TooltipModule,
-    InputTextareaModule
+    QuillModule
   ]
 })
 export class EditProfileModule { }

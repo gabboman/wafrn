@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { environment } from 'src/environments/environment';
 import { LoginService } from './login.service';
 import { HttpClient } from '@angular/common/http';
+import { UtilsService } from './utils.service';
 
 @Injectable({
   providedIn: 'root'
@@ -10,11 +11,17 @@ export class ThemeService {
 
   constructor(
     private loginService: LoginService,
-    private http: HttpClient
+    private http: HttpClient,
+    private utils: UtilsService,
+
     ) { }
 
     setMyTheme(){
       this.setTheme(this.loginService.getLoggedUserUUID())
+    }
+
+    updateTheme(newTheme: string) {
+      return this.http.post(`${environment.baseUrl}/updateCSS`, {css: newTheme}).toPromise()
     }
 
     // 0 no data 1 does not want custom css 2 accepts custom css

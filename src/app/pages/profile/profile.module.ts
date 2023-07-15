@@ -16,6 +16,10 @@ import { MyMutesComponent } from './my-mutes/my-mutes.component';
         loadChildren: ()=>  import ('./edit-profile/edit-profile.module').then(m => m.EditProfileModule)
       },
       {
+        path: 'css',
+        loadChildren: ()=>  import ('./css-editor/css-editor.module').then(m => m.CssEditorModule)
+      },
+      {
         path: 'blocks',
         loadChildren: () => import ('./my-blocks/my-blocks.module').then(m=> m.MyBlocksModule)
       },
