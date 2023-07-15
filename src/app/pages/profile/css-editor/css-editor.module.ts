@@ -7,7 +7,6 @@ import { QuillModule } from 'ngx-quill';
 import { RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { ButtonModule } from 'primeng/button';
-import { HIGHLIGHT_OPTIONS } from 'ngx-highlightjs';
 
 
 
