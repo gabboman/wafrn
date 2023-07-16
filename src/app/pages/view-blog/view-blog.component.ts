@@ -87,7 +87,7 @@ export class ViewBlogComponent implements OnInit, OnDestroy {
         } : {
           title: 'Mute user',
           label: 'Mute user',
-          command: () => this.blockService.muteUser(this.blogDetails.id),
+          command: () => this.blockService.muteUser(this.blogDetails.id).then(() => this.ngOnInit()),
           icon: 'pi pi-volume-off',
         },
         blogResponse.blocked ?
@@ -100,24 +100,23 @@ export class ViewBlogComponent implements OnInit, OnDestroy {
         } : {
           title: 'Block user',
           label: 'Block user',
-          command: () => this.blockService.blockUser(this.blogDetails.id),
+          command: () => this.blockService.blockUser(this.blogDetails.id).then(() => this.ngOnInit()),
           icon: 'pi pi-ban',
 
         },
         blogResponse.url.startsWith('@') && !blogResponse.serverBlocked ?
         {
-          // TODO make visible once is done
-          visible: false,
           title: 'Block server',
           label: 'Block server',
-          command: () => this.blockService.blockServer(this.blogDetails.id)
+          icon: 'pi pi-server',
+          command: () => this.blockService.blockServer(this.blogDetails.id).then(() => this.ngOnInit())
         } : {
           disabled: true,
-          // TODO make visible once is done
-          visible: false,
-          //visible: blogResponse.url.startsWith('@'),
+          visible: blogResponse.url.startsWith('@'),
           title: `You have blocked this user's server`,
-          label: `You have blocked this user's server`
+          label: `You have blocked this user's server`,
+          icon: 'pi pi-server'
+
         } ,
       ]
       this.loadPosts(this.currentPage).then(() => this.loading = false);

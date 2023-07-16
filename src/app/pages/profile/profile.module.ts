@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { MyMutesComponent } from './my-mutes/my-mutes.component';
+import { MyServerBlocksComponent } from './my-server-blocks/my-server-blocks.component';
 
 
 
@@ -22,6 +23,10 @@ import { MyMutesComponent } from './my-mutes/my-mutes.component';
       {
         path: 'blocks',
         loadChildren: () => import ('./my-blocks/my-blocks.module').then(m=> m.MyBlocksModule)
+      },
+      {
+        path: 'serverBlocks',
+        loadChildren: () => import('./my-server-blocks/my-server-blocks.module').then(m=>m.MyServerBlocksModule)
       },
       {
         path: 'mutes',

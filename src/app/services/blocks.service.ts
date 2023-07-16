@@ -80,6 +80,14 @@ export class BlocksService {
     return response ? this.processResponse(response, 'muted') : [];
   }
 
+  processResponseServer(response: any) {
+    return response.map((elem: any) => {
+      return {
+        id: elem.blockedServer.id,
+        displayName: elem.blockedServer.displayName
+      }
+    })
+  }
   async blockServer(id: string): Promise<boolean> {
     let success = false;
     try {
@@ -98,11 +106,11 @@ export class BlocksService {
   }
   async getMyServerBlockList(): Promise<Array<any>> {
     const response = await this.http.get<Array<any>>(`${environment.baseUrl}/myServerBlocks`).toPromise();
-    return response ? this.processResponse(response, 'server') : [];
+    return response ? this.processResponseServer(response) : [];
   }
 
   async unblockServer(id: string): Promise<Array<any>> {
-    const response = await this.http.post<Array<any>>(`${environment.baseUrl}/unblockServer?displayName=${encodeURIComponent(id)}`, {}).toPromise();
-    return response ? this.processResponse(response, 'server') : [];
+    const response = await this.http.post<Array<any>>(`${environment.baseUrl}/unblockServer?id=${encodeURIComponent(id)}`, {}).toPromise();
+    return response ? this.processResponseServer(response) : [];
   }
 }

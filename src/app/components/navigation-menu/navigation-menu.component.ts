@@ -207,6 +207,14 @@ export class NavigationMenuComponent implements OnInit, OnDestroy {
             visible: this.jwtService.tokenValid(),
           },
           {
+            label: 'Manage blocked servers',
+            title: 'Manage blocked servers',
+            icon: "pi pi-server",
+            command: () => this.hideMenu(),
+            routerLink: ['/profile/serverBlocks'],
+            visible: this.jwtService.tokenValid(),
+          },
+          {
             label: 'My blog',
             title: 'View your own blog',
             icon: "pi pi-user",
