@@ -8,6 +8,14 @@ const routes: Route[] = [
   {
     path: 'server-list',
     loadChildren: () => import('./server-list/server-list.module').then(m => m.ServerListModule)
+  },
+  {
+    path: 'user-blocks',
+    loadChildren: () => import ('./blocks/blocks.module').then(m => m.BlocksModule)
+  },
+  {
+    path: 'user-reports',
+    loadChildren: () => import ('./report-list/report-list.module').then(m => m.ReportListModule)
   }
 ]
 @NgModule({

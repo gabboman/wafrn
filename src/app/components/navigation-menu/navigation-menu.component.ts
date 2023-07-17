@@ -126,6 +126,22 @@ export class NavigationMenuComponent implements OnInit, OnDestroy {
             title: 'List of all the servers',
             command: () => this.hideMenu(),
             routerLink: '/admin/server-list',
+          },
+          {
+            label: 'User reports',
+            title: 'User reports',
+            icon: "pi pi-exclamation-triangle",
+            // TODO finish this
+            visible: false,
+            command: () => this.hideMenu(),
+            routerLink: '/admin/user-reports',
+          },
+          {
+            label: 'User blocklists',
+            title: 'User blocklists',
+            icon: "pi pi-ban",
+            command: () => this.hideMenu(),
+            routerLink: '/admin/user-blocks',
           }
         ]
       },

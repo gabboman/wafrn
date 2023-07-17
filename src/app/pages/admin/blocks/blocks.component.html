@@ -1,0 +1,50 @@
+<div class="grid pb-6 lg:px-4 scalein animation-duration-400 wafrn-container">
+  <div class="col-12 wafrn-post">
+    <p-card>
+      <h3>Per user blocks</h3>
+      <p-table
+      [value]="userBlocks"
+      [paginator]="true"
+      [rows]="5"
+      [rowsPerPageOptions]="[5, 10, 25, 50]"
+      [loading]="!ready"
+      >
+        <ng-template pTemplate="header">
+          <tr>
+            <th>Blocker</th>
+            <th>Blocked</th>
+            <th></th>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-userBlock>
+          <tr>
+            <td><img class="avatar" [src]="userBlock.blocker.avatar"> {{userBlock.blocker.url}}</td>
+            <td><img class="avatar" [src]="userBlock.blocked.avatar"> {{userBlock.blocked.url}}</td>
+          </tr>
+        </ng-template>
+      </p-table>
+      <h3>Per user server blocks</h3>
+      <p-table
+      [value]="serverBlocks"
+      [paginator]="true"
+      [rows]="5"
+      [rowsPerPageOptions]="[5, 10, 25, 50]"
+      [loading]="!ready"
+      >
+        <ng-template pTemplate="header">
+          <tr>
+            <th>Blocker</th>
+            <th>Server</th>
+            <th></th>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-serverBlock>
+          <tr>
+            <td><img class="avatar" [src]="serverBlock.userBlocker.avatar"> {{serverBlock.userBlocker.url}}</td>
+            <td>{{serverBlock.blockedServer.displayName}}</td>
+          </tr>
+        </ng-template>
+      </p-table>
+    </p-card>
+  </div>
+</div>

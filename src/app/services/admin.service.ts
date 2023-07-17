@@ -21,4 +21,16 @@ export class AdminService {
     const response = await this.http.post(`${environment.baseUrl}/admin/server-update`, serversToUpdate).toPromise()
     return response;
   }
+
+  async getBlocks(): Promise<any> {
+    const response = await this.http.get(`${environment.baseUrl}/admin/userBlockList`).toPromise();
+    return response;
+  }
+
+  async getReports(): Promise<any> {
+    const response = await this.http.get(`${environment.baseUrl}/admin/reportList`).toPromise();
+    return response;
+  }
+
+
 }
