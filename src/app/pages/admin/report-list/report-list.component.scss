@@ -1,0 +1,11 @@
+.avatar {
+  max-height: 32px;
+  max-width: 32px;
+  display: inline-flex;
+}
+
+@media (min-width: 992px) {
+  .block-list-container {
+      margin-left: 360px;
+  }
+}

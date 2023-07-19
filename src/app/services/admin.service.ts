@@ -28,8 +28,16 @@ export class AdminService {
   }
 
   async getReports(): Promise<any> {
-    const response = await this.http.get(`${environment.baseUrl}/admin/reportList`).toPromise();
-    return response;
+    return this.http.get(`${environment.baseUrl}/admin/reportList`).toPromise();
+  }
+
+  async ignoreReport(id: number): Promise<any> {
+    return this.http.post(`${environment.baseUrl}/admin/ignoreReport`, {id: id }).toPromise();
+  }
+
+  async banUser(id: number) {
+    return this.http.post(`${environment.baseUrl}/admin/banUser`, {id: id }).toPromise();
+
   }
 
 

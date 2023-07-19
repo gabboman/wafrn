@@ -1,1 +1,42 @@
-<p>report-list works!</p>
+<div class="grid pb-8 lg:px-4 scalein animation-duration-400 block-list-container">
+  <div class="col-12 wafrn-post">
+    <p-card>
+      <p-table
+      [value]="reportList"
+      [paginator]="true"
+      [rows]="5"
+      [rowsPerPageOptions]="[5, 10, 25, 50]"
+      [loading]="!ready"
+      >
+        <ng-template pTemplate="header">
+          <tr>
+            <th>Reporter</th>
+            <th>Reported</th>
+            <th>Reason</th>
+            <th>Severity</th>
+            <th>Report date</th>
+            <th>Actions</th>
+
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-report>
+          <tr>
+            <td><a [routerLink]="['/blog', report.user.url]"> <img class="avatar" [src]="report.user.avatar"> {{report.user.url}} </a></td>
+            <td><a [routerLink]="['/blog', report.post.user.url]"> <img class="avatar" [src]="report.post.user.avatar"> {{report.post.user.url}} </a></td>
+
+            <ng-container [ngSwitch]="report.severity">
+              <td *ngSwitchCase="0">Spam</td>
+              <td *ngSwitchCase="1">Not marked nsfw</td>
+              <td *ngSwitchCase="5">Hate speech</td>
+              <td *ngSwitchCase="10">Illegal content</td>
+            </ng-container>
+            <td><a [href]="'/post/' + report.postId" target="_blank">{{report.description}}</a></td>
+            <td>{{report.createdAt | date}}</td>
+            <td *ngIf="!report.resolved"><p-splitButton label="Actions" [model]="report.actions"></p-splitButton></td>
+            <td *ngIf="report.resolved">Solved</td>
+          </tr>
+        </ng-template>
+      </p-table>
+    </p-card>
+  </div>
+</div>

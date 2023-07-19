@@ -131,8 +131,6 @@ export class NavigationMenuComponent implements OnInit, OnDestroy {
             label: 'User reports',
             title: 'User reports',
             icon: "pi pi-exclamation-triangle",
-            // TODO finish this
-            visible: false,
             command: () => this.hideMenu(),
             routerLink: '/admin/user-reports',
           },
