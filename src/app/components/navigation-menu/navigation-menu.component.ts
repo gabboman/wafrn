@@ -287,8 +287,7 @@ export class NavigationMenuComponent implements OnInit, OnDestroy {
     }
     if (this.jwtService.adminToken()) {
       const reports = (await this.adminService.getOpenReportsCount())?.reports
-      this.adminNotifications = reports.toString();
-      console.log(this.adminNotifications)
+      this.adminNotifications = reports;
     }
   }
 
