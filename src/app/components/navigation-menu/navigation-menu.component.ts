@@ -19,8 +19,8 @@ export class NavigationMenuComponent implements OnInit, OnDestroy {
 
   menuItems: MenuItem[] = [];
   menuVisible = false;
-  notifications = '';
-  adminNotifications = '';
+  notifications = 0;
+  adminNotifications = 0;
   privateMessagesNotifications = '';
   mobile = false;
 
@@ -114,14 +114,14 @@ export class NavigationMenuComponent implements OnInit, OnDestroy {
         title: 'Check your notifications',
         command: () => this.hideMenu(),
         routerLink: '/dashboard/notifications',
-        badge: this.notifications,
+        badge: this.notifications === 0 ? '': this.notifications.toString(),
         visible: this.jwtService.tokenValid()
       },
       {
         label: 'Admin',
         icon: "pi pi-power-off",
         title: 'Check your notifications',
-        badge: this.adminNotifications,
+        badge: this.adminNotifications === 0 ? '' : this.adminNotifications.toString(),
         visible: this.jwtService.adminToken(),
         items: [
           {
@@ -135,7 +135,7 @@ export class NavigationMenuComponent implements OnInit, OnDestroy {
             label: 'User reports',
             title: 'User reports',
             icon: "pi pi-exclamation-triangle",
-            badge: this.adminNotifications,
+            badge: this.adminNotifications === 0 ? '' : this.adminNotifications.toString(),
             command: () => this.hideMenu(),
             routerLink: '/admin/user-reports',
           },
@@ -277,7 +277,7 @@ export class NavigationMenuComponent implements OnInit, OnDestroy {
   async updateNotifications(url: string) {
     if(this.jwtService.tokenValid()) {
       if(url === '/dashboard/notifications') {
-        this.notifications = '';
+        this.notifications = 0;
       } else {
         const response = await this.notificationsService.getUnseenNotifications()
         this.notifications =  response;

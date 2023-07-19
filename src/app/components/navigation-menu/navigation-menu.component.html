@@ -1,4 +1,4 @@
-<p-button *ngIf="!menuVisible" icon="pi pi-bars" [label]="notifications + adminNotifications"
+<p-button *ngIf="!menuVisible" icon="pi pi-bars" [label]="notifications + adminNotifications > 0 ? (notifications + adminNotifications).toString() : ''"
 type="button" class="show-sidebar-menu-button" styleClass="p-button-raised p-button-rounded "
 (click)="showMenu()"
 ></p-button>

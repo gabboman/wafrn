@@ -17,8 +17,8 @@ export class NotificationsService {
     private jwt: JwtService
   ) { }
 
-  async getUnseenNotifications(): Promise<string> {
-    let res = '';
+  async getUnseenNotifications(): Promise<number> {
+    let res = 0;
     let total = 0;
     try {
       const lastTimeCheckedString = localStorage.getItem('lastTimeCheckNotifications')
@@ -28,7 +28,7 @@ export class NotificationsService {
       const notifications = await this.http.get<{notifications: number}>(`${environment.baseUrl}/notificationsCount`, {params: petitionData}).toPromise();
       total = notifications ? notifications.notifications : 0;
       if(total > 0) {
-        res = total.toString();
+        res = total;
       }
 
     } catch (error) {
