@@ -37,7 +37,10 @@ export class AdminService {
 
   async banUser(id: number) {
     return this.http.post(`${environment.baseUrl}/admin/banUser`, {id: id }).toPromise();
+  }
 
+  async getOpenReportsCount(): Promise<any> {
+    return this.http.get(`${environment.baseUrl}/admin/reportCount`).toPromise()
   }
 
 

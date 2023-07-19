@@ -3,6 +3,7 @@ import { NavigationEnd, Router } from '@angular/router';
 import { MenuItem } from 'primeng/api';
 import { Subscription } from 'rxjs';
 import { Action } from 'src/app/interfaces/editor-launcher-data';
+import { AdminService } from 'src/app/services/admin.service';
 import { EditorService } from 'src/app/services/editor.service';
 import { JwtService } from 'src/app/services/jwt.service';
 import { LoginService } from 'src/app/services/login.service';
@@ -19,6 +20,8 @@ export class NavigationMenuComponent implements OnInit, OnDestroy {
   menuItems: MenuItem[] = [];
   menuVisible = false;
   notifications = '';
+  adminNotifications = '';
+  privateMessagesNotifications = '';
   mobile = false;
 
   navigationSubscription: Subscription;
@@ -29,7 +32,8 @@ export class NavigationMenuComponent implements OnInit, OnDestroy {
     private jwtService: JwtService,
     private loginService: LoginService,
     private notificationsService: NotificationsService,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    private adminService: AdminService
   ) {
     this.loginSubscription = this.loginService.logingEventEmitter.subscribe(() => {
       this.drawMenu();
@@ -117,7 +121,7 @@ export class NavigationMenuComponent implements OnInit, OnDestroy {
         label: 'Admin',
         icon: "pi pi-power-off",
         title: 'Check your notifications',
-        // badge: this.notifications,
+        badge: this.adminNotifications,
         visible: this.jwtService.adminToken(),
         items: [
           {
@@ -131,6 +135,7 @@ export class NavigationMenuComponent implements OnInit, OnDestroy {
             label: 'User reports',
             title: 'User reports',
             icon: "pi pi-exclamation-triangle",
+            badge: this.adminNotifications,
             command: () => this.hideMenu(),
             routerLink: '/admin/user-reports',
           },
@@ -279,6 +284,11 @@ export class NavigationMenuComponent implements OnInit, OnDestroy {
       }
       this.drawMenu();
       this.cdr.detectChanges();
+    }
+    if (this.jwtService.adminToken()) {
+      const reports = (await this.adminService.getOpenReportsCount())?.reports
+      this.adminNotifications = reports.toString();
+      console.log(this.adminNotifications)
     }
   }
 
