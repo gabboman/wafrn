@@ -140,9 +140,16 @@ export class NavigationMenuComponent implements OnInit, OnDestroy {
             routerLink: '/admin/user-reports',
           },
           {
+            label: 'User bans',
+            title: 'User bans',
+            icon: "pi pi-ban",
+            command: () => this.hideMenu(),
+            routerLink: '/admin/bans',
+          },
+          {
             label: 'User blocklists',
             title: 'User blocklists',
-            icon: "pi pi-ban",
+            //icon: "pi pi-ban",
             command: () => this.hideMenu(),
             routerLink: '/admin/user-blocks',
           }

@@ -1,0 +1,27 @@
+<div class="grid pb-6 lg:px-4 scalein animation-duration-400 wafrn-container">
+  <div class="col-12 wafrn-post">
+    <p-card>
+      <h3>Banned users</h3>
+      <p-table
+      [value]="bannedUsers"
+      [paginator]="true"
+      [rows]="5"
+      [rowsPerPageOptions]="[5, 10, 25, 50]"
+      [loading]="!ready"
+      >
+        <ng-template pTemplate="header">
+          <tr>
+            <th>user</th>
+            <th></th>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-userBanned>
+          <tr>
+            <td><img class="avatar" [src]="userBanned.avatar"> {{userBanned.url}}</td>
+            <td><button pButton label="Unban" (click)="unbanUser(userBanned.id)"></button></td>
+          </tr>
+        </ng-template>
+      </p-table>
+    </p-card>
+  </div>
+</div>

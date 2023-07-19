@@ -35,10 +35,17 @@ export class AdminService {
     return this.http.post(`${environment.baseUrl}/admin/ignoreReport`, {id: id }).toPromise();
   }
 
-  async banUser(id: number) {
+  async banUser(id: string) {
     return this.http.post(`${environment.baseUrl}/admin/banUser`, {id: id }).toPromise();
   }
 
+  async banList() {
+    return this.http.get(`${environment.baseUrl}/admin/getBannedUsers`).toPromise();
+  }
+  async pardonUser(id: string) {
+    return this.http.post(`${environment.baseUrl}/admin/unbanUser`, {id: id }).toPromise();
+
+  }
   async getOpenReportsCount(): Promise<any> {
     return this.http.get(`${environment.baseUrl}/admin/reportCount`).toPromise()
   }

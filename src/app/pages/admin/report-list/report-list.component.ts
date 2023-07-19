@@ -46,7 +46,7 @@ export class ReportListComponent {
     })
   }
 
-  ban(id: number) {
+  ban(id: string) {
     this.adminService.banUser(id).then(() => {
       this.loadReports()
     })
