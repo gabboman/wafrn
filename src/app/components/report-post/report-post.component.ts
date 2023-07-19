@@ -22,11 +22,11 @@ export class ReportPostComponent implements OnInit {
   reportOptions: Array<{label: string, value: number}> = [
     {
       label: 'This post is spam',
-      value: 0
+      value: 1
     },
     {
       label: 'This post contains NSFW media and is not labelled as such',
-      value: 1
+      value: 2
     },
     {
       label: 'This post is inciting hate against a person or collective',
