@@ -14,6 +14,7 @@ export class RecoverPasswordComponent implements OnInit {
 
 
   loading = false;
+  logo = environment.logo;
 
   loginForm = new UntypedFormGroup({
     email:  new UntypedFormControl('', [Validators.required, Validators.email]),

@@ -3,6 +3,7 @@ import { UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms
 import { first } from 'rxjs/operators';
 import { MessageService } from 'primeng/api';
 import { LoginService } from 'src/app/services/login.service';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-register',
@@ -13,6 +14,7 @@ export class RegisterComponent implements OnInit {
 
 
   loading = false;
+  logo = environment.logo;
 
   minimumRegistrationDate: Date;
   minDate: Date;

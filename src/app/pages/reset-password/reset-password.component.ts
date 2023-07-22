@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { LoginService } from 'src/app/services/login.service';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-reset-password',
@@ -10,6 +11,7 @@ import { LoginService } from 'src/app/services/login.service';
 export class ResetPasswordComponent implements OnInit {
 
   newPassword: string = '';
+  logo = environment.logo;
 
   constructor(
     private loginService: LoginService,

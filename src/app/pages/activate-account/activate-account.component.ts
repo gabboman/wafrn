@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { LoginService } from 'src/app/services/login.service';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-activate-account',
@@ -9,6 +10,8 @@ import { LoginService } from 'src/app/services/login.service';
 })
 export class ActivateAccountComponent implements OnInit {
 
+  logo = environment.logo;
+
   constructor(
     private activeRoute: ActivatedRoute,
     private loginService: LoginService
@@ -16,7 +19,7 @@ export class ActivateAccountComponent implements OnInit {
 
   ngOnInit(): void {
   }
-  
+
   async activateAccount() {
     const params: any = this.activeRoute.snapshot.params;
     await this.loginService.activateAccount(params.email, params.activationCode)
