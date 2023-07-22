@@ -8,6 +8,7 @@ import { EditorService } from 'src/app/services/editor.service';
 import { JwtService } from 'src/app/services/jwt.service';
 import { LoginService } from 'src/app/services/login.service';
 import { NotificationsService } from 'src/app/services/notifications.service';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-navigation-menu',
@@ -23,6 +24,7 @@ export class NavigationMenuComponent implements OnInit, OnDestroy {
   adminNotifications = 0;
   privateMessagesNotifications = '';
   mobile = false;
+  logo = environment.logo;
 
   navigationSubscription: Subscription;
   loginSubscription: Subscription;
