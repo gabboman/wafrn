@@ -15,7 +15,7 @@ export interface RawPost {
     ancestors?:     RawPost[];
     user:           SimplifiedUser;
     medias?:        WafrnMedia[];
-    tags:           Tag[];
+    postTags:           Tag[];
     mentionPost?: SimplifiedUser[];
     notes:          number;
     privacy:        number;

@@ -113,10 +113,10 @@ export class PostsService {
     const notes = rawPost.notes;
     if (rawPost.ancestors) {
       rawPost.ancestors.forEach((post: RawPost) => {
-        result.push({...post, remotePostId: post.remotePostId? post.remotePostId : `${environment.frontUrl}/post/${post.id}` ,userLikesPostRelations: post.userLikesPostRelations.map(elem => elem.userId) , notes: notes});
+        result.push({...post, tags: post.postTags, remotePostId: post.remotePostId? post.remotePostId : `${environment.frontUrl}/post/${post.id}` ,userLikesPostRelations: post.userLikesPostRelations.map(elem => elem.userId) , notes: notes});
       });
       result = result.sort((a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime());
-      result.push({...rawPost, userLikesPostRelations: rawPost.userLikesPostRelations.map(elem => elem.userId), remotePostId: rawPost.remotePostId? rawPost.remotePostId : `${environment.frontUrl}/post/${rawPost.id}`, notes: notes});
+      result.push({...rawPost, tags: rawPost.postTags, userLikesPostRelations: rawPost.userLikesPostRelations.map(elem => elem.userId), remotePostId: rawPost.remotePostId? rawPost.remotePostId : `${environment.frontUrl}/post/${rawPost.id}`, notes: notes});
     }
     result = result.filter((elem, index) => elem.content != '' || index === result.length -1 )
     result.forEach((val, index) => {
