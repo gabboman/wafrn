@@ -4,7 +4,6 @@
 
 export const environment = {
   production: false,
-  //recaptchaPublic: '6LcrwQchAAAAADcgr0bLQ45AknhAQLkzX2RYNavT',
   maxUploadSize: '250',
   logo: '/assets/logo.png',
   baseUrl: 'http://localhost:3000/api',
