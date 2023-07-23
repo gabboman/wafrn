@@ -96,6 +96,11 @@ a, a:visited {
     opacity: 0.5;
 }
 
+.ql-syntax {
+  background-color: #23241f;
+  color: #f8f8f2;
+}
+
 .hover-cursor {
     cursor: pointer;
 }
@@ -153,4 +158,8 @@ body, html, .p-component {
   display: inline-flex;
   max-height: 32px;
   max-width: 32px;
+}
+
+.ql-picker-item {
+  color: black;
 }
