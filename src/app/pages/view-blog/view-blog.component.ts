@@ -119,7 +119,9 @@ export class ViewBlogComponent implements OnInit, OnDestroy {
 
         } ,
       ]
-      this.loadPosts(this.currentPage).then(() => this.loading = false);
+      this.loadPosts(this.currentPage).then(() => {
+        this.loading = false;
+      });
       this.avatarUrl = this.blogDetails.url.startsWith('@') ? environment.externalCacheurl + encodeURIComponent(this.blogDetails.avatar) : environment.baseMediaUrl + this.blogDetails.avatar
       this.titleService.setTitle(`${this.blogDetails.url}\'s blog`);
         this.metaTagService.addTags([
@@ -150,7 +152,7 @@ export class ViewBlogComponent implements OnInit, OnDestroy {
 
   async countViewedPost() {
     this.viewedPosts++;
-    if (this.posts.length - 3 < this.viewedPosts) {
+    if (this.posts.length === this.viewedPosts) {
       this.currentPage++;
       await this.loadPosts(this.currentPage);
     }
