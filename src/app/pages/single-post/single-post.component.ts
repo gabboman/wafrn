@@ -94,7 +94,9 @@ export class SinglePostComponent implements OnInit {
   async loadRepliesFromFediverse() {
     this.loading = true;
     await this.postService.loadRepliesFromFediverse(this.post[this.post.length - 1].id);
-    this.loading = false;
+    // a bit janky, could do something better but I feel like is the best option today.
+    // TODO unjank this
+    window.location.reload();
   }
 
 }
