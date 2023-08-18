@@ -1,3 +1,10 @@
+<div *ngIf="loading" class="grid pb-6 lg:px-4 scalein animation-duration-400 wafrn-container">
+  <div class="col-12 wafrn-post">
+    <p-card>
+<p-progressSpinner></p-progressSpinner>
+    </p-card>
+    </div>
+    </div>
 <app-post [showFull]="true" *ngIf="!loading && postFound" [post]="post"></app-post>
 
 <div *ngIf="!loading && post[post.length - 1]" class="grid pb-6 lg:px-4 scalein animation-duration-400 wafrn-container">
@@ -35,7 +42,6 @@
     </p-card>
     </div>
 </div>
-<p-progressSpinner *ngIf="loading"></p-progressSpinner>
 
 <app-pagenotfound *ngIf="!postFound"></app-pagenotfound>
 <noscript>
