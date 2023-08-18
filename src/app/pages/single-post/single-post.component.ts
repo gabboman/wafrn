@@ -92,7 +92,7 @@ export class SinglePostComponent implements OnInit {
   }
 
   async loadRepliesFromFediverse() {
-    // this.loading = true;
+    this.loading = true;
     await this.postService.loadRepliesFromFediverse(this.post[this.post.length - 1].id);
     this.loading = false;
   }
