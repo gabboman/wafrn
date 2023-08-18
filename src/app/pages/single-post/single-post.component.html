@@ -1,5 +1,36 @@
 <app-post [showFull]="true" *ngIf="!loading && postFound" [post]="post"></app-post>
 
+<div *ngIf="!loading && post[post.length - 1]" class="grid pb-6 lg:px-4 scalein animation-duration-400 wafrn-container">
+  <div class="col-12 wafrn-post">
+    <p-card>
+      <div *ngIf="post[0].id !== post[post.length -1].id">
+        This are the responses to the current post. If you would like to see other parts of the thread please visit the <a [routerLink]="['/post', post[0].id]">initial post</a>
+      </div>
+      <p-table
+      [value]="post[post.length - 1].descendents"
+      [paginator]="true"
+      [rows]="5"
+      [rowsPerPageOptions]="[5, 10, 25, 50]"
+      >
+
+      <ng-template pTemplate="header">
+        <tr>
+          <th></th>
+        </tr>
+      </ng-template>
+
+      <ng-template pTemplate="body" let-post>
+        <tr>
+          <th><a [routerLink]="['/post', post.id]"><img class="avatar"  [src]="post.user.avatar"> {{post.user.url}} {{post.content === '' ? 'reblogged' : 'commented'}}</a></th>
+
+        </tr>
+      </ng-template>
+
+
+      </p-table>
+    </p-card>
+    </div>
+</div>
 <p-progressSpinner *ngIf="loading"></p-progressSpinner>
 
 <app-pagenotfound *ngIf="!postFound"></app-pagenotfound>

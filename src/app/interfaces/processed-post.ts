@@ -3,6 +3,7 @@ import { WafrnMedia } from "./wafrn-media";
 import { Tag } from "./tag";
 import { WafrnMention } from "./wafrn-mention";
 import { Emoji } from "./emoji";
+import { RawPost } from "./raw-post";
 
 export interface ProcessedPost {
 
@@ -21,4 +22,5 @@ export interface ProcessedPost {
     remotePostId:   string;
     userLikesPostRelations: string[];
     emojis:         Emoji[];
+    descendents:   RawPost[]
 }

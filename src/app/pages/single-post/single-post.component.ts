@@ -21,6 +21,7 @@ export class SinglePostComponent implements OnInit {
   blogUrl: string = '';
   blogDetails: any;
   mediaUrl = environment.baseMediaUrl;
+  cacheUrl = environment.externalCacheurl;
   forceSSR = false;
   postFound = true;
 

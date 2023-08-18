@@ -113,10 +113,16 @@ export class PostsService {
     const notes = rawPost.notes;
     if (rawPost.ancestors) {
       rawPost.ancestors.forEach((post: RawPost) => {
-        result.push({...post, tags: post.postTags, remotePostId: post.remotePostId? post.remotePostId : `${environment.frontUrl}/post/${post.id}` ,userLikesPostRelations: post.userLikesPostRelations.map(elem => elem.userId) , notes: notes});
+        result.push({...post, tags: post.postTags, remotePostId: post.remotePostId? post.remotePostId : `${environment.frontUrl}/post/${post.id}` ,userLikesPostRelations: post.userLikesPostRelations.map(elem => elem.userId) , notes: notes, descendents: []});
       });
       result = result.sort((a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime());
-      result.push({...rawPost, tags: rawPost.postTags, userLikesPostRelations: rawPost.userLikesPostRelations.map(elem => elem.userId), remotePostId: rawPost.remotePostId? rawPost.remotePostId : `${environment.frontUrl}/post/${rawPost.id}`, notes: notes});
+      result.push({...rawPost, tags: rawPost.postTags, userLikesPostRelations: rawPost.userLikesPostRelations.map(elem => elem.userId), remotePostId: rawPost.remotePostId? rawPost.remotePostId : `${environment.frontUrl}/post/${rawPost.id}`, notes: notes, descendents: []});
+    }
+    if (rawPost.descendents) {
+      result[result.length - 1 ].descendents = rawPost.descendents.map(elem => {
+        elem.user.avatar = elem.user.url.startsWith('@') ? environment.externalCacheurl + encodeURI(elem.user.avatar) : environment.baseMediaUrl + elem.user.avatar;
+        return elem;
+      }).sort((a: RawPost, b: RawPost) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
     }
     result = result.filter((elem, index) => elem.content != '' || index === result.length -1 )
     result.forEach((val, index) => {

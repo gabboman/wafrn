@@ -6,6 +6,8 @@ import { SinglePostComponent } from './single-post.component';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { PostModule } from '../../components/post/post.module';
 import { PagenotfoundModule } from '../pagenotfound/pagenotfound.module';
+import { CardModule } from 'primeng/card';
+import { TableModule } from 'primeng/table';
 
 const routes: Routes = [
       {
@@ -25,6 +27,8 @@ const routes: Routes = [
     ProgressSpinnerModule,
     PostModule,
     PagenotfoundModule,
+    CardModule,
+    TableModule
   ]
 })
 export class SinglePostModule { }

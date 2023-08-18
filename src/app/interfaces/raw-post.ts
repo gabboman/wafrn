@@ -13,6 +13,7 @@ export interface RawPost {
     userId:         string;
     hierarchyLevel: number;
     ancestors?:     RawPost[];
+    descendents?:   RawPost[];
     user:           SimplifiedUser;
     medias?:        WafrnMedia[];
     postTags:           Tag[];

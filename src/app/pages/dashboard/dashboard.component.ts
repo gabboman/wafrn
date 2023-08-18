@@ -113,8 +113,8 @@ export class DashboardComponent implements OnInit {
         remotePostId: '',
         privacy: 0,
         userLikesPostRelations: [],
-        emojis: []
-
+        emojis: [],
+        descendents: []
       }]);
     }
     filteredPosts.forEach(post => {
