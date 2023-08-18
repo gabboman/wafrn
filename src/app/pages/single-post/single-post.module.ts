@@ -8,6 +8,7 @@ import { PostModule } from '../../components/post/post.module';
 import { PagenotfoundModule } from '../pagenotfound/pagenotfound.module';
 import { CardModule } from 'primeng/card';
 import { TableModule } from 'primeng/table';
+import { ButtonModule } from 'primeng/button';
 
 const routes: Routes = [
       {
@@ -28,7 +29,8 @@ const routes: Routes = [
     PostModule,
     PagenotfoundModule,
     CardModule,
-    TableModule
+    TableModule,
+    ButtonModule
   ]
 })
 export class SinglePostModule { }

@@ -22,9 +22,10 @@ export class SinglePostComponent implements OnInit {
   blogDetails: any;
   mediaUrl = environment.baseMediaUrl;
   cacheUrl = environment.externalCacheurl;
+  localUrl = environment.frontUrl;
   forceSSR = false;
   postFound = true;
-
+  userLoggedIn = false;
 
 
   constructor(
@@ -39,6 +40,7 @@ export class SinglePostComponent implements OnInit {
     private themeService: ThemeService
   ) {
     this.themeService.setMyTheme()
+    this.userLoggedIn = loginService.checkUserLoggedIn()
 
     this.route.data.subscribe((data) => {
       this.forceSSR = route.snapshot.queryParams['force-ssr'] === 'true';
@@ -87,6 +89,12 @@ export class SinglePostComponent implements OnInit {
       }
     }
     return res;
+  }
+
+  async loadRepliesFromFediverse() {
+    // this.loading = true;
+    await this.postService.loadRepliesFromFediverse(this.post[this.post.length - 1].id);
+    this.loading = false;
   }
 
 }

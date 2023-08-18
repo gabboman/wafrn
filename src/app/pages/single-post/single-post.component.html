@@ -25,9 +25,13 @@
 
         </tr>
       </ng-template>
-
-
       </p-table>
+      <button
+      pButton *ngIf="!post[post.length -1].remotePostId.startsWith(localUrl) && userLoggedIn"
+      class="w-full"
+      label="Fetch more external replies"
+      (click)="loadRepliesFromFediverse()"
+      ></button>
     </p-card>
     </div>
 </div>

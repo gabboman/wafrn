@@ -233,4 +233,8 @@ export class PostsService {
   getPostContentSanitized(content: string): string {
     return sanitizeHtml(content);
   }
+
+  async loadRepliesFromFediverse(id: string) {
+    return await this.http.get(`${environment.baseUrl}/loadRemoteResponses?id=${id}`).toPromise()
+  }
 }
