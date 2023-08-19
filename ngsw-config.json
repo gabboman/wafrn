@@ -35,6 +35,7 @@
       "resources": {
         "urls": [
           "https://cache.wafrn.net/**",
+          "https://app.wafrn.net/**",
           "https://media.wafrn.net/?media=**"
         ]
 
