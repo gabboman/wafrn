@@ -1,4 +1,5 @@
 import { Component, Injector, OnInit } from '@angular/core';
+import { SwUpdate } from '@angular/service-worker';
 import { PrimeNGConfig } from 'primeng/api';
 import { createCustomElement } from '@angular/elements';
 import { Router } from '@angular/router';
@@ -17,6 +18,7 @@ export class AppComponent implements OnInit {
   title = 'wafrn';
 
   constructor(
+    private swUpdate: SwUpdate,
     private primengConfig: PrimeNGConfig,
     private injector: Injector,
     private loginService: LoginService
@@ -29,9 +31,17 @@ export class AppComponent implements OnInit {
 
       const mediaElement = createCustomElement(WafrnMediaComponent, { injector: this.injector });
       customElements.define('app-wafrn-media', mediaElement);
-  
+
       const youtubeElement = createCustomElement(WafrnYoutubePlayerComponent,  { injector: this.injector });
       customElements.define('app-wafrn-youtube-player', youtubeElement);
+
+      if (this.swUpdate.isEnabled) {
+        this.swUpdate.available.subscribe(() => {
+          if(confirm("You're using an old version of wafrn, do you want to update?")) {
+            window.location.reload();
+          }
+        });
+      }
   }
 }
 
