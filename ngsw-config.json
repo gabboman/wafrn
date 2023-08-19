@@ -33,12 +33,9 @@
       "updateMode": "lazy",
       "installMode": "lazy",
       "resources": {
-        "files": [],
         "urls": [
-          "https://wafrnmedia.b-cdn.net/**",
-          "https://wafrncache.b-cdn.net/**",
-          "https://wafrnmedia.b-cdn.net/",
-          "https://wafrncache.b-cdn.net/"
+          "https://cache.wafrn.net/**",
+          "https://media.wafrn.net/**"
         ]
 
       }
