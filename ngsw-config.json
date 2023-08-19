@@ -33,26 +33,15 @@
       "updateMode": "lazy",
       "installMode": "lazy",
       "resources": {
-        "files": ["**"],
+        "files": [],
         "urls": [
           "https://wafrnmedia.b-cdn.net/**",
-          "https://wafrncache.b-cdn.net/**"
+          "https://wafrncache.b-cdn.net/**",
+          "https://wafrnmedia.b-cdn.net/",
+          "https://wafrncache.b-cdn.net/"
         ]
 
       }
     }
-  ],
-  "dataGroups": [
-    {
-    "name": "cdn",
-    "urls": [
-    "https://wafrnmedia.b-cdn.net/"
-    ],
-    "cacheConfig": {
-      "maxSize": 512,
-      "maxAge": "2h",
-      "strategy": "freshness"
-    }
-  }
-]
+  ]
 }
