@@ -11,7 +11,9 @@
           "/index.html",
           "/manifest.webmanifest",
           "/*.css",
-          "/*.js"
+          "/*.js",
+          "/assets/logo.png",
+          "/assets/logo_w.png"
         ]
       }
     },
@@ -24,6 +26,18 @@
           "/assets/**",
           "/*.(svg|cur|jpg|jpeg|png|apng|webp|avif|gif|otf|ttf|woff|woff2)"
         ]
+      }
+    },
+    {
+      "name": "fedicache",
+      "updateMode": "lazy",
+      "resources": {
+        "files": [],
+        "urls": [
+          "https://wafrnmedia.b-cdn.net/**",
+          "https://wafrncache.b-cdn.net/**"
+        ]
+
       }
     }
   ]
