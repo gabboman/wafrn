@@ -3,4 +3,5 @@ export interface SimplifiedUser {
     url:         string;
     description: string;
     id:          string;
+    remoteId?:   string;
 }

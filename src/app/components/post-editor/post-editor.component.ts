@@ -68,7 +68,9 @@ export class PostEditorComponent implements OnInit, OnDestroy {
       defaultMenuOrientation: 'bottom',
       onSelect: (item: any, insertItem: any) => {
         item.denotationChar = ''
-        item.value = `[mentionuserid="${item.id}"]`
+        console.log(item)
+        const elem = this.mentionSuggestions[item.index]
+        item.value = ' <a href="' + elem.remoteId + '"><span class="mention" data-denotation-char="" data-id="' + elem.id +'" data-value="' + elem.url + '">﻿<span contenteditable="false"><span class="ql-mention-denotation-char"></span>' + elem.url + '</span></span></a>'
         const editor = this.quill.quillEditor
         insertItem(item)
         // necessary because quill-mention triggers changes as 'api' instead of 'user'
@@ -76,7 +78,13 @@ export class PostEditorComponent implements OnInit, OnDestroy {
       },
       source: async (searchTerm: string, renderList: any) => {
         await this.updateMentionsSuggestions(searchTerm)
-        const values = this.mentionSuggestions.map(elem => {return {id: elem.id, value: elem.url.replaceAll('@', '_').replace('_','@'), avatar: elem.avatar}})
+        const values = this.mentionSuggestions.map(elem => {
+          return {
+            id: elem.id,
+            value: elem.url.replaceAll('@', '_').replace('_','@'),
+            avatar: elem.avatar,
+            remoteId: elem.remoteId ? elem.remoteId : `${elem.frontUrl}/blog/${elem.url}` }
+        })
 
         if (searchTerm.length === 0) {
           renderList(values, searchTerm)
@@ -116,6 +124,7 @@ export class PostEditorComponent implements OnInit, OnDestroy {
         const inResponseTo = elem.post;
         this.postCreatorContent = '';
         this.tags = [];
+        const usersToMention: {id: string, url: string, remoteId: string}[] = [];
         if(inResponseTo) {
           this.contentWarning = inResponseTo.content_warning
           const parentPrivacy = this.privacyOptions.find(elem => elem.level === inResponseTo.privacy);
@@ -124,14 +133,27 @@ export class PostEditorComponent implements OnInit, OnDestroy {
           }
           this.privacy = parentPrivacy ? parentPrivacy : this.privacyOptions[0]
           if(inResponseTo.user.url.startsWith('@')) {
-            this.postCreatorContent = `${this.postCreatorContent}[mentionuserid="${inResponseTo.user.id}"] `
+            usersToMention.push({
+              id: inResponseTo.user.id,
+              url: inResponseTo.user.url.startsWith('@') ? inResponseTo.user.url : '@' +inResponseTo.user.url,
+              remoteId: inResponseTo.user.remoteId ? inResponseTo.user.remoteId : `environment.frontUrl/blog/${inResponseTo.user.url}`
+            })
           }
           inResponseTo.mentionPost?.forEach((mention) => {
-            if(mention?.url.startsWith('@')) {
-              this.postCreatorContent = `${this.postCreatorContent}[mentionuserid="${mention.id}"] `
+            if(!usersToMention.map(elem => elem.id).includes(mention.id)) {
+              usersToMention.push({
+                url: mention.url.startsWith('@') ? mention.url : '@' + mention.url,
+                id: mention.id,
+                remoteId: mention.remoteId ? mention.remoteId : `environment.frontUrl/blog/${mention.url}`
+              })
             }
           });
         }
+        let mentionsHtml = '';
+        usersToMention.forEach(elem => {
+          mentionsHtml = mentionsHtml + ' <a href="' + elem.remoteId + '"><span class="mention" data-denotation-char="" data-id="' + elem.id +'" data-value="' + elem.url + '">﻿<span contenteditable="false"><span class="ql-mention-denotation-char"></span>' + elem.url + '</span></span></a>'
+        })
+        this.postCreatorContent = `<p>${mentionsHtml}</p>`
         this.openEditor()
       }
     });
@@ -234,6 +256,7 @@ export class PostEditorComponent implements OnInit, OnDestroy {
         this.mentionSuggestions = backendResponse.users? backendResponse.users : [];
         this.mentionSuggestions = this.mentionSuggestions.map((user) => {
           user.avatar = user.url.startsWith('@') ? this.cacheurl + encodeURIComponent(user.avatar) : this.baseMediaUrl + user.avatar;
+          user.remoteId = user.remoteId ? user.remoteId : `${environment.frontUrl}/blog/${user.url}`
           return user;
         })
       }
