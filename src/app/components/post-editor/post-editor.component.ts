@@ -151,7 +151,7 @@ export class PostEditorComponent implements OnInit, OnDestroy {
         }
         let mentionsHtml = '';
         usersToMention.forEach(elem => {
-          mentionsHtml = mentionsHtml + ' <a href="' + elem.remoteId + '"><span class="mention" data-denotation-char="" data-id="' + elem.id +'" data-value="' + elem.url + '">﻿<span contenteditable="false"><span class="ql-mention-denotation-char"></span>' + elem.url + '</span></span></a>'
+          mentionsHtml = mentionsHtml + ' <a href="' + elem.remoteId + '"><span class="mention" data-denotation-char="" data-id="' + elem.id +'" data-value="' + elem.url + '">﻿<span contenteditable="false"><span class="ql-mention-denotation-char"></span>' + elem.url + '</span></span></a> '
         })
         this.postCreatorContent = `<p>${mentionsHtml}</p>`
         this.openEditor()
