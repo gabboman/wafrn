@@ -1,8 +1,8 @@
 {
   "name": "wafrn",
   "short_name": "wafrn",
-  "theme_color": "#1976d2",
-  "background_color": "#fafafa",
+  "theme_color": "#2A323D",
+  "background_color": "#2A323D",
   "display": "standalone",
   "scope": "./",
   "start_url": "./",
