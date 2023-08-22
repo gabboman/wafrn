@@ -31,6 +31,10 @@ import { MyServerBlocksComponent } from './my-server-blocks/my-server-blocks.com
       {
         path: 'mutes',
         loadChildren: () => import ('./my-mutes/my-mutes.module').then(m=> m.MyMutesModule)
+      },
+      {
+        path: 'importFollowers',
+        loadChildren: () => import ('./import-followers/import-followers.module').then(m=> m.ImportFollowersModule)
       }
     ])
   ]

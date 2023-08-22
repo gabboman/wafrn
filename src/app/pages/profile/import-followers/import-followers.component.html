@@ -1,0 +1,21 @@
+<div class="grid">
+  <div class="col-12 sm:col-12 md:col-12 lg:col-5 margin-auto pb-6">
+    <p-card>
+    <p-progressSpinner *ngIf="loading"></p-progressSpinner>
+    <p-fileUpload
+    class="w-full"
+    chooseStyleClass="w-full"
+    mode="basic"
+    chooseLabel="Choose"
+    [multiple]="false"
+    name="follows"
+    [url]="baseUrl + '/loadFollowList'"
+    accept="text/csv"
+    [maxFileSize]="size"
+    (onUpload)="afterUpload($event)"
+    (onBeforeUpload)="beforeUpload()"
+    [auto]="true"
+    ></p-fileUpload>
+  </p-card>
+  </div>
+</div>
