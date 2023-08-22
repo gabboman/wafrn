@@ -59,7 +59,7 @@
 
         <div class="grid">
           <div class="col-8 flex justify-content-start">
-            <a [routerLink]="['/post', post[post.length -1].content === '' ? post[post.length -2].id : post[post.length -1].id]">Notes: {{notes}}</a>
+            <a [routerLink]="['/post', finalPost.id]">Notes: {{notes}}</a>
           </div>
           <div *ngIf="userLoggedIn" class="col-4 flex justify-content-end">
             <div class="grid" *ngIf="!loadingAction">
