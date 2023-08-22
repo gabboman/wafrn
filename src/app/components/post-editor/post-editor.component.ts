@@ -75,6 +75,7 @@ export class PostEditorComponent implements OnInit, OnDestroy {
         insertItem(item)
         // necessary because quill-mention triggers changes as 'api' instead of 'user'
         editor.insertText(editor.getLength() - 1, '', 'user')
+        console.log(this.postCreatorContent)
       },
       source: async (searchTerm: string, renderList: any) => {
         await this.updateMentionsSuggestions(searchTerm)
@@ -153,7 +154,8 @@ export class PostEditorComponent implements OnInit, OnDestroy {
         usersToMention.forEach(elem => {
           mentionsHtml = mentionsHtml + '<a href="' + elem.remoteId + '"><span class="mention" data-denotation-char="" data-id="' + elem.id +'" data-value="' + elem.url + '"><span contenteditable="false"><span class="ql-mention-denotation-char"></span>' + elem.url + '</span></span></a> '
         })
-        this.postCreatorContent = `${mentionsHtml} `
+        this.postCreatorContent = `${mentionsHtml} <span> `
+        console.log(this.postCreatorContent)
         this.openEditor();
       }
     });
