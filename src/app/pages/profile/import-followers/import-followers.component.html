@@ -3,6 +3,7 @@
     <p-card>
     <p-progressSpinner *ngIf="loading"></p-progressSpinner>
     <p-fileUpload
+    [hidden]="responseResults.success"
     class="w-full"
     chooseStyleClass="w-full"
     mode="basic"
@@ -16,6 +17,22 @@
     (onBeforeUpload)="beforeUpload()"
     [auto]="true"
     ></p-fileUpload>
+    <div *ngIf="responseResults.success">
+      <p-messages [value]="[
+      { severity: 'success', summary: 'Follow request sent to ' + responseResults.newFollows + ' accounts'},
+      { severity: 'warn', summary: 'Already following ' + responseResults.alreadyFollowing},
+      ]" [enableService]="false" [closable]="false"></p-messages>
+      <div  *ngIf="responseResults.errors.length > 0" >
+      <p-messages [value]="[
+      { severity: 'error', summary: 'Error while trying to follow ' + responseResults.errors.length + ' account(s)'}
+      ]" [enableService]="false" [closable]="false"></p-messages>
+      There was a problem while loading these accounts:
+      <div *ngFor="let acc of responseResults.errors">{{acc}}</div>
+    </div>
+    </div>
+    <div *ngIf="responseResults.success === false">
+      {{responseResults.errorMessage}}
+    </div>
   </p-card>
   </div>
 </div>

@@ -7,7 +7,7 @@ import { ButtonModule } from 'primeng/button';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { FileUploadModule } from 'primeng/fileupload';
-
+import { MessagesModule } from 'primeng/messages';
 
 @NgModule({
   declarations: [
@@ -19,6 +19,7 @@ import { FileUploadModule } from 'primeng/fileupload';
     ButtonModule,
     FileUploadModule,
     ProgressSpinnerModule,
+    MessagesModule,
     RouterModule.forChild([
       {
         path: '',
