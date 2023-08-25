@@ -137,7 +137,7 @@ export class PostEditorComponent implements OnInit, OnDestroy {
             usersToMention.push({
               id: inResponseTo.user.id,
               url: inResponseTo.user.url.startsWith('@') ? inResponseTo.user.url : '@' +inResponseTo.user.url,
-              remoteId: inResponseTo.user.remoteId ? inResponseTo.user.remoteId : `environment.frontUrl/blog/${inResponseTo.user.url}`
+              remoteId: inResponseTo.user.remoteId ? inResponseTo.user.remoteId : `${environment.frontUrl}/blog/${inResponseTo.user.url}`
             })
           }
           inResponseTo.mentionPost?.forEach((mention) => {
@@ -145,7 +145,7 @@ export class PostEditorComponent implements OnInit, OnDestroy {
               usersToMention.push({
                 url: mention.url.startsWith('@') ? mention.url : '@' + mention.url,
                 id: mention.id,
-                remoteId: mention.remoteId ? mention.remoteId : `environment.frontUrl/blog/${mention.url}`
+                remoteId: mention.remoteId ? mention.remoteId : `${environment.frontUrl}/blog/${mention.url}`
               })
             }
           });
