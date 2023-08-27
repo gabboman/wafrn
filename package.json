@@ -7,11 +7,7 @@
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
-    "dev:ssr": "ng run wafrn:serve-ssr",
-    "serve:ssr": "node dist/wafrn/server/main.js",
-    "build:ssr": "ng build && ng run wafrn:server",
-    "prerender": "ng run wafrn:prerender",
-    "vercel-build": "npm run build:ssr"
+    "vercel-build": "npm run build"
   },
   "private": true,
   "dependencies": {
