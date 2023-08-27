@@ -10,6 +10,7 @@
     You are reblogging the post. Your followers will see the full thread with your reply on it
   </h2>
   <div class="mt-4 mb-2">
+    <p-dropdown [disabled]="!enablePrivacyEdition" class="p-fluid" [options]="privacyOptions" [(ngModel)]="privacy" optionLabel="name"></p-dropdown>
     <input [(ngModel)]="contentWarning" pInputText class="w-full" placeholder="Content warning">
   </div>
   <p-overlayPanel appendTo="body" #uploadImagesPanel>
@@ -78,10 +79,7 @@
   <p-chips class="p-fluid" [(ngModel)]="tags" separator="," placeholder="Tags separated by commas."></p-chips>
   <div class="mt-4 mb-2">
     <p-tag class="p-fluid" severity="info" *ngIf="privacy.level === 10"  value="Attention! ADMINS both of your instance and the target instance can read the DMs"></p-tag>
-    <p-dropdown [disabled]="!enablePrivacyEdition" class="p-fluid" [options]="privacyOptions" [(ngModel)]="privacy" optionLabel="name"></p-dropdown>
-
   </div>
-  <br><br><br><br>
-  <p-button [disabled]="postBeingSubmitted" (onClick)="submitPost()">Submit</p-button>
+  <button pButton class="w-full" label="Publish post" [disabled]="postBeingSubmitted" (click)="submitPost()"></button>
 
 </p-dialog>
