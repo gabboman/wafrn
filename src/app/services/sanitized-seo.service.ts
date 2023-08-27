@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Title, Meta } from '@angular/platform-browser';
-import * as sanitizeHtml from 'sanitize-html';
+import  {sanitize} from 'dompurify';
 
 @Injectable({
   providedIn: 'root'
@@ -15,11 +15,7 @@ export class SanitizedSeoService {
 
 
   setSEOTags(title: string, description: string, author: string, image: string): void{
-    const sanitizedDescription = sanitizeHtml(description, {
-      allowedTags: [],
-      allowedClasses: { },
-      allowedStyles: { }
-    });
+    const sanitizedDescription = sanitize(description);
     this.titleService.setTitle(title);
     this.metaTagService.addTags([
       {name: 'description', content: sanitizedDescription },
@@ -35,6 +31,6 @@ export class SanitizedSeoService {
       {name: 'twitter:site', content: 'https://app.wafrn.net' },
       {name: 'twitter:description', content: sanitizedDescription },
       {name: 'twitter:image', content: image},
-    ]);    
+    ]);
   }
 }

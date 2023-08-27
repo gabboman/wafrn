@@ -29,6 +29,10 @@
             "polyfills": "src/polyfills.ts",
             "tsConfig": "tsconfig.app.json",
             "inlineStyleLanguage": "scss",
+            "allowedCommonJsDependencies": [
+              "dompurify",
+              "quill"
+            ],
             "assets": [
               "src/favicon.ico",
               "src/assets",
@@ -83,7 +87,7 @@
               "budgets": [
                 {
                   "type": "initial",
-                  "maximumWarning": "768kb",
+                  "maximumWarning": "1.25mb",
                   "maximumError": "5mb"
                 },
                 {

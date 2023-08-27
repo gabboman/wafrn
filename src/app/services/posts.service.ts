@@ -2,7 +2,7 @@ import { Injectable, SecurityContext } from '@angular/core';
 import { ProcessedPost } from '../interfaces/processed-post';
 import { RawPost } from '../interfaces/raw-post';
 import { MediaService } from './media.service';
-import * as sanitizeHtml from 'sanitize-html';
+import  {sanitize} from 'dompurify';
 import { HttpClient } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
 import { BehaviorSubject } from 'rxjs';
@@ -137,25 +137,9 @@ export class PostsService {
     const replacementsWafrnMedia: Array<{ wafrnMediaStringToReplace: string, id: string }> = [];
     const replacementsWafrnMentions: Array<{ wafrnMentionstringToReplace: string, url: string }> = [];
 
-    let sanitized = sanitizeHtml(content, {
-      allowedTags: ['b', 'i', 'u', 'a','s', 'span', 'br', 'p', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'pre', 'strong', 'em', 'ul', 'li', 'marquee'],
-      allowedClasses: {
-        '*': ['*'],
-      },
-      allowedAttributes: {
-        '*': ['style', 'class'],
-        'a': ['href'],
-      },
-      allowedStyles: {
-        '*': {
-          // Match HEX and RGB
-          'color': [/^#(0x)?[0-9a-f]+$/i, /^rgb\(\s*(\d{1,3})\s*,\s*(\d{1,3})\s*,\s*(\d{1,3})\s*\)$/],
-          'background-color': [/^#(0x)?[0-9a-f]+$/i, /^rgb\(\s*(\d{1,3})\s*,\s*(\d{1,3})\s*,\s*(\d{1,3})\s*\)$/],
-          'text-align': [/^left$/, /^right$/, /^center$/],
-          // Match any number with px, em, or %
-          'font-size': [/^\d+(?:px|em|%)$/]
-        }
-      }
+    let sanitized = sanitize(content, {
+      ALLOWED_TAGS: ['b', 'i', 'u', 'a','s', 'span', 'br', 'p', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'pre', 'strong', 'em', 'ul', 'li', 'marquee'],
+      ALLOWED_ATTR: ['style', 'class']
     });
     // we remove stuff like img and script tags. we only allow certain stuff.
     const parsedAsHTML = this.parser.parseFromString(sanitized, 'text/html')
@@ -201,7 +185,7 @@ export class PostsService {
       if(!replacement.url) {
         replacement.url = ''
       }
-      const replacementString = `<a href="/blog/${sanitizeHtml(replacement.url)}" >@${sanitizeHtml(replacement.url.startsWith('@') ? replacement.url.substring(1): replacement.url)}</a>`
+      const replacementString = `<a href="/blog/${sanitize(replacement.url)}" >@${sanitize(replacement.url.startsWith('@') ? replacement.url.substring(1): replacement.url)}</a>`
       sanitized = sanitized.replace(replacement.wafrnMentionstringToReplace, replacement.url ? replacementString: '_error_in_mention_');
     });
 
@@ -231,7 +215,7 @@ export class PostsService {
   }
 
   getPostContentSanitized(content: string): string {
-    return sanitizeHtml(content);
+    return sanitize(content);
   }
 
   async loadRepliesFromFediverse(id: string) {
