@@ -1,4 +1,4 @@
-import { APP_INITIALIZER, ErrorHandler, NgModule, isDevMode } from "@angular/core";import { BrowserModule } from '@angular/platform-browser';
+import { NgModule, isDevMode } from "@angular/core";import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
@@ -8,9 +8,6 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { WafrnAuthInterceptor } from './interceptors/wafrn-auth.interceptor';
 import { ToastModule } from 'primeng/toast';
 import { MessageService } from 'primeng/api';
-import { environment } from 'src/environments/environment';
-import { Router } from "@angular/router";
-import { QuillConfigModule } from "ngx-quill";
 import { ServiceWorkerModule } from '@angular/service-worker';
 
 @NgModule({
