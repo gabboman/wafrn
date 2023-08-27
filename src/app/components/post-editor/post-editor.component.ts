@@ -21,6 +21,7 @@ import { QuillEditorComponent } from 'ngx-quill'
 import { Subscription } from 'rxjs';
 import { Action } from 'src/app/interfaces/editor-launcher-data';
 import 'quill-mention'
+import { JwtService } from 'src/app/services/jwt.service';
 
 @Component({
   selector: 'app-post-editor',
@@ -112,6 +113,7 @@ export class PostEditorComponent implements OnInit, OnDestroy {
     private editorService: EditorService,
     private messages: MessageService,
     private mediaService: MediaService,
+    private jwtService: JwtService
   ) {
     this.privacy = this.privacyOptions[0]
     this.showEditorSubscription = this.editorService.launchPostEditorEmitter.subscribe((elem) => {
@@ -131,7 +133,7 @@ export class PostEditorComponent implements OnInit, OnDestroy {
             this.enablePrivacyEdition = false;
           }
           this.privacy = parentPrivacy ? parentPrivacy : this.privacyOptions[0]
-          if(inResponseTo.user.url.startsWith('@')) {
+          if(inResponseTo.userId != this.jwtService.getTokenData().userId) {
             usersToMention.push({
               id: inResponseTo.user.id,
               url: inResponseTo.user.url.startsWith('@') ? inResponseTo.user.url : '@' +inResponseTo.user.url,
@@ -139,7 +141,7 @@ export class PostEditorComponent implements OnInit, OnDestroy {
             })
           }
           inResponseTo.mentionPost?.forEach((mention) => {
-            if(!usersToMention.map(elem => elem.id).includes(mention.id)) {
+            if(!usersToMention.map(elem => elem.id).includes(mention.id) && mention.id != this.jwtService.getTokenData().userId) {
               usersToMention.push({
                 url: mention.url.startsWith('@') ? mention.url : '@' + mention.url,
                 id: mention.id,
@@ -152,9 +154,7 @@ export class PostEditorComponent implements OnInit, OnDestroy {
         usersToMention.forEach(elem => {
           mentionsHtml = mentionsHtml + this.getMentionHtml(elem)
         })
-        this.postCreatorContent = `${mentionsHtml} `;
-        this.quill.quillEditor.insertText(this.quill.quillEditor.getLength() - 1, '', 'user')
-        this.openEditor();
+        this.openEditor(mentionsHtml);
       }
     });
   }
@@ -163,8 +163,14 @@ export class PostEditorComponent implements OnInit, OnDestroy {
   }
 
 
-  openEditor() {
+  openEditor( content?: string) {
+    this.postCreatorContent = "";
+    this.quill.ngOnInit();
     this.editorVisible = true;
+    if(content) {
+      this.quill.quillEditor.clipboard.dangerouslyPasteHTML(content)
+      this.quill.quillEditor.insertText(this.quill.quillEditor.getLength() - 1, '', 'user')
+    }
   }
 
   postBeingSubmitted = false;
