@@ -12,6 +12,7 @@ import { DialogModule } from 'primeng/dialog';
 import { TooltipModule } from 'primeng/tooltip';
 import { TagModule } from 'primeng/tag';
 import { DropdownModule } from 'primeng/dropdown';
+import { MediaPreviewModule } from '../media-preview/media-preview.module';
 
 
 @NgModule({
@@ -32,6 +33,7 @@ import { DropdownModule } from 'primeng/dropdown';
     TooltipModule,
     TagModule,
     DropdownModule,
+    MediaPreviewModule
   ],
   exports: [
     PostEditorComponent

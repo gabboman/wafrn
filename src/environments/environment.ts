@@ -11,7 +11,7 @@ export const environment = {
   //baseMediaUrl: 'https://media.wafrn.net',
   externalCacheurl: 'https://cache.wafrn.net/?media=',
   //baseMediaUrl: 'wafrnmedia.b-cdn.net',
-  baseMediaUrl: 'http://localhost:3000/uploads',
+  baseMediaUrl: 'http://localhost:3000/api/uploads',
   frontUrl: 'http://localhost:4200',
   shortenPosts: 5,
 };

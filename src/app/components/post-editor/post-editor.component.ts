@@ -22,6 +22,7 @@ import { Subscription } from 'rxjs';
 import { Action } from 'src/app/interfaces/editor-launcher-data';
 import 'quill-mention'
 import { JwtService } from 'src/app/services/jwt.service';
+import { WafrnMedia } from 'src/app/interfaces/wafrn-media';
 
 @Component({
   selector: 'app-post-editor',
@@ -42,13 +43,10 @@ export class PostEditorComponent implements OnInit, OnDestroy {
   tags: string[] = [];
   privacy;
   @ViewChild('quill') quill!: QuillEditorComponent;
-
   // upload media variables
-  newImageDescription = '';
-  newImageNSFW = false;
-  newImageAdult = false;
   newImageFile: File | undefined;
   disableImageUploadButton = false;
+  uploadedMedias: WafrnMedia[] = []
   uploadImageUrl = `${environment.baseUrl}/uploadMedia`;
   @ViewChild('uploadImagesPanel') uploadImagesPanel: any;
 
@@ -182,8 +180,17 @@ export class PostEditorComponent implements OnInit, OnDestroy {
     });
     tagsToSend = tagsToSend.slice(0, -1);
     let res = undefined;
-    this.fixNullPosting()
-    res = await this.editorService.createPost(this.postCreatorContent, this.privacy.level, tagsToSend, this.idPostToReblog, this.contentWarning);
+    let mediasString = ''
+    this.fixNullPosting();
+    if(this.uploadedMedias.length > 0) {
+      const updateMediaPromises: Promise<any>[] = [];
+      this.uploadedMedias.forEach(elem => {
+        updateMediaPromises.push(this.mediaService.updateMedia(elem.id, elem.description, elem.NSFW, elem.adultContent));
+        mediasString = `${mediasString}[wafrnmediaid="${elem.id}"]`
+      })
+      await Promise.allSettled(updateMediaPromises);
+    }
+    res = await this.editorService.createPost(this.postCreatorContent + mediasString, this.privacy.level, tagsToSend, this.idPostToReblog, this.contentWarning);
     if (res) {
       this.messages.add({
         severity: 'success',
@@ -223,16 +230,18 @@ export class PostEditorComponent implements OnInit, OnDestroy {
       let responses = event.originalEvent.body;
       responses.forEach(async (response: any) => {
         if (response) {
-          if(this.newImageDescription !== '' || this.newImageNSFW || this.newImageAdult ){
-            await this.mediaService.updateMedia(response.id, this.newImageDescription, this.newImageNSFW, this.newImageAdult);
+          // This is something for a new feature. The modified editor...
+          const newMedia: WafrnMedia = {
+            id: response.id,
+            adultContent: response.adultContent,
+            NSFW: response.NSFW,
+            description: response.description,
+            external: response.external,
+            url: `${environment.baseMediaUrl}${response.url}`
           }
-          this.fixNullPosting();
-          this.postCreatorContent = `${this.postCreatorContent}[wafrnmediaid="${response.id}"]`
+          this.uploadedMedias.push(newMedia)
         }
       });
-      this.newImageDescription = '';
-      this.newImageNSFW = false;
-      this.newImageAdult = false;
       this.newImageFile = undefined;
       this.uploadImagesPanel.hide();
       this.messages.add({
@@ -277,8 +286,8 @@ export class PostEditorComponent implements OnInit, OnDestroy {
     this.mentionUserSearchPanel.hide();
   }
 
-  adultContentUpdated() {
-    this.newImageNSFW = this.newImageAdult ? true : this.newImageNSFW;
+  adultContentUpdated(index: number) {
+    this.uploadedMedias[index].NSFW = this.uploadedMedias[index].adultContent ? true : this.uploadedMedias[index].NSFW;
   }
 
   ngOnDestroy(): void {

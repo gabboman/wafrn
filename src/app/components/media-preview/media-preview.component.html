@@ -1,0 +1,7 @@
+<div class="w-full">
+  <p-progressSpinner *ngIf="!success"></p-progressSpinner>
+</div>
+<div *ngIf="media && success" class="w-full flex align-items-center justify-content-center">
+  <img  *ngIf="media.url.endsWith('webp')" style="max-height: 25vh; max-width: 100%;" [src]="elemUrl" (error)="imageLoadFailed($event)">
+  <video  *ngIf="media.url.endsWith('mp4')" style="max-height: 25vh; max-width: 100%;" [src]="elemUrl" (error)="imageLoadFailed($event)"></video>
+</div>

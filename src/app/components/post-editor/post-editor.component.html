@@ -14,27 +14,7 @@
     <input [(ngModel)]="contentWarning" pInputText class="w-full" placeholder="Content warning">
   </div>
   <p-overlayPanel appendTo="body" #uploadImagesPanel>
-    <div>
-      <label for="description" class="block text-900 font-medium mb-2">Images description</label>
-      <input [(ngModel)]="newImageDescription" id="description" type="text"
-        pTooltip="Images description. Useful in the case of someone using a screen reader, or when the image does not load properly. Applies to ALL images uploaded in the batch"
-        tooltipPosition="top" pInputText class="w-full mb-3">
-
-      <p-checkbox [(ngModel)]="newImageNSFW" [binary]="true" label="This medias are NSFW"
-        pTooltip="Are these images NSFW? as in 'this is a spicy post and is better to not see it in a classroom or a work environment'"
-        tooltipPosition="top"
-        [disabled]="newImageAdult"
-        ></p-checkbox>
-        <p-checkbox [(ngModel)]="newImageAdult" [binary]="true" label="This medias containt adult content"
-        (ngModelChange)="adultContentUpdated()"
-        pTooltip="Not a spicy post, but actual adult NSFW content. This media will not be visible to minors nor people who is not logged in"
-        tooltipPosition="top"></p-checkbox>
-    </div>
-    <p-fileUpload name="image" [url]="uploadImageUrl" [multiple]="true"
-      accept="image/jpeg,image/png,image/webp,image/gif,video/mp4,video/quicktime,video/webm,.mkv,audio/mpeg,audio/*" [auto]="false" (onUpload)="uploadImage($event)"
-      [maxFileSize]="maxFileUploadSize" chooseLabel="Upload image, video or audio">
-    </p-fileUpload>
-
+    The new button is on the bottom of the post editor. You will be able to see what you're uploading now
   </p-overlayPanel>
 
   <p-overlayPanel appendTo="body" #mentionUserSearchPanel>
@@ -79,6 +59,40 @@
   <p-chips class="p-fluid" [(ngModel)]="tags" separator="," placeholder="Tags separated by commas."></p-chips>
   <div class="mt-4 mb-2">
     <p-tag class="p-fluid" severity="info" *ngIf="privacy.level === 10"  value="Attention! ADMINS both of your instance and the target instance can read the DMs"></p-tag>
+  </div>
+  <div>
+    <div *ngIf="uploadedMedias.length < 4">
+      <p-fileUpload name="image" [url]="uploadImageUrl" [multiple]="false"
+      accept="image/jpeg,image/png,image/webp,image/gif,video/mp4,video/quicktime,video/webm,.mkv,audio/mpeg,audio/*" [auto]="true" (onUpload)="uploadImage($event)"
+      [maxFileSize]="maxFileUploadSize" chooseLabel="Upload image, video or audio">
+    </p-fileUpload>
+    </div>
+    <div *ngIf="uploadedMedias.length >= 4">
+      Due some fediverse limitations, we can only have 4 medias per post. Adding more would break how the post is seen in other places. Sorry for the inconvenience
+    </div>
+    <div *ngFor="let media of uploadedMedias; let i = index">
+      <div class="col-12 md:col-3">
+        <div class="w-full">
+          <app-media-preview [media]="media"></app-media-preview>
+          <input placeholder="Media description, please fill this! It is important" [(ngModel)]="media.description" id="description" type="text"
+            pTooltip="Images description. Useful in the case of someone using a screen reader, or when the image does not load properly."
+            tooltipPosition="top" pInputText class="w-full mb-3">
+            <div>
+              <p-checkbox [(ngModel)]="media.NSFW" [binary]="true" label="NSFW"
+              pTooltip="Is this image NSFW? as in 'this is a spicy post and is better to not see it in a classroom or a work environment'"
+              tooltipPosition="top"
+              [disabled]="media.adultContent"
+              ></p-checkbox>
+            </div>
+            <div>
+              <p-checkbox [(ngModel)]="media.adultContent" [binary]="true" label="Adult Content"
+              (ngModelChange)="adultContentUpdated(i)"
+              pTooltip="Not a spicy post, but actual adult NSFW content. This media will not be visible to minors nor people who is not logged in"
+              tooltipPosition="top"></p-checkbox>
+            </div>
+        </div>
+      </div>
+    </div>
   </div>
   <button pButton class="w-full" label="Publish post" [disabled]="postBeingSubmitted" (click)="submitPost()"></button>
 
