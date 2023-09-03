@@ -12,7 +12,7 @@ import { PostsService } from './posts.service';
 })
 export class LoginService {
 
-  public logingEventEmitter: EventEmitter<string> = new EventEmitter();
+  public loginEventEmitter: EventEmitter<string> = new EventEmitter();
   constructor(
     private http: HttpClient,
     private router: Router,
@@ -32,7 +32,7 @@ export class LoginService {
       if (petition.success) {
         localStorage.setItem('authToken', petition.token);
         await this.postsService.loadFollowers();
-        this.logingEventEmitter.emit('logged in');
+        this.loginEventEmitter.emit('logged in');
         success = true;
         this.router.navigate(['/dashboard']);
       }
@@ -46,7 +46,7 @@ export class LoginService {
   logOut() {
     localStorage.clear();
     this.router.navigate(['/']);
-    this.logingEventEmitter.emit('logged out')
+    this.loginEventEmitter.emit('logged out')
   }
 
   async register(registerForm: UntypedFormGroup, img: File | null): Promise<boolean> {

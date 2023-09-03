@@ -1,5 +1,5 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { EventEmitter, Injectable } from '@angular/core';
 import { environment } from 'src/environments/environment';
 import { ProcessedPost } from '../interfaces/processed-post';
 import { RawPost } from '../interfaces/raw-post';
@@ -13,6 +13,7 @@ import { map, tap } from "rxjs/operators";
 })
 export class DashboardService {
 
+  public scrollEventEmitter: EventEmitter<string> = new EventEmitter();
   startScrollDate: Date = new Date();
   baseUrl: string;
 
@@ -60,7 +61,7 @@ export class DashboardService {
       // TODO show error message
     }
 
-
+    this.scrollEventEmitter.emit('scrollingtime');
     return result;
 
   }

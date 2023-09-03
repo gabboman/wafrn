@@ -4,6 +4,7 @@ import { MenuItem } from 'primeng/api';
 import { Subscription } from 'rxjs';
 import { Action } from 'src/app/interfaces/editor-launcher-data';
 import { AdminService } from 'src/app/services/admin.service';
+import { DashboardService } from 'src/app/services/dashboard.service';
 import { EditorService } from 'src/app/services/editor.service';
 import { JwtService } from 'src/app/services/jwt.service';
 import { LoginService } from 'src/app/services/login.service';
@@ -35,9 +36,10 @@ export class NavigationMenuComponent implements OnInit, OnDestroy {
     private loginService: LoginService,
     private notificationsService: NotificationsService,
     private cdr: ChangeDetectorRef,
-    private adminService: AdminService
+    private adminService: AdminService,
+    private dashboardService: DashboardService
   ) {
-    this.loginSubscription = this.loginService.logingEventEmitter.subscribe(() => {
+    this.loginSubscription = this.loginService.loginEventEmitter.subscribe(() => {
       this.drawMenu();
     })
     this.navigationSubscription = this.router.events.subscribe((ev) => {
@@ -45,6 +47,10 @@ export class NavigationMenuComponent implements OnInit, OnDestroy {
         this.updateNotifications(ev.url)
       }
     });
+
+    this.dashboardService.scrollEventEmitter.subscribe(ev => {
+      this.updateNotifications('scroll')
+    })
 
   }
 
