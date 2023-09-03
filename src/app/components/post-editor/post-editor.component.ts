@@ -122,6 +122,7 @@ export class PostEditorComponent implements OnInit, OnDestroy {
         this.idPostToReblog = elem.post?.id;
         const inResponseTo = elem.post;
         this.postCreatorContent = '';
+        this.uploadedMedias = []
         this.tags = [];
         const usersToMention: {id: string, url: string, remoteId: string}[] = [];
         if(inResponseTo) {
@@ -163,6 +164,7 @@ export class PostEditorComponent implements OnInit, OnDestroy {
 
   openEditor( content?: string) {
     this.postCreatorContent = "";
+    this.uploadedMedias = []
     this.quill.ngOnInit();
     this.editorVisible = true;
     if(content) {
@@ -197,6 +199,7 @@ export class PostEditorComponent implements OnInit, OnDestroy {
         summary: 'Your post has been published!'
       });
       this.postCreatorContent = '';
+      this.uploadedMedias = []
       this.tags = [];
       this.editorVisible = false;
     } else {
@@ -216,6 +219,8 @@ export class PostEditorComponent implements OnInit, OnDestroy {
   fixNullPosting() {
     if (!this.postCreatorContent) {
       this.postCreatorContent = '';
+      this.uploadedMedias = []
+
     }
   }
 
