@@ -123,9 +123,9 @@ export class PostComponent implements OnInit {
     });
   }
 
-  async quickReblog() {
+  async quickReblog(id: string) {
     this.loadingAction = true;
-      const response = await this.editor.createPost('', 0,  '',this.finalPost.id );
+      const response = await this.editor.createPost('', 0,  '', id );
       if(response) {
         this.messages.add({ severity: 'success', summary: 'You reblogged the post succesfully' });
       } else {
@@ -188,6 +188,12 @@ export class PostComponent implements OnInit {
             action: Action.Response,
             post: content
           })
+        },
+        {
+          label: "Quick reblog",
+          title: "Reblog this post to your followers",
+          icon: 'pi pi-history',
+          command: () => this.quickReblog(content.id)
         },
         (content.content !== '' || content.tags.length != 0) && content.userId != this.myId  ?
         content.userLikesPostRelations.includes(this.myId) ?

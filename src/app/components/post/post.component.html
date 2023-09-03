@@ -64,7 +64,7 @@
           <div *ngIf="userLoggedIn" class="col-4 flex justify-content-end">
             <div class="grid" *ngIf="!loadingAction">
               <i
-               (click)="quickReblog()"
+               (click)="quickReblog(finalPost.id)"
                class="col-3 pi pi-history hover-cursor" title="Quick Reblog"></i>
               <i (click)="launchReblog()" class="col-3 pi pi-replay hover-cursor" title="Reblog"></i>
               <i *ngIf="showLikeFinalPost === 1" (click)="likePost(finalPost)" class="col-3 pi pi-heart hover-cursor" title="Like Post"></i>
