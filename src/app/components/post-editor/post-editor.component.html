@@ -89,6 +89,7 @@
               (ngModelChange)="adultContentUpdated(i)"
               pTooltip="Not a spicy post, but actual adult NSFW content. This media will not be visible to minors nor people who is not logged in"
               tooltipPosition="top"></p-checkbox>
+              <button (click)="deleteImage(i)" pButton class="w-full" label="Delete" pTooltip="Deletes the image ON TOP of this button" icon="pi pi-trash"></button>
             </div>
         </div>
       </div>

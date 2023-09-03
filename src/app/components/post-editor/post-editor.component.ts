@@ -303,4 +303,9 @@ export class PostEditorComponent implements OnInit, OnDestroy {
     return `<span class="mention" data-denotation-char="" data-id="${mention.id}" data-value="<span class=&quot;h-card&quot; data-id=&quot;${mention.id}&quot;><a href=&quot;${mention.remoteId}&quot; ><span>${mention.url}</span></a></span>">﻿<span contenteditable="false"><span class="ql-mention-denotation-char"></span><span class="h-card" data-id="${mention.id}"><a href="${mention.remoteId}"><span>${mention.url}</span></a></span></span>﻿</span>`
   }
 
+  deleteImage(index: number) {
+    // TODO we should look how to clean the disk at some point. A call to delete the media would be nice
+    this.uploadedMedias.splice(index, 1)
+  }
+
 }
