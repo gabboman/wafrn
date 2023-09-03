@@ -23,6 +23,7 @@ import { Action } from 'src/app/interfaces/editor-launcher-data';
 import 'quill-mention'
 import { JwtService } from 'src/app/services/jwt.service';
 import { WafrnMedia } from 'src/app/interfaces/wafrn-media';
+import { DashboardService } from 'src/app/services/dashboard.service';
 
 @Component({
   selector: 'app-post-editor',
@@ -111,7 +112,8 @@ export class PostEditorComponent implements OnInit, OnDestroy {
     private editorService: EditorService,
     private messages: MessageService,
     private mediaService: MediaService,
-    private jwtService: JwtService
+    private jwtService: JwtService,
+    private dashboardService: DashboardService,
   ) {
     this.privacy = this.privacyOptions[0]
     this.showEditorSubscription = this.editorService.launchPostEditorEmitter.subscribe((elem) => {
@@ -193,6 +195,8 @@ export class PostEditorComponent implements OnInit, OnDestroy {
       await Promise.allSettled(updateMediaPromises);
     }
     res = await this.editorService.createPost(this.postCreatorContent + mediasString, this.privacy.level, tagsToSend, this.idPostToReblog, this.contentWarning);
+    // its a great time to check notifications isnt it?
+    this.dashboardService.scrollEventEmitter.emit('post')
     if (res) {
       this.messages.add({
         severity: 'success',
