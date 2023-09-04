@@ -5,9 +5,9 @@
     </p-card>
     </div>
     </div>
-<app-post [showFull]="true" *ngIf="!loading && postFound" [post]="post"></app-post>
+<app-post [showFull]="true" *ngIf="!loading && postFound && post" [post]="post"></app-post>
 
-<div *ngIf="!loading && post[post.length - 1]" class="grid pb-6 lg:px-4 scalein animation-duration-400 wafrn-container">
+<div *ngIf="!loading && post &&  post[post.length - 1]" class="grid pb-6 lg:px-4 scalein animation-duration-400 wafrn-container">
   <div class="col-12 wafrn-post">
     <p-card>
       <div *ngIf="post[0].id !== post[post.length -1].id">
@@ -44,8 +44,3 @@
 </div>
 
 <app-pagenotfound *ngIf="!postFound"></app-pagenotfound>
-<noscript>
-    The post is rendered using javascript. If you have javascript disabled, we can try to force rendering this post on the server, but this place is better with javascript.
-    <a *ngIf="postFound" [href]="'/post/' + post[post.length -1].id  + '?force-ssr=true'">Click here to try to see the server side rendered version of the post</a>
-    <p *ngIf="!postFound">But it seems this post does not exist or there is something wrong with the api</p>
-</noscript>

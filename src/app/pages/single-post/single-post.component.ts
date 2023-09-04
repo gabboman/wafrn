@@ -35,30 +35,28 @@ export class SinglePostComponent implements OnInit {
     private loginService: LoginService,
     private router: Router,
     private route: ActivatedRoute,
-    private seoService: SanitizedSeoService,
     @Inject(PLATFORM_ID) private platformId: Object,
     private themeService: ThemeService
   ) {
     this.themeService.setMyTheme()
     this.userLoggedIn = loginService.checkUserLoggedIn()
-
-    this.route.data.subscribe((data) => {
-      this.forceSSR = route.snapshot.queryParams['force-ssr'] === 'true';
-      this.post = data['posts'];
+    this.route.params.subscribe(async (data: any) => {
+      this.forceSSR = this.route.snapshot.queryParams['force-ssr'] === 'true';
+      const tmpPost =  await this.dashboardService.getPost(data ? data.id : '').toPromise();
+      this.post = tmpPost ? tmpPost : [];
       const lastPostFragment = this.post[this.post.length -1];
       if(lastPostFragment) {
         this.postFound = true;
-        this.seoService.setSEOTags(`Wafrn - Post by ${lastPostFragment.user.url}`, `Wafrn post by ${lastPostFragment.user.url}: ${this.postService.getPostContentSanitized(lastPostFragment.content)}`, lastPostFragment.user.url, this.getImage(this.post));
+        this.loading = false;
+        //this.seoService.setSEOTags(`Wafrn - Post by ${lastPostFragment.user.url}`, `Wafrn post by ${lastPostFragment.user.url}: ${this.postService.getPostContentSanitized(lastPostFragment.content)}`, lastPostFragment.user.url, this.getImage(this.post));
       } else {
         this.postFound = false;
       }
     })
+
+
   }
   ngOnInit(): void {
-    if(isPlatformBrowser(this.platformId) || this.forceSSR) {
-      this.loading = false;
-    }
-
   }
 
   // gets either the first non video image from the last post, the fist non video image from the initial post OR the wafrn logo

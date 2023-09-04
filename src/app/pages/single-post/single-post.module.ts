@@ -13,7 +13,6 @@ import { ButtonModule } from 'primeng/button';
 const routes: Routes = [
       {
         path: ':id',
-        resolve: { posts: PostResolver },
         component: SinglePostComponent
       }
     ];
