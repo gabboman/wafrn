@@ -71,7 +71,7 @@
       Due some fediverse limitations, we can only have 4 medias per post. Adding more would break how the post is seen in other places. Sorry for the inconvenience
     </div>
     <div *ngFor="let media of uploadedMedias; let i = index">
-      <div class="col-12 md:col-3">
+      <div class="col-12 md:col-6">
         <div class="w-full">
           <app-media-preview [media]="media"></app-media-preview>
           <input placeholder="Media description, please fill this! It is important" [(ngModel)]="media.description" id="description" type="text"
