@@ -138,8 +138,8 @@ export class PostsService {
     const replacementsWafrnMentions: Array<{ wafrnMentionstringToReplace: string, url: string }> = [];
 
     let sanitized = sanitize(content, {
-      ALLOWED_TAGS: ['b', 'i', 'u', 'a','s', 'span', 'br', 'p', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'pre', 'strong', 'em', 'ul', 'li', 'marquee'],
-      ALLOWED_ATTR: ['style', 'class', 'href']
+      ALLOWED_TAGS: ['b', 'i', 'u', 'a','s', 'span', 'br', 'p', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'pre', 'strong', 'em', 'ul', 'li', 'marquee', 'font'],
+      ALLOWED_ATTR: ['style', 'class', 'href', 'color']
     });
     // we remove stuff like img and script tags. we only allow certain stuff.
     const parsedAsHTML = this.parser.parseFromString(sanitized, 'text/html')
