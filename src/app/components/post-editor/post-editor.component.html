@@ -21,7 +21,7 @@
     Due a bug when wriging @torvalds@kernel.social you should write @torvalds_kernel.social
   </p-overlayPanel>
 
-  <quill-editor #quill class="w-full" [(ngModel)]="postCreatorContent"  [modules]="modules" >
+  <quill-editor #quill class="w-full" [(ngModel)]="postCreatorContent"  [modules]="modules" [customOptions]="customOptions" >
     <div quill-editor-toolbar style="border-top-left-radius: 5px; border-top-right-radius: 5px;">
       <select class="ql-size" title="Text Size">
         <option value="small"></option>
@@ -70,29 +70,31 @@
     <div *ngIf="uploadedMedias.length >= 4">
       Due some fediverse limitations, we can only have 4 medias per post. Adding more would break how the post is seen in other places. Sorry for the inconvenience
     </div>
-    <div *ngFor="let media of uploadedMedias; let i = index">
-      <div class="col-12 md:col-6">
-        <div class="w-full">
-          <app-media-preview [media]="media"></app-media-preview>
-          <input placeholder="Media description, please fill this! It is important" [(ngModel)]="media.description" id="description" type="text"
-            pTooltip="Images description. Useful in the case of someone using a screen reader, or when the image does not load properly."
-            tooltipPosition="top" pInputText class="w-full mb-3">
-            <div>
-              <p-checkbox [(ngModel)]="media.NSFW" [binary]="true" label="NSFW"
-              pTooltip="Is this image NSFW? as in 'this is a spicy post and is better to not see it in a classroom or a work environment'"
-              tooltipPosition="top"
-              [disabled]="media.adultContent"
-              ></p-checkbox>
-            </div>
-            <div>
-              <p-checkbox [(ngModel)]="media.adultContent" [binary]="true" label="Adult Content"
-              (ngModelChange)="adultContentUpdated(i)"
-              pTooltip="Not a spicy post, but actual adult NSFW content. This media will not be visible to minors nor people who is not logged in"
-              tooltipPosition="top"></p-checkbox>
-              <button (click)="deleteImage(i)" pButton class="w-full" label="Delete" pTooltip="Deletes the image ON TOP of this button" icon="pi pi-trash"></button>
-            </div>
+    <div class="grid">
+      <ng-container *ngFor="let media of uploadedMedias; let i = index">
+        <div class="col-12 md:col-6">
+          <div class="w-full">
+            <app-media-preview [media]="media"></app-media-preview>
+            <input placeholder="Media description, please fill this! It is important" [(ngModel)]="media.description" id="description" type="text"
+              pTooltip="Images description. Useful in the case of someone using a screen reader, or when the image does not load properly."
+              tooltipPosition="top" pInputText class="w-full mb-3">
+              <div>
+                <p-checkbox [(ngModel)]="media.NSFW" [binary]="true" label="NSFW"
+                pTooltip="Is this image NSFW? as in 'this is a spicy post and is better to not see it in a classroom or a work environment'"
+                tooltipPosition="top"
+                [disabled]="media.adultContent"
+                ></p-checkbox>
+              </div>
+              <div>
+                <p-checkbox [(ngModel)]="media.adultContent" [binary]="true" label="Adult Content"
+                (ngModelChange)="adultContentUpdated(i)"
+                pTooltip="Not a spicy post, but actual adult NSFW content. This media will not be visible to minors nor people who is not logged in"
+                tooltipPosition="top"></p-checkbox>
+                <button (click)="deleteImage(i)" pButton class="w-full" label="Delete" pTooltip="Deletes the image ON TOP of this button" icon="pi pi-trash"></button>
+              </div>
+          </div>
         </div>
-      </div>
+      </ng-container>
     </div>
   </div>
   <button pButton class="w-full" label="Publish post" [disabled]="postBeingSubmitted" (click)="submitPost()"></button>

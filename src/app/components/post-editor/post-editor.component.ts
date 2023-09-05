@@ -102,6 +102,10 @@ export class PostEditorComponent implements OnInit, OnDestroy {
     toolbar: []
   }
 
+  // TODO fill with custom formating. no clue yet
+  customOptions = [
+  ]
+
   showEditorSubscription: Subscription;
 
 
@@ -118,6 +122,8 @@ export class PostEditorComponent implements OnInit, OnDestroy {
     this.privacy = this.privacyOptions[0]
     this.showEditorSubscription = this.editorService.launchPostEditorEmitter.subscribe((elem) => {
       if (elem.action === Action.New || elem.action === Action.Response) {
+        console.log('a')
+        console.log(this.quill.customOptions)
         this.enablePrivacyEdition = true;
         this.privacy = this.privacyOptions[0];
         this.contentWarning = '';
@@ -185,7 +191,7 @@ export class PostEditorComponent implements OnInit, OnDestroy {
     tagsToSend = tagsToSend.slice(0, -1);
     let res = undefined;
     let mediasString = ''
-    this.fixNullPosting();
+    // this.fixNullPosting();
     if(this.uploadedMedias.length > 0) {
       const updateMediaPromises: Promise<any>[] = [];
       this.uploadedMedias.forEach(elem => {
