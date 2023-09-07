@@ -10,7 +10,9 @@
       <div class="flex justify-content-center flex-wrap mt-4 mb-2">
         <div [innerHtml]="blogDetails.description" class="text-600 font-medium line-height-3"></div>
       </div>
-      <div class="flex align-items-center justify-content-center w-full">
+      <div *ngIf="blogDetails.url.startsWith('@')">
+        Attention! This is an external user, and the profile might not be complete. To check this user's complete profile in their instanc <a [href]="blogDetails.remoteId" target="_blank"> click here</a>.</div>
+      <div class="flex align-items-center justify-content-center w-full" style="margin-top: 1em">
         <p-splitButton [model]="splitButtonItems" *ngIf="followedUsers.indexOf(blogDetails.id) === -1 && userLoggedIn" pRipple label="Follow"
         (onClick)="followUser(blogDetails.id)"></p-splitButton>
 <p-splitButton [model]="splitButtonItems" *ngIf="followedUsers.indexOf(blogDetails.id) !== -1 && userLoggedIn" pRipple label="Unfollow"
