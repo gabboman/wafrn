@@ -144,7 +144,9 @@ export class PostsService {
     // we remove stuff like img and script tags. we only allow certain stuff.
     const parsedAsHTML = this.parser.parseFromString(sanitized, 'text/html')
     const links = parsedAsHTML.getElementsByTagName('a')
-    const mentionedUrls = post.mentionPost ?  post.mentionPost?.map(elem => elem.remoteId) : []
+    const mentionedRemoteIds = post.mentionPost ?  post.mentionPost?.map(elem => elem.remoteId) : [];
+    const mentionRemoteUrls = post.mentionPost ?  post.mentionPost?.map(elem => elem.url) : [];
+    const mentionedHosts = post.mentionPost ?  post.mentionPost?.map(elem => new URL(elem.remoteId? elem.remoteId : 'https://adomainthatdoesnotexist.google.com').hostname) : [];
     Array.from(links).forEach((link) => {
       const youtubeMatch = link.href.matchAll(this.youtubeRegex)
       if(link.innerText === link.href && youtubeMatch) {
@@ -156,7 +158,7 @@ export class PostsService {
       }
       // replace mentioned users with wafrn version of profile.
       // TODO not all software links to mentionedProfile
-      if(mentionedUrls.includes(link.href)) {
+      if(mentionedRemoteIds.includes(link.href)) {
         if (post.mentionPost) {
           let mentionedUser = post.mentionPost.find(elem => elem.remoteId === link.href);
           if(mentionedUser) {
@@ -164,6 +166,15 @@ export class PostsService {
           }
         }
 
+      }
+      const linkAsUrl = new URL(link.href)
+      if(mentionedHosts.includes(linkAsUrl.hostname)){
+        const sanitizedContent = sanitize(link.innerHTML, {
+          ALLOWED_TAGS: []
+        })
+        if(sanitizedContent.startsWith('@') && mentionRemoteUrls.includes(`${sanitizedContent}@${linkAsUrl.hostname}`)) {
+          link.href = `/blog/${sanitizedContent}@${linkAsUrl.hostname}`
+        }
       }
       link.target = "_blank"
       sanitized = parsedAsHTML.documentElement.innerHTML
