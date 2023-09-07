@@ -175,6 +175,9 @@ export class PostsService {
         if(sanitizedContent.startsWith('@') && mentionRemoteUrls.includes(`${sanitizedContent}@${linkAsUrl.hostname}`)) {
           link.href = `/blog/${sanitizedContent}@${linkAsUrl.hostname}`
         }
+        if(sanitizedContent.startsWith('@') && mentionRemoteUrls.includes(`${sanitizedContent}`)) {
+          link.href = `/blog/${sanitizedContent}`
+        }
       }
       link.target = "_blank"
       sanitized = parsedAsHTML.documentElement.innerHTML
