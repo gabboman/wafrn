@@ -144,7 +144,7 @@ export class PostsService {
     // we remove stuff like img and script tags. we only allow certain stuff.
     const parsedAsHTML = this.parser.parseFromString(sanitized, 'text/html')
     const links = parsedAsHTML.getElementsByTagName('a')
-
+    const mentionedUrls = post.mentionPost ?  post.mentionPost?.map(elem => elem.remoteId) : []
     Array.from(links).forEach((link) => {
       const youtubeMatch = link.href.matchAll(this.youtubeRegex)
       if(link.innerText === link.href && youtubeMatch) {
@@ -153,6 +153,17 @@ export class PostsService {
             ytPlayer.setAttribute('video',youtubeString[6] )
             link.innerHTML =  `<app-wafrn-youtube-player video="${youtubeString[6]}" > </app-wafrn-youtube-player>`
           })
+      }
+      // replace mentioned users with wafrn version of profile.
+      // TODO not all software links to mentionedProfile
+      if(mentionedUrls.includes(link.href)) {
+        if (post.mentionPost) {
+          let mentionedUser = post.mentionPost.find(elem => elem.remoteId === link.href);
+          if(mentionedUser) {
+            link.href = `${environment.frontUrl}/blog/${mentionedUser.url}`
+          }
+        }
+
       }
       link.target = "_blank"
       sanitized = parsedAsHTML.documentElement.innerHTML
