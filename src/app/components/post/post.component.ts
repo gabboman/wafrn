@@ -125,12 +125,18 @@ export class PostComponent implements OnInit {
 
   async quickReblog(id: string) {
     this.loadingAction = true;
+    let postToBeReblogged = this.post.find(elem => elem.id === id);
+    if(postToBeReblogged?.privacy === 0) {
       const response = await this.editor.createPost('', 0,  '', id );
       if(response) {
         this.messages.add({ severity: 'success', summary: 'You reblogged the post succesfully' });
       } else {
         this.messages.add({ severity: 'error', summary: 'Something went wrong! Check your internet conectivity and try again' });
       }
+    } else {
+      this.messages.add({ severity: 'warn', summary: 'Sorry, this post is not rebloggeable as requested by the user' });
+
+    }
     this.loadingAction = false;
   }
 
