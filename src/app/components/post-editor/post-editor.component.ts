@@ -200,7 +200,7 @@ export class PostEditorComponent implements OnInit, OnDestroy {
       })
       await Promise.allSettled(updateMediaPromises);
     }
-    res = await this.editorService.createPost(this.postCreatorContent + mediasString, this.privacy.level, tagsToSend, this.idPostToReblog, this.contentWarning);
+    res = await this.editorService.createPost((this.postCreatorContent ? this.postCreatorContent : '') + mediasString, this.privacy.level, tagsToSend, this.idPostToReblog, this.contentWarning);
     // its a great time to check notifications isnt it?
     this.dashboardService.scrollEventEmitter.emit('post')
     if (res) {
