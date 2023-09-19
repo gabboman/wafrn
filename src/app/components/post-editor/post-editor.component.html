@@ -72,7 +72,7 @@
     </div>
     <div class="grid">
       <ng-container *ngFor="let media of uploadedMedias; let i = index">
-        <div class="col-12 md:col-6">
+        <div class="col-12 md:col-6 my-4">
           <div class="w-full">
             <app-media-preview [media]="media"></app-media-preview>
             <input placeholder="Media description, please fill this! It is important" [(ngModel)]="media.description" id="description" type="text"
@@ -89,8 +89,9 @@
                 <p-checkbox [(ngModel)]="media.adultContent" [binary]="true" label="Adult Content"
                 (ngModelChange)="adultContentUpdated(i)"
                 pTooltip="Not a spicy post, but actual adult NSFW content. This media will not be visible to minors nor people who is not logged in"
-                tooltipPosition="top"></p-checkbox>
-                <button (click)="deleteImage(i)" pButton class="w-full" label="Delete" pTooltip="Deletes the image ON TOP of this button" icon="pi pi-trash"></button>
+                tooltipPosition="top"
+                ></p-checkbox>
+                <button (click)="deleteImage(i)" pButton class="w-full p-button-danger" label="Delete" pTooltip="Deletes the image ON TOP of this button" icon="pi pi-trash"></button>
               </div>
           </div>
         </div>

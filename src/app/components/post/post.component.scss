@@ -5,7 +5,7 @@
 }
 
 .center-text {
-    display: flex; 
+    display: flex;
     flex-direction: row;
     align-items: center;
     gap: 0.25em;
@@ -20,5 +20,5 @@
 }
 
 .blurry{
-    filter: blur(50px);
+    filter: opacity(0);
 }
