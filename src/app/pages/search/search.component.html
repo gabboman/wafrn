@@ -1,4 +1,4 @@
-  <div class="grid pb-6 lg:px-4 scalein animation-duration-400 wafrn-container">
+  <div class="grid pb-6 lg:px-4 scalein animation-duration-100 wafrn-container">
 
     <p-card >
       <span class="text-600 font-medium line-height-3">You can search for users by url and description, and posts by
@@ -21,7 +21,7 @@
 
 
 
-<div  [hidden]="!(users && users.length > 0)" class="grid pb-6 lg:px-4 scalein animation-duration-400 wafrn-container" >
+<div  [hidden]="!(users && users.length > 0)" class="grid pb-6 lg:px-4 scalein animation-duration-100 wafrn-container" >
     <p-carousel [value]="users" [showIndicators]="false">
       <ng-template let-user pTemplate="item">
         <p-card *ngIf="user">
