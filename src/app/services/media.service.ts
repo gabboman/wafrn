@@ -79,7 +79,7 @@ export class MediaService {
     // TODO this is a dirty hack. we should replace this when setting the media
     // this arquitecture isnt even the best I think. Refactor would be nice
     if(!res.url.includes(environment.externalCacheurl) && res.url.endsWith('mp4')) {
-      res.url = environment.externalCacheurl + encodeURIComponent(environment.baseMediaUrl + res.url)
+      res.url = environment.externalCacheurl + encodeURIComponent(res.url)
     }
     if (!res) {
       res = {
