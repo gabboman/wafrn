@@ -252,7 +252,7 @@ export class PostEditorComponent implements OnInit, OnDestroy {
             NSFW: response.NSFW,
             description: response.description,
             external: response.external,
-            url: `${environment.baseMediaUrl}${response.url}`
+            url: environment.externalCacheurl + encodeURIComponent(`${environment.baseMediaUrl}${response.url}`)
           }
           this.uploadedMedias.push(newMedia)
         }

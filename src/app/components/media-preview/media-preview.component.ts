@@ -31,6 +31,7 @@ export class MediaPreviewComponent implements OnInit{
   }
 
   updateMediaUrl() {
+    console.log(this.media.url)
     this.elemUrl = `${this.media.url}?date=${new Date().getTime()}`
 
   }
