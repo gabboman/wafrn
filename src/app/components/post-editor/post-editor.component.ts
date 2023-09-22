@@ -122,8 +122,6 @@ export class PostEditorComponent implements OnInit, OnDestroy {
     this.privacy = this.privacyOptions[0]
     this.showEditorSubscription = this.editorService.launchPostEditorEmitter.subscribe((elem) => {
       if (elem.action === Action.New || elem.action === Action.Response) {
-        console.log('a')
-        console.log(this.quill.customOptions)
         this.enablePrivacyEdition = true;
         this.privacy = this.privacyOptions[0];
         this.contentWarning = '';
