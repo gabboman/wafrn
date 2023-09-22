@@ -73,8 +73,12 @@ export class DashboardComponent implements OnInit {
   }
 
   async loadPosts(page: number) {
-
-    const tmpPosts = await this.dashboardService.getDashboardPage(page, this.level);
+    let scrollDate = new Date()
+    if(page !== 0) {
+      const lastPostBlock = this.posts[this.posts.length -1 ];
+      scrollDate = new Date(lastPostBlock[lastPostBlock.length - 1].createdAt)
+    }
+    const tmpPosts = await this.dashboardService.getDashboardPage(scrollDate, this.level);
     const filteredPosts = tmpPosts.filter((post: ProcessedPost[]) => {
       let allFragmentsSeen = true;
       post.forEach(component => {

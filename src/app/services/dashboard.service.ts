@@ -14,6 +14,8 @@ import { map, tap } from "rxjs/operators";
 export class DashboardService {
 
   public scrollEventEmitter: EventEmitter<string> = new EventEmitter();
+  // TODO improve this. will require some changes for stuff but basically
+  // its faster to say "gimme page 0 startdate this" than "gime page 2 startdate this"
   startScrollDate: Date = new Date();
   baseUrl: string;
 
@@ -43,15 +45,11 @@ export class DashboardService {
     return res;
   }
 
-  async getDashboardPage(page: number, level: number): Promise<ProcessedPost[][]> {
+  async getDashboardPage(date: Date, level: number): Promise<ProcessedPost[][]> {
     let result: ProcessedPost[][] = [];
-    if(page === 0) {
-      //if we are starting the scroll, we store the current date
-      this.startScrollDate = new Date();
-    }
     let petitionData: HttpParams = new HttpParams();
-    petitionData = petitionData.set('page', page.toString());
-    petitionData = petitionData.set('startScroll', this.startScrollDate.getTime().toString());
+    petitionData = petitionData.set('page', '0');
+    petitionData = petitionData.set('startScroll', date.getTime().toString());
     const url = this.getDashboardUrl(level);
     let dashboardPetition: Array<RawPost> | undefined = await this.http.get<Array<RawPost>>(url, {params: petitionData}).toPromise();
     if(dashboardPetition) {
