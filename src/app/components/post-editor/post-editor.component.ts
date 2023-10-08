@@ -67,13 +67,14 @@ export class PostEditorComponent implements OnInit, OnDestroy {
       fixMentionsToQuill: true,
       defaultMenuOrientation: 'bottom',
       onSelect: (item: any, insertItem: any) => {
-        item.denotationChar = ''
+        item.denotationChar = '';
         const elem = this.mentionSuggestions[item.index]
-        item.value = this.getMentionHtml(elem)
+        item.value = this.getMentionHtml(elem, true)
         const editor = this.quill.quillEditor
         insertItem(item)
         // necessary because quill-mention triggers changes as 'api' instead of 'user'
         editor.insertText(editor.getLength() - 1, '', 'user')
+        // console.log(this.postCreatorContent)
       },
       source: async (searchTerm: string, renderList: any) => {
         await this.updateMentionsSuggestions(searchTerm)
@@ -158,7 +159,10 @@ export class PostEditorComponent implements OnInit, OnDestroy {
         let mentionsHtml = '';
         usersToMention.forEach(elem => {
           mentionsHtml = mentionsHtml + this.getMentionHtml(elem)
-        })
+        });
+        if (mentionsHtml !== '') {
+          mentionsHtml = mentionsHtml + '<span> </span>'
+        }
         this.openEditor(mentionsHtml);
       }
     });
@@ -307,8 +311,10 @@ export class PostEditorComponent implements OnInit, OnDestroy {
     this.showEditorSubscription.unsubscribe();
   }
 
-  getMentionHtml(mention: {id: string, url: string, remoteId: string}): string {
-    return `<span class="mention" data-denotation-char="" data-id="${mention.id}" data-value="<span class=&quot;h-card&quot; data-id=&quot;${mention.id}&quot;><a href=&quot;${mention.remoteId}&quot; ><span>${mention.url}</span></a></span>">﻿<span contenteditable="false"><span class="ql-mention-denotation-char"></span><span class="h-card" data-id="${mention.id}"><a href="${mention.remoteId}"><span>${mention.url}</span></a></span></span>﻿</span>`
+  getMentionHtml(mention: {id: string, url: string, remoteId: string}, simple = false): string {
+    const fullMention = `<span class="mention" data-index="1" data-denotation-char="" data-id="${mention.id}" data-value="<span data-id=&quot;${mention.id}&quot; class=&quot;h-card mention&quot; translate=&quot;no&quot;><a href=&quot;${mention.remoteId}&quot; class=&quot;u-url mention&quot;><span>${mention.url.startsWith('@') ? mention.url : '@' + mention.url }</span></a></span>">﻿<span contenteditable="false"><span class="ql-mention-denotation-char"></span><span data-id="${mention.id}" class="h-card mention" translate="no"><a href="${mention.remoteId}" class="u-url mention"><span>@${mention.url.startsWith('@') ? mention.url : '@' + mention.url }</span></a></span></span>﻿</span>`
+    const simplifiedMention = `<span data-id="${mention.id}" class="h-card mention" translate="no"><a href="${mention.remoteId}" class="u-url mention"><span>${mention.url.startsWith('@') ? mention.url : '@' + mention.url }</span></a></span>`
+    return simple? simplifiedMention : fullMention;
   }
 
   deleteImage(index: number) {
