@@ -9,6 +9,7 @@ import {SplitButtonModule} from 'primeng/splitbutton';
 import { InjectHtmlModule } from '../../directives/inject-html/inject-html.module';
 import { WafrnMediaModule } from '../wafrn-media/wafrn-media.module';
 import { WafrnYoutubePlayerModule } from '../wafrn-youtube-player/wafrn-youtube-player.module';
+import { PollModule } from '../poll/poll.module';
 
 
 
@@ -25,7 +26,8 @@ import { WafrnYoutubePlayerModule } from '../wafrn-youtube-player/wafrn-youtube-
     SplitButtonModule,
     WafrnMediaModule,
     WafrnYoutubePlayerModule,
-    InjectHtmlModule
+    InjectHtmlModule,
+    PollModule
   ],
   exports: [
     PostComponent

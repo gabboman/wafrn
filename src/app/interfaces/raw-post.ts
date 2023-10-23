@@ -3,6 +3,7 @@ import { WafrnMedia } from "./wafrn-media";
 import { Tag } from "./tag";
 import { WafrnMention } from "./wafrn-mention";
 import { Emoji } from "./emoji";
+import { QuestionPoll } from "./questionPoll";
 
 export interface RawPost {
     id:             string;
@@ -23,6 +24,7 @@ export interface RawPost {
     remotePostId?:   string;
     userLikesPostRelations: {userId: string}[];
     emojis:         Array<Emoji>;
+    questionPoll?: QuestionPoll;
 
 
 }

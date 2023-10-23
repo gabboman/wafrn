@@ -42,7 +42,15 @@
           [injectHTML]="sanitizedPostContent[index]"
         >
         </div>
-        <div *ngIf="content.tags">
+        <div
+        *ngIf="content.questionPoll"
+        [ngClass]="{'blurry': content.content_warning}"
+        >
+        <app-poll [poll]="content.questionPoll" ></app-poll>
+        </div>
+        <div *ngIf="content.tags"
+        [ngClass]="{'blurry': content.content_warning}"
+        >
           <a *ngFor="let tag of content.tags" [routerLink]="'/dashboard/search/' + tag.tagName" style="margin: 0.25em" >
             <p-tag class="wafrn-tag" [value]="'#' +tag.tagName"></p-tag>
           </a>
