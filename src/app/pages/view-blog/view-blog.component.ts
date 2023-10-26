@@ -2,7 +2,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Meta, Title } from '@angular/platform-browser';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { MenuItem, MessageService } from 'primeng/api';
-import { filter } from 'rxjs';
+import { Subscription, filter } from 'rxjs';
 import { ProcessedPost } from 'src/app/interfaces/processed-post';
 import { BlocksService } from 'src/app/services/blocks.service';
 import { DashboardService } from 'src/app/services/dashboard.service';
@@ -27,7 +27,7 @@ export class ViewBlogComponent implements OnInit, OnDestroy {
   followedUsers: Array<String> = [];
   userLoggedIn = false;
   avatarUrl = '';
-  navigationSubscription;
+  navigationSubscription!: Subscription;
   showModalTheme = false;
 
   splitButtonItems: MenuItem[] = [];
@@ -46,7 +46,15 @@ export class ViewBlogComponent implements OnInit, OnDestroy {
     private blockService: BlocksService
   ) {
     this.userLoggedIn = loginService.checkUserLoggedIn();
-    this.navigationSubscription = router.events.pipe(filter(event => event instanceof NavigationEnd)).subscribe((ev)=> {
+  }
+  ngOnDestroy(): void {
+    if(this.navigationSubscription) {
+      this.navigationSubscription.unsubscribe();
+    }
+  }
+
+  ngOnInit(): void {
+    this.navigationSubscription = this.router.events.pipe(filter(event => event instanceof NavigationEnd)).subscribe((ev)=> {
       this.loading = true;
       this.found = true;
       this.viewedPosts = 0;
@@ -56,13 +64,6 @@ export class ViewBlogComponent implements OnInit, OnDestroy {
       this.avatarUrl = '';
       this.ngOnInit()
     })
-
-  }
-  ngOnDestroy(): void {
-    this.navigationSubscription.unsubscribe();
-  }
-
-  ngOnInit(): void {
     this.followedUsers = this.postService.followedUserIds;
     this.postService.updateFollowers.subscribe( () => {
       this.followedUsers = this.postService.followedUserIds;
