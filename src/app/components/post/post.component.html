@@ -33,11 +33,11 @@
           </div>
         </div>
         <br />
-        <div *ngIf="content.content_warning" class="fragment-content ql-editor -mx-3">{{content.content_warning}}</div>
+        <div *ngIf="content.content_warning" class="fragment-content">{{content.content_warning}}</div>
         <button *ngIf="content.content_warning" pButton (click)="dismissContentWarning()" class="w-full" label="I understand this and I want to see this post"></button>
         <div
           *ngIf="content.content != '' || content.tags.length"
-          class="fragment-content ql-editor -mx-3"
+          class="fragment-content"
           [ngClass]="{'blurry': content.content_warning}"
           [injectHTML]="sanitizedPostContent[index]"
         >

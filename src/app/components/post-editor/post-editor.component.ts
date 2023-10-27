@@ -22,6 +22,7 @@ import { Action } from 'src/app/interfaces/editor-launcher-data';
 import { JwtService } from 'src/app/services/jwt.service';
 import { WafrnMedia } from 'src/app/interfaces/wafrn-media';
 import { DashboardService } from 'src/app/services/dashboard.service';
+import { Editor } from 'ngx-editor';
 
 @Component({
   selector: 'app-post-editor',
@@ -30,6 +31,7 @@ import { DashboardService } from 'src/app/services/dashboard.service';
 })
 export class PostEditorComponent implements OnInit, OnDestroy {
 
+  editor!: Editor;
   privacyOptions = [
     {level: 0, name: 'Public'},
     {level: 1, name: 'Followers only'},
@@ -112,7 +114,7 @@ export class PostEditorComponent implements OnInit, OnDestroy {
           mentionsHtml = mentionsHtml + this.getMentionHtml(elem)
         });
         if (mentionsHtml !== '') {
-          mentionsHtml = mentionsHtml + '<span> </span>'
+          mentionsHtml = mentionsHtml
         }
         this.openEditor(mentionsHtml);
       }
@@ -124,7 +126,11 @@ export class PostEditorComponent implements OnInit, OnDestroy {
 
 
   openEditor( content?: string) {
-    this.postCreatorContent = "";
+    this.editor = new Editor();
+
+    this.editor.setContent(content ? content : '')
+    this.postCreatorContent = content ? content: '';
+    //this.postCreatorContent = "";
     this.uploadedMedias = []
     this.editorVisible = true;
     if(content) {
@@ -175,6 +181,7 @@ export class PostEditorComponent implements OnInit, OnDestroy {
 
   closeEditor() {
     this.editorVisible = false;
+    this.editor.destroy();
   }
 
   fixNullPosting() {
@@ -261,7 +268,7 @@ export class PostEditorComponent implements OnInit, OnDestroy {
   }
 
   getMentionHtml(mention: {id: string, url: string, remoteId: string}): string {
-    return `<span class="mention" data-denotation-char="@" data-id="${mention.id}" value="${mention.url}">${mention.url}</span>`
+    return `<span class="h-card" translate="no"><a href="${mention.remoteId}" class="u-url mention">@<span>${mention.url}</span></a></span>`
   }
 
   deleteImage(index: number) {

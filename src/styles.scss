@@ -114,6 +114,16 @@ a, a:visited {
     width: 100%;
 }
 
+.NgxEditor__MenuBar, .NgxEditor__Popup--Label, .NgxEditor__Popup, .NgxEditor__Dropdown--Item {
+  background-color: #2A323D !important;
+}
+
+.NgxEditor__Content {
+  word-break: normal;
+  background-color: #20262E !important;
+  color: white !important;
+}
+
 .p-dialog-maximized {
   max-width: 100vw !important;
 }

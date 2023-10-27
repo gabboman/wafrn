@@ -21,7 +21,12 @@
     Due a bug when wriging @torvalds@kernel.social you should write @torvalds_kernel.social
   </p-overlayPanel>
 
-  EDITOR
+
+  <div class="NgxEditor__Wrapper" *ngIf="editorVisible">
+    <ngx-editor-menu [editor]="editor"> </ngx-editor-menu>
+    <ngx-editor [editor]="editor" [(ngModel)]="postCreatorContent" [disabled]="false" [placeholder]="'Type here...'"></ngx-editor>
+  </div>
+
   <p-tag severity="danger" *ngIf="postCreatorContent?.includes('<img')"   value="You seem to have pasted images in the editor. The image will NOT be visible once you post. Please use the upload tool on the top bar of the editor"></p-tag>
   <p-chips class="p-fluid" [(ngModel)]="tags" separator="," placeholder="Tags separated by commas."></p-chips>
   <div class="mt-4 mb-2">

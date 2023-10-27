@@ -34,6 +34,8 @@
     "primeflex": "^3.3.0",
     "primeicons": "^6.0.1",
     "primeng": "16.0.2",
+    "prosemirror": "^0.11.1",
+    "prosemirror-mentions": "^1.0.2",
     "rxjs": "^7.8.1",
     "zone.js": "~0.13.0"
   },
