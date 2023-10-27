@@ -17,10 +17,8 @@ import {
 import {
   environment
 } from 'src/environments/environment';
-import { QuillEditorComponent } from 'ngx-quill'
 import { Subscription } from 'rxjs';
 import { Action } from 'src/app/interfaces/editor-launcher-data';
-import 'quill-mention'
 import { JwtService } from 'src/app/services/jwt.service';
 import { WafrnMedia } from 'src/app/interfaces/wafrn-media';
 import { DashboardService } from 'src/app/services/dashboard.service';
@@ -43,7 +41,6 @@ export class PostEditorComponent implements OnInit, OnDestroy {
   postCreatorContent: string = '';
   tags: string[] = [];
   privacy;
-  @ViewChild('quill') quill!: QuillEditorComponent;
   // upload media variables
   newImageFile: File | undefined;
   disableImageUploadButton = false;
@@ -59,55 +56,7 @@ export class PostEditorComponent implements OnInit, OnDestroy {
   userSelectionMentionValue = '';
   contentWarning = '';
   enablePrivacyEdition = true;
-  modules = {
-    mention: {
-      allowedChars: /^[A-Z0-9a-z_.]*$/,
-      mentionDenotationChars: ['@'],
-      maxChars: 128,
-      minChars: 3,
-      linkTarget: '_blank',
-      fixMentionsToQuill: true,
-      isolateCharacter: true,
-      allowInlineMentionChar: true,
-      defaultMenuOrientation: 'bottom',
-      renderItem: (item: any, searchTerm: any) => {
-        const itemString =   `<div><img src="${item.avatar}" style="max-height: 24px; max-width: 24px;" /> ${item.value}</div>`
-        console.log(this.postCreatorContent)
-        return new DOMParser().parseFromString(itemString, 'text/html').body.childNodes[0]
-      },
-      source: async (searchTerm: string, renderList: any) => {
-        await this.updateMentionsSuggestions(searchTerm)
-        const values = this.mentionSuggestions.map(elem => {
-          let url = elem.url.replaceAll('@', '_').replace('_','@');
-          url = url.startsWith('@')? url.substring(1) : url
-          return {
-            id: elem.id,
-            value: url,
-            avatar: elem.avatar,
-            remoteId: elem.remoteId ? elem.remoteId : `${elem.frontUrl}/blog/${elem.url}`,
-          }
-        })
 
-        if (searchTerm.length === 0) {
-          renderList(values, searchTerm)
-        } else {
-          const matches: any = []
-
-          values.forEach((entry) => {
-            if (entry.value.toLowerCase().indexOf(searchTerm.toLowerCase()) !== -1) {
-              matches.push(entry)
-            }
-          })
-          renderList(matches, searchTerm)
-        }
-      }
-    },
-    toolbar: []
-  }
-
-  // TODO fill with custom formating. no clue yet
-  customOptions = [
-  ]
 
   showEditorSubscription: Subscription;
 
@@ -177,11 +126,9 @@ export class PostEditorComponent implements OnInit, OnDestroy {
   openEditor( content?: string) {
     this.postCreatorContent = "";
     this.uploadedMedias = []
-    this.quill.ngOnInit();
     this.editorVisible = true;
     if(content) {
-      this.quill.quillEditor.clipboard.dangerouslyPasteHTML(content)
-      this.quill.quillEditor.insertText(this.quill.quillEditor.getLength() - 1, '', 'user')
+      // TODO leftover from quill. cleaned up
     }
   }
 
@@ -314,7 +261,7 @@ export class PostEditorComponent implements OnInit, OnDestroy {
   }
 
   getMentionHtml(mention: {id: string, url: string, remoteId: string}): string {
-    return `<span><span data-denotation-char="@" data-id="${mention.id}" value="${mention.url}">${mention.url}</span></span>`
+    return `<span class="mention" data-denotation-char="@" data-id="${mention.id}" value="${mention.url}">${mention.url}</span>`
   }
 
   deleteImage(index: number) {

@@ -21,40 +21,7 @@
     Due a bug when wriging @torvalds@kernel.social you should write @torvalds_kernel.social
   </p-overlayPanel>
 
-  <quill-editor #quill class="w-full" [(ngModel)]="postCreatorContent"  [modules]="modules" [customOptions]="customOptions" >
-    <div quill-editor-toolbar style="border-top-left-radius: 5px; border-top-right-radius: 5px;">
-      <select class="ql-size" title="Text Size">
-        <option value="small"></option>
-        <option selected></option>
-        <option value="large"></option>
-        <option value="huge"></option>
-      </select>
-      <span class="ql-align">
-        <button class="ql-list" value="bullet"></button>
-        <select class="ql-align">
-          <option selected></option>
-          <option value="center"></option>
-          <option value="right"></option>
-          <option value="justify"></option>
-        </select>
-        <select class="ql-color"></select>
-        <select class="ql-background"></select>
-      </span>
-      <button pButton type="button" class="ql-bold" aria-label="Bold" title="Bold"></button>
-      <button pButton type="button" class="ql-italic" aria-label="Italic" title="Italic"></button>
-      <button pButton type="button" class="ql-underline" aria-label="Underline" title="Underline"></button>
-      <button pButton type="button" class="ql-strike" aria-label="Strike" title="Strike"></button>
-      <button pButton type="button" class="ql-link" aria-label="Insert Link" title="Insert Link"></button>
-      <button pButton type="button" class="ql-code-block" aria-label="Code block" title="Code block"></button>
-      <button pButton #uploadImages
-        (click)="uploadImagesPanel.show($event, uploadImages)" [icon]="'pi pi-upload'"
-        title="Upload Image" class="uploadImageButton" type="button"></button>
-        <button pButton #addMention
-        (click)="mentionUserSearchPanel.show($event, addMention)" [icon]="'pi pi-at'"
-        title="Mention User" class="uploadImageButton" type="button"></button>
-
-    </div>
-  </quill-editor>
+  EDITOR
   <p-tag severity="danger" *ngIf="postCreatorContent?.includes('<img')"   value="You seem to have pasted images in the editor. The image will NOT be visible once you post. Please use the upload tool on the top bar of the editor"></p-tag>
   <p-chips class="p-fluid" [(ngModel)]="tags" separator="," placeholder="Tags separated by commas."></p-chips>
   <div class="mt-4 mb-2">

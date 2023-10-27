@@ -3,11 +3,11 @@
     <p-card>
     <p-progressSpinner *ngIf="!ready"></p-progressSpinner>
 
-    <quill-editor format="text" *ngIf="ready" #quill [(ngModel)]="myCSS" class="w-full" [modules]="modules" >
-      <div quill-editor-toolbar style="border-top-left-radius: 5px; border-top-right-radius: 5px;">
-        Edit your css
-      </div>
-    </quill-editor>
+    <textarea
+    pInputTextarea
+    [(ngModel)]="myCSS"
+    class="w-full"
+    ></textarea>
     <button  *ngIf="ready"  (click)="submit()" pButton pRipple label="Update your theme" class="w-full"></button>
 
   </p-card>

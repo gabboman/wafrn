@@ -3,10 +3,10 @@ import { CommonModule } from '@angular/common';
 import { CardModule } from 'primeng/card';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { CssEditorComponent } from './css-editor.component';
-import { QuillModule } from 'ngx-quill';
 import { RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { ButtonModule } from 'primeng/button';
+import { InputTextareaModule } from 'primeng/inputtextarea';
 
 
 
@@ -18,9 +18,9 @@ import { ButtonModule } from 'primeng/button';
     CommonModule,
     CardModule,
     ProgressSpinnerModule,
-    QuillModule,
     FormsModule,
     ButtonModule,
+    InputTextareaModule,
     RouterModule.forChild([{
       path: '',
       component: CssEditorComponent

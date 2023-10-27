@@ -30,8 +30,7 @@
             "tsConfig": "tsconfig.app.json",
             "inlineStyleLanguage": "scss",
             "allowedCommonJsDependencies": [
-              "dompurify",
-              "quill"
+              "dompurify"
             ],
             "assets": [
               "src/favicon.ico",
@@ -59,21 +58,6 @@
                 "input": "node_modules/primeflex/primeflex.min.css",
                 "inject": false,
                 "bundleName": "primeng-data"
-              },
-              {
-                "input": "node_modules/quill/dist/quill.snow.css",
-                "inject": false,
-                "bundleName": "quill-css"
-              },
-              {
-                "input": "node_modules/quill/dist/quill.core.css",
-                "inject": false,
-                "bundleName": "quill-css"
-              },
-              {
-                "input": "node_modules/quill-mention/dist/quill.mention.min.css",
-                "inject": false,
-                "bundleName": "quill-css"
               },
               "src/styles.scss"
             ],
