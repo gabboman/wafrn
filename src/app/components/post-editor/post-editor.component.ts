@@ -23,6 +23,11 @@ import { JwtService } from 'src/app/services/jwt.service';
 import { WafrnMedia } from 'src/app/interfaces/wafrn-media';
 import { DashboardService } from 'src/app/services/dashboard.service';
 import { Editor } from 'ngx-editor';
+import { Plugin } from 'prosemirror-state';
+// @ts-ignore
+import { getMentionsPlugin } from 'prosemirror-mentions';
+import { Mention } from 'src/app/interfaces/mention';
+import schema from './schema';
 
 @Component({
   selector: 'app-post-editor',
@@ -52,7 +57,7 @@ export class PostEditorComponent implements OnInit, OnDestroy {
 
   // add mention variables
   @ViewChild('mentionUserSearchPanel') mentionUserSearchPanel: any;
-  mentionSuggestions: any[] = [];
+  mentionSuggestions: Mention[] = [];
   baseMediaUrl = environment.baseMediaUrl;
   cacheurl = environment.externalCacheurl;
   userSelectionMentionValue = '';
@@ -62,6 +67,27 @@ export class PostEditorComponent implements OnInit, OnDestroy {
 
   showEditorSubscription: Subscription;
 
+
+  mentionsPlugin = getMentionsPlugin({
+    maxNoOfSuggestions: 500,
+    delay: 0,
+    getSuggestions: async (type: string, text: string, done: any) => {
+      if (type != 'mention') {
+        done([])
+      } else {
+        await this.updateMentionsSuggestions(text)
+        done(this.mentionSuggestions)
+      }
+    },
+    getSuggestionsHTML: (items: Mention[], type: string) => {
+      let mentionsHtml = items ? items.map(elem => `<div class="suggestion-item suggestion-item"><img style="max-height: 24px; max-width: 24px;" src="${elem.avatar}"/>${elem.url}</div>`).join('') : ''
+      return `<div class="suggestion-item-list"><div class="suggestion-item suggestion-item-active"></div>${mentionsHtml}</div>`
+    },
+    select: (view: any, state: any, opts: any) => {
+      console.log('select')
+    }
+  })
+  editorPlugins: Plugin[] = [this.mentionsPlugin]
 
 
   maxFileUploadSize = parseInt(environment.maxUploadSize) * 1024 * 1024;
@@ -73,6 +99,7 @@ export class PostEditorComponent implements OnInit, OnDestroy {
     private jwtService: JwtService,
     private dashboardService: DashboardService,
   ) {
+    console.log(this.mentionsPlugin)
     this.privacy = this.privacyOptions[0]
     this.showEditorSubscription = this.editorService.launchPostEditorEmitter.subscribe((elem) => {
       if (elem.action === Action.New || elem.action === Action.Response) {
@@ -84,7 +111,7 @@ export class PostEditorComponent implements OnInit, OnDestroy {
         this.postCreatorContent = '';
         this.uploadedMedias = []
         this.tags = [];
-        const usersToMention: {id: string, url: string, remoteId: string}[] = [];
+        const usersToMention: Mention[] = [];
         if(inResponseTo) {
           this.contentWarning = inResponseTo.content_warning
           const parentPrivacy = this.privacyOptions.find(elem => elem.level === inResponseTo.privacy);
@@ -96,7 +123,8 @@ export class PostEditorComponent implements OnInit, OnDestroy {
             usersToMention.push({
               id: inResponseTo.user.id,
               url: inResponseTo.user.url.startsWith('@') ? inResponseTo.user.url : '@' +inResponseTo.user.url,
-              remoteId: inResponseTo.user.remoteId ? inResponseTo.user.remoteId : `${environment.frontUrl}/blog/${inResponseTo.user.url}`
+              remoteId: inResponseTo.user.remoteId ? inResponseTo.user.remoteId : `${environment.frontUrl}/blog/${inResponseTo.user.url}`,
+              avatar: ''
             })
           }
           inResponseTo.mentionPost?.forEach((mention) => {
@@ -104,7 +132,8 @@ export class PostEditorComponent implements OnInit, OnDestroy {
               usersToMention.push({
                 url: mention.url.startsWith('@') ? mention.url : '@' + mention.url,
                 id: mention.id,
-                remoteId: mention.remoteId ? mention.remoteId : `${environment.frontUrl}/blog/${mention.url}`
+                remoteId: mention.remoteId ? mention.remoteId : `${environment.frontUrl}/blog/${mention.url}`,
+                avatar: ''
               })
             }
           });
@@ -126,7 +155,10 @@ export class PostEditorComponent implements OnInit, OnDestroy {
 
 
   openEditor( content?: string) {
-    this.editor = new Editor();
+    this.editor = new Editor({
+      schema: schema,
+      plugins: this.editorPlugins
+    });
 
     this.editor.setContent(content ? content : '')
     this.postCreatorContent = content ? content: '';
@@ -253,11 +285,6 @@ export class PostEditorComponent implements OnInit, OnDestroy {
     }
   }
 
-  mentionUserSelected(selected: any){
-    this.postCreatorContent = `${this.postCreatorContent}[mentionuserid="${selected.id}"]`;
-    this.userSelectionMentionValue = '';
-    this.mentionUserSearchPanel.hide();
-  }
 
   adultContentUpdated(index: number) {
     this.uploadedMedias[index].NSFW = this.uploadedMedias[index].adultContent ? true : this.uploadedMedias[index].NSFW;
@@ -267,9 +294,19 @@ export class PostEditorComponent implements OnInit, OnDestroy {
     this.showEditorSubscription.unsubscribe();
   }
 
-  getMentionHtml(mention: {id: string, url: string, remoteId: string}): string {
+  getMentionHtml(mention: Mention): string {
     return `<span class="h-card" translate="no"><a href="${mention.remoteId}" class="u-url mention">@<span>${mention.url}</span></a></span>`
   }
+
+  getMentionSuggestionsHTML(items: Mention[] ) {
+    const res =  '<div class="suggestion-item-list"> <div class="suggestion-item"></div>' +
+    items.map((i) => '<div class="suggestion-item">' + i.url + '</div>').join('') +
+    '</div>';
+    console.log(res);
+    return res;
+  }
+
+
 
   deleteImage(index: number) {
     // TODO we should look how to clean the disk at some point. A call to delete the media would be nice
