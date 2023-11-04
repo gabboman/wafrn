@@ -13,14 +13,6 @@
     <p-dropdown [disabled]="!enablePrivacyEdition" class="p-fluid" [options]="privacyOptions" [(ngModel)]="privacy" optionLabel="name"></p-dropdown>
     <input [(ngModel)]="contentWarning" pInputText class="w-full" placeholder="Content warning">
   </div>
-  <p-overlayPanel appendTo="body" #uploadImagesPanel>
-    The new button is on the bottom of the post editor. You will be able to see what you're uploading now
-  </p-overlayPanel>
-
-  <p-overlayPanel appendTo="body" #mentionUserSearchPanel>
-    Due a bug when wriging @torvalds@kernel.social you should write @torvalds_kernel.social
-  </p-overlayPanel>
-
   <quill-editor #quill class="w-full" [(ngModel)]="postCreatorContent"  [modules]="modules" [customOptions]="customOptions" >
     <div quill-editor-toolbar style="border-top-left-radius: 5px; border-top-right-radius: 5px;">
       <select class="ql-size" title="Text Size">
@@ -46,13 +38,6 @@
       <button pButton type="button" class="ql-strike" aria-label="Strike" title="Strike"></button>
       <button pButton type="button" class="ql-link" aria-label="Insert Link" title="Insert Link"></button>
       <button pButton type="button" class="ql-code-block" aria-label="Code block" title="Code block"></button>
-      <button pButton #uploadImages
-        (click)="uploadImagesPanel.show($event, uploadImages)" [icon]="'pi pi-upload'"
-        title="Upload Image" class="uploadImageButton" type="button"></button>
-        <button pButton #addMention
-        (click)="mentionUserSearchPanel.show($event, addMention)" [icon]="'pi pi-at'"
-        title="Mention User" class="uploadImageButton" type="button"></button>
-
     </div>
   </quill-editor>
   <p-tag severity="danger" *ngIf="postCreatorContent?.includes('<img')"   value="You seem to have pasted images in the editor. The image will NOT be visible once you post. Please use the upload tool on the top bar of the editor"></p-tag>

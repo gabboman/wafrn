@@ -26,7 +26,6 @@ import { MediaPreviewModule } from '../media-preview/media-preview.module';
     ButtonModule,
     ChipsModule,
     QuillModule,
-    OverlayPanelModule,
     FileUploadModule,
     CheckboxModule,
     DialogModule,
