@@ -61,7 +61,7 @@ export class PostEditorComponent implements OnInit, OnDestroy {
   enablePrivacyEdition = true;
   modules = {
     mention: {
-      allowedChars: /^[A-Z0-9a-z_.]*$/,
+      allowedChars: /^[A-Z0-9a-z_.@]*$/,
       mentionDenotationChars: ['@'],
       maxChars: 128,
       minChars: 3,
@@ -72,13 +72,12 @@ export class PostEditorComponent implements OnInit, OnDestroy {
       defaultMenuOrientation: 'bottom',
       renderItem: (item: any, searchTerm: any) => {
         const itemString =   `<div><img src="${item.avatar}" style="max-height: 24px; max-width: 24px;" /> ${item.value}</div>`
-        console.log(this.postCreatorContent)
         return new DOMParser().parseFromString(itemString, 'text/html').body.childNodes[0]
       },
       source: async (searchTerm: string, renderList: any) => {
         await this.updateMentionsSuggestions(searchTerm)
         const values = this.mentionSuggestions.map(elem => {
-          let url = elem.url.replaceAll('@', '_').replace('_','@');
+          let url = elem.url;
           url = url.startsWith('@')? url.substring(1) : url
           return {
             id: elem.id,
@@ -285,7 +284,7 @@ export class PostEditorComponent implements OnInit, OnDestroy {
 
   async updateMentionsSuggestions(query: string){
     if(query){
-      const backendResponse: any = await this.editorService.searchUser(query.replaceAll('_', '@'));
+      const backendResponse: any = await this.editorService.searchUser(query);
       if(backendResponse){
         this.mentionSuggestions = backendResponse.users? backendResponse.users : [];
         this.mentionSuggestions = this.mentionSuggestions.map((user) => {
@@ -314,7 +313,8 @@ export class PostEditorComponent implements OnInit, OnDestroy {
   }
 
   getMentionHtml(mention: {id: string, url: string, remoteId: string}): string {
-    return `<span><span data-denotation-char="@" data-id="${mention.id}" value="${mention.url}">${mention.url}</span></span>`
+    let mentionHtml = `<a href="${mention.remoteId}" class="u-url"><span data-id="${mention.id}" data-denotation-char="" data-value="${mention.url}" class="h-card mention" translate="no"><span>${mention.url.startsWith('@') ? mention.url : '@' + mention.url }</span></span></a>`
+    return mentionHtml//`<a data-denotation-char="" class="mention" data-value="${mention.url}" href="${mention.remoteId}" ><span data-id="${mention.id}"></span></a>`
   }
 
   deleteImage(index: number) {
