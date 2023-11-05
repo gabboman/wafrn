@@ -12,9 +12,6 @@ import {
 } from 'src/app/services/editor.service';
 import { MediaService } from 'src/app/services/media.service';
 import {
-  PostsService
-} from 'src/app/services/posts.service';
-import {
   environment
 } from 'src/environments/environment';
 import { QuillEditorComponent } from 'ngx-quill'
@@ -61,15 +58,15 @@ export class PostEditorComponent implements OnInit, OnDestroy {
   enablePrivacyEdition = true;
   modules = {
     mention: {
-      allowedChars: /^[A-Z0-9a-z_.@]*$/,
+      allowedChars: /^[A-Z0-9a-z_.@-]*$/,
       mentionDenotationChars: ['@'],
       maxChars: 128,
       minChars: 3,
-      linkTarget: '_blank',
+      linkTarget: '_self',
       fixMentionsToQuill: true,
       isolateCharacter: true,
       allowInlineMentionChar: true,
-      defaultMenuOrientation: 'bottom',
+      //defaultMenuOrientation: 'bottom',
       renderItem: (item: any, searchTerm: any) => {
         const itemString =   `<div><img src="${item.avatar}" style="max-height: 24px; max-width: 24px;" /> ${item.value}</div>`
         return new DOMParser().parseFromString(itemString, 'text/html').body.childNodes[0]
@@ -109,9 +106,6 @@ export class PostEditorComponent implements OnInit, OnDestroy {
   ]
 
   showEditorSubscription: Subscription;
-
-
-
   maxFileUploadSize = parseInt(environment.maxUploadSize) * 1024 * 1024;
 
   constructor(
@@ -314,7 +308,7 @@ export class PostEditorComponent implements OnInit, OnDestroy {
 
   getMentionHtml(mention: {id: string, url: string, remoteId: string}): string {
     let mentionHtml = `<a href="${mention.remoteId}" class="u-url"><span data-id="${mention.id}" data-denotation-char="" data-value="${mention.url}" class="h-card mention" translate="no"><span>${mention.url.startsWith('@') ? mention.url : '@' + mention.url }</span></span></a>`
-    return mentionHtml//`<a data-denotation-char="" class="mention" data-value="${mention.url}" href="${mention.remoteId}" ><span data-id="${mention.id}"></span></a>`
+    return mentionHtml;
   }
 
   deleteImage(index: number) {
