@@ -28,7 +28,6 @@ export class PostComponent implements OnInit {
   cacheurl = environment.externalCacheurl;
   userLoggedIn = false;
   followedUsers: Array<String> = [];
-  urls: string[] = [];
   avatars: string[] = [];
   notes: string = '---';
   quickReblogPanelVisible = false;
@@ -76,7 +75,6 @@ export class PostComponent implements OnInit {
 
   async ngOnChanges(): Promise<void> {
     this.sanitizedPostContent = this.post.map((elem) => this.postService.getPostHtml(elem));
-    this.urls = this.post.map((elem) => elem.user.url);
     this.avatars = this.post.map((elem) => elem.user.url.startsWith('@') ? this.cacheurl + encodeURIComponent(elem.user.avatar) : this.mediaBaseUrl + elem.user.avatar)
     this.ready = true;
     this.updateButtonItems();

@@ -3,7 +3,7 @@
     <p-card>
       <div *ngIf="post.length > 1" class="center-text overflow-hidden">
         <img crossorigin="anonymous" loading="lazy" [src]="avatars[avatars.length - 1]" class="avatar"/>
-        <a [routerLink]="'/blog/'+ originalPoster.url">{{originalPoster.url}}</a>
+        <a [routerLink]="'/blog/'+ originalPoster.url" [pTooltip]="originalPoster.url">{{originalPoster.name}}</a>
         reblogged
       </div>
 
@@ -13,7 +13,7 @@
           <div class="flex gap-1 md:gap-3 align-items-center" style="width: 100%;">
             <div class="center-text py-2 flex-grow-1 flex-shrink-1 min-w-0">
               <img crossorigin="anonymous" loading="lazy" [src]="avatars[index]" class="avatar" />
-              <a class="max-w-full white-space-nowrap overflow-hidden text-overflow-ellipsis" [routerLink]="'/blog/'+ urls[index]">{{content.user.url}}</a>
+              <a class="max-w-full white-space-nowrap overflow-hidden text-overflow-ellipsis" [routerLink]="'/blog/'+ content.user.url" [pTooltip]="content.user.url">{{content.user.name}}</a>
             </div>
             <button
               *ngIf="followedUsers.indexOf(content.userId) === -1 && userLoggedIn"

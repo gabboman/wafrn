@@ -10,7 +10,7 @@ import { InjectHtmlModule } from '../../directives/inject-html/inject-html.modul
 import { WafrnMediaModule } from '../wafrn-media/wafrn-media.module';
 import { WafrnYoutubePlayerModule } from '../wafrn-youtube-player/wafrn-youtube-player.module';
 import { PollModule } from '../poll/poll.module';
-
+import { TooltipModule } from 'primeng/tooltip';
 
 
 @NgModule({
@@ -27,7 +27,8 @@ import { PollModule } from '../poll/poll.module';
     WafrnMediaModule,
     WafrnYoutubePlayerModule,
     InjectHtmlModule,
-    PollModule
+    PollModule,
+    TooltipModule
   ],
   exports: [
     PostComponent
