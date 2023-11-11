@@ -108,7 +108,7 @@ export class DashboardComponent implements OnInit {
         user: {
           avatar: "/1641804617334_2f7de58d61c79f0bca67869c5b375f74a3787a17.webp",
           url: "admin",
-          description: "admin",
+          name: "admin",
           id: "admin",
         },
         medias: [],

@@ -1,7 +1,7 @@
 export interface SimplifiedUser {
     avatar:      string;
     url:         string;
-    description: string;
+    name: string;
     id:          string;
     remoteId?:   string;
 }
