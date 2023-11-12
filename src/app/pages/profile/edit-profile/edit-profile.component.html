@@ -8,6 +8,9 @@
         <input formControlName="avatar" id="avatar" type="file" accept="image/jpeg,image/png,image/webp,image/gif" (change)="imgSelected($event)"
           pTooltip="Select your avatar" tooltipPosition="top" pInputText
           class="w-full mb-3">
+
+        <label for="name" class="block text-900 font-medium mb-2">Name</label>
+        <input pInputText formControlName="name" class="w-full">
         <label for="description" class="block text-900 font-medium mb-2">Description</label>
         <quill-editor #quill formControlName="description" class="w-full" [modules]="{toolbar: []}" >
           <div quill-editor-toolbar style="border-top-left-radius: 5px; border-top-right-radius: 5px;">

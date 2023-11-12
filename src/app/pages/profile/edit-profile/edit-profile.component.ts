@@ -18,6 +18,7 @@ export class EditProfileComponent implements OnInit {
   img: File| undefined = undefined;
   editProfileForm = new UntypedFormGroup({
     avatar:  new UntypedFormControl('', []),
+    name: new FormControl('', Validators.required),
     disableNSFWFilter:  new UntypedFormControl(false, []),
     disableGifsByDefault:  new UntypedFormControl(false, []),
     description: new FormControl('', Validators.required)
