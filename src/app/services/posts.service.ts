@@ -128,7 +128,12 @@ export class PostsService {
     result.forEach((val, index) => {
       this.mediaService.addMediaToMap(val);
     });
-    return result;
+    return result.map(elem => {
+      elem.user.emojis?.forEach(emoji => {
+        elem.user.name = elem.user.name.replaceAll(emoji.name, `<img class="post-emoji" src="${environment.externalCacheurl + encodeURIComponent(emoji.url)}">`)
+      })
+      return elem
+    });
   }
 
 
