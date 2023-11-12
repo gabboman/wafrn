@@ -1,7 +1,9 @@
 $wafrn-blue: rgb(56, 254, 241);
 // $wafrn-dark: rgb(18, 95, 90);
 $editor-buttons:  #ffffffde;
-
+a {
+  text-decoration: none;
+}
 html {
     background-color: rgb(32, 38, 46);
 }
