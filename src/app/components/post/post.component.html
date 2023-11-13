@@ -2,10 +2,10 @@
   <div class="col-12 wafrn-post">
     <p-card>
       <div *ngIf="post.length > 1" class="center-text overflow-hidden">
-        <img crossorigin="anonymous" loading="lazy" [src]="avatars[avatars.length - 1]" class="avatar"/>
+        <img [routerLink]="'/blog/'+ originalPoster.url" crossorigin="anonymous" loading="lazy" [src]="avatars[avatars.length - 1]" class="avatar"/>
         <div class="w-full white-space-nowrap overflow-hidden text-overflow-ellipsis flex flex-column">
           <div>
-            <a [routerLink]="'/blog/'+ originalPoster.url" [pTooltip]="originalPoster.url" [innerHTML]="originalPoster.name"></a>
+            <a [routerLink]="'/blog/'+ originalPoster.url" [innerHTML]="originalPoster.name"></a>
           </div>
           <span class="font-small" [innerText]="originalPoster.url"></span>
         </div>
@@ -16,9 +16,9 @@
         <div *ngIf="content.content != '' || index == 0 || content.tags.length > 0" class="fragment-header">
           <div class="flex gap-1 md:gap-3 align-items-center" style="width: 100%;">
             <div class="center-text py-2 flex-grow-1 flex-shrink-1 min-w-0">
-              <img crossorigin="anonymous" loading="lazy" [src]="avatars[index]" class="avatar" />
+              <img [routerLink]="'/blog/'+ content.user.url" crossorigin="anonymous" loading="lazy" [src]="avatars[index]" class="avatar" />
               <div class="w-full overflow-hidden flex flex-column">
-                <a class="max-w-full white-space-nowrap overflow-hidden text-overflow-ellipsis" [routerLink]="'/blog/'+ content.user.url" [pTooltip]="content.user.url" [innerHTML]="content.user.name"></a>
+                <a class="max-w-full white-space-nowrap overflow-hidden text-overflow-ellipsis" [routerLink]="'/blog/'+ content.user.url" [innerHTML]="content.user.name"></a>
                 <span class="font-small max-w-full white-space-nowrap overflow-hidden text-overflow-ellipsis" [innerText]="content.user.url"></span>
               </div>
             </div>
