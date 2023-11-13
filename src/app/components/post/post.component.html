@@ -74,7 +74,7 @@
               <i
                (click)="quickReblog(finalPost.id)"
                class="col-3 pi pi-history hover-cursor" title="Quick Reblog"></i>
-              <i (click)="launchReblog()" class="col-3 pi pi-replay hover-cursor" title="Reblog"></i>
+              <i (click)="launchReblog()" class="col-3 pi pi-reply hover-cursor" title="Reply"></i>
               <i *ngIf="showLikeFinalPost === 1" (click)="likePost(finalPost)" class="col-3 pi pi-heart hover-cursor" title="Like Post"></i>
               <i *ngIf="showLikeFinalPost === 2" (click)="unlikePost(finalPost)" class="col-3 pi pi-heart-fill hover-cursor" title="Unlike Post"></i>
               <i *ngIf="!(post[post.length - 1].userId == myId)" (click)="reportPost()" class="col-3 pi pi-exclamation-triangle hover-cursor" title="Report Post"></i>
