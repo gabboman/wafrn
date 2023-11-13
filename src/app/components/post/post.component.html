@@ -3,19 +3,11 @@
     <p-card>
       <div *ngIf="post.length > 1" class="center-text overflow-hidden">
         <img crossorigin="anonymous" loading="lazy" [src]="avatars[avatars.length - 1]" class="avatar"/>
-        <div class="w-full overflow-hidden flex flex-column">
+        <div class="w-full white-space-nowrap overflow-hidden text-overflow-ellipsis flex flex-column">
           <div>
             <a [routerLink]="'/blog/'+ originalPoster.url" [pTooltip]="originalPoster.url" [innerHTML]="originalPoster.name"></a>
           </div>
           <span class="font-small" [innerText]="originalPoster.url"></span>
-        </div>
-        <div class="flex flex-column flex-start">
-          <div>
-            reblogged
-          </div>
-          <div>
-            {{post[post.length -1].createdAt | date:'shortDate'}}
-          </div>
         </div>
       </div>
 
