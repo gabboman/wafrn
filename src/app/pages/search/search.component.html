@@ -28,7 +28,7 @@
             <div class="p-mb-3  flex justify-content-center">
               <img [routerLink]="'/blog/' + user.url" loading="lazy" [src]="avatars[user.url]" style="max-width: 30vw; max-height: 30vh;">
             </div>
-            <div>
+            <div class="user-preview-description">
               <h4 class="p-mb-1"><a [routerLink]="'/blog/' + user.url" [innerText]="user.url" ></a></h4>
               <h4 class="p-mb-1" [innerText]="user.name"></h4>
               <div class="p-mt-0 p-mb-3" [innerHTML]="user.description"></div>
