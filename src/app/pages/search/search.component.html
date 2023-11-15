@@ -24,12 +24,13 @@
 <div  [hidden]="!(users && users.length > 0)" class="grid pb-6 lg:px-4 scalein  wafrn-container" >
     <p-carousel [value]="users" [showIndicators]="false">
       <ng-template let-user pTemplate="item">
-        <p-card *ngIf="user">
+        <p-card *ngIf="user" class="user-preview">
             <div class="p-mb-3  flex justify-content-center">
-              <img loading="lazy" [src]="avatars[user.url]" style="max-width: 30vw; max-height: 30vh;">
+              <img [routerLink]="'/blog/' + user.url" loading="lazy" [src]="avatars[user.url]" style="max-width: 30vw; max-height: 30vh;">
             </div>
             <div>
-              <h4 class="p-mb-1"><a [routerLink]="'/blog/' + user.url">{{user.url}}</a></h4>
+              <h4 class="p-mb-1"><a [routerLink]="'/blog/' + user.url" [innerText]="user.url" ></a></h4>
+              <h4 class="p-mb-1" [innerText]="user.name"></h4>
               <div class="p-mt-0 p-mb-3" [innerHTML]="user.description"></div>
               <button *ngIf="followedUsers.indexOf(user.id) === -1 && userLoggedIn" pButton pRipple label="Follow"
                 class="w-full" (click)="followUser(user.id)"></button>
