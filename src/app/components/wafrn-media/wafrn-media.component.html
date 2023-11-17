@@ -12,5 +12,6 @@
     <audio *ngIf="!nsfw && mimeType.startsWith('audio')" controls>
       <source [src]="displayUrl" [type]="mimeType" />
     </audio>
+    <div [innerText]="this.data.description"></div>
 
 </div>
