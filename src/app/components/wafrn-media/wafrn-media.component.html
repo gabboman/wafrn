@@ -1,4 +1,5 @@
-<div class="parent">
+<p-card class="parent">
+  <ng-template pTemplate="header">
     <img #wafrnMedia *ngIf="nsfw || ! extensionsToHideImgTag.includes(extension) || mimeType === 'UNKNOWN'"
     (click)="showPicture()" [src]="displayUrl"
     [alt]="data.description" loading="lazy"
@@ -12,6 +13,6 @@
     <audio *ngIf="!nsfw && mimeType.startsWith('audio')" controls>
       <source [src]="displayUrl" [type]="mimeType" />
     </audio>
-    <div [innerText]="this.data.description"></div>
-
-</div>
+  </ng-template>
+  <p [innerText]="data.description" ></p>
+</p-card>

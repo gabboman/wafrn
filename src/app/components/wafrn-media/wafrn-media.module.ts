@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { WafrnMediaComponent } from './wafrn-media.component';
+import { CardModule } from 'primeng/card';
 
 
 
@@ -9,7 +10,8 @@ import { WafrnMediaComponent } from './wafrn-media.component';
     WafrnMediaComponent
   ],
   imports: [
-    CommonModule
+    CommonModule,
+    CardModule
   ],
   exports: [
     WafrnMediaComponent
