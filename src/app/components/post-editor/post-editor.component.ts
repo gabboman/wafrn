@@ -46,7 +46,6 @@ export class PostEditorComponent implements OnInit, OnDestroy {
   disableImageUploadButton = false;
   uploadedMedias: WafrnMedia[] = []
   uploadImageUrl = `${environment.baseUrl}/uploadMedia`;
-  @ViewChild('uploadImagesPanel') uploadImagesPanel: any;
 
   // add mention variables
   @ViewChild('mentionUserSearchPanel') mentionUserSearchPanel: any;
@@ -255,12 +254,13 @@ export class PostEditorComponent implements OnInit, OnDestroy {
         }
       });
       this.newImageFile = undefined;
-      this.uploadImagesPanel.hide();
       this.messages.add({
         severity: 'success',
-        summary: responses.length === 1 ? 'Image uploaded and added to the post!' : 'Images uploaded and added to the post'
+        summary: 'Media uploaded and added to the post! Please fill in the description',
+        life: 50000
       });
     } catch (error) {
+      console.log(error)
       this.messages.add({
         severity: 'error',
         summary: 'Oh no! something went wrong'
