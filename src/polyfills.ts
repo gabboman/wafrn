@@ -11,7 +11,7 @@
  * automatically update themselves. This includes recent versions of Safari, Chrome (including
  * Opera), Edge on the desktop, and iOS and Chrome on mobile.
  *
- * Learn more in https://angular.io/guide/browser-support
+ * Learn more in https://angular.io/guid e/browser-support
  */
 
 /***************************************************************************************************
@@ -50,9 +50,9 @@ import 'zone.js';  // Included with Angular CLI.
 
 
 // rtc peer connection patch
-import 'zone.js/dist/webapis-rtc-peer-connection';
+// import 'zone.js/dist/webapis-rtc-peer-connection';
 // getUserMedia patch
-import 'zone.js/dist/zone-patch-user-media';
+// import 'zone.js/dist/zone-patch-user-media';
 
 
 

@@ -36,8 +36,8 @@ export class AppComponent implements OnInit {
       customElements.define('app-wafrn-youtube-player', youtubeElement);
 
       if (this.swUpdate.isEnabled) {
-        this.swUpdate.available.subscribe(() => {
-          if(confirm("You're using an old version of wafrn, do you want to update?")) {
+        this.swUpdate.checkForUpdate().then((updateAvaiable) => {
+          if(updateAvaiable && confirm("You're using an old version of wafrn, do you want to update?")) {
             window.location.reload();
           }
         });
