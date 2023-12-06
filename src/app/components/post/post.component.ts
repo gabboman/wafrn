@@ -22,12 +22,10 @@ export class PostComponent implements OnInit {
   originalPoster!: SimplifiedUser;
   originalPostContent: ProcessedPost[] = [];
   ready = false;
-  sanitizedPostContent: string[] = [];
-
   mediaBaseUrl = environment.baseMediaUrl;
   cacheurl = environment.externalCacheurl;
   userLoggedIn = false;
-  followedUsers: Array<String> = [];
+  followedUsers: Array<string> = [];
   avatars: string[] = [];
   notes: string = '---';
   quickReblogPanelVisible = false;
@@ -74,11 +72,10 @@ export class PostComponent implements OnInit {
   }
 
   async ngOnChanges(): Promise<void> {
-    this.sanitizedPostContent = this.post.map((elem) => this.postService.getPostHtml(elem));
     this.avatars = this.post.map((elem) => elem.user.url.startsWith('@') ? this.cacheurl + encodeURIComponent(elem.user.avatar) : this.mediaBaseUrl + elem.user.avatar)
     this.ready = true;
     this.updateButtonItems();
-    let notes = this.post[this.post.length - 1].notes;
+    const notes = this.post[this.post.length - 1].notes;
     this.notes = notes.toString();
 
     // if the last post is an EMPTY reblog we evaluate the like of the parent.
@@ -96,7 +93,7 @@ export class PostComponent implements OnInit {
   }
 
   async followUser(id: string) {
-    let response = await this.postService.followUser(id);
+    const response = await this.postService.followUser(id);
     if(response) {
       this.messages.add({ severity: 'success', summary: 'You now follow this user!' });
     } else {
@@ -105,7 +102,7 @@ export class PostComponent implements OnInit {
   }
 
   async unfollowUser(id: string) {
-    let response = await this.postService.unfollowUser(id);
+    const response = await this.postService.unfollowUser(id);
     if(response) {
       this.messages.add({ severity: 'success', summary: 'You no longer follow this user!' });
     } else {
@@ -123,7 +120,7 @@ export class PostComponent implements OnInit {
 
   async quickReblog(id: string) {
     this.loadingAction = true;
-    let postToBeReblogged = this.post.find(elem => elem.id === id);
+    const postToBeReblogged = this.post.find(elem => elem.id === id);
     if(postToBeReblogged?.privacy === 0) {
       const response = await this.editor.createPost('', 0,  '', id );
       if(response) {

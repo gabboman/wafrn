@@ -54,7 +54,7 @@ export class RegisterComponent implements OnInit {
     this.loading = true;
     try {
 
-      let petition = await this.loginService.register(this.loginForm, this.img);
+      const petition = await this.loginService.register(this.loginForm, this.img);
       if(petition) {
         this.messages.add({severity:'success', summary:'Success!', detail:'Please check your email to activate your account'});
       } else {

@@ -7,7 +7,8 @@
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
-    "vercel-build": "npm run build"
+    "vercel-build": "npm run build",
+    "lint": "ng lint"
   },
   "private": true,
   "dependencies": {
@@ -40,6 +41,11 @@
   },
   "devDependencies": {
     "@angular-devkit/build-angular": "^17.0.5",
+    "@angular-eslint/builder": "17.1.1",
+    "@angular-eslint/eslint-plugin": "17.1.1",
+    "@angular-eslint/eslint-plugin-template": "17.1.1",
+    "@angular-eslint/schematics": "17.1.1",
+    "@angular-eslint/template-parser": "17.1.1",
     "@angular/cli": "^17.0.5",
     "@angular/compiler-cli": "^17.0.0",
     "@types/dompurify": "^3.0.2",
@@ -48,6 +54,9 @@
     "@types/node": "^20.5.2",
     "@types/quill": "^1.3.10",
     "@types/sanitize-html": "^2.6.2",
+    "@typescript-eslint/eslint-plugin": "6.13.1",
+    "@typescript-eslint/parser": "6.13.1",
+    "eslint": "^8.54.0",
     "eslint-config-prettier": "^8.3.0",
     "eslint-plugin-prettier": "^4.0.0",
     "jasmine-core": "~3.10.0",

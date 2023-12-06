@@ -238,7 +238,7 @@ export class PostEditorComponent implements OnInit, OnDestroy {
 
   async uploadImage(event: any) {
     try {
-      let responses = event.originalEvent.body;
+      const responses = event.originalEvent.body;
       responses.forEach(async (response: any) => {
         if (response) {
           // This is something for a new feature. The modified editor...
@@ -307,7 +307,7 @@ export class PostEditorComponent implements OnInit, OnDestroy {
   }
 
   getMentionHtml(mention: {id: string, url: string, remoteId: string}): string {
-    let mentionHtml = `<a href="${mention.remoteId}" class="u-url"><span data-id="${mention.id}" data-denotation-char="" data-value="${mention.url}" class="h-card mention" translate="no"><span>${mention.url.startsWith('@') ? mention.url : '@' + mention.url }</span></span></a>`
+    const mentionHtml = `<a href="${mention.remoteId}" class="u-url"><span data-id="${mention.id}" data-denotation-char="" data-value="${mention.url}" class="h-card mention" translate="no"><span>${mention.url.startsWith('@') ? mention.url : '@' + mention.url }</span></span></a>`
     return mentionHtml;
   }
 

@@ -63,7 +63,7 @@ export class SinglePostComponent implements OnInit {
   getImage(processedPost: ProcessedPost[]): string{
     const posterAvatar = environment.baseMediaUrl + processedPost[processedPost.length -1 ]?.user.avatar;
     let res: string = posterAvatar? posterAvatar : 'https://app.wafrn.net/favicon.ico';
-    let firstPostMedias = processedPost[0]?.medias;
+    const firstPostMedias = processedPost[0]?.medias;
     if(firstPostMedias){
       for (let i = 0; i < firstPostMedias.length; i++){
         const mp4 = firstPostMedias[i].url.toLowerCase().endsWith('mp4');
@@ -75,7 +75,7 @@ export class SinglePostComponent implements OnInit {
       }
     }
 
-    let lastPostMedias = processedPost[processedPost.length -1 ]?.medias;
+    const lastPostMedias = processedPost[processedPost.length -1 ]?.medias;
     if(lastPostMedias){
       for (let i = 0; i < lastPostMedias.length; i++){
         const mp4 = lastPostMedias[i].url.toLowerCase().endsWith('mp4');

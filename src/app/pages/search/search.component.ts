@@ -28,7 +28,7 @@ export class SearchComponent implements OnInit, OnDestroy {
   users: SimplifiedUser[] = [];
   avatars: any = {};
   viewedUsers = 0;
-  followedUsers: Array<String> = [];
+  followedUsers: Array<string> = [];
   userLoggedIn = false;
   currentPage = 0;
   loading = false;
@@ -73,7 +73,7 @@ export class SearchComponent implements OnInit, OnDestroy {
     this.viewedUsers = 0;
     this.currentPage = 0;
     this.currentSearch = this.searchForm.value['search'];
-    let searchResult = await this.dashboardService.getSearchPage(this.currentPage, this.currentSearch);
+    const searchResult = await this.dashboardService.getSearchPage(this.currentPage, this.currentSearch);
     this.posts = searchResult.posts;
     this.users = searchResult.users;
     searchResult.users.forEach((user) => {
@@ -83,7 +83,7 @@ export class SearchComponent implements OnInit, OnDestroy {
   }
 
   async loadResults(page: number) {
-    let searchResult = await this.dashboardService.getSearchPage(page, this.currentSearch);
+    const searchResult = await this.dashboardService.getSearchPage(page, this.currentSearch);
     searchResult.posts.forEach((post) => this.posts.push(post));
     searchResult.users.forEach((user) => {
       this.users.push(user);
@@ -108,7 +108,7 @@ export class SearchComponent implements OnInit, OnDestroy {
   }
 
   async followUser(id: string) {
-    let response = await this.postService.followUser(id);
+    const response = await this.postService.followUser(id);
     if(response) {
       this.messages.add({ severity: 'success', summary: 'You now follow this user!' });
     } else {
@@ -117,7 +117,7 @@ export class SearchComponent implements OnInit, OnDestroy {
   }
 
   async unfollowUser(id: string) {
-    let response = await this.postService.unfollowUser(id);
+    const response = await this.postService.unfollowUser(id);
     if(response) {
       this.messages.add({ severity: 'success', summary: 'You no longer follow this user!' });
     } else {

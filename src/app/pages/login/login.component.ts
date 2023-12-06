@@ -37,7 +37,7 @@ export class LoginComponent implements OnInit {
   async onSubmit(){
     this.loading = true;
     try {
-      let login = await this.loginService.logIn(this.loginForm);
+      const login = await this.loginService.logIn(this.loginForm);
       if(!login) {
         this.messages.add({severity:'warn', summary:'Login failed', detail:'Check email, password, or if you recived the activation email!'});
       }

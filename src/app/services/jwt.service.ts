@@ -16,7 +16,7 @@ export class JwtService {
     let res = false;
     const tokenString = localStorage.getItem('authToken');
     if(tokenString){
-      let token = this.decodeToken(tokenString);
+      const token = this.decodeToken(tokenString);
       res = new Date().getTime() < token.exp * 1000;
       if(!res) {
         localStorage.clear();
@@ -26,7 +26,7 @@ export class JwtService {
   }
 
   adminToken(): boolean {
-    let res = false;
+    const res = false;
     if(this.tokenValid()) {
       return parseInt(this.getTokenData().role) === 10
     }

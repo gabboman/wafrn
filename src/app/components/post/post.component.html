@@ -12,8 +12,8 @@
       </div>
 
       <div *ngFor="let content of post; index as index">
-        <p-divider *ngIf="post.length > 1 && (content.content != '' || content.tags.length)"></p-divider>
-        <div *ngIf="content.content != '' || index == 0 || content.tags.length > 0" class="fragment-header">
+        <p-divider *ngIf="post.length > 1 && (content.content !== '' || content.tags.length)"></p-divider>
+        <div *ngIf="content.content !== '' || (content.medias && content.medias.length > 0) || index == 0 || content.tags.length > 0" class="fragment-header">
           <div class="flex gap-1 md:gap-3 align-items-center" style="width: 100%;">
             <div class="center-text py-2 flex-grow-1 flex-shrink-1 min-w-0">
               <img [routerLink]="'/blog/'+ content.user.url" crossorigin="anonymous" loading="lazy" [src]="avatars[index]" class="avatar" />
@@ -34,8 +34,9 @@
             <p-splitButton
               (onClick)="sharePost(content.id)"
               icon="pi pi-share-alt"
+              styleClass="p-button-sm flex-shrink-0"
               [model]="buttonItems[content.id]"
-              styleClass="p-button-sm flex-shrink-0">
+              >
             </p-splitButton>
           </div>
         </div>
@@ -43,10 +44,10 @@
         <div *ngIf="content.content_warning" class="fragment-content ql-editor -mx-3">{{content.content_warning}}</div>
         <button *ngIf="content.content_warning" pButton (click)="dismissContentWarning()" class="w-full" label="I understand this and I want to see this post"></button>
         <div
-          *ngIf="content.content != '' || content.tags.length"
+          *ngIf="content.content !== '' || content.tags.length"
           class="fragment-content ql-editor -mx-3"
           [ngClass]="{'blurry': content.content_warning}"
-          [injectHTML]="sanitizedPostContent[index]"
+          [injectHTML]="content.content"
         >
         </div>
         <div
@@ -54,6 +55,9 @@
         [ngClass]="{'blurry': content.content_warning}"
         >
         <app-poll [poll]="content.questionPoll" ></app-poll>
+        </div>
+        <div *ngFor="let media of content.medias">
+          <app-wafrn-media [data]="media" ></app-wafrn-media>
         </div>
         <div *ngIf="content.tags"
         [ngClass]="{'blurry': content.content_warning}"

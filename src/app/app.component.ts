@@ -4,8 +4,6 @@ import { PrimeNGConfig } from 'primeng/api';
 import { createCustomElement } from '@angular/elements';
 import { Router } from '@angular/router';
 import { LoginService } from './services/login.service';
-import { isPlatformBrowser } from '@angular/common';
-import { WafrnMediaComponent } from './components/wafrn-media/wafrn-media.component';
 import { WafrnYoutubePlayerComponent } from './components/wafrn-youtube-player/wafrn-youtube-player.component';
 
 
@@ -28,10 +26,6 @@ export class AppComponent implements OnInit {
 
   ngOnInit() {
     this.primengConfig.ripple = true;
-
-      const mediaElement = createCustomElement(WafrnMediaComponent, { injector: this.injector });
-      customElements.define('app-wafrn-media', mediaElement);
-
       const youtubeElement = createCustomElement(WafrnYoutubePlayerComponent,  { injector: this.injector });
       customElements.define('app-wafrn-youtube-player', youtubeElement);
 

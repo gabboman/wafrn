@@ -28,7 +28,7 @@ export class LoginService {
   async logIn(loginForm: UntypedFormGroup): Promise<boolean> {
     let success = false;
     try {
-      let petition: any = await this.http.post(`${environment.baseUrl}/login`, loginForm.value).toPromise();
+      const petition: any = await this.http.post(`${environment.baseUrl}/login`, loginForm.value).toPromise();
       if (petition.success) {
         localStorage.setItem('authToken', petition.token);
         await this.postsService.loadFollowers();
@@ -52,11 +52,11 @@ export class LoginService {
   async register(registerForm: UntypedFormGroup, img: File | null): Promise<boolean> {
     let success = false;
     try {
-      let payload =  this.utils.objectToFormData(registerForm.value);
+      const payload =  this.utils.objectToFormData(registerForm.value);
       if ( img ) {
         payload.append('avatar', img);
       }
-      let petition: any = await this.http.post(`${environment.baseUrl}/register`,
+      const petition: any = await this.http.post(`${environment.baseUrl}/register`,
        payload).toPromise();
       if (petition.success) {
         success = petition.success;
@@ -81,13 +81,13 @@ export class LoginService {
   }
 
   async resetPassword(email: string, code: string, password: string) {
-    let res = false;
+    const res = false;
     const payload = {
       email: email,
       code: code,
       password: password
     }
-    let response: any = await this.http.post(`${environment.baseUrl}/resetPassword`, payload).toPromise();
+    const response: any = await this.http.post(`${environment.baseUrl}/resetPassword`, payload).toPromise();
     if(response?.success) {
       this.router.navigate(['/']);
     }
@@ -96,12 +96,12 @@ export class LoginService {
   }
 
   async activateAccount(email: string, code: string) {
-    let res = false;
+    const res = false;
     const payload = {
       email: email,
       code: code
     }
-    let response: any = await this.http.post(`${environment.baseUrl}/activateUser`, payload).toPromise();
+    const response: any = await this.http.post(`${environment.baseUrl}/activateUser`, payload).toPromise();
     if(response?.success) {
       this.router.navigate(['/']);
     }
@@ -112,11 +112,11 @@ export class LoginService {
   async updateProfile(updateProfileForm: UntypedFormGroup, img: File | undefined): Promise<boolean> {
     let success = false;
     try {
-      let payload =  this.utils.objectToFormData(updateProfileForm.value);
+      const payload =  this.utils.objectToFormData(updateProfileForm.value);
       if(img){
         payload.append('avatar', img);
       }
-      let petition: any = await this.http.post(`${environment.baseUrl}/editProfile`,
+      const petition: any = await this.http.post(`${environment.baseUrl}/editProfile`,
        payload).toPromise();
       if (petition.success) {
         success = true;

@@ -53,7 +53,7 @@ export class EditProfileComponent implements OnInit {
   async onSubmit() {
     this.loading = true;
     try {
-      let res = await this.loginService.updateProfile(this.editProfileForm, this.img);
+      const res = await this.loginService.updateProfile(this.editProfileForm, this.img);
       this.messages.add({severity:'success', summary:'Your profile was updated!'});
     }catch(error){
       this.messages.add({severity:'error', summary:'Something went wrong', detail:'If you know what you are doing check the console and let us know!'});

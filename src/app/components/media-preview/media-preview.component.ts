@@ -10,7 +10,7 @@ import { environment } from 'src/environments/environment';
 export class MediaPreviewComponent implements OnInit{
 
 
-  @Input('media') media!: WafrnMedia;
+  @Input() media!: WafrnMedia;
   baseMediaUrl = environment.baseMediaUrl;
   cacheUrl = environment.externalCacheurl;
   success = false;

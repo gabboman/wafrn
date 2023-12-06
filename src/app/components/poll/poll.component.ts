@@ -8,7 +8,7 @@ import { QuestionPoll } from 'src/app/interfaces/questionPoll';
 })
 export class PollComponent  implements OnInit{
 
-  @Input('poll') poll!: QuestionPoll;
+  @Input() poll!: QuestionPoll;
   total = 0;
 
   ngOnInit(): void {

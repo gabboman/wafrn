@@ -14,12 +14,10 @@ export class PostsService {
 
   parser = new DOMParser();
   wafrnMediaRegex = /\[wafrnmediaid="[0-9a-fA-F]{8}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{12}"\]/gm;
-  wafrnMentionRegex = /\[mentionuserid="[0-9a-fA-F]{8}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{12}"\]/gm;
-  uuidRegex = /[0-9a-fA-F]{8}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{12}/;
   youtubeRegex = /((?:https?:\/\/)?(www.|m.)?(youtube(\-nocookie)?\.com|youtu\.be)\/(v\/|watch\?v=|embed\/)?([\S]{11}))([^\S]|\?[\S]*|\&[\S]*|\b)/g;
-  public updateFollowers: BehaviorSubject<Boolean> = new BehaviorSubject(new Boolean());
+  public updateFollowers: BehaviorSubject<boolean> = new BehaviorSubject(false);
 
-  public followedUserIds: Array<String> = [];
+  public followedUserIds: Array<string> = [];
   public blockedUserIds: Array<string> = [];
   constructor(
     private mediaService: MediaService,
@@ -32,7 +30,7 @@ export class PostsService {
 
   async loadFollowers() {
     if(this.jwtService.tokenValid()) {
-      let followsAndBlocks = await this.http.get<{
+      const followsAndBlocks = await this.http.get<{
         followedUsers: string[],
         blockedUsers: string[]
       }>(`${environment.baseUrl}/getFollowedUsers`).toPromise()
@@ -46,11 +44,11 @@ export class PostsService {
 
   async followUser(id: string): Promise<boolean> {
     let res = false;
-    let payload = {
+    const payload = {
       userId: id
     }
     try {
-      let response = await this.http.post<{ success: boolean }>(`${environment.baseUrl}/follow`, payload).toPromise();
+      const response = await this.http.post<{ success: boolean }>(`${environment.baseUrl}/follow`, payload).toPromise();
       await this.loadFollowers();
       res = response?.success === true;
     } catch (exception) {
@@ -62,11 +60,11 @@ export class PostsService {
 
   async unfollowUser(id: string): Promise<boolean> {
     let res = false;
-    let payload = {
+    const payload = {
       userId: id
     }
     try {
-      let response = await this.http.post<{ success: boolean }>(`${environment.baseUrl}/unfollow`, payload).toPromise();
+      const response = await this.http.post<{ success: boolean }>(`${environment.baseUrl}/unfollow`, payload).toPromise();
       await this.loadFollowers();
       res = response?.success === true;
     } catch (exception) {
@@ -78,11 +76,11 @@ export class PostsService {
 
   async likePost(id: string): Promise<boolean> {
     let res = false;
-    let payload = {
+    const payload = {
       postId: id
     }
     try {
-      let response = await this.http.post<{ success: boolean }>(`${environment.baseUrl}/like`, payload).toPromise();
+      const response = await this.http.post<{ success: boolean }>(`${environment.baseUrl}/like`, payload).toPromise();
       await this.loadFollowers();
       res = response?.success === true;
     } catch (exception) {
@@ -94,11 +92,11 @@ export class PostsService {
 
   async unlikePost(id: string): Promise<boolean> {
     let res = false;
-    let payload = {
+    const payload = {
       postId: id
     }
     try {
-      let response = await this.http.post<{ success: boolean }>(`${environment.baseUrl}/unlike`, payload).toPromise();
+      const response = await this.http.post<{ success: boolean }>(`${environment.baseUrl}/unlike`, payload).toPromise();
       await this.loadFollowers();
       res = response?.success === true;
     } catch (exception) {
@@ -125,13 +123,11 @@ export class PostsService {
       }).sort((a: RawPost, b: RawPost) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
     }
     result = result.filter((elem, index) => elem.content != '' || index === result.length -1 )
-    result.forEach((val, index) => {
-      this.mediaService.addMediaToMap(val);
-    });
     return result.map(elem => {
       elem.user.emojis?.forEach(emoji => {
         elem.user.name = elem.user.name.replaceAll(emoji.name, `<img class="post-emoji" src="${environment.externalCacheurl + encodeURIComponent(emoji.url)}">`)
-      })
+      });
+      elem.content = this.getPostHtml(elem)
       return elem
     });
   }
@@ -139,9 +135,6 @@ export class PostsService {
 
   getPostHtml(post: ProcessedPost): string {
     const content = post.content;
-    const replacementsWafrnMedia: Array<{ wafrnMediaStringToReplace: string, id: string }> = [];
-    const replacementsWafrnMentions: Array<{ wafrnMentionstringToReplace: string, url: string }> = [];
-
     let sanitized = sanitize(content, {
       ALLOWED_TAGS: ['b', 'i', 'u', 'a','s', 'span', 'br', 'p', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'pre', 'strong', 'em', 'ul', 'li', 'marquee', 'font'],
       ALLOWED_ATTR: ['style', 'class', 'href', 'color']
@@ -165,7 +158,7 @@ export class PostsService {
       // TODO not all software links to mentionedProfile
       if(mentionedRemoteIds.includes(link.href)) {
         if (post.mentionPost) {
-          let mentionedUser = post.mentionPost.find(elem => elem.remoteId === link.href);
+          const mentionedUser = post.mentionPost.find(elem => elem.remoteId === link.href);
           if(mentionedUser) {
             link.href = `${environment.frontUrl}/blog/${mentionedUser.url}`
           }
@@ -188,36 +181,7 @@ export class PostsService {
       sanitized = parsedAsHTML.documentElement.innerHTML
     });
 
-
-    sanitized.match(this.wafrnMediaRegex)?.forEach((media) => {
-      let id = '0';
-      const uuid = media.match(this.uuidRegex);
-      if (uuid) {
-        id = uuid[0]
-      }
-      replacementsWafrnMedia.push({ wafrnMediaStringToReplace: media, id: id });
-    });
-
-    sanitized.match(this.wafrnMentionRegex)?.forEach((mention) => {
-      let id = '0';
-      const uuid = mention.match(this.uuidRegex);
-      if (uuid) {
-        id = uuid[0]
-      }
-      replacementsWafrnMentions.push({ wafrnMentionstringToReplace: mention, url: this.mediaService.mentionsMap[id]?.url });
-    });
-    replacementsWafrnMedia.forEach(replacement => {
-      const replacementString = `<app-wafrn-media id="${replacement.id}" > </app-wafrn-media>`
-      sanitized = sanitized.replace(replacement.wafrnMediaStringToReplace, replacementString);
-    });
-
-    replacementsWafrnMentions.forEach(replacement => {
-      if(!replacement.url) {
-        replacement.url = ''
-      }
-      const replacementString = `<a href="/blog/${sanitize(replacement.url)}" >@${sanitize(replacement.url.startsWith('@') ? replacement.url.substring(1): replacement.url)}</a>`
-      sanitized = sanitized.replace(replacement.wafrnMentionstringToReplace, replacement.url ? replacementString: '_error_in_mention_');
-    });
+    sanitized = sanitized.replaceAll(this.wafrnMediaRegex, '')
 
     post.emojis.forEach(emoji => {
       if(emoji.name.startsWith(':') && emoji.name.endsWith(':')) {

@@ -9,7 +9,7 @@ export class UtilsService {
 
 
   objectToFormData(obj: any): FormData {
-    let res = new FormData();
+    const res = new FormData();
     Object.keys(obj).forEach((key: string) => {
       res.append(key, obj[key]);
     })

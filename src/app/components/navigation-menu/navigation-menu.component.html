@@ -4,7 +4,7 @@ type="button" class="show-sidebar-menu-button" styleClass="p-button-raised p-but
 ></p-button>
 
 <p-sidebar (onHide)="onCloseMenu()" [visible]="menuVisible || !mobile" [modal]="mobile" [showCloseIcon]="mobile">
-    <a routerLink="/"><img  [src]="logo" class="w-full"></a>
+    <a routerLink="/"><img  [src]="logo" alt="instance logo" class="w-full"></a>
     <p-panelMenu [model]="menuItems" [style]="{'width':'100%'}"></p-panelMenu>
 </p-sidebar>
 

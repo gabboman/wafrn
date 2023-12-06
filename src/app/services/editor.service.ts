@@ -39,7 +39,7 @@ export class EditorService {
         privacy: privacy,
         content_warning: contentWarning ? contentWarning : ''
       };
-      let petitionResponse: any = await this.http.post(`${this.base_url}/createPost`, formdata).toPromise();
+      const petitionResponse: any = await this.http.post(`${this.base_url}/createPost`, formdata).toPromise();
       success = petitionResponse.id;
 
     } catch (exception) {
@@ -53,11 +53,11 @@ export class EditorService {
   async uploadMedia(description: string, nsfw: boolean, img: File): Promise<WafrnMedia | undefined > {
     let res: WafrnMedia | undefined = undefined;
     try {
-      let payload =  new FormData();
+      const payload =  new FormData();
       payload.append('files', img);
       payload.append('description', description);
       payload.append('nsfw', nsfw.toString());
-      let petition: any = await this.http.post<Array<WafrnMedia>>(`${environment.baseUrl}/uploadMedia`,
+      const petition: any = await this.http.post<Array<WafrnMedia>>(`${environment.baseUrl}/uploadMedia`,
        payload).toPromise();
       if (petition) {
         res = petition[0];

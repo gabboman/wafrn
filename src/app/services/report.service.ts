@@ -28,7 +28,7 @@ export class ReportService {
         postId : post[post.length -1].id
       }
       formData.severity = formData.severity.value;
-      const response = await this.http.post(`${environment.baseUrl}/reportPost`, formData).toPromise();
+      await this.http.post(`${environment.baseUrl}/reportPost`, formData).toPromise();
       success = true;
 
     } catch (error) {

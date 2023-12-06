@@ -51,7 +51,7 @@ export class DashboardService {
     petitionData = petitionData.set('page', '0');
     petitionData = petitionData.set('startScroll', date.getTime().toString());
     const url = this.getDashboardUrl(level);
-    let dashboardPetition: Array<RawPost> | undefined = await this.http.get<Array<RawPost>>(url, {params: petitionData}).toPromise();
+    const dashboardPetition: Array<RawPost> | undefined = await this.http.get<Array<RawPost>>(url, {params: petitionData}).toPromise();
     if(dashboardPetition) {
       result = dashboardPetition.map(elem => this.postService.processPost(elem));
       result = result.filter(post => !this.postService.postContainsBlocked(post));
@@ -75,7 +75,7 @@ export class DashboardService {
     petitionData = petitionData.set('page', page.toString());
     petitionData = petitionData.set('startScroll', this.startScrollDate.getTime().toString());
     petitionData = petitionData.set('term', term);
-    let dashboardPetition: {posts: Array<RawPost>, users: Array<SimplifiedUser> } | undefined = await this.http.get<{posts: Array<RawPost>, users: Array<SimplifiedUser> }>(`${environment.baseUrl}/search`, {params: petitionData}).toPromise();
+    const dashboardPetition: {posts: Array<RawPost>, users: Array<SimplifiedUser> } | undefined = await this.http.get<{posts: Array<RawPost>, users: Array<SimplifiedUser> }>(`${environment.baseUrl}/search`, {params: petitionData}).toPromise();
     if(dashboardPetition) {
       postResult = dashboardPetition.posts.map(elem => this.postService.processPost(elem));
       postResult = postResult.filter(post => !this.postService.postContainsBlocked(post));
@@ -99,7 +99,7 @@ export class DashboardService {
     petitionData = petitionData.set('page', page.toString());
     petitionData = petitionData.set('startScroll', this.startScrollDate.getTime().toString());
     petitionData = petitionData.set('id', blogId);
-    let dashboardPetition: Array<RawPost> | undefined = await this.http.get<Array<RawPost>>(`${environment.baseUrl}/blog`, {params: petitionData}).toPromise();
+    const dashboardPetition: Array<RawPost> | undefined = await this.http.get<Array<RawPost>>(`${environment.baseUrl}/blog`, {params: petitionData}).toPromise();
     if(dashboardPetition) {
       result = dashboardPetition.map(elem => this.postService.processPost(elem));
       result = result.filter(post => !this.postService.postContainsBlocked(post));
@@ -115,7 +115,7 @@ export class DashboardService {
   async getBlogDetails(url: string) {
     let petitionData: HttpParams = new HttpParams();
     petitionData = petitionData.append('id', url);
-    let res: any = await this.http.get(`${environment.baseUrl}/user`, {params: petitionData}).toPromise();
+    const res: any = await this.http.get(`${environment.baseUrl}/user`, {params: petitionData}).toPromise();
     if(res.id) {
       return {...res, success: true};
     }
@@ -127,7 +127,7 @@ export class DashboardService {
   }
 
   getPost(id: string): Observable<ProcessedPost[]> {
-    let petition: Observable<RawPost> = this.http.get<RawPost>(`${this.baseUrl}/singlePost/${id}`);
+    const petition: Observable<RawPost> = this.http.get<RawPost>(`${this.baseUrl}/singlePost/${id}`);
     return petition.pipe(map ((elem: RawPost) => {
       return this.postService.processPost(elem);
     }))

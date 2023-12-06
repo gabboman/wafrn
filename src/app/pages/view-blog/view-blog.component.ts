@@ -24,7 +24,7 @@ export class ViewBlogComponent implements OnInit, OnDestroy {
   posts: ProcessedPost[][] = [];
   blogUrl: string = '';
   blogDetails: any;
-  followedUsers: Array<String> = [];
+  followedUsers: Array<string> = [];
   userLoggedIn = false;
   avatarUrl = '';
   navigationSubscription!: Subscription;
@@ -160,14 +160,14 @@ export class ViewBlogComponent implements OnInit, OnDestroy {
   }
 
   async loadPosts(page: number) {
-    let tmpPosts = await this.dashboardService.getBlogPage(page, this.blogUrl);
+    const tmpPosts = await this.dashboardService.getBlogPage(page, this.blogUrl);
     tmpPosts.forEach(post => {
       this.posts.push(post);
     });
   }
 
   async unfollowUser(id: string) {
-    let response = await this.postService.unfollowUser(id);
+    const response = await this.postService.unfollowUser(id);
     if(response) {
       this.messages.add({ severity: 'success', summary: 'You no longer follow this user!' });
     } else {
@@ -177,7 +177,7 @@ export class ViewBlogComponent implements OnInit, OnDestroy {
   }
 
   async followUser(id: string) {
-    let response = await this.postService.followUser(id);
+    const response = await this.postService.followUser(id);
     if(response) {
       this.messages.add({ severity: 'success', summary: 'You now follow this user!' });
     } else {

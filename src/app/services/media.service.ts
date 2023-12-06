@@ -16,16 +16,10 @@ export class MediaService {
 
 
   disableNSFWFilter = false;
-
-  mediaMap: {[id:  string]: WafrnMedia} = {};
-  mentionsMap: {[id:  string]: SimplifiedUser} = {};
-
   constructor(
     private jwt: JwtService,
-    //private login: LoginService,
     private jwtService: JwtService,
     private http: HttpClient,
-    private utils: UtilsService,
 
   ) {
     if (
@@ -57,52 +51,13 @@ export class MediaService {
 
   }
 
-  // TODO rename this component and rename this method, as due the similarities we are gona use for more stuff
-  addMediaToMap(post: ProcessedPost): void {
-    if(post.medias) {
-      post.medias.forEach(val => {
-        val.url = val.external ? environment.externalCacheurl + encodeURIComponent(val.url) : environment.baseMediaUrl + val.url;
-        this.mediaMap[val.id] = val;
-      });
-    }
-    if(post.mentionPost) {
-      post.mentionPost.forEach(val => {
-        this.mentionsMap[val.id] = val;
-      });
-    }
-
-  }
-
-  getMediaById(id: string): WafrnMedia {
-
-    let res =  this.mediaMap[id];
-    // TODO this is a dirty hack. we should replace this when setting the media
-    // this arquitecture isnt even the best I think. Refactor would be nice
-    if(!res.url.includes(environment.externalCacheurl) && res.url.endsWith('mp4')) {
-      res.url = environment.externalCacheurl + encodeURIComponent(res.url)
-    }
-    if (!res) {
-      res = {
-        id: id,
-        url: '/assets/img/404.png',
-        description: 'The media that you are looking for could not be found. The identifier is wrong. The image is the default 404 that wafrn uses. A stock image for 404. The developer has not thought too much into it, and actually has spend more time writing this message than actually searching for a good 404 image',
-        NSFW: false,
-        adultContent: false,
-        external: false
-      }
-    }
-
-    return res;
-
-  }
-
   async updateMedia(id: string, description: string, nsfw: boolean, adult: boolean) {
     let payload: HttpParams = new HttpParams();
     payload = payload.set('id', id);
     payload = payload.set('description', description);
     payload = payload.set('NSFW', nsfw);
     payload = payload.set('adultContent', adult)
-    let response = await this.http.get(`${environment.baseUrl}/updateMedia`, {params: payload}).toPromise();
+    const response = await this.http.get(`${environment.baseUrl}/updateMedia`, {params: payload}).toPromise();
     return response;
 
   }
