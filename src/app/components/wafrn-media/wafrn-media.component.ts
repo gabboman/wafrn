@@ -35,13 +35,13 @@ export class WafrnMediaComponent implements OnChanges {
 
   ngOnChanges(): void {
     if(this.data){
+      this.extension = this.getExtension();
       this.data.url =  this.data.external ?
         environment.externalCacheurl + encodeURIComponent(this.data.url) :
         environment.baseMediaUrl + this.data.url
       this.nsfw = this.data.adultContent ? true : this.data.NSFW && ! this.disableNSFWFilter;
       this.adultContent = this.data.adultContent;
       this.displayUrl = this.nsfw ? '/assets/img/nsfw_image.webp' : this.data.url;
-      this.extension = this.getExtension();
       switch (this.extension){
         case 'mp4': {
           this.mimeType = 'video/mp4'
@@ -82,7 +82,6 @@ export class WafrnMediaComponent implements OnChanges {
         }
       }
     }
-    console.log(this.displayUrl)
     this.cdr.markForCheck()
   }
 
