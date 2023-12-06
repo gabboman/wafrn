@@ -127,6 +127,7 @@ export class PostsService {
       elem.user.emojis?.forEach(emoji => {
         elem.user.name = elem.user.name.replaceAll(emoji.name, `<img class="post-emoji" src="${environment.externalCacheurl + encodeURIComponent(emoji.url)}">`)
       });
+      elem.user.name = elem.user.name ? elem.user.name : ''
       elem.content = this.getPostHtml(elem)
       return elem
     });
