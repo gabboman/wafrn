@@ -124,10 +124,10 @@ export class PostsService {
     }
     result = result.filter((elem, index) => elem.content != '' || index === result.length -1 )
     return result.map(elem => {
+      elem.user.name = elem.user.name ? elem.user.name : ''
       elem.user.emojis?.forEach(emoji => {
         elem.user.name = elem.user.name.replaceAll(emoji.name, `<img class="post-emoji" src="${environment.externalCacheurl + encodeURIComponent(emoji.url)}">`)
       });
-      elem.user.name = elem.user.name ? elem.user.name : ''
       elem.content = this.getPostHtml(elem)
       return elem
     });
