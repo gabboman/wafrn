@@ -1,6 +1,6 @@
 <div *ngFor="let notification of notificationsToShow; let indexOfelement=index;" pDefer (onLoad)="countViewedNotifications(indexOfelement)">
+  <app-single-notification [notification]="notificationsToShow[indexOfelement]"></app-single-notification>
   <ng-template>
-    <app-single-notification [notification]="notificationsToShow[indexOfelement]"></app-single-notification>
   </ng-template>
 </div>
 
