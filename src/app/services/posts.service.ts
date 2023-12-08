@@ -12,6 +12,7 @@ import { JwtService } from './jwt.service';
 })
 export class PostsService {
 
+
   parser = new DOMParser();
   wafrnMediaRegex = /\[wafrnmediaid="[0-9a-fA-F]{8}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{12}"\]/gm;
   youtubeRegex = /((?:https?:\/\/)?(www.|m.)?(youtube(\-nocookie)?\.com|youtu\.be)\/(v\/|watch\?v=|embed\/)?([\S]{11}))([^\S]|\?[\S]*|\&[\S]*|\b)/g;
@@ -145,7 +146,7 @@ export class PostsService {
     const links = parsedAsHTML.getElementsByTagName('a')
     const mentionedRemoteIds = post.mentionPost ?  post.mentionPost?.map(elem => elem.remoteId) : [];
     const mentionRemoteUrls = post.mentionPost ?  post.mentionPost?.map(elem => elem.url) : [];
-    const mentionedHosts = post.mentionPost ?  post.mentionPost?.map(elem => new URL(elem.remoteId? elem.remoteId : 'https://adomainthatdoesnotexist.google.com').hostname) : [];
+    const mentionedHosts = post.mentionPost ?  post.mentionPost?.map(elem => this.getURL(elem.remoteId? elem.remoteId : 'https://adomainthatdoesnotexist.google.com').hostname) : [];
     Array.from(links).forEach((link) => {
       const youtubeMatch = link.href.matchAll(this.youtubeRegex)
       if(link.innerText === link.href && youtubeMatch) {
@@ -166,7 +167,7 @@ export class PostsService {
         }
 
       }
-      const linkAsUrl = new URL(link.href)
+      const linkAsUrl: URL = this.getURL(link.href)
       if(mentionedHosts.includes(linkAsUrl.hostname)){
         const sanitizedContent = sanitize(link.innerHTML, {
           ALLOWED_TAGS: []
@@ -216,4 +217,14 @@ export class PostsService {
   async loadRepliesFromFediverse(id: string) {
     return await this.http.get(`${environment.baseUrl}/loadRemoteResponses?id=${id}`).toPromise()
   }
+
+  getURL(urlString: string): URL {
+    let res = new URL(environment.frontUrl);
+    try {
+      res = new URL(urlString)
+    } catch (error) {
+      console.log('Invalid url: '+ urlString)
+    }
+    return res;
+}
 }
