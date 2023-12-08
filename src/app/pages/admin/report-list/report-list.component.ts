@@ -23,17 +23,6 @@ export class ReportListComponent {
       this.reportList = response.map((elem: any) => {
         elem.user.avatar = elem.user.url.startsWith('@') ? environment.externalCacheurl + encodeURIComponent(elem.user.avatar) : environment.baseMediaUrl + elem.user.avatar;
         elem.post.user.avatar = elem.post.user.url.startsWith('@') ? environment.externalCacheurl + encodeURIComponent(elem.post.user.avatar) : environment.baseMediaUrl + elem.post.user.avatar;
-
-        elem.actions = [
-          {
-            label: 'Ignore',
-            command: () => this.ignore(elem.id),
-          },
-          {
-            label: 'Ban user',
-            command: () => this.ban(elem.post.user.id)
-          },
-        ];
         return elem;
       });
       this.ready = true;

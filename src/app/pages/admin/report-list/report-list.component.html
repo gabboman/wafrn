@@ -32,8 +32,13 @@
             </ng-container>
             <td><a [href]="'/post/' + report.postId" target="_blank">{{report.description}}</a></td>
             <td>{{report.createdAt | date}}</td>
-            <td *ngIf="!report.resolved"><p-splitButton label="Actions" [model]="report.actions"></p-splitButton></td>
+            <td *ngIf="!report.resolved">
+              <p-button (click)="ban(report.user.id)" label="Ban user" severity="danger"></p-button>
+            </td>
             <td *ngIf="report.resolved">Solved</td>
+            <td>
+              <p-button *ngIf="!report.resolved" (click)="ignore(report.id)" label="Ignore report"></p-button>
+            </td>
           </tr>
         </ng-template>
       </p-table>

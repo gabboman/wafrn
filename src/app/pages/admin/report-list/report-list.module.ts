@@ -5,7 +5,6 @@ import { RouterModule } from '@angular/router';
 import { CardModule } from 'primeng/card';
 import { TableModule } from 'primeng/table';
 import { ButtonModule } from 'primeng/button';
-import { SplitButtonModule } from 'primeng/splitbutton';
 
 
 
@@ -18,8 +17,7 @@ import { SplitButtonModule } from 'primeng/splitbutton';
     CommonModule,
     CardModule,
     TableModule,
-    //ButtonModule,
-    SplitButtonModule,
+    ButtonModule,
     RouterModule.forChild([
       {
         path: '',
