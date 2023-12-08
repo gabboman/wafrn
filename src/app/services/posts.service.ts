@@ -165,7 +165,6 @@ export class PostsService {
             link.href = `${environment.frontUrl}/blog/${mentionedUser.url}`
           }
         }
-
       }
       const linkAsUrl: URL = this.getURL(link.href)
       if(mentionedHosts.includes(linkAsUrl.hostname)){

@@ -13,7 +13,9 @@
           "/*.css",
           "/*.js",
           "/assets/logo.png",
-          "/assets/logo_w.png"
+          "/assets/logo_w.png",
+          "/assets/fonts/NotoSans-Regular.ttf",
+          "/assets/fonts/NotoColorEmoji-Regular.ttf"
         ]
       }
     },
