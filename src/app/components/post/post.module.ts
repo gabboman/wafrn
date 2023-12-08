@@ -8,7 +8,6 @@ import {DividerModule} from 'primeng/divider';
 import {SplitButtonModule} from 'primeng/splitbutton';
 import { InjectHtmlModule } from '../../directives/inject-html/inject-html.module';
 import { WafrnMediaModule } from '../wafrn-media/wafrn-media.module';
-import { WafrnYoutubePlayerModule } from '../wafrn-youtube-player/wafrn-youtube-player.module';
 import { PollModule } from '../poll/poll.module';
 
 
@@ -24,7 +23,6 @@ import { PollModule } from '../poll/poll.module';
     TagModule,
     SplitButtonModule,
     WafrnMediaModule,
-    WafrnYoutubePlayerModule,
     InjectHtmlModule,
     PollModule,
   ],

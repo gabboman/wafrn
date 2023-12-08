@@ -153,7 +153,7 @@ export class PostsService {
           Array.from(youtubeMatch).forEach(youtubeString => {
             const ytPlayer = document.createElement("app-wafrn-youtube-player")
             ytPlayer.setAttribute('video',youtubeString[6] )
-            link.innerHTML =  `<app-wafrn-youtube-player video="${youtubeString[6]}" > </app-wafrn-youtube-player>`
+            link.innerHTML =  `  <div class="watermark"><!-- Watermark container --><div class="watermark__inner"><!-- The watermark --><div class="watermark__body"><img alt="youtube logo" loading="lazy" src="/assets/img/youtube_logo.png"></div></div><img src="${environment.externalCacheurl + encodeURIComponent(`https://img.youtube.com/vi/${youtubeString[6]}/hqdefault.jpg`)}" loading="lazy" alt="Thumbnail for video"></div>`
           })
       }
       // replace mentioned users with wafrn version of profile.

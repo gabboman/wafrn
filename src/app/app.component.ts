@@ -4,7 +4,6 @@ import { PrimeNGConfig } from 'primeng/api';
 import { createCustomElement } from '@angular/elements';
 import { Router } from '@angular/router';
 import { LoginService } from './services/login.service';
-import { WafrnYoutubePlayerComponent } from './components/wafrn-youtube-player/wafrn-youtube-player.component';
 
 
 @Component({
@@ -26,8 +25,6 @@ export class AppComponent implements OnInit {
 
   ngOnInit() {
     this.primengConfig.ripple = true;
-      const youtubeElement = createCustomElement(WafrnYoutubePlayerComponent,  { injector: this.injector });
-      customElements.define('app-wafrn-youtube-player', youtubeElement);
 
       if (this.swUpdate.isEnabled) {
         this.swUpdate.checkForUpdate().then((updateAvaiable) => {
