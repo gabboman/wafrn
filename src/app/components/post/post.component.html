@@ -42,7 +42,7 @@
         </div>
         <br />
         <div *ngIf="content.content_warning" class="fragment-content ql-editor -mx-3">{{content.content_warning}}</div>
-        <button *ngIf="content.content_warning" pButton (click)="dismissContentWarning()" class="w-full" label="I understand this and I want to see this post"></button>
+        <p-button *ngIf="content.content_warning" (click)="dismissContentWarning()" class="w-full" label="I understand this and I want to see this post"></p-button>
         <div
           *ngIf="content.content !== '' || content.tags.length"
           class="fragment-content ql-editor -mx-3"
@@ -56,7 +56,7 @@
         >
         <app-poll [poll]="content.questionPoll" ></app-poll>
         </div>
-        <div *ngFor="let media of content.medias">
+        <div *ngFor="let media of content.medias"  [ngClass]="{'blurry': content.content_warning}" >
           <app-wafrn-media [data]="media" ></app-wafrn-media>
         </div>
         <div *ngIf="content.tags"
@@ -71,7 +71,7 @@
       <div *ngIf="!showFull">
         <p-divider></p-divider>
 
-        <button pButton (click)="expandPost()" class="w-full" label="Expand shortened post"></button>
+        <p-button (click)="expandPost()" class="w-full" label="Expand shortened post"></p-button>
       </div>
       <ng-template pTemplate="footer">
         <p-divider></p-divider>
