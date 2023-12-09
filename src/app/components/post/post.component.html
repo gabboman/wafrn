@@ -1,3 +1,4 @@
+<!-- eslint-disable @angular-eslint/template/elements-content -->
 <div *ngIf="ready" class="grid pb-6 lg:px-4 scalein animation-duration-200 wafrn-container">
   <div class="col-12 wafrn-post">
     <p-card>
@@ -42,7 +43,7 @@
         </div>
         <br />
         <div *ngIf="content.content_warning" class="fragment-content ql-editor -mx-3">{{content.content_warning}}</div>
-        <p-button *ngIf="content.content_warning" (click)="dismissContentWarning()" class="w-full" label="I understand this and I want to see this post"></p-button>
+        <button pButton *ngIf="content.content_warning" (click)="dismissContentWarning()" class="w-full" label="I understand this and I want to see this post"></button>
         <div
           *ngIf="content.content !== '' || content.tags.length"
           class="fragment-content ql-editor -mx-3"
@@ -71,7 +72,7 @@
       <div *ngIf="!showFull">
         <p-divider></p-divider>
 
-        <p-button (click)="expandPost()" class="w-full" label="Expand shortened post"></p-button>
+        <button pButton (click)="expandPost()" class="w-full" label="Expand shortened post"></button>
       </div>
       <ng-template pTemplate="footer">
         <p-divider></p-divider>
