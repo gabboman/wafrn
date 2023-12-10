@@ -48,17 +48,6 @@ a, a:visited {
     text-align: center;
 }
 
-#notifications_badge {
-    position: fixed !important;
-    top: 0.5em;
-    right: 0.5em;
-}
-
-.p-tag-value {
-    max-width: 100%;
-    word-break: break-word;
-}
-
 .ql-snow .ql-stroke {
     fill: none;
     stroke: $editor-buttons;
@@ -120,15 +109,6 @@ a, a:visited {
     }
 }
 
-
-.p-dialog {
-    max-width: 768px;
-    width: 100%;
-}
-
-.p-dialog-maximized {
-  max-width: 100vw !important;
-}
 .mention {
   height: unset;
   width: unset;
@@ -147,9 +127,6 @@ a, a:visited {
   background-color: #2a323d;
 }
 
-.p-carousel, p-carousel {
-  width: 100%;
-}
 
 .post-emoji{
   display: inline-flex;
@@ -161,20 +138,11 @@ a, a:visited {
   color: black;
 }
 
-.p-progressbar-label
- {
-  display: none !important;
- }
 
 
  .font-small {
   font-size: 0.85em;
  }
-
- .p-fileupload-choose {
-  width: 100%;
- }
-
 
  // youtube player
 
@@ -217,7 +185,7 @@ a, a:visited {
 
 
 
-body, html, .p-component {
+body, html {
   font-family: "noto-sans", "noto-emoji-color", sans-serif;
 
 }

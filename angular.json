@@ -47,24 +47,28 @@
               {
                 "input": "node_modules/primeflex/primeflex.min.css",
                 "inject": false,
-                "bundleName": "primeng-data"
+                "bundleName": "wafrn-css"
               },
               {
                 "input": "node_modules/quill/dist/quill.snow.css",
                 "inject": false,
-                "bundleName": "quill-css"
+                "bundleName": "wafrn-css"
               },
               {
                 "input": "node_modules/quill/dist/quill.core.css",
                 "inject": false,
-                "bundleName": "quill-css"
+                "bundleName": "wafrn-css"
               },
               {
                 "input": "node_modules/quill-mention/dist/quill.mention.min.css",
                 "inject": false,
-                "bundleName": "quill-css"
+                "bundleName": "wafrn-css"
               },
-              "src/styles.scss"
+              {
+                "input": "src/styles.scss",
+                "inject": false,
+                "bundleName": "wafrn-css"
+              }
             ],
             "scripts": [],
             "serviceWorker": true,
