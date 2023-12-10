@@ -44,7 +44,11 @@
               "src/manifest.webmanifest"
             ],
             "styles": [
-              "@angular/material/prebuilt-themes/purple-green.css",
+              {
+                "input": "@angular/material/prebuilt-themes/purple-green.css",
+                "inject": false,
+                "bundleName": "wafrn-css"
+              },
               {
                 "input": "node_modules/primeflex/primeflex.min.css",
                 "inject": false,
@@ -80,7 +84,7 @@
               "budgets": [
                 {
                   "type": "initial",
-                  "maximumWarning": "1.25mb",
+                  "maximumWarning": "750kb",
                   "maximumError": "5mb"
                 },
                 {
