@@ -3,6 +3,7 @@ import { UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms
 import { LoginService } from 'src/app/services/login.service';
 import { MessageService } from 'src/app/services/message.service';
 import { environment } from 'src/environments/environment';
+import { faUser } from '@fortawesome/free-solid-svg-icons'
 
 @Component({
   selector: 'app-register',
@@ -30,7 +31,9 @@ export class RegisterComponent implements OnInit {
     avatar:  new UntypedFormControl('', [])
   });
 
+  // fontawesome icons
 
+  faUser = faUser;
 
   constructor(
     private loginService: LoginService,
