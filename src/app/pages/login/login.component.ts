@@ -2,8 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { LoginService } from 'src/app/services/login.service';
 import { environment } from 'src/environments/environment';
 import { UntypedFormGroup, UntypedFormControl, Validators } from '@angular/forms'
-import {MessageService} from 'primeng/api';
 import { Router } from '@angular/router';
+import { MessageService } from 'src/app/services/message.service';
 
 @Component({
   selector: 'app-login',

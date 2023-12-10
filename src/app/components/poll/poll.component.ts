@@ -1,4 +1,4 @@
-import { Component, Input, OnChanges, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { QuestionPoll } from 'src/app/interfaces/questionPoll';
 
 @Component({

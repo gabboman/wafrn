@@ -1,6 +1,5 @@
 import { ChangeDetectorRef, Component, HostListener, OnDestroy, OnInit } from '@angular/core';
 import { NavigationEnd, Router } from '@angular/router';
-import { MenuItem } from 'primeng/api';
 import { Subscription } from 'rxjs';
 import { Action } from 'src/app/interfaces/editor-launcher-data';
 import { AdminService } from 'src/app/services/admin.service';
@@ -19,7 +18,7 @@ import { environment } from 'src/environments/environment';
 export class NavigationMenuComponent implements OnInit, OnDestroy {
 
 
-  menuItems: MenuItem[] = [];
+  menuItems: any[] = [];
   menuVisible = false;
   notifications = 0;
   adminNotifications = 0;

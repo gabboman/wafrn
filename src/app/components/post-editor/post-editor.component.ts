@@ -5,9 +5,6 @@ import {
   ViewChild
 } from '@angular/core';
 import {
-  MessageService
-} from 'primeng/api';
-import {
   EditorService
 } from 'src/app/services/editor.service';
 import { MediaService } from 'src/app/services/media.service';
@@ -21,6 +18,7 @@ import 'quill-mention'
 import { JwtService } from 'src/app/services/jwt.service';
 import { WafrnMedia } from 'src/app/interfaces/wafrn-media';
 import { DashboardService } from 'src/app/services/dashboard.service';
+import { MessageService } from 'src/app/services/message.service';
 
 @Component({
   selector: 'app-post-editor',

@@ -1,3 +1,4 @@
+<!--
 <div *ngIf="!loading && found" class="wafrn-container lg:px-4">
   <div id="firstPost" class="col-12 pb-6">
     <p-card class="align-items-center">
@@ -26,13 +27,11 @@
   </div>
 </div>
 
-
 <div *ngFor="let post of posts" defer (onLoad)="countViewedPost()">
   <ng-template>
   </ng-template>
   <app-post [post]="post"></app-post>
 </div>
-
 
 <div *ngIf="found" class="grid pb-6">
   <div class="col-12 sm:col-12 md:col-12 lg:col-5 margin-auto">
@@ -44,7 +43,6 @@
 </div>
 
 <app-pagenotfound *ngIf="!found" ></app-pagenotfound>
-
 
 <p-dialog
 [(visible)]="showModalTheme" header="This blog has a custom css theme" [modal]="true"
@@ -60,3 +58,5 @@
   <button (click)="answerCustomThemeModal(1)" pButton pRipple label="No thanks"  class="w-full"></button>
 </div>
 </p-dialog>
+
+-->

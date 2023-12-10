@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { MessageService } from 'primeng/api';
 import { ProcessedPost } from 'src/app/interfaces/processed-post';
 import { DashboardService } from 'src/app/services/dashboard.service';
 import { JwtService } from 'src/app/services/jwt.service';
@@ -8,6 +7,7 @@ import { PostsService } from 'src/app/services/posts.service';
 import { Title, Meta } from '@angular/platform-browser';
 import { ThemeService } from 'src/app/services/theme.service';
 import { LoginService } from 'src/app/services/login.service';
+import { MessageService } from 'src/app/services/message.service';
 
 @Component({
   selector: 'app-dashboard',

@@ -1,7 +1,7 @@
 import { ChangeDetectorRef, Component, Input, OnChanges, ViewChild } from '@angular/core';
-import { MessageService } from 'primeng/api';
 import { WafrnMedia } from 'src/app/interfaces/wafrn-media';
 import { MediaService } from 'src/app/services/media.service';
+import { MessageService } from 'src/app/services/message.service';
 import { environment } from 'src/environments/environment';
 
 @Component({

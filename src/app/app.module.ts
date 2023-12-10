@@ -6,8 +6,6 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { WafrnAuthInterceptor } from './interceptors/wafrn-auth.interceptor';
-import { ToastModule } from 'primeng/toast';
-import { MessageService } from 'primeng/api';
 import { ServiceWorkerModule } from '@angular/service-worker';
 
 @NgModule({
@@ -22,7 +20,6 @@ import { ServiceWorkerModule } from '@angular/service-worker';
     ReactiveFormsModule,
     AppRoutingModule,
     HttpClientModule,
-    ToastModule,
     ServiceWorkerModule.register('ngsw-worker.js', {
       enabled: !isDevMode(),
       // Register the ServiceWorker as soon as the application is stable
@@ -32,7 +29,7 @@ import { ServiceWorkerModule } from '@angular/service-worker';
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: WafrnAuthInterceptor, multi: true },
-    MessageService,
+
   ],
   bootstrap: [AppComponent],
   exports: [

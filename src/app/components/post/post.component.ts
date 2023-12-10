@@ -1,5 +1,4 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { MenuItem, MessageService } from 'primeng/api';
 import { ProcessedPost } from 'src/app/interfaces/processed-post';
 import { EditorService } from 'src/app/services/editor.service';
 import { LoginService } from 'src/app/services/login.service';
@@ -9,6 +8,7 @@ import { environment } from 'src/environments/environment';
 import { DeletePostService } from 'src/app/services/delete-post.service';
 import { SimplifiedUser } from 'src/app/interfaces/simplified-user';
 import { Action } from 'src/app/interfaces/editor-launcher-data';
+import { MessageService } from 'src/app/services/message.service';
 
 @Component({
   selector: 'app-post',
@@ -166,7 +166,7 @@ export class PostComponent implements OnInit {
   updateButtonItems(){
     let index = 0;
     for (const content of this.post) {
-      const buttonsForFragment: MenuItem[] = [
+      const buttonsForFragment: any[] = [
         {
           label: "Share with wafrn",
           title: "Copy the wafrn url of the post to the clipboard",
@@ -180,7 +180,7 @@ export class PostComponent implements OnInit {
           command: () => this.shareOriginalPost(content.remotePostId)
         },
       ];
-      const loggedInButtons: MenuItem[] = [
+      const loggedInButtons: any[] = [
         {
           label: "Reblog",
           title: "Open the reblog editor, reblogging this post",

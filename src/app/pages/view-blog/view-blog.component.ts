@@ -1,12 +1,12 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Meta, Title } from '@angular/platform-browser';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
-import { MenuItem, MessageService } from 'primeng/api';
 import { Subscription, filter } from 'rxjs';
 import { ProcessedPost } from 'src/app/interfaces/processed-post';
 import { BlocksService } from 'src/app/services/blocks.service';
 import { DashboardService } from 'src/app/services/dashboard.service';
 import { LoginService } from 'src/app/services/login.service';
+import { MessageService } from 'src/app/services/message.service';
 import { PostsService } from 'src/app/services/posts.service';
 import { ThemeService } from 'src/app/services/theme.service';
 import { environment } from 'src/environments/environment';
@@ -30,7 +30,7 @@ export class ViewBlogComponent implements OnInit, OnDestroy {
   navigationSubscription!: Subscription;
   showModalTheme = false;
 
-  splitButtonItems: MenuItem[] = [];
+  splitButtonItems: any[] = [];
 
 
   constructor(

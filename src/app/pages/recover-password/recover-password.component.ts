@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { UntypedFormGroup, UntypedFormControl, Validators } from '@angular/forms';
-import { MessageService } from 'primeng/api';
 import { LoginService } from 'src/app/services/login.service';
+import { MessageService } from 'src/app/services/message.service';
 import { environment } from 'src/environments/environment';
 
 @Component({

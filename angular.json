@@ -45,21 +45,6 @@
             ],
             "styles": [
               {
-                "input": "node_modules/primeicons/primeicons.css",
-                "inject": false,
-                "bundleName": "primeng-data"
-              },
-              {
-                "input": "node_modules/primeng/resources/themes/bootstrap4-dark-purple/theme.css",
-                "inject": false,
-                "bundleName": "primeng-data"
-              },
-              {
-                "input": "node_modules/primeng/resources/primeng.min.css",
-                "inject": false,
-                "bundleName": "primeng-data"
-              },
-              {
                 "input": "node_modules/primeflex/primeflex.min.css",
                 "inject": false,
                 "bundleName": "primeng-data"

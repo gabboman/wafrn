@@ -1,12 +1,12 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
-import { MenuItem, MessageService } from 'primeng/api';
 import { filter } from 'rxjs';
 import { ProcessedPost } from 'src/app/interfaces/processed-post';
 import { SimplifiedUser } from 'src/app/interfaces/simplified-user';
 import { DashboardService } from 'src/app/services/dashboard.service';
 import { LoginService } from 'src/app/services/login.service';
+import { MessageService } from 'src/app/services/message.service';
 import { PostsService } from 'src/app/services/posts.service';
 import { ThemeService } from 'src/app/services/theme.service';
 import { environment } from 'src/environments/environment';
