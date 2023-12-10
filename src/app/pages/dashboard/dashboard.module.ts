@@ -4,9 +4,9 @@ import { DashboardComponent } from './dashboard.component';
 import { RouterModule, Routes } from '@angular/router';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { CardModule } from 'primeng/card';
-import { DeferModule } from 'primeng/defer';
 import { PostModule } from 'src/app/components/post/post.module';
 import { loginRequiredGuard } from 'src/app/guards/login-required.guard';
+import { DeferModule } from 'src/app/directives/defer/defer.module';
 
 const routes: Routes = [
       {

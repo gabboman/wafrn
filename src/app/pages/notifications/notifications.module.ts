@@ -5,7 +5,7 @@ import { Route, RouterModule } from '@angular/router';
 import { CardModule } from 'primeng/card';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { SingleNotificationModule } from 'src/app/components/single-notification/single-notification.module';
-import { DeferModule } from 'primeng/defer';
+import { DeferModule } from 'src/app/directives/defer/defer.module';
 import { loginRequiredGuard } from 'src/app/guards/login-required.guard';
 import { DataViewModule, DataViewLayoutOptions } from 'primeng/dataview';
 

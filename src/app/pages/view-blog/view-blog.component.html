@@ -27,7 +27,7 @@
 </div>
 
 
-<div *ngFor="let post of posts" pDefer (onLoad)="countViewedPost()">
+<div *ngFor="let post of posts" defer (onLoad)="countViewedPost()">
   <ng-template>
   </ng-template>
   <app-post [post]="post"></app-post>

@@ -1,4 +1,4 @@
-<div *ngFor="let post of posts; let indexOfelement=index;" pDefer (onLoad)="countViewedPost(indexOfelement)">
+<div *ngFor="let post of posts; let indexOfelement=index;" defer (onLoad)="countViewedPost(indexOfelement)">
   <ng-template>
   </ng-template>
   <app-post [post]="post"></app-post>
