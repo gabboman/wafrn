@@ -44,6 +44,7 @@
               "src/manifest.webmanifest"
             ],
             "styles": [
+              "@angular/material/prebuilt-themes/purple-green.css",
               {
                 "input": "node_modules/primeflex/primeflex.min.css",
                 "inject": false,
@@ -160,6 +161,7 @@
               "src/manifest.webmanifest"
             ],
             "styles": [
+              "@angular/material/prebuilt-themes/purple-green.css",
               "src/styles.scss"
             ],
             "scripts": []

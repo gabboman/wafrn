@@ -183,9 +183,7 @@ a, a:visited {
 }
 
 
-
-
-body, html {
-  font-family: "noto-sans", "noto-emoji-color", sans-serif;
-
-}
+html, body { height: 100%; }
+body {
+  margin: 0;
+  font-family: "noto-sans", "noto-emoji-color", sans-serif; }
