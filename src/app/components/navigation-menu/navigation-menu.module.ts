@@ -5,7 +5,7 @@ import { PostEditorModule } from '../post-editor/post-editor.module';
 import { ReportPostModule } from '../report-post/report-post.module';
 import { RouterModule } from '@angular/router';
 import { DeletePostModule } from '../delete-post/delete-post.module';
-
+import {MatSidenavModule} from '@angular/material/sidenav';
 
 
 @NgModule({
@@ -18,6 +18,7 @@ import { DeletePostModule } from '../delete-post/delete-post.module';
     ReportPostModule,
     RouterModule,
     DeletePostModule,
+    MatSidenavModule
   ],
   exports: [
     NavigationMenuComponent

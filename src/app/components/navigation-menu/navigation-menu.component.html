@@ -18,6 +18,13 @@ type="button" class="show-sidebar-menu-button" styleClass="p-button-raised "
 </div>
 -->
 
+<mat-sidenav-container>
+  <mat-drawer #drawer class="example-sidenav" mode="side" [disableClose]="!mobile" >
+    <mat-sidenav>Start</mat-sidenav>
+    <mat-sidenav-content>Main</mat-sidenav-content>
+  </mat-drawer>
+</mat-sidenav-container>
+
 <div class="pt-7">
   <router-outlet></router-outlet>
 </div>
