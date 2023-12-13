@@ -1,19 +1,15 @@
-<div class="grid pb-6 lg:px-4 scalein  wafrn-container">
-  <div class="col-12 wafrn-post">
-    AAAAA
-  </div>
-</div>
-<!--
+
+
   <div class="grid pb-6 lg:px-4 scalein  wafrn-container">
   <div class="col-12 wafrn-post">
-    <p-card>
+    <mat-card>
       <div class="text-center mb-5">
         <img loading="lazy" [src]="logo" alt="Image" height="50" class="mb-3">
         <div class="text-900 text-3xl font-medium mb-3">Welcome Back</div>
-        <a [routerLink]="['/dashboard/explore']" class="text-900 text-3xl font-medium mb-3 text-blue-500 cursor-pointer">Click here to take a look without an account!</a>
+        <a [routerLink]="['/dashboard/explore']" class="text-900 text-3xl font-medium mb-3  cursor-pointer">Click here to take a look without an account!</a>
         <br>
         <span class="text-600 font-medium line-height-3">Don't have an account?</span>
-        <a routerLink="/" class="font-medium no-underline ml-2 text-blue-500 cursor-pointer">Register now!</a>
+        <a routerLink="/" class="font-medium no-underline ml-2  cursor-pointer">Register now!</a>
         <br>
         <span class="text-600 font-medium line-height-3">If you have any issue please check your spam folder!</span>
         <br>
@@ -22,24 +18,26 @@
 
       </div>
 
-      <p-progressSpinner *ngIf="loading"></p-progressSpinner>
 
       <form [hidden]="loading" [formGroup]="loginForm" (ngSubmit)="onSubmit()">
-        <label for="email" class="block text-900 font-medium mb-2">Email</label>
-        <input formControlName="email" id="email" type="email" pInputText class="w-full mb-3">
+        <mat-form-field class="w-full">
+          <mat-label>Email</mat-label>
+          <input formControlName="email"  type="email" matInput>
+        </mat-form-field>
 
-        <label for="password" class="block text-900 font-medium mb-2">Password</label>
-        <input formControlName="password" id="password" type="password" pInputText class="w-full mb-3">
+        <mat-form-field class="w-full">
+          <mat-label>Password</mat-label>
+          <input formControlName="password"  type="password" matInput>
+          <mat-hint><a routerLink="/recoverPassword"
+            class="font-medium no-underline ml-2  text-right cursor-pointer">Forgot password? Click here!</a></mat-hint>
 
-        <div class="flex align-items-center justify-content-between mb-6">
-          <a routerLink="/recoverPassword"
-            class="font-medium no-underline ml-2 text-blue-500 text-right cursor-pointer">Forgot password?</a>
-        </div>
+        </mat-form-field>
 
-        <button [disabled]="loading || !loginForm.valid" pButton pRipple label="Sign In" icon="pi pi-user"
-          class="w-full"></button>
+        <button [disabled]="loading || !loginForm.valid" mat-fab extended
+          class="w-full">
+          <fa-icon [icon]="faUser"></fa-icon>
+          Login</button>
       </form>
-    </p-card>
+    </mat-card>
   </div>
 </div>
--->
