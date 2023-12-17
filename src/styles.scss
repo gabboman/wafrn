@@ -8,10 +8,20 @@
   font-family: 'Noto Sans';
   src: url(/assets/fonts/NotoSans-Regular.ttf);
 }
+
+body, html, .p-component {
+  font-family: "noto-sans", "noto-emoji-color", sans-serif;
+}
 */
 $wafrn-blue: rgb(56, 254, 241);
 // $wafrn-dark: rgb(18, 95, 90);
 $editor-buttons:  #ffffffde;
+
+@use '@angular/material' as mat;
+@include mat.core();
+
+
+
 a {
   text-decoration: none;
 }
@@ -181,10 +191,3 @@ a, a:visited {
 
 }
 
-
-
-
-//body, html, .p-component {
-//  font-family: "noto-sans", "noto-emoji-color", sans-serif;
-//
-//}
