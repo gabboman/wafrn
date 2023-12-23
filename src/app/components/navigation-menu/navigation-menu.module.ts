@@ -6,7 +6,7 @@ import { ReportPostModule } from '../report-post/report-post.module';
 import { RouterModule } from '@angular/router';
 import { DeletePostModule } from '../delete-post/delete-post.module';
 import {MatSidenavModule} from '@angular/material/sidenav';
-
+import {MatListModule} from '@angular/material/list';
 
 @NgModule({
   declarations: [
@@ -18,7 +18,8 @@ import {MatSidenavModule} from '@angular/material/sidenav';
     ReportPostModule,
     RouterModule,
     DeletePostModule,
-    MatSidenavModule
+    MatSidenavModule,
+    MatListModule
   ],
   exports: [
     NavigationMenuComponent
