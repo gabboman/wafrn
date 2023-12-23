@@ -18,13 +18,27 @@ type="button" class="show-sidebar-menu-button" styleClass="p-button-raised "
 </div>
 -->
 
-<mat-sidenav-container>
-  <mat-drawer #drawer class="example-sidenav" mode="side" [disableClose]="!mobile" >
-    <mat-sidenav>Start</mat-sidenav>
-    <mat-sidenav-content>Main</mat-sidenav-content>
+<button *ngIf="!menuVisible"
+  type="button" class="show-sidebar-menu-button"
+  (click)="showMenu()"
+  >butt</button>
+<mat-drawer-container class="example-container">
+  <mat-drawer mode="side" [opened]="menuVisible || !mobile">
+    @for (link of menuItems; track link) {
+      <mat-list-item *ngIf="link.visible !== false" [activated]="link.isActive">
+         <a matListItemTitle [href]="link.url" [routerLink]="link.routerLink"  >{{ link.label }}</a>
+         <button mat-icon-butto matListItemMeta>
+            {{link.icon}}
+         </button>
+      </mat-list-item>
+    }
   </mat-drawer>
-</mat-sidenav-container>
+  <mat-drawer-content>
+    <div class="pt-7">
+      <router-outlet></router-outlet>
+    </div>
+  </mat-drawer-content>
+</mat-drawer-container>
 
-<div class="pt-7">
-  <router-outlet></router-outlet>
-</div>
+
+
