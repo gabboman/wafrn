@@ -26,9 +26,9 @@ type="button" class="show-sidebar-menu-button" styleClass="p-button-raised "
   <mat-drawer mode="side" [opened]="menuVisible || !mobile">
     @for (link of menuItems; track link) {
       <mat-list-item *ngIf="link.visible !== false" [activated]="link.isActive">
-         <a matListItemTitle [href]="link.url" [routerLink]="link.routerLink"  >{{ link.label }}</a>
-         <button mat-icon-butto matListItemMeta>
-            {{link.icon}}
+         <button mat-button mat-icon-butto matListItemMeta class="w-full">
+          <fa-icon [icon]="link.icon? link.icon : defaultIcon"></fa-icon>
+          <a matListItemTitle [href]="link.url" [routerLink]="link.routerLink"  >{{ link.label }}</a>
          </button>
       </mat-list-item>
     }

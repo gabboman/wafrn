@@ -7,7 +7,8 @@ import { RouterModule } from '@angular/router';
 import { DeletePostModule } from '../delete-post/delete-post.module';
 import {MatSidenavModule} from '@angular/material/sidenav';
 import {MatListModule} from '@angular/material/list';
-
+import {MatButtonModule} from '@angular/material/button';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 @NgModule({
   declarations: [
     NavigationMenuComponent
@@ -19,7 +20,9 @@ import {MatListModule} from '@angular/material/list';
     RouterModule,
     DeletePostModule,
     MatSidenavModule,
-    MatListModule
+    MatListModule,
+    MatButtonModule,
+    FontAwesomeModule
   ],
   exports: [
     NavigationMenuComponent
