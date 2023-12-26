@@ -8,6 +8,9 @@ import { DeletePostModule } from '../delete-post/delete-post.module';
 import {MatSidenavModule} from '@angular/material/sidenav';
 import {MatListModule} from '@angular/material/list';
 import { MenuItemComponent } from '../menu-item/menu-item.component';
+import { MatBadgeModule } from '@angular/material/badge';
+import { MatButtonModule } from '@angular/material/button';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 @NgModule({
   declarations: [
     NavigationMenuComponent
@@ -20,7 +23,10 @@ import { MenuItemComponent } from '../menu-item/menu-item.component';
     DeletePostModule,
     MatSidenavModule,
     MatListModule,
-    MenuItemComponent
+    MenuItemComponent,
+    MatBadgeModule,
+    FontAwesomeModule,
+    MatButtonModule
   ],
   exports: [
     NavigationMenuComponent
