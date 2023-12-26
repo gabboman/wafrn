@@ -1,36 +1,15 @@
-<!--
-<p-button *ngIf="!menuVisible" icon="pi pi-bars" [label]="notifications + adminNotifications > 0 ? (notifications + adminNotifications).toString() : ''"
-type="button" class="show-sidebar-menu-button" styleClass="p-button-raised "
-(click)="showMenu()"
-></p-button>
-
-<p-sidebar (onHide)="onCloseMenu()" [visible]="menuVisible || !mobile" [modal]="mobile" [showCloseIcon]="mobile">
-    <a routerLink="/"><img  [src]="logo" alt="instance logo" class="w-full"></a>
-    <p-panelMenu [model]="menuItems" [style]="{'width':'100%'}"></p-panelMenu>
-</p-sidebar>
-
-
-<app-post-editor></app-post-editor>
-<app-report-post></app-report-post>
-<app-delete-post></app-delete-post>
-<div class="pt-7">
-    <router-outlet></router-outlet>
-</div>
--->
-
 <button *ngIf="!menuVisible" type="button" class="show-sidebar-menu-button" (click)="showMenu()">MENU butt</button>
 <mat-drawer-container class="side-menu">
   <mat-drawer [mode]="mobile ? 'over' : 'side'" [opened]="menuVisible || !mobile">
-    <mat-list-item>
-      <a routerLink="/" class="block">
-        <img [src]="logo" class="block mx-auto my-3" alt="instance logo" style="max-width: 200px; max-height: 72px;">
-      </a>
-    </mat-list-item>
+    <a routerLink="/" class="block">
+      <img [src]="logo" class="block mx-auto my-3" alt="instance logo" style="max-width: 200px; max-height: 72px;">
+    </a>
     <hr class="mx-3" />
-
-    @for (link of menuItems; track link) {
-    <app-menu-item [item]="link"></app-menu-item>
-    }
+    <mat-nav-list>
+      @for (link of menuItems; track link) {
+      <app-menu-item [item]="link"></app-menu-item>
+      }
+    </mat-nav-list>
   </mat-drawer>
   <mat-drawer-content>
     <div class="pt-7">

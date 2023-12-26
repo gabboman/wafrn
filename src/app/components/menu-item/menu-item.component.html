@@ -1,24 +1,24 @@
 @if (item.items && item.visible !== false) {
-<mat-list-item>
-  <button mat-button matListItemMeta class="w-full justify-content-start">
-    <span class="menu-item-icon">
-      <fa-icon *ngIf="item.icon" [icon]="item.icon"></fa-icon>
+<a mat-list-item [href]="item.url" [routerLink]="item.routerLink">
+  <div class="flex align-items-center justify-content-start">
+    <span class="menu-item-icon" *ngIf="item.icon">
+      <fa-icon [icon]="item.icon"></fa-icon>
     </span>
-    <a class="ml-2" matListItemTitle [href]="item.url" [routerLink]="item.routerLink">{{ item.label }}</a>
-  </button>
-</mat-list-item>
+    <span class="ml-3">{{ item.label }}</span>
+  </div>
+</a>
 @if(expanded) {
 @for (internal of item.items; track internal) {
 <app-menu-item [item]="internal"></app-menu-item>
 }
 }
 } @else {
-<mat-list-item *ngIf="item.visible !== false">
-  <button mat-button matListItemMeta class="w-full justify-content-start">
-    <span class="menu-item-icon">
-      <fa-icon *ngIf="item.icon" [icon]="item.icon"></fa-icon>
+<a mat-list-item *ngIf="item.visible !== false" [href]="item.url" [routerLink]="item.routerLink">
+  <div class="flex align-items-center justify-content-start">
+    <span class="menu-item-icon" *ngIf="item.icon">
+      <fa-icon [icon]="item.icon"></fa-icon>
     </span>
-    <a class="ml-2" matListItemTitle [href]="item.url" [routerLink]="item.routerLink">{{ item.label }}</a>
-  </button>
-</mat-list-item>
+    <span class="ml-3">{{ item.label }}</span>
+  </div>
+</a>
 }
