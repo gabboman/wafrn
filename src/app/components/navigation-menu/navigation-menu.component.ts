@@ -34,6 +34,7 @@ import {
   faCode,
   faEuro,
   faSignOut,
+  faBars
 } from '@fortawesome/free-solid-svg-icons';
 import { MenuItem } from 'src/app/interfaces/menu-item';
 
@@ -53,6 +54,7 @@ export class NavigationMenuComponent implements OnInit, OnDestroy {
   defaultIcon = faQuestion;
   navigationSubscription: Subscription;
   loginSubscription: Subscription;
+  hamburguerIcon = faBars;
   constructor(
     private editorService: EditorService,
     private router: Router,
