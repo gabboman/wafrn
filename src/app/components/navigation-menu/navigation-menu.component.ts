@@ -1,4 +1,10 @@
-import { ChangeDetectorRef, Component, HostListener, OnDestroy, OnInit } from '@angular/core';
+import {
+  ChangeDetectorRef,
+  Component,
+  HostListener,
+  OnDestroy,
+  OnInit,
+} from '@angular/core';
 import { NavigationEnd, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { Action } from 'src/app/interfaces/editor-launcher-data';
@@ -9,17 +15,34 @@ import { JwtService } from 'src/app/services/jwt.service';
 import { LoginService } from 'src/app/services/login.service';
 import { NotificationsService } from 'src/app/services/notifications.service';
 import { environment } from 'src/environments/environment';
-import { faQuestion, faHouse, faUser, faCompass, faPencil, faBell, faPowerOff, faServer, faExclamationTriangle, faBan, faEnvelope, faSearch, faUserEdit, faVolumeOff, faVolumeMute, faEyeSlash, faCode, faEuro, faSignOut } from '@fortawesome/free-solid-svg-icons'
+import {
+  faQuestion,
+  faHouse,
+  faUser,
+  faCompass,
+  faPencil,
+  faBell,
+  faPowerOff,
+  faServer,
+  faExclamationTriangle,
+  faBan,
+  faEnvelope,
+  faSearch,
+  faUserEdit,
+  faVolumeMute,
+  faEyeSlash,
+  faCode,
+  faEuro,
+  faSignOut,
+} from '@fortawesome/free-solid-svg-icons';
 import { MenuItem } from 'src/app/interfaces/menu-item';
 
 @Component({
   selector: 'app-navigation-menu',
   templateUrl: './navigation-menu.component.html',
-  styleUrls: ['./navigation-menu.component.scss']
+  styleUrls: ['./navigation-menu.component.scss'],
 })
 export class NavigationMenuComponent implements OnInit, OnDestroy {
-
-
   menuItems: MenuItem[] = [];
   menuVisible = false;
   notifications = 0;
@@ -27,7 +50,7 @@ export class NavigationMenuComponent implements OnInit, OnDestroy {
   privateMessagesNotifications = '';
   mobile = false;
   logo = environment.logo;
-  defaultIcon = faQuestion
+  defaultIcon = faQuestion;
   navigationSubscription: Subscription;
   loginSubscription: Subscription;
   constructor(
@@ -40,21 +63,21 @@ export class NavigationMenuComponent implements OnInit, OnDestroy {
     private adminService: AdminService,
     private dashboardService: DashboardService
   ) {
-    this.loginSubscription = this.loginService.loginEventEmitter.subscribe(() => {
-      this.drawMenu();
-    })
+    this.loginSubscription = this.loginService.loginEventEmitter.subscribe(
+      () => {
+        this.drawMenu();
+      }
+    );
     this.navigationSubscription = this.router.events.subscribe((ev) => {
-      if( ev instanceof NavigationEnd) {
-        this.updateNotifications(ev.url)
+      if (ev instanceof NavigationEnd) {
+        this.updateNotifications(ev.url);
       }
     });
 
-    this.dashboardService.scrollEventEmitter.subscribe(ev => {
-      this.updateNotifications('scroll')
-    })
-
+    this.dashboardService.scrollEventEmitter.subscribe(() => {
+      this.updateNotifications('scroll');
+    });
   }
-
 
   ngOnInit(): void {
     this.drawMenu();
@@ -72,9 +95,8 @@ export class NavigationMenuComponent implements OnInit, OnDestroy {
 
   hideMenu() {
     this.menuVisible = false;
-    this.editorService.launchPostEditorEmitter.next({action: Action.Close});
+    this.editorService.launchPostEditorEmitter.next({ action: Action.Close });
   }
-
 
   drawMenu() {
     this.menuItems = [
@@ -83,35 +105,40 @@ export class NavigationMenuComponent implements OnInit, OnDestroy {
         title: 'Log in',
         icon: faHouse,
         routerLink: '/login',
-        visible: !this.jwtService.tokenValid()
+        visible: !this.jwtService.tokenValid(),
       },
       {
         label: 'Register',
         title: 'Register',
         icon: faUser,
         routerLink: '/',
-        visible: !this.jwtService.tokenValid()
+        visible: !this.jwtService.tokenValid(),
       },
       {
         label: 'Explore without an account',
         icon: faCompass,
         title: 'See ALL the posts that are public! Yes, you can be a lurker',
         routerLink: '/dashboard/exploreLocal',
-        visible: !this.jwtService.tokenValid()
+        visible: !this.jwtService.tokenValid(),
       },
       {
         label: 'Dashboard',
         title: 'View dashboard',
         icon: faHouse,
         routerLink: '/dashboard',
-        visible: this.jwtService.tokenValid()
+        visible: this.jwtService.tokenValid(),
       },
       {
         label: 'Write new post',
         title: 'Write a post',
         icon: faPencil,
-        command: () => {this.editorService.launchPostEditorEmitter.next({action: Action.New}); this.menuVisible = false;},
-        visible: this.jwtService.tokenValid()
+        command: () => {
+          this.editorService.launchPostEditorEmitter.next({
+            action: Action.New,
+          });
+          this.menuVisible = false;
+        },
+        visible: this.jwtService.tokenValid(),
       },
       {
         label: 'Notifications',
@@ -119,7 +146,7 @@ export class NavigationMenuComponent implements OnInit, OnDestroy {
         title: 'Check your notifications',
         routerLink: '/dashboard/notifications',
         badge: this.notifications,
-        visible: this.jwtService.tokenValid()
+        visible: this.jwtService.tokenValid(),
       },
       {
         label: 'Admin',
@@ -155,8 +182,8 @@ export class NavigationMenuComponent implements OnInit, OnDestroy {
             title: 'User blocklists',
 
             routerLink: '/admin/user-blocks',
-          }
-        ]
+          },
+        ],
       },
       {
         label: 'Explore',
@@ -174,12 +201,13 @@ export class NavigationMenuComponent implements OnInit, OnDestroy {
           {
             label: 'Explore the fediverse',
             icon: faCompass,
-            title: 'Take a look to all the public posts avaiable to us, not only of people in this servers',
+            title:
+              'Take a look to all the public posts avaiable to us, not only of people in this servers',
 
             routerLink: '/dashboard/explore',
-            visible: this.jwtService.tokenValid()
-          }
-        ]
+            visible: this.jwtService.tokenValid(),
+          },
+        ],
       },
 
       {
@@ -187,13 +215,13 @@ export class NavigationMenuComponent implements OnInit, OnDestroy {
         icon: faEnvelope,
         title: 'Private messages are here!',
         routerLink: '/dashboard/private',
-        visible: this.jwtService.tokenValid()
+        visible: this.jwtService.tokenValid(),
       },
       {
         label: 'Search',
         title: 'Search',
         icon: faSearch,
-        routerLink: '/dashboard/search'
+        routerLink: '/dashboard/search',
       },
 
       {
@@ -246,63 +274,70 @@ export class NavigationMenuComponent implements OnInit, OnDestroy {
             title: 'View your own blog',
             icon: faUser,
 
-            routerLink: '/blog' + this.jwtService.tokenValid() ? this.jwtService.getTokenData()['url'] : '',
-            visible: this.jwtService.tokenValid()
+            routerLink:
+              '/blog' + this.jwtService.tokenValid()
+                ? this.jwtService.getTokenData()['url']
+                : '',
+            visible: this.jwtService.tokenValid(),
           },
-        ]
+        ],
       },
       {
         label: 'Privacy policy',
         title: 'Privacy policy',
         icon: faEyeSlash,
-        routerLink: '/privacy'
+        routerLink: '/privacy',
       },
       {
         label: 'Check the source code!',
         icon: faCode,
         title: 'The frontend is made in angular, you can check the code here',
-        url: "https://github.com/gabboman/wafrn"
+        url: 'https://github.com/gabboman/wafrn',
       },
       {
-        label: "Give us some money",
-        title: "Give us some money through patreon",
+        label: 'Give us some money',
+        title: 'Give us some money through patreon',
         icon: faEuro,
-        url: "https://patreon.com/wafrn"
+        url: 'https://patreon.com/wafrn',
       },
       {
         label: 'Log out',
         icon: faSignOut,
-        title: 'nintendo this button is for you, and your 25000000 alt accounts',
-        command: () => {this.loginService.logOut(); this.hideMenu();},
-        visible: this.jwtService.tokenValid()
-      }
+        title:
+          'nintendo this button is for you, and your 25000000 alt accounts',
+        command: () => {
+          this.loginService.logOut();
+          this.hideMenu();
+        },
+        visible: this.jwtService.tokenValid(),
+      },
     ];
   }
 
   async updateNotifications(url: string) {
-    if(this.jwtService.tokenValid()) {
-      if(url === '/dashboard/notifications') {
+    if (this.jwtService.tokenValid()) {
+      if (url === '/dashboard/notifications') {
         this.notifications = 0;
       } else {
-        const response = await this.notificationsService.getUnseenNotifications()
-        this.notifications =  response;
+        const response =
+          await this.notificationsService.getUnseenNotifications();
+        this.notifications = response;
       }
       this.drawMenu();
       this.cdr.detectChanges();
     }
     if (this.jwtService.adminToken()) {
-      const reports = (await this.adminService.getOpenReportsCount())?.reports
+      const reports = (await this.adminService.getOpenReportsCount())?.reports;
       this.adminNotifications = reports;
     }
   }
 
   @HostListener('window:resize', ['$event'])
   onResize() {
-  this.mobile = window.innerWidth <= 992;
-}
+    this.mobile = window.innerWidth <= 992;
+  }
 
-onCloseMenu () {
-  this.menuVisible = false;
-}
-
+  onCloseMenu() {
+    this.menuVisible = false;
+  }
 }
