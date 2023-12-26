@@ -1,25 +1,21 @@
 <mat-drawer-container class="side-menu">
-  <mat-drawer [mode]="mobile ? 'over' : 'side'" [opened]="menuVisible || !mobile" (closed)="hideMenu()" >
-    <mat-list-item>
-      <a routerLink="/" class="block">
-        <img [src]="logo" class="block mx-auto my-3" alt="instance logo" style="max-width: 200px; max-height: 72px;">
-      </a>
-    </mat-list-item>
+  <mat-drawer [mode]="mobile ? 'over' : 'side'" [opened]="menuVisible || !mobile" (closed)="hideMenu()">
+    <a routerLink="/" class="block">
+      <img [src]="logo" class="block mx-auto my-3" alt="instance logo" style="max-width: 200px; max-height: 72px;">
+    </a>
     <hr class="mx-3" />
-
-    @for (link of menuItems; track link) {
-    <app-menu-item [item]="link"></app-menu-item>
-    }
+    <mat-nav-list>
+      @for (link of menuItems; track link) {
+      <app-menu-item [item]="link"></app-menu-item>
+      }
+    </mat-nav-list>
   </mat-drawer>
   <mat-drawer-content>
-    <button style="position: fixed; z-index: 500;"
-mat-flat-button color="accent"
-*ngIf="!menuVisible" type="button"
-class="show-sidebar-menu-button" (click)="showMenu()"
-[matBadge]="notifications + adminNotifications"
-[matBadgeHidden]="notifications + adminNotifications === 0"
-matBadgePosition="below"
-><fa-icon [icon]="hamburguerIcon" ></fa-icon></button>
+    <button style="position: fixed; z-index: 500;" mat-flat-button color="accent" *ngIf="!menuVisible" type="button"
+      class="show-sidebar-menu-button" (click)="showMenu()" [matBadge]="notifications + adminNotifications"
+      [matBadgeHidden]="notifications + adminNotifications === 0" matBadgePosition="below">
+      <fa-icon [icon]="hamburguerIcon"></fa-icon>
+    </button>
     <div class="pt-7">
       <router-outlet></router-outlet>
     </div>

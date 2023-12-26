@@ -1,29 +1,30 @@
 @if (item.items && item.visible !== false) {
-<mat-list-item>
-  <a class="ml-2">
-    <!-- TODO add animation -->
-  <button (click)="expanded = !expanded" mat-button matListItemMeta class="w-full justify-content-start">
-    <span  [matBadge]="item.badge" [matBadgeHidden]="item.badge === 0" class="menu-item-icon">
-      <fa-icon [icon]="expanded ? chevronUp : chevronDown"></fa-icon>
-      {{item.label}}
+<button class="border-none" (click)="expanded = !expanded" mat-list-item>
+  <div class="flex align-items-center justify-content-start">
+    <span class="menu-item-icon" *ngIf="item.icon">
+      <fa-icon [icon]="item.icon"></fa-icon>
     </span>
-  </button>
-  </a>
-</mat-list-item>
+    <span class="ml-3 flex-grow-1 text-left">{{ item.label }}</span>
+    <span class="menu-item-icon">
+      <fa-icon [icon]="expanded ? chevronUp : chevronDown"></fa-icon>
+    </span>
+  </div>
+</button>
 @if(expanded) {
-@for (internal of item.items; track internal) {
-<app-menu-item [item]="internal"></app-menu-item>
-}
+<div class="ml-4">
+  @for (internal of item.items; track internal) {
+  <app-menu-item [item]="internal"></app-menu-item>
+  }
+</div>
 }
 } @else {
-<mat-list-item *ngIf="item.visible !== false">
-  <a class="ml-2" matListItemTitle  [attr.href]="item.url ? item.url : null" target="_blank">
-  <button [routerLink]="item.routerLink" mat-button matListItemMeta class="w-full justify-content-start" (click)="doCommand()" >
-    <span  [matBadge]="item.badge" [matBadgeHidden]="item.badge === 0" class="menu-item-icon">
-      <fa-icon *ngIf="item.icon" [icon]="item.icon"></fa-icon>
-      {{ item.label }}
+<a mat-list-item *ngIf="item.visible !== false" [href]="item.url" [routerLink]="item.routerLink" (click)="doCommand()">
+  <div [matBadge]="item.badge" [matBadgeHidden]="item.badge === 0"
+    class="flex align-items-center justify-content-start">
+    <span class="menu-item-icon" *ngIf="item.icon">
+      <fa-icon [icon]="item.icon"></fa-icon>
     </span>
-  </button>
-  </a>
-</mat-list-item>
+    <span class="ml-3">{{ item.label }}</span>
+  </div>
+</a>
 }
