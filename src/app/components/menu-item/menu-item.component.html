@@ -1,7 +1,7 @@
 @if (item.items && item.visible !== false) {
 <mat-list-item>
   <button mat-button matListItemMeta class="w-full justify-content-start">
-    <span style="display: inline-block; min-width: 20px;">
+    <span class="menu-item-icon">
       <fa-icon *ngIf="item.icon" [icon]="item.icon"></fa-icon>
     </span>
     <a class="ml-2" matListItemTitle [href]="item.url" [routerLink]="item.routerLink">{{ item.label }}</a>
@@ -15,7 +15,7 @@
 } @else {
 <mat-list-item *ngIf="item.visible !== false">
   <button mat-button matListItemMeta class="w-full justify-content-start">
-    <span style="display: inline-block; min-width: 20px;">
+    <span class="menu-item-icon">
       <fa-icon *ngIf="item.icon" [icon]="item.icon"></fa-icon>
     </span>
     <a class="ml-2" matListItemTitle [href]="item.url" [routerLink]="item.routerLink">{{ item.label }}</a>
