@@ -223,13 +223,11 @@
       *ngIf="content.tags && content.tags.length"
       [ngClass]="{ blurry: content.content_warning }"
     >
-      <a
-        *ngFor="let tag of content.tags"
-        [routerLink]="'/dashboard/search/' + tag.tagName"
-        style="margin: 0.25em"
-      >
-        <span>#{{ tag.tagName }}</span>
-      </a>
+      @for(tag of content.tags; track tag) {
+      <button mat-flat-button [routerLink]="'/dashboard/search/' + tag.tagName">
+        #{{ tag.tagName }}
+      </button>
+      }
     </div>
   </div>
   }
