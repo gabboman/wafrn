@@ -4,7 +4,7 @@
     <span class="menu-item-icon">
       <fa-icon *ngIf="item.icon" [icon]="item.icon"></fa-icon>
     </span>
-    <a class="ml-2" matListItemTitle [href]="item.url" [routerLink]="item.routerLink">{{ item.label }}</a>
+    <a class="ml-2" matListItemTitle [href]="item.url" >{{ item.label }}</a>
   </button>
 </mat-list-item>
 @if(expanded) {
@@ -14,11 +14,11 @@
 }
 } @else {
 <mat-list-item *ngIf="item.visible !== false">
-  <button mat-button matListItemMeta class="w-full justify-content-start">
+  <button [routerLink]="item.routerLink" mat-button matListItemMeta class="w-full justify-content-start" (click)="doCommand()" >
     <span class="menu-item-icon">
       <fa-icon *ngIf="item.icon" [icon]="item.icon"></fa-icon>
     </span>
-    <a class="ml-2" matListItemTitle [href]="item.url" [routerLink]="item.routerLink">{{ item.label }}</a>
+    <a class="ml-2" matListItemTitle [href]="item.url" >{{ item.label }}</a>
   </button>
 </mat-list-item>
 }

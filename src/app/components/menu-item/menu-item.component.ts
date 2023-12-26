@@ -25,4 +25,11 @@ export class MenuItemComponent {
   @Input() item!: MenuItem;
   expanded = false;
 
+
+  doCommand() {
+    if(this.item.command) {
+      this.item.command();
+    }
+  }
+
 }
