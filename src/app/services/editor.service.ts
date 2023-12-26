@@ -7,7 +7,7 @@ import { ProcessedPost } from '../interfaces/processed-post';
 import { Action, EditorLauncherData } from '../interfaces/editor-launcher-data';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'any'
 })
 export class EditorService {
 

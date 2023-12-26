@@ -4,6 +4,7 @@ import { PostEditorComponent } from './post-editor.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { QuillModule } from 'ngx-quill';
 import { MediaPreviewModule } from '../media-preview/media-preview.module';
+import { EditorService } from 'src/app/services/editor.service';
 
 
 @NgModule({
@@ -19,6 +20,8 @@ import { MediaPreviewModule } from '../media-preview/media-preview.module';
   ],
   exports: [
     PostEditorComponent
-  ]
+  ],
+  providers: [EditorService]
+
 })
 export class PostEditorModule { }

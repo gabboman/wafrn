@@ -1,0 +1,22 @@
+@if (item.items && item.visible !== false) {
+  <mat-list-item>
+    <button mat-button mat-icon-butto matListItemMeta class="w-full">
+     <fa-icon *ngIf="item.icon" [icon]="item.icon "></fa-icon>
+     <a matListItemTitle [href]="item.url" [routerLink]="item.routerLink" > {{ item.label }}</a>
+    </button>
+ </mat-list-item>
+  @if(expanded) {
+    @for (internal of item.items; track internal) {
+      <app-menu-item [item]="internal" ></app-menu-item>
+    }
+  }
+
+}
+@else {
+<mat-list-item *ngIf="item.visible !== false">
+   <button mat-button mat-icon-butto matListItemMeta class="w-full">
+    <fa-icon *ngIf="item.icon" [icon]="item.icon "></fa-icon>
+    <a matListItemTitle [href]="item.url" [routerLink]="item.routerLink" > {{ item.label }}</a>
+   </button>
+</mat-list-item>
+}

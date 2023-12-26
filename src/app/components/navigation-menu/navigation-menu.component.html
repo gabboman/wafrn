@@ -22,15 +22,14 @@ type="button" class="show-sidebar-menu-button" styleClass="p-button-raised "
   type="button" class="show-sidebar-menu-button"
   (click)="showMenu()"
   >butt</button>
-<mat-drawer-container class="example-container">
+<mat-drawer-container class="side-menu">
   <mat-drawer mode="side" [opened]="menuVisible || !mobile">
+    <mat-list-item>
+      <a routerLink="/"><img  [src]="logo" alt="instance logo" style="max-height: 72px;"></a>
+    </mat-list-item>
+
     @for (link of menuItems; track link) {
-      <mat-list-item *ngIf="link.visible !== false" [activated]="link.isActive">
-         <button mat-button mat-icon-butto matListItemMeta class="w-full">
-          <fa-icon [icon]="link.icon? link.icon : defaultIcon"></fa-icon>
-          <a matListItemTitle [href]="link.url" [routerLink]="link.routerLink"  >{{ link.label }}</a>
-         </button>
-      </mat-list-item>
+      <app-menu-item [item]="link"></app-menu-item>
     }
   </mat-drawer>
   <mat-drawer-content>

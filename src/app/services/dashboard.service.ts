@@ -6,7 +6,7 @@ import { RawPost } from '../interfaces/raw-post';
 import { SimplifiedUser } from '../interfaces/simplified-user';
 import { PostsService } from './posts.service';
 import { Observable } from 'rxjs';
-import { map, tap } from "rxjs/operators";
+import { map } from "rxjs/operators";
 
 @Injectable({
   providedIn: 'root'
