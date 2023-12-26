@@ -1,11 +1,14 @@
 @if (item.items && item.visible !== false) {
 <mat-list-item>
-  <button mat-button matListItemMeta class="w-full justify-content-start">
+  <a class="ml-2">
+    <!-- TODO add animation -->
+  <button (click)="expanded = !expanded" mat-button matListItemMeta class="w-full justify-content-start">
     <span class="menu-item-icon">
-      <fa-icon *ngIf="item.icon" [icon]="item.icon"></fa-icon>
+      <fa-icon [icon]="expanded ? chevronUp : chevronDown"></fa-icon>
+      {{item.label}}
     </span>
-    <a class="ml-2" matListItemTitle [href]="item.url" >{{ item.label }}</a>
   </button>
+  </a>
 </mat-list-item>
 @if(expanded) {
 @for (internal of item.items; track internal) {
@@ -14,11 +17,13 @@
 }
 } @else {
 <mat-list-item *ngIf="item.visible !== false">
+  <a class="ml-2" matListItemTitle  [attr.href]="item.url ? item.url : null" target="_blank">
   <button [routerLink]="item.routerLink" mat-button matListItemMeta class="w-full justify-content-start" (click)="doCommand()" >
     <span class="menu-item-icon">
       <fa-icon *ngIf="item.icon" [icon]="item.icon"></fa-icon>
+      {{ item.label }}
     </span>
-    <a class="ml-2" matListItemTitle [href]="item.url" >{{ item.label }}</a>
   </button>
+  </a>
 </mat-list-item>
 }

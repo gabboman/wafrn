@@ -5,7 +5,7 @@ import { MatListModule } from '@angular/material/list';
 import { RouterModule } from '@angular/router';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { MenuItem } from 'src/app/interfaces/menu-item';
-
+import { faChevronUp, faChevronDown } from '@fortawesome/free-solid-svg-icons';
 @Component({
   selector: 'app-menu-item',
   standalone: true,
@@ -22,6 +22,9 @@ import { MenuItem } from 'src/app/interfaces/menu-item';
 })
 export class MenuItemComponent {
 
+  chevronUp = faChevronUp;
+  chevronDown = faChevronDown;
+  
   @Input() item!: MenuItem;
   expanded = false;
 
