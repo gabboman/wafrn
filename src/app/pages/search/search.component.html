@@ -1,50 +1,93 @@
-<!--
-<div class="grid pb-6 lg:px-4 scalein  wafrn-container">
-
-    <p-card >
-      <span class="text-600 font-medium line-height-3">You can search for users by url and description, and posts by
-        tags. No need to add # to your search.
-        To force the server to search for a remote user in the fediverse, put their full username starting with an &#64;. As example, &#64;torvalds&#64;social.kernel.org<br>
-        You can also force the app to get an external post with the url
-        <br></span>
-      <form [formGroup]="searchForm" (submit)="submitSearch()">
-        <span class="p-float-label">
-          <input formControlName="search" id="float-input" type="text" pInputText class="w-full">
-          <label for="float-input">Search term</label>
-        </span>
-        <button pButton pRipple label="Search" icon="pi pi-search" class="w-full" type="submit"></button>
+<main class="scalein wafrn-container">
+  <!-- SEARCH FORM -->
+  <div class="pb-4 lg:px-4">
+    <mat-card>
+      <div class="p-3 text-600 font-medium line-height-3">
+        <p>
+          You can search for users by url and description, and posts by tags. No
+          need to add # to your search. To force the server to search for a
+          remote user in the fediverse, put their full username starting with an
+          &#64;. As example, &#64;torvalds&#64;social.kernel.org
+        </p>
+        <p>You can also force the app to get an external post with the url</p>
+      </div>
+      <form
+        class="p-3 flex gap-2"
+        [formGroup]="searchForm"
+        (submit)="submitSearch()"
+      >
+        <mat-form-field class="flex-1">
+          <mat-label>Search term</mat-label>
+          <input
+            matInput
+            formControlName="search"
+            id="float-input"
+            type="text"
+          />
+        </mat-form-field>
+        <button mat-fab extended class="border-round-md" type="submit">
+          <fa-icon [icon]="searchIcon"></fa-icon>
+          Search
+        </button>
       </form>
-
-    </p-card>
-
+    </mat-card>
   </div>
-
-
-
-
-<div  [hidden]="!(users && users.length > 0)" class="grid pb-6 lg:px-4 scalein  wafrn-container" >
-    <p-carousel [value]="users" [showIndicators]="false">
-      <ng-template let-user pTemplate="item">
-        <p-card *ngIf="user" class="user-preview">
-            <div class="p-mb-3  flex justify-content-center">
-              <img [routerLink]="'/blog/' + user.url" loading="lazy" [src]="avatars[user.url]" style="max-width: 30vw; max-height: 30vh;">
-            </div>
-            <div class="user-preview-description">
-              <h4 class="p-mb-1"><a [routerLink]="'/blog/' + user.url" [innerText]="user.url" ></a></h4>
-              <h4 class="p-mb-1" [innerText]="user.name"></h4>
-              <div class="p-mt-0 p-mb-3" [innerHTML]="user.description"></div>
-              <button *ngIf="followedUsers.indexOf(user.id) === -1 && userLoggedIn" pButton pRipple label="Follow"
-                class="w-full" (click)="followUser(user.id)"></button>
-              <button *ngIf="followedUsers.indexOf(user.id) !== -1 && userLoggedIn" pButton pRipple label="Unfollow"
-                class="w-full" (click)="unfollowUser(user.id)"></button>
-            </div>
-        </p-card>
-
-      </ng-template>
-    </p-carousel>
-
-</div>
-
+  <!-- USER LIST -->
+  <div class="lg:mx-4">
+    <mat-list
+      role="list"
+      class="flex gap-3 align-items-start max-w-full overflow-scroll"
+    >
+      @for (user of users; track user) {
+      <mat-card mat-list-item class="user-preview text-center">
+        <img
+          [alt]="user.name + ' avatar'"
+          [src]="getAvatar(user.url)"
+          loading="lazy"
+          width="80"
+          height="80"
+          class="block mx-auto my-2 border-round-md"
+        />
+        <div class="flex-grow-1 p-2">
+          <button
+            mat-raised-button
+            color="primary"
+            *ngIf="followedUsers.indexOf(user.id) === -1 && userLoggedIn"
+            (click)="followUser(user.id)"
+            class="mb-4"
+          >
+            Follow
+          </button>
+          <button
+            mat-raised-button
+            color="primary"
+            *ngIf="followedUsers.indexOf(user.id) !== -1 && userLoggedIn"
+            (click)="unfollowUser(user.id)"
+          >
+            Unfollow
+          </button>
+          <p>{{ user.name }}</p>
+          <p>
+            <a [routerLink]="'/blog/' + user.url">{{ user.url }}</a>
+          </p>
+          <div class="mb-3" [innerHTML]="user.description"></div>
+        </div>
+      </mat-card>
+      }
+    </mat-list>
+  </div>
+  <div
+    class="mt-4"
+    defer
+    *ngFor="let post of posts"
+    (onLoad)="countViewedPost()"
+  >
+    <ng-template>
+      <app-post [post]="post"></app-post>
+    </ng-template>
+  </div>
+</main>
+<!--
 <div [hidden]="!(posts && posts.length > 0)">
 
   <div *ngFor="let post of posts" defer (onLoad)="countViewedPost()">
@@ -52,14 +95,13 @@
     </ng-template>
     <app-post [post]="post"></app-post>
   </div>
-</div>
+</div> 
 
 
 <div class="grid pb-6" *ngIf="loading">
   <div class="col-12 sm:col-12 md:col-12 lg:col-5 margin-auto">
     <p-card class="flex justify-content-center flex-wrap">
       <p-progressSpinner class="flex align-items-center justify-content-center "></p-progressSpinner>
-
     </p-card>
   </div>
 </div>
