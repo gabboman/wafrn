@@ -34,7 +34,9 @@ import {
   faCode,
   faEuro,
   faSignOut,
-  faBars
+  faBars,
+  faUserLock,
+  faCog,
 } from '@fortawesome/free-solid-svg-icons';
 import { MenuItem } from 'src/app/interfaces/menu-item';
 
@@ -84,6 +86,7 @@ export class NavigationMenuComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.drawMenu();
     this.onResize();
+    this.menuVisible = !this.mobile;
   }
 
   ngOnDestroy(): void {
@@ -161,7 +164,6 @@ export class NavigationMenuComponent implements OnInit, OnDestroy {
             label: 'Server list',
             icon: faServer,
             title: 'List of all the servers',
-
             routerLink: '/admin/server-list',
           },
           {
@@ -169,20 +171,18 @@ export class NavigationMenuComponent implements OnInit, OnDestroy {
             title: 'User reports',
             icon: faExclamationTriangle,
             badge: this.adminNotifications,
-
             routerLink: '/admin/user-reports',
           },
           {
             label: 'User bans',
             title: 'User bans',
             icon: faBan,
-
             routerLink: '/admin/bans',
           },
           {
             label: 'User blocklists',
             title: 'User blocklists',
-
+            icon: faUserLock,
             routerLink: '/admin/user-blocks',
           },
         ],
@@ -191,12 +191,12 @@ export class NavigationMenuComponent implements OnInit, OnDestroy {
         label: 'Explore',
         title: 'See the local posts of the server or the fediverse!',
         visible: this.jwtService.tokenValid(),
+        icon: faCompass,
         items: [
           {
             label: 'Local explore',
             icon: faServer,
             title: 'See the local posts of the server!',
-
             routerLink: '/dashboard/exploreLocal',
             visible: this.jwtService.tokenValid(),
           },
@@ -205,13 +205,11 @@ export class NavigationMenuComponent implements OnInit, OnDestroy {
             icon: faCompass,
             title:
               'Take a look to all the public posts avaiable to us, not only of people in this servers',
-
             routerLink: '/dashboard/explore',
             visible: this.jwtService.tokenValid(),
           },
         ],
       },
-
       {
         label: 'Private messages',
         icon: faEnvelope,
@@ -225,11 +223,11 @@ export class NavigationMenuComponent implements OnInit, OnDestroy {
         icon: faSearch,
         routerLink: '/dashboard/search',
       },
-
       {
         label: 'Settings',
         title: 'Your blog, your profile, blocks, and other stuff',
         visible: this.jwtService.tokenValid(),
+        icon: faCog,
         items: [
           {
             label: 'Edit profile',
