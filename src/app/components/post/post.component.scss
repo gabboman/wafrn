@@ -1,24 +1,32 @@
 .avatar {
-    max-height: 2em;
-    max-width: 2em;
-    border-radius: 25%;
+  max-height: 40px;
+  max-width: 40px;
+  width: 100%;
+  margin: 0 4px;
+
+  img {
+    border-radius: 8px;
+    margin: 0 auto;
+    display: block;
+    width: auto;
+  }
 }
 
 .center-text {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    gap: 0.25em;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 0.25em;
 }
 
 .share-button {
-    gap: 0.5em
+  gap: 0.5em;
 }
 
 .timestamp {
-    font-size: 0.75em;
+  font-size: 0.75em;
 }
 
-.blurry{
-    filter: opacity(0);
+.blurry {
+  filter: opacity(0);
 }
