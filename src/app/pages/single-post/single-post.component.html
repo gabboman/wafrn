@@ -47,3 +47,5 @@
 <app-pagenotfound *ngIf="!postFound"></app-pagenotfound>
 
 -->
+
+<app-post [showFull]="true" *ngIf="!loading && postFound && post" [post]="post"></app-post>

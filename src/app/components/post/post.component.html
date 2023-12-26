@@ -103,3 +103,120 @@
 </div>
 
 -->
+
+<mat-card class="p-3 mb-6 lg:mx-4 scalein wafrn-container">
+  <div *ngIf="post.length > 1" class="center-text overflow-hidden">
+    <img
+      [routerLink]="'/blog/' + originalPoster.url"
+      crossorigin="anonymous"
+      loading="lazy"
+      [src]="avatars[avatars.length - 1]"
+      class="avatar"
+      [alt]="originalPoster.url + ' avatar'"
+    />
+    <div
+      class="w-full white-space-nowrap overflow-hidden text-overflow-ellipsis flex flex-column"
+    >
+      <div>
+        <a
+          [routerLink]="'/blog/' + originalPoster.url"
+          [innerHTML]="originalPoster.name"
+        ></a>
+      </div>
+      <span class="font-small" [innerText]="originalPoster.url"></span>
+    </div>
+  </div>
+  <div *ngFor="let content of post; index as index">
+    <hr
+      *ngIf="post.length > 1 && (content.content !== '' || content.tags.length)"
+    />
+    <div
+      *ngIf="
+        content.content !== '' ||
+        (content.medias && content.medias.length > 0) ||
+        index === 0 ||
+        content.tags.length > 0
+      "
+      class="fragment-header"
+    >
+      <div class="flex gap-1 md:gap-3 align-items-center" style="width: 100%">
+        <div class="center-text py-2 flex-grow-1 flex-shrink-1 min-w-0">
+          <img
+            [alt]="content.user.url + ' avatar'"
+            [routerLink]="'/blog/' + content.user.url"
+            crossorigin="anonymous"
+            loading="lazy"
+            [src]="avatars[index]"
+            class="avatar"
+          />
+          <div class="w-full overflow-hidden flex flex-column">
+            <a
+              class="max-w-full white-space-nowrap overflow-hidden text-overflow-ellipsis"
+              [routerLink]="'/blog/' + content.user.url"
+              [innerHTML]="content.user.name"
+            ></a>
+            <span
+              class="font-small max-w-full white-space-nowrap overflow-hidden text-overflow-ellipsis"
+              [innerText]="content.user.url"
+            ></span>
+          </div>
+        </div>
+        <button
+          mat-flat-button
+          color="accent"
+          *ngIf="followedUsers.indexOf(content.userId) === -1 && userLoggedIn"
+          class="w-80 p-button-sm flex-shrink-0"
+          (click)="followUser(content.userId)"
+        >
+          Follow
+        </button>
+        <div class="timestamp flex-shrink-0">
+          {{ content.createdAt | date : "shortDate" }}
+        </div>
+      </div>
+      <div
+        *ngIf="content.content_warning"
+        class="fragment-content ql-editor -mx-3"
+      >
+        {{ content.content_warning }}
+      </div>
+      <button
+        mat-flat-button
+        color="accent"
+        *ngIf="content.content_warning"
+        (click)="dismissContentWarning()"
+        class="w-full"
+      >
+        I understand this and I want to see this post
+      </button>
+      <div
+        *ngIf="content.content !== '' || content.tags.length"
+        class="fragment-content ql-editor -mx-3"
+        [ngClass]="{ blurry: content.content_warning }"
+        [injectHTML]="content.content"
+      ></div>
+      <div
+        *ngIf="content.questionPoll"
+        [ngClass]="{ blurry: content.content_warning }"
+      >
+        <app-poll [poll]="content.questionPoll"></app-poll>
+      </div>
+      <div
+        *ngFor="let media of content.medias"
+        [ngClass]="{ blurry: content.content_warning }"
+      >
+        <app-wafrn-media [data]="media"></app-wafrn-media>
+      </div>
+      <div *ngIf="content.tags" [ngClass]="{ blurry: content.content_warning }">
+        <a
+          *ngFor="let tag of content.tags"
+          [routerLink]="'/dashboard/search/' + tag.tagName"
+          style="margin: 0.25em"
+        >
+          <!--<p-tag class="wafrn-tag" [value]="'#' +tag.tagName"></p-tag>-->
+          <button mat-flat-button color="accent">#{{ tag.tagName }}</button>
+        </a>
+      </div>
+    </div>
+  </div>
+</mat-card>

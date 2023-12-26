@@ -15,3 +15,12 @@
 </div>
 
 -->
+
+<div *ngFor="let post of posts; let indexOfelement=index;" defer (onLoad)="countViewedPost(indexOfelement)">
+  <ng-template>
+    <app-post [post]="post"></app-post>
+  </ng-template>
+</div>
+
+
+IF YOU READ THIS ITS LOADING WILL ADD LOADER LATER
