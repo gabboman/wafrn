@@ -16,11 +16,18 @@
   <app-menu-item [item]="internal"></app-menu-item>
   }
 </div>
-}
-} @else {
-<a mat-list-item *ngIf="item.visible !== false" [href]="item.url" [routerLink]="item.routerLink" (click)="doCommand()">
-  <div [matBadge]="item.badge" [matBadgeHidden]="item.badge === 0"
-    class="flex align-items-center justify-content-start">
+} } @else {
+<a
+  mat-list-item
+  *ngIf="item.visible !== false"
+  [routerLink]="item.routerLink ? item.routerLink : null"
+  (click)="doCommand()"
+>
+  <div
+    [matBadge]="item.badge"
+    [matBadgeHidden]="item.badge === 0"
+    class="flex align-items-center justify-content-start"
+  >
     <span class="menu-item-icon" *ngIf="item.icon">
       <fa-icon [icon]="item.icon"></fa-icon>
     </span>
