@@ -1,19 +1,23 @@
 <mat-card class="p-3 mb-6 lg:mx-4 scalein wafrn-container">
   <div class="text-center mb-5">
-    <img loading="lazy" [src]="logo" alt="Image" height="50" class="mb-3">
-    <div class="text-900 text-3xl font-medium mb-4">
-      Welcome Back!
-    </div>
+    <img loading="lazy" [src]="logo" alt="Image" height="50" class="mb-3" />
+    <div class="text-900 text-3xl font-medium mb-4">Welcome Back!</div>
     <p class="text-900 text-xl font-medium mb-3">
       <a [routerLink]="['/dashboard/explore']">
         Click here to take a look without an account!
       </a>
     </p>
     <p>
-      <span class="text-600 font-medium line-height-3">Don't have an account?</span>
-      <a routerLink="/" class="font-medium no-underline ml-2  cursor-pointer">Register now!</a>
+      <span class="text-600 font-medium line-height-3"
+        >Don't have an account?</span
+      >
+      <a routerLink="/" class="font-medium no-underline ml-2 cursor-pointer"
+        >Register now!</a
+      >
     </p>
-    <p class="text-600 font-medium line-height-3">If you have any issue please check your spam folder!</p>
+    <p class="text-600 font-medium line-height-3">
+      If you have any issue please check your spam folder!
+    </p>
     <p class="text-600 font-medium line-height-3">
       Still having problems? Send us an email at info &#64; wafrn.net
     </p>
@@ -22,19 +26,28 @@
   <form [hidden]="loading" [formGroup]="loginForm" (ngSubmit)="onSubmit()">
     <mat-form-field class="w-full">
       <mat-label>Email</mat-label>
-      <input formControlName="email" type="email" matInput>
+      <input formControlName="email" type="email" matInput />
     </mat-form-field>
 
     <mat-form-field class="w-full">
       <mat-label>Password</mat-label>
-      <input formControlName="password" type="password" matInput>
-      <mat-hint><a routerLink="/recoverPassword" class="font-medium no-underline ml-2  text-right cursor-pointer">Forgot
-          password? Click
-          here!</a></mat-hint>
-
+      <input formControlName="password" type="password" matInput />
+      <mat-hint
+        ><a
+          routerLink="/recoverPassword"
+          class="font-medium no-underline ml-2 text-right cursor-pointer"
+          >Forgot password? Click here!</a
+        ></mat-hint
+      >
     </mat-form-field>
 
-    <button [disabled]="loading || !loginForm.valid" mat-fab extended class="w-full border-round-md mt-4">
+    <button
+      [disabled]="loading || !loginForm.valid"
+      mat-flat-button
+      color="primary"
+      extended
+      class="w-full border-round-md mt-4"
+    >
       <fa-icon [icon]="faUser"></fa-icon>
       Login
     </button>

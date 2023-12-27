@@ -25,7 +25,13 @@
             type="text"
           />
         </mat-form-field>
-        <button mat-fab extended class="border-round-md" type="submit">
+        <button
+          mat-flat-button
+          color="primary"
+          extended
+          class="border-round-md"
+          type="submit"
+        >
           <fa-icon [icon]="searchIcon"></fa-icon>
           Search
         </button>
@@ -95,7 +101,7 @@
     </ng-template>
     <app-post [post]="post"></app-post>
   </div>
-</div> 
+</div>
 
 
 <div class="grid pb-6" *ngIf="loading">
