@@ -22,5 +22,9 @@
   <audio *ngIf="!nsfw && mimeType.startsWith('audio')" controls>
     <source [src]="displayUrl" [type]="mimeType" />
   </audio>
-  <div [innerText]="data.description"></div>
+  <div
+    *ngIf="data.description"
+    class="media-description bg-black-alpha-10 px-2 py-1"
+    [innerText]="data.description"
+  ></div>
 </mat-card>
