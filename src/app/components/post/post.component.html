@@ -104,7 +104,7 @@
 
 -->
 
-<mat-card class="p-3 mb-6 lg:mx-4 scalein wafrn-container">
+<mat-card #postElement class="p-3 mb-6 lg:mx-4 scalein wafrn-container">
   <div *ngIf="post.length > 1" class="center-text overflow-hidden">
     <div class="avatar">
       <img
@@ -283,4 +283,13 @@
     </div>
   </div>
   }
+  <hr [id]="'final-hr-' + finalPost.id" />
+  <div class="grid">
+    <div class="col-8 flex justify-content-start">
+      <a [routerLink]="'/post/' + finalPost.id">Notes: {{ notes }}</a>
+    </div>
+    <div *ngIf="userLoggedIn" class="col-4 flex justify-content-end">
+      <div class="grid" *ngIf="!loadingAction">ACTIONS</div>
+    </div>
+  </div>
 </mat-card>

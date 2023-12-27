@@ -79,7 +79,12 @@ export class PostComponent implements OnInit {
         this.showFull = true;
       }
     }
-
+    console.log(document.querySelector('#final-hr-' + this.finalPost.id))
+    new IntersectionObserver(()=> {
+      console.log('seen post ' + this.finalPost.id)
+    }, {
+      root: document.querySelector('#final-hr-' + this.finalPost.id),
+    })
   }
 
   async ngOnChanges(): Promise<void> {
