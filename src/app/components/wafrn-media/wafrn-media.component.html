@@ -1,20 +1,26 @@
-<!--
-<p-card *ngIf="data" class="parent">
-  <ng-template pTemplate="header">
-    <img #wafrnMedia *ngIf="nsfw || ! extensionsToHideImgTag.includes(extension) || mimeType === 'UNKNOWN'"
-    (click)="showPicture()" [src]="displayUrl"
-    [alt]="data.description" loading="lazy"
+<mat-card *ngIf="data" class="parent">
+  <img
+    #wafrnMedia
+    *ngIf="
+      nsfw ||
+      !extensionsToHideImgTag.includes(extension) ||
+      mimeType === 'UNKNOWN'
+    "
+    (click)="showPicture()"
+    (keyup)="showPicture()"
+    [src]="displayUrl"
+    [alt]="data.description"
+    role="none"
+    loading="lazy"
     (load)="imgLoaded()"
-    >
+  />
 
-    <video *ngIf="!nsfw &&  mimeType.startsWith('video')" controls >
-        <source [src]="displayUrl" [type]="mimeType">
-    </video>
+  <video *ngIf="!nsfw && mimeType.startsWith('video')" controls>
+    <source [src]="displayUrl" [type]="mimeType" />
+  </video>
 
-    <audio *ngIf="!nsfw && mimeType.startsWith('audio')" controls>
-      <source [src]="displayUrl" [type]="mimeType" />
-    </audio>
-  </ng-template>
-  <div [innerText]="data.description" ></div>
-</p-card>
--->
+  <audio *ngIf="!nsfw && mimeType.startsWith('audio')" controls>
+    <source [src]="displayUrl" [type]="mimeType" />
+  </audio>
+  <div [innerText]="data.description"></div>
+</mat-card>

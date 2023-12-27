@@ -111,6 +111,9 @@ export class NavigationMenuComponent implements OnInit, OnDestroy {
         icon: faHouse,
         routerLink: '/login',
         visible: !this.jwtService.tokenValid(),
+        command: () => {
+          this.hideMenu();
+        },
       },
       {
         label: 'Register',
@@ -118,6 +121,9 @@ export class NavigationMenuComponent implements OnInit, OnDestroy {
         icon: faUser,
         routerLink: '/',
         visible: !this.jwtService.tokenValid(),
+        command: () => {
+          this.hideMenu();
+        },
       },
       {
         label: 'Explore without an account',
@@ -125,6 +131,9 @@ export class NavigationMenuComponent implements OnInit, OnDestroy {
         title: 'See ALL the posts that are public! Yes, you can be a lurker',
         routerLink: '/dashboard/exploreLocal',
         visible: !this.jwtService.tokenValid(),
+        command: () => {
+          this.hideMenu();
+        },
       },
       {
         label: 'Dashboard',
@@ -132,6 +141,9 @@ export class NavigationMenuComponent implements OnInit, OnDestroy {
         icon: faHouse,
         routerLink: '/dashboard',
         visible: this.jwtService.tokenValid(),
+        command: () => {
+          this.hideMenu();
+        },
       },
       {
         label: 'Write new post',
@@ -152,6 +164,9 @@ export class NavigationMenuComponent implements OnInit, OnDestroy {
         routerLink: '/dashboard/notifications',
         badge: this.notifications,
         visible: this.jwtService.tokenValid(),
+        command: () => {
+          this.hideMenu();
+        },
       },
       {
         label: 'Admin',
@@ -165,6 +180,9 @@ export class NavigationMenuComponent implements OnInit, OnDestroy {
             icon: faServer,
             title: 'List of all the servers',
             routerLink: '/admin/server-list',
+            command: () => {
+              this.hideMenu();
+            },
           },
           {
             label: 'User reports',
@@ -172,18 +190,27 @@ export class NavigationMenuComponent implements OnInit, OnDestroy {
             icon: faExclamationTriangle,
             badge: this.adminNotifications,
             routerLink: '/admin/user-reports',
+            command: () => {
+              this.hideMenu();
+            },
           },
           {
             label: 'User bans',
             title: 'User bans',
             icon: faBan,
             routerLink: '/admin/bans',
+            command: () => {
+              this.hideMenu();
+            },
           },
           {
             label: 'User blocklists',
             title: 'User blocklists',
             icon: faUserLock,
             routerLink: '/admin/user-blocks',
+            command: () => {
+              this.hideMenu();
+            },
           },
         ],
       },
@@ -199,6 +226,9 @@ export class NavigationMenuComponent implements OnInit, OnDestroy {
             title: 'See the local posts of the server!',
             routerLink: '/dashboard/exploreLocal',
             visible: this.jwtService.tokenValid(),
+            command: () => {
+              this.hideMenu();
+            },
           },
           {
             label: 'Explore the fediverse',
@@ -207,6 +237,9 @@ export class NavigationMenuComponent implements OnInit, OnDestroy {
               'Take a look to all the public posts avaiable to us, not only of people in this servers',
             routerLink: '/dashboard/explore',
             visible: this.jwtService.tokenValid(),
+            command: () => {
+              this.hideMenu();
+            },
           },
         ],
       },
@@ -215,12 +248,18 @@ export class NavigationMenuComponent implements OnInit, OnDestroy {
         icon: faEnvelope,
         title: 'Private messages are here!',
         routerLink: '/dashboard/private',
+        command: () => {
+          this.hideMenu();
+        },
         visible: this.jwtService.tokenValid(),
       },
       {
         label: 'Search',
         title: 'Search',
         icon: faSearch,
+        command: () => {
+          this.hideMenu();
+        },
         routerLink: '/dashboard/search',
       },
       {
@@ -233,7 +272,9 @@ export class NavigationMenuComponent implements OnInit, OnDestroy {
             label: 'Edit profile',
             title: 'Edit profile',
             icon: faUserEdit,
-
+            command: () => {
+              this.hideMenu();
+            },
             routerLink: '/profile/edit',
             visible: this.jwtService.tokenValid(),
           },
@@ -241,7 +282,9 @@ export class NavigationMenuComponent implements OnInit, OnDestroy {
             label: 'Edit my theme',
             title: 'Edit my theme',
             icon: faUserEdit,
-
+            command: () => {
+              this.hideMenu();
+            },
             routerLink: '/profile/css',
             visible: this.jwtService.tokenValid(),
           },
@@ -249,7 +292,9 @@ export class NavigationMenuComponent implements OnInit, OnDestroy {
             label: 'Manage muted users',
             title: 'Manage muted users',
             icon: faVolumeMute,
-
+            command: () => {
+              this.hideMenu();
+            },
             routerLink: '/profile/mutes',
             visible: this.jwtService.tokenValid(),
           },
@@ -257,7 +302,9 @@ export class NavigationMenuComponent implements OnInit, OnDestroy {
             label: 'Manage blocked users',
             title: 'Manage blocked users',
             icon: faBan,
-
+            command: () => {
+              this.hideMenu();
+            },
             routerLink: '/profile/blocks',
             visible: this.jwtService.tokenValid(),
           },
@@ -265,7 +312,9 @@ export class NavigationMenuComponent implements OnInit, OnDestroy {
             label: 'Manage blocked servers',
             title: 'Manage blocked servers',
             icon: faServer,
-
+            command: () => {
+              this.hideMenu();
+            },
             routerLink: '/profile/serverBlocks',
             visible: this.jwtService.tokenValid(),
           },
@@ -273,7 +322,9 @@ export class NavigationMenuComponent implements OnInit, OnDestroy {
             label: 'My blog',
             title: 'View your own blog',
             icon: faUser,
-
+            command: () => {
+              this.hideMenu();
+            },
             routerLink:
               '/blog' + this.jwtService.tokenValid()
                 ? this.jwtService.getTokenData()['url']
@@ -287,18 +338,27 @@ export class NavigationMenuComponent implements OnInit, OnDestroy {
         title: 'Privacy policy',
         icon: faEyeSlash,
         routerLink: '/privacy',
+        command: () => {
+          this.hideMenu();
+        }
       },
       {
         label: 'Check the source code!',
         icon: faCode,
         title: 'The frontend is made in angular, you can check the code here',
         url: 'https://github.com/gabboman/wafrn',
+        command: () => {
+          this.hideMenu();
+        }
       },
       {
         label: 'Give us some money',
         title: 'Give us some money through patreon',
         icon: faEuro,
         url: 'https://patreon.com/wafrn',
+        command: () => {
+          this.hideMenu();
+        }
       },
       {
         label: 'Log out',

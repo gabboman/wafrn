@@ -1,8 +1,12 @@
-<!--<div *ngFor="let question of poll.questionPollQuestions">
-  {{question.questionText}} ({{question.remoteReplies}} votes out of {{total}}, {{question.remoteReplies * 100 / total | number : '1.0-0'}}% )
+<div *ngFor="let question of poll.questionPollQuestions">
+  {{ question.questionText }} ({{ question.remoteReplies }} votes out of
+  {{ total }}, {{ (question.remoteReplies * 100) / total | number : "1.0-0" }}%
+  )
   <div class="w-full">
-    <p-progressBar [value]="question.remoteReplies * 100 / total"></p-progressBar>
+    <mat-progress-bar
+      mode="determinate"
+      color="primary"
+      [value]="(question.remoteReplies * 100) / total"
+    ></mat-progress-bar>
   </div>
-
 </div>
--->

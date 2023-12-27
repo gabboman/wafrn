@@ -9,6 +9,7 @@ import { DeletePostService } from 'src/app/services/delete-post.service';
 import { SimplifiedUser } from 'src/app/interfaces/simplified-user';
 import { Action } from 'src/app/interfaces/editor-launcher-data';
 import { MessageService } from 'src/app/services/message.service';
+import { faArrowUpRightFromSquare, faChevronDown, faClockRotateLeft, faHeart, faHeartBroken, faRotateLeft, faShareNodes, faTriangleExclamation } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
   selector: 'app-post',
@@ -32,12 +33,22 @@ export class PostComponent implements OnInit {
   quickReblogBeingDone = false;
   quickReblogDoneSuccessfully = false;
   reblogging = false;
-  buttonItems: any = [];
   myId: string = '';
   loadingAction = false;
   // 0 no display at all 1 display like 2 display dislike
   showLikeFinalPost: number = 0;
   finalPost!: ProcessedPost;
+
+  // icons
+  shareIcon = faShareNodes;
+  expandDownIcon = faChevronDown;
+  solidHeartIcon = faHeart;
+  clearHeartIcon = faHeartBroken;
+  reblogIcon = faRotateLeft;
+  quickReblogIcon = faClockRotateLeft;
+  shareExternalIcon = faArrowUpRightFromSquare;
+  reportIcon = faTriangleExclamation;
+
 
   constructor(
     private postService: PostsService,
@@ -68,13 +79,17 @@ export class PostComponent implements OnInit {
         this.showFull = true;
       }
     }
-
+    console.log(document.querySelector('#final-hr-' + this.finalPost.id))
+    new IntersectionObserver(()=> {
+      console.log('seen post ' + this.finalPost.id)
+    }, {
+      root: document.querySelector('#final-hr-' + this.finalPost.id),
+    })
   }
 
   async ngOnChanges(): Promise<void> {
     this.avatars = this.post.map((elem) => elem.user.url.startsWith('@') ? this.cacheurl + encodeURIComponent(elem.user.avatar) : this.mediaBaseUrl + elem.user.avatar)
     this.ready = true;
-    this.updateButtonItems();
     const notes = this.post[this.post.length - 1].notes;
     this.notes = notes.toString();
 
@@ -144,11 +159,17 @@ export class PostComponent implements OnInit {
   shareOriginalPost(url: string) {
     navigator.clipboard.writeText(url);
     this.messages.add({ severity: 'success', summary: 'The external url has been copied!' });
-
   }
 
-  reportPost() {
-    this.reportService.launchReportScreen.next(this.post);
+  replyPost(post: ProcessedPost) {
+    this.editorService.launchPostEditorEmitter.next({
+      action: Action.Response,
+      post: post
+    })
+  }
+
+  reportPost(post: ProcessedPost) {
+    this.reportService.launchReportScreen.next([post]);
   }
 
   deletePost(id: string) {
@@ -161,79 +182,6 @@ export class PostComponent implements OnInit {
 
   hideQuickReblogOverlay() {
     this.quickReblogPanelVisible = false;
-  }
-
-  updateButtonItems(){
-    let index = 0;
-    for (const content of this.post) {
-      const buttonsForFragment: any[] = [
-        {
-          label: "Share with wafrn",
-          title: "Copy the wafrn url of the post to the clipboard",
-          icon: 'pi pi-share-alt',
-          command: () => this.sharePost(content.id)
-        },
-        {
-          label: "Share external url",
-          title: "Copy the post external url",
-          icon: 'pi pi-external-link',
-          command: () => this.shareOriginalPost(content.remotePostId)
-        },
-      ];
-      const loggedInButtons: any[] = [
-        {
-          label: "Reblog",
-          title: "Open the reblog editor, reblogging this post",
-          icon: 'pi pi-replay',
-          command: () => this.editorService.launchPostEditorEmitter.next({
-            action: Action.Response,
-            post: content
-          })
-        },
-        {
-          label: "Quick reblog",
-          title: "Reblog this post to your followers",
-          icon: 'pi pi-history',
-          command: () => this.quickReblog(content.id)
-        },
-        (content.content !== '' || content.tags.length != 0) && content.userId != this.myId  ?
-        content.userLikesPostRelations.includes(this.myId) ?
-        {
-          label: "Remove like",
-          title: "Remove your like to this post",
-          icon: 'pi pi-heart-fill',
-          command: () => this.unlikePost(content)
-        }
-        :
-        {
-          label: "Like this post",
-          title: "Add a like to this post",
-          icon: 'pi pi-heart',
-          command: () => this.likePost(content)
-        }
-        : {
-          label: 'NULL'
-        },
-        content.userId === this.myId ?
-        {
-          label: "Delete",
-          title: "Open the delete panel for this post",
-          icon: 'pi pi-trash',
-          // TODO this is stupid this is ugly but I am sleepy and I shall not fix this now
-          command: () => this.deletePostService.launchDeleteScreen.next(content.id)
-        } :
-        {
-          label: "Report",
-          title: "Open the report panel for this post",
-          icon: 'pi pi-exclamation-triangle',
-          // TODO this is stupid this is ugly but I am sleepy and I shall not fix this now
-          command: () => this.reportService.launchReportScreen.next([content])
-        }
-      ].filter(elem => elem.label != 'NULL')
-      this.buttonItems[content.id] = this.userLoggedIn ? buttonsForFragment.concat(loggedInButtons) :  buttonsForFragment;
-      index = index +1 ;
-    }
-
   }
 
   expandPost() {

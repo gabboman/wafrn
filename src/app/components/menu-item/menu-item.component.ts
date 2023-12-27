@@ -32,6 +32,12 @@ export class MenuItemComponent {
 
 
   doCommand() {
+    // TODO href and routerlink in the same page, a way of not doing it this dirty way
+    // this is BAD for accesibility you know
+    // the other option was an ngif and displaying it depending on this. not cool!
+    if(this.item.url) {
+      window.open(this.item.url, '_blank');
+    }
     if(this.item.command) {
       this.item.command();
     }

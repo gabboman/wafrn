@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { PollComponent } from './poll.component';
-
+import {MatProgressBarModule} from '@angular/material/progress-bar';
 
 
 @NgModule({
@@ -10,6 +10,7 @@ import { PollComponent } from './poll.component';
   ],
   imports: [
     CommonModule,
+    MatProgressBarModule
   ],
   exports: [
     PollComponent

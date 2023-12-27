@@ -104,7 +104,7 @@
 
 -->
 
-<mat-card class="p-3 mb-6 lg:mx-4 scalein wafrn-container">
+<mat-card #postElement class="p-3 mb-6 lg:mx-4 scalein wafrn-container">
   <div *ngIf="post.length > 1" class="center-text overflow-hidden">
     <div class="avatar">
       <img
@@ -183,6 +183,54 @@
       <div class="timestamp flex-shrink-0">
         {{ content.createdAt | date : "shortDate" }}
       </div>
+      <div class="gap-0">
+        <button
+          mat-raised-button
+          color="primary"
+          class="split-button-left"
+          (click)="sharePost(content.id)"
+        >
+          <fa-icon [icon]="shareIcon"></fa-icon>
+        </button>
+        <button
+          mat-raised-button
+          color="primary"
+          class="split-button-right"
+          [matMenuTriggerFor]="menu"
+        >
+          <fa-icon [icon]="expandDownIcon"></fa-icon>
+        </button>
+      </div>
+      <mat-menu #menu="matMenu" xPosition="before">
+        <button (click)="sharePost(content.id)" mat-menu-item>
+          <fa-icon class="mr-2" [icon]="shareIcon"></fa-icon>Share with wafrn
+        </button>
+        <button (click)="shareOriginalPost(content.remotePostId)" mat-menu-item>
+          <fa-icon class="mr-2" [icon]="shareExternalIcon"></fa-icon>Share
+          external URL
+        </button>
+        @if(userLoggedIn) {
+        <button (click)="replyPost(content)" mat-menu-item>
+          <fa-icon class="mr-2" [icon]="reblogIcon"></fa-icon>Reblog
+        </button>
+        <button (click)="quickReblog(content.id)" mat-menu-item>
+          <fa-icon class="mr-2" [icon]="quickReblogIcon"></fa-icon>Quick reblog
+        </button>
+        @if(content.userId !== myId){ @if
+        (content.userLikesPostRelations.includes(myId)) {
+        <button (click)="unlikePost(content)" mat-menu-item>
+          <fa-icon class="mr-2" [icon]="clearHeartIcon"></fa-icon>Dislike post
+        </button>
+        } @else {
+        <button (click)="likePost(content)" mat-menu-item>
+          <fa-icon class="mr-2" [icon]="solidHeartIcon"></fa-icon>Like post
+        </button>
+        } }
+        <button (click)="reportPost(content)" mat-menu-item>
+          <fa-icon class="mr-2" [icon]="reportIcon"></fa-icon>Report post
+        </button>
+        }
+      </mat-menu>
     </div>
     <div id="fragment-content-warning" *ngIf="content.content_warning">
       <div class="fragment-content ql-editor -mx-3">
@@ -190,7 +238,7 @@
       </div>
       <button
         mat-flat-button
-        color="accent"
+        color="primary"
         (click)="dismissContentWarning()"
         class="w-full"
       >
@@ -223,13 +271,23 @@
       *ngIf="content.tags && content.tags.length"
       [ngClass]="{ blurry: content.content_warning }"
     >
+      @for(tag of content.tags; track tag) {
       <a
-        *ngFor="let tag of content.tags"
         [routerLink]="'/dashboard/search/' + tag.tagName"
         style="margin: 0.25em"
       >
         <span>#{{ tag.tagName }}</span>
       </a>
+      }
+    </div>
+  </div>
+  <hr [id]="'final-hr-' + finalPost.id" />
+  <div class="grid">
+    <div class="col-8 flex justify-content-start">
+      <a [routerLink]="'/post/' + finalPost.id">Notes: {{ notes }}</a>
+    </div>
+    <div *ngIf="userLoggedIn" class="col-4 flex justify-content-end">
+      <div class="grid" *ngIf="!loadingAction">ACTIONS</div>
     </div>
   </div>
   }

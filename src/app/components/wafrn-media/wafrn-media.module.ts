@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { WafrnMediaComponent } from './wafrn-media.component';
+import { MatCardModule } from '@angular/material/card';
 
 
 
@@ -10,6 +11,7 @@ import { WafrnMediaComponent } from './wafrn-media.component';
   ],
   imports: [
     CommonModule,
+    MatCardModule
   ],
   exports: [
     WafrnMediaComponent
