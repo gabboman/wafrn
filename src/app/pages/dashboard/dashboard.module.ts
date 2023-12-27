@@ -6,6 +6,8 @@ import { PostModule } from 'src/app/components/post/post.module';
 import { loginRequiredGuard } from 'src/app/guards/login-required.guard';
 import { DeferModule } from 'src/app/directives/defer/defer.module';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { MatButtonModule } from '@angular/material/button';
 
 const routes: Routes = [
   {
@@ -37,6 +39,8 @@ const routes: Routes = [
     DeferModule,
     PostModule,
     MatProgressSpinnerModule,
+    MatButtonModule,
+    FontAwesomeModule,
   ],
 })
 export class DashboardModule {}

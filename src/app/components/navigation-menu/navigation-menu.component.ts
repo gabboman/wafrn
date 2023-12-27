@@ -221,7 +221,7 @@ export class NavigationMenuComponent implements OnInit, OnDestroy {
         icon: faCompass,
         items: [
           {
-            label: 'Local explore',
+            label: 'Explore WAFRN',
             icon: faServer,
             title: 'See the local posts of the server!',
             routerLink: '/dashboard/exploreLocal',
@@ -340,7 +340,7 @@ export class NavigationMenuComponent implements OnInit, OnDestroy {
         routerLink: '/privacy',
         command: () => {
           this.hideMenu();
-        }
+        },
       },
       {
         label: 'Check the source code!',
@@ -349,7 +349,7 @@ export class NavigationMenuComponent implements OnInit, OnDestroy {
         url: 'https://github.com/gabboman/wafrn',
         command: () => {
           this.hideMenu();
-        }
+        },
       },
       {
         label: 'Give us some money',
@@ -358,7 +358,7 @@ export class NavigationMenuComponent implements OnInit, OnDestroy {
         url: 'https://patreon.com/wafrn',
         command: () => {
           this.hideMenu();
-        }
+        },
       },
       {
         label: 'Log out',

@@ -15,11 +15,21 @@
 </div>
 
 -->
-
+<div class="wafrn-container mx-1 md:mx-4 flex align-items-center">
+  <h3 class="flex-grow-1 m-0 text-2xl">{{ title }}</h3>
+  <button
+    (click)="reloadPosts()"
+    mat-icon-button
+    color="default"
+    aria-label="Refresh"
+  >
+    <fa-icon [icon]="reloadIcon" />
+  </button>
+</div>
 <div
   *ngFor="let post of posts; let indexOfelement = index"
   defer
-  (onLoad)="countViewedPost(indexOfelement)"
+  (onLoad)="countViewedPost()"
 >
   <ng-template> </ng-template>
   <app-post [post]="post"></app-post>
