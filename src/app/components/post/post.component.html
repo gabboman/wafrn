@@ -144,10 +144,10 @@
   >
     <div
       id="fragment-header"
-      class="flex gap-1 md:gap-3 align-items-center"
+      class="flex mb-1 gap-1 md:gap-3 align-items-center"
       style="width: 100%"
     >
-      <div class="center-text py-2 flex-grow-1 flex-shrink-1 min-w-0">
+      <div class="center-text flex-grow-1 flex-shrink-1 min-w-0">
         <div class="avatar">
           <img
             [alt]="content.user.url + ' avatar'"
@@ -171,21 +171,9 @@
           ></span>
         </div>
       </div>
-      <button
-        mat-flat-button
-        color="primary"
-        *ngIf="followedUsers.indexOf(content.userId) === -1 && userLoggedIn"
-        class="w-80 p-button-sm flex-shrink-0"
-        (click)="followUser(content.userId)"
-      >
-        Follow
-      </button>
-      <div class="timestamp flex-shrink-0">
-        {{ content.createdAt | date : "shortDate" }}
-      </div>
-      <div class="gap-0">
+      <div class="gap-0" id="post-actions">
         <button
-          mat-raised-button
+          mat-flat-button
           color="primary"
           class="split-button-left"
           (click)="sharePost(content.id)"
@@ -193,7 +181,7 @@
           <fa-icon [icon]="shareIcon"></fa-icon>
         </button>
         <button
-          mat-raised-button
+          mat-flat-button
           color="primary"
           class="split-button-right"
           [matMenuTriggerFor]="menu"
@@ -232,6 +220,20 @@
         }
       </mat-menu>
     </div>
+    <div class="date-line mb-1 flex gap-2 align-items-center">
+      <span class="text-xs text-600">
+        {{ content.createdAt | date : "short" }}
+      </span>
+      <button
+        mat-stroked-button
+        color="accent"
+        *ngIf="followedUsers.indexOf(content.userId) === -1 && userLoggedIn"
+        class="follow-button flex-shrink-0"
+        (click)="followUser(content.userId)"
+      >
+        Follow
+      </button>
+    </div>
     <div id="fragment-content-warning" *ngIf="content.content_warning">
       <div class="fragment-content ql-editor -mx-3">
         {{ content.content_warning }}
@@ -268,17 +270,19 @@
     </div>
     <div
       id="fragment-tags"
+      class="flex flex-wrap gap-2 mt-4"
       *ngIf="content.tags && content.tags.length"
       [ngClass]="{ blurry: content.content_warning }"
     >
       @for(tag of content.tags; track tag) {
-      <button
+      <a
         mat-flat-button
         color="primary"
+        class="tag"
         [routerLink]="'/dashboard/search/' + tag.tagName"
       >
-        #{{ tag.tagName }}
-      </button>
+        <span>#{{ tag.tagName }}</span>
+      </a>
       }
     </div>
   </div>
