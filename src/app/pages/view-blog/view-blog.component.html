@@ -1,3 +1,70 @@
+@if (found) { @if (!loading) {
+<mat-card class="wafrn-container p-3 lg:mx-4 mb-6">
+  <div class="flex justify-content-center mb-2">
+    <img
+      loading="lazy"
+      style="max-width: 100%; max-height: 15vh"
+      [src]="avatarUrl"
+      alt="user avatar"
+      class="border-round-md"
+    />
+  </div>
+  <div class="flex justify-content-center flex-wrap">
+    <div
+      [innerText]="blogDetails.name"
+      class="text-xl font-medium line-height-3"
+    ></div>
+  </div>
+  <div class="flex justify-content-center flex-wrap mb-2">
+    <div [innerText]="blogDetails.url" class="text-600 line-height-3"></div>
+  </div>
+  @if (userLoggedIn) { @if (followedUsers.indexOf(blogDetails.id) === -1) {
+  <button
+    mat-flat-button
+    color="primary"
+    class="w-min mx-auto"
+    (click)="followUser(blogDetails.id)"
+  >
+    Follow
+  </button>
+  } @else {
+  <button
+    mat-flat-button
+    color="warn"
+    class="w-min mx-auto"
+    (click)="unfollowUser(blogDetails.id)"
+  >
+    Unfollow
+  </button>
+  } }
+  <div class="flex justify-content-center flex-wrap mt-3 mb-2">
+    <div [innerHtml]="blogDetails.description"></div>
+  </div>
+  <div class="mt-6 text-600 text-sm" *ngIf="blogDetails.url.startsWith('@')">
+    <strong>Attention!</strong>
+    This is an external user, and the profile might not be complete.
+    <br />
+    To check this user's complete profile in their instance
+    <a [href]="blogDetails.remoteId" target="_blank"> click here</a>.
+  </div>
+</mat-card>
+}
+<div
+  *ngFor="let post of posts; let indexOfelement = index"
+  defer
+  (onLoad)="countViewedPost()"
+>
+  <ng-template> </ng-template>
+  <app-post [post]="post"></app-post>
+</div>
+<footer class="p-4 flex gap-3 align-items-center">
+  <mat-spinner diameter="42"></mat-spinner>
+  <p class="m-0 text-lg text-600">Loading ...</p>
+</footer>
+} @else {
+<app-pagenotfound />
+}
+
 <!--
 <div *ngIf="!loading && found" class="wafrn-container lg:px-4">
   <div id="firstPost" class="col-12 pb-6">
