@@ -26,13 +26,8 @@
     <fa-icon [icon]="reloadIcon" />
   </button>
 </div>
-<div
-  *ngFor="let post of posts; let indexOfelement = index"
-  defer
-  (onLoad)="countViewedPost()"
->
-  <ng-template> </ng-template>
-  <app-post [post]="post"></app-post>
+<div *ngFor="let post of posts; let indexOfelement = index">
+  <app-post (seenEmitter)="countViewedPost()" [post]="post"></app-post>
 </div>
 <footer class="p-4 flex gap-3 align-items-center">
   <mat-spinner diameter="42"></mat-spinner>

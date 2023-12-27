@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { ProcessedPost } from 'src/app/interfaces/processed-post';
 import { EditorService } from 'src/app/services/editor.service';
 import { LoginService } from 'src/app/services/login.service';
@@ -49,6 +49,10 @@ export class PostComponent implements OnInit {
   shareExternalIcon = faArrowUpRightFromSquare;
   reportIcon = faTriangleExclamation;
 
+  // post seen
+  seen = 0;
+  @Output() seenEmitter: EventEmitter<boolean> = new EventEmitter<boolean>()
+
 
   constructor(
     private postService: PostsService,
@@ -79,12 +83,28 @@ export class PostComponent implements OnInit {
         this.showFull = true;
       }
     }
-    console.log(document.querySelector('#final-hr-' + this.finalPost.id))
-    new IntersectionObserver(()=> {
-      console.log('seen post ' + this.finalPost.id)
-    }, {
-      root: document.querySelector('#final-hr-' + this.finalPost.id),
+    // TODO this is a HACK
+    // this thing works because it goes to the next tick.
+    // basically we check if we see it (twice for some reason)
+    // and once we see it we emit the event and disconnect from observer
+    setTimeout(() => {
+      const element = document.querySelector('#post-element-' + this.finalPost.id)
+      const observer = new IntersectionObserver(()=> {
+        this.seen = this.seen + 1;
+        if(this.seen > 1) {
+          observer.disconnect();
+          this.seenEmitter.emit(true)
+        }
+      }, {
+        //root: document.querySelector('#post-element-' + this.finalPost.id),
+        //rootMargin: "0px",
+        threshold: 1,
+      });
+      if(element) {
+        observer.observe(element)
+      }
     })
+
   }
 
   async ngOnChanges(): Promise<void> {
