@@ -183,6 +183,54 @@
       <div class="timestamp flex-shrink-0">
         {{ content.createdAt | date : "shortDate" }}
       </div>
+      <div class="gap-0">
+        <button
+          mat-raised-button
+          color="primary"
+          class="split-button-left"
+          (click)="sharePost(content.id)"
+        >
+          <fa-icon [icon]="shareIcon"></fa-icon>
+        </button>
+        <button
+          mat-raised-button
+          color="primary"
+          class="split-button-right"
+          [matMenuTriggerFor]="menu"
+        >
+          <fa-icon [icon]="expandDownIcon"></fa-icon>
+        </button>
+      </div>
+      <mat-menu #menu="matMenu" xPosition="before">
+        <button (click)="sharePost(content.id)" mat-menu-item>
+          <fa-icon class="mr-2" [icon]="shareIcon"></fa-icon>Share with wafrn
+        </button>
+        <button (click)="shareOriginalPost(content.remotePostId)" mat-menu-item>
+          <fa-icon class="mr-2" [icon]="shareExternalIcon"></fa-icon>Share
+          external URL
+        </button>
+        @if(userLoggedIn) {
+        <button (click)="replyPost(content)" mat-menu-item>
+          <fa-icon class="mr-2" [icon]="reblogIcon"></fa-icon>Reblog
+        </button>
+        <button (click)="quickReblog(content.id)" mat-menu-item>
+          <fa-icon class="mr-2" [icon]="quickReblogIcon"></fa-icon>Quick reblog
+        </button>
+        @if(content.userId !== myId){ @if
+        (content.userLikesPostRelations.includes(myId)) {
+        <button (click)="unlikePost(content)" mat-menu-item>
+          <fa-icon class="mr-2" [icon]="clearHeartIcon"></fa-icon>Dislike post
+        </button>
+        } @else {
+        <button (click)="likePost(content)" mat-menu-item>
+          <fa-icon class="mr-2" [icon]="solidHeartIcon"></fa-icon>Like post
+        </button>
+        } }
+        <button (click)="reportPost(content)" mat-menu-item>
+          <fa-icon class="mr-2" [icon]="reportIcon"></fa-icon>Report post
+        </button>
+        }
+      </mat-menu>
     </div>
     <div id="fragment-content-warning" *ngIf="content.content_warning">
       <div class="fragment-content ql-editor -mx-3">
