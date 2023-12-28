@@ -70,7 +70,19 @@ export class DashboardComponent implements OnInit {
         this.router.navigate(['/dashboard/exploreLocal']);
       }
     });
-    this.loadPosts(this.currentPage);
+    this.loadPosts(this.currentPage).then(()=> {
+      // we detect the bottom of the page and load more posts
+      const element = document.querySelector('#if-you-see-this-load-more-posts');
+      const observer = new IntersectionObserver( (intersectionEntries: IntersectionObserverEntry[])=> {
+        if(intersectionEntries[0].isIntersecting) {
+          this.currentPage++;
+          this.loadPosts(this.currentPage);
+        }
+      } );
+    if(element) {
+      observer.observe(element)
+    }
+    });
     this.themeService.setMyTheme();
   }
 
@@ -84,7 +96,7 @@ export class DashboardComponent implements OnInit {
 
   async countViewedPost() {
     this.viewedPostsNumber++;
-    if (this.posts.length - 5 < this.viewedPostsNumber) {
+    if (this.posts.length - 1 < this.viewedPostsNumber) {
       this.currentPage++;
       await this.loadPosts(this.currentPage);
     }

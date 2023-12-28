@@ -27,9 +27,12 @@
   </button>
 </div>
 <div *ngFor="let post of posts; let indexOfelement = index">
-  <app-post (seenEmitter)="countViewedPost()" [post]="post"></app-post>
+  <app-post [post]="post"></app-post>
 </div>
-<footer class="p-4 flex gap-3 align-items-center">
+<footer
+  id="if-you-see-this-load-more-posts"
+  class="p-4 flex gap-3 align-items-center"
+>
   <mat-spinner diameter="42"></mat-spinner>
   <p class="m-0 text-lg text-600">Loading more...</p>
 </footer>

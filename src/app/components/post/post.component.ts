@@ -50,7 +50,6 @@ export class PostComponent implements OnInit {
   reportIcon = faTriangleExclamation;
 
   // post seen
-  seen = 0;
   @Output() seenEmitter: EventEmitter<boolean> = new EventEmitter<boolean>()
 
 
@@ -83,28 +82,6 @@ export class PostComponent implements OnInit {
         this.showFull = true;
       }
     }
-    // TODO this is a HACK
-    // this thing works because it goes to the next tick.
-    // basically we check if we see it (twice for some reason)
-    // and once we see it we emit the event and disconnect from observer
-    setTimeout(() => {
-      const element = document.querySelector('#post-element-' + this.finalPost.id)
-      const observer = new IntersectionObserver(()=> {
-        this.seen = this.seen + 1;
-        if(this.seen > 1) {
-          observer.disconnect();
-          this.seenEmitter.emit(true)
-        }
-      }, {
-        //root: document.querySelector('#post-element-' + this.finalPost.id),
-        //rootMargin: "0px",
-        threshold: 1,
-      });
-      if(element) {
-        observer.observe(element)
-      }
-    })
-
   }
 
   async ngOnChanges(): Promise<void> {
