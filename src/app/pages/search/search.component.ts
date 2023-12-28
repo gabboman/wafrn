@@ -39,6 +39,7 @@ export class SearchComponent implements OnInit, OnDestroy {
   navigationSubscription;
 
   searchIcon = faSearch;
+  atLeastOneSearchDone = false;
 
   constructor(
     private dashboardService: DashboardService,
@@ -80,6 +81,7 @@ export class SearchComponent implements OnInit, OnDestroy {
 
   async submitSearch() {
     this.loading = true;
+    this.atLeastOneSearchDone = true;
     this.viewedPosts = 0;
     this.viewedUsers = 0;
     this.currentPage = 0;
