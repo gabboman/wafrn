@@ -7,6 +7,7 @@
     <span
       [matBadge]="item.badge"
       [matBadgeHidden]="item.badge === 0"
+      matBadgePosition="above before"
       class="ml-3 flex-grow-1 text-left"
       >{{ item.label }}</span
     >
@@ -23,6 +24,9 @@
 </div>
 } } @else {
 <a
+  [matBadge]="item.badge"
+  [matBadgeHidden]="item.badge === 0"
+  matBadgePosition="above before"
   mat-list-item
   *ngIf="item.visible !== false"
   [routerLink]="item.routerLink ? item.routerLink : null"
@@ -32,12 +36,7 @@
     <span class="menu-item-icon" *ngIf="item.icon">
       <fa-icon [icon]="item.icon"></fa-icon>
     </span>
-    <span
-      [matBadge]="item.badge"
-      [matBadgeHidden]="item.badge === 0"
-      class="ml-3"
-      >{{ item.label }}</span
-    >
+    <span class="ml-3">{{ item.label }}</span>
   </div>
 </a>
 }
