@@ -72,4 +72,9 @@ export class EditorService {
   async searchUser(url: string) {
     return await this.http.get(`${environment.baseUrl}/userSearch/${encodeURIComponent(url)}`).toPromise();
   }
+
+  async getEditorComponent(): Promise<typeof PostEditorComponent> {
+    const { PostEditorComponent } = await import("../components/post-editor/post-editor.component");
+    return PostEditorComponent
+  }
 }

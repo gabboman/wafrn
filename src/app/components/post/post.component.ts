@@ -10,6 +10,7 @@ import { SimplifiedUser } from 'src/app/interfaces/simplified-user';
 import { Action } from 'src/app/interfaces/editor-launcher-data';
 import { MessageService } from 'src/app/services/message.service';
 import { faArrowUpRightFromSquare, faChevronDown, faClockRotateLeft, faHeart, faHeartBroken, faRotateLeft, faShareNodes, faTriangleExclamation } from '@fortawesome/free-solid-svg-icons';
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-post',
@@ -61,6 +62,7 @@ export class PostComponent implements OnInit {
     private editorService: EditorService,
     private reportService: ReportService,
     private deletePostService: DeletePostService,
+    private dialogService: MatDialog
   ) {
     this.userLoggedIn = loginService.checkUserLoggedIn();
     if(this.userLoggedIn) {
@@ -158,11 +160,10 @@ export class PostComponent implements OnInit {
     this.messages.add({ severity: 'success', summary: 'The external url has been copied!' });
   }
 
-  replyPost(post: ProcessedPost) {
-    this.editorService.launchPostEditorEmitter.next({
-      action: Action.Response,
-      post: post
-    })
+  async replyPost(post: ProcessedPost) {
+    const dialogRef = this.dialogService.open(await this.editorService.getEditorComponent(), {
+      data: {post},
+    });
   }
 
   reportPost(post: ProcessedPost) {
