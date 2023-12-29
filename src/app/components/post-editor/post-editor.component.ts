@@ -23,6 +23,7 @@ import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { ProcessedPost } from 'src/app/interfaces/processed-post';
 import { MatButtonModule } from '@angular/material/button';
 import { MatSelectModule } from '@angular/material/select';
+import { MatInputModule } from '@angular/material/input';
 
 @Component({
   selector: 'app-post-editor',
@@ -41,6 +42,7 @@ import { MatSelectModule } from '@angular/material/select';
     MatDialogClose,
     MatButtonModule,
     MatSelectModule,
+    MatInputModule,
   ],
   providers: [EditorService],
 })
@@ -54,7 +56,7 @@ export class PostEditorComponent implements OnInit, OnDestroy {
   idPostToReblog: string | undefined;
   editorVisible: boolean = false;
   postCreatorContent: string = '';
-  tags: string[] = [];
+  tags: string = '';
   privacy = 0;
   @ViewChild('quill') quill!: QuillEditorComponent;
   // upload media variables
@@ -146,7 +148,7 @@ export class PostEditorComponent implements OnInit, OnDestroy {
     const inResponseTo = this.data.post;
     this.postCreatorContent = '';
     this.uploadedMedias = [];
-    this.tags = [];
+    this.tags = '';
     const usersToMention: { id: string; url: string; remoteId: string }[] = [];
     if (inResponseTo) {
       this.contentWarning = inResponseTo.content_warning;
@@ -220,7 +222,7 @@ export class PostEditorComponent implements OnInit, OnDestroy {
   async submitPost() {
     this.postBeingSubmitted = true;
     let tagsToSend = '';
-    this.tags.forEach((elem) => {
+    this.tags.split(',').forEach((elem) => {
       tagsToSend = `${tagsToSend}${elem.trim()},`;
     });
     tagsToSend = tagsToSend.slice(0, -1);
@@ -258,7 +260,7 @@ export class PostEditorComponent implements OnInit, OnDestroy {
       });
       this.postCreatorContent = '';
       this.uploadedMedias = [];
-      this.tags = [];
+      this.tags = '';
       this.dialogRef.close();
     } else {
       this.messages.add({

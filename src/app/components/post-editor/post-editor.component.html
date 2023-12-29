@@ -13,12 +13,10 @@
         }
       </mat-select>
     </mat-form-field>
-    <input
-      [(ngModel)]="contentWarning"
-      pInputText
-      class="w-full"
-      placeholder="Content warning"
-    />
+    <mat-form-field class="w-full">
+      <mat-label>Content warning</mat-label>
+      <input [(ngModel)]="contentWarning" matNativeControl />
+    </mat-form-field>
   </div>
   <quill-editor
     #quill
@@ -100,12 +98,19 @@
 ></p-tag>
 -->
 
-  <p-chips
-    class="p-fluid"
-    [(ngModel)]="tags"
-    separator=","
-    placeholder="Tags separated by commas."
-  ></p-chips>
+  <mat-form-field class="w-full">
+    <mat-label>Tags</mat-label>
+    <input
+      [(ngModel)]="tags"
+      placeholder="Separated by commas"
+      matNativeControl
+    />
+  </mat-form-field>
+  @for(tag of tags.split(','); track tag) {
+  <a *ngIf="tag" mat-flat-button color="primary" class="tag">
+    <span>#{{ tag }}</span>
+  </a>
+  }
   <div class="mt-4 mb-2">
     <!--
 <p-tag
