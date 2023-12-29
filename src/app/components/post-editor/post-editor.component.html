@@ -6,14 +6,6 @@
 <mat-dialog-content>
   <div class="mt-4 mb-2">
     <mat-form-field class="w-full">
-      <mat-label>Privacy</mat-label>
-      <mat-select [required]="true" [(value)]="privacy">
-        @for(option of privacyOptions; track option) {
-        <mat-option [value]="option.level">{{ option.name }}</mat-option>
-        }
-      </mat-select>
-    </mat-form-field>
-    <mat-form-field class="w-full">
       <mat-label>Content warning</mat-label>
       <input [(ngModel)]="contentWarning" matNativeControl />
     </mat-form-field>
@@ -184,6 +176,14 @@
       </ng-container>
     </div>
   </div>
+  <mat-form-field class="w-full">
+    <mat-label>Privacy</mat-label>
+    <mat-select [required]="true" [(value)]="privacy">
+      @for(option of privacyOptions; track option) {
+      <mat-option [value]="option.level">{{ option.name }}</mat-option>
+      }
+    </mat-select>
+  </mat-form-field>
   <button
     mat-flat-button
     color="primary"
