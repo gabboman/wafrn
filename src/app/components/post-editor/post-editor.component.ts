@@ -11,7 +11,6 @@ import { MessageService } from 'src/app/services/message.service';
 import { CommonModule } from '@angular/common';
 import { QuillModule } from 'ngx-quill';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { MediaPreviewModule } from '../media-preview/media-preview.module';
 import {
   MatDialogContent,
   MatDialogTitle,
@@ -24,7 +23,9 @@ import { ProcessedPost } from 'src/app/interfaces/processed-post';
 import { MatButtonModule } from '@angular/material/button';
 import { MatSelectModule } from '@angular/material/select';
 import { MatInputModule } from '@angular/material/input';
-
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { FileUploadComponent } from '../file-upload/file-upload.component';
+import { MediaPreviewComponent } from '../media-preview/media-preview.component';
 @Component({
   selector: 'app-post-editor',
   templateUrl: './post-editor.component.html',
@@ -35,7 +36,7 @@ import { MatInputModule } from '@angular/material/input';
     QuillModule,
     FormsModule,
     ReactiveFormsModule,
-    MediaPreviewModule,
+    MediaPreviewComponent,
     MatDialogTitle,
     MatDialogContent,
     MatDialogActions,
@@ -43,6 +44,8 @@ import { MatInputModule } from '@angular/material/input';
     MatButtonModule,
     MatSelectModule,
     MatInputModule,
+    MatCheckboxModule,
+    FileUploadComponent,
   ],
   providers: [EditorService],
 })
@@ -63,7 +66,6 @@ export class PostEditorComponent implements OnInit, OnDestroy {
   newImageFile: File | undefined;
   disableImageUploadButton = false;
   uploadedMedias: WafrnMedia[] = [];
-  uploadImageUrl = `${environment.baseUrl}/uploadMedia`;
 
   // add mention variables
   @ViewChild('mentionUserSearchPanel') mentionUserSearchPanel: any;
@@ -289,31 +291,14 @@ export class PostEditorComponent implements OnInit, OnDestroy {
     }
   }
 
-  async uploadImage(event: any) {
+  async uploadImage(media: WafrnMedia) {
     try {
-      const responses = event.originalEvent.body;
-      responses.forEach(async (response: any) => {
-        if (response) {
-          // This is something for a new feature. The modified editor...
-          const newMedia: WafrnMedia = {
-            id: response.id,
-            adultContent: response.adultContent,
-            NSFW: response.NSFW,
-            description: response.description,
-            external: response.external,
-            url:
-              environment.externalCacheurl +
-              encodeURIComponent(`${environment.baseMediaUrl}${response.url}`),
-          };
-          this.uploadedMedias.push(newMedia);
-        }
-      });
-      this.newImageFile = undefined;
+      media.url = environment.baseMediaUrl + media.url;
+      this.uploadedMedias.push(media);
       this.messages.add({
         severity: 'success',
         summary:
           'Media uploaded and added to the post! Please fill in the description',
-        life: 50000,
       });
     } catch (error) {
       console.log(error);

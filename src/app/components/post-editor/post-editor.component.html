@@ -109,19 +109,8 @@
   }
   <div>
     <div *ngIf="uploadedMedias.length < 4">
-      <!--
-<p-fileUpload
-      name="image"
-      [url]="uploadImageUrl"
-      [multiple]="false"
-      accept="image/jpeg,image/png,image/webp,image/gif,video/mp4,video/quicktime,video/webm,.mkv,audio/mpeg,audio/*"
-      [auto]="true"
-      (onUpload)="uploadImage($event)"
-      [maxFileSize]="maxFileUploadSize"
-      chooseLabel="Upload image, video or audio"
-    >
-    </p-fileUpload>
-    --></div>
+      <app-file-upload (fileUpload)="uploadImage($event)"></app-file-upload>
+    </div>
     <div *ngIf="uploadedMedias.length >= 4">
       Due some fediverse limitations, we can only have 4 medias per post. Adding
       more would break how the post is seen in other places. Sorry for the
@@ -135,43 +124,25 @@
             <input
               placeholder="Description. Please FILL THIS"
               [(ngModel)]="media.description"
-              id="description"
               type="text"
-              pTooltip="Images description. Useful in the case of someone using a screen reader, or when the image does not load properly."
-              tooltipPosition="top"
-              pInputText
+              matNativeControl
+              required
               class="w-full mb-3"
             />
-            <!--
-<div>
-            <p-checkbox
-              [(ngModel)]="media.NSFW"
-              [binary]="true"
-              label="NSFW"
-              pTooltip="Is this image NSFW? as in 'this is a spicy post and is better to not see it in a classroom or a work environment'"
-              tooltipPosition="top"
+            <mat-checkbox
               [disabled]="media.adultContent"
-            ></p-checkbox>
-          </div>
-          <div>
-            <p-checkbox
-              [(ngModel)]="media.adultContent"
-              [binary]="true"
-              label="Adult Content"
+              [(ngModel)]="media.NSFW"
+              >NSFW</mat-checkbox
+            >
+            <mat-checkbox
               (ngModelChange)="adultContentUpdated(i)"
-              pTooltip="Not a spicy post, but actual adult NSFW content. This media will not be visible to minors nor people who is not logged in"
-              tooltipPosition="top"
-            ></p-checkbox>
-            <button
-              (click)="deleteImage(i)"
-              pButton
-              class="w-full p-button-danger"
-              label="Delete"
-              pTooltip="Deletes the image ON TOP of this button"
-              icon="pi pi-trash"
-            ></button>
-          </div>
-          --></div>
+              [(ngModel)]="media.adultContent"
+              >NSFW</mat-checkbox
+            >
+            <button mat-flat-button color="warn" (click)="deleteImage(i)">
+              Delete
+            </button>
+            </div>
         </div>
       </ng-container>
     </div>
