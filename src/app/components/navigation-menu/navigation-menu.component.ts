@@ -39,6 +39,7 @@ import {
   faCog,
 } from '@fortawesome/free-solid-svg-icons';
 import { MenuItem } from 'src/app/interfaces/menu-item';
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-navigation-menu',
@@ -65,7 +66,8 @@ export class NavigationMenuComponent implements OnInit, OnDestroy {
     private notificationsService: NotificationsService,
     private cdr: ChangeDetectorRef,
     private adminService: AdminService,
-    private dashboardService: DashboardService
+    private dashboardService: DashboardService,
+    private dialogService: MatDialog
   ) {
     this.loginSubscription = this.loginService.loginEventEmitter.subscribe(
       () => {
@@ -149,11 +151,10 @@ export class NavigationMenuComponent implements OnInit, OnDestroy {
         label: 'Write new post',
         title: 'Write a post',
         icon: faPencil,
-        command: () => {
-          this.editorService.launchPostEditorEmitter.next({
-            action: Action.New,
-          });
-          this.menuVisible = false;
+        command: async () => {
+          this.dialogService.open(
+            await this.editorService.getEditorComponent()
+          );
         },
         visible: this.jwtService.tokenValid(),
       },

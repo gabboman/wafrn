@@ -4,16 +4,16 @@ import { NavigationMenuComponent } from './navigation-menu.component';
 import { ReportPostModule } from '../report-post/report-post.module';
 import { RouterModule } from '@angular/router';
 import { DeletePostModule } from '../delete-post/delete-post.module';
-import {MatSidenavModule} from '@angular/material/sidenav';
-import {MatListModule} from '@angular/material/list';
+import { MatSidenavModule } from '@angular/material/sidenav';
+import { MatListModule } from '@angular/material/list';
 import { MenuItemComponent } from '../menu-item/menu-item.component';
 import { MatBadgeModule } from '@angular/material/badge';
 import { MatButtonModule } from '@angular/material/button';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { MatDialogModule } from '@angular/material/dialog';
+
 @NgModule({
-  declarations: [
-    NavigationMenuComponent
-  ],
+  declarations: [NavigationMenuComponent],
   imports: [
     CommonModule,
     ReportPostModule,
@@ -24,10 +24,9 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
     MenuItemComponent,
     MatBadgeModule,
     FontAwesomeModule,
-    MatButtonModule
+    MatButtonModule,
+    MatDialogModule,
   ],
-  exports: [
-    NavigationMenuComponent
-  ]
+  exports: [NavigationMenuComponent],
 })
-export class NavigationMenuModule { }
+export class NavigationMenuModule {}

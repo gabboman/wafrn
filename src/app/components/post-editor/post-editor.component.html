@@ -121,28 +121,40 @@
         <div class="col-12 md:col-6 my-4">
           <div class="w-full">
             <app-media-preview [media]="media"></app-media-preview>
-            <input
-              placeholder="Description. Please FILL THIS"
-              [(ngModel)]="media.description"
-              type="text"
-              matNativeControl
-              required
-              class="w-full mb-3"
-            />
-            <mat-checkbox
-              [disabled]="media.adultContent"
-              [(ngModel)]="media.NSFW"
-              >NSFW</mat-checkbox
-            >
-            <mat-checkbox
-              (ngModelChange)="adultContentUpdated(i)"
-              [(ngModel)]="media.adultContent"
-              >NSFW</mat-checkbox
-            >
-            <button mat-flat-button color="warn" (click)="deleteImage(i)">
-              Delete
-            </button>
+            <mat-form-field class="w-full">
+              <mat-label>Image Description</mat-label>
+              <input
+                placeholder="Description. Please FILL THIS"
+                [(ngModel)]="media.description"
+                type="text"
+                matNativeControl
+                required
+                class="w-full mb-3"
+              />
+            </mat-form-field>
+            <div>
+              <mat-checkbox
+                [disabled]="media.adultContent"
+                [(ngModel)]="media.NSFW"
+                class="w-full"
+                >NSFW</mat-checkbox
+              >
+              <mat-checkbox
+                class="w-full"
+                (ngModelChange)="adultContentUpdated(i)"
+                [(ngModel)]="media.adultContent"
+                >Adult content</mat-checkbox
+              >
+              <button
+                class="w-full"
+                mat-flat-button
+                color="warn"
+                (click)="deleteImage(i)"
+              >
+                Delete
+              </button>
             </div>
+          </div>
         </div>
       </ng-container>
     </div>
