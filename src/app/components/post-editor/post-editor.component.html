@@ -90,14 +90,18 @@
       ></button>
     </div>
   </quill-editor>
-  <!--
-<p-tag
-  severity="danger"
-  *ngIf="postCreatorContent?.includes('<img')"
-  value="You seem to have pasted images in the editor. The image will NOT be visible once you post. Please use the upload tool on the top bar of the editor"
-></p-tag>
--->
-
+  <button
+    mat-flat-button
+    color="danger"
+    *ngIf="postCreatorContent?.includes('<img')"
+  >
+    You seem to have pasted images in the editor. The image will NOT be visible
+    once you post. Please use the upload tool on the top bar of the editor
+  </button>
+  <button mat-flat-button color="warning" *ngIf="privacy === 10">
+    Attention! ADMINS both of your instance and the target instance can read the
+    DMs
+  </button>
   <mat-form-field class="w-full">
     <mat-label>Tags</mat-label>
     <input
@@ -111,15 +115,6 @@
     <span>#{{ tag }}</span>
   </a>
   }
-  <div class="mt-4 mb-2">
-    <!--
-<p-tag
-    class="p-fluid"
-    severity="info"
-    *ngIf="privacy.level === 10"
-    value="Attention! ADMINS both of your instance and the target instance can read the DMs"
-  ></p-tag>
-  --></div>
   <div>
     <div *ngIf="uploadedMedias.length < 4">
       <!--
