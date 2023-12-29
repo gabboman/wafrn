@@ -9,16 +9,24 @@ import { DeletePostService } from 'src/app/services/delete-post.service';
 import { SimplifiedUser } from 'src/app/interfaces/simplified-user';
 import { Action } from 'src/app/interfaces/editor-launcher-data';
 import { MessageService } from 'src/app/services/message.service';
-import { faArrowUpRightFromSquare, faChevronDown, faClockRotateLeft, faHeart, faHeartBroken, faRotateLeft, faShareNodes, faTriangleExclamation } from '@fortawesome/free-solid-svg-icons';
+import {
+  faArrowUpRightFromSquare,
+  faChevronDown,
+  faClockRotateLeft,
+  faHeart,
+  faHeartBroken,
+  faRotateLeft,
+  faShareNodes,
+  faTriangleExclamation,
+} from '@fortawesome/free-solid-svg-icons';
 import { MatDialog } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-post',
   templateUrl: './post.component.html',
-  styleUrls: ['./post.component.scss']
+  styleUrls: ['./post.component.scss'],
 })
 export class PostComponent implements OnInit {
-
   @Input() post!: ProcessedPost[];
   @Input() showFull: boolean = false;
   originalPoster!: SimplifiedUser;
@@ -51,8 +59,7 @@ export class PostComponent implements OnInit {
   reportIcon = faTriangleExclamation;
 
   // post seen
-  @Output() seenEmitter: EventEmitter<boolean> = new EventEmitter<boolean>()
-
+  @Output() seenEmitter: EventEmitter<boolean> = new EventEmitter<boolean>();
 
   constructor(
     private postService: PostsService,
@@ -65,105 +72,147 @@ export class PostComponent implements OnInit {
     private dialogService: MatDialog
   ) {
     this.userLoggedIn = loginService.checkUserLoggedIn();
-    if(this.userLoggedIn) {
+    if (this.userLoggedIn) {
       this.myId = loginService.getLoggedUserUUID();
     }
-   }
+  }
 
   ngOnInit(): void {
-    this.originalPoster = this.post[this.post.length - 1].user
+    this.originalPoster = this.post[this.post.length - 1].user;
     this.followedUsers = this.postService.followedUserIds;
-    this.postService.updateFollowers.subscribe( () => {
+    this.postService.updateFollowers.subscribe(() => {
       this.followedUsers = this.postService.followedUserIds;
-    } );
-    if(!this.showFull){
+    });
+    if (!this.showFull) {
       this.originalPostContent = this.post;
       this.post = this.post.slice(0, environment.shortenPosts);
 
-      if(this.originalPostContent.length === this.post.length) {
+      if (this.originalPostContent.length === this.post.length) {
         this.showFull = true;
       }
     }
   }
 
   async ngOnChanges(): Promise<void> {
-    this.avatars = this.post.map((elem) => elem.user.url.startsWith('@') ? this.cacheurl + encodeURIComponent(elem.user.avatar) : this.mediaBaseUrl + elem.user.avatar)
+    this.avatars = this.post.map((elem) =>
+      elem.user.url.startsWith('@')
+        ? this.cacheurl + encodeURIComponent(elem.user.avatar)
+        : this.mediaBaseUrl + elem.user.avatar
+    );
     this.ready = true;
     const notes = this.post[this.post.length - 1].notes;
     this.notes = notes.toString();
 
     // if the last post is an EMPTY reblog we evaluate the like of the parent.
-    const postToEvaluate = this.post[this.post.length - 1].content == '' && this.post[this.post.length - 1].tags.length == 0 && this.post.length > 1 ?
-      this.post[this.post.length -2] : this.post[this.post.length -1]
+    const postToEvaluate =
+      this.post[this.post.length - 1].content == '' &&
+      this.post[this.post.length - 1].tags.length == 0 &&
+      this.post.length > 1
+        ? this.post[this.post.length - 2]
+        : this.post[this.post.length - 1];
     this.finalPost = postToEvaluate;
 
-    this.showLikeFinalPost = postToEvaluate.userLikesPostRelations.includes(this.myId) ? 2 : 1
+    this.showLikeFinalPost = postToEvaluate.userLikesPostRelations.includes(
+      this.myId
+    )
+      ? 2
+      : 1;
 
-    if(postToEvaluate.userId === this.myId) {
+    if (postToEvaluate.userId === this.myId) {
       this.showLikeFinalPost = 0;
     }
-
-
   }
 
   async followUser(id: string) {
     const response = await this.postService.followUser(id);
-    if(response) {
-      this.messages.add({ severity: 'success', summary: 'You now follow this user!' });
+    if (response) {
+      this.messages.add({
+        severity: 'success',
+        summary: 'You now follow this user!',
+      });
     } else {
-      this.messages.add({ severity: 'error', summary: 'Something went wrong! Check your internet conectivity and try again' });
+      this.messages.add({
+        severity: 'error',
+        summary:
+          'Something went wrong! Check your internet conectivity and try again',
+      });
     }
   }
 
   async unfollowUser(id: string) {
     const response = await this.postService.unfollowUser(id);
-    if(response) {
-      this.messages.add({ severity: 'success', summary: 'You no longer follow this user!' });
+    if (response) {
+      this.messages.add({
+        severity: 'success',
+        summary: 'You no longer follow this user!',
+      });
     } else {
-      this.messages.add({ severity: 'error', summary: 'Something went wrong! Check your internet conectivity and try again' });
+      this.messages.add({
+        severity: 'error',
+        summary:
+          'Something went wrong! Check your internet conectivity and try again',
+      });
     }
-
   }
 
   launchReblog() {
     this.editorService.launchPostEditorEmitter.next({
       post: this.finalPost,
-      action: Action.Response
+      action: Action.Response,
     });
   }
 
   async quickReblog(id: string) {
     this.loadingAction = true;
-    const postToBeReblogged = this.post.find(elem => elem.id === id);
-    if(postToBeReblogged?.privacy === 0) {
-      const response = await this.editor.createPost('', 0,  '', id );
-      if(response) {
-        this.messages.add({ severity: 'success', summary: 'You reblogged the post succesfully' });
+    const postToBeReblogged = this.post.find((elem) => elem.id === id);
+    if (postToBeReblogged?.privacy === 0) {
+      const response = await this.editor.createPost('', 0, '', id);
+      if (response) {
+        this.messages.add({
+          severity: 'success',
+          summary: 'You reblogged the post succesfully',
+        });
       } else {
-        this.messages.add({ severity: 'error', summary: 'Something went wrong! Check your internet conectivity and try again' });
+        this.messages.add({
+          severity: 'error',
+          summary:
+            'Something went wrong! Check your internet conectivity and try again',
+        });
       }
     } else {
-      this.messages.add({ severity: 'warn', summary: 'Sorry, this post is not rebloggeable as requested by the user' });
-
+      this.messages.add({
+        severity: 'warn',
+        summary:
+          'Sorry, this post is not rebloggeable as requested by the user',
+      });
     }
     this.loadingAction = false;
   }
 
   sharePost(id: string) {
     navigator.clipboard.writeText(`${environment.frontUrl}/post/${id}`);
-    this.messages.add({ severity: 'success', summary: 'The post URL was copied to your clipboard!' });
-
+    this.messages.add({
+      severity: 'success',
+      summary: 'The post URL was copied to your clipboard!',
+    });
   }
 
   shareOriginalPost(url: string) {
     navigator.clipboard.writeText(url);
-    this.messages.add({ severity: 'success', summary: 'The external url has been copied!' });
+    this.messages.add({
+      severity: 'success',
+      summary: 'The external url has been copied!',
+    });
   }
 
   async replyPost(post: ProcessedPost) {
-    const dialogRef = this.dialogService.open(await this.editorService.getEditorComponent(), {
-      data: {post},
-    });
+    const dialogRef = this.dialogService.open(
+      await this.editorService.getEditorComponent(),
+      {
+        data: { post },
+        width: '100%',
+      }
+    );
   }
 
   reportPost(post: ProcessedPost) {
@@ -184,44 +233,52 @@ export class PostComponent implements OnInit {
 
   expandPost() {
     this.post = this.originalPostContent;
-    this.showFull =true
+    this.showFull = true;
   }
 
   dismissContentWarning() {
-    this.post.forEach(elem => {
+    this.post.forEach((elem) => {
       elem.content_warning = '';
-    })
-    this.originalPostContent.forEach(elem => {
-      elem.content_warning = ''
-    })
+    });
+    this.originalPostContent.forEach((elem) => {
+      elem.content_warning = '';
+    });
   }
 
-
-  async likePost( postToLike: ProcessedPost) {
+  async likePost(postToLike: ProcessedPost) {
     this.loadingAction = true;
-    if(await this.postService.likePost(postToLike.id)) {
+    if (await this.postService.likePost(postToLike.id)) {
       postToLike.userLikesPostRelations.push(this.myId);
       this.ngOnChanges();
-      this.messages.add({ severity: 'success', summary: 'You successfully liked this post' });
+      this.messages.add({
+        severity: 'success',
+        summary: 'You successfully liked this post',
+      });
     } else {
-      this.messages.add({ severity: 'error', summary: 'Something went wrong. Please try again' });
-
+      this.messages.add({
+        severity: 'error',
+        summary: 'Something went wrong. Please try again',
+      });
     }
     this.loadingAction = false;
-
   }
 
   async unlikePost(postToUnlike: ProcessedPost) {
     this.loadingAction = true;
-    if(await this.postService.unlikePost(postToUnlike.id)) {
-      postToUnlike.userLikesPostRelations =  postToUnlike.userLikesPostRelations.filter(elem => elem != this.myId)
+    if (await this.postService.unlikePost(postToUnlike.id)) {
+      postToUnlike.userLikesPostRelations =
+        postToUnlike.userLikesPostRelations.filter((elem) => elem != this.myId);
       this.ngOnChanges();
-      this.messages.add({ severity: 'success', summary: 'You no longer like this post' });
+      this.messages.add({
+        severity: 'success',
+        summary: 'You no longer like this post',
+      });
     } else {
-      this.messages.add({ severity: 'error', summary: 'Something went wrong. Please try again' });
+      this.messages.add({
+        severity: 'error',
+        summary: 'Something went wrong. Please try again',
+      });
     }
     this.loadingAction = false;
   }
-
 }
-

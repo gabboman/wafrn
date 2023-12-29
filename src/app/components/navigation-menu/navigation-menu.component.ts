@@ -153,7 +153,10 @@ export class NavigationMenuComponent implements OnInit, OnDestroy {
         icon: faPencil,
         command: async () => {
           this.dialogService.open(
-            await this.editorService.getEditorComponent()
+            await this.editorService.getEditorComponent(),
+            {
+              width: '100%',
+            }
           );
         },
         visible: this.jwtService.tokenValid(),
