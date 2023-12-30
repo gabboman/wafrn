@@ -1,8 +1,5 @@
 import { Component, Injector, OnInit } from '@angular/core';
 import { SwUpdate } from '@angular/service-worker';
-import { PrimeNGConfig } from 'primeng/api';
-import { createCustomElement } from '@angular/elements';
-import { Router } from '@angular/router';
 import { LoginService } from './services/login.service';
 
 
@@ -16,7 +13,6 @@ export class AppComponent implements OnInit {
 
   constructor(
     private swUpdate: SwUpdate,
-    private primengConfig: PrimeNGConfig,
     private injector: Injector,
     private loginService: LoginService
   ) {
@@ -24,8 +20,6 @@ export class AppComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.primengConfig.ripple = true;
-
       if (this.swUpdate.isEnabled) {
         this.swUpdate.checkForUpdate().then((updateAvaiable) => {
           if(updateAvaiable && confirm("You're using an old version of wafrn, do you want to update?")) {
@@ -36,7 +30,4 @@ export class AppComponent implements OnInit {
   }
 }
 
-function platformId(platformId: any) {
-  throw new Error('Function not implemented.');
-}
 

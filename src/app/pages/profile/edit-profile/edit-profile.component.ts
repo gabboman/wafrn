@@ -1,10 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
-import { MessageService } from 'primeng/api';
 import { DashboardService } from 'src/app/services/dashboard.service';
 import { JwtService } from 'src/app/services/jwt.service';
 import { LoginService } from 'src/app/services/login.service';
 import { MediaService } from 'src/app/services/media.service';
+import { MessageService } from 'src/app/services/message.service';
 import { ThemeService } from 'src/app/services/theme.service';
 
 @Component({

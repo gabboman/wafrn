@@ -1,5 +1,4 @@
 import { Component } from '@angular/core';
-import { FileUploadEvent } from 'primeng/fileupload';
 import { environment } from 'src/environments/environment';
 
 @Component({

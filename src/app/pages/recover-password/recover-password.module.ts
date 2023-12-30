@@ -1,36 +1,36 @@
-import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
 import { RecoverPasswordComponent } from './recover-password.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { CardModule } from 'primeng/card';
 import { RouterModule, Routes } from '@angular/router';
-import { ButtonModule } from 'primeng/button';
-import { KeyFilterModule } from 'primeng/keyfilter';
-import { InputTextModule } from 'primeng/inputtext';
+import { NgModule } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { MatCardModule } from '@angular/material/card';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatButtonModule } from '@angular/material/button';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 
 const routes: Routes = [
-      {
-        path: '',
-        component: RecoverPasswordComponent
-      }
-    ];
-
+  {
+    path: '',
+    component: RecoverPasswordComponent,
+  },
+];
 
 @NgModule({
-  declarations: [
-    RecoverPasswordComponent
-  ],
+  declarations: [RecoverPasswordComponent],
   imports: [
     CommonModule,
     FormsModule,
     ReactiveFormsModule,
-    CardModule,
-    ButtonModule,
-    KeyFilterModule,
-    InputTextModule,
-    RouterModule.forChild(routes)
+    MatCardModule,
+    MatDatepickerModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatButtonModule,
+    FontAwesomeModule,
+    RouterModule.forChild(routes),
   ],
-  exports: [
-  ]
+  exports: [],
 })
-export class RecoverPasswordModule { }
+export class RecoverPasswordModule {}

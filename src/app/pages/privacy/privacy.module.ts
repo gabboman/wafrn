@@ -1,27 +1,18 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { PrivacyComponent } from './privacy.component';
-import { CardModule } from 'primeng/card';
 import { Route, RouterModule } from '@angular/router';
-
-
+import { MatCardModule } from '@angular/material/card';
 
 const routes: Route[] = [
-    {
-      path: '',
-      component: PrivacyComponent
-    }
-  ];
+  {
+    path: '',
+    component: PrivacyComponent,
+  },
+];
 
 @NgModule({
-  declarations: [
-    PrivacyComponent
-  ],
-  imports: [
-    CommonModule,
-    CardModule,
-    RouterModule.forChild(routes)
-
-  ]
+  declarations: [PrivacyComponent],
+  imports: [CommonModule, RouterModule.forChild(routes), MatCardModule],
 })
-export class PrivacyModule { }
+export class PrivacyModule {}

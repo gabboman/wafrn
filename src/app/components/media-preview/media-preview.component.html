@@ -1,7 +1,22 @@
-<div  *ngIf="!success" class="w-full" style="height: 25vh;">
-  <p-progressSpinner></p-progressSpinner>
+<div *ngIf="!success" class="w-full" style="height: 25vh">
+  <mat-spinner></mat-spinner>
 </div>
-<div *ngIf="media && success" class="w-full flex align-items-center justify-content-center" style="height: 25vh">
-  <img  *ngIf="media.url.endsWith('webp')" style="max-height: 25vh; max-width: 100%;" [src]="elemUrl" (error)="imageLoadFailed($event)">
-  <video  *ngIf="media.url.endsWith('mp4')" style="max-height: 25vh; max-width: 100%;" [src]="elemUrl" (error)="imageLoadFailed($event)"></video>
+<div
+  *ngIf="media && success"
+  class="w-full flex align-items-center justify-content-center"
+  style="height: 25vh"
+>
+  <img
+    alt="loading"
+    *ngIf="media.url.endsWith('webp')"
+    style="max-height: 25vh; max-width: 100%"
+    [src]="elemUrl"
+    (error)="imageLoadFailed($event)"
+  />
+  <video
+    *ngIf="media.url.endsWith('mp4')"
+    style="max-height: 25vh; max-width: 100%"
+    [src]="elemUrl"
+    (error)="imageLoadFailed($event)"
+  ></video>
 </div>

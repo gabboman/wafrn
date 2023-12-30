@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { MessageService } from 'primeng/api';
 import { environment } from 'src/environments/environment';
+import { MessageService } from './message.service';
 
 @Injectable({
   providedIn: 'root'

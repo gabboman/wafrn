@@ -1,11 +1,8 @@
-
 {
   "$schema": "./node_modules/@angular/cli/lib/config/schema.json",
   "cli": {
     "analytics": "2ed75e61-714f-4d01-bf90-aa49cf351d90",
-    "schematicCollections": [
-      "@angular-eslint/schematics"
-    ]
+    "schematicCollections": ["@angular-eslint/schematics"]
   },
   "version": 1,
   "newProjectRoot": "projects",
@@ -33,10 +30,7 @@
             "polyfills": "src/polyfills.ts",
             "tsConfig": "tsconfig.app.json",
             "inlineStyleLanguage": "scss",
-            "allowedCommonJsDependencies": [
-              "dompurify",
-              "quill"
-            ],
+            "allowedCommonJsDependencies": ["dompurify", "quill"],
             "assets": [
               "src/favicon.ico",
               "src/assets",
@@ -45,41 +39,40 @@
             ],
             "styles": [
               {
-                "input": "node_modules/primeicons/primeicons.css",
+                "input": "@angular/material/prebuilt-themes/purple-green.css",
                 "inject": false,
-                "bundleName": "primeng-data"
+                "bundleName": "wafrn-css"
               },
               {
-                "input": "node_modules/primeng/resources/themes/bootstrap4-dark-purple/theme.css",
+                "input": "node_modules/primeflex/primeflex.css",
                 "inject": false,
-                "bundleName": "primeng-data"
+                "bundleName": "wafrn-css"
               },
               {
-                "input": "node_modules/primeng/resources/primeng.min.css",
+                "input": "node_modules/primeflex/themes/primeone-dark.css",
                 "inject": false,
-                "bundleName": "primeng-data"
-              },
-              {
-                "input": "node_modules/primeflex/primeflex.min.css",
-                "inject": false,
-                "bundleName": "primeng-data"
+                "bundleName": "wafrn-css"
               },
               {
                 "input": "node_modules/quill/dist/quill.snow.css",
                 "inject": false,
-                "bundleName": "quill-css"
+                "bundleName": "wafrn-css"
               },
               {
                 "input": "node_modules/quill/dist/quill.core.css",
                 "inject": false,
-                "bundleName": "quill-css"
+                "bundleName": "wafrn-css"
               },
               {
                 "input": "node_modules/quill-mention/dist/quill.mention.min.css",
                 "inject": false,
-                "bundleName": "quill-css"
+                "bundleName": "wafrn-css"
               },
-              "src/styles.scss"
+              {
+                "input": "src/styles.scss",
+                "inject": false,
+                "bundleName": "wafrn-css"
+              }
             ],
             "scripts": [],
             "serviceWorker": true,
@@ -90,7 +83,7 @@
               "budgets": [
                 {
                   "type": "initial",
-                  "maximumWarning": "1.25mb",
+                  "maximumWarning": "750kb",
                   "maximumError": "5mb"
                 },
                 {
@@ -171,6 +164,7 @@
               "src/manifest.webmanifest"
             ],
             "styles": [
+              "@angular/material/prebuilt-themes/purple-green.css",
               "src/styles.scss"
             ],
             "scripts": []
@@ -179,10 +173,7 @@
         "lint": {
           "builder": "@angular-eslint/builder:lint",
           "options": {
-            "lintFilePatterns": [
-              "src/**/*.ts",
-              "src/**/*.html"
-            ]
+            "lintFilePatterns": ["src/**/*.ts", "src/**/*.html"]
           }
         }
       }

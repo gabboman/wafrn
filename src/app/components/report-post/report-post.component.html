@@ -1,3 +1,4 @@
+<!--
 <p-dialog [(visible)]="visible" header="Report a post" [modal]="true">
   <div class="p-grid pt-4">
     <form [formGroup]="reportForm" (submit)="submit()">
@@ -32,3 +33,31 @@
     </form>
   </div>
 </p-dialog>
+-->
+<h2 mat-dialog-title>
+  Ok let's report the post but first we need more information
+</h2>
+<form [formGroup]="reportForm" (submit)="submit()">
+  <mat-form-field class="w-full">
+    <mat-label>Severity</mat-label>
+    <mat-select [required]="true" formControlName="severity">
+      @for(option of reportOptions; track option) {
+      <mat-option [value]="option.value">{{ option.label }}</mat-option>
+      }
+    </mat-select>
+  </mat-form-field>
+  <mat-form-field class="w-full">
+    <mat-label>Description</mat-label>
+    <textarea
+      required
+      matNativeControl
+      formControlName="description"
+    ></textarea>
+  </mat-form-field>
+  <mat-checkbox class="w-full" formControlName="block"
+    >Block this user</mat-checkbox
+  >
+  <button mat-flat-button color="warn" class="w-full" type="submit">
+    Report
+  </button>
+</form>

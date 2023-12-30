@@ -1,40 +1,88 @@
-<div class="grid pb-6 lg:px-4 scalein  wafrn-container">
-  <div class="col-12 wafrn-post">
-    <p-card>
-      <div class="text-center mb-5">
-        <img loading="lazy" [src]="logo" alt="Image" height="50" class="mb-3">
-        <div class="text-900 text-3xl font-medium mb-3">Welcome! We hope you enjoy this place!</div>
-        <span class="text-600 font-medium line-height-3">Do you have an account?</span>
-        <a routerLink="/login" class="font-medium no-underline ml-2 text-blue-500 cursor-pointer">Just log in!</a>
-      </div>
-
-      <form [hidden]="loading" [formGroup]="loginForm" (ngSubmit)="onSubmit()">
-        <label for="email" class="block text-900 font-medium mb-2">Email</label>
-        <input formControlName="email" id="email" type="email" pInputText class="w-full mb-3">
-
-        <label for="password1" class="block text-900 font-medium mb-2">Password</label>
-        <input formControlName="password" id="password1" type="password" pInputText class="w-full mb-3">
-
-        <label for="url" class="block text-900 font-medium mb-2">Public username (your url)</label>
-        <input formControlName="url" pTooltip="Right now we do not allow special characters nor spaces."
-          tooltipPosition="top" id="url" type="text" pKeyFilter="alphanum" pInputText class="w-full mb-3">
-
-        <label for="description" class="block text-900 font-medium mb-2">Describe yourself!</label>
-        <input formControlName="description" id="description" type="text"
-          pTooltip="You can write some tags here so you will appear in some searches" tooltipPosition="top" pInputText
-          class="w-full mb-3">
-
-        <label for="birthDate" class="block text-900 font-medium mb-2">Your birth date</label>
-        <p-calendar [maxDate]="minimumRegistrationDate" id="birthDate" [minDate]="minDate" [defaultDate]="minimumRegistrationDate" formControlName="birthDate" [readonlyInput]="true" [touchUI]="true"
-          styleClass="w-full mb-3"></p-calendar>
-
-        <label for="avatar" class="block text-900 font-medium mb-2">Upload your avatar</label>
-        <input formControlName="avatar" id="avatar" type="file" accept="image/jpeg,image/png,image/webp,image/gif"
-          (change)="imgSelected($event)" pTooltip="Select your avatar" tooltipPosition="top" pInputText
-          class="w-full mb-3">
-        <button [disabled]="loading || !loginForm.valid" pButton pRipple label="Register" icon="pi pi-user"
-          class="w-full"></button>
-      </form>
-    </p-card>
+<mat-card class="p-3 mb-6 lg:mx-4 scalein wafrn-container">
+  <div class="text-center mb-5">
+    <img loading="lazy" [src]="logo" alt="Image" height="50" class="mb-3" />
+    <div class="text-900 text-3xl font-medium mb-3">
+      Welcome! We hope you enjoy this place!
+    </div>
+    <span class="text-600 font-medium line-height-3"
+      >Do you have an account?</span
+    >
+    <a routerLink="/login" class="font-medium no-underline ml-2 cursor-pointer"
+      >Just log in!</a
+    >
   </div>
-</div>
+
+  <form [hidden]="loading" [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+    <mat-form-field class="w-full">
+      <mat-label>Email</mat-label>
+      <input formControlName="email" type="email" matInput />
+    </mat-form-field>
+
+    <mat-form-field class="w-full">
+      <mat-label>Password</mat-label>
+      <input formControlName="password" type="password" matInput />
+    </mat-form-field>
+
+    <mat-form-field class="w-full mb-3">
+      <mat-label>Your username</mat-label>
+      <input formControlName="url" type="text" matInput />
+      <mat-hint
+        >Right now we do not allow special characters nor spaces</mat-hint
+      >
+    </mat-form-field>
+
+    <mat-form-field class="w-full mb-3">
+      <mat-label>Describe yourself</mat-label>
+      <input formControlName="description" type="text" matInput />
+      <mat-hint
+        >A short description of yourself so other people can know who you
+        are</mat-hint
+      >
+    </mat-form-field>
+
+    <mat-form-field class="w-full mb-3">
+      <mat-label>Your birth date</mat-label>
+      <input
+        formControlName="birthDate"
+        matInput
+        [min]="minDate"
+        [max]="minimumRegistrationDate"
+        [matDatepicker]="picker"
+      />
+      <mat-hint>MM/DD/YYYY</mat-hint>
+      <mat-datepicker-toggle
+        matIconSuffix
+        [for]="picker"
+      ></mat-datepicker-toggle>
+      <mat-datepicker #picker></mat-datepicker>
+    </mat-form-field>
+
+    <div class="pt-2 px-3 border-round-md" style="border: 1px solid #999">
+      <label for="avatar" class="block text-900 font-medium mb-2"
+        >Upload your avatar</label
+      >
+      <input
+        formControlName="avatar"
+        id="avatar"
+        type="file"
+        accept="image/jpeg,image/png,image/webp,image/gif"
+        (change)="imgSelected($event)"
+        pTooltip="Select your avatar"
+        tooltipPosition="top"
+        pInputText
+        class="w-full mb-3"
+      />
+    </div>
+    <button
+      color="primary"
+      mat-flat-button
+      color="primary"
+      extended
+      [disabled]="loading || !loginForm.valid"
+      class="w-full border-round-md mt-4"
+    >
+      <fa-icon [icon]="faUser"></fa-icon>
+      Register
+    </button>
+  </form>
+</mat-card>

@@ -1,7 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { PagenotfoundComponent } from './pagenotfound.component';
-import { CardModule } from 'primeng/card';
 import { RouterModule, Routes } from '@angular/router';
 
 const routes: Routes = [
@@ -17,7 +16,6 @@ const routes: Routes = [
   ],
   imports: [
     CommonModule,
-    CardModule,
     RouterModule.forChild(routes)
   ],
   exports: [

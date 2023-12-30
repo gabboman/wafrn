@@ -1,35 +1,34 @@
-import { Component, OnInit } from '@angular/core';
-import { UntypedFormGroup, UntypedFormControl, Validators } from '@angular/forms';
-import { MessageService } from 'primeng/api';
+import { Component } from '@angular/core';
+import {
+  UntypedFormGroup,
+  UntypedFormControl,
+  Validators,
+} from '@angular/forms';
+import { faUser } from '@fortawesome/free-solid-svg-icons';
 import { LoginService } from 'src/app/services/login.service';
+import { MessageService } from 'src/app/services/message.service';
 import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-recover-password',
   templateUrl: './recover-password.component.html',
-  styleUrls: ['./recover-password.component.scss']
+  styleUrls: ['./recover-password.component.scss'],
 })
-export class RecoverPasswordComponent implements OnInit {
-
-
-
+export class RecoverPasswordComponent {
   loading = false;
   logo = environment.logo;
+  icon = faUser;
 
   loginForm = new UntypedFormGroup({
-    email:  new UntypedFormControl('', [Validators.required, Validators.email]),
+    email: new UntypedFormControl('', [Validators.required, Validators.email]),
   });
 
   constructor(
     private loginService: LoginService,
-    private messageService: MessageService,
-  ) { }
+    private messageService: MessageService
+  ) {}
 
-  ngOnInit(): void {
-  }
-
-
-  async onSubmit(){
+  async onSubmit() {
     this.loading = true;
     await this.loginService.requestPasswordReset(this.loginForm.value.email);
     this.loading = false;

@@ -1,20 +1,26 @@
-<p-dialog
-  [hidden]="!editorVisible"
-  [header]="idPostToReblog ? 'Reblog a post' : 'Create new post'"
-  [(visible)]="editorVisible"
-  [modal]="true"
-  [maximizable]="true"
->
+<h2 mat-dialog-title *ngIf="idPostToReblog">
+  You are replying to the post. Your followers will see the full thread with
+  your reply on it.
+</h2>
 
-  <h2 *ngIf="idPostToReblog">
-    You are replying to the post. Your followers will see the full thread with your reply on it.
-  </h2>
+<mat-dialog-content>
   <div class="mt-4 mb-2">
-    <p-dropdown [disabled]="!enablePrivacyEdition" class="p-fluid" [options]="privacyOptions" [(ngModel)]="privacy" optionLabel="name"></p-dropdown>
-    <input [(ngModel)]="contentWarning" pInputText class="w-full" placeholder="Content warning">
+    <mat-form-field class="w-full">
+      <mat-label>Content warning</mat-label>
+      <input [(ngModel)]="contentWarning" matNativeControl />
+    </mat-form-field>
   </div>
-  <quill-editor #quill class="w-full" [(ngModel)]="postCreatorContent"  [modules]="modules" [customOptions]="customOptions" >
-    <div quill-editor-toolbar style="border-top-left-radius: 5px; border-top-right-radius: 5px;">
+  <quill-editor
+    #quill
+    class="w-full"
+    [(ngModel)]="postCreatorContent"
+    [modules]="modules"
+    [customOptions]="customOptions"
+  >
+    <div
+      quill-editor-toolbar
+      style="border-top-left-radius: 5px; border-top-right-radius: 5px"
+    >
       <select class="ql-size" title="Text Size">
         <option value="small"></option>
         <option selected></option>
@@ -32,57 +38,142 @@
         <select class="ql-color"></select>
         <select class="ql-background"></select>
       </span>
-      <button pButton type="button" class="ql-bold" aria-label="Bold" title="Bold"></button>
-      <button pButton type="button" class="ql-italic" aria-label="Italic" title="Italic"></button>
-      <button pButton type="button" class="ql-underline" aria-label="Underline" title="Underline"></button>
-      <button pButton type="button" class="ql-strike" aria-label="Strike" title="Strike"></button>
-      <button pButton type="button" class="ql-link" aria-label="Insert Link" title="Insert Link"></button>
-      <button pButton type="button" class="ql-code-block" aria-label="Code block" title="Code block"></button>
+      <button
+        pButton
+        type="button"
+        class="ql-bold"
+        aria-label="Bold"
+        title="Bold"
+      ></button>
+      <button
+        pButton
+        type="button"
+        class="ql-italic"
+        aria-label="Italic"
+        title="Italic"
+      ></button>
+      <button
+        pButton
+        type="button"
+        class="ql-underline"
+        aria-label="Underline"
+        title="Underline"
+      ></button>
+      <button
+        pButton
+        type="button"
+        class="ql-strike"
+        aria-label="Strike"
+        title="Strike"
+      ></button>
+      <button
+        pButton
+        type="button"
+        class="ql-link"
+        aria-label="Insert Link"
+        title="Insert Link"
+      ></button>
+      <button
+        pButton
+        type="button"
+        class="ql-code-block"
+        aria-label="Code block"
+        title="Code block"
+      ></button>
     </div>
   </quill-editor>
-  <p-tag severity="danger" *ngIf="postCreatorContent?.includes('<img')"   value="You seem to have pasted images in the editor. The image will NOT be visible once you post. Please use the upload tool on the top bar of the editor"></p-tag>
-  <p-chips class="p-fluid" [(ngModel)]="tags" separator="," placeholder="Tags separated by commas."></p-chips>
-  <div class="mt-4 mb-2">
-    <p-tag class="p-fluid" severity="info" *ngIf="privacy.level === 10"  value="Attention! ADMINS both of your instance and the target instance can read the DMs"></p-tag>
-  </div>
+  <button
+    mat-flat-button
+    color="danger"
+    *ngIf="postCreatorContent?.includes('<img')"
+  >
+    You seem to have pasted images in the editor. The image will NOT be visible
+    once you post. Please use the upload tool on the top bar of the editor
+  </button>
+  <button mat-flat-button color="warning" *ngIf="privacy === 10">
+    Attention! ADMINS both of your instance and the target instance can read the
+    DMs
+  </button>
+  <mat-form-field class="w-full">
+    <mat-label>Tags</mat-label>
+    <input
+      [(ngModel)]="tags"
+      placeholder="Separated by commas"
+      matNativeControl
+    />
+  </mat-form-field>
+  @for(tag of tags.split(','); track tag) {
+  <a *ngIf="tag" mat-flat-button color="primary" class="tag">
+    <span>#{{ tag }}</span>
+  </a>
+  }
   <div>
     <div *ngIf="uploadedMedias.length < 4">
-      <p-fileUpload name="image" [url]="uploadImageUrl" [multiple]="false"
-      accept="image/jpeg,image/png,image/webp,image/gif,video/mp4,video/quicktime,video/webm,.mkv,audio/mpeg,audio/*" [auto]="true" (onUpload)="uploadImage($event)"
-      [maxFileSize]="maxFileUploadSize" chooseLabel="Upload image, video or audio">
-    </p-fileUpload>
+      <app-file-upload (fileUpload)="uploadImage($event)"></app-file-upload>
     </div>
     <div *ngIf="uploadedMedias.length >= 4">
-      Due some fediverse limitations, we can only have 4 medias per post. Adding more would break how the post is seen in other places. Sorry for the inconvenience
+      Due some fediverse limitations, we can only have 4 medias per post. Adding
+      more would break how the post is seen in other places. Sorry for the
+      inconvenience
     </div>
     <div class="grid">
       <ng-container *ngFor="let media of uploadedMedias; let i = index">
         <div class="col-12 md:col-6 my-4">
           <div class="w-full">
             <app-media-preview [media]="media"></app-media-preview>
-            <input placeholder="Description. Please FILL THIS" [(ngModel)]="media.description" id="description" type="text"
-              pTooltip="Images description. Useful in the case of someone using a screen reader, or when the image does not load properly."
-              tooltipPosition="top" pInputText class="w-full mb-3">
-              <div>
-                <p-checkbox [(ngModel)]="media.NSFW" [binary]="true" label="NSFW"
-                pTooltip="Is this image NSFW? as in 'this is a spicy post and is better to not see it in a classroom or a work environment'"
-                tooltipPosition="top"
+            <mat-form-field class="w-full">
+              <mat-label>Image Description</mat-label>
+              <input
+                placeholder="Description. Please FILL THIS"
+                [(ngModel)]="media.description"
+                type="text"
+                matNativeControl
+                required
+                class="w-full mb-3"
+              />
+            </mat-form-field>
+            <div>
+              <mat-checkbox
                 [disabled]="media.adultContent"
-                ></p-checkbox>
-              </div>
-              <div>
-                <p-checkbox [(ngModel)]="media.adultContent" [binary]="true" label="Adult Content"
+                [(ngModel)]="media.NSFW"
+                class="w-full"
+                >NSFW</mat-checkbox
+              >
+              <mat-checkbox
+                class="w-full"
                 (ngModelChange)="adultContentUpdated(i)"
-                pTooltip="Not a spicy post, but actual adult NSFW content. This media will not be visible to minors nor people who is not logged in"
-                tooltipPosition="top"
-                ></p-checkbox>
-                <button (click)="deleteImage(i)" pButton class="w-full p-button-danger" label="Delete" pTooltip="Deletes the image ON TOP of this button" icon="pi pi-trash"></button>
-              </div>
+                [(ngModel)]="media.adultContent"
+                >Adult content</mat-checkbox
+              >
+              <button
+                class="w-full"
+                mat-flat-button
+                color="warn"
+                (click)="deleteImage(i)"
+              >
+                Delete
+              </button>
+            </div>
           </div>
         </div>
       </ng-container>
     </div>
   </div>
-  <button pButton class="w-full" [label]="idPostToReblog ? 'Publish reply to post' : 'Publish post'" [disabled]="postBeingSubmitted" (click)="submitPost()"></button>
-
-</p-dialog>
+  <mat-form-field class="w-full">
+    <mat-label>Privacy</mat-label>
+    <mat-select [required]="true" [(value)]="privacy">
+      @for(option of privacyOptions; track option) {
+      <mat-option [value]="option.level">{{ option.name }}</mat-option>
+      }
+    </mat-select>
+  </mat-form-field>
+  <button
+    mat-flat-button
+    color="primary"
+    class="w-full"
+    [disabled]="postBeingSubmitted"
+    (click)="submitPost()"
+  >
+    {{ idPostToReblog ? "Publish reply to post" : "Publish post" }}
+  </button>
+</mat-dialog-content>

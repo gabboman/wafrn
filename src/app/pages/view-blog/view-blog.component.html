@@ -1,54 +1,83 @@
-<div *ngIf="!loading && found" class="wafrn-container lg:px-4">
-  <div id="firstPost" class="col-12 pb-6">
-    <p-card class="align-items-center">
-      <div class="flex justify-content-center flex-wrap">
-        <img loading="lazy" style="max-width: 100%; max-height: 15vh;" [src]="avatarUrl">
-      </div>
-      <div class="flex justify-content-center flex-wrap">
-        <div [innerText]="blogDetails.url" class="text-600 text-xl font-medium line-height-3"></div>
-      </div>
-      <div class="flex justify-content-center flex-wrap">
-        <div [innerText]="blogDetails.name" class="text-600 text-xl font-medium line-height-3"></div>
-      </div>
-      <div class="flex justify-content-center flex-wrap mt-4 mb-2">
-        <div [innerHtml]="blogDetails.description" class="text-600 font-medium line-height-3"></div>
-      </div>
-      <div *ngIf="blogDetails.url.startsWith('@')">
-        Attention! This is an external user, and the profile might not be complete. To check this user's complete profile in their instanc <a [href]="blogDetails.remoteId" target="_blank"> click here</a>.</div>
-      <div class="flex align-items-center justify-content-center w-full" style="margin-top: 1em">
-        <p-splitButton [model]="splitButtonItems" *ngIf="followedUsers.indexOf(blogDetails.id) === -1 && userLoggedIn" pRipple label="Follow"
-        (onClick)="followUser(blogDetails.id)"></p-splitButton>
-<p-splitButton [model]="splitButtonItems" *ngIf="followedUsers.indexOf(blogDetails.id) !== -1 && userLoggedIn" pRipple label="Unfollow"
-        (onClick)="unfollowUser(blogDetails.id)"></p-splitButton>
-      </div>
-
-    </p-card>
+@if (found) { @if (!loading) {
+<mat-card class="wafrn-container p-3 lg:mx-4 mb-6">
+  <div class="flex justify-content-center mb-2">
+    <img
+      loading="lazy"
+      style="max-width: 100%; max-height: 15vh"
+      [src]="avatarUrl"
+      alt="user avatar"
+      class="border-round-md"
+    />
   </div>
-</div>
-
-
-<div *ngFor="let post of posts" defer (onLoad)="countViewedPost()">
-  <ng-template>
-  </ng-template>
+  <div class="flex justify-content-center flex-wrap">
+    <div
+      [innerText]="blogDetails.name"
+      class="text-xl font-medium line-height-3"
+    ></div>
+  </div>
+  <div class="flex justify-content-center flex-wrap mb-2">
+    <div [innerText]="blogDetails.url" class="text-600 line-height-3"></div>
+  </div>
+  @if (userLoggedIn) { @if (followedUsers.indexOf(blogDetails.id) === -1) {
+  <button
+    mat-flat-button
+    color="primary"
+    class="w-min mx-auto"
+    (click)="followUser(blogDetails.id)"
+  >
+    Follow
+  </button>
+  } @else {
+  <button
+    mat-flat-button
+    color="warn"
+    class="w-min mx-auto"
+    (click)="unfollowUser(blogDetails.id)"
+  >
+    Unfollow
+  </button>
+  } }
+  <div class="flex justify-content-center flex-wrap mt-3 mb-2">
+    <div [innerHtml]="blogDetails.description"></div>
+  </div>
+  <div class="mt-6 text-600 text-sm" *ngIf="blogDetails.url.startsWith('@')">
+    <strong>Attention!</strong>
+    This is an external user, and the profile might not be complete.
+    <br />
+    To check this user's complete profile in their instance
+    <a [href]="blogDetails.remoteId" target="_blank"> click here</a>.
+  </div>
+</mat-card>
+}
+<div *ngFor="let post of posts; let indexOfelement = index">
+  <ng-template> </ng-template>
   <app-post [post]="post"></app-post>
 </div>
+<footer class="p-4 flex gap-3 align-items-center">
+  <mat-spinner *ngIf="!noMorePosts" diameter="42"></mat-spinner>
+  <p
+    [hidden]="loading || noMorePosts"
+    id="if-you-see-this-load-more-posts"
+    class="m-0 text-lg text-600"
+  >
+    Loading more...
+  </p>
+  <p *ngIf="loading" class="m-0 text-lg text-600">Loading more posts</p>
+  <p *ngIf="noMorePosts" class="m-0 text-lg text-600">
+    No more posts.<a
+      *ngIf="blogDetails.url.startsWith('@')"
+      [href]="blogDetails.remoteId"
+      target="_blank"
+      >This is an external user, there might be more posts in their profile.
+      Click here to go to their original instance</a
+    >.
+  </p>
+</footer>
+} @else {
+<app-pagenotfound />
+}
 
-
-<div *ngIf="found" class="grid pb-6">
-  <div class="col-12 sm:col-12 md:col-12 lg:col-5 margin-auto">
-    <p-card class="flex justify-content-center flex-wrap">
-      <p-progressSpinner class="flex align-items-center justify-content-center "></p-progressSpinner>
-
-    </p-card>
-  </div>
-</div>
-
-<app-pagenotfound *ngIf="!found" ></app-pagenotfound>
-
-
-<p-dialog
-[(visible)]="showModalTheme" header="This blog has a custom css theme" [modal]="true"
->
+<!--
 <div  class="p-grid">
   <p>This user has custom styles! would you like to enable custom themes from users?</p>
   <p>Select GLOW UP to allow custem themes from the users</p>
@@ -60,3 +89,5 @@
   <button (click)="answerCustomThemeModal(1)" pButton pRipple label="No thanks"  class="w-full"></button>
 </div>
 </p-dialog>
+
+-->

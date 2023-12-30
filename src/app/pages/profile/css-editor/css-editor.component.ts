@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
-import { MessageService } from 'primeng/api';
+import { MessageService } from 'src/app/services/message.service';
 import { ThemeService } from 'src/app/services/theme.service';
 
 @Component({

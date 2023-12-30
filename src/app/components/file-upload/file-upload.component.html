@@ -1,0 +1,22 @@
+<input
+  type="file"
+  class="file-input"
+  (change)="onFileSelected($event)"
+  #fileUpload
+/>
+
+<div *ngIf="!uploading" class="file-upload">
+  <button
+    mat-flat-button
+    color="accent"
+    class="upload-btn"
+    (click)="fileUpload.click()"
+  >
+    <fa-icon [icon]="uploadIcon"></fa-icon> Upload media
+  </button>
+</div>
+
+<div *ngIf="uploading" class="grid w-full">
+  <mat-spinner color="accent" diameter="42"></mat-spinner>
+  <p class="m-0 text-lg text-600">Uploading...</p>
+</div>

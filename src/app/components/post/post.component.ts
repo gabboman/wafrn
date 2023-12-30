@@ -1,5 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
-import { MenuItem, MessageService } from 'primeng/api';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { ProcessedPost } from 'src/app/interfaces/processed-post';
 import { EditorService } from 'src/app/services/editor.service';
 import { LoginService } from 'src/app/services/login.service';
@@ -9,14 +8,26 @@ import { environment } from 'src/environments/environment';
 import { DeletePostService } from 'src/app/services/delete-post.service';
 import { SimplifiedUser } from 'src/app/interfaces/simplified-user';
 import { Action } from 'src/app/interfaces/editor-launcher-data';
+import { MessageService } from 'src/app/services/message.service';
+import {
+  faArrowUpRightFromSquare,
+  faChevronDown,
+  faClockRotateLeft,
+  faHeart,
+  faHeartBroken,
+  faRotateLeft,
+  faShareNodes,
+  faTrash,
+  faTriangleExclamation,
+} from '@fortawesome/free-solid-svg-icons';
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-post',
   templateUrl: './post.component.html',
-  styleUrls: ['./post.component.scss']
+  styleUrls: ['./post.component.scss'],
 })
 export class PostComponent implements OnInit {
-
   @Input() post!: ProcessedPost[];
   @Input() showFull: boolean = false;
   originalPoster!: SimplifiedUser;
@@ -32,12 +43,25 @@ export class PostComponent implements OnInit {
   quickReblogBeingDone = false;
   quickReblogDoneSuccessfully = false;
   reblogging = false;
-  buttonItems: any = [];
   myId: string = '';
   loadingAction = false;
   // 0 no display at all 1 display like 2 display dislike
   showLikeFinalPost: number = 0;
   finalPost!: ProcessedPost;
+
+  // icons
+  shareIcon = faShareNodes;
+  expandDownIcon = faChevronDown;
+  solidHeartIcon = faHeart;
+  clearHeartIcon = faHeartBroken;
+  reblogIcon = faRotateLeft;
+  quickReblogIcon = faClockRotateLeft;
+  shareExternalIcon = faArrowUpRightFromSquare;
+  reportIcon = faTriangleExclamation;
+  deleteIcon = faTrash;
+
+  // post seen
+  @Output() seenEmitter: EventEmitter<boolean> = new EventEmitter<boolean>();
 
   constructor(
     private postService: PostsService,
@@ -47,112 +71,161 @@ export class PostComponent implements OnInit {
     private editorService: EditorService,
     private reportService: ReportService,
     private deletePostService: DeletePostService,
+    private dialogService: MatDialog
   ) {
     this.userLoggedIn = loginService.checkUserLoggedIn();
-    if(this.userLoggedIn) {
+    if (this.userLoggedIn) {
       this.myId = loginService.getLoggedUserUUID();
     }
-   }
+  }
 
   ngOnInit(): void {
-    this.originalPoster = this.post[this.post.length - 1].user
+    this.originalPoster = this.post[this.post.length - 1].user;
     this.followedUsers = this.postService.followedUserIds;
-    this.postService.updateFollowers.subscribe( () => {
+    this.postService.updateFollowers.subscribe(() => {
       this.followedUsers = this.postService.followedUserIds;
-    } );
-    if(!this.showFull){
+    });
+    if (!this.showFull) {
       this.originalPostContent = this.post;
       this.post = this.post.slice(0, environment.shortenPosts);
 
-      if(this.originalPostContent.length === this.post.length) {
+      if (this.originalPostContent.length === this.post.length) {
         this.showFull = true;
       }
     }
-
   }
 
   async ngOnChanges(): Promise<void> {
-    this.avatars = this.post.map((elem) => elem.user.url.startsWith('@') ? this.cacheurl + encodeURIComponent(elem.user.avatar) : this.mediaBaseUrl + elem.user.avatar)
+    this.avatars = this.post.map((elem) =>
+      elem.user.url.startsWith('@')
+        ? this.cacheurl + encodeURIComponent(elem.user.avatar)
+        : this.mediaBaseUrl + elem.user.avatar
+    );
     this.ready = true;
-    this.updateButtonItems();
     const notes = this.post[this.post.length - 1].notes;
     this.notes = notes.toString();
 
     // if the last post is an EMPTY reblog we evaluate the like of the parent.
-    const postToEvaluate = this.post[this.post.length - 1].content == '' && this.post[this.post.length - 1].tags.length == 0 && this.post.length > 1 ?
-      this.post[this.post.length -2] : this.post[this.post.length -1]
+    const postToEvaluate =
+      this.post[this.post.length - 1].content == '' &&
+      this.post[this.post.length - 1].tags.length == 0 &&
+      this.post.length > 1
+        ? this.post[this.post.length - 2]
+        : this.post[this.post.length - 1];
     this.finalPost = postToEvaluate;
 
-    this.showLikeFinalPost = postToEvaluate.userLikesPostRelations.includes(this.myId) ? 2 : 1
+    this.showLikeFinalPost = postToEvaluate.userLikesPostRelations.includes(
+      this.myId
+    )
+      ? 2
+      : 1;
 
-    if(postToEvaluate.userId === this.myId) {
+    if (postToEvaluate.userId === this.myId) {
       this.showLikeFinalPost = 0;
     }
-
-
   }
 
   async followUser(id: string) {
     const response = await this.postService.followUser(id);
-    if(response) {
-      this.messages.add({ severity: 'success', summary: 'You now follow this user!' });
+    if (response) {
+      this.messages.add({
+        severity: 'success',
+        summary: 'You now follow this user!',
+      });
     } else {
-      this.messages.add({ severity: 'error', summary: 'Something went wrong! Check your internet conectivity and try again' });
+      this.messages.add({
+        severity: 'error',
+        summary:
+          'Something went wrong! Check your internet conectivity and try again',
+      });
     }
   }
 
   async unfollowUser(id: string) {
     const response = await this.postService.unfollowUser(id);
-    if(response) {
-      this.messages.add({ severity: 'success', summary: 'You no longer follow this user!' });
+    if (response) {
+      this.messages.add({
+        severity: 'success',
+        summary: 'You no longer follow this user!',
+      });
     } else {
-      this.messages.add({ severity: 'error', summary: 'Something went wrong! Check your internet conectivity and try again' });
+      this.messages.add({
+        severity: 'error',
+        summary:
+          'Something went wrong! Check your internet conectivity and try again',
+      });
     }
-
   }
 
   launchReblog() {
     this.editorService.launchPostEditorEmitter.next({
       post: this.finalPost,
-      action: Action.Response
+      action: Action.Response,
     });
   }
 
   async quickReblog(id: string) {
     this.loadingAction = true;
-    const postToBeReblogged = this.post.find(elem => elem.id === id);
-    if(postToBeReblogged?.privacy === 0) {
-      const response = await this.editor.createPost('', 0,  '', id );
-      if(response) {
-        this.messages.add({ severity: 'success', summary: 'You reblogged the post succesfully' });
+    const postToBeReblogged = this.post.find((elem) => elem.id === id);
+    if (postToBeReblogged?.privacy === 0) {
+      const response = await this.editor.createPost('', 0, '', id);
+      if (response) {
+        this.messages.add({
+          severity: 'success',
+          summary: 'You reblogged the post succesfully',
+        });
       } else {
-        this.messages.add({ severity: 'error', summary: 'Something went wrong! Check your internet conectivity and try again' });
+        this.messages.add({
+          severity: 'error',
+          summary:
+            'Something went wrong! Check your internet conectivity and try again',
+        });
       }
     } else {
-      this.messages.add({ severity: 'warn', summary: 'Sorry, this post is not rebloggeable as requested by the user' });
-
+      this.messages.add({
+        severity: 'warn',
+        summary:
+          'Sorry, this post is not rebloggeable as requested by the user',
+      });
     }
     this.loadingAction = false;
   }
 
   sharePost(id: string) {
     navigator.clipboard.writeText(`${environment.frontUrl}/post/${id}`);
-    this.messages.add({ severity: 'success', summary: 'The post URL was copied to your clipboard!' });
-
+    this.messages.add({
+      severity: 'success',
+      summary: 'The post URL was copied to your clipboard!',
+    });
   }
 
   shareOriginalPost(url: string) {
     navigator.clipboard.writeText(url);
-    this.messages.add({ severity: 'success', summary: 'The external url has been copied!' });
-
+    this.messages.add({
+      severity: 'success',
+      summary: 'The external url has been copied!',
+    });
   }
 
-  reportPost() {
-    this.reportService.launchReportScreen.next(this.post);
+  async replyPost(post: ProcessedPost) {
+    this.dialogService.open(await this.editorService.getEditorComponent(), {
+      data: { post },
+      width: '100%',
+    });
   }
 
-  deletePost(id: string) {
-    this.deletePostService.launchDeleteScreen.next(id);
+  async reportPost(post: ProcessedPost) {
+    this.dialogService.open(await this.reportService.getReportComponent(), {
+      data: { post },
+      width: '100%',
+    });
+  }
+
+  async deletePost(id: string) {
+    this.dialogService.open(await this.deletePostService.getDeletePostComponent(), {
+      data: { id },
+      width: '100%',
+    });
   }
 
   showQuickReblogOverlay() {
@@ -163,119 +236,54 @@ export class PostComponent implements OnInit {
     this.quickReblogPanelVisible = false;
   }
 
-  updateButtonItems(){
-    let index = 0;
-    for (const content of this.post) {
-      const buttonsForFragment: MenuItem[] = [
-        {
-          label: "Share with wafrn",
-          title: "Copy the wafrn url of the post to the clipboard",
-          icon: 'pi pi-share-alt',
-          command: () => this.sharePost(content.id)
-        },
-        {
-          label: "Share external url",
-          title: "Copy the post external url",
-          icon: 'pi pi-external-link',
-          command: () => this.shareOriginalPost(content.remotePostId)
-        },
-      ];
-      const loggedInButtons: MenuItem[] = [
-        {
-          label: "Reblog",
-          title: "Open the reblog editor, reblogging this post",
-          icon: 'pi pi-replay',
-          command: () => this.editorService.launchPostEditorEmitter.next({
-            action: Action.Response,
-            post: content
-          })
-        },
-        {
-          label: "Quick reblog",
-          title: "Reblog this post to your followers",
-          icon: 'pi pi-history',
-          command: () => this.quickReblog(content.id)
-        },
-        (content.content !== '' || content.tags.length != 0) && content.userId != this.myId  ?
-        content.userLikesPostRelations.includes(this.myId) ?
-        {
-          label: "Remove like",
-          title: "Remove your like to this post",
-          icon: 'pi pi-heart-fill',
-          command: () => this.unlikePost(content)
-        }
-        :
-        {
-          label: "Like this post",
-          title: "Add a like to this post",
-          icon: 'pi pi-heart',
-          command: () => this.likePost(content)
-        }
-        : {
-          label: 'NULL'
-        },
-        content.userId === this.myId ?
-        {
-          label: "Delete",
-          title: "Open the delete panel for this post",
-          icon: 'pi pi-trash',
-          // TODO this is stupid this is ugly but I am sleepy and I shall not fix this now
-          command: () => this.deletePostService.launchDeleteScreen.next(content.id)
-        } :
-        {
-          label: "Report",
-          title: "Open the report panel for this post",
-          icon: 'pi pi-exclamation-triangle',
-          // TODO this is stupid this is ugly but I am sleepy and I shall not fix this now
-          command: () => this.reportService.launchReportScreen.next([content])
-        }
-      ].filter(elem => elem.label != 'NULL')
-      this.buttonItems[content.id] = this.userLoggedIn ? buttonsForFragment.concat(loggedInButtons) :  buttonsForFragment;
-      index = index +1 ;
-    }
-
-  }
-
   expandPost() {
     this.post = this.originalPostContent;
-    this.showFull =true
+    this.showFull = true;
   }
 
   dismissContentWarning() {
-    this.post.forEach(elem => {
+    this.post.forEach((elem) => {
       elem.content_warning = '';
-    })
-    this.originalPostContent.forEach(elem => {
-      elem.content_warning = ''
-    })
+    });
+    this.originalPostContent.forEach((elem) => {
+      elem.content_warning = '';
+    });
   }
 
-
-  async likePost( postToLike: ProcessedPost) {
+  async likePost(postToLike: ProcessedPost) {
     this.loadingAction = true;
-    if(await this.postService.likePost(postToLike.id)) {
+    if (await this.postService.likePost(postToLike.id)) {
       postToLike.userLikesPostRelations.push(this.myId);
       this.ngOnChanges();
-      this.messages.add({ severity: 'success', summary: 'You successfully liked this post' });
+      this.messages.add({
+        severity: 'success',
+        summary: 'You successfully liked this post',
+      });
     } else {
-      this.messages.add({ severity: 'error', summary: 'Something went wrong. Please try again' });
-
+      this.messages.add({
+        severity: 'error',
+        summary: 'Something went wrong. Please try again',
+      });
     }
     this.loadingAction = false;
-
   }
 
   async unlikePost(postToUnlike: ProcessedPost) {
     this.loadingAction = true;
-    if(await this.postService.unlikePost(postToUnlike.id)) {
-      postToUnlike.userLikesPostRelations =  postToUnlike.userLikesPostRelations.filter(elem => elem != this.myId)
+    if (await this.postService.unlikePost(postToUnlike.id)) {
+      postToUnlike.userLikesPostRelations =
+        postToUnlike.userLikesPostRelations.filter((elem) => elem != this.myId);
       this.ngOnChanges();
-      this.messages.add({ severity: 'success', summary: 'You no longer like this post' });
+      this.messages.add({
+        severity: 'success',
+        summary: 'You no longer like this post',
+      });
     } else {
-      this.messages.add({ severity: 'error', summary: 'Something went wrong. Please try again' });
+      this.messages.add({
+        severity: 'error',
+        summary: 'Something went wrong. Please try again',
+      });
     }
     this.loadingAction = false;
   }
-
 }
-

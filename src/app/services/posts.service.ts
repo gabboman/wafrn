@@ -1,4 +1,4 @@
-import { Injectable, SecurityContext } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { ProcessedPost } from '../interfaces/processed-post';
 import { RawPost } from '../interfaces/raw-post';
 import { MediaService } from './media.service';
