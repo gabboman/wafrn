@@ -1,4 +1,10 @@
-import { ChangeDetectorRef, Component, Input, OnChanges, ViewChild } from '@angular/core';
+import {
+  ChangeDetectorRef,
+  Component,
+  Input,
+  OnChanges,
+  ViewChild,
+} from '@angular/core';
 import { WafrnMedia } from 'src/app/interfaces/wafrn-media';
 import { MediaService } from 'src/app/services/media.service';
 import { MessageService } from 'src/app/services/message.service';
@@ -7,11 +13,9 @@ import { environment } from 'src/environments/environment';
 @Component({
   selector: 'app-wafrn-media',
   templateUrl: './wafrn-media.component.html',
-  styleUrls: ['./wafrn-media.component.scss']
+  styleUrls: ['./wafrn-media.component.scss'],
 })
 export class WafrnMediaComponent implements OnChanges {
-
-
   nsfw = true;
   adultContent = true;
   @Input() data!: WafrnMedia;
@@ -20,10 +24,18 @@ export class WafrnMediaComponent implements OnChanges {
   @ViewChild('wafrnMedia') wafrnMedia!: HTMLElement;
   extension = '';
   viewLongImage = false;
-  extensionsToHideImgTag = ['mp4', 'aac', 'mp3', 'ogg', 'webm', 'weba', 'svg', 'ogg', 'oga']
+  extensionsToHideImgTag = [
+    'mp4',
+    'aac',
+    'mp3',
+    'ogg',
+    'webm',
+    'weba',
+    'svg',
+    'ogg',
+    'oga',
+  ];
   mimeType = '';
-
-
 
   constructor(
     private mediaService: MediaService,
@@ -31,28 +43,32 @@ export class WafrnMediaComponent implements OnChanges {
     private cdr: ChangeDetectorRef
   ) {
     this.disableNSFWFilter = mediaService.checkNSFWFilterDisabled();
-   }
+  }
 
   ngOnChanges(): void {
-    if(this.data){
+    if (this.data) {
       this.extension = this.getExtension();
-      this.data.url =  this.data.external ?
-        environment.externalCacheurl + encodeURIComponent(this.data.url) :
-        environment.baseMediaUrl + this.data.url
-      this.nsfw = this.data.adultContent ? true : this.data.NSFW && ! this.disableNSFWFilter;
+      this.data.url = this.data.external
+        ? environment.externalCacheurl + encodeURIComponent(this.data.url)
+        : environment.baseMediaUrl + this.data.url;
+      this.nsfw = this.data.adultContent
+        ? true
+        : this.data.NSFW && !this.disableNSFWFilter;
       this.adultContent = this.data.adultContent;
-      this.displayUrl = this.nsfw ? '/assets/img/nsfw_image.webp' : this.data.url;
-      switch (this.extension){
+      this.displayUrl = this.nsfw
+        ? '/assets/img/nsfw_image.webp'
+        : this.data.url;
+      switch (this.extension) {
         case 'mp4': {
-          this.mimeType = 'video/mp4'
+          this.mimeType = 'video/mp4';
           break;
         }
         case 'webm': {
-          this.mimeType = 'video/webm'
+          this.mimeType = 'video/webm';
           break;
         }
-        case 'mp3':{
-          this.mimeType = 'audio/mpeg'
+        case 'mp3': {
+          this.mimeType = 'audio/mpeg';
           break;
         }
         case 'wav': {
@@ -77,40 +93,41 @@ export class WafrnMediaComponent implements OnChanges {
           break;
         }
         default: {
-          this.mimeType= 'UNKNOWN'
-
+          this.mimeType = 'UNKNOWN';
         }
       }
     }
-    this.cdr.markForCheck()
+    this.cdr.markForCheck();
   }
 
-  showPicture(){
-    if(!(this.adultContent && !this.mediaService.checkAge())) {
+  showPicture() {
+    if (!(this.adultContent && !this.mediaService.checkAge())) {
       this.nsfw = false;
       this.adultContent = false;
-      this.displayUrl = this.data ? this.data.url : 'UNDEFINED' ;
+      this.displayUrl = this.data ? this.data.url : 'UNDEFINED';
       this.viewLongImage = true;
     } else {
       this.messagesService.add({
         severity: 'warn',
-        detail: 'This image has been flagged as adult content and you are a minor, or you are not logged in'
-      })
+        summary:
+          'This image has been flagged as adult content and you are a minor, or you are not logged in',
+      });
     }
-
-
   }
-
 
   imgLoaded() {
-    if(!this.viewLongImage && this.wafrnMedia.offsetHeight/this.wafrnMedia.offsetWidth > 3) {
-      this.displayUrl = this.nsfw ? '/assets/img/nsfw_image.webp' : '/assets/img/long_image.jpg'
+    if (
+      !this.viewLongImage &&
+      this.wafrnMedia.offsetHeight / this.wafrnMedia.offsetWidth > 3
+    ) {
+      this.displayUrl = this.nsfw
+        ? '/assets/img/nsfw_image.webp'
+        : '/assets/img/long_image.jpg';
     }
   }
 
-  private getExtension(){
+  private getExtension() {
     const mediaUrl = this.data.url.split('.');
-    return mediaUrl[mediaUrl.length -1].toLowerCase();
+    return mediaUrl[mediaUrl.length - 1].toLowerCase();
   }
-
 }

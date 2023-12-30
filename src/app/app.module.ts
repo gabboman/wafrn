@@ -10,7 +10,7 @@ import { WafrnAuthInterceptor } from './interceptors/wafrn-auth.interceptor';
 import { ServiceWorkerModule } from '@angular/service-worker';
 import { MatNativeDateModule } from '@angular/material/core';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 @NgModule({
   declarations: [AppComponent],
   imports: [
@@ -29,6 +29,7 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
       registrationStrategy: 'registerWhenStable:30000',
     }),
     FontAwesomeModule,
+    MatSnackBarModule,
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: WafrnAuthInterceptor, multi: true },
