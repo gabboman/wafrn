@@ -1,4 +1,5 @@
-import { NgModule, isDevMode } from "@angular/core";import { BrowserModule } from '@angular/platform-browser';
+import { NgModule, isDevMode } from '@angular/core';
+import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
@@ -7,13 +8,11 @@ import { AppComponent } from './app.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { WafrnAuthInterceptor } from './interceptors/wafrn-auth.interceptor';
 import { ServiceWorkerModule } from '@angular/service-worker';
-import { MatNativeDateModule } from "@angular/material/core";
+import { MatNativeDateModule } from '@angular/material/core';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 
 @NgModule({
-  declarations: [
-    AppComponent,
-  ],
+  declarations: [AppComponent],
   imports: [
     BrowserModule,
     BrowserAnimationsModule,
@@ -27,16 +26,14 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
       enabled: !isDevMode(),
       // Register the ServiceWorker as soon as the application is stable
       // or after 30 seconds (whichever comes first).
-      registrationStrategy: 'registerWhenStable:30000'
+      registrationStrategy: 'registerWhenStable:30000',
     }),
     FontAwesomeModule,
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: WafrnAuthInterceptor, multi: true },
-
   ],
   bootstrap: [AppComponent],
-  exports: [
-  ]
+  exports: [],
 })
-export class AppModule { }
+export class AppModule {}

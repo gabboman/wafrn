@@ -1,109 +1,3 @@
-<!--
-<div *ngIf="ready" class="grid pb-6 lg:px-4 scalein animation-duration-200 wafrn-container">
-  <div class="col-12 wafrn-post">
-    <p-card>
-      <div *ngIf="post.length > 1" class="center-text overflow-hidden">
-        <img [routerLink]="'/blog/'+ originalPoster.url" crossorigin="anonymous" loading="lazy" [src]="avatars[avatars.length - 1]" class="avatar"/>
-        <div class="w-full white-space-nowrap overflow-hidden text-overflow-ellipsis flex flex-column">
-          <div>
-            <a [routerLink]="'/blog/'+ originalPoster.url" [innerHTML]="originalPoster.name"></a>
-          </div>
-          <span class="font-small" [innerText]="originalPoster.url"></span>
-        </div>
-      </div>
-
-      <div *ngFor="let content of post; index as index">
-        <p-divider *ngIf="post.length > 1 && (content.content !== '' || content.tags.length)"></p-divider>
-        <div *ngIf="content.content !== '' || (content.medias && content.medias.length > 0) || index == 0 || content.tags.length > 0" class="fragment-header">
-          <div class="flex gap-1 md:gap-3 align-items-center" style="width: 100%;">
-            <div class="center-text py-2 flex-grow-1 flex-shrink-1 min-w-0">
-              <img [routerLink]="'/blog/'+ content.user.url" crossorigin="anonymous" loading="lazy" [src]="avatars[index]" class="avatar" />
-              <div class="w-full overflow-hidden flex flex-column">
-                <a class="max-w-full white-space-nowrap overflow-hidden text-overflow-ellipsis" [routerLink]="'/blog/'+ content.user.url" [innerHTML]="content.user.name"></a>
-                <span class="font-small max-w-full white-space-nowrap overflow-hidden text-overflow-ellipsis" [innerText]="content.user.url"></span>
-              </div>
-            </div>
-            <button
-              *ngIf="followedUsers.indexOf(content.userId) === -1 && userLoggedIn"
-              pButton
-              pRipple
-              label="Follow"
-              class="w-80 p-button-sm flex-shrink-0"
-              (click)="followUser(content.userId)">
-            </button>
-            <div class="timestamp flex-shrink-0">{{content.createdAt | date : 'shortDate'}}</div>
-            <p-splitButton
-              (onClick)="sharePost(content.id)"
-              icon="pi pi-share-alt"
-              styleClass="p-button-sm flex-shrink-0"
-              [model]="buttonItems[content.id]"
-              >
-            </p-splitButton>
-          </div>
-        </div>
-        <br />
-        <div *ngIf="content.content_warning" class="fragment-content ql-editor -mx-3">{{content.content_warning}}</div>
-        <button pButton *ngIf="content.content_warning" (click)="dismissContentWarning()" class="w-full" label="I understand this and I want to see this post"></button>
-        <div
-          *ngIf="content.content !== '' || content.tags.length"
-          class="fragment-content ql-editor -mx-3"
-          [ngClass]="{'blurry': content.content_warning}"
-          [injectHTML]="content.content"
-        >
-        </div>
-        <div
-        *ngIf="content.questionPoll"
-        [ngClass]="{'blurry': content.content_warning}"
-        >
-        <app-poll [poll]="content.questionPoll" ></app-poll>
-        </div>
-        <div *ngFor="let media of content.medias"  [ngClass]="{'blurry': content.content_warning}" >
-          <app-wafrn-media [data]="media" ></app-wafrn-media>
-        </div>
-        <div *ngIf="content.tags"
-        [ngClass]="{'blurry': content.content_warning}"
-        >
-          <a *ngFor="let tag of content.tags" [routerLink]="'/dashboard/search/' + tag.tagName" style="margin: 0.25em" >
-            <p-tag class="wafrn-tag" [value]="'#' +tag.tagName"></p-tag>
-          </a>
-        </div>
-      </div>
-
-      <div *ngIf="!showFull">
-        <p-divider></p-divider>
-
-        <button pButton (click)="expandPost()" class="w-full" label="Expand shortened post"></button>
-      </div>
-      <ng-template pTemplate="footer">
-        <p-divider></p-divider>
-
-        <div class="grid">
-          <div class="col-8 flex justify-content-start">
-            <a [routerLink]="['/post', finalPost.id]">Notes: {{notes}}</a>
-          </div>
-          <div *ngIf="userLoggedIn" class="col-4 flex justify-content-end">
-            <div class="grid" *ngIf="!loadingAction">
-              <i
-               (click)="quickReblog(finalPost.id)"
-               class="col-3 pi pi-history hover-cursor" title="Quick Reblog"></i>
-              <i (click)="launchReblog()" class="col-3 pi pi-reply hover-cursor" title="Reply"></i>
-              <i *ngIf="showLikeFinalPost === 1" (click)="likePost(finalPost)" class="col-3 pi pi-heart hover-cursor" title="Like Post"></i>
-              <i *ngIf="showLikeFinalPost === 2" (click)="unlikePost(finalPost)" class="col-3 pi pi-heart-fill hover-cursor" title="Unlike Post"></i>
-              <i *ngIf="!(post[post.length - 1].userId == myId)" (click)="reportPost()" class="col-3 pi pi-exclamation-triangle hover-cursor" title="Report Post"></i>
-              <i *ngIf="(post[post.length - 1].userId == myId)" (click)="deletePost(post[post.length - 1].id)" class="col-3 pi pi-trash hover-cursor" title="Delete Post"></i>
-            </div>
-            <div class="grid" *ngIf="loadingAction">
-              <i class="pi pi-spin pi-spinner" style="height: 1em;"></i>
-            </div>
-          </div>
-        </div>
-      </ng-template>
-    </p-card>
-  </div>
-</div>
-
--->
-
 <mat-card
   [id]="'post-element-' + finalPost.id"
   class="p-3 mb-6 lg:mx-4 scalein wafrn-container"
@@ -216,11 +110,15 @@
         <button (click)="likePost(content)" mat-menu-item>
           <fa-icon class="mr-2" [icon]="solidHeartIcon"></fa-icon>Like post
         </button>
-        } }
+        }
         <button (click)="reportPost(content)" mat-menu-item>
           <fa-icon class="mr-2" [icon]="reportIcon"></fa-icon>Report post
         </button>
-        }
+        } @else {
+        <button (click)="deletePost(content.id)" mat-menu-item>
+          <fa-icon class="mr-2" [icon]="deleteIcon"></fa-icon>Delete post
+        </button>
+        } }
       </mat-menu>
     </div>
     <div class="date-line mb-1 flex gap-2 align-items-center">
@@ -296,7 +194,45 @@
       <a [routerLink]="'/post/' + finalPost.id">Notes: {{ notes }}</a>
     </div>
     <div *ngIf="userLoggedIn" class="col-4 flex justify-content-end">
-      <div class="grid" *ngIf="!loadingAction">ACTIONS</div>
+      <div class="grid" *ngIf="!loadingAction">
+        <fa-icon
+          (click)="quickReblog(finalPost.id)"
+          class="pl-2 pr-2 hover-cursor"
+          [icon]="quickReblogIcon"
+        ></fa-icon>
+        <fa-icon
+          (click)="replyPost(finalPost)"
+          class="pl-2 pr-2 hover-cursor"
+          [icon]="reblogIcon"
+        ></fa-icon>
+        @if(finalPost.userId !== myId ) {
+        @if(finalPost.userLikesPostRelations.includes(myId)) {
+        <fa-icon
+          (click)="unlikePost(finalPost)"
+          class="pl-2 pr-2 hover-cursor"
+          [icon]="clearHeartIcon"
+        ></fa-icon>
+        } @else {
+        <fa-icon
+          (click)="likePost(finalPost)"
+          class="pl-2 pr-2 hover-cursor"
+          [icon]="solidHeartIcon"
+        ></fa-icon>
+        }
+
+        <fa-icon
+          (click)="reportPost(finalPost)"
+          class="pl-2 pr-2 hover-cursor"
+          [icon]="reportIcon"
+        ></fa-icon>
+        } @else {
+        <fa-icon
+          (click)="deletePost(finalPost.id)"
+          class="pl-2 pr-2 hover-cursor"
+          [icon]="deleteIcon"
+        ></fa-icon>
+        }
+      </div>
     </div>
   </div>
 </mat-card>

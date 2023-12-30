@@ -17,6 +17,7 @@ import {
   faHeartBroken,
   faRotateLeft,
   faShareNodes,
+  faTrash,
   faTriangleExclamation,
 } from '@fortawesome/free-solid-svg-icons';
 import { MatDialog } from '@angular/material/dialog';
@@ -57,6 +58,7 @@ export class PostComponent implements OnInit {
   quickReblogIcon = faClockRotateLeft;
   shareExternalIcon = faArrowUpRightFromSquare;
   reportIcon = faTriangleExclamation;
+  deleteIcon = faTrash;
 
   // post seen
   @Output() seenEmitter: EventEmitter<boolean> = new EventEmitter<boolean>();
@@ -206,17 +208,17 @@ export class PostComponent implements OnInit {
   }
 
   async replyPost(post: ProcessedPost) {
-    const dialogRef = this.dialogService.open(
-      await this.editorService.getEditorComponent(),
-      {
-        data: { post },
-        width: '100%',
-      }
-    );
+    this.dialogService.open(await this.editorService.getEditorComponent(), {
+      data: { post },
+      width: '100%',
+    });
   }
 
-  reportPost(post: ProcessedPost) {
-    this.reportService.launchReportScreen.next([post]);
+  async reportPost(post: ProcessedPost) {
+    this.dialogService.open(await this.reportService.getReportComponent(), {
+      data: { post },
+      width: '100%',
+    });
   }
 
   deletePost(id: string) {
