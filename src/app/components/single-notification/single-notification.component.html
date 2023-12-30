@@ -1,98 +1,37 @@
-<!--
-<div *ngIf="notification" class="grid pb-3 lg:px-4 scalein  wafrn-container">
-  <div class="col-12 wafrn-post">
-    <a [routerLink]="notification.url">
-      <p-card *ngIf="notification.type === notificationType.REBLOG">
-        <div class="flex align-items-start -my-2">
-          <div  class="border-1 border-gray-700 border-round">
-            <img
-              crossorigin="anonymous"
-              loading="lazy"
-              [src]="notification.avatar"
-              class="notification-image"
-            />
-          </div>
-          <div class="p-1 px-3">
-            <p class="m-0 mb-2 no-underline text-sm text-gray-300">{{(notification.date).toLocaleString()}}</p>
-            <p class="m-0">
-              User {{notification.userUrl}} reblogged one of your posts!
-            </p>
-          </div>
-        </div>
-      </p-card>
-      <p-card *ngIf="notification.type === notificationType.LIKE">
-        <div class="flex align-items-start -my-2">
-          <div  class="border-1 border-gray-700 border-round">
-            <img
-              crossorigin="anonymous"
-              loading="lazy"
-              [src]="notification.avatar"
-              class="notification-image"
-            />
-          </div>
-          <div class="p-1 px-3">
-            <p class="m-0 mb-2 no-underline text-sm text-gray-300">{{(notification.date).toLocaleString()}}</p>
-            <p class="m-0">
-              User {{notification.userUrl}} liked one of your posts!
-            </p>
-          </div>
-        </div>
-      </p-card>
-      <p-card *ngIf="notification.type === notificationType.MENTION">
-        <div class="flex align-items-start -my-2">
-          <div  class="border-1 border-gray-700 border-round">
-            <img
-              crossorigin="anonymous"
-              loading="lazy"
-              [src]="notification.avatar"
-              class="notification-image"
-            />
-          </div>
-          <div class="p-1 px-3">
-            <p class="m-0 mb-2 no-underline text-sm text-gray-300">{{(notification.date).toLocaleString()}}</p>
-            <p class="m-0">
-              User {{notification.userUrl}} mentioned you in a post!
-            </p>
-          </div>
-        </div>
-      </p-card>
-      <p-card *ngIf="notification.type === notificationType.FOLLOW">
-        <div class="flex align-items-start -my-2">
-          <div  class="border-1 border-gray-700 border-round">
-            <img
-              crossorigin="anonymous"
-              loading="lazy"
-              [src]="notification.avatar"
-              class="notification-image"
-            />
-          </div>
-          <div class="p-1 px-3">
-            <p class="m-0 mb-2 no-underline text-sm text-gray-300">{{(notification.date).toLocaleString()}}</p>
-            <p class="m-0">
-              Hoorray! {{notification.userUrl}} now follows you!
-            </p>
-          </div>
-        </div>
-      </p-card>
-      <p-card *ngIf="notification.type === notificationType.PRIVATE">
-        <div class="flex align-items-start -my-2">
-          <div  class="border-1 border-gray-700 border-round">
-            <img
-              crossorigin="anonymous"
-              loading="lazy"
-              [src]="notification.avatar"
-              class="notification-image"
-            />
-          </div>
-          <div class="p-1 px-3">
-            <p class="m-0 mb-2 no-underline text-sm text-gray-300">{{(notification.date).toLocaleString()}}</p>
-            <p class="m-0">
-              {{notification.userUrl}} has sent you a private message
-            </p>
-          </div>
-        </div>
-      </p-card>
-    </a>
+<mat-card *ngIf="notification" class="p-3 mb-6 lg:mx-4 scalein wafrn-container">
+  <div class="flex align-items-start -my-2">
+    <div class="border-1 border-gray-700 border-round">
+      <img
+        crossorigin="anonymous"
+        loading="lazy"
+        [src]="notification.avatar"
+        class="notification-image"
+        alt=""
+      />
+    </div>
+    <div class="p-1 px-3">
+      <p class="m-0 mb-2 no-underline text-sm text-gray-300">
+        {{ notification.date.toLocaleString() }}
+      </p>
+      <p class="m-0">
+        User
+        <a [routerLink]="'/blog/' + notification.userUrl">{{
+          notification.userUrl
+        }}</a>
+        @switch ((notification.type)) { @case(notificationType.MENTION) {
+        mentioned you <a [routerLink]="notification.url"> in a post</a>} @case
+        (notificationType.LIKE) { liked
+        <a [routerLink]="notification.url">one of your posts</a>
+        } @case(notificationType.FOLLOW) { now follows you! } @case
+        (notificationType.PRIVATE) {
+        <a [routerLink]="notification.url">sent you a DM</a>. TEMPORARY
+        WORKARROUND:
+        <a [routerLink="/dashboard/private" ]
+          >click here to go to your DMs. Yep we are working on this</a
+        >
+        } @case (notificationType.REBLOG) { reblogged
+        <a [routerLink="notification.url" ]>one of your posts</a>} }
+      </p>
+    </div>
   </div>
-</div>
--->
+</mat-card>

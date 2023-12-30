@@ -13,3 +13,11 @@
   </div>
 </div>
 -->
+@for(notification of notificationsToShow; track notification) {
+<app-single-notification
+  [notification]="notification"
+></app-single-notification>
+@if($index % 19 === 0 && $index > 0) {
+<!--This element is the one that says NOTIFICATION LOAD TIME-->
+<div class="load-more-notifications-intersector"></div>
+} }

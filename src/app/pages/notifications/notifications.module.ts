@@ -2,27 +2,24 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { NotificationsComponent } from './notifications.component';
 import { Route, RouterModule } from '@angular/router';
-import { SingleNotificationModule } from 'src/app/components/single-notification/single-notification.module';
 import { DeferModule } from 'src/app/directives/defer/defer.module';
 import { loginRequiredGuard } from 'src/app/guards/login-required.guard';
-
+import { SingleNotificationComponent } from 'src/app/components/single-notification/single-notification.component';
 
 const routes: Route[] = [
-      {
-        path: '',
-        component: NotificationsComponent,
-        canActivate: [loginRequiredGuard]
-      }
-    ];
+  {
+    path: '',
+    component: NotificationsComponent,
+    canActivate: [loginRequiredGuard],
+  },
+];
 @NgModule({
-  declarations: [
-    NotificationsComponent,
-  ],
+  declarations: [NotificationsComponent],
   imports: [
     CommonModule,
-    SingleNotificationModule,
+    SingleNotificationComponent,
     RouterModule.forChild(routes),
     DeferModule,
-  ]
+  ],
 })
-export class NotificationsModule { }
+export class NotificationsModule {}
