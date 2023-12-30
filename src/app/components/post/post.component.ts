@@ -221,8 +221,11 @@ export class PostComponent implements OnInit {
     });
   }
 
-  deletePost(id: string) {
-    this.deletePostService.launchDeleteScreen.next(id);
+  async deletePost(id: string) {
+    this.dialogService.open(await this.deletePostService.getDeletePostComponent(), {
+      data: { id },
+      width: '100%',
+    });
   }
 
   showQuickReblogOverlay() {

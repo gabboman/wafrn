@@ -1,11 +1,8 @@
-<!--
-<p-dialog [(visible)]="visible" header="Are you sure that you want to delete that post?" [modal]="true"  >
-    <div  class="p-grid">
-        <p>Your post will be deleted. If the post has no reblogs, it will be totally deleted. If it has reblogs, the content will be changed to "This post has been deleted"</p>
-        <button (click)="deletePost()" pButton pRipple label="Delete" icon="pi pi-trash" class="w-full"></button>
-        <br>
-        <br>
-        <button (click)="cancelDelete()" pButton pRipple label="Cancel"  class="w-full"></button>
-    </div>
-</p-dialog>
--->
+<p mat-dialog-title>
+  Your post will be deleted. If the post has no reblogs, it will be totally
+  deleted. If it has reblogs, the content will be changed to "This post has been
+  deleted"
+</p>
+<button mat-flat-button (click)="deletePost()" class="w-full">
+  Delete post
+</button>
