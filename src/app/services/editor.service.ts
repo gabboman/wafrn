@@ -7,7 +7,7 @@ import { ProcessedPost } from '../interfaces/processed-post';
 import { Action, EditorLauncherData } from '../interfaces/editor-launcher-data';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'any'
 })
 export class EditorService {
 
@@ -71,5 +71,10 @@ export class EditorService {
 
   async searchUser(url: string) {
     return await this.http.get(`${environment.baseUrl}/userSearch/${encodeURIComponent(url)}`).toPromise();
+  }
+
+  async getEditorComponent(): Promise<typeof PostEditorComponent> {
+    const { PostEditorComponent } = await import("../components/post-editor/post-editor.component");
+    return PostEditorComponent
   }
 }

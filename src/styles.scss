@@ -1,102 +1,72 @@
-/*
-@font-face {
-  font-family: noto-emoji-color;
-  src: url(/assets/fonts/NotoColorEmoji-Regular.ttf);
+html,
+body,
+app-root,
+app-navigation-menu,
+.side-menu {
+  margin: 0;
+  height: 100%;
+  display: block;
 }
 
-@font-face {
-  font-family: noto-sans;
-  src: url(/assets/fonts/NotoSans-Regular.ttf);
-}
-*/
 $wafrn-blue: rgb(56, 254, 241);
 // $wafrn-dark: rgb(18, 95, 90);
-$editor-buttons:  #ffffffde;
-a {
-  text-decoration: none;
-}
-html {
-    background-color: rgb(32, 38, 46);
-}
+$editor-buttons: #ffffffde;
 
-@media( max-width: 992px ){
-    .show-sidebar-menu-button {
-        position: fixed !important;
-        top: 1em;
-        left: 1em;
-        z-index: 9999;
-
-    }
-    .left-menu-hidden-mobile {
-        display: none;
-    }
-}
-
-@media( min-width: 992px ){
-    .show-sidebar-menu-button {
-        display: none;
-    }
+@media (min-width: 992px) {
+  .show-sidebar-menu-button {
+    display: none;
+  }
 }
 
 
-a, a:visited {
-    color:  $wafrn-blue,
+a,
+a:visited {
+  color: $wafrn-blue;
 }
 
-
-#script-warn{
-    width: 100%;
-    color: $wafrn-blue;
-    text-align: center;
-}
-
-#notifications_badge {
-    position: fixed !important;
-    top: 0.5em;
-    right: 0.5em;
-}
-
-.p-tag-value {
-    max-width: 100%;
-    word-break: break-word;
+#script-warn {
+  width: 100%;
+  color: $wafrn-blue;
+  text-align: center;
 }
 
 .ql-snow .ql-stroke {
-    fill: none;
-    stroke: $editor-buttons;
-    stroke-linecap: round;
-    stroke-linejoin: round;
-    stroke-width: 2;
-  }
+  fill: none;
+  stroke: $editor-buttons;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 2;
+}
 
-.ql-snow .ql-fill, .ql-snow .ql-stroke.ql-fill {
-    fill: $editor-buttons;
-  }
+.ql-snow .ql-fill,
+.ql-snow .ql-stroke.ql-fill {
+  fill: $editor-buttons;
+}
 
-.ql-snow .ql-picker{
-    color: $editor-buttons;
+.ql-snow .ql-picker {
+  color: $editor-buttons;
 }
 
 .uploadImageButton {
-    color: $editor-buttons
+  color: $editor-buttons;
 }
 
 .ql-snow.ql-container {
-    border-radius: 0 0 5px 5px;
+  border-radius: 0 0 5px 5px;
 }
 
-.ql-snow > .ql-editor{
-    background: #20262e !important;
-    border-radius: 0 0 5px 5px;
-    font-size: 16px;
-    min-height: 100px;
-    max-height: 400px;
-    overflow-y: auto;
+.ql-snow > .ql-editor {
+  background: #20262e !important;
+  border-radius: 0 0 5px 5px;
+  font-size: 16px;
+  min-height: 100px;
+  max-height: 400px;
+  overflow-y: auto;
 }
 
 .ql-snow > .ql-editor.ql-blank::before {
-    color: white;
-    opacity: 0.5;
+  color: white;
+  opacity: 0.5;
 }
 
 .ql-syntax {
@@ -105,32 +75,17 @@ a, a:visited {
 }
 
 .hover-cursor {
-    cursor: pointer;
+  cursor: pointer;
 }
 
 .margin-auto {
-    margin:auto;
+  margin: auto;
 }
 
 .wafrn-container {
-    max-width: 800px;
+  max-width: 800px;
 }
 
-@media (min-width: 992px) {
-    .wafrn-container {
-        margin-left: 360px;
-    }
-}
-
-
-.p-dialog {
-    max-width: 768px;
-    width: 100%;
-}
-
-.p-dialog-maximized {
-  max-width: 100vw !important;
-}
 .mention {
   height: unset;
   width: unset;
@@ -149,11 +104,7 @@ a, a:visited {
   background-color: #2a323d;
 }
 
-.p-carousel, p-carousel {
-  width: 100%;
-}
-
-.post-emoji{
+.post-emoji {
   display: inline-flex;
   max-height: 1em;
   max-width: 1em;
@@ -163,22 +114,11 @@ a, a:visited {
   color: black;
 }
 
-.p-progressbar-label
- {
-  display: none !important;
- }
-
-
- .font-small {
+.font-small {
   font-size: 0.85em;
- }
+}
 
- .p-fileupload-choose {
-  width: 100%;
- }
-
-
- // youtube player
+// youtube player
 
 .yt-thumbnail {
   max-width: 100%;
@@ -213,13 +153,4 @@ a, a:visited {
 .watermark__body {
   max-height: 15%;
   max-width: 15%;
-
 }
-
-
-
-
-//body, html, .p-component {
-//  font-family: "noto-sans", "noto-emoji-color", sans-serif;
-//
-//}

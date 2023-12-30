@@ -1,38 +1,45 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
+import {
+  UntypedFormControl,
+  UntypedFormGroup,
+  Validators,
+} from '@angular/forms';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
-import { MenuItem, MessageService } from 'primeng/api';
+import { faSearch } from '@fortawesome/free-solid-svg-icons';
 import { filter } from 'rxjs';
 import { ProcessedPost } from 'src/app/interfaces/processed-post';
 import { SimplifiedUser } from 'src/app/interfaces/simplified-user';
 import { DashboardService } from 'src/app/services/dashboard.service';
 import { LoginService } from 'src/app/services/login.service';
+import { MessageService } from 'src/app/services/message.service';
 import { PostsService } from 'src/app/services/posts.service';
 import { ThemeService } from 'src/app/services/theme.service';
 import { environment } from 'src/environments/environment';
 @Component({
   selector: 'app-search',
   templateUrl: './search.component.html',
-  styleUrls: ['./search.component.scss']
+  styleUrls: ['./search.component.scss'],
 })
 export class SearchComponent implements OnInit, OnDestroy {
-
   cacheurl = environment.externalCacheurl;
   baseMediaUrl = environment.baseMediaUrl;
   searchForm: UntypedFormGroup = new UntypedFormGroup({
-    search: new UntypedFormControl('', [Validators.required])
+    search: new UntypedFormControl('', [Validators.required]),
   });
   currentSearch = '';
   posts: ProcessedPost[][] = [];
   viewedPosts = 0;
   users: SimplifiedUser[] = [];
-  avatars: any = {};
+  avatars: Record<string, string> = {};
   viewedUsers = 0;
   followedUsers: Array<string> = [];
   userLoggedIn = false;
   currentPage = 0;
   loading = false;
   navigationSubscription;
+
+  searchIcon = faSearch;
+  atLeastOneSearchDone = false;
 
   constructor(
     private dashboardService: DashboardService,
@@ -43,10 +50,12 @@ export class SearchComponent implements OnInit, OnDestroy {
     private activatedRoute: ActivatedRoute,
     private themeService: ThemeService
   ) {
-    this.themeService.setMyTheme()
-    this.navigationSubscription = router.events.pipe(filter(event => event instanceof NavigationEnd)).subscribe((ev)=> {
-      this.ngOnInit()
-    })
+    this.themeService.setMyTheme();
+    this.navigationSubscription = router.events
+      .pipe(filter((event) => event instanceof NavigationEnd))
+      .subscribe(() => {
+        this.ngOnInit();
+      });
   }
   ngOnDestroy(): void {
     this.navigationSubscription.unsubscribe();
@@ -54,40 +63,54 @@ export class SearchComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.followedUsers = this.postService.followedUserIds;
-    this.postService.updateFollowers.subscribe( () => {
+    this.postService.updateFollowers.subscribe(() => {
       this.followedUsers = this.postService.followedUserIds;
-    } );
+    });
     this.userLoggedIn = this.loginService.checkUserLoggedIn();
-    if(this.activatedRoute.snapshot.paramMap.get('term')) {
+    if (this.activatedRoute.snapshot.paramMap.get('term')) {
       this.searchForm.patchValue({
-        search: this.activatedRoute.snapshot.paramMap.get('term')
+        search: this.activatedRoute.snapshot.paramMap.get('term'),
       });
       this.submitSearch();
     }
+  }
 
+  getAvatar(url: string) {
+    return this.avatars[url];
   }
 
   async submitSearch() {
     this.loading = true;
+    this.atLeastOneSearchDone = true;
     this.viewedPosts = 0;
     this.viewedUsers = 0;
     this.currentPage = 0;
     this.currentSearch = this.searchForm.value['search'];
-    const searchResult = await this.dashboardService.getSearchPage(this.currentPage, this.currentSearch);
+    const searchResult = await this.dashboardService.getSearchPage(
+      this.currentPage,
+      this.currentSearch
+    );
     this.posts = searchResult.posts;
     this.users = searchResult.users;
     searchResult.users.forEach((user) => {
-      this.avatars[user.url] = user.url.startsWith('@') ? this.cacheurl + encodeURIComponent(user.avatar) : this.baseMediaUrl + user.avatar;
-    })
+      this.avatars[user.url] = user.url.startsWith('@')
+        ? this.cacheurl + encodeURIComponent(user.avatar)
+        : this.baseMediaUrl + user.avatar;
+    });
     this.loading = false;
   }
 
   async loadResults(page: number) {
-    const searchResult = await this.dashboardService.getSearchPage(page, this.currentSearch);
+    const searchResult = await this.dashboardService.getSearchPage(
+      page,
+      this.currentSearch
+    );
     searchResult.posts.forEach((post) => this.posts.push(post));
     searchResult.users.forEach((user) => {
       this.users.push(user);
-      this.avatars[user.url] = user.url.startsWith('@') ? this.cacheurl + encodeURIComponent(user.avatar) : this.baseMediaUrl + user.avatar;
+      this.avatars[user.url] = user.url.startsWith('@')
+        ? this.cacheurl + encodeURIComponent(user.avatar)
+        : this.baseMediaUrl + user.avatar;
     });
   }
 
@@ -100,7 +123,7 @@ export class SearchComponent implements OnInit, OnDestroy {
   }
 
   async countViewedUser() {
-    this.viewedUsers ++;
+    this.viewedUsers++;
     if (this.users.length - 3 < this.viewedUsers) {
       this.currentPage++;
       await this.loadResults(this.currentPage);
@@ -109,21 +132,33 @@ export class SearchComponent implements OnInit, OnDestroy {
 
   async followUser(id: string) {
     const response = await this.postService.followUser(id);
-    if(response) {
-      this.messages.add({ severity: 'success', summary: 'You now follow this user!' });
+    if (response) {
+      this.messages.add({
+        severity: 'success',
+        summary: 'You now follow this user!',
+      });
     } else {
-      this.messages.add({ severity: 'error', summary: 'Something went wrong! Check your internet conectivity and try again' });
+      this.messages.add({
+        severity: 'error',
+        summary:
+          'Something went wrong! Check your internet conectivity and try again',
+      });
     }
   }
 
   async unfollowUser(id: string) {
     const response = await this.postService.unfollowUser(id);
-    if(response) {
-      this.messages.add({ severity: 'success', summary: 'You no longer follow this user!' });
+    if (response) {
+      this.messages.add({
+        severity: 'success',
+        summary: 'You no longer follow this user!',
+      });
     } else {
-      this.messages.add({ severity: 'error', summary: 'Something went wrong! Check your internet conectivity and try again' });
+      this.messages.add({
+        severity: 'error',
+        summary:
+          'Something went wrong! Check your internet conectivity and try again',
+      });
     }
-
   }
-
 }

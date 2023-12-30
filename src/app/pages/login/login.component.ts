@@ -2,8 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import { LoginService } from 'src/app/services/login.service';
 import { environment } from 'src/environments/environment';
 import { UntypedFormGroup, UntypedFormControl, Validators } from '@angular/forms'
-import {MessageService} from 'primeng/api';
 import { Router } from '@angular/router';
+import { MessageService } from 'src/app/services/message.service';
+import { faUser } from '@fortawesome/free-solid-svg-icons'
 
 @Component({
   selector: 'app-login',
@@ -14,6 +15,7 @@ export class LoginComponent implements OnInit {
 
   loading = false;
   logo = environment.logo;
+  faUser = faUser;
 
   loginForm = new UntypedFormGroup({
     email:  new UntypedFormControl('', [Validators.required, Validators.email]),

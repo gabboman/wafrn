@@ -1,24 +1,63 @@
 .avatar {
-    max-height: 2em;
-    max-width: 2em;
-    border-radius: 25%;
+  max-height: 40px;
+  max-width: 40px;
+  width: 100%;
+  margin-right: 4px;
+
+  img {
+    border-radius: 8px;
+    margin: 0 auto;
+    display: block;
+    width: auto;
+    max-width: 100%;
+    object-fit: cover;
+  }
 }
 
 .center-text {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    gap: 0.25em;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 0.25em;
 }
 
 .share-button {
-    gap: 0.5em
+  gap: 0.5em;
 }
 
-.timestamp {
-    font-size: 0.75em;
+.blurry {
+  filter: opacity(0);
 }
 
-.blurry{
-    filter: opacity(0);
+.split-button-left {
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+  min-width: 0;
+}
+
+.split-button-right {
+  width: 30px !important;
+  min-width: unset !important;
+  padding: 0 2px;
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+  border-left: 1px solid #ffffff44;
+}
+
+hr {
+  width: calc(100% + 32px);
+  margin: 12px -16px;
+}
+
+.tag {
+  height: 24px;
+  padding: 0 6px;
+  cursor: pointer;
+}
+
+.follow-button {
+  height: 24px;
+  padding: 0;
+  cursor: pointer;
+  margin-left: 0px;
 }

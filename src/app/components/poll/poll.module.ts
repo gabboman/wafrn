@@ -1,8 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { PollComponent } from './poll.component';
-import { ProgressBarModule } from 'primeng/progressbar';
-
+import {MatProgressBarModule} from '@angular/material/progress-bar';
 
 
 @NgModule({
@@ -11,7 +10,7 @@ import { ProgressBarModule } from 'primeng/progressbar';
   ],
   imports: [
     CommonModule,
-    ProgressBarModule
+    MatProgressBarModule
   ],
   exports: [
     PollComponent

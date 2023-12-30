@@ -1,38 +1,55 @@
-<div class="grid pb-6 lg:px-4 scalein  wafrn-container">
-  <div class="col-12 wafrn-post">
-    <p-card>
-      <div class="text-center mb-5">
-        <img loading="lazy" [src]="logo" alt="Image" height="50" class="mb-3">
-        <div class="text-900 text-3xl font-medium mb-3">Welcome Back</div>
-        <a [routerLink]="['/dashboard/explore']" class="text-900 text-3xl font-medium mb-3 text-blue-500 cursor-pointer">Click here to take a look without an account!</a>
-        <br>
-        <span class="text-600 font-medium line-height-3">Don't have an account?</span>
-        <a routerLink="/" class="font-medium no-underline ml-2 text-blue-500 cursor-pointer">Register now!</a>
-        <br>
-        <span class="text-600 font-medium line-height-3">If you have any issue please check your spam folder!</span>
-        <br>
-        <span class="text-600 font-medium line-height-3">Still having problems? Send us an email at info &#64;
-          wafrn.net</span>
-
-      </div>
-
-      <p-progressSpinner *ngIf="loading"></p-progressSpinner>
-
-      <form [hidden]="loading" [formGroup]="loginForm" (ngSubmit)="onSubmit()">
-        <label for="email" class="block text-900 font-medium mb-2">Email</label>
-        <input formControlName="email" id="email" type="email" pInputText class="w-full mb-3">
-
-        <label for="password" class="block text-900 font-medium mb-2">Password</label>
-        <input formControlName="password" id="password" type="password" pInputText class="w-full mb-3">
-
-        <div class="flex align-items-center justify-content-between mb-6">
-          <a routerLink="/recoverPassword"
-            class="font-medium no-underline ml-2 text-blue-500 text-right cursor-pointer">Forgot password?</a>
-        </div>
-
-        <button [disabled]="loading || !loginForm.valid" pButton pRipple label="Sign In" icon="pi pi-user"
-          class="w-full"></button>
-      </form>
-    </p-card>
+<mat-card class="p-3 mb-6 lg:mx-4 scalein wafrn-container">
+  <div class="text-center mb-5">
+    <img loading="lazy" [src]="logo" alt="Image" height="50" class="mb-3" />
+    <div class="text-900 text-3xl font-medium mb-4">Welcome Back!</div>
+    <p class="text-900 text-xl font-medium mb-3">
+      <a [routerLink]="['/dashboard/explore']">
+        Click here to take a look without an account!
+      </a>
+    </p>
+    <p>
+      <span class="text-600 font-medium line-height-3"
+        >Don't have an account?</span
+      >
+      <a routerLink="/" class="font-medium no-underline ml-2 cursor-pointer"
+        >Register now!</a
+      >
+    </p>
+    <p class="text-600 font-medium line-height-3">
+      If you have any issue please check your spam folder!
+    </p>
+    <p class="text-600 font-medium line-height-3">
+      Still having problems? Send us an email at info &#64; wafrn.net
+    </p>
   </div>
-</div>
+
+  <form [hidden]="loading" [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+    <mat-form-field class="w-full">
+      <mat-label>Email</mat-label>
+      <input formControlName="email" type="email" matInput />
+    </mat-form-field>
+
+    <mat-form-field class="w-full">
+      <mat-label>Password</mat-label>
+      <input formControlName="password" type="password" matInput />
+      <mat-hint
+        ><a
+          routerLink="/recoverPassword"
+          class="font-medium no-underline ml-2 text-right cursor-pointer"
+          >Forgot password? Click here!</a
+        ></mat-hint
+      >
+    </mat-form-field>
+
+    <button
+      [disabled]="loading || !loginForm.valid"
+      mat-flat-button
+      color="primary"
+      extended
+      class="w-full border-round-md mt-4"
+    >
+      <fa-icon [icon]="faUser"></fa-icon>
+      Login
+    </button>
+  </form>
+</mat-card>

@@ -1,34 +1,28 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { NavigationMenuComponent } from './navigation-menu.component';
-import { SidebarModule } from 'primeng/sidebar';
-import { PanelMenuModule } from 'primeng/panelmenu';
-import { ButtonModule } from 'primeng/button';
-import { PostEditorModule } from '../post-editor/post-editor.module';
-import { ReportPostModule } from '../report-post/report-post.module';
 import { RouterModule } from '@angular/router';
-import { DeletePostModule } from '../delete-post/delete-post.module';
-import { BadgeModule } from 'primeng/badge';
-
-
+import { MatSidenavModule } from '@angular/material/sidenav';
+import { MatListModule } from '@angular/material/list';
+import { MenuItemComponent } from '../menu-item/menu-item.component';
+import { MatBadgeModule } from '@angular/material/badge';
+import { MatButtonModule } from '@angular/material/button';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { MatDialogModule } from '@angular/material/dialog';
 
 @NgModule({
-  declarations: [
-    NavigationMenuComponent
-  ],
+  declarations: [NavigationMenuComponent],
   imports: [
     CommonModule,
-    SidebarModule,
-    PanelMenuModule,
-    ButtonModule,
-    PostEditorModule,
-    ReportPostModule,
     RouterModule,
-    DeletePostModule,
-    BadgeModule,
+    MatSidenavModule,
+    MatListModule,
+    MenuItemComponent,
+    MatBadgeModule,
+    FontAwesomeModule,
+    MatButtonModule,
+    MatDialogModule,
   ],
-  exports: [
-    NavigationMenuComponent
-  ]
+  exports: [NavigationMenuComponent],
 })
-export class NavigationMenuModule { }
+export class NavigationMenuModule {}
