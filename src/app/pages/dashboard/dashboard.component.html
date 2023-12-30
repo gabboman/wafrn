@@ -29,10 +29,15 @@
 <div *ngFor="let post of posts; let indexOfelement = index">
   <app-post [post]="post"></app-post>
 </div>
-<footer
-  id="if-you-see-this-load-more-posts"
-  class="p-4 flex gap-3 align-items-center"
->
-  <mat-spinner diameter="42"></mat-spinner>
-  <p class="m-0 text-lg text-600">Loading more...</p>
+<footer class="p-4 flex gap-3 align-items-center">
+  <mat-spinner *ngIf="!noMorePosts" diameter="42"></mat-spinner>
+  <p
+    [hidden]="loadingPosts || noMorePosts"
+    id="if-you-see-this-load-more-posts"
+    class="m-0 text-lg text-600"
+  >
+    Loading more...
+  </p>
+  <p *ngIf="loadingPosts" class="m-0 text-lg text-600">Loading more posts</p>
+  <p *ngIf="noMorePosts" class="m-0 text-lg text-600">No more posts found</p>
 </footer>

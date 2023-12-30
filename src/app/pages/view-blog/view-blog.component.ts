@@ -28,6 +28,7 @@ import { environment } from 'src/environments/environment';
 })
 export class ViewBlogComponent implements OnInit, OnDestroy {
   loading = true;
+  noMorePosts = false;
   found = true;
   viewedPosts = 0;
   currentPage = 0;
@@ -158,9 +159,7 @@ export class ViewBlogComponent implements OnInit, OnDestroy {
               icon: 'pi pi-server',
             },
       ];
-      this.loadPosts(this.currentPage).then(() => {
-        this.loading = false;
-      });
+      this.loadPosts(this.currentPage).then(() => {});
       this.avatarUrl = this.blogDetails.url.startsWith('@')
         ? environment.externalCacheurl +
           encodeURIComponent(this.blogDetails.avatar)
@@ -194,6 +193,18 @@ export class ViewBlogComponent implements OnInit, OnDestroy {
     } else {
       this.themeService.setTheme('');
     }
+    const element = document.querySelector('#if-you-see-this-load-more-posts');
+    const observer = new IntersectionObserver(
+      (intersectionEntries: IntersectionObserverEntry[]) => {
+        if (intersectionEntries[0].isIntersecting) {
+          this.currentPage++;
+          this.loadPosts(this.currentPage);
+        }
+      }
+    );
+    if (element) {
+      observer.observe(element);
+    }
   }
 
   async countViewedPost() {
@@ -205,6 +216,7 @@ export class ViewBlogComponent implements OnInit, OnDestroy {
   }
 
   async loadPosts(page: number) {
+    this.loading = true;
     const tmpPosts = await this.dashboardService.getBlogPage(
       page,
       this.blogUrl
@@ -212,6 +224,10 @@ export class ViewBlogComponent implements OnInit, OnDestroy {
     tmpPosts.forEach((post) => {
       this.posts.push(post);
     });
+    this.loading = false;
+    if (tmpPosts.length === 0) {
+      this.noMorePosts = true;
+    }
   }
 
   async unfollowUser(id: string) {

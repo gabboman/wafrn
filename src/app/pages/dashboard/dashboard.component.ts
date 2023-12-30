@@ -15,6 +15,8 @@ import { faArrowsRotate } from '@fortawesome/free-solid-svg-icons';
   styleUrls: ['./dashboard.component.scss'],
 })
 export class DashboardComponent implements OnInit {
+  loadingPosts = false;
+  noMorePosts = false;
   posts: ProcessedPost[][] = [];
   viewedPostsNumber = 0;
   viewedPostsIds: string[] = [];
@@ -70,18 +72,24 @@ export class DashboardComponent implements OnInit {
         this.router.navigate(['/dashboard/exploreLocal']);
       }
     });
-    this.loadPosts(this.currentPage).then(()=> {
-      // we detect the bottom of the page and load more posts
-      const element = document.querySelector('#if-you-see-this-load-more-posts');
-      const observer = new IntersectionObserver( (intersectionEntries: IntersectionObserverEntry[])=> {
-        if(intersectionEntries[0].isIntersecting) {
-          this.currentPage++;
-          this.loadPosts(this.currentPage);
+    this.loadPosts(this.currentPage).then(() => {
+      setTimeout(() => {
+        // we detect the bottom of the page and load more posts
+        const element = document.querySelector(
+          '#if-you-see-this-load-more-posts'
+        );
+        const observer = new IntersectionObserver(
+          (intersectionEntries: IntersectionObserverEntry[]) => {
+            if (intersectionEntries[0].isIntersecting) {
+              this.currentPage++;
+              this.loadPosts(this.currentPage);
+            }
+          }
+        );
+        if (element) {
+          observer.observe(element);
         }
-      } );
-    if(element) {
-      observer.observe(element)
-    }
+      });
     });
     this.themeService.setMyTheme();
   }
@@ -103,6 +111,7 @@ export class DashboardComponent implements OnInit {
   }
 
   async loadPosts(page: number) {
+    this.loadingPosts = true;
     let scrollDate = new Date();
     if (page !== 0) {
       const lastPostBlock = this.posts[this.posts.length - 1];
@@ -112,6 +121,7 @@ export class DashboardComponent implements OnInit {
       scrollDate,
       this.level
     );
+    this.noMorePosts = tmpPosts.length === 0;
     const filteredPosts = tmpPosts.filter((post: ProcessedPost[]) => {
       let allFragmentsSeen = true;
       post.forEach((component) => {
@@ -167,5 +177,6 @@ export class DashboardComponent implements OnInit {
       this.currentPage = this.currentPage + 1;
       await this.loadPosts(this.currentPage);
     }
+    this.loadingPosts = false;
   }
 }
