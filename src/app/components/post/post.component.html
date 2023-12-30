@@ -189,17 +189,15 @@
   </div>
   }
   <hr />
-  <div class="grid">
-    <button
-      *ngIf="!showFull"
-      class="w-full mb-3 mt-2"
-      color="accent"
-      mat-flat-button
-      (click)="expandPost()"
-    >
-      Expand post
-    </button>
-  </div>
+  <button
+    *ngIf="!showFull"
+    color="accent"
+    class="w-full mb-3 mt-2 w-full"
+    mat-flat-button
+    (click)="expandPost()"
+  >
+    Expand post
+  </button>
 
   <div class="grid">
     <div class="col-8 flex justify-content-start">
