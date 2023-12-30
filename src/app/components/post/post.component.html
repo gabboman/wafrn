@@ -189,9 +189,18 @@
   </div>
   }
   <hr />
-  <button class="w-full" mat-flat-button (click)="expandPost()">
-    Expand post
-  </button>
+  <div class="grid">
+    <button
+      *ngIf="!showFull"
+      class="w-full mb-3 mt-2"
+      color="accent"
+      mat-flat-button
+      (click)="expandPost()"
+    >
+      Expand post
+    </button>
+  </div>
+
   <div class="grid">
     <div class="col-8 flex justify-content-start">
       <a [routerLink]="'/post/' + finalPost.id">Notes: {{ notes }}</a>
