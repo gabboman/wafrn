@@ -18,7 +18,7 @@
         <a [routerLink]="'/blog/' + notification.userUrl">{{
           notification.userUrl
         }}</a>
-        @switch ((notification.type)) { @case(notificationType.MENTION) {
+        @switch (notification.type) { @case(notificationType.MENTION) {
         mentioned you <a [routerLink]="notification.url"> in a post</a>} @case
         (notificationType.LIKE) { liked
         <a [routerLink]="notification.url">one of your posts</a>
@@ -26,11 +26,11 @@
         (notificationType.PRIVATE) {
         <a [routerLink]="notification.url">sent you a DM</a>. TEMPORARY
         WORKARROUND:
-        <a [routerLink="/dashboard/private" ]
+        <a [routerLink]="'/dashboard/private'"
           >click here to go to your DMs. Yep we are working on this</a
         >
         } @case (notificationType.REBLOG) { reblogged
-        <a [routerLink="notification.url" ]>one of your posts</a>} }
+        <a [routerLink]="notification.url">one of your posts</a>} }
       </p>
     </div>
   </div>
