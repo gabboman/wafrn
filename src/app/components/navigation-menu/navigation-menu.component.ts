@@ -152,6 +152,7 @@ export class NavigationMenuComponent implements OnInit, OnDestroy {
         title: 'Write a post',
         icon: faPencil,
         command: async () => {
+          this.hideMenu();
           this.dialogService.open(
             await this.editorService.getEditorComponent(),
             {
