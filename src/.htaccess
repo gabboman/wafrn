@@ -1,32 +1,37 @@
 # Generated with ngx-htaccess-generator v1.2.4
+
 # Check for updates: https://julianpoemp.github.io/ngx-htaccess-generator/
 
 <IfModule mod_rewrite.c>
   RewriteEngine On
 
-  # Redirection to HTTPS:
-  RewriteCond %{HTTPS} !on
-  RewriteRule (.*) https://%{HTTP_HOST}%{REQUEST_URI} [R=301,L]
+# Redirection to HTTPS:
 
-  # Redirection of requests to index.html
-  RewriteBase /
-  RewriteRule ^index\.html$ - [L]
-  RewriteCond %{REQUEST_FILENAME} !-f
-  RewriteCond %{REQUEST_FILENAME} !-d
-  RewriteRule . /index.html [L]
+RewriteCond %{HTTPS} !on
+RewriteRule (.\*) https://%{HTTP_HOST}%{REQUEST_URI} [R=301,L]
+
+# Redirection of requests to index.html
+
+RewriteBase /
+RewriteRule ^index\.html$ - [L]
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteCond %{REQUEST_URI} !^/api/$
+RewriteRule . /index.html [L]
 </IfModule>
 
 # Disable browser caching for all files that don't get a hash string by Angular.
-<FilesMatch "^(?!.*\.([0-9a-z]{20})\.).*$">
-  <IfModule mod_headers.c>
-    FileETag None
-    Header unset ETag
-    Header unset Pragma
-    Header unset Cache-Control
-    Header unset Last-Modified
-    Header set Pragma "no-cache"
-    Header set Cache-Control "max-age=0, no-cache, no-store, must-revalidate"
-    Header set Expires "Mon, 1 Jan 1900 00:00:00 GMT"
-  </IfModule>
+
+<FilesMatch "^(?!._\.([0-9a-z]{20})\.)._$">
+<IfModule mod_headers.c>
+FileETag None
+Header unset ETag
+Header unset Pragma
+Header unset Cache-Control
+Header unset Last-Modified
+Header set Pragma "no-cache"
+Header set Cache-Control "max-age=0, no-cache, no-store, must-revalidate"
+Header set Expires "Mon, 1 Jan 1900 00:00:00 GMT"
+</IfModule>
 
 </FilesMatch>
