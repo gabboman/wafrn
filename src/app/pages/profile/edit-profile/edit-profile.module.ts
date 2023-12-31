@@ -5,6 +5,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { loginRequiredGuard } from 'src/app/guards/login-required.guard';
 import { QuillModule } from 'ngx-quill';
+import { MatCardModule } from '@angular/material/card';
 
 const routes: Routes = [
       {
@@ -23,7 +24,8 @@ const routes: Routes = [
     RouterModule.forChild(routes),
     FormsModule,
     ReactiveFormsModule,
-    QuillModule
+    QuillModule,
+    MatCardModule
   ]
 })
 export class EditProfileModule { }

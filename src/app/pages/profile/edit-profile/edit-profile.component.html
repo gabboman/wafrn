@@ -1,33 +1,91 @@
-<!--
-<div class="grid">
-    <div class="col-12 sm:col-12 md:col-12 lg:col-5 margin-auto pb-6">
-      <p-card>
-      <p-progressSpinner *ngIf="loading"></p-progressSpinner>
+<mat-card class="p-3 mb-6 lg:mx-4 scalein wafrn-container">
+  <form
+    [hidden]="loading"
+    [formGroup]="editProfileForm"
+    (ngSubmit)="onSubmit()"
+  >
+    <label for="avatar" class="block text-900 font-medium mb-2">
+      Select a new avatar</label
+    >
+    <input
+      formControlName="avatar"
+      id="avatar"
+      type="file"
+      accept="image/jpeg,image/png,image/webp,image/gif"
+      (change)="imgSelected($event)"
+      pTooltip="Select your avatar"
+      tooltipPosition="top"
+      pInputText
+      class="w-full mb-3"
+    />
 
-      <form [hidden]="loading" [formGroup]="editProfileForm" (ngSubmit)="onSubmit()" >
-        <label for="avatar" class="block text-900 font-medium mb-2"> Select a new avatar</label>
-        <input formControlName="avatar" id="avatar" type="file" accept="image/jpeg,image/png,image/webp,image/gif" (change)="imgSelected($event)"
-          pTooltip="Select your avatar" tooltipPosition="top" pInputText
-          class="w-full mb-3">
-
-        <label for="name" class="block text-900 font-medium mb-2">Name</label>
-        <input pInputText formControlName="name" class="w-full">
-        <label for="description" class="block text-900 font-medium mb-2">Description</label>
-        <quill-editor #quill formControlName="description" class="w-full" [modules]="{toolbar: []}" >
-          <div quill-editor-toolbar style="border-top-left-radius: 5px; border-top-right-radius: 5px;">
-            <button pButton type="button" class="ql-bold" aria-label="Bold" title="Bold"></button>
-            <button pButton type="button" class="ql-italic" aria-label="Italic" title="Italic"></button>
-            <button pButton type="button" class="ql-underline" aria-label="Underline" title="Underline"></button>
-            <button pButton type="button" class="ql-strike" aria-label="Strike" title="Strike"></button>
-            <button pButton type="button" class="ql-link" aria-label="Insert Link" title="Insert Link"></button>
-          </div>
-        </quill-editor>
-        <div class="flex align-items-center justify-content-between mb-6">
-          <a routerLink="/recoverPassword" class="font-medium no-underline ml-2 text-blue-500 text-right cursor-pointer">To change your password, please use the reset password form</a>
-        </div>
-        <button [disabled]="!editProfileForm.valid" pButton pRipple label="Update profile" icon="pi pi-user" class="w-full"></button>
-      </form>
-    </p-card>
+    <label for="name" class="block text-900 font-medium mb-2">Name</label>
+    <input pInputText formControlName="name" class="w-full" />
+    <label for="description" class="block text-900 font-medium mb-2"
+      >Description</label
+    >
+    <quill-editor
+      #quill
+      formControlName="description"
+      class="w-full"
+      [modules]="{ toolbar: [] }"
+    >
+      <div
+        quill-editor-toolbar
+        style="border-top-left-radius: 5px; border-top-right-radius: 5px"
+      >
+        <button
+          pButton
+          type="button"
+          class="ql-bold"
+          aria-label="Bold"
+          title="Bold"
+        ></button>
+        <button
+          pButton
+          type="button"
+          class="ql-italic"
+          aria-label="Italic"
+          title="Italic"
+        ></button>
+        <button
+          pButton
+          type="button"
+          class="ql-underline"
+          aria-label="Underline"
+          title="Underline"
+        ></button>
+        <button
+          pButton
+          type="button"
+          class="ql-strike"
+          aria-label="Strike"
+          title="Strike"
+        ></button>
+        <button
+          pButton
+          type="button"
+          class="ql-link"
+          aria-label="Insert Link"
+          title="Insert Link"
+        ></button>
+      </div>
+    </quill-editor>
+    <div class="flex align-items-center justify-content-between mb-6">
+      <a
+        routerLink="/recoverPassword"
+        class="font-medium no-underline ml-2 text-blue-500 text-right cursor-pointer"
+        >To change your password, please use the reset password form</a
+      >
     </div>
-  </div>
--->
+    <button
+      [disabled]="!editProfileForm.valid"
+      pButton
+      pRipple
+      icon="pi pi-user"
+      class="w-full"
+    >
+      Update profile
+    </button>
+  </form>
+</mat-card>
