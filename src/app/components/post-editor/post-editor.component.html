@@ -113,7 +113,7 @@
   </a>
   }
   <div>
-    <div *ngIf="uploadedMedias.length < 4">
+    <div class="pb-3 w-full" *ngIf="uploadedMedias.length < 4">
       <app-file-upload (fileUpload)="uploadImage($event)"></app-file-upload>
     </div>
     <div *ngIf="uploadedMedias.length >= 4">
