@@ -6,6 +6,7 @@ import { PostModule } from '../../components/post/post.module';
 import { PagenotfoundModule } from '../pagenotfound/pagenotfound.module';
 import { MatTableModule } from '@angular/material/table';
 import { MatPaginatorModule } from '@angular/material/paginator';
+import { MatCardModule } from '@angular/material/card';
 
 const routes: Routes = [
   {
@@ -23,6 +24,7 @@ const routes: Routes = [
     PagenotfoundModule,
     MatTableModule,
     MatPaginatorModule,
+    MatCardModule,
   ],
 })
 export class SinglePostModule {}
