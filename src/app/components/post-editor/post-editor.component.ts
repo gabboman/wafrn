@@ -146,8 +146,8 @@ export class PostEditorComponent implements OnInit, OnDestroy {
     this.enablePrivacyEdition = true;
     this.privacy = this.privacyOptions[0].level;
     this.contentWarning = '';
-    this.idPostToReblog = this.data.post?.id;
-    const inResponseTo = this.data.post;
+    this.idPostToReblog = this.data?.post?.id;
+    const inResponseTo = this.data?.post;
     this.postCreatorContent = '';
     this.uploadedMedias = [];
     this.tags = '';
