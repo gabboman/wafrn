@@ -4,7 +4,6 @@ import { RouterModule, Routes } from '@angular/router';
 import { ViewBlogComponent } from './view-blog.component';
 import { PostModule } from '../../components/post/post.module';
 import { PagenotfoundModule } from '../pagenotfound/pagenotfound.module';
-import { DeferModule } from 'src/app/directives/defer/defer.module';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
@@ -23,7 +22,6 @@ const routes: Routes = [
   imports: [
     CommonModule,
     RouterModule.forChild(routes),
-    DeferModule,
     PostModule,
     PagenotfoundModule,
     MatProgressSpinnerModule,

@@ -4,7 +4,6 @@ import { DashboardComponent } from './dashboard.component';
 import { RouterModule, Routes } from '@angular/router';
 import { PostModule } from 'src/app/components/post/post.module';
 import { loginRequiredGuard } from 'src/app/guards/login-required.guard';
-import { DeferModule } from 'src/app/directives/defer/defer.module';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { MatButtonModule } from '@angular/material/button';
@@ -36,7 +35,6 @@ const routes: Routes = [
   imports: [
     CommonModule,
     RouterModule.forChild(routes),
-    DeferModule,
     PostModule,
     MatProgressSpinnerModule,
     MatButtonModule,

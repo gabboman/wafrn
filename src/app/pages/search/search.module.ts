@@ -3,7 +3,6 @@ import { CommonModule } from '@angular/common';
 import { SearchComponent } from './search.component';
 import { RouterModule, Routes } from '@angular/router';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { DeferModule } from 'src/app/directives/defer/defer.module';
 import { PostModule } from 'src/app/components/post/post.module';
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
@@ -31,7 +30,6 @@ const routes: Routes = [
     FormsModule,
     ReactiveFormsModule,
     RouterModule.forChild(routes),
-    DeferModule,
     PostModule,
     MatCardModule,
     MatButtonModule,
@@ -39,7 +37,7 @@ const routes: Routes = [
     MatInputModule,
     FontAwesomeModule,
     MatListModule,
-    MatProgressSpinnerModule
+    MatProgressSpinnerModule,
   ],
 })
 export class SearchModule {}
