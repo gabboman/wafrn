@@ -54,18 +54,19 @@
   [post]="post"
 ></app-post>
 
-<mat-card class="p-3 mb-6 lg:mx-4 scalein wafrn-container">
-  <table
-    *ngIf="
-      !loading &&
-      postFound &&
-      post &&
-      post.length > 0 &&
-      post[post.length - 1].descendents
-    "
-    mat-table
-    [dataSource]="dataSource"
-  >
+<mat-card
+  *ngIf="
+    !loading &&
+    postFound &&
+    post &&
+    post.length > 0 &&
+    post[post.length - 1].descendents
+  "
+  class="p-3 mb-6 lg:mx-4 scalein wafrn-container"
+>
+  You mighw want to check the replies in the
+  <a [href]="'/post/' + post[0].id">initial post</a>
+  <table mat-table [dataSource]="dataSource">
     <!-- Position Column -->
     <ng-container matColumnDef="user">
       <th mat-header-cell *matHeaderCellDef>User</th>
