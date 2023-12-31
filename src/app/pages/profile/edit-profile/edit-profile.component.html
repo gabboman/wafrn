@@ -7,23 +7,25 @@
     <label for="avatar" class="block text-900 font-medium mb-2">
       Select a new avatar</label
     >
-    <input
-      formControlName="avatar"
-      id="avatar"
-      type="file"
-      accept="image/jpeg,image/png,image/webp,image/gif"
-      (change)="imgSelected($event)"
-      pTooltip="Select your avatar"
-      tooltipPosition="top"
-      pInputText
-      class="w-full mb-3"
-    />
+    <div class="pt-2 px-3 border-round-md" style="border: 1px solid #999">
+      <label for="avatar" class="block text-900 font-medium mb-2"
+        >Upload your avatar</label
+      >
+      <input
+        formControlName="avatar"
+        id="avatar"
+        type="file"
+        accept="image/jpeg,image/png,image/webp,image/gif"
+        (change)="imgSelected($event)"
+        class="w-full mb-3"
+      />
+    </div>
 
-    <label for="name" class="block text-900 font-medium mb-2">Name</label>
-    <input pInputText formControlName="name" class="w-full" />
-    <label for="description" class="block text-900 font-medium mb-2"
-      >Description</label
-    >
+    <mat-form-field class="w-full">
+      <mat-label>Name</mat-label>
+      <input formControlName="name" matInput />
+    </mat-form-field>
+
     <quill-editor
       #quill
       formControlName="description"
@@ -80,8 +82,8 @@
     </div>
     <button
       [disabled]="!editProfileForm.valid"
-      pButton
-      pRipple
+      mat-flat-button
+      color="primary"
       icon="pi pi-user"
       class="w-full"
     >
