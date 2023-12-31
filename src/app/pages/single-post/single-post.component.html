@@ -48,4 +48,59 @@
 
 -->
 
-<app-post [showFull]="true" *ngIf="!loading && postFound && post" [post]="post"></app-post>
+<app-post
+  [showFull]="true"
+  *ngIf="!loading && postFound && post"
+  [post]="post"
+></app-post>
+
+<table
+  *ngIf="
+    !loading &&
+    postFound &&
+    post &&
+    post.length > 0 &&
+    post[post.length - 1].descendents
+  "
+  mat-table
+  [dataSource]="dataSource"
+>
+  <!-- Position Column -->
+  <ng-container matColumnDef="user">
+    <th mat-header-cell *matHeaderCellDef>User</th>
+    <td mat-cell *matCellDef="let element">
+      <a [routerLink]="'/blog/' + element.user.url"
+        ><img class="avatar" [src]="element.user.avatar" alt="" />{{
+          element.user.url
+        }}</a
+      >
+    </td>
+  </ng-container>
+
+  <ng-container matColumnDef="action">
+    <th mat-header-cell *matHeaderCellDef>Action</th>
+    <td mat-cell *matCellDef="let element">
+      <!--TODO fix href so its not a full load-->
+      <a [href]="'/post/' + element.id">
+        @if(element?.content !== '') { replied to the post } @else { reblogged }
+      </a>
+    </td>
+  </ng-container>
+
+  <!-- Definitions -->
+  <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+  <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+</table>
+<mat-paginator
+  *ngIf="
+    !loading &&
+    postFound &&
+    post &&
+    post.length > 0 &&
+    post[post.length - 1].descendents
+  "
+  [pageSizeOptions]="[5, 10, 25, 50, 100]"
+  showFirstLastButtons
+  aria-label="Select page of periodic elements"
+>
+</mat-paginator>
