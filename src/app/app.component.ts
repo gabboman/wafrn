@@ -18,19 +18,23 @@ export class AppComponent implements OnInit {
 
   ngOnInit() {
     // unregister serviceworkers
-    navigator.serviceWorker.getRegistrations().then(function (registrations) {
+    /*navigator.serviceWorker.getRegistrations().then(function (registrations) {
       for (const registration of registrations) {
         registration.unregister();
       }
-    });
-    /*
-      if (this.swUpdate.isEnabled) {
-        this.swUpdate.checkForUpdate().then((updateAvaiable) => {
-          if(updateAvaiable && confirm("You're using an old version of wafrn, do you want to update?")) {
-            window.location.reload();
-          }
-        });
-      }
-      */
+    });*/
+
+    if (this.swUpdate.isEnabled) {
+      this.swUpdate.checkForUpdate().then((updateAvaiable) => {
+        if (
+          updateAvaiable &&
+          confirm(
+            "You're using an old version of wafrn, do you want to update?"
+          )
+        ) {
+          window.location.reload();
+        }
+      });
+    }
   }
 }
