@@ -226,6 +226,7 @@ export class PostEditorComponent implements OnInit, OnDestroy {
     let tagsToSend = '';
     this.tags
       .split(',')
+      .map((elem) => elem.trim())
       .filter((t) => t !== '')
       .forEach((elem) => {
         tagsToSend = `${tagsToSend}${elem.trim()},`;
