@@ -29,14 +29,22 @@
           "/*.(svg|cur|jpg|jpeg|png|apng|webp|avif|gif|otf|ttf|woff|woff2)"
         ]
       }
-    },
+    }
+  ],
+  "dataGroups": [
     {
+      "cacheConfig": {
+        "maxAge": "10s",
+        "maxSize": 20,
+        "strategy": "freshness",
+        "timeout": "420"
+      },
       "name": "fedicache",
-      "updateMode": "lazy",
-      "installMode": "lazy",
-      "resources": {
-        "urls": ["https://cache.wafrn.net/**", "https://media.wafrn.net/**"]
-      }
+      "urls": [
+        "https://cache.wafrn.net/**",
+        "https://media.wafrn.net/**",
+        "https://api.wafrn.net/api/**"
+      ]
     }
   ]
 }

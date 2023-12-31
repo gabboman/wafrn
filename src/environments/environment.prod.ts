@@ -1,7 +1,7 @@
 export const environment = {
   production: true,
   maxUploadSize: '250', // upload size in mb.
-  baseUrl: 'https://app.wafrn.net/api',
+  baseUrl: 'https://api.wafrn.net/api',
   logo: '/assets/logo.png',
   baseMediaUrl: 'https://wafrnmedia.b-cdn.net',
   //baseMediaUrl: 'https://media.wafrn.net',
