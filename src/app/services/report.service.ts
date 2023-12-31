@@ -6,7 +6,7 @@ import { environment } from 'src/environments/environment';
 import { ProcessedPost } from '../interfaces/processed-post';
 
 @Injectable({
-  providedIn: 'root',
+  providedIn: 'any',
 })
 export class ReportService {
   public launchReportScreen: ReplaySubject<Array<ProcessedPost>> =

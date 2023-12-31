@@ -8,8 +8,12 @@ import {
   faHeart,
   faHeartBroken,
   faReply,
-  faShareNodes,
+  faServer,
   faTriangleExclamation,
+  faUser,
+  faUserSlash,
+  faVolumeMute,
+  faVolumeUp,
 } from '@fortawesome/free-solid-svg-icons';
 import { Subscription, filter } from 'rxjs';
 import { ProcessedPost } from 'src/app/interfaces/processed-post';
@@ -43,11 +47,12 @@ export class ViewBlogComponent implements OnInit, OnDestroy {
   navigationSubscription!: Subscription;
   showModalTheme = false;
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  splitButtonItems: any[] = [];
-
   expandDownIcon = faChevronDown;
-  shareIcon = faShareNodes;
+  muteUserIcon = faVolumeMute;
+  unmuteUserIcon = faVolumeUp;
+  userIcon = faUser;
+  blockUserIcon = faUserSlash;
+  unblockServerIcon = faServer;
   shareExternalIcon = faArrowUpRightFromSquare;
   solidHeartIcon = faHeart;
   clearHeartIcon = faHeartBroken;
@@ -65,7 +70,7 @@ export class ViewBlogComponent implements OnInit, OnDestroy {
     private titleService: Title,
     private metaTagService: Meta,
     private themeService: ThemeService,
-    private blockService: BlocksService
+    public blockService: BlocksService
   ) {
     this.userLoggedIn = loginService.checkUserLoggedIn();
   }
@@ -108,57 +113,7 @@ export class ViewBlogComponent implements OnInit, OnDestroy {
       this.found = false;
     } else {
       this.blogDetails = blogResponse;
-      this.splitButtonItems = [
-        blogResponse.muted
-          ? {
-              disabled: true,
-              title: 'You muted this user',
-              label: 'You muted this user',
-              icon: 'pi pi-volume-off',
-            }
-          : {
-              title: 'Mute user',
-              label: 'Mute user',
-              command: () =>
-                this.blockService
-                  .muteUser(this.blogDetails.id)
-                  .then(() => this.ngOnInit()),
-              icon: 'pi pi-volume-off',
-            },
-        blogResponse.blocked
-          ? {
-              disabled: true,
-              title: 'You blocked this user',
-              label: 'You blocked this user',
-              icon: 'pi pi-ban',
-            }
-          : {
-              title: 'Block user',
-              label: 'Block user',
-              command: () =>
-                this.blockService
-                  .blockUser(this.blogDetails.id)
-                  .then(() => this.ngOnInit()),
-              icon: 'pi pi-ban',
-            },
-        blogResponse.url.startsWith('@') && !blogResponse.serverBlocked
-          ? {
-              title: 'Block server',
-              label: 'Block server',
-              icon: 'pi pi-server',
-              command: () =>
-                this.blockService
-                  .blockServer(this.blogDetails.id)
-                  .then(() => this.ngOnInit()),
-            }
-          : {
-              disabled: true,
-              visible: blogResponse.url.startsWith('@'),
-              title: `You have blocked this user's server`,
-              label: `You have blocked this user's server`,
-              icon: 'pi pi-server',
-            },
-      ];
+
       this.loadPosts(this.currentPage).then(() => {});
       this.avatarUrl = this.blogDetails.url.startsWith('@')
         ? environment.externalCacheurl +

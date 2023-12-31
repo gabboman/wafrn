@@ -1,4 +1,4 @@
-@if (found) { @if (!loading) {
+@if (blogDetails) { @if (!loading) {
 <mat-card class="wafrn-container p-3 lg:mx-4 mb-6">
   <div class="flex justify-content-center mb-2">
     <img
@@ -18,25 +18,74 @@
   <div class="flex justify-content-center flex-wrap mb-2">
     <div [innerText]="blogDetails.url" class="text-600 line-height-3"></div>
   </div>
-  @if (userLoggedIn) { @if (followedUsers.indexOf(blogDetails.id) === -1) {
-  <button
-    mat-flat-button
-    color="primary"
-    class="w-min mx-auto"
-    (click)="followUser(blogDetails.id)"
-  >
-    Follow
-  </button>
-  } @else {
-  <button
-    mat-flat-button
-    color="warn"
-    class="w-min mx-auto"
-    (click)="unfollowUser(blogDetails.id)"
-  >
-    Unfollow
-  </button>
-  } }
+  @if (userLoggedIn) {
+  <div *ngIf="userLoggedIn" class="flex gap-0 flex-nowrap w-min mx-auto">
+    <button
+      mat-flat-button
+      [color]="
+        followedUsers.indexOf(blogDetails.id) === -1 ? 'primary' : 'warn'
+      "
+      class="split-button-left"
+      (click)="
+        followedUsers.indexOf(blogDetails.id) === -1
+          ? followUser(blogDetails.id)
+          : unfollowUser(blogDetails.id)
+      "
+    >
+      {{ followedUsers.indexOf(blogDetails.id) === -1 ? "Follow" : "Unfollow" }}
+    </button>
+    <button
+      [matMenuTriggerFor]="menu"
+      mat-flat-button
+      [color]="
+        followedUsers.indexOf(blogDetails.id) === -1 ? 'primary' : 'warn'
+      "
+      class="split-button-right"
+    >
+      <fa-icon [icon]="expandDownIcon"></fa-icon>
+    </button>
+  </div>
+
+  <mat-menu #menu="matMenu" xPosition="before">
+    @if(!blogDetails.muted){
+    <button mat-menu-item (click)="blockService.muteUser(this.blogDetails.id)">
+      <fa-icon class="mr-2" [icon]="muteUserIcon"></fa-icon>Mute user
+    </button>
+    } @else {
+    <button
+      (click)="blockService.unmuteUser(this.blogDetails.id)"
+      mat-menu-item
+    >
+      <fa-icon class="mr-2" [icon]="unmuteUserIcon"></fa-icon>Unmute user
+    </button>
+    } @if(!blogDetails.blocked) {
+    <button mat-menu-item (click)="blockService.blockUser(this.blogDetails.id)">
+      <fa-icon class="mr-2" [icon]="blockUserIcon"></fa-icon>Block user
+    </button>
+    } @else {
+    <button
+      mat-menu-item
+      (click)="blockService.unblockUser(this.blogDetails.id)"
+    >
+      <fa-icon class="mr-2" [icon]="userIcon"></fa-icon>Unblock user
+    </button>
+    } @if(blogDetails.url.startsWith('@')) { @if( !blogDetails.serverBlocked) {
+    <button
+      mat-menu-item
+      (click)="blockService.blockServer(this.blogDetails.id)"
+    >
+      <fa-icon class="mr-2" [icon]="unblockServerIcon"></fa-icon>Block server
+    </button>
+    } @else {
+    <button
+      mat-menu-item
+      (click)="blockService.unblockServer(this.blogDetails.federatedHost.id)"
+    >
+      <fa-icon class="mr-2" [icon]="unblockServerIcon"></fa-icon>Unblock server
+    </button>
+    } }
+  </mat-menu>
+  }
   <div class="flex justify-content-center flex-wrap mt-3 mb-2">
     <div [innerHtml]="blogDetails.description"></div>
   </div>

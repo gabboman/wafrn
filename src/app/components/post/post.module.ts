@@ -7,14 +7,13 @@ import { PollModule } from '../poll/poll.module';
 import { MatCardModule } from '@angular/material/card';
 import { RouterModule } from '@angular/router';
 import { MatButtonModule } from '@angular/material/button';
-import {MatMenuModule} from '@angular/material/menu';
+import { MatMenuModule } from '@angular/material/menu';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import {MatDialogModule} from '@angular/material/dialog';
+import { MatDialogModule } from '@angular/material/dialog';
+import { ReportService } from 'src/app/services/report.service';
 
 @NgModule({
-  declarations: [
-    PostComponent
-  ],
+  declarations: [PostComponent],
   imports: [
     CommonModule,
     RouterModule,
@@ -25,10 +24,9 @@ import {MatDialogModule} from '@angular/material/dialog';
     MatButtonModule,
     MatMenuModule,
     FontAwesomeModule,
-    MatDialogModule
+    MatDialogModule,
   ],
-  exports: [
-    PostComponent
-  ]
+  exports: [PostComponent],
+  providers: [ReportService],
 })
-export class PostModule { }
+export class PostModule {}

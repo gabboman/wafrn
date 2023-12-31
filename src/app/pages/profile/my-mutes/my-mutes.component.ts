@@ -10,6 +10,7 @@ export class MyMutesComponent {
 
   loading = true;
   mutedUsers: Array<any> = []
+  displayedColumns = ['user', 'action'];
 
   constructor(
     private blocksService: BlocksService

@@ -4,26 +4,29 @@ import { environment } from 'src/environments/environment';
 import { server } from '../interfaces/servers';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class AdminService {
-
-  constructor(
-    private http: HttpClient
-  ) { }
+  constructor(private http: HttpClient) {}
 
   async getServers(): Promise<server[]> {
-    const response = await this.http.get<{servers: server[]}>(`${environment.baseUrl}/admin/server-list`).toPromise();
+    const response = await this.http
+      .get<{ servers: server[] }>(`${environment.baseUrl}/admin/server-list`)
+      .toPromise();
     return response?.servers ? response?.servers : [];
   }
 
   async updateServers(serversToUpdate: server[]) {
-    const response = await this.http.post(`${environment.baseUrl}/admin/server-update`, serversToUpdate).toPromise()
+    const response = await this.http
+      .post(`${environment.baseUrl}/admin/server-update`, serversToUpdate)
+      .toPromise();
     return response;
   }
 
   async getBlocks(): Promise<any> {
-    const response = await this.http.get(`${environment.baseUrl}/admin/userBlockList`).toPromise();
+    const response = await this.http
+      .get(`${environment.baseUrl}/admin/userBlockList`)
+      .toPromise();
     return response;
   }
 
@@ -32,23 +35,30 @@ export class AdminService {
   }
 
   async ignoreReport(id: number): Promise<any> {
-    return this.http.post(`${environment.baseUrl}/admin/ignoreReport`, {id: id }).toPromise();
+    return this.http
+      .post(`${environment.baseUrl}/admin/ignoreReport`, { id: id })
+      .toPromise();
   }
 
   async banUser(id: string) {
-    return this.http.post(`${environment.baseUrl}/admin/banUser`, {id: id }).toPromise();
+    return this.http
+      .post(`${environment.baseUrl}/admin/banUser`, { id: id })
+      .toPromise();
   }
 
   async banList() {
-    return this.http.get(`${environment.baseUrl}/admin/getBannedUsers`).toPromise();
+    return this.http
+      .get(`${environment.baseUrl}/admin/getBannedUsers`)
+      .toPromise();
   }
   async pardonUser(id: string) {
-    return this.http.post(`${environment.baseUrl}/admin/unbanUser`, {id: id }).toPromise();
-
+    return this.http
+      .post(`${environment.baseUrl}/admin/unbanUser`, { id: id })
+      .toPromise();
   }
   async getOpenReportsCount(): Promise<any> {
-    return this.http.get(`${environment.baseUrl}/admin/reportCount`).toPromise()
+    return this.http
+      .get(`${environment.baseUrl}/admin/reportCount`)
+      .toPromise();
   }
-
-
 }

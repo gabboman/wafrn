@@ -63,7 +63,4 @@ export class NotificationsService {
     }
     return tmp ? tmp : { follows: [], reblogs: [], mentions: [], likes: []};
   }
-
-
-
 }

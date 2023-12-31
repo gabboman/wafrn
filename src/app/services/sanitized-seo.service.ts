@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
 import { Title, Meta } from '@angular/platform-browser';
-import { sanitize } from 'dompurify';
+//import { sanitize } from 'dompurify';
 
 @Injectable({
-  providedIn: 'root',
+  providedIn: 'any',
 })
 export class SanitizedSeoService {
   constructor(private titleService: Title, private metaTagService: Meta) {}
