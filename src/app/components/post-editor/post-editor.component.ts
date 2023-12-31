@@ -11,13 +11,7 @@ import { MessageService } from 'src/app/services/message.service';
 import { CommonModule } from '@angular/common';
 import { QuillModule } from 'ngx-quill';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import {
-  MatDialogContent,
-  MatDialogTitle,
-  MatDialogActions,
-  MatDialogClose,
-  MatDialogRef,
-} from '@angular/material/dialog';
+import { MatDialogContent, MatDialogRef } from '@angular/material/dialog';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { ProcessedPost } from 'src/app/interfaces/processed-post';
 import { MatButtonModule } from '@angular/material/button';
@@ -37,10 +31,7 @@ import { MediaPreviewComponent } from '../media-preview/media-preview.component'
     FormsModule,
     ReactiveFormsModule,
     MediaPreviewComponent,
-    MatDialogTitle,
     MatDialogContent,
-    MatDialogActions,
-    MatDialogClose,
     MatButtonModule,
     MatSelectModule,
     MatInputModule,
