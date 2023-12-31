@@ -6,6 +6,7 @@ import { MyMutesComponent } from './my-mutes.component';
 import { MatTableModule } from '@angular/material/table';
 import { MatCardModule } from '@angular/material/card';
 import { MatPaginatorModule } from '@angular/material/paginator';
+import { MatButtonModule } from '@angular/material/button';
 
 @NgModule({
   declarations: [MyMutesComponent],
@@ -21,6 +22,7 @@ import { MatPaginatorModule } from '@angular/material/paginator';
     MatTableModule,
     MatCardModule,
     MatPaginatorModule,
+    MatButtonModule,
   ],
 })
 export class MyMutesModule {}

@@ -6,6 +6,7 @@ import { FormsModule } from '@angular/forms';
 import { MatCardModule } from '@angular/material/card';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatTableModule } from '@angular/material/table';
+import { MatButtonModule } from '@angular/material/button';
 
 @NgModule({
   declarations: [MyServerBlocksComponent],
@@ -21,6 +22,7 @@ import { MatTableModule } from '@angular/material/table';
     MatTableModule,
     MatCardModule,
     MatPaginatorModule,
+    MatButtonModule,
   ],
 })
 export class MyServerBlocksModule {}

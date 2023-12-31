@@ -4,18 +4,15 @@ import { BlocksService } from 'src/app/services/blocks.service';
 @Component({
   selector: 'app-my-mutes',
   templateUrl: './my-mutes.component.html',
-  styleUrls: ['./my-mutes.component.scss']
+  styleUrls: ['./my-mutes.component.scss'],
 })
 export class MyMutesComponent {
-
   loading = true;
-  mutedUsers: Array<any> = []
-  displayedColumns = ['user', 'action'];
+  mutedUsers: Array<any> = [];
+  displayedColumns = ['muted', 'actions'];
 
-  constructor(
-    private blocksService: BlocksService
-  ) {
-    this.blocksService.getMuteList().then(response => {
+  constructor(private blocksService: BlocksService) {
+    this.blocksService.getMuteList().then((response) => {
       this.mutedUsers = response;
       this.loading = false;
     });
@@ -26,5 +23,4 @@ export class MyMutesComponent {
     this.mutedUsers = await this.blocksService.unmuteUser(id);
     this.loading = false;
   }
-
 }
