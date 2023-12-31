@@ -2,17 +2,18 @@ import { Injectable } from '@angular/core';
 import { Meta, Title } from '@angular/platform-browser';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class SimpleSeoService {
+  constructor(private titleService: Title, private metaTagService: Meta) {}
 
-  constructor(
-    private titleService: Title,
-    private metaTagService: Meta,
-  ) { }
-
-
-  setSEOTags(title: string, description: string, author: string, image: string): void{
+  setSEOTags(
+    title: string,
+    description: string,
+    author: string,
+    image: string
+  ): void {
+    /*
     const sanitizedDescription = description;
     this.titleService.setTitle(title);
     this.metaTagService.addTags([
@@ -29,6 +30,7 @@ export class SimpleSeoService {
       {name: 'twitter:site', content: 'https://app.wafrn.net' },
       {name: 'twitter:description', content: sanitizedDescription },
       {name: 'twitter:image', content: image},
-    ]);    
+    ]);
+    */
   }
 }

@@ -1,20 +1,20 @@
 import { Injectable } from '@angular/core';
 import { Title, Meta } from '@angular/platform-browser';
-import  {sanitize} from 'dompurify';
+import { sanitize } from 'dompurify';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class SanitizedSeoService {
+  constructor(private titleService: Title, private metaTagService: Meta) {}
 
-  constructor(
-    private titleService: Title,
-    private metaTagService: Meta,
-  ) { }
-
-
-
-  setSEOTags(title: string, description: string, author: string, image: string): void{
+  setSEOTags(
+    title: string,
+    description: string,
+    author: string,
+    image: string
+  ): void {
+    /*
     const sanitizedDescription = sanitize(description);
     this.titleService.setTitle(title);
     this.metaTagService.addTags([
@@ -32,5 +32,6 @@ export class SanitizedSeoService {
       {name: 'twitter:description', content: sanitizedDescription },
       {name: 'twitter:image', content: image},
     ]);
+    */
   }
 }
