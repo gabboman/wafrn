@@ -103,8 +103,8 @@
     />
   </mat-form-field>
   @for(tag of tags.split(','); track tag) {
-  <a *ngIf="tag" mat-flat-button color="primary" class="tag">
-    <span>#{{ tag }}</span>
+  <a *ngIf="tag && tag !== ''" mat-flat-button color="primary" class="tag">
+    <span>#{{ tag.trim() }}</span>
   </a>
   }
   <div>

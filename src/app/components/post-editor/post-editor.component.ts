@@ -224,9 +224,12 @@ export class PostEditorComponent implements OnInit, OnDestroy {
   async submitPost() {
     this.postBeingSubmitted = true;
     let tagsToSend = '';
-    this.tags.split(',').forEach((elem) => {
-      tagsToSend = `${tagsToSend}${elem.trim()},`;
-    });
+    this.tags
+      .split(',')
+      .filter((t) => t !== '')
+      .forEach((elem) => {
+        tagsToSend = `${tagsToSend}${elem.trim()},`;
+      });
     tagsToSend = tagsToSend.slice(0, -1);
     let res = undefined;
     let mediasString = '';
