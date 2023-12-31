@@ -330,7 +330,7 @@ export class NavigationMenuComponent implements OnInit, OnDestroy {
               this.hideMenu();
             },
             routerLink:
-              '/blog' + this.jwtService.tokenValid()
+              '/blog/' + this.jwtService.tokenValid()
                 ? this.jwtService.getTokenData()['url']
                 : '',
             visible: this.jwtService.tokenValid(),
@@ -351,6 +351,15 @@ export class NavigationMenuComponent implements OnInit, OnDestroy {
         icon: faCode,
         title: 'The frontend is made in angular, you can check the code here',
         url: 'https://github.com/gabboman/wafrn',
+        command: () => {
+          this.hideMenu();
+        },
+      },
+      {
+        label: 'Check the backend code!',
+        icon: faCode,
+        title: 'The backend is made in node, you can check the code here',
+        url: 'https://github.com/gabboman/wafrn-backend',
         command: () => {
           this.hideMenu();
         },
