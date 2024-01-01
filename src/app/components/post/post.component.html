@@ -53,6 +53,7 @@
             crossorigin="anonymous"
             loading="lazy"
             [src]="avatars[index]"
+            onerror="this.onerror=null;this.src='/api/uploads/default.webp'"
             height="40"
             width="40"
           />
