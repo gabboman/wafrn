@@ -129,6 +129,17 @@
     <div class="date-line mb-1 flex gap-2 align-items-center">
       <span class="text-xs text-600">
         {{ content.createdAt | date : "short" }}
+        <fa-icon
+          [icon]="
+            content.privacy === 0
+              ? worldIcon
+              : content.privacy === 1
+              ? userIcon
+              : content.privacy === 2
+              ? serverIcon
+              : envelopeIcon
+          "
+        ></fa-icon>
       </span>
       <button
         mat-stroked-button

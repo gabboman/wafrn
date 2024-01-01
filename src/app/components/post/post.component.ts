@@ -19,6 +19,10 @@ import {
   faShareNodes,
   faTrash,
   faTriangleExclamation,
+  faGlobe,
+  faEnvelope,
+  faServer,
+  faUser,
 } from '@fortawesome/free-solid-svg-icons';
 import { MatDialog } from '@angular/material/dialog';
 
@@ -59,6 +63,10 @@ export class PostComponent implements OnInit {
   shareExternalIcon = faArrowUpRightFromSquare;
   reportIcon = faTriangleExclamation;
   deleteIcon = faTrash;
+  worldIcon = faGlobe;
+  envelopeIcon = faEnvelope;
+  serverIcon = faServer;
+  userIcon = faUser;
 
   // post seen
   @Output() seenEmitter: EventEmitter<boolean> = new EventEmitter<boolean>();
@@ -222,10 +230,13 @@ export class PostComponent implements OnInit {
   }
 
   async deletePost(id: string) {
-    this.dialogService.open(await this.deletePostService.getDeletePostComponent(), {
-      data: { id },
-      width: '100%',
-    });
+    this.dialogService.open(
+      await this.deletePostService.getDeletePostComponent(),
+      {
+        data: { id },
+        width: '100%',
+      }
+    );
   }
 
   showQuickReblogOverlay() {
