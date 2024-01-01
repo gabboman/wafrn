@@ -176,12 +176,7 @@
       [ngClass]="{ blurry: content.content_warning }"
     >
       @for(tag of content.tags; track tag) {
-      <a
-        mat-flat-button
-        color="primary"
-        class="tag"
-        [routerLink]="'/dashboard/search/' + tag.tagName"
-      >
+      <a class="tag" [routerLink]="'/dashboard/search/' + tag.tagName">
         <span>#{{ tag.tagName }}</span>
       </a>
       }
