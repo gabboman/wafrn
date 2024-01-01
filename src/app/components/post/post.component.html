@@ -9,7 +9,7 @@
         crossorigin="anonymous"
         loading="lazy"
         [src]="avatars[avatars.length - 1]"
-        [alt]="originalPoster.url + ' avatar'"
+        alt=""
         width="40"
         height="40"
       />
@@ -47,7 +47,7 @@
       <div class="center-text flex-grow-1 flex-shrink-1 min-w-0">
         <div class="avatar">
           <img
-            [alt]="content.user.url + ' avatar'"
+            alt=""
             [routerLink]="'/blog/' + content.user.url"
             crossorigin="anonymous"
             loading="lazy"
