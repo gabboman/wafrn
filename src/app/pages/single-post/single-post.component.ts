@@ -61,7 +61,9 @@ export class SinglePostComponent {
         this.dataSource = new MatTableDataSource<RawPost>(
           this.post[this.post.length - 1].descendents
         );
-        this.dataSource.paginator = this.paginator;
+        setTimeout(() => {
+          this.dataSource.paginator = this.paginator;
+        });
       }
       const lastPostFragment = this.post[this.post.length - 1];
       if (lastPostFragment) {

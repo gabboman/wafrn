@@ -95,16 +95,18 @@
     <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
   </table>
   <mat-paginator
-    *ngIf="
-      !loading &&
-      postFound &&
-      post &&
-      post.length > 0 &&
-      post[post.length - 1].descendents
+    [hidden]="
+      !(
+        !loading &&
+        postFound &&
+        post &&
+        post.length > 0 &&
+        post[post.length - 1].descendents
+      )
     "
     [pageSizeOptions]="[5, 10, 25, 50, 100]"
     showFirstLastButtons
-    aria-label="Select page of periodic elements"
+    aria-label="Select page"
   >
   </mat-paginator>
 </mat-card>
