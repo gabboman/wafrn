@@ -28,9 +28,7 @@
     </div>
   </div>
   @for (content of post; track post; let index = $index) {
-  <hr
-    *ngIf="post.length > 1 && (content.content !== '' || content.tags.length)"
-  />
+  <hr *ngIf="post.length > 1" />
   <div
     *ngIf="
       content.content !== '' ||
