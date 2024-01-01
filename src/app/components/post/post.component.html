@@ -9,6 +9,7 @@
         crossorigin="anonymous"
         loading="lazy"
         [src]="avatars[avatars.length - 1]"
+        onerror="this.onerror=null;this.src='/api/uploads/default.webp'"
         alt=""
         width="40"
         height="40"
