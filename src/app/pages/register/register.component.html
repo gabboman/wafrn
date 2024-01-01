@@ -12,6 +12,11 @@
     >
   </div>
 
+  <button mat-flat-button color="warn" class="w-full" *ngIf="manuallyReview">
+    An administrator will review your profile before you can join. This process
+    can take a few hours.
+  </button>
+
   <form [hidden]="loading" [formGroup]="loginForm" (ngSubmit)="onSubmit()">
     <mat-form-field class="w-full">
       <mat-label>Email</mat-label>

@@ -17,6 +17,7 @@ import { faUser } from '@fortawesome/free-solid-svg-icons';
 export class RegisterComponent {
   loading = false;
   logo = environment.logo;
+  manuallyReview = environment.reviewRegistrations;
 
   minimumRegistrationDate: Date;
   minDate: Date;

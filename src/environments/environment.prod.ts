@@ -11,4 +11,5 @@ export const environment = {
   externalCacheurl: 'https://app.wafrn.net/api/cache?media=',
   frontUrl: 'https://app.wafrn.net',
   shortenPosts: 5,
+  reviewRegistrations: true,
 };
