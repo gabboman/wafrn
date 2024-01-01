@@ -122,9 +122,11 @@
     >.
   </p>
 </footer>
+} @else { @if(loading) {
+<app-loader></app-loader>
 } @else {
 <app-pagenotfound />
-}
+} }
 
 <!--
 <div  class="p-grid">

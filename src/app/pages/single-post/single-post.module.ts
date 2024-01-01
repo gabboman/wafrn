@@ -7,6 +7,9 @@ import { PagenotfoundModule } from '../pagenotfound/pagenotfound.module';
 import { MatTableModule } from '@angular/material/table';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatCardModule } from '@angular/material/card';
+import { MatButtonModule } from '@angular/material/button';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { LoaderComponent } from 'src/app/components/loader/loader.component';
 
 const routes: Routes = [
   {
@@ -25,6 +28,9 @@ const routes: Routes = [
     MatTableModule,
     MatPaginatorModule,
     MatCardModule,
+    MatButtonModule,
+    MatProgressSpinnerModule,
+    LoaderComponent,
   ],
 })
 export class SinglePostModule {}

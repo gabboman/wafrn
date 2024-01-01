@@ -9,6 +9,7 @@ import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { MatMenuModule } from '@angular/material/menu';
+import { LoaderComponent } from 'src/app/components/loader/loader.component';
 
 const routes: Routes = [
   {
@@ -29,6 +30,7 @@ const routes: Routes = [
     MatButtonModule,
     FontAwesomeModule,
     MatMenuModule,
+    LoaderComponent,
   ],
 })
 export class ViewBlogModule {}
