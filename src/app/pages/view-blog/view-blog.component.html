@@ -87,7 +87,10 @@
   </mat-menu>
   }
   <div class="flex justify-content-center flex-wrap mt-3 mb-2">
-    <div [innerHtml]="blogDetails.description"></div>
+    <div
+      style="word-wrap: anywhere"
+      [innerHtml]="blogDetails.description"
+    ></div>
   </div>
   <div class="mt-6 text-600 text-sm" *ngIf="blogDetails.url.startsWith('@')">
     <strong>Attention!</strong>
