@@ -43,8 +43,21 @@
   ],
   "dataGroups": [
     {
-      "name": "api-freshness",
+      "name": "api",
       "urls": ["https://api.wafrn.net/**"],
+      "cacheConfig": {
+        "strategy": "freshness",
+        "maxSize": 250,
+        "maxAge": "1m"
+      }
+    },
+    {
+      "name": "media",
+      "urls": [
+        "https://cache.wafrn.net/**",
+        "https://media.wafrn.net/**",
+        "https://wafrnmedia.b-cdn.nett/**"
+      ],
       "cacheConfig": {
         "strategy": "freshness",
         "maxSize": 250,
