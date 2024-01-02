@@ -1,5 +1,11 @@
-.avatar {
-  max-height: 32px;
-  max-width: 32px;
+$avatar-length: 2em;
+.avatar-container {
+  height: $avatar-length;
+  width: $avatar-length;
   display: inline-flex;
+}
+
+.avatar {
+  max-height: $avatar-length;
+  max-width: $avatar-length;
 }
