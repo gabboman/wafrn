@@ -56,12 +56,13 @@
       "urls": [
         "https://cache.wafrn.net/**",
         "https://media.wafrn.net/**",
-        "https://wafrnmedia.b-cdn.nett/**"
+        "https://wafrnmedia.b-cdn.nett/**",
+        "https://wafrnmediacache.b-cdn.net/**"
       ],
       "cacheConfig": {
-        "strategy": "freshness",
-        "maxSize": 250,
-        "maxAge": "1m"
+        "strategy": "performance",
+        "maxSize": 1000,
+        "maxAge": "2d"
       }
     }
   ]
