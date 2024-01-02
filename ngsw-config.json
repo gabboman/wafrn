@@ -1,6 +1,16 @@
 {
   "$schema": "./node_modules/@angular/service-worker/config/schema.json",
   "index": "/index.html",
+  "navigationUrls": [
+    "/dashboard",
+    "/dashboard/**",
+    "/profile",
+    "profile/**",
+    "/blog/**",
+    "/post/**",
+    "/search",
+    "/search/**"
+  ],
   "assetGroups": [
     {
       "name": "app",
@@ -33,18 +43,13 @@
   ],
   "dataGroups": [
     {
+      "name": "api-freshness",
+      "urls": ["https://api.wafrn.net/**"],
       "cacheConfig": {
-        "maxAge": "10s",
-        "maxSize": 20,
         "strategy": "freshness",
-        "timeout": "420"
-      },
-      "name": "fedicache",
-      "urls": [
-        "https://cache.wafrn.net/**",
-        "https://media.wafrn.net/**",
-        "https://api.wafrn.net/api/**"
-      ]
+        "maxSize": 250,
+        "maxAge": "1h"
+      }
     }
   ]
 }
