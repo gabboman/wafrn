@@ -175,7 +175,12 @@
     mat-flat-button
     color="primary"
     class="w-full"
-    [disabled]="postBeingSubmitted"
+    [disabled]="
+      postBeingSubmitted ||
+      (postCreatorContent === '' &&
+        tags.length === 0 &&
+        uploadedMedias.length === 0)
+    "
     (click)="submitPost()"
   >
     {{ idPostToReblog ? "Publish reply to post" : "Publish post" }}
