@@ -18,7 +18,6 @@ $editor-buttons: #ffffffde;
   }
 }
 
-
 a,
 a:visited {
   color: $wafrn-blue;
@@ -153,4 +152,8 @@ a:visited {
 .watermark__body {
   max-height: 15%;
   max-width: 15%;
+}
+
+hr {
+  border-top: 0px;
 }
