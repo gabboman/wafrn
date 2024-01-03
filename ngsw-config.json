@@ -49,8 +49,7 @@
         "strategy": "freshness",
         "maxSize": 250,
         "maxAge": "1m",
-        "timeout": "300s",
-        "cacheOpaqueResponses": false
+        "timeout": "300s"
       }
     },
     {
@@ -64,8 +63,8 @@
       "cacheConfig": {
         "strategy": "performance",
         "maxSize": 1000,
-        "maxAge": "2d",
-        "cacheOpaqueResponses": false
+        "maxAge": "3d",
+        "timeout": "300s"
       }
     }
   ]
