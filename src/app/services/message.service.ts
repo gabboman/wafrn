@@ -10,7 +10,7 @@ export class MessageService {
   add(message: {
     severity: 'error' | 'success' | 'warn' | 'info';
     summary: string;
-    detail?: string;
+    //detail?: string;
   }) {
     let icon = '';
     switch (message.severity) {

@@ -62,13 +62,11 @@ export class RegisterComponent {
         this.messages.add({
           severity: 'success',
           summary: 'Success!',
-          detail: 'Please check your email to activate your account',
         });
       } else {
         this.messages.add({
           severity: 'warn',
           summary: 'Email or url in use',
-          detail: 'Email or url already in use!',
         });
         this.loading = false;
       }
@@ -76,8 +74,6 @@ export class RegisterComponent {
       this.messages.add({
         severity: 'error',
         summary: 'Something failed!',
-        detail:
-          'Something has failed. Check your internet connection or try again later',
       });
       this.loading = false;
     }
