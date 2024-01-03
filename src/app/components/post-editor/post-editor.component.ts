@@ -288,8 +288,7 @@ export class PostEditorComponent implements OnInit, OnDestroy {
 
   async uploadImage(media: WafrnMedia) {
     try {
-      media.url =
-        environment.baseMediaUrl + media.url + '?cdnDoNotcacheThis=true';
+      media.url = environment.baseMediaUrl + media.url;
       this.uploadedMedias.push(media);
       this.messages.add({
         severity: 'success',

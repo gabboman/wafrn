@@ -1,5 +1,11 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input, OnInit } from '@angular/core';
+import {
+  Component,
+  Input,
+  OnChanges,
+  OnInit,
+  SimpleChanges,
+} from '@angular/core';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { WafrnMedia } from 'src/app/interfaces/wafrn-media';
 import { environment } from 'src/environments/environment';
@@ -32,7 +38,6 @@ export class MediaPreviewComponent implements OnInit {
   }
 
   updateMediaUrl() {
-    console.log(this.media.url);
-    this.elemUrl = `${this.media.url}&date=${new Date().getTime()}`;
+    this.elemUrl = `${this.media.url}?date=${new Date().getTime()}`;
   }
 }
