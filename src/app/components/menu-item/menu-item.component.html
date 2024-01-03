@@ -25,16 +25,19 @@
 </div>
 } } @else {
 <a
-  [matBadge]="item.badge"
-  [matBadgeHidden]="item.badge === 0"
-  matBadgePosition="above after"
   mat-list-item
   *ngIf="item.visible !== false"
   [routerLink]="item.routerLink ? item.routerLink : null"
   (click)="doCommand()"
 >
-  <div class="flex align-items-center justify-content-start">
-    <span class="menu-item-icon" *ngIf="item.icon">
+  <div class="h-3rem flex align-items-center justify-content-start">
+    <span
+      [matBadge]="item.badge"
+      [matBadgeHidden]="item.badge === 0"
+      matBadgePosition="above after"
+      class="menu-item-icon"
+      *ngIf="item.icon"
+    >
       <fa-icon [icon]="item.icon"></fa-icon>
     </span>
     <span class="ml-3">{{ item.label }}</span>
