@@ -75,16 +75,14 @@
       </div>
       <div class="flex gap-0 flex-nowrap" id="post-actions">
         <button
-          mat-flat-button
-          color="primary"
+          mat-button
           class="split-button-left"
           (click)="sharePost(content.id)"
         >
           <fa-icon [icon]="shareIcon"></fa-icon>
         </button>
         <button
-          mat-flat-button
-          color="primary"
+          mat-button
           class="split-button-right"
           [matMenuTriggerFor]="menu"
         >
@@ -167,7 +165,7 @@
     <div
       id="fragment-content"
       *ngIf="content.content !== '' || content.tags.length"
-      class="fragment-content ql-editor -mx-3"
+      class="fragment-content text-base ql-editor -mx-3"
       [ngClass]="{ blurry: content.content_warning }"
       [injectHTML]="content.content"
     ></div>
@@ -193,7 +191,7 @@
     >
       @for(tag of content.tags; track tag) {
       <a class="tag" [routerLink]="'/dashboard/search/' + tag.tagName">
-        <span>#{{ tag.tagName }}</span>
+        #{{ tag.tagName }}
       </a>
       }
     </div>
