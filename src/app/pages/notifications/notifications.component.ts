@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { faArrowsRotate } from '@fortawesome/free-solid-svg-icons';
 import { NotificationType } from 'src/app/enums/notification-type';
 import { Follower } from 'src/app/interfaces/follower';
 import { Reblog } from 'src/app/interfaces/reblog';
@@ -19,6 +20,7 @@ export class NotificationsComponent implements OnInit {
   reblogs: Reblog[] = [];
   mentions: Reblog[] = [];
   observer: IntersectionObserver;
+  reloadIcon = faArrowsRotate;
 
   seen = {
     follows: 0,
@@ -43,6 +45,11 @@ export class NotificationsComponent implements OnInit {
         }
       }
     );
+  }
+
+  reload() {
+    this.page = 0;
+    this.ngOnInit();
   }
 
   async ngOnInit(): Promise<void> {

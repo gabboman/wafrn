@@ -11,6 +11,7 @@ import { MatMenuModule } from '@angular/material/menu';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { MatDialogModule } from '@angular/material/dialog';
 import { ReportService } from 'src/app/services/report.service';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 @NgModule({
   declarations: [PostComponent],
@@ -25,6 +26,7 @@ import { ReportService } from 'src/app/services/report.service';
     MatMenuModule,
     FontAwesomeModule,
     MatDialogModule,
+    MatTooltipModule,
   ],
   exports: [PostComponent],
   providers: [ReportService],
