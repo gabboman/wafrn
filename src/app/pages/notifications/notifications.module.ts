@@ -4,6 +4,8 @@ import { NotificationsComponent } from './notifications.component';
 import { Route, RouterModule } from '@angular/router';
 import { loginRequiredGuard } from 'src/app/guards/login-required.guard';
 import { SingleNotificationComponent } from 'src/app/components/single-notification/single-notification.component';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { MatButtonModule } from '@angular/material/button';
 
 const routes: Route[] = [
   {
@@ -18,6 +20,8 @@ const routes: Route[] = [
     CommonModule,
     SingleNotificationComponent,
     RouterModule.forChild(routes),
+    FontAwesomeModule,
+    MatButtonModule,
   ],
 })
 export class NotificationsModule {}

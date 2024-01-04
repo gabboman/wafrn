@@ -1,6 +1,14 @@
-.notification-image {
-  max-height: 64px;
-  max-width: 64px;
-  margin: 0 auto;
-  display: block;
+.avatar {
+  height: 64px;
+  width: 64px;
+  margin-right: 4px;
+
+  img {
+    border-radius: 4px;
+    margin: 0 auto;
+    display: block;
+    width: auto;
+    max-width: 100%;
+    object-fit: cover;
+  }
 }

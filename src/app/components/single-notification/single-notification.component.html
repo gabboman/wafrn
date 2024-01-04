@@ -1,17 +1,22 @@
-<mat-card *ngIf="notification" class="p-3 mb-6 lg:mx-4 scalein wafrn-container">
+<mat-card
+  *ngIf="notification"
+  class="p-3 py-4 mb-2 lg:mx-4 scalein wafrn-container"
+>
   <div class="flex align-items-start -my-2">
-    <div class="border-1 border-gray-700 border-round">
+    <div class="avatar border-1 border-300 border-round">
       <img
         crossorigin="anonymous"
         loading="lazy"
         [src]="notification.avatar"
         class="notification-image"
         alt=""
+        width="64"
+        height="64"
       />
     </div>
-    <div class="p-1 px-3">
-      <p class="m-0 mb-2 no-underline text-sm text-gray-300">
-        {{ notification.date.toLocaleString() }}
+    <div class="py-1 px-2">
+      <p class="m-0 mb-1 no-underline text-sm text-gray-300">
+        {{ notification.date | date : "short" }}
       </p>
       <p class="m-0">
         User

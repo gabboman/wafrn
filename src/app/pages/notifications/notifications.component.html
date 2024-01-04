@@ -1,18 +1,14 @@
-<!--
-<div *ngFor="let notification of notificationsToShow; let indexOfelement=index;" defer (onLoad)="countViewedNotifications(indexOfelement)">
-  <app-single-notification [notification]="notificationsToShow[indexOfelement]"></app-single-notification>
-  <ng-template>
-  </ng-template>
+<div class="wafrn-container mx-1 md:mx-4 flex align-items-center">
+  <h3 class="flex-grow-1 m-0 text-2xl">Notifications</h3>
+  <button
+    (click)="reload()"
+    mat-icon-button
+    color="default"
+    aria-label="Refresh"
+  >
+    <fa-icon [icon]="reloadIcon" />
+  </button>
 </div>
-<div class="grid pb-6">
-  <div class="col-12 sm:col-12 md:col-12 lg:col-4 margin-auto">
-    <p-card class="flex justify-content-center flex-wrap">
-      <p-progressSpinner class="flex align-items-center justify-content-center "></p-progressSpinner>
-
-    </p-card>
-  </div>
-</div>
--->
 @for(notification of notificationsToShow; track notification) {
 <app-single-notification
   [notification]="notification"
