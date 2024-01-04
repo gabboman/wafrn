@@ -78,6 +78,7 @@
           mat-button
           class="split-button-left"
           (click)="sharePost(content.id)"
+          matTooltip="Copy Wafrn link"
         >
           <fa-icon [icon]="shareIcon"></fa-icon>
         </button>
@@ -85,6 +86,7 @@
           mat-button
           class="split-button-right"
           [matMenuTriggerFor]="menu"
+          matTooltip="Post actions"
         >
           <fa-icon [icon]="expandDownIcon"></fa-icon>
         </button>
@@ -94,24 +96,28 @@
           <fa-icon class="mr-2" [icon]="shareIcon"></fa-icon>Share with wafrn
         </button>
         <button (click)="shareOriginalPost(content.remotePostId)" mat-menu-item>
-          <fa-icon class="mr-2" [icon]="shareExternalIcon"></fa-icon>Share
-          external URL
+          <fa-icon class="mr-2" [icon]="shareExternalIcon"></fa-icon>
+          Share external URL
         </button>
         @if(userLoggedIn) {
         <button (click)="replyPost(content)" mat-menu-item>
-          <fa-icon class="mr-2" [icon]="reblogIcon"></fa-icon>Reblog
+          <fa-icon class="mr-2" [icon]="reblogIcon"></fa-icon>
+          Reblog
         </button>
         <button (click)="quickReblog(content.id)" mat-menu-item>
-          <fa-icon class="mr-2" [icon]="quickReblogIcon"></fa-icon>Quick reblog
+          <fa-icon class="mr-2" [icon]="quickReblogIcon"></fa-icon>
+          Quick reblog
         </button>
         @if(content.userId !== myId){ @if
         (content.userLikesPostRelations.includes(myId)) {
         <button (click)="unlikePost(content)" mat-menu-item>
-          <fa-icon class="mr-2" [icon]="clearHeartIcon"></fa-icon>Dislike post
+          <fa-icon class="mr-2" [icon]="clearHeartIcon"></fa-icon>
+          Dislike post
         </button>
         } @else {
         <button (click)="likePost(content)" mat-menu-item>
-          <fa-icon class="mr-2" [icon]="solidHeartIcon"></fa-icon>Like post
+          <fa-icon class="mr-2" [icon]="solidHeartIcon"></fa-icon>
+          Like post
         </button>
         }
         <button (click)="reportPost(content)" mat-menu-item>
@@ -208,47 +214,53 @@
     Expand post
   </button>
 
-  <div class="grid">
-    <div class="col-8 flex justify-content-start">
-      <a [routerLink]="'/post/' + finalPost.id">Notes: {{ notes }}</a>
-    </div>
-    <div *ngIf="userLoggedIn" class="col-4 flex justify-content-end">
-      <div class="grid" *ngIf="!loadingAction">
+  <div class="flex">
+    <a class="flex flex-grow-1" [routerLink]="'/post/' + finalPost.id">
+      Notes: {{ notes }}
+    </a>
+    <div *ngIf="userLoggedIn" class="flex flex-shrink-0">
+      <div class="flex gap-3 px-1" *ngIf="!loadingAction">
         <fa-icon
           (click)="quickReblog(finalPost.id)"
-          class="pl-2 pr-2 hover-cursor"
+          class="hover-cursor"
           [icon]="quickReblogIcon"
+          matTooltip="Quick reblog"
         ></fa-icon>
         <fa-icon
           (click)="replyPost(finalPost)"
-          class="pl-2 pr-2 hover-cursor"
+          class="hover-cursor"
           [icon]="reblogIcon"
+          matTooltip="Reply post"
         ></fa-icon>
         @if(finalPost.userId !== myId ) {
         @if(finalPost.userLikesPostRelations.includes(myId)) {
         <fa-icon
           (click)="unlikePost(finalPost)"
-          class="pl-2 pr-2 hover-cursor"
+          class="hover-cursor"
           [icon]="clearHeartIcon"
+          matTooltip="Remove like"
         ></fa-icon>
         } @else {
         <fa-icon
           (click)="likePost(finalPost)"
-          class="pl-2 pr-2 hover-cursor"
+          class="hover-cursor"
           [icon]="solidHeartIcon"
+          matTooltip="Like post"
         ></fa-icon>
         }
 
         <fa-icon
           (click)="reportPost(finalPost)"
-          class="pl-2 pr-2 hover-cursor"
+          class="hover-cursor"
           [icon]="reportIcon"
+          matTooltip="Report post"
         ></fa-icon>
         } @else {
         <fa-icon
           (click)="deletePost(finalPost.id)"
-          class="pl-2 pr-2 hover-cursor"
+          class="hover-cursor"
           [icon]="deleteIcon"
+          matTooltip="Delete post"
         ></fa-icon>
         }
       </div>
