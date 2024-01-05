@@ -100,6 +100,7 @@ export class DashboardComponent implements OnInit {
     this.viewedPostsNumber = 0;
     this.viewedPostsIds = [];
     this.loadPosts(this.currentPage);
+    window.scrollTo(0, 0);
   }
 
   async countViewedPost() {
