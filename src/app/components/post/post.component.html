@@ -215,9 +215,9 @@
   </button>
 
   <div class="flex">
-    <a class="flex flex-grow-1" [routerLink]="'/post/' + finalPost.id">
-      Notes: {{ notes }}
-    </a>
+    <div class="flex flex-grow-1">
+      <a [routerLink]="'/post/' + finalPost.id"> Notes: {{ notes }} </a>
+    </div>
     <div *ngIf="userLoggedIn" class="flex flex-shrink-0">
       <div class="flex gap-3 px-1" *ngIf="!loadingAction">
         <fa-icon
