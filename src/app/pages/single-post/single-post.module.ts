@@ -10,6 +10,7 @@ import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { LoaderComponent } from 'src/app/components/loader/loader.component';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 
 const routes: Routes = [
   {
@@ -31,6 +32,7 @@ const routes: Routes = [
     MatButtonModule,
     MatProgressSpinnerModule,
     LoaderComponent,
+    FontAwesomeModule,
   ],
 })
 export class SinglePostModule {}

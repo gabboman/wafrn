@@ -49,6 +49,7 @@ export class DashboardComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    window.scrollTo(0, 0);
     if (this.router.url.endsWith('explore')) {
       this.level = 0;
       this.title = 'Explore the fediverse';

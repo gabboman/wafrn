@@ -1,11 +1,4 @@
-import {
-  AfterViewInit,
-  Component,
-  Inject,
-  OnInit,
-  PLATFORM_ID,
-  ViewChild,
-} from '@angular/core';
+import { Component, Inject, PLATFORM_ID, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ProcessedPost } from 'src/app/interfaces/processed-post';
 import { DashboardService } from 'src/app/services/dashboard.service';
@@ -16,12 +9,14 @@ import { ThemeService } from 'src/app/services/theme.service';
 import { MatPaginator } from '@angular/material/paginator';
 import { RawPost } from 'src/app/interfaces/raw-post';
 import { MatTableDataSource } from '@angular/material/table';
+import { faHome } from '@fortawesome/free-solid-svg-icons';
 @Component({
   selector: 'app-single-post',
   templateUrl: './single-post.component.html',
   styleUrls: ['./single-post.component.scss'],
 })
 export class SinglePostComponent {
+  homeIcon = faHome;
   post: ProcessedPost[] = [];
   loading = true;
   blogUrl: string = '';

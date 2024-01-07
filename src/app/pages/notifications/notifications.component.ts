@@ -53,6 +53,7 @@ export class NotificationsComponent implements OnInit {
   }
 
   async ngOnInit(): Promise<void> {
+    window.scrollTo(0, 0);
     localStorage.setItem(
       'lastTimeCheckNotifications',
       new Date().toISOString()

@@ -7,6 +7,7 @@ import {
   faClockRotateLeft,
   faHeart,
   faHeartBroken,
+  faHome,
   faReply,
   faServer,
   faTriangleExclamation,
@@ -59,6 +60,7 @@ export class ViewBlogComponent implements OnInit, OnDestroy {
   reblogIcon = faReply;
   quickReblogIcon = faClockRotateLeft;
   reportIcon = faTriangleExclamation;
+  homeIcon = faHome;
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -82,6 +84,7 @@ export class ViewBlogComponent implements OnInit, OnDestroy {
   }
 
   async ngOnInit() {
+    window.scrollTo(0, 0);
     this.navigationSubscription = this.router.events
       .pipe(filter((event) => event instanceof NavigationEnd))
       .subscribe(() => {

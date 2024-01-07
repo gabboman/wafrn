@@ -131,6 +131,16 @@
 <app-pagenotfound />
 } }
 
+<button
+  [routerLink]="'/dashboard'"
+  mat-flat-button
+  color="default"
+  aria-label="Go back to the dashboard"
+  style="position: fixed; z-index: 500; top: 1em; right: 0.5em"
+>
+  <fa-icon [icon]="homeIcon" />
+</button>
+
 <!--
 <div  class="p-grid">
   <p>This user has custom styles! would you like to enable custom themes from users?</p>
