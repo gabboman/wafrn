@@ -19,6 +19,11 @@
     <source [src]="displayUrl" [type]="mimeType" />
   </video>
 
+  <div *ngIf="!nsfw && mimeType.startsWith('pdf')">
+    <a [href]="displayUrl" target="_blank"
+      >Click here to see the PDF file that is embeded in this post</a
+    >
+  </div>
   <audio *ngIf="!nsfw && mimeType.startsWith('audio')" controls>
     <source [src]="displayUrl" [type]="mimeType" />
   </audio>

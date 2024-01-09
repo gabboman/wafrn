@@ -58,6 +58,7 @@ export class WafrnMediaComponent implements OnChanges {
       this.displayUrl = this.nsfw
         ? '/assets/img/nsfw_image.webp'
         : this.data.url;
+∫
       switch (this.extension) {
         case 'mp4': {
           this.mimeType = 'video/mp4';
@@ -90,6 +91,10 @@ export class WafrnMediaComponent implements OnChanges {
         }
         case 'm4a': {
           this.mimeType = 'audio/mp4';
+          break;
+        }
+        case 'pdf': {
+          this.mimeType = 'pdf';
           break;
         }
         default: {
