@@ -331,9 +331,10 @@ export class NavigationMenuComponent implements OnInit, OnDestroy {
               this.hideMenu();
             },
             routerLink:
-              '/blog/' + this.jwtService.tokenValid()
+              '/blog/' +
+              (this.jwtService.tokenValid()
                 ? this.jwtService.getTokenData()['url']
-                : '',
+                : ''),
             visible: this.jwtService.tokenValid(),
           },
         ],
