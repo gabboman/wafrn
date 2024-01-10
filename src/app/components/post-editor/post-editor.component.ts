@@ -219,7 +219,7 @@ export class PostEditorComponent implements OnInit, OnDestroy {
         console.log(newNode.childNodes);
         return newNode;
       };*/
-      mentionBlot.tagName = 'a'; // used to be a <span> and masto peps want me dead!
+      //mentionBlot.tagName = 'a'; // used to be a <span> and masto peps want me dead!
       Quill.register(mentionBlot, true);
 
       // quill stuff
