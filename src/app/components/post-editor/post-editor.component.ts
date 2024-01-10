@@ -20,6 +20,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { FileUploadComponent } from '../file-upload/file-upload.component';
 import { MediaPreviewComponent } from '../media-preview/media-preview.component';
+import Quill from 'quill';
 @Component({
   selector: 'app-post-editor',
   templateUrl: './post-editor.component.html',
@@ -198,6 +199,30 @@ export class PostEditorComponent implements OnInit, OnDestroy {
     // TODO FIX HACK. We just add a timeout so some stuff gets initialized
     // I would try doing that now but cant
     setTimeout(() => {
+      // quill format variables
+      const italic = Quill.import('formats/italic');
+      italic.tagName = 'i'; // Quill uses <em> by default
+      Quill.register(italic, true);
+
+      const strike = Quill.import('formats/strike');
+      strike.tagName = 'del'; // Quill uses <s> by default
+      Quill.register(strike, true);
+
+      const mentionBlot = Quill.import('blots/mention');
+      /*
+      mentionBlot.setDataValues = (node: any, data: any) => {
+        const newNode: any = node.cloneNode(false);
+        while (newNode.firstChild) {
+          newNode.removeChild(newNode.firstChild);
+        }
+        newNode.textContent = `@${data.value}`;
+        console.log(newNode.childNodes);
+        return newNode;
+      };*/
+      mentionBlot.tagName = 'a'; // used to be a <span> and masto peps want me dead!
+      Quill.register(mentionBlot, true);
+
+      // quill stuff
       this.quill.ngOnInit();
       this.editorVisible = true;
       if (content) {
