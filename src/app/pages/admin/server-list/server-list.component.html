@@ -22,11 +22,7 @@
       <td mat-cell *matCellDef="let element">
         <mat-form-field class="w-full">
           <mat-label>Comment</mat-label>
-          <textarea
-            matInput
-            class="w-full"
-            [(ngModel)]="element.detail"
-          ></textarea>
+          <input matInput class="w-full" [(ngModel)]="element.detail" />
         </mat-form-field>
       </td>
     </ng-container>
