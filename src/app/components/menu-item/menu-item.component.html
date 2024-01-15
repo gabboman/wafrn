@@ -1,22 +1,24 @@
 @if (item.items && item.visible !== false) {
-<button
-  [matBadge]="item.badge"
-  [matBadgeHidden]="item.badge === 0"
-  matBadgePosition="above after"
-  class="border-none"
-  (click)="expanded = !expanded"
+<div
   mat-list-item
+  (click)="expanded = !expanded"
+  role="none"
+  class="h-3rem flex align-items-center justify-content-start mdc-list-item"
 >
-  <div class="flex align-items-center justify-content-start">
-    <span class="menu-item-icon" *ngIf="item.icon">
-      <fa-icon [icon]="item.icon"></fa-icon>
-    </span>
-    <span class="ml-3 flex-grow-1 text-left">{{ item.label }}</span>
-    <span class="menu-item-icon">
-      <fa-icon [icon]="expanded ? chevronUp : chevronDown"></fa-icon>
-    </span>
-  </div>
-</button>
+  <span
+    [matBadge]="item.badge"
+    [matBadgeHidden]="item.badge === 0"
+    matBadgePosition="above after"
+    class="menu-item-icon"
+    *ngIf="item.icon"
+  >
+    <fa-icon [icon]="item.icon"></fa-icon>
+  </span>
+  <span class="ml-3">{{ item.label }}</span>
+  <span class="menu-item-icon">
+    <fa-icon [icon]="expanded ? chevronUp : chevronDown"></fa-icon>
+  </span>
+</div>
 @if(expanded) {
 <div class="ml-4">
   @for (internal of item.items; track internal) {
