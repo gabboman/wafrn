@@ -23,6 +23,7 @@ import {
   faEnvelope,
   faServer,
   faUser,
+  faUnlock,
 } from '@fortawesome/free-solid-svg-icons';
 import { MatDialog } from '@angular/material/dialog';
 
@@ -64,6 +65,7 @@ export class PostComponent implements OnInit {
   reportIcon = faTriangleExclamation;
   deleteIcon = faTrash;
   worldIcon = faGlobe;
+  unlockIcon = faUnlock;
   envelopeIcon = faEnvelope;
   serverIcon = faServer;
   userIcon = faUser;
