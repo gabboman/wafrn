@@ -46,7 +46,7 @@ export class PostEditorComponent implements OnInit, OnDestroy {
     { level: 0, name: 'Public' },
     { level: 1, name: 'Followers only' },
     { level: 2, name: 'This instance only' },
-    { level: 3, name: 'Unlisted' },
+    // { level: 3, name: 'Unlisted' },
     { level: 10, name: 'Direct Message' },
   ];
   idPostToReblog: string | undefined;
