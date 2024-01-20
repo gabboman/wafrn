@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { environment } from 'src/environments/environment';
 import { server } from '../interfaces/servers';
+import { firstValueFrom } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -12,53 +13,54 @@ export class AdminService {
   async getServers(): Promise<server[]> {
     const response = await this.http
       .get<{ servers: server[] }>(`${environment.baseUrl}/admin/server-list`)
-      .toPromise();
+      );
     return response?.servers ? response?.servers : [];
   }
 
   async updateServers(serversToUpdate: server[]) {
     const response = await this.http
       .post(`${environment.baseUrl}/admin/server-update`, serversToUpdate)
-      .toPromise();
+      );
     return response;
   }
 
   async getBlocks(): Promise<any> {
     const response = await this.http
       .get(`${environment.baseUrl}/admin/userBlockList`)
-      .toPromise();
+      );
     return response;
   }
 
   async getReports(): Promise<any> {
-    return this.http.get(`${environment.baseUrl}/admin/reportList`).toPromise();
+    return firstValueFrom(this.http.get(`${environment.baseUrl}/admin/reportList`));
   }
 
   async ignoreReport(id: number): Promise<any> {
-    return this.http
+    return firstValueFrom(this.http
       .post(`${environment.baseUrl}/admin/ignoreReport`, { id: id })
-      .toPromise();
+      );
   }
 
   async banUser(id: string) {
-    return this.http
+    return firstValueFrom(this.http
       .post(`${environment.baseUrl}/admin/banUser`, { id: id })
-      .toPromise();
+      );
   }
 
   async banList() {
-    return this.http
+    return firstValueFrom(this.http
       .get(`${environment.baseUrl}/admin/getBannedUsers`)
-      .toPromise();
+      );
   }
   async pardonUser(id: string) {
-    return this.http
-      .post(`${environment.baseUrl}/admin/unbanUser`, { id: id })
-      .toPromise();
+    return firstValueFrom(
+      this.http.post(`${environment.baseUrl}/admin/unbanUser`, { id: id })
+    );
   }
   async getOpenReportsCount(): Promise<any> {
-    return this.http
-      .get(`${environment.baseUrl}/admin/reportCount`)
-      .toPromise();
+    return firstValueFrom(
+      this.http.get(`${environment.baseUrl}/admin/reportCount`)
+    );
   }
+
 }
