@@ -210,17 +210,22 @@ export class PostEditorComponent implements OnInit, OnDestroy {
       Quill.register(strike, true);
 
       const mentionBlot = Quill.import('blots/mention');
-      /*
+
       mentionBlot.setDataValues = (node: any, data: any) => {
         const newNode: any = node.cloneNode(false);
-        while (newNode.firstChild) {
-          newNode.removeChild(newNode.firstChild);
-        }
-        newNode.textContent = `@${data.value}`;
-        console.log(newNode.childNodes);
+        const userMentionFullData = this.mentionSuggestions.find(
+          (elem) => elem.id === data.id
+        );
+        newNode.innerHTML = this.getMentionHtml({
+          id: data.id,
+          url: data.value,
+          remoteId: data.remoteid
+            ? data.remoteid
+            : userMentionFullData.remoteId,
+        });
         return newNode;
-      };*/
-      //mentionBlot.tagName = 'a'; // used to be a <span> and masto peps want me dead!
+      };
+      mentionBlot.tagName = 'a'; // used to be a <span> and masto peps want me dead!
       Quill.register(mentionBlot, true);
 
       // quill stuff
@@ -381,13 +386,11 @@ export class PostEditorComponent implements OnInit, OnDestroy {
   }): string {
     const mentionHtml = `<a href="${
       mention.remoteId
-    }" class="u-url"><span data-id="${
-      mention.id
-    }" data-denotation-char="" data-value="${
+    }" class="u-url h-card mention" data-id="${mention.id}" data-value="${
       mention.url
-    }" class="h-card mention" translate="no"><span>${
+    }" data-remoteid="${mention.remoteId}" >${
       mention.url.startsWith('@') ? mention.url : '@' + mention.url
-    }</span></span></a>`;
+    }</a>`;
     return mentionHtml;
   }
 
