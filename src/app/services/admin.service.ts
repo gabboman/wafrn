@@ -11,46 +11,53 @@ export class AdminService {
   constructor(private http: HttpClient) {}
 
   async getServers(): Promise<server[]> {
-    const response = await this.http
-      .get<{ servers: server[] }>(`${environment.baseUrl}/admin/server-list`)
-      );
+    const response = await firstValueFrom(
+      this.http.get<{ servers: server[] }>(
+        `${environment.baseUrl}/admin/server-list`
+      )
+    );
     return response?.servers ? response?.servers : [];
   }
 
   async updateServers(serversToUpdate: server[]) {
-    const response = await this.http
-      .post(`${environment.baseUrl}/admin/server-update`, serversToUpdate)
-      );
+    const response = await firstValueFrom(
+      this.http.post(
+        `${environment.baseUrl}/admin/server-update`,
+        serversToUpdate
+      )
+    );
     return response;
   }
 
   async getBlocks(): Promise<any> {
-    const response = await this.http
-      .get(`${environment.baseUrl}/admin/userBlockList`)
-      );
+    const response = await firstValueFrom(
+      this.http.get(`${environment.baseUrl}/admin/userBlockList`)
+    );
     return response;
   }
 
   async getReports(): Promise<any> {
-    return firstValueFrom(this.http.get(`${environment.baseUrl}/admin/reportList`));
+    return firstValueFrom(
+      this.http.get(`${environment.baseUrl}/admin/reportList`)
+    );
   }
 
   async ignoreReport(id: number): Promise<any> {
-    return firstValueFrom(this.http
-      .post(`${environment.baseUrl}/admin/ignoreReport`, { id: id })
-      );
+    return firstValueFrom(
+      this.http.post(`${environment.baseUrl}/admin/ignoreReport`, { id: id })
+    );
   }
 
   async banUser(id: string) {
-    return firstValueFrom(this.http
-      .post(`${environment.baseUrl}/admin/banUser`, { id: id })
-      );
+    return firstValueFrom(
+      this.http.post(`${environment.baseUrl}/admin/banUser`, { id: id })
+    );
   }
 
   async banList() {
-    return firstValueFrom(this.http
-      .get(`${environment.baseUrl}/admin/getBannedUsers`)
-      );
+    return firstValueFrom(
+      this.http.get(`${environment.baseUrl}/admin/getBannedUsers`)
+    );
   }
   async pardonUser(id: string) {
     return firstValueFrom(
@@ -62,5 +69,4 @@ export class AdminService {
       this.http.get(`${environment.baseUrl}/admin/reportCount`)
     );
   }
-
 }
