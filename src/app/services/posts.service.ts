@@ -191,6 +191,7 @@ export class PostsService {
         'u',
         'a',
         's',
+        'del',
         'span',
         'br',
         'p',
