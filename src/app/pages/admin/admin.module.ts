@@ -34,6 +34,12 @@ const routes: Route[] = [
         (m) => m.PendingUsersComponent
       ),
   },
+  {
+    path: 'stats',
+    // new lazyloading method
+    loadComponent: () =>
+      import('./stats/stats.component').then((m) => m.StatsComponent),
+  },
 ];
 @NgModule({
   declarations: [],

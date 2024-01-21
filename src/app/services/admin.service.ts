@@ -4,6 +4,7 @@ import { environment } from 'src/environments/environment';
 import { server } from '../interfaces/servers';
 import { firstValueFrom } from 'rxjs';
 import { SimplifiedUser } from '../interfaces/simplified-user';
+import { statsReply } from '../interfaces/statsReply';
 
 @Injectable({
   providedIn: 'root',
@@ -92,6 +93,12 @@ export class AdminService {
       this.http.post(`${environment.baseUrl}/admin/activateUser`, {
         id,
       })
+    );
+  }
+
+  async getStats(): Promise<statsReply> {
+    return firstValueFrom(
+      this.http.get<statsReply>(`${environment.baseUrl}/status/workerStats`)
     );
   }
 }

@@ -37,6 +37,8 @@ import {
   faBars,
   faUserLock,
   faCog,
+  faChartSimple,
+  faHourglass,
 } from '@fortawesome/free-solid-svg-icons';
 import { MenuItem } from 'src/app/interfaces/menu-item';
 import { MatDialog } from '@angular/material/dialog';
@@ -211,8 +213,17 @@ export class NavigationMenuComponent implements OnInit, OnDestroy {
           {
             label: 'User blocklists',
             title: 'User blocklists',
-            icon: faUserLock,
+            icon: faHourglass,
             routerLink: '/admin/user-blocks',
+            command: () => {
+              this.hideMenu();
+            },
+          },
+          {
+            label: 'Stats',
+            title: 'Stats',
+            icon: faChartSimple,
+            routerLink: '/admin/stats',
             command: () => {
               this.hideMenu();
             },
