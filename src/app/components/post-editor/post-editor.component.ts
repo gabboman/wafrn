@@ -49,6 +49,7 @@ export class PostEditorComponent implements OnInit, OnDestroy {
     // { level: 3, name: 'Unlisted' },
     { level: 10, name: 'Direct Message' },
   ];
+  displayMarqueeButton = false;
   idPostToReblog: string | undefined;
   editorVisible: boolean = false;
   postCreatorContent: string = '';
@@ -204,7 +205,23 @@ export class PostEditorComponent implements OnInit, OnDestroy {
       const italic = Quill.import('formats/italic');
       italic.tagName = 'i'; // Quill uses <em> by default
       Quill.register(italic, true);
+      /*
+      const blockBlot = Quill.import('blots/block');
+      class MarqueeBlot extends blockBlot {
+        static create(value: any) {
+          const node = super.create(value);
 
+          return node;
+        }
+      }
+      MarqueeBlot['blotName'] = 'marquee';
+      MarqueeBlot['tagName'] = 'marquee';
+
+      Quill.register('formats/marquee', MarqueeBlot);
+      setTimeout(() => {
+        this.displayMarqueeButton = true;
+      });
+      */
       const strike = Quill.import('formats/strike');
       strike.tagName = 'del'; // Quill uses <s> by default
       Quill.register(strike, true);
