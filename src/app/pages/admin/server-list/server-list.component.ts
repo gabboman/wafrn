@@ -38,7 +38,11 @@ export class ServerListComponent implements OnInit {
     const serversToPatch: server[] = [];
     this.dataSource.data.forEach((elem, index) => {
       const original = this.originalServers[index];
-      if (elem.blocked != original.blocked || elem.detail != original.detail) {
+      if (
+        elem.blocked != original.blocked ||
+        elem.detail != original.detail ||
+        elem.friendServer != original.friendServer
+      ) {
         serversToPatch.push(elem);
       }
     });

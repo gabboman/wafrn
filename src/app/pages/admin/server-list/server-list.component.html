@@ -17,6 +17,12 @@
         <mat-checkbox [(ngModel)]="element.blocked"></mat-checkbox>
       </td>
     </ng-container>
+    <ng-container matColumnDef="friendServer">
+      <th mat-header-cell *matHeaderCellDef>Friended</th>
+      <td mat-cell *matCellDef="let element">
+        <mat-checkbox [(ngModel)]="element.friendServer"></mat-checkbox>
+      </td>
+    </ng-container>
     <ng-container matColumnDef="detail">
       <th mat-header-cell *matHeaderCellDef>Comment</th>
       <td mat-cell *matCellDef="let element">
