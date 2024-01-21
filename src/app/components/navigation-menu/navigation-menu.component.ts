@@ -217,6 +217,15 @@ export class NavigationMenuComponent implements OnInit, OnDestroy {
               this.hideMenu();
             },
           },
+          {
+            label: 'Users awaiting aproval',
+            title: 'User awaiting aproval',
+            icon: faUserLock,
+            routerLink: '/admin/activate-users',
+            command: () => {
+              this.hideMenu();
+            },
+          },
         ],
       },
       {

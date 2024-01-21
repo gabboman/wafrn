@@ -8,4 +8,5 @@ export interface SimplifiedUser {
   remoteId?: string;
   description?: string;
   emojis?: Emoji[];
+  email?: string;
 }

@@ -1,0 +1,30 @@
+<mat-card
+  class="p-3 mb-6 lg:mx-4 scalein wafrn-container"
+  *ngFor="let user of pendingUsers"
+>
+  <div class="flex justify-content-center mb-2">
+    <img
+      loading="lazy"
+      style="max-width: 100%; max-height: 15vh"
+      [src]="user.avatar"
+      alt="user avatar"
+      class="border-round-md"
+    />
+  </div>
+  <div class="flex justify-content-center flex-wrap"></div>
+  <div class="flex justify-content-center flex-wrap mb-2">
+    <div [innerText]="user.url" class="text-600 line-height-3"></div>
+  </div>
+  <div class="flex justify-content-center flex-wrap mb-2">
+    <div [innerText]="user.email" class="text-600 line-height-3"></div>
+  </div>
+  <div class="flex justify-content-center flex-wrap mt-3 mb-2">
+    <div style="word-wrap: anywhere" [innerHtml]="user.description"></div>
+  </div>
+  <button (click)="activateUser(user.id)" mat-flat-button color="primary">
+    Activate user
+  </button>
+  <button (click)="requireExtra(user.id)" mat-flat-button color="warn">
+    Require extra steps
+  </button>
+</mat-card>

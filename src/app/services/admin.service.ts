@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { environment } from 'src/environments/environment';
 import { server } from '../interfaces/servers';
 import { firstValueFrom } from 'rxjs';
+import { SimplifiedUser } from '../interfaces/simplified-user';
 
 @Injectable({
   providedIn: 'root',
@@ -67,6 +68,30 @@ export class AdminService {
   async getOpenReportsCount(): Promise<any> {
     return firstValueFrom(
       this.http.get(`${environment.baseUrl}/admin/reportCount`)
+    );
+  }
+
+  async getPendingActivationUsers(): Promise<SimplifiedUser[]> {
+    return firstValueFrom(
+      this.http.get<SimplifiedUser[]>(
+        `${environment.baseUrl}/admin/getPendingApprovalUsers`
+      )
+    );
+  }
+
+  async requireExtraSteps(id: string): Promise<any> {
+    return firstValueFrom(
+      this.http.post(`${environment.baseUrl}/admin/notActivateAndSendEmail`, {
+        id,
+      })
+    );
+  }
+
+  async activateUser(id: string): Promise<any> {
+    return firstValueFrom(
+      this.http.post(`${environment.baseUrl}/admin/activateUser`, {
+        id,
+      })
     );
   }
 }

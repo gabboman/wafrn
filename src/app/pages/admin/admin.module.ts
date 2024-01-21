@@ -1,7 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Route, RouterModule } from '@angular/router';
-import { AdminService } from 'src/app/services/admin.service';
 
 const routes: Route[] = [
   {
@@ -26,6 +25,14 @@ const routes: Route[] = [
   {
     path: 'bans',
     loadChildren: () => import('./bans/bans.module').then((m) => m.BansModule),
+  },
+  {
+    path: 'activate-users',
+    // new lazyloading method
+    loadComponent: () =>
+      import('./pending-users/pending-users.component').then(
+        (m) => m.PendingUsersComponent
+      ),
   },
 ];
 @NgModule({
