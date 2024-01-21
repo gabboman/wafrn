@@ -13,7 +13,7 @@ export class ServerListComponent implements OnInit {
   ready = false;
   originalServers: server[] = [];
 
-  displayedColumns = ['displayName', 'blocked', 'detail'];
+  displayedColumns = ['displayName', 'blocked', 'friendServer', 'detail'];
   @ViewChild(MatPaginator) paginator!: MatPaginator;
 
   dataSource!: MatTableDataSource<server, MatPaginator>;
