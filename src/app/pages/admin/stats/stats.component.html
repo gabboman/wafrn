@@ -1,9 +1,17 @@
 <mat-card *ngIf="backendReply" class="p-3 mb-6 lg:mx-4 scalein wafrn-container">
   <div class="flex justify-content-center flex-wrap mt-3 mb-2">
+    <div>Inbox still waiting: {{ backendReply.inboxAwaiting }}</div>
+  </div>
+  <div class="flex justify-content-center flex-wrap mt-3 mb-2">
     <div>Inbox success: {{ backendReply.inboxSuccess.count }}</div>
   </div>
   <div class="flex justify-content-center flex-wrap mt-3 mb-2">
     <div>Inbox fail: {{ backendReply.inboxFail.count }}</div>
+  </div>
+  <div class="flex justify-content-center flex-wrap mt-3 mb-2">
+    <div>
+      Preparation send awaiting: {{ backendReply.prepareSendPostAwaiting }}
+    </div>
   </div>
   <div class="flex justify-content-center flex-wrap mt-3 mb-2">
     <div>
@@ -14,10 +22,16 @@
     <div>Preparation send fail: {{ backendReply.prepareSendFail.count }}</div>
   </div>
   <div class="flex justify-content-center flex-wrap mt-3 mb-2">
+    <div>Send post awaiting: {{ backendReply.sendPostAwaiting }}</div>
+  </div>
+  <div class="flex justify-content-center flex-wrap mt-3 mb-2">
     <div>Send post success: {{ backendReply.sendPostSuccess.count }}</div>
   </div>
   <div class="flex justify-content-center flex-wrap mt-3 mb-2">
     <div>Send post success: {{ backendReply.sendPostFailed.count }}</div>
+  </div>
+  <div class="flex justify-content-center flex-wrap mt-3 mb-2">
+    <div>Update user awaiting: {{ backendReply.updateUserAwaiting }}</div>
   </div>
   <div class="flex justify-content-center flex-wrap mt-3 mb-2">
     <div>Update user success: {{ backendReply.updateUserSuccess.count }}</div>
