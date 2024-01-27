@@ -41,12 +41,12 @@ import Quill from 'quill';
   ],
   providers: [EditorService],
 })
-export class PostEditorComponent implements OnInit, OnDestroy {
+export class PostEditorComponent implements OnInit {
   privacyOptions = [
     { level: 0, name: 'Public' },
     { level: 1, name: 'Followers only' },
     { level: 2, name: 'This instance only' },
-    // { level: 3, name: 'Unlisted' },
+    { level: 3, name: 'Unlisted' },
     { level: 10, name: 'Direct Message' },
   ];
   displayMarqueeButton = false;
@@ -393,8 +393,6 @@ export class PostEditorComponent implements OnInit, OnDestroy {
       ? true
       : this.uploadedMedias[index].NSFW;
   }
-
-  ngOnDestroy(): void {}
 
   getMentionHtml(mention: {
     id: string;
