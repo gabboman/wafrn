@@ -314,6 +314,16 @@ export class NavigationMenuComponent implements OnInit, OnDestroy {
             visible: this.jwtService.tokenValid(),
           },
           {
+            label: 'Import follows',
+            title: 'Import follows',
+            icon: faUserEdit,
+            command: () => {
+              this.hideMenu();
+            },
+            routerLink: '/profile/importFollows',
+            visible: this.jwtService.tokenValid(),
+          },
+          {
             label: 'Manage muted users',
             title: 'Manage muted users',
             icon: faVolumeMute,

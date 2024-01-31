@@ -1,41 +1,64 @@
-<!--
-  <div class="grid">
-  <div class="col-12 sm:col-12 md:col-12 lg:col-5 margin-auto pb-6">
-    <p-card>
-    <p-progressSpinner *ngIf="loading"></p-progressSpinner>
-    <p-fileUpload
-    [hidden]="responseResults.success"
-    class="w-full"
-    chooseStyleClass="w-full"
-    mode="basic"
-    chooseLabel="Choose"
-    [multiple]="false"
-    name="follows"
-    [url]="baseUrl + '/loadFollowList'"
-    accept="text/csv"
-    [maxFileSize]="size"
-    (onUpload)="afterUpload($event)"
-    (onBeforeUpload)="beforeUpload()"
-    [auto]="true"
-    ></p-fileUpload>
-    <div *ngIf="responseResults.success">
-      <p-messages [value]="[
-      { severity: 'success', summary: 'Follow request sent to ' + responseResults.newFollows + ' accounts'},
-      { severity: 'warn', summary: 'Already following ' + responseResults.alreadyFollowing},
-      ]" [enableService]="false" [closable]="false"></p-messages>
-      <div  *ngIf="responseResults.errors.length > 0" >
-      <p-messages [value]="[
-      { severity: 'error', summary: 'Error while trying to follow ' + responseResults.errors.length + ' account(s)'}
-      ]" [enableService]="false" [closable]="false"></p-messages>
-      There was a problem while loading these accounts:
-      <div *ngFor="let acc of responseResults.errors">{{acc}}</div>
-    </div>
-    </div>
-    <div *ngIf="responseResults.success === false">
-      {{responseResults.errorMessage}}
-    </div>
-  </p-card>
-  </div>
-</div>
+<mat-card class="p-3 mb-6 lg:mx-4 scalein wafrn-container">
+  <mat-card-content>
+    @switch (step) { @case (0) {
+    <h2>Import your followers from another instance</h2>
+    <span>Let's upload a CSV</span>
+    <input
+      [hidden]="true"
+      type="file"
+      accept=".csv"
+      class="file-input"
+      (change)="onFileSelected($event)"
+      #fileUpload
+    />
 
--->
+    <div *ngIf="!uploading" class="file-upload">
+      <button
+        mat-flat-button
+        color="accent"
+        class="upload-btn w-full"
+        (click)="fileUpload.click()"
+      >
+        Upload CSV
+      </button>
+    </div>
+
+    <div *ngIf="uploading" class="grid w-full">
+      <mat-spinner color="accent" diameter="42"></mat-spinner>
+      <p class="m-0 text-lg text-600">Uploading... This might take some time</p>
+    </div>
+    } @case (1) {
+    <button
+      (click)="followEveryone()"
+      mat-flat-button
+      class="w-full"
+      color="primary"
+    >
+      Follow all users
+    </button>
+    @if(response.notFoundUsers.length > 0) {
+    <span
+      >We had problems finding these {{ response.notFoundUsers.length }} users
+      users:</span
+    >
+    @for (user of response.notFoundUsers; track $index) {
+    <p [innerText]="user"></p>
+    } } } @case (2) {
+    <mat-spinner color="accent" diameter="42"></mat-spinner>
+    <p class="m-0 text-lg text-600">
+      Following people... This might take some time
+    </p>
+    <mat-progress-bar
+      mode="determinate"
+      [value]="(progress * 100) / response.foundUsers.length"
+    ></mat-progress-bar>
+    } @case(3) {
+    <span
+      >We had problems following these {{ failedFollows.length }} users
+      users:</span
+    >
+    @for (user of failedFollows; track $index) {
+    <a [routerLink]="['blog', user]"><p [innerText]="user"></p></a>
+    } } }
+  </mat-card-content>
+</mat-card>

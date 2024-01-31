@@ -47,6 +47,7 @@ export class FileUploadComponent {
         this.http.post<Array<WafrnMedia>>(uploadImageUrl, formdata)
       ).catch((error: any) => {
         console.log('error uploading');
+        console.warn(error);
       });
       if (petition && petition[0]) {
         this.fileUpload.emit(petition[0]);
