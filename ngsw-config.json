@@ -49,7 +49,7 @@
         "strategy": "freshness",
         "maxSize": 250,
         "maxAge": "1m",
-        "timeout": "300s"
+        "timeout": "3000s"
       }
     },
     {
@@ -62,9 +62,9 @@
       ],
       "cacheConfig": {
         "strategy": "performance",
-        "maxSize": 1000,
+        "maxSize": 10000,
         "maxAge": "3d",
-        "timeout": "300s"
+        "timeout": "30s"
       }
     }
   ]
