@@ -149,6 +149,7 @@ export class NavigationMenuComponent implements OnInit, OnDestroy {
           this.hideMenu();
         },
       },
+
       {
         label: 'Write new post',
         title: 'Write a post',
@@ -174,6 +175,20 @@ export class NavigationMenuComponent implements OnInit, OnDestroy {
         command: () => {
           this.hideMenu();
         },
+      },
+      {
+        label: 'My blog',
+        title: 'View your own blog',
+        icon: faUser,
+        command: () => {
+          this.hideMenu();
+        },
+        routerLink:
+          '/blog/' +
+          (this.jwtService.tokenValid()
+            ? this.jwtService.getTokenData()['url']
+            : ''),
+        visible: this.jwtService.tokenValid(),
       },
       {
         label: 'Admin',
@@ -351,20 +366,6 @@ export class NavigationMenuComponent implements OnInit, OnDestroy {
               this.hideMenu();
             },
             routerLink: '/profile/serverBlocks',
-            visible: this.jwtService.tokenValid(),
-          },
-          {
-            label: 'My blog',
-            title: 'View your own blog',
-            icon: faUser,
-            command: () => {
-              this.hideMenu();
-            },
-            routerLink:
-              '/blog/' +
-              (this.jwtService.tokenValid()
-                ? this.jwtService.getTokenData()['url']
-                : ''),
             visible: this.jwtService.tokenValid(),
           },
         ],
