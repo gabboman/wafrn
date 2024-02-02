@@ -208,6 +208,7 @@ export class PostsService {
         'li',
         'marquee',
         'font',
+        'blockquote',
       ],
       ALLOWED_ATTR: ['style', 'class', 'href', 'color'],
     });
