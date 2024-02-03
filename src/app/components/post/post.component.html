@@ -162,12 +162,12 @@
       </button>
       <button
         mat-stroked-button
-        color="warn"
+        color="accent"
         *ngIf="notYetAcceptedFollows.includes(content.userId) && userLoggedIn"
         class="follow-button flex-shrink-0"
         (click)="unfollowUser(content.userId)"
       >
-        Follow not yet accepted
+        Awaiting aproval
       </button>
     </div>
     <div id="fragment-content-warning" *ngIf="content.content_warning">
