@@ -32,7 +32,9 @@ export class SearchComponent implements OnInit, OnDestroy {
   users: SimplifiedUser[] = [];
   avatars: Record<string, string> = {};
   viewedUsers = 0;
-  followedUsers: Array<string> = [];
+  followedUsers: string[] = [];
+  notYetAcceptedFollows: string[] = [];
+
   userLoggedIn = false;
   currentPage = 0;
   loading = false;
@@ -63,8 +65,12 @@ export class SearchComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.followedUsers = this.postService.followedUserIds;
+    this.notYetAcceptedFollows =
+      this.postService.notYetAcceptedFollowedUsersIds;
     this.postService.updateFollowers.subscribe(() => {
       this.followedUsers = this.postService.followedUserIds;
+      this.notYetAcceptedFollows =
+        this.postService.notYetAcceptedFollowedUsersIds;
     });
     this.userLoggedIn = this.loginService.checkUserLoggedIn();
     if (this.activatedRoute.snapshot.paramMap.get('term')) {

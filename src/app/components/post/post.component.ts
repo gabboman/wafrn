@@ -41,7 +41,8 @@ export class PostComponent implements OnInit {
   mediaBaseUrl = environment.baseMediaUrl;
   cacheurl = environment.externalCacheurl;
   userLoggedIn = false;
-  followedUsers: Array<string> = [];
+  followedUsers: string[] = [];
+  notYetAcceptedFollows: string[] = [];
   avatars: string[] = [];
   notes: string = '---';
   quickReblogPanelVisible = false;
@@ -92,8 +93,12 @@ export class PostComponent implements OnInit {
   ngOnInit(): void {
     this.originalPoster = this.post[this.post.length - 1].user;
     this.followedUsers = this.postService.followedUserIds;
+    this.notYetAcceptedFollows =
+      this.postService.notYetAcceptedFollowedUsersIds;
     this.postService.updateFollowers.subscribe(() => {
       this.followedUsers = this.postService.followedUserIds;
+      this.notYetAcceptedFollows =
+        this.postService.notYetAcceptedFollowedUsersIds;
     });
     if (!this.showFull) {
       this.originalPostContent = this.post;

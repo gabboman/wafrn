@@ -19,6 +19,7 @@ export class PostsService {
   public updateFollowers: BehaviorSubject<boolean> = new BehaviorSubject(false);
 
   public followedUserIds: Array<string> = [];
+  public notYetAcceptedFollowedUsersIds: Array<string> = [];
   public blockedUserIds: Array<string> = [];
   constructor(
     private mediaService: MediaService,
@@ -34,11 +35,14 @@ export class PostsService {
         .get<{
           followedUsers: string[];
           blockedUsers: string[];
+          notAcceptedFollows: string[];
         }>(`${environment.baseUrl}/getFollowedUsers`)
         .toPromise();
       if (followsAndBlocks) {
         this.followedUserIds = followsAndBlocks.followedUsers;
         this.blockedUserIds = followsAndBlocks.blockedUsers;
+        this.notYetAcceptedFollowedUsersIds =
+          followsAndBlocks.notAcceptedFollows;
         this.updateFollowers.next(true);
       }
     }

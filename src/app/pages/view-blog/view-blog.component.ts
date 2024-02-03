@@ -42,7 +42,8 @@ export class ViewBlogComponent implements OnInit, OnDestroy {
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   blogDetails: any;
-  followedUsers: Array<string> = [];
+  followedUsers: string[] = [];
+  notYetAcceptedFollows: string[] = [];
   userLoggedIn = false;
   avatarUrl = '';
   navigationSubscription!: Subscription;
@@ -99,8 +100,12 @@ export class ViewBlogComponent implements OnInit, OnDestroy {
       });
 
     this.followedUsers = this.postService.followedUserIds;
+    this.notYetAcceptedFollows =
+      this.postService.notYetAcceptedFollowedUsersIds;
     this.postService.updateFollowers.subscribe(() => {
       this.followedUsers = this.postService.followedUserIds;
+      this.notYetAcceptedFollows =
+        this.postService.notYetAcceptedFollowedUsersIds;
     });
 
     const blogUrl = this.activatedRoute.snapshot.paramMap.get('url');

@@ -150,11 +150,24 @@
       <button
         mat-stroked-button
         color="accent"
-        *ngIf="followedUsers.indexOf(content.userId) === -1 && userLoggedIn"
+        *ngIf="
+          !notYetAcceptedFollows.includes(content.userId) &&
+          !followedUsers.includes(content.userId) &&
+          userLoggedIn
+        "
         class="follow-button flex-shrink-0"
         (click)="followUser(content.userId)"
       >
         Follow
+      </button>
+      <button
+        mat-stroked-button
+        color="warn"
+        *ngIf="notYetAcceptedFollows.includes(content.userId) && userLoggedIn"
+        class="follow-button flex-shrink-0"
+        (click)="unfollowUser(content.userId)"
+      >
+        Follow not yet accepted
       </button>
     </div>
     <div id="fragment-content-warning" *ngIf="content.content_warning">
