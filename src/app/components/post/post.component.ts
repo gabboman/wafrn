@@ -24,6 +24,7 @@ import {
   faServer,
   faUser,
   faUnlock,
+  faPen,
 } from '@fortawesome/free-solid-svg-icons';
 import { MatDialog } from '@angular/material/dialog';
 
@@ -70,6 +71,7 @@ export class PostComponent implements OnInit {
   envelopeIcon = faEnvelope;
   serverIcon = faServer;
   userIcon = faUser;
+  editedIcon = faPen;
 
   // post seen
   @Output() seenEmitter: EventEmitter<boolean> = new EventEmitter<boolean>();

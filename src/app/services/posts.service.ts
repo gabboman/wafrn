@@ -127,6 +127,8 @@ export class PostsService {
       rawPost.ancestors.forEach((post: RawPost) => {
         result.push({
           ...post,
+          createdAt: new Date(post.createdAt),
+          updatedAt: new Date(post.updatedAt),
           tags: post.postTags,
           remotePostId: post.remotePostId
             ? post.remotePostId
@@ -161,6 +163,8 @@ export class PostsService {
           elem.user.avatar = elem.user.url.startsWith('@')
             ? environment.externalCacheurl + encodeURI(elem.user.avatar)
             : environment.baseMediaUrl + elem.user.avatar;
+          elem.createdAt = new Date(elem.createdAt);
+          elem.updatedAt = new Date(elem.updatedAt);
           return elem;
         })
         .sort(
@@ -182,6 +186,8 @@ export class PostsService {
         );
       });
       elem.content = this.getPostHtml(elem);
+      elem.createdAt = new Date(elem.createdAt);
+      elem.updatedAt = new Date(elem.updatedAt);
       return elem;
     });
   }

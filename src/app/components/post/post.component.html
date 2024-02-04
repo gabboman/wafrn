@@ -147,6 +147,15 @@
           "
         ></fa-icon>
       </span>
+      <span
+        *ngIf="
+          content.updatedAt.getTime() - content.createdAt.getTime() > 60000
+        "
+        class="text-xs text-600"
+      >
+        <fa-icon [icon]="editedIcon"></fa-icon>
+        {{ content.updatedAt | date : "short" }}
+      </span>
       <button
         mat-stroked-button
         color="accent"
