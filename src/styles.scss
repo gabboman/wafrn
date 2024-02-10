@@ -162,3 +162,7 @@ blockquote {
   border-inline-start: 3px solid #9baec8;
   padding-inline-start: 1em !important;
 }
+
+.mdc-button {
+  min-width: unset !important;
+}
