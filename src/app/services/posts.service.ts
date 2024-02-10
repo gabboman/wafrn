@@ -123,7 +123,6 @@ export class PostsService {
   }
 
   processPostNew(unlinked: unlinkedPosts): ProcessedPost[][] {
-    console.log(unlinked);
     const res = unlinked.posts.map((elem) => {
       const processed = elem.ancestors
         ? elem.ancestors.map((anc) =>
