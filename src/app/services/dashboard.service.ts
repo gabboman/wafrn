@@ -8,6 +8,8 @@ import { PostsService } from './posts.service';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { MessageService } from './message.service';
+import { firstValueFrom } from 'rxjs';
+import { unlinkedPosts } from '../interfaces/unlinked-posts';
 
 @Injectable({
   providedIn: 'root',
@@ -28,6 +30,7 @@ export class DashboardService {
   }
 
   getDashboardUrl(level: number): string {
+    return `${environment.baseUrl}/v2/dashboard`;
     let res = '';
     switch (level) {
       case 0:
@@ -52,22 +55,18 @@ export class DashboardService {
     let result: ProcessedPost[][] = [];
     let petitionData: HttpParams = new HttpParams();
     petitionData = petitionData.set('page', '0');
+    petitionData = petitionData.set('level', level);
     petitionData = petitionData.set('startScroll', date.getTime().toString());
     const url = this.getDashboardUrl(level);
-    const dashboardPetition: Array<RawPost> | undefined = await this.http
-      .get<Array<RawPost>>(url, { params: petitionData })
-      .toPromise();
-    if (dashboardPetition) {
-      result = dashboardPetition.map((elem) =>
-        this.postService.processPost(elem)
-      );
-      result = result.filter(
-        (post) => !this.postService.postContainsBlocked(post)
-      );
-    } else {
-      // TODO show error message
-    }
-
+    const dashboardPetition = await firstValueFrom(
+      this.http.get<unlinkedPosts>(url, {
+        params: petitionData,
+      })
+    );
+    result = this.postService.processPostNew(dashboardPetition);
+    result = result.filter(
+      (post) => !this.postService.postContainsBlocked(post)
+    );
     this.scrollEventEmitter.emit('scrollingtime');
     return result;
   }

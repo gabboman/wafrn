@@ -7,6 +7,8 @@ import { HttpClient } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
 import { BehaviorSubject } from 'rxjs';
 import { JwtService } from './jwt.service';
+import { unlinkedPosts } from '../interfaces/unlinked-posts';
+import { SimplifiedUser } from '../interfaces/simplified-user';
 @Injectable({
   providedIn: 'root',
 })
@@ -118,6 +120,89 @@ export class PostsService {
     }
 
     return res;
+  }
+
+  processPostNew(unlinked: unlinkedPosts): ProcessedPost[][] {
+    console.log(unlinked);
+    const res = unlinked.posts.map((elem) => {
+      const processed = elem.ancestors
+        ? elem.ancestors.map((anc) =>
+            this.processSinglePost({ ...unlinked, posts: [anc] })
+          )
+        : [];
+      processed.push(
+        this.processSinglePost({
+          ...unlinked,
+          posts: [elem],
+        })
+      );
+      return processed.sort((a, b) => {
+        return a.createdAt.getTime() - b.createdAt.getTime();
+      });
+    });
+    return res;
+  }
+
+  processSinglePost(unlinked: unlinkedPosts): ProcessedPost {
+    const elem = unlinked.posts[0];
+    const user = unlinked.users.find((usr) => usr.id === elem.userId);
+    const userEmojis = unlinked.emojiRelations.userEmojiRelation.filter(
+      (elem) => elem.userId === user?.id
+    );
+    const polls = unlinked.polls.filter((poll) => poll.postId === elem.id);
+    const medias = unlinked.medias.filter((media) => {
+      return media.posts.some(
+        (thing) => thing.postMediaRelations.postId === elem.id
+      );
+    });
+    if (userEmojis && userEmojis.length && user?.name) {
+      userEmojis.forEach((usrEmoji) => {
+        const emoji = unlinked.emojiRelations.emojis.find(
+          (emojis) => emojis.id === usrEmoji.emojiId
+        );
+        if (emoji) {
+          user.name = user.name.replaceAll(
+            emoji.name,
+            `<img class="post-emoji" src="${
+              environment.externalCacheurl + encodeURIComponent(emoji.url)
+            }">`
+          );
+        }
+      });
+    }
+    const nonExistentUser = {
+      avatar: '',
+      url: 'ERROR',
+      name: 'ERROR',
+      id: '42',
+    };
+    const mentionedUsers = unlinked.mentions
+      .filter((mention) => mention.post === elem.id)
+      .map((mention) =>
+        unlinked.users.find((usr) => usr.id === mention.userMentioned)
+      )
+      .filter((mention) => mention !== undefined);
+    const newPost: ProcessedPost = {
+      ...elem,
+      user: user ? user : nonExistentUser,
+      tags: unlinked.tags.filter((tag) => tag.postId === elem.id),
+      descendents: [],
+      userLikesPostRelations: unlinked.likes
+        .filter((like) => like.postId === elem.id)
+        .map((like) => like.userId),
+      emojis: unlinked.emojiRelations.emojis,
+      createdAt: new Date(elem.createdAt),
+      updatedAt: new Date(elem.updatedAt),
+      notes: elem.notes ? elem.notes : 0,
+      remotePostId: elem.remotePostId
+        ? elem.remotePostId
+        : `${environment.frontUrl}/post/${elem.id}`,
+      medias: medias,
+      questionPoll: polls[0],
+      mentionPost: mentionedUsers as SimplifiedUser[],
+    };
+    newPost.content = this.getPostHtml(newPost);
+    return newPost;
   }
 
   processPost(rawPost: RawPost): ProcessedPost[] {
@@ -308,7 +393,7 @@ export class PostsService {
   postContainsBlocked(processedPost: ProcessedPost[]): boolean {
     let res = false;
     processedPost.forEach((fragment) => {
-      if (this.blockedUserIds.indexOf(fragment.userId) !== -1) {
+      if (this.blockedUserIds.includes(fragment.userId)) {
         res = true;
       }
     });
