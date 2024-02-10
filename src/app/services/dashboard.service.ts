@@ -29,25 +29,6 @@ export class DashboardService {
     this.baseUrl = environment.baseUrl;
   }
 
-  getDashboardUrl(level: number): string {
-    return `${environment.baseUrl}/v2/dashboard`;
-    let res = '';
-    switch (level) {
-      case 0:
-        res = `${environment.baseUrl}/explore`;
-        break;
-      case 1:
-        res = `${environment.baseUrl}/dashboard`;
-        break;
-      case 2:
-        res = `${environment.baseUrl}/exploreLocal`;
-        break;
-      default:
-        res = `${environment.baseUrl}/private`;
-    }
-    return res;
-  }
-
   async getDashboardPage(
     date: Date,
     level: number
@@ -57,7 +38,7 @@ export class DashboardService {
     petitionData = petitionData.set('page', '0');
     petitionData = petitionData.set('level', level);
     petitionData = petitionData.set('startScroll', date.getTime().toString());
-    const url = this.getDashboardUrl(level);
+    const url = `${environment.baseUrl}/v2/dashboard`;
     const dashboardPetition = await firstValueFrom(
       this.http.get<unlinkedPosts>(url, {
         params: petitionData,
