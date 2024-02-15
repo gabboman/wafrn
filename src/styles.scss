@@ -1,3 +1,4 @@
+/*
 // material theme
 @use "@angular/material" as mat;
 @use "@angular/material-experimental" as matx;
@@ -25,10 +26,9 @@ $theme: matx.define-theme(
 html {
   // Apply the base theme at the root, so it will be inherited by the whole app.
   @include mat.core-theme($theme);
-
   @include mat.all-component-themes($theme);
 }
-
+*/
 // wafrn css
 html,
 body,
