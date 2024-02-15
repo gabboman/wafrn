@@ -1,3 +1,35 @@
+// material theme
+@use "@angular/material" as mat;
+@use "@angular/material-experimental" as matx;
+
+@include mat.core();
+
+$theme: matx.define-theme(
+  (
+    color: (
+      theme-type: dark,
+      primary: matx.$m3-magenta-palette,
+      tertiary: matx.$m3-blue-palette,
+    ),
+    typography: (
+      //brand-family: "Roboto",
+      //plain-family: "Roboto, sans serif",
+      bold-weight: 900,
+    ),
+    density: (
+      scale: -1,
+    ),
+  )
+);
+
+html {
+  // Apply the base theme at the root, so it will be inherited by the whole app.
+  @include mat.core-theme($theme);
+
+  @include mat.all-component-themes($theme);
+}
+
+// wafrn css
 html,
 body,
 app-root,

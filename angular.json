@@ -39,11 +39,6 @@
             ],
             "styles": [
               {
-                "input": "@angular/material/prebuilt-themes/purple-green.css",
-                "inject": false,
-                "bundleName": "wafrn-css"
-              },
-              {
                 "input": "node_modules/primeflex/primeflex.css",
                 "inject": false,
                 "bundleName": "wafrn-css"
