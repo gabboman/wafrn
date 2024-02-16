@@ -15,6 +15,11 @@ $editor-buttons: #ffffffde;
   }
 }
 
+// dirty hack because bug regarding the editor
+.cdk-overlay-pane.mat-mdc-dialog-panel {
+  max-width: 100% !important;
+}
+
 a,
 a:visited {
   color: $wafrn-blue;
