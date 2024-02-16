@@ -1,5 +1,7 @@
-<mat-drawer-container class="side-menu">
+<mat-drawer-container>
   <mat-drawer
+    style="position: fixed"
+    class="side-menu"
     [mode]="mobile ? 'over' : 'side'"
     [opened]="menuVisible || !mobile"
     (closed)="hideMenu()"
