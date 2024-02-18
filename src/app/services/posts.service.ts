@@ -441,7 +441,7 @@ export class PostsService {
           avatar: descendent.user.url.startsWith('@')
             ? environment.externalCacheurl +
               encodeURIComponent(descendent.user.avatar)
-            : descendent.user.avatar,
+            : environment.baseMediaUrl + descendent.user.avatar,
         },
       };
     });
