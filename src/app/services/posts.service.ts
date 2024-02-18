@@ -425,13 +425,13 @@ export class PostsService {
   }
 
   async getDescendents(id: string): Promise<{ descendents: RawPost[] }> {
-    const res = await firstValueFrom(
+    let res = await firstValueFrom(
       this.http.get<{ descendents: RawPost[] }>(
         environment.baseUrl + '/v2/descendents/' + id
       )
     );
-    if (!res?.descendents) {
-      res.descendents = [];
+    if (!res || !res?.descendents) {
+      res = { descendents: [] };
     }
     return res;
   }
