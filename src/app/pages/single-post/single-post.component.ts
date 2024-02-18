@@ -57,9 +57,9 @@ export class SinglePostComponent {
         setTimeout(() => {
           this.dataSource.paginator = this.paginator;
         });
-        this.dataSource.data = (
-          await this.postService.getDescendents(data.id)
-        ).descendents;
+        this.postService.getDescendents(data.id).then((response) => {
+          this.dataSource.data = response.descendents;
+        });
       }
       const lastPostFragment = this.post[this.post.length - 1];
       if (lastPostFragment) {

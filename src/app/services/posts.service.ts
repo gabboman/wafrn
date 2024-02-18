@@ -433,6 +433,18 @@ export class PostsService {
     if (!res || !res?.descendents) {
       res = { descendents: [] };
     }
+    res.descendents = res.descendents.map((descendent) => {
+      return {
+        ...descendent,
+        user: {
+          ...descendent.user,
+          avatar: descendent.user.url.startsWith('@')
+            ? environment.externalCacheurl +
+              encodeURIComponent(descendent.user.avatar)
+            : descendent.user.avatar,
+        },
+      };
+    });
     return res;
   }
 }
