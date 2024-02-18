@@ -139,7 +139,12 @@ export class PostsService {
         return a.createdAt.getTime() - b.createdAt.getTime();
       });
     });
-    return res;
+    return res.sort((a, b) => {
+      return (
+        b[b.length - 1].createdAt.getTime() -
+        a[a.length - 1].createdAt.getTime()
+      );
+    });
   }
 
   processSinglePost(unlinked: unlinkedPosts): ProcessedPost {
