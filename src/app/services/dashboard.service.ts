@@ -157,4 +157,14 @@ export class DashboardService {
       })
     );
   }
+
+  async getPostV2(id: string): Promise<ProcessedPost[]> {
+    const petition = await firstValueFrom(
+      this.http.get<unlinkedPosts>(`${this.baseUrl}/v2/post/${id}`)
+    );
+
+    const result = this.postService.processPostNew(petition);
+
+    return result[0];
+  }
 }

@@ -44,21 +44,22 @@ export class SinglePostComponent {
     this.userLoggedIn = loginService.checkUserLoggedIn();
     this.route.params.subscribe(async (data: any) => {
       this.forceSSR = this.route.snapshot.queryParams['force-ssr'] === 'true';
-      const tmpPost = await this.dashboardService
-        .getPost(data ? data.id : '')
-        .toPromise();
+      const tmpPost = await this.dashboardService.getPostV2(
+        data ? data.id : ''
+      );
       this.post = tmpPost ? tmpPost : [];
       if (
         this.post &&
         this.post.length > 0 &&
         this.post[this.post.length - 1].descendents
       ) {
-        this.dataSource = new MatTableDataSource<RawPost>(
-          this.post[this.post.length - 1].descendents
-        );
+        this.dataSource = new MatTableDataSource<any>([]);
         setTimeout(() => {
           this.dataSource.paginator = this.paginator;
         });
+        this.dataSource.data = (
+          await this.postService.getDescendents(data.id)
+        ).descendents;
       }
       const lastPostFragment = this.post[this.post.length - 1];
       if (lastPostFragment) {

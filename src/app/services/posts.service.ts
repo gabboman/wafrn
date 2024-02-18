@@ -5,7 +5,7 @@ import { MediaService } from './media.service';
 import { sanitize } from 'dompurify';
 import { HttpClient } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, Observable, firstValueFrom } from 'rxjs';
 import { JwtService } from './jwt.service';
 import { unlinkedPosts } from '../interfaces/unlinked-posts';
 import { SimplifiedUser } from '../interfaces/simplified-user';
@@ -420,6 +420,18 @@ export class PostsService {
       res = new URL(urlString);
     } catch (error) {
       console.log('Invalid url: ' + urlString);
+    }
+    return res;
+  }
+
+  async getDescendents(id: string): Promise<{ descendents: RawPost[] }> {
+    const res = await firstValueFrom(
+      this.http.get<{ descendents: RawPost[] }>(
+        environment.baseUrl + '/v2/descendents/' + id
+      )
+    );
+    if (!res?.descendents) {
+      res.descendents = [];
     }
     return res;
   }
