@@ -31,8 +31,8 @@
       type="button"
       class="show-sidebar-menu-button"
       (click)="showMenu()"
-      [matBadge]="notifications + adminNotifications"
-      [matBadgeHidden]="notifications + adminNotifications === 0"
+      [matBadge]="notifications + adminNotifications + usersAwaitingAproval"
+      [matBadgeHidden]="notifications + adminNotifications + usersAwaitingAproval === 0"
       matBadgePosition="below"
     >
       <fa-icon [icon]="hamburguerIcon"></fa-icon>
