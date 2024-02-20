@@ -66,11 +66,6 @@ export class AdminService {
       this.http.post(`${environment.baseUrl}/admin/unbanUser`, { id: id })
     );
   }
-  async getOpenReportsCount(): Promise<any> {
-    return firstValueFrom(
-      this.http.get(`${environment.baseUrl}/admin/reportCount`)
-    );
-  }
 
   async getPendingActivationUsers(): Promise<SimplifiedUser[]> {
     return firstValueFrom(

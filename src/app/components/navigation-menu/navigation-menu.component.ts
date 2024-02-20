@@ -53,6 +53,7 @@ export class NavigationMenuComponent implements OnInit, OnDestroy {
   menuVisible = false;
   notifications = 0;
   adminNotifications = 0;
+  usersAwaitingAproval = 0;
   privateMessagesNotifications = '';
   mobile = false;
   logo = environment.logo;
@@ -194,7 +195,7 @@ export class NavigationMenuComponent implements OnInit, OnDestroy {
         label: 'Admin',
         icon: faPowerOff,
         title: 'Check your notifications',
-        badge: this.adminNotifications,
+        badge: this.adminNotifications + this.usersAwaitingAproval,
         visible: this.jwtService.adminToken(),
         items: [
           {
@@ -246,6 +247,7 @@ export class NavigationMenuComponent implements OnInit, OnDestroy {
           {
             label: 'Users awaiting aproval',
             title: 'User awaiting aproval',
+            badge: this.usersAwaitingAproval,
             icon: faUserLock,
             routerLink: '/admin/activate-users',
             command: () => {
@@ -427,14 +429,12 @@ export class NavigationMenuComponent implements OnInit, OnDestroy {
       } else {
         const response =
           await this.notificationsService.getUnseenNotifications();
-        this.notifications = response;
+        this.notifications = response.notifications;
+        this.adminNotifications = response.reports;
+        this.usersAwaitingAproval = response.awaitingAproval;
       }
       this.drawMenu();
       this.cdr.detectChanges();
-    }
-    if (this.jwtService.adminToken()) {
-      const reports = (await this.adminService.getOpenReportsCount())?.reports;
-      this.adminNotifications = reports;
     }
   }
 
