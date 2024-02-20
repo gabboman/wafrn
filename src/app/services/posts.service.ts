@@ -425,26 +425,46 @@ export class PostsService {
   }
 
   async getDescendents(id: string): Promise<{ descendents: RawPost[] }> {
-    let res = await firstValueFrom(
-      this.http.get<{ descendents: RawPost[] }>(
+    const response = await firstValueFrom(
+      this.http.get<unlinkedPosts>(
         environment.baseUrl + '/v2/descendents/' + id
       )
     );
-    if (!res || !res?.descendents) {
-      res = { descendents: [] };
-    }
-    res.descendents = res.descendents.map((descendent) => {
-      return {
-        ...descendent,
-        user: {
-          ...descendent.user,
-          avatar: descendent.user.url.startsWith('@')
-            ? environment.externalCacheurl +
-              encodeURIComponent(descendent.user.avatar)
-            : environment.baseMediaUrl + descendent.user.avatar,
-        },
+    const res: { descendents: RawPost[] } = { descendents: [] };
+    console.log(response);
+    if (response) {
+      const emptyUser: SimplifiedUser = {
+        id: '42',
+        url: 'ERROR_GETTING_USER',
+        avatar: '',
+        name: 'ERROR',
       };
-    });
+      res.descendents = response.posts
+        .map((elem) => {
+          const user = response.users.find((usr) => usr.id === elem.userId);
+          if (user) {
+            user.avatar = user.url.startsWith('@')
+              ? environment.externalCacheurl + encodeURIComponent(user.avatar)
+              : environment.baseMediaUrl + user.avatar;
+          }
+          return {
+            id: elem.id,
+            content: elem.len ? 'A' : '', // HACK I know this is ugly but because legacy reasons reblogs are empty posts
+            user: user ? user : emptyUser,
+            content_warning: '',
+            createdAt: new Date(elem.createdAt),
+            updatedAt: new Date(elem.updatedAt),
+            userId: elem.userId,
+            hierarchyLevel: 69, // yeah I know
+            postTags: [],
+            privacy: elem.privacy,
+            notes: 69,
+            userLikesPostRelations: [],
+            emojis: [],
+          };
+        })
+        .sort((b, a) => a.createdAt.getTime() - b.createdAt.getTime());
+    }
     return res;
   }
 }

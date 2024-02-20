@@ -13,6 +13,7 @@ export interface unlinkedPosts {
 }
 
 interface basicPost {
+  len?: number;
   id: string;
   content_warning: string;
   content: string;
