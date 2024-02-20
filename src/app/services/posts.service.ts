@@ -431,7 +431,6 @@ export class PostsService {
       )
     );
     const res: { descendents: RawPost[] } = { descendents: [] };
-    console.log(response);
     if (response) {
       const emptyUser: SimplifiedUser = {
         id: '42',
