@@ -24,7 +24,33 @@
           [innerHTML]="originalPoster.name"
         ></a>
       </div>
-      <span class="font-small" [innerText]="originalPoster.url"></span>
+      <div class="date-line mb-1 flex gap-2 align-items-center">
+        <span class="font-small" [innerText]="originalPoster.url"></span>
+        <button
+          mat-stroked-button
+          color="accent"
+          *ngIf="
+            !notYetAcceptedFollows.includes(originalPoster.id) &&
+            !followedUsers.includes(originalPoster.id) &&
+            userLoggedIn
+          "
+          class="follow-button flex-shrink-0"
+          (click)="followUser(originalPoster.id)"
+        >
+          Follow
+        </button>
+        <button
+          mat-stroked-button
+          color="accent"
+          *ngIf="
+            notYetAcceptedFollows.includes(originalPoster.id) && userLoggedIn
+          "
+          class="follow-button flex-shrink-0"
+          (click)="unfollowUser(originalPoster.id)"
+        >
+          Awaiting aproval
+        </button>
+      </div>
     </div>
   </div>
   @for (content of post; track post; let index = $index) {
