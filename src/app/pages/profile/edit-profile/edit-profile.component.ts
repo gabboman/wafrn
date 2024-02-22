@@ -20,11 +20,18 @@ import { ThemeService } from 'src/app/services/theme.service';
 export class EditProfileComponent implements OnInit {
   loading = true;
   img: File | undefined = undefined;
+  privacyOptions = [
+    { level: 0, name: 'Public' },
+    { level: 1, name: 'Followers only' },
+    { level: 2, name: 'This instance only' },
+    { level: 3, name: 'Unlisted' },
+  ];
   editProfileForm = new UntypedFormGroup({
     avatar: new UntypedFormControl('', []),
     name: new FormControl('', Validators.required),
     disableNSFWFilter: new UntypedFormControl(false, []),
     disableGifsByDefault: new UntypedFormControl(false, []),
+    defaultPostEditorPrivacy: new UntypedFormControl(false, []),
     description: new FormControl('', Validators.required),
   });
 
@@ -48,6 +55,9 @@ export class EditProfileComponent implements OnInit {
         this.editProfileForm.controls['disableNSFWFilter'].patchValue(
           this.mediaService.checkNSFWFilterDisabled
         );
+        this.editProfileForm.controls['defaultPostEditorPrivacy'].patchValue(
+          this.loginService.getUserDefaultPostPrivacyLevel()
+        );
         this.loading = false;
       });
   }
@@ -65,6 +75,7 @@ export class EditProfileComponent implements OnInit {
         this.editProfileForm,
         this.img
       );
+
       this.messages.add({
         severity: 'success',
         summary: 'Your profile was updated!',

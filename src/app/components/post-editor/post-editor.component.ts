@@ -21,6 +21,7 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 import { FileUploadComponent } from '../file-upload/file-upload.component';
 import { MediaPreviewComponent } from '../media-preview/media-preview.component';
 import Quill from 'quill';
+import { LoginService } from 'src/app/services/login.service';
 @Component({
   selector: 'app-post-editor',
   templateUrl: './post-editor.component.html',
@@ -54,7 +55,7 @@ export class PostEditorComponent implements OnInit {
   editorVisible: boolean = false;
   postCreatorContent: string = '';
   tags: string = '';
-  privacy = 0;
+  privacy: number;
   @ViewChild('quill') quill!: QuillEditorComponent;
   // upload media variables
   newImageFile: File | undefined;
@@ -131,14 +132,15 @@ export class PostEditorComponent implements OnInit {
     private jwtService: JwtService,
     private dashboardService: DashboardService,
     private dialogRef: MatDialogRef<PostEditorComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: { post?: ProcessedPost }
-  ) {}
+    @Inject(MAT_DIALOG_DATA) public data: { post?: ProcessedPost },
+    private loginService: LoginService
+  ) {
+    this.privacy = this.loginService.getUserDefaultPostPrivacyLevel();
+  }
 
   ngOnInit(): void {
-    this.privacy = this.privacyOptions[0].level;
-
     this.enablePrivacyEdition = true;
-    this.privacy = this.privacyOptions[0].level;
+    //this.privacy = this.privacyOptions[0].level;
     this.contentWarning = '';
     this.idPostToReblog = this.data?.post?.id;
     const inResponseTo = this.data?.post;

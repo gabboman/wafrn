@@ -8,6 +8,7 @@ import { QuillModule } from 'ngx-quill';
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
 import { MatInputModule } from '@angular/material/input';
+import { MatSelectModule } from '@angular/material/select';
 
 const routes: Routes = [
   {
@@ -28,6 +29,7 @@ const routes: Routes = [
     MatCardModule,
     MatButtonModule,
     MatInputModule,
+    MatSelectModule,
   ],
 })
 export class EditProfileModule {}

@@ -26,6 +26,14 @@
       <input formControlName="name" matInput />
     </mat-form-field>
 
+    <mat-form-field class="w-full">
+      <mat-label>Default post privacy</mat-label>
+      <mat-select [required]="true" formControlName="defaultPostEditorPrivacy">
+        @for(option of privacyOptions; track option) {
+        <mat-option [value]="option.level">{{ option.name }}</mat-option>
+        }
+      </mat-select>
+    </mat-form-field>
     <quill-editor
       #quill
       formControlName="description"
