@@ -77,10 +77,10 @@ export class PostEditorComponent implements OnInit {
       maxChars: 128,
       minChars: 3,
       linkTarget: '_self',
-      fixMentionsToQuill: true,
+      fixMentionsToQuill: false,
       isolateCharacter: true,
       allowInlineMentionChar: true,
-      //defaultMenuOrientation: 'bottom',
+      defaultMenuOrientation: 'top',
       renderItem: (item: any, searchTerm: any) => {
         const itemString = `<div><img src="${item.avatar}" style="max-height: 24px; max-width: 24px;" /> ${item.value}</div>`;
         return new DOMParser().parseFromString(itemString, 'text/html').body
