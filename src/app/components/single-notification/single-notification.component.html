@@ -24,7 +24,7 @@
           notification.userUrl
         }}</a>
         @switch (notification.type) { @case(notificationType.MENTION) {
-        mentioned you <a [routerLink]="notification.url"> in a post</a>} @case
+        mentioned you <a [routerLink]="notification.url"> in a woot</a>} @case
         (notificationType.LIKE) { liked
         <a [routerLink]="notification.url">one of your woots</a>
         } @case(notificationType.FOLLOW) { now follows you! } @case
