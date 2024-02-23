@@ -128,11 +128,11 @@
         @if(userLoggedIn) {
         <button (click)="replyPost(content)" mat-menu-item>
           <fa-icon class="mr-2" [icon]="reblogIcon"></fa-icon>
-          Reblog
+          Rewoot
         </button>
         <button (click)="quickReblog(content.id)" mat-menu-item>
           <fa-icon class="mr-2" [icon]="quickReblogIcon"></fa-icon>
-          Quick reblog
+          Quick rewoot
         </button>
         @if(content.userId !== myId){ @if
         (content.userLikesPostRelations.includes(myId)) {
@@ -273,7 +273,7 @@
           (click)="quickReblog(finalPost.id)"
           class="hover-cursor"
           [icon]="quickReblogIcon"
-          matTooltip="Quick reblog"
+          matTooltip="Quick rewoot"
         ></fa-icon>
         <fa-icon
           (click)="replyPost(finalPost)"
