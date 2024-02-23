@@ -26,7 +26,7 @@
         @switch (notification.type) { @case(notificationType.MENTION) {
         mentioned you <a [routerLink]="notification.url"> in a post</a>} @case
         (notificationType.LIKE) { liked
-        <a [routerLink]="notification.url">one of your posts</a>
+        <a [routerLink]="notification.url">one of your woots</a>
         } @case(notificationType.FOLLOW) { now follows you! } @case
         (notificationType.PRIVATE) {
         <a [routerLink]="notification.url">sent you a DM</a>. TEMPORARY
@@ -35,7 +35,7 @@
           >click here to go to your DMs. Yep we are working on this</a
         >
         } @case (notificationType.REBLOG) { rewooted
-        <a [routerLink]="notification.url">one of your posts</a>} }
+        <a [routerLink]="notification.url">one of your woots</a>} }
       </p>
     </div>
   </div>
