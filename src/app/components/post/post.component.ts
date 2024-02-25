@@ -181,15 +181,19 @@ export class PostComponent implements OnInit {
     });
   }
 
-  async quickReblog(id: string) {
+  async quickReblog(postToBeReblogged: ProcessedPost) {
     this.loadingAction = true;
-    const postToBeReblogged = this.post.find((elem) => elem.id === id);
     if (postToBeReblogged?.privacy === 0) {
-      const response = await this.editor.createPost('', 0, '', id);
+      const response = await this.editor.createPost({
+        content: '',
+        idPostToReblog: postToBeReblogged.id,
+        privacy: 0,
+        media: [],
+      });
       if (response) {
         this.messages.add({
           severity: 'success',
-          summary: 'You reblogged the post succesfully',
+          summary: 'You reblogged the woot succesfully',
         });
       } else {
         this.messages.add({
@@ -202,7 +206,7 @@ export class PostComponent implements OnInit {
       this.messages.add({
         severity: 'warn',
         summary:
-          'Sorry, this post is not rebloggeable as requested by the user',
+          'Sorry, this woot is not rebloggeable as requested by the user',
       });
     }
     this.loadingAction = false;
@@ -212,7 +216,7 @@ export class PostComponent implements OnInit {
     navigator.clipboard.writeText(`${environment.frontUrl}/post/${id}`);
     this.messages.add({
       severity: 'success',
-      summary: 'The post URL was copied to your clipboard!',
+      summary: 'The woot URL was copied to your clipboard!',
     });
   }
 
@@ -238,6 +242,13 @@ export class PostComponent implements OnInit {
     });
   }
 
+  async editPost(post: ProcessedPost) {
+    this.dialogService.open(await this.editorService.getEditorComponent(), {
+      data: { post, edit: true },
+      width: '100%',
+    });
+  }
+
   async deletePost(id: string) {
     this.dialogService.open(
       await this.deletePostService.getDeletePostComponent(),
@@ -246,14 +257,6 @@ export class PostComponent implements OnInit {
         width: '100%',
       }
     );
-  }
-
-  showQuickReblogOverlay() {
-    this.quickReblogPanelVisible = true;
-  }
-
-  hideQuickReblogOverlay() {
-    this.quickReblogPanelVisible = false;
   }
 
   expandPost() {
@@ -277,7 +280,7 @@ export class PostComponent implements OnInit {
       this.ngOnChanges();
       this.messages.add({
         severity: 'success',
-        summary: 'You successfully liked this post',
+        summary: 'You successfully liked this woot',
       });
     } else {
       this.messages.add({
@@ -296,7 +299,7 @@ export class PostComponent implements OnInit {
       this.ngOnChanges();
       this.messages.add({
         severity: 'success',
-        summary: 'You no longer like this post',
+        summary: 'You no longer like this woot',
       });
     } else {
       this.messages.add({

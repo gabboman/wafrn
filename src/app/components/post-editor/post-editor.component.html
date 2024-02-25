@@ -1,7 +1,11 @@
 <mat-dialog-content>
-  <h2 *ngIf="idPostToReblog">
-    You are replying to the post. Your followers will see the full thread with
-    your reply on it.
+  <h2 *ngIf="idPostToReblog && !editing">
+    You are replying to the woot. Your wafrn followers will see the full thread
+    with your reply on it. Your fedi followers will see the reply and they will
+    be able to see the full thread upon clicking
+  </h2>
+  <h2 *ngIf="editing">
+    You are editing your woot. Sorry you need to write all of it again.
   </h2>
   <div class="mt-4 mb-2">
     <mat-form-field class="w-full">
@@ -96,7 +100,7 @@
     *ngIf="postCreatorContent?.includes('<img')"
   >
     You seem to have pasted images in the editor. The image will NOT be visible
-    once you post. Please use the upload tool on the top bar of the editor
+    once you woot. Please use the upload tool on the top bar of the editor
   </button>
   <button mat-flat-button color="warning" *ngIf="privacy === 10">
     Attention! ADMINS both of your instance and the target instance can read the
@@ -125,8 +129,8 @@
       <app-file-upload (fileUpload)="uploadImage($event)"></app-file-upload>
     </div>
     <div *ngIf="uploadedMedias.length >= 4">
-      Due some fediverse limitations, we can only have 4 medias per post. Adding
-      more would break how the post is seen in other places. Sorry for the
+      Due some fediverse limitations, we can only have 4 medias per woot. Adding
+      more would break how the woot is seen in other places. Sorry for the
       inconvenience
     </div>
     <div class="grid">
@@ -192,6 +196,12 @@
     "
     (click)="submitPost()"
   >
-    {{ idPostToReblog ? "Publish reply to woot" : "Publish woot" }}
+    {{
+      editing
+        ? "Save woot"
+        : idPostToReblog
+        ? "Publish reply to woot"
+        : "Publish woot"
+    }}
   </button>
 </mat-dialog-content>

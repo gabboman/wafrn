@@ -130,7 +130,7 @@
           <fa-icon class="mr-2" [icon]="reblogIcon"></fa-icon>
           Rewoot
         </button>
-        <button (click)="quickReblog(content.id)" mat-menu-item>
+        <button (click)="quickReblog(content)" mat-menu-item>
           <fa-icon class="mr-2" [icon]="quickReblogIcon"></fa-icon>
           Quick rewoot
         </button>
@@ -138,20 +138,23 @@
         (content.userLikesPostRelations.includes(myId)) {
         <button (click)="unlikePost(content)" mat-menu-item>
           <fa-icon class="mr-2" [icon]="clearHeartIcon"></fa-icon>
-          Dislike post
+          Dislike woot
         </button>
         } @else {
         <button (click)="likePost(content)" mat-menu-item>
           <fa-icon class="mr-2" [icon]="solidHeartIcon"></fa-icon>
-          Like post
+          Like woot
         </button>
         }
         <button (click)="reportPost(content)" mat-menu-item>
-          <fa-icon class="mr-2" [icon]="reportIcon"></fa-icon>Report post
+          <fa-icon class="mr-2" [icon]="reportIcon"></fa-icon>Report woot
         </button>
         } @else {
+        <!--<button (click)="editPost(content)" mat-menu-item>
+          <fa-icon class="mr-2" [icon]="editedIcon"></fa-icon>Edit woot
+        </button>-->
         <button (click)="deletePost(content.id)" mat-menu-item>
-          <fa-icon class="mr-2" [icon]="deleteIcon"></fa-icon>Delete post
+          <fa-icon class="mr-2" [icon]="deleteIcon"></fa-icon>Delete woot
         </button>
         } }
       </mat-menu>
@@ -214,7 +217,7 @@
         (click)="dismissContentWarning()"
         class="w-full"
       >
-        I understand this and I want to see this post
+        I understand this and I want to see this woot
       </button>
     </div>
     <div
@@ -260,7 +263,7 @@
     mat-flat-button
     (click)="expandPost()"
   >
-    Expand post
+    Expand woot
   </button>
 
   <div class="flex">
@@ -270,7 +273,7 @@
     <div *ngIf="userLoggedIn" class="flex flex-shrink-0">
       <div class="flex gap-3 px-1" *ngIf="!loadingAction">
         <fa-icon
-          (click)="quickReblog(finalPost.id)"
+          (click)="quickReblog(finalPost)"
           class="hover-cursor"
           [icon]="quickReblogIcon"
           matTooltip="Quick rewoot"
@@ -279,7 +282,7 @@
           (click)="replyPost(finalPost)"
           class="hover-cursor"
           [icon]="reblogIcon"
-          matTooltip="Reply post"
+          matTooltip="Reply woot"
         ></fa-icon>
         @if(finalPost.userId !== myId ) {
         @if(finalPost.userLikesPostRelations.includes(myId)) {
@@ -294,7 +297,7 @@
           (click)="likePost(finalPost)"
           class="hover-cursor"
           [icon]="solidHeartIcon"
-          matTooltip="Like post"
+          matTooltip="Like woot"
         ></fa-icon>
         }
 
@@ -302,14 +305,20 @@
           (click)="reportPost(finalPost)"
           class="hover-cursor"
           [icon]="reportIcon"
-          matTooltip="Report post"
+          matTooltip="Report woot"
         ></fa-icon>
         } @else {
+        <!--<fa-icon
+          (click)="editPost(finalPost)"
+          class="hover-cursor"
+          [icon]="editedIcon"
+          matTooltip="Edit woot"
+        ></fa-icon>-->
         <fa-icon
           (click)="deletePost(finalPost.id)"
           class="hover-cursor"
           [icon]="deleteIcon"
-          matTooltip="Delete post"
+          matTooltip="Delete woot"
         ></fa-icon>
         }
       </div>

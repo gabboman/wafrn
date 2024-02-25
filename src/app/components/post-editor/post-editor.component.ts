@@ -65,6 +65,7 @@ export class PostEditorComponent implements OnInit {
   // add mention variables
   @ViewChild('mentionUserSearchPanel') mentionUserSearchPanel: any;
   mentionSuggestions: any[] = [];
+  editing = false;
   baseMediaUrl = environment.baseMediaUrl;
   cacheurl = environment.externalCacheurl;
   userSelectionMentionValue = '';
@@ -132,7 +133,8 @@ export class PostEditorComponent implements OnInit {
     private jwtService: JwtService,
     private dashboardService: DashboardService,
     private dialogRef: MatDialogRef<PostEditorComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: { post?: ProcessedPost },
+    @Inject(MAT_DIALOG_DATA)
+    public data: { post?: ProcessedPost; edit?: boolean },
     private loginService: LoginService
   ) {
     this.privacy = this.loginService.getUserDefaultPostPrivacyLevel();
@@ -144,6 +146,7 @@ export class PostEditorComponent implements OnInit {
     this.contentWarning = '';
     this.idPostToReblog = this.data?.post?.id;
     const inResponseTo = this.data?.post;
+    this.editing = this.data?.edit === true;
     this.postCreatorContent = '';
     this.uploadedMedias = [];
     this.tags = '';
@@ -195,6 +198,11 @@ export class PostEditorComponent implements OnInit {
     this.openEditor();
 
     this.openEditor(mentionsHtml);
+
+    if (this.data && this.data.post && this.data.edit) {
+      this.tags = this.data.post.tags.map((tag) => tag.tagName).join();
+      this.uploadedMedias = this.data.post.medias ? this.data.post.medias : [];
+    }
   }
 
   openEditor(content?: string) {
@@ -274,7 +282,6 @@ export class PostEditorComponent implements OnInit {
       });
     tagsToSend = tagsToSend.slice(0, -1);
     let res = undefined;
-    let mediasString = '';
     // this.fixNullPosting();
     if (this.uploadedMedias.length > 0) {
       const updateMediaPromises: Promise<any>[] = [];
@@ -287,23 +294,24 @@ export class PostEditorComponent implements OnInit {
             elem.adultContent
           )
         );
-        mediasString = `${mediasString}[wafrnmediaid="${elem.id}"]`;
       });
       await Promise.allSettled(updateMediaPromises);
     }
-    res = await this.editorService.createPost(
-      (this.postCreatorContent ? this.postCreatorContent : '') + mediasString,
-      this.privacy,
-      tagsToSend,
-      this.idPostToReblog,
-      this.contentWarning
-    );
+    res = await this.editorService.createPost({
+      content: this.postCreatorContent ? this.postCreatorContent : '',
+      media: this.uploadedMedias.map((elem) => elem.id),
+      privacy: this.privacy,
+      tags: tagsToSend,
+      idPostToReblog: this.editing ? undefined : this.idPostToReblog,
+      contentWarning: this.contentWarning,
+      idPostToEdit: this.editing ? this.idPostToReblog : undefined,
+    });
     // its a great time to check notifications isnt it?
     this.dashboardService.scrollEventEmitter.emit('post');
     if (res) {
       this.messages.add({
         severity: 'success',
-        summary: 'Your post has been published!',
+        summary: 'Your woot has been published!',
       });
       this.postCreatorContent = '';
       this.uploadedMedias = [];
@@ -313,7 +321,7 @@ export class PostEditorComponent implements OnInit {
       this.messages.add({
         severity: 'warn',
         summary:
-          'Something went wrong and your post was not published. Check your internet connection and try again',
+          'Something went wrong and your woot was not published. Check your internet connection and try again',
       });
     }
     this.postBeingSubmitted = false;
@@ -343,7 +351,7 @@ export class PostEditorComponent implements OnInit {
       this.messages.add({
         severity: 'success',
         summary:
-          'Media uploaded and added to the post! Please fill in the description',
+          'Media uploaded and added to the woot! Please fill in the description',
       });
     } catch (error) {
       console.log(error);

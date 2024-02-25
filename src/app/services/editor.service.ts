@@ -26,24 +26,35 @@ export class EditorService {
     });
   }
 
-  async createPost(
-    content: string,
-    privacy: number,
-    tags?: string,
-    idPostToReblog?: string,
-    contentWarning?: string
-  ): Promise<boolean> {
+  async createPost(options: {
+    content: string;
+    media: string[];
+    privacy: number;
+    tags?: string;
+    idPostToReblog?: string;
+    contentWarning?: string;
+    idPostToEdit?: string;
+  }): Promise<boolean> {
+    const content = options.content;
+    const media = options.media;
+    const privacy = options.privacy;
+    const tags = options.tags;
+    const idPostToReblog = options.idPostToReblog;
+    const contentWarning = options.contentWarning;
     let success: boolean = false;
+    console.log(options);
     try {
       const formdata = {
         content: content,
         parent: idPostToReblog,
+        medias: media,
         tags: tags,
         privacy: privacy,
         content_warning: contentWarning ? contentWarning : '',
+        idPostToEdit: options.idPostToEdit,
       };
       const petitionResponse: any = await this.http
-        .post(`${this.base_url}/createPost`, formdata)
+        .post(`${this.base_url}/v2/createPost`, formdata)
         .toPromise();
       success = petitionResponse.id;
     } catch (exception) {
