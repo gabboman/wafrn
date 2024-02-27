@@ -7,7 +7,7 @@ export const environment = {
   maxUploadSize: '250',
   logo: '/assets/logo.png',
   baseUrl: 'http://localhost:3000/api',
-  // baseUrl: 'https://app.wafrn.net/api',
+  //baseUrl: 'https://app.wafrn.net/api',
   baseMediaUrl: 'http://localhost:3000/api/uploads',
   //baseMediaUrl: 'https://media.wafrn.net',
   // baseMediaUrl: 'wafrnmedia.b-cdn.net',
