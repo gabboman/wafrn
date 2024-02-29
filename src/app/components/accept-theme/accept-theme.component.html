@@ -1,1 +1,31 @@
-<p>accept-theme works!</p>
+<p>
+  This user has custom styles! would you like to enable custom themes from
+  users?
+</p>
+<p>Select GLOW UP to allow custem themes from the users</p>
+<p>
+  Select No thanks if you rather use the default wafrn theme for everything
+  (Recomended if you suffer from epilepsy)
+</p>
+<p>
+  If you would like to change your mind about this, just log out and log in
+  again!
+</p>
+<button
+  mat-flat-button
+  color="primary"
+  (click)="answerCustomThemeModal(2)"
+  class="w-full"
+>
+  GLOW UP
+</button>
+<br />
+<br />
+<button
+  mat-flat-button
+  color="primary"
+  (click)="answerCustomThemeModal(1)"
+  class="w-full"
+>
+  No thanks
+</button>

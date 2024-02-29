@@ -1,12 +1,13 @@
 import { DialogModule } from '@angular/cdk/dialog';
 import { Component } from '@angular/core';
+import { MatButtonModule } from '@angular/material/button';
 import { MatDialogRef } from '@angular/material/dialog';
 import { ThemeService } from 'src/app/services/theme.service';
 
 @Component({
   selector: 'app-accept-theme',
   standalone: true,
-  imports: [DialogModule],
+  imports: [DialogModule, MatButtonModule],
   templateUrl: './accept-theme.component.html',
   styleUrl: './accept-theme.component.scss',
 })
