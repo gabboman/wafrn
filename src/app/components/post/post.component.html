@@ -149,10 +149,13 @@
         <button (click)="reportPost(content)" mat-menu-item>
           <fa-icon class="mr-2" [icon]="reportIcon"></fa-icon>Report woot
         </button>
-        } @else {
-        <!--<button (click)="editPost(content)" mat-menu-item>
+        } @else { <<button
+          *ngIf="content.privacy === 2"
+          (click)="editPost(content)"
+          mat-menu-item
+        >
           <fa-icon class="mr-2" [icon]="editedIcon"></fa-icon>Edit woot
-        </button>-->
+        </button>
         <button (click)="deletePost(content.id)" mat-menu-item>
           <fa-icon class="mr-2" [icon]="deleteIcon"></fa-icon>Delete woot
         </button>
@@ -308,12 +311,13 @@
           matTooltip="Report woot"
         ></fa-icon>
         } @else {
-        <!--<fa-icon
+        <fa-icon
+          *ngIf="finalPost.privacy === 2"
           (click)="editPost(finalPost)"
           class="hover-cursor"
           [icon]="editedIcon"
           matTooltip="Edit woot"
-        ></fa-icon>-->
+        ></fa-icon>
         <fa-icon
           (click)="deletePost(finalPost.id)"
           class="hover-cursor"

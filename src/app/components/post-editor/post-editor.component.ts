@@ -201,6 +201,7 @@ export class PostEditorComponent implements OnInit {
 
     if (this.data && this.data.post && this.data.edit) {
       this.tags = this.data.post.tags.map((tag) => tag.tagName).join();
+      this.contentWarning = this.data.post.content_warning;
       this.uploadedMedias = this.data.post.medias ? this.data.post.medias : [];
     }
   }
