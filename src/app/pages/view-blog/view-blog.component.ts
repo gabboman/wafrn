@@ -1,4 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
+import { MatDialogRef } from '@angular/material/dialog';
 import { Meta, Title } from '@angular/platform-browser';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import {
@@ -25,7 +26,8 @@ import { MessageService } from 'src/app/services/message.service';
 import { PostsService } from 'src/app/services/posts.service';
 import { ThemeService } from 'src/app/services/theme.service';
 import { environment } from 'src/environments/environment';
-
+import { MatDialog } from '@angular/material/dialog';
+import { AcceptThemeComponent } from 'src/app/components/accept-theme/accept-theme.component';
 @Component({
   selector: 'app-view-blog',
   templateUrl: './view-blog.component.html',
@@ -73,7 +75,8 @@ export class ViewBlogComponent implements OnInit, OnDestroy {
     private titleService: Title,
     private metaTagService: Meta,
     private themeService: ThemeService,
-    public blockService: BlocksService
+    public blockService: BlocksService,
+    private dialog: MatDialog
   ) {
     this.userLoggedIn = loginService.checkUserLoggedIn();
   }
@@ -143,7 +146,7 @@ export class ViewBlogComponent implements OnInit, OnDestroy {
     );
 
     if (userHasCustomTheme) {
-      const userResponseToCustomThemes =
+      let userResponseToCustomThemes =
         this.themeService.hasUserAcceptedCustomThemes();
 
       if (userResponseToCustomThemes === 2) {
@@ -151,7 +154,14 @@ export class ViewBlogComponent implements OnInit, OnDestroy {
       }
 
       if (userResponseToCustomThemes === 0) {
-        this.showModalTheme = true;
+        const dialogRef = this.dialog.open(AcceptThemeComponent);
+        dialogRef.afterClosed().subscribe(() => {
+          userResponseToCustomThemes =
+            this.themeService.hasUserAcceptedCustomThemes();
+          if (userResponseToCustomThemes === 2) {
+            this.themeService.setTheme(this.blogDetails.id);
+          }
+        });
       }
     } else {
       this.themeService.setTheme('');
@@ -223,13 +233,5 @@ export class ViewBlogComponent implements OnInit, OnDestroy {
           'Something went wrong! Check your internet conectivity and try again',
       });
     }
-  }
-
-  answerCustomThemeModal(response: number) {
-    localStorage.setItem('acceptsCustomThemes', response.toString());
-    if (response === 2) {
-      this.themeService.setTheme(this.blogDetails.id);
-    }
-    this.showModalTheme = false;
   }
 }

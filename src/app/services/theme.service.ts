@@ -3,6 +3,7 @@ import { environment } from 'src/environments/environment';
 import { LoginService } from './login.service';
 import { HttpClient } from '@angular/common/http';
 import { UtilsService } from './utils.service';
+import { firstValueFrom } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -15,14 +16,13 @@ export class ThemeService {
   ) {}
 
   setMyTheme() {
-    // TODO re-enable themes
-    //this.setTheme(this.loginService.getLoggedUserUUID())
+    this.setTheme(this.loginService.getLoggedUserUUID());
   }
 
   updateTheme(newTheme: string) {
-    return this.http
-      .post(`${environment.baseUrl}/updateCSS`, { css: newTheme })
-      .toPromise();
+    return firstValueFrom(
+      this.http.post(`${environment.baseUrl}/updateCSS`, { css: newTheme })
+    );
   }
 
   // 0 no data 1 does not want custom css 2 accepts custom css
@@ -38,11 +38,11 @@ export class ThemeService {
   async checkThemeExists(theme: string): Promise<boolean> {
     let res = false;
     try {
-      const response = await this.http
-        .get(`${environment.baseMediaUrl}/themes/${theme}.css`, {
+      const response = await firstValueFrom(
+        this.http.get(`${environment.baseMediaUrl}/themes/${theme}.css`, {
           responseType: 'text',
         })
-        .toPromise();
+      );
       if (response && response.length > 0) {
         res = true;
       }

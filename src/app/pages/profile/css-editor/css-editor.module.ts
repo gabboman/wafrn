@@ -5,6 +5,7 @@ import { QuillModule } from 'ngx-quill';
 import { RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { MatCardModule } from '@angular/material/card';
+import { MatButtonModule } from '@angular/material/button';
 
 @NgModule({
   declarations: [CssEditorComponent],
@@ -12,6 +13,7 @@ import { MatCardModule } from '@angular/material/card';
     CommonModule,
     QuillModule,
     FormsModule,
+    MatButtonModule,
     RouterModule.forChild([
       {
         path: '',

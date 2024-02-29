@@ -17,8 +17,28 @@
 
 -->
 <mat-card class="p-3 mb-6 lg:mx-4 scalein wafrn-container">
-  <mat-card-header>
-    The theme editor has been TEMPORARILY disabled. If it has been a few weeks
-    please remind me to do it again
-  </mat-card-header>
+  <quill-editor
+    format="text"
+    *ngIf="ready"
+    #quill
+    [(ngModel)]="myCSS"
+    class="w-full"
+    [modules]="modules"
+  >
+    <div
+      quill-editor-toolbar
+      style="border-top-left-radius: 5px; border-top-right-radius: 5px"
+    >
+      Edit your css
+    </div>
+  </quill-editor>
+  <button
+    mat-flat-button
+    color="primary"
+    *ngIf="ready"
+    (click)="submit()"
+    class="w-full"
+  >
+    Update your theme
+  </button>
 </mat-card>
