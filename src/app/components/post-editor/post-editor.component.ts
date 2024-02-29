@@ -237,12 +237,6 @@ export class PostEditorComponent implements OnInit {
       strike.tagName = 'del'; // Quill uses <s> by default
       Quill.register(strike, true);
 
-      // Quill link z-index fix
-      const linkTooltip = document.getElementsByClassName(
-        'ql-tooltip'
-      )[1] as HTMLElement;
-      linkTooltip.style.zIndex = '1';
-
       const mentionBlot = Quill.import('blots/mention');
 
       mentionBlot.setDataValues = (node: any, data: any) => {
