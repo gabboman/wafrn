@@ -183,7 +183,7 @@ export class PostComponent implements OnInit {
 
   async quickReblog(postToBeReblogged: ProcessedPost) {
     this.loadingAction = true;
-    if (postToBeReblogged?.privacy === 0) {
+    if (postToBeReblogged?.privacy !== 10) {
       const response = await this.editor.createPost({
         content: '',
         idPostToReblog: postToBeReblogged.id,

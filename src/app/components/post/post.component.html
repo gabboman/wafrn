@@ -128,9 +128,13 @@
         @if(userLoggedIn) {
         <button (click)="replyPost(content)" mat-menu-item>
           <fa-icon class="mr-2" [icon]="reblogIcon"></fa-icon>
-          Rewoot
+          Reply woot
         </button>
-        <button (click)="quickReblog(content)" mat-menu-item>
+        <button
+          *ngIf="content.privacy !== 10"
+          (click)="quickReblog(content)"
+          mat-menu-item
+        >
           <fa-icon class="mr-2" [icon]="quickReblogIcon"></fa-icon>
           Quick rewoot
         </button>
@@ -277,6 +281,7 @@
     <div *ngIf="userLoggedIn" class="flex flex-shrink-0">
       <div class="flex gap-3 px-1" *ngIf="!loadingAction">
         <fa-icon
+          *ngIf="finalPost.privacy !== 10"
           (click)="quickReblog(finalPost)"
           class="hover-cursor"
           [icon]="quickReblogIcon"
