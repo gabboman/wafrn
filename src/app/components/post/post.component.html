@@ -149,7 +149,8 @@
         <button (click)="reportPost(content)" mat-menu-item>
           <fa-icon class="mr-2" [icon]="reportIcon"></fa-icon>Report woot
         </button>
-        } @else { <<button
+        } @else {
+        <button
           *ngIf="content.privacy === 2"
           (click)="editPost(content)"
           mat-menu-item
