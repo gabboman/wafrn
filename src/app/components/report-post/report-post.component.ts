@@ -93,7 +93,6 @@ export class ReportPostComponent implements OnInit {
   }
 
   async submit() {
-    console.log(this.reportForm.value);
     if (this.postToReport) {
       const reportDone = this.reportService.reportPost(
         this.postToReport,

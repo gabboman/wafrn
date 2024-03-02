@@ -23,7 +23,6 @@ export class ServerListComponent implements OnInit {
       this.originalServers = JSON.parse(JSON.stringify(response));
       this.ready = true;
       this.dataSource.data = response;
-      console.log(response);
     });
   }
   ngOnInit(): void {

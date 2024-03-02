@@ -42,7 +42,6 @@ export class EditorService {
     const idPostToReblog = options.idPostToReblog;
     const contentWarning = options.contentWarning;
     let success: boolean = false;
-    console.log(options);
     try {
       const formdata = {
         content: content,

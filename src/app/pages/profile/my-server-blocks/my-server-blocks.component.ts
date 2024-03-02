@@ -13,7 +13,6 @@ export class MyServerBlocksComponent {
 
   constructor(private blocksService: BlocksService) {
     this.blocksService.getMyServerBlockList().then((backendResponse) => {
-      console.log(backendResponse);
       this.serverBlocks = backendResponse;
       this.ready = true;
     });
