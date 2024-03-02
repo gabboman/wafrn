@@ -36,6 +36,7 @@ export class FileUploadComponent {
   ) {}
 
   // DIRTY if you touch ANYTHING ELSE here you better move this to a service. UNDERSTOOD?
+  // TODO undo this dirty thing, move to a service, handle errors
   async onFileSelected(event: Event) {
     this.uploading = true;
     const el = event.target as HTMLInputElement;
