@@ -33,6 +33,7 @@ export class EditProfileComponent implements OnInit {
     disableGifsByDefault: new UntypedFormControl(false, []),
     defaultPostEditorPrivacy: new UntypedFormControl(false, []),
     description: new FormControl('', Validators.required),
+    federateWithThreads: new FormControl(false),
   });
 
   constructor(
