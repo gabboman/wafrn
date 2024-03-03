@@ -57,7 +57,6 @@ export class PostsService {
             (elem: UserOptions) =>
               elem.optionName === 'wafrn.defaultPostEditorPrivacy'
           );
-          console.log(postEditorPrivacy ? postEditorPrivacy.optionValue : '0');
           // if not we force zero so users will update
           localStorage.setItem(
             'defaultPostEditorPrivacy',
