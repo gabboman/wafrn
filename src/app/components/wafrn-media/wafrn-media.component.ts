@@ -107,7 +107,7 @@ export class WafrnMediaComponent implements OnChanges {
     if (!(this.adultContent && !this.mediaService.checkAge())) {
       this.nsfw = false;
       this.adultContent = false;
-      this.displayUrl = this.data ? this.data.url : 'UNDEFINED';
+      this.displayUrl = this.tmpUrl;
       this.viewLongImage = true;
     } else {
       this.messagesService.add({
