@@ -135,13 +135,11 @@ export class LoginService {
       );
       if (petition.success) {
         success = true;
+        await this.postsService.loadFollowers();
       }
     } catch (exception) {
       console.error(exception);
     }
-    await this.setUserDefaultPostPrivacyLevel(
-      updateProfileForm.controls['defaultPostEditorPrivacy'].value
-    );
     return success;
   }
 
@@ -151,12 +149,7 @@ export class LoginService {
   }
 
   getUserDefaultPostPrivacyLevel(): number {
-    const res = localStorage.getItem('defaultPostPrivacy');
+    const res = localStorage.getItem('defaultPostEditorPrivacy');
     return res ? parseInt(res) : 0;
-  }
-
-  async setUserDefaultPostPrivacyLevel(level: number): Promise<void> {
-    // TODO update backend in same method as edit profile
-    localStorage.setItem('defaultPostPrivacy', level.toString());
   }
 }

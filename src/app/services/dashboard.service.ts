@@ -33,6 +33,7 @@ export class DashboardService {
     date: Date,
     level: number
   ): Promise<ProcessedPost[][]> {
+    this.postService.loadFollowers();
     let result: ProcessedPost[][] = [];
     let petitionData: HttpParams = new HttpParams();
     petitionData = petitionData.set('page', '0');

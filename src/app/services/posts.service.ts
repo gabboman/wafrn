@@ -9,6 +9,7 @@ import { BehaviorSubject, Observable, firstValueFrom } from 'rxjs';
 import { JwtService } from './jwt.service';
 import { unlinkedPosts } from '../interfaces/unlinked-posts';
 import { SimplifiedUser } from '../interfaces/simplified-user';
+import { UserOptions } from '../interfaces/userOptions';
 @Injectable({
   providedIn: 'root',
 })
@@ -33,19 +34,36 @@ export class PostsService {
 
   async loadFollowers() {
     if (this.jwtService.tokenValid()) {
-      const followsAndBlocks = await this.http
-        .get<{
+      const followsAndBlocks = await firstValueFrom(
+        this.http.get<{
           followedUsers: string[];
           blockedUsers: string[];
           notAcceptedFollows: string[];
+          options: UserOptions[];
         }>(`${environment.baseUrl}/getFollowedUsers`)
-        .toPromise();
+      );
       if (followsAndBlocks) {
         this.followedUserIds = followsAndBlocks.followedUsers;
         this.blockedUserIds = followsAndBlocks.blockedUsers;
         this.notYetAcceptedFollowedUsersIds =
           followsAndBlocks.notAcceptedFollows;
         this.updateFollowers.next(true);
+        // Here we check user options
+        if (followsAndBlocks.options?.length > 0) {
+          const options = followsAndBlocks.options;
+          // do things per otpion
+          // default privacy
+          const postEditorPrivacy = options.find(
+            (elem: UserOptions) =>
+              elem.optionName === 'wafrn.defaultPostEditorPrivacy'
+          );
+          console.log(postEditorPrivacy ? postEditorPrivacy.optionValue : '0');
+          // if not we force zero so users will update
+          localStorage.setItem(
+            'defaultPostEditorPrivacy',
+            postEditorPrivacy ? postEditorPrivacy.optionValue : '0'
+          );
+        }
       }
     }
   }
