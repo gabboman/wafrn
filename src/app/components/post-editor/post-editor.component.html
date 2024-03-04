@@ -102,10 +102,6 @@
     You seem to have pasted images in the editor. The image will NOT be visible
     once you woot. Please use the upload tool on the top bar of the editor
   </button>
-  <button mat-flat-button color="warning" *ngIf="privacy === 10">
-    Attention! ADMINS both of your instance and the target instance can read the
-    DMs
-  </button>
   <mat-form-field class="w-full">
     <mat-label>Tags</mat-label>
     <input
@@ -115,14 +111,11 @@
     />
   </mat-form-field>
   @for(tag of tags.split(','); track tag) {
-  <a
-    *ngIf="tag && tag !== '' && tag.trim() !== ''"
-    mat-flat-button
-    color="primary"
-    class="tag"
+
+  <span *ngIf="tag && tag !== '' && tag.trim() !== ''" class="tag p-1"
+    >#{{ tag.trim() }}</span
   >
-    <span>#{{ tag.trim() }}</span>
-  </a>
+
   }
   <div>
     <div class="pb-3 w-full" *ngIf="uploadedMedias.length < 4">
@@ -184,6 +177,15 @@
       }
     </mat-select>
   </mat-form-field>
+  <div mat-flat-button color="warning" *ngIf="privacy === 10">
+    Attention! ADMINS both of your instance and the target instance can read the
+    DMs
+  </div>
+  <div mat-flat-button color="warning" *ngIf="privacy === 3">
+    Unlisted posts are posts that opt out of search, that including tag
+    (hashtag) search in other instances. They are more public than followers
+    only but less than regular public. I know I am great at explaining stuff
+  </div>
   <button
     mat-flat-button
     color="primary"
