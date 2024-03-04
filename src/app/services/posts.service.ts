@@ -50,18 +50,16 @@ export class PostsService {
         this.updateFollowers.next(true);
         // Here we check user options
         if (followsAndBlocks.options?.length > 0) {
+          // frontend options start with wafrn.
           const options = followsAndBlocks.options;
-          // do things per otpion
-          // default privacy
-          const postEditorPrivacy = options.find(
-            (elem: UserOptions) =>
-              elem.optionName === 'wafrn.defaultPostEditorPrivacy'
-          );
-          // if not we force zero so users will update
-          localStorage.setItem(
-            'defaultPostEditorPrivacy',
-            postEditorPrivacy ? postEditorPrivacy.optionValue : '0'
-          );
+          options
+            .filter((option) => option.optionName.startsWith('wafrn.'))
+            .forEach((option) => {
+              localStorage.setItem(
+                option.optionName.split('wafrn.')[1],
+                option.optionValue
+              );
+            });
         }
       }
     }

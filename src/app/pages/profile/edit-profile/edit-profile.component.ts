@@ -59,6 +59,10 @@ export class EditProfileComponent implements OnInit {
         this.editProfileForm.controls['defaultPostEditorPrivacy'].patchValue(
           this.loginService.getUserDefaultPostPrivacyLevel()
         );
+        const federateWithThreads = localStorage.getItem('federateWithThreads');
+        this.editProfileForm.controls['federateWithThreads'].patchValue(
+          federateWithThreads === 'true'
+        );
         this.loading = false;
       });
   }
