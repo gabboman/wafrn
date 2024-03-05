@@ -38,7 +38,7 @@
       </form>
     </mat-card>
   </div>
-  <mat-tab-group color="primary" class="m-2">
+  <mat-tab-group color="primary">
     <mat-tab *ngIf="posts && posts.length > 0" label="Posts">
       <div *ngFor="let post of posts">
         <app-post [post]="post"></app-post>
