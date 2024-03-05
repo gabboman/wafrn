@@ -104,6 +104,24 @@ export class SearchComponent implements OnInit, OnDestroy {
         : this.baseMediaUrl + user.avatar;
     });
     this.loading = false;
+
+    setTimeout(() => {
+      // we detect the bottom of the page and load more posts
+      const element = document.querySelector(
+        '#if-you-see-this-load-more-posts'
+      );
+      const observer = new IntersectionObserver(
+        (intersectionEntries: IntersectionObserverEntry[]) => {
+          if (intersectionEntries[0].isIntersecting) {
+            this.currentPage++;
+            this.loadResults(this.currentPage);
+          }
+        }
+      );
+      if (element) {
+        observer.observe(element);
+      }
+    });
   }
 
   async loadResults(page: number) {
@@ -118,22 +136,6 @@ export class SearchComponent implements OnInit, OnDestroy {
         ? this.cacheurl + encodeURIComponent(user.avatar)
         : this.baseMediaUrl + user.avatar;
     });
-  }
-
-  async countViewedPost() {
-    this.viewedPosts++;
-    if (this.posts.length - 3 < this.viewedPosts) {
-      this.currentPage++;
-      await this.loadResults(this.currentPage);
-    }
-  }
-
-  async countViewedUser() {
-    this.viewedUsers++;
-    if (this.users.length - 3 < this.viewedUsers) {
-      this.currentPage++;
-      await this.loadResults(this.currentPage);
-    }
   }
 
   async followUser(id: string) {
