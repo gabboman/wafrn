@@ -69,18 +69,17 @@ export class DashboardService {
       this.startScrollDate.getTime().toString()
     );
     petitionData = petitionData.set('term', term);
-    const dashboardPetition:
-      | { posts: Array<RawPost>; users: Array<SimplifiedUser> }
-      | undefined = await this.http
-      .get<{ posts: Array<RawPost>; users: Array<SimplifiedUser> }>(
-        `${environment.baseUrl}/search`,
-        { params: petitionData }
-      )
-      .toPromise();
+    const dashboardPetition: {
+      posts: unlinkedPosts;
+      foundUsers: Array<SimplifiedUser>;
+    } = await firstValueFrom(
+      this.http.get<{
+        posts: unlinkedPosts;
+        foundUsers: Array<SimplifiedUser>;
+      }>(`${environment.baseUrl}/v2/search`, { params: petitionData })
+    );
     if (dashboardPetition) {
-      postResult = dashboardPetition.posts.map((elem) =>
-        this.postService.processPost(elem)
-      );
+      postResult = this.postService.processPostNew(dashboardPetition.posts);
       postResult = postResult.filter(
         (post) => !this.postService.postContainsBlocked(post)
       );
@@ -94,7 +93,7 @@ export class DashboardService {
 
     return {
       posts: postResult,
-      users: dashboardPetition?.users ? dashboardPetition?.users : [],
+      users: dashboardPetition?.foundUsers ? dashboardPetition?.foundUsers : [],
     };
   }
 
