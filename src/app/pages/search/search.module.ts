@@ -11,7 +11,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatListModule } from '@angular/material/list';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-
+import { MatTabsModule } from '@angular/material/tabs';
 const routes: Routes = [
   {
     path: '',
@@ -38,6 +38,7 @@ const routes: Routes = [
     FontAwesomeModule,
     MatListModule,
     MatProgressSpinnerModule,
+    MatTabsModule,
   ],
 })
 export class SearchModule {}
