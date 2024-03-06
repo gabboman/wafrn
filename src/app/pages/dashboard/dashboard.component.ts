@@ -50,6 +50,10 @@ export class DashboardComponent implements OnInit {
 
   ngOnInit(): void {
     window.scrollTo(0, 0);
+    // HACK maybe this fixes issues with the initial load
+    setTimeout(() => {
+      this.themeService.setMyTheme();
+    }, 50);
     if (this.router.url.endsWith('explore')) {
       this.level = 0;
       this.title = 'Explore the fediverse';
@@ -92,7 +96,6 @@ export class DashboardComponent implements OnInit {
         }
       });
     });
-    this.themeService.setMyTheme();
   }
 
   reloadPosts() {
