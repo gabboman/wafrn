@@ -110,15 +110,13 @@ export class DashboardService {
       this.startScrollDate.getTime().toString()
     );
     petitionData = petitionData.set('id', blogId);
-    const dashboardPetition: Array<RawPost> | undefined = await this.http
-      .get<Array<RawPost>>(`${environment.baseUrl}/blog`, {
+    const dashboardPetition: unlinkedPosts = await firstValueFrom(
+      this.http.get<unlinkedPosts>(`${environment.baseUrl}/v2/blog`, {
         params: petitionData,
       })
-      .toPromise();
+    );
     if (dashboardPetition) {
-      result = dashboardPetition.map((elem) =>
-        this.postService.processPost(elem)
-      );
+      result = this.postService.processPostNew(dashboardPetition);
       result = result.filter(
         (post) => !this.postService.postContainsBlocked(post)
       );
