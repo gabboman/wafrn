@@ -84,7 +84,7 @@ export class PostEditorComponent implements OnInit {
       fixMentionsToQuill: false,
       isolateCharacter: true,
       allowInlineMentionChar: true,
-      defaultMenuOrientation: 'top',
+      defaultMenuOrientation: 'bottom',
       dataAttributes: ['id', 'value', 'avatar', 'link'],
       renderItem: (item: any, searchTerm: any) => {
         const div = document.createElement('div');
