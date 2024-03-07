@@ -86,7 +86,6 @@ export class PostEditorComponent implements OnInit {
       allowInlineMentionChar: true,
       defaultMenuOrientation: 'bottom',
       dataAttributes: ['id', 'value', 'avatar', 'link'],
-      renderLoading: () => 'Loading...',
       renderItem: (item: any, searchTerm: any) => {
         const div = document.createElement('div');
         div.className = 'quill-mention-inner';
