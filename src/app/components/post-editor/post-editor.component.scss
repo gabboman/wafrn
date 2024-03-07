@@ -1,4 +1,28 @@
+#tags {
+  margin-bottom: 8px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+
 .tag {
-  word-wrap: break-word;
+  padding: 0 6px;
+  cursor: pointer;
+  background-color: #8531a9;
+  color: white;
+  text-decoration: none;
+  border-radius: 5px;
+  font-size: 13px;
+  line-height: 16px;
+  padding-top: 2px;
   word-break: break-all;
+}
+
+.grid {
+  margin: 0;
+}
+
+.grid > div {
+  border: 1px solid #999;
+  border-radius: 8px;
 }
