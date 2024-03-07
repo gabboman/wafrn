@@ -99,6 +99,15 @@
     To check this user's complete profile in their instance
     <a [href]="blogDetails.remoteId" target="_blank"> click here</a>.
   </div>
+  <div class="grid">
+    <div class="col-6 flex flex-wrap justify-content-center">
+      <p><b>Following</b>: {{ blogDetails.followed }} users</p>
+    </div>
+
+    <div class="col-6 flex flex-wrap justify-content-center">
+      <p><b>Followed by</b>: {{ blogDetails.followers }} users</p>
+    </div>
+  </div>
 </mat-card>
 }
 <div *ngFor="let post of posts; let indexOfelement = index">
