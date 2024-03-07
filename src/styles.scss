@@ -21,7 +21,8 @@ $editor-buttons: #ffffffde;
 }
 
 a,
-a:visited {
+a:visited,
+.ql-snow a {
   color: $wafrn-blue;
 }
 
@@ -54,10 +55,13 @@ a:visited {
 
 .ql-snow.ql-container {
   border-radius: 0 0 5px 5px;
+  border-color: #999;
+  margin-bottom: 12px;
 }
 
 .ql-snow > .ql-editor {
   background: #20262e !important;
+  color: white;
   border-radius: 0 0 5px 5px;
   font-size: 16px;
   min-height: 100px;
@@ -96,6 +100,9 @@ a:visited {
   margin-right: unset;
   -webkit-user-select: unset;
   user-select: unset;
+}
+.mention > span {
+  margin: 0;
 }
 
 .ql-mention-list-item.selected {
@@ -171,4 +178,21 @@ blockquote {
 
 .ql-tooltip {
   z-index: 999 !important;
+}
+.ql-toolbar.ql-snow {
+  border-color: #999;
+}
+
+.quill-mention-inner {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  img {
+    object-fit: contain;
+    width: 24px;
+    height: 24px;
+    display: block;
+    margin: 0 auto;
+  }
 }

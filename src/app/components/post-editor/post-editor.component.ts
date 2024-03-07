@@ -1,15 +1,15 @@
-import { Component, Inject, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, Inject, OnInit, ViewChild } from '@angular/core';
 import { EditorService } from 'src/app/services/editor.service';
 import { MediaService } from 'src/app/services/media.service';
 import { environment } from 'src/environments/environment';
-import { QuillEditorComponent } from 'ngx-quill';
+import { QuillEditorComponent, QuillModule } from 'ngx-quill';
 import 'quill-mention';
+import Quill from 'quill';
 import { JwtService } from 'src/app/services/jwt.service';
 import { WafrnMedia } from 'src/app/interfaces/wafrn-media';
 import { DashboardService } from 'src/app/services/dashboard.service';
 import { MessageService } from 'src/app/services/message.service';
 import { CommonModule } from '@angular/common';
-import { QuillModule } from 'ngx-quill';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatDialogContent, MatDialogRef } from '@angular/material/dialog';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
@@ -20,8 +20,8 @@ import { MatInputModule } from '@angular/material/input';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { FileUploadComponent } from '../file-upload/file-upload.component';
 import { MediaPreviewComponent } from '../media-preview/media-preview.component';
-import Quill from 'quill';
 import { LoginService } from 'src/app/services/login.service';
+
 @Component({
   selector: 'app-post-editor',
   templateUrl: './post-editor.component.html',
@@ -50,13 +50,15 @@ export class PostEditorComponent implements OnInit {
     { level: 3, name: 'Unlisted' },
     { level: 10, name: 'Direct Message' },
   ];
+
   displayMarqueeButton = false;
-  idPostToReblog: string | undefined;
-  editorVisible: boolean = false;
   postCreatorContent: string = '';
   tags: string = '';
   privacy: number;
-  @ViewChild('quill') quill!: QuillEditorComponent;
+
+  @ViewChild(QuillEditorComponent, { static: true })
+  quill!: QuillEditorComponent;
+
   // upload media variables
   newImageFile: File | undefined;
   disableImageUploadButton = false;
@@ -64,13 +66,14 @@ export class PostEditorComponent implements OnInit {
 
   // add mention variables
   @ViewChild('mentionUserSearchPanel') mentionUserSearchPanel: any;
-  mentionSuggestions: any[] = [];
+
   editing = false;
   baseMediaUrl = environment.baseMediaUrl;
   cacheurl = environment.externalCacheurl;
   userSelectionMentionValue = '';
   contentWarning = '';
   enablePrivacyEdition = true;
+
   modules = {
     mention: {
       allowedChars: /^[A-Z0-9a-z_.@-]*$/,
@@ -82,40 +85,34 @@ export class PostEditorComponent implements OnInit {
       isolateCharacter: true,
       allowInlineMentionChar: true,
       defaultMenuOrientation: 'top',
+      dataAttributes: ['id', 'value', 'avatar', 'link'],
       renderItem: (item: any, searchTerm: any) => {
-        const itemString = `<div><img src="${item.avatar}" style="max-height: 24px; max-width: 24px;" /> ${item.value}</div>`;
-        return new DOMParser().parseFromString(itemString, 'text/html').body
-          .childNodes[0];
+        const div = document.createElement('div');
+        div.className = 'quill-mention-inner';
+        const img = document.createElement('img');
+        img.src = item.avatar;
+        div.appendChild(document.createElement('div').appendChild(img));
+        const span = document.createElement('span');
+        span.innerHTML = item.value;
+        div.appendChild(span);
+        return div;
+        // const itemString = `
+        //   <div class="quill-mention-inner">
+        //     <div><img src="${item.avatar}" /></div>
+        //     <span>${item.value}</span>
+        //   </div>`;
+        // return new DOMParser().parseFromString(itemString, 'text/html').body
+        //   .childNodes[0];
       },
       source: async (searchTerm: string, renderList: any) => {
-        await this.updateMentionsSuggestions(searchTerm);
-        const values = this.mentionSuggestions.map((elem) => {
-          let url = elem.url;
-          url = url.startsWith('@') ? url.substring(1) : url;
-          return {
-            id: elem.id,
-            value: url,
-            avatar: elem.avatar,
-            remoteId: elem.remoteId
-              ? elem.remoteId
-              : `${elem.frontUrl}/blog/${elem.url}`,
-          };
-        });
-
-        if (searchTerm.length === 0) {
-          renderList(values, searchTerm);
-        } else {
-          const matches: any = [];
-
-          values.forEach((entry) => {
-            if (
-              entry.value.toLowerCase().indexOf(searchTerm.toLowerCase()) !== -1
-            ) {
-              matches.push(entry);
-            }
-          });
-          renderList(matches, searchTerm);
+        let matches = await this.updateMentionsSuggestions(searchTerm);
+        if (searchTerm.length > 0) {
+          matches = matches.filter(
+            (m) =>
+              m.value.toLowerCase().indexOf(searchTerm.toLowerCase()) !== -1
+          );
         }
+        renderList(matches, searchTerm);
       },
     },
     toolbar: [],
@@ -125,6 +122,10 @@ export class PostEditorComponent implements OnInit {
   customOptions = [];
 
   maxFileUploadSize = parseInt(environment.maxUploadSize) * 1024 * 1024;
+
+  get idPostToReblog() {
+    return this.data?.post?.id;
+  }
 
   constructor(
     private editorService: EditorService,
@@ -141,133 +142,141 @@ export class PostEditorComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.enablePrivacyEdition = true;
-    //this.privacy = this.privacyOptions[0].level;
-    this.contentWarning = '';
-    this.idPostToReblog = this.data?.post?.id;
-    const inResponseTo = this.data?.post;
     this.editing = this.data?.edit === true;
-    this.postCreatorContent = '';
-    this.uploadedMedias = [];
-    this.tags = '';
-    const usersToMention: { id: string; url: string; remoteId: string }[] = [];
-    if (inResponseTo) {
-      this.contentWarning = inResponseTo.content_warning;
-      const parentPrivacy = this.privacyOptions.find(
-        (elem) => elem.level === inResponseTo.privacy
-      );
-      if (parentPrivacy?.level !== 0) {
+
+    let content = '';
+    const post = this.data?.post;
+    if (post) {
+      this.contentWarning = post.content_warning;
+
+      if (this.data.edit) {
+        if (post.content) {
+          content = post.content;
+        }
+        this.tags = post.tags.map((tag) => tag.tagName).join(', ');
+        this.uploadedMedias = post.medias ? post.medias : [];
+      }
+
+      this.privacy = (
+        this.privacyOptions.find((elem) => elem.level === post.privacy) ||
+        this.privacyOptions[0]
+      ).level;
+
+      if (this.privacy !== 0) {
         this.enablePrivacyEdition = false;
       }
-      this.privacy = parentPrivacy
-        ? parentPrivacy.level
-        : this.privacyOptions[0].level;
-      if (inResponseTo.userId != this.jwtService.getTokenData().userId) {
-        usersToMention.push({
-          id: inResponseTo.user.id,
-          url: inResponseTo.user.url.startsWith('@')
-            ? inResponseTo.user.url
-            : '@' + inResponseTo.user.url,
-          remoteId: inResponseTo.user.remoteId
-            ? inResponseTo.user.remoteId
-            : `${environment.frontUrl}/blog/${inResponseTo.user.url}`,
-        });
-      }
-      inResponseTo.mentionPost?.forEach((mention) => {
-        if (
-          !usersToMention.map((elem) => elem.id).includes(mention.id) &&
-          mention.id != this.jwtService.getTokenData().userId
-        ) {
-          usersToMention.push({
-            url: mention.url.startsWith('@') ? mention.url : '@' + mention.url,
-            id: mention.id,
-            remoteId: mention.remoteId
-              ? mention.remoteId
-              : `${environment.frontUrl}/blog/${mention.url}`,
-          });
-        }
+    }
+
+    if (!content) {
+      content = this.getInitialMentionsHTML();
+    }
+
+    this.openEditor(content);
+  }
+
+  getInitialMentionsHTML() {
+    const usersToMention: { id: string; url: string; remoteId: string }[] = [];
+    const post = this.data?.post;
+    if (!post) {
+      return '';
+    }
+
+    const currentUserId = this.jwtService.getTokenData().userId;
+    if (post.userId !== currentUserId) {
+      usersToMention.push({
+        id: post.user.id,
+        url: post.user.url.startsWith('@')
+          ? post.user.url
+          : '@' + post.user.url,
+        remoteId: post.user.remoteId
+          ? post.user.remoteId
+          : `${environment.frontUrl}/blog/${post.user.url}`,
       });
     }
-    let mentionsHtml = '';
-    usersToMention.forEach((elem) => {
-      mentionsHtml = mentionsHtml + this.getMentionHtml(elem);
+
+    post.mentionPost?.forEach((mention) => {
+      if (
+        mention.id !== currentUserId &&
+        !usersToMention.some((elem) => elem.id === mention.id)
+      ) {
+        usersToMention.push({
+          url: mention.url.startsWith('@') ? mention.url : '@' + mention.url,
+          id: mention.id,
+          remoteId: mention.remoteId
+            ? mention.remoteId
+            : `${environment.frontUrl}/blog/${mention.url}`,
+        });
+      }
     });
-    if (mentionsHtml !== '') {
-      mentionsHtml = mentionsHtml + '<span> </span>';
-    }
-    this.openEditor();
 
-    this.openEditor(mentionsHtml);
+    const mentionsHtml = usersToMention
+      .map((u) => this.getMentionHtml(u))
+      .join('<span>&nbsp;</span>');
 
-    if (this.data && this.data.post && this.data.edit) {
-      this.tags = this.data.post.tags.map((tag) => tag.tagName).join();
-      this.contentWarning = this.data.post.content_warning;
-      this.uploadedMedias = this.data.post.medias ? this.data.post.medias : [];
-    }
+    return mentionsHtml;
   }
 
   openEditor(content?: string) {
-    this.postCreatorContent = '';
-    this.uploadedMedias = [];
-    // TODO FIX HACK. We just add a timeout so some stuff gets initialized
-    // I would try doing that now but cant
+    this.postCreatorContent = `${content || ''} `;
+
+    // quill format variables
+    const italic = Quill.import('formats/italic');
+    italic.tagName = 'i'; // Quill uses <em> by default
+    Quill.register(italic, true);
+    /*
+    const blockBlot = Quill.import('blots/block');
+    class MarqueeBlot extends blockBlot {
+      static create(value: any) {
+        const node = super.create(value);
+
+        return node;
+      }
+    }
+    MarqueeBlot['blotName'] = 'marquee';
+    MarqueeBlot['tagName'] = 'marquee';
+
+    Quill.register('formats/marquee', MarqueeBlot);
     setTimeout(() => {
-      // quill format variables
-      const italic = Quill.import('formats/italic');
-      italic.tagName = 'i'; // Quill uses <em> by default
-      Quill.register(italic, true);
-      /*
-      const blockBlot = Quill.import('blots/block');
-      class MarqueeBlot extends blockBlot {
-        static create(value: any) {
-          const node = super.create(value);
-
-          return node;
-        }
-      }
-      MarqueeBlot['blotName'] = 'marquee';
-      MarqueeBlot['tagName'] = 'marquee';
-
-      Quill.register('formats/marquee', MarqueeBlot);
-      setTimeout(() => {
-        this.displayMarqueeButton = true;
-      });
-      */
-      const strike = Quill.import('formats/strike');
-      strike.tagName = 'del'; // Quill uses <s> by default
-      Quill.register(strike, true);
-
-      const mentionBlot = Quill.import('blots/mention');
-
-      mentionBlot.setDataValues = (node: any, data: any) => {
-        const newNode: any = node.cloneNode(false);
-        const userMentionFullData = this.mentionSuggestions.find(
-          (elem) => elem.id === data.id
-        );
-        newNode.innerHTML = this.getMentionHtml({
-          id: data.id,
-          url: data.value,
-          remoteId: data.remoteid
-            ? data.remoteid
-            : userMentionFullData.remoteId,
-        });
-        return newNode;
-      };
-      mentionBlot.tagName = 'a'; // used to be a <span> and masto peps want me dead!
-      Quill.register(mentionBlot, true);
-
-      // quill stuff
-      this.quill.ngOnInit();
-      this.editorVisible = true;
-      if (content) {
-        this.quill.quillEditor.clipboard.dangerouslyPasteHTML(content);
-        this.quill.quillEditor.insertText(
-          this.quill.quillEditor.getLength() - 1,
-          '',
-          'user'
-        );
-      }
+      this.displayMarqueeButton = true;
     });
+    */
+    const strike = Quill.import('formats/strike');
+    strike.tagName = 'del'; // Quill uses <s> by default
+    Quill.register(strike, true);
+
+    const mentionBlot = Quill.import('blots/mention');
+
+    mentionBlot.setDataValues = (
+      node: HTMLElement,
+      data: { id: string; value: string; link: string }
+    ) => {
+      if (!data.id) {
+        return document.createElement('span');
+      }
+
+      const newNode = node.cloneNode(false) as HTMLElement;
+      newNode.innerHTML = this.getMentionHtml({
+        id: data.id,
+        url: data.value,
+        remoteId: data.link,
+      }).trim();
+      return newNode.firstElementChild;
+    };
+    mentionBlot.tagName = 'a'; // used to be a <span> and masto peps want me dead!
+    Quill.register(mentionBlot, true);
+
+    // quill stuff
+    this.quill.ngOnInit();
+    // if (content) {
+    //   setTimeout(() => {
+    //     this.quill.quillEditor.clipboard.dangerouslyPasteHTML(content);
+    //     this.quill.quillEditor.insertText(
+    //       this.quill.quillEditor.getLength() - 1,
+    //       ' ',
+    //       'user'
+    //     );
+    //   });
+    // }
   }
 
   postBeingSubmitted = false;
@@ -283,7 +292,6 @@ export class PostEditorComponent implements OnInit {
       });
     tagsToSend = tagsToSend.slice(0, -1);
     let res = undefined;
-    // this.fixNullPosting();
     if (this.uploadedMedias.length > 0) {
       const updateMediaPromises: Promise<any>[] = [];
       this.uploadedMedias.forEach((elem) => {
@@ -332,16 +340,11 @@ export class PostEditorComponent implements OnInit {
     this.dialogRef.close();
   }
 
-  fixNullPosting() {
-    if (!this.postCreatorContent) {
-      this.postCreatorContent = '';
-      this.uploadedMedias = [];
-    }
-  }
-
-  imgSelected(filePickerEvent: any) {
-    if (filePickerEvent.target.files[0]) {
-      this.newImageFile = filePickerEvent.target.files[0];
+  imgSelected(ev: InputEvent) {
+    const target = ev.target as HTMLInputElement;
+    const files = target.files || [];
+    if (files[0]) {
+      this.newImageFile = files[0];
     }
   }
 
@@ -355,7 +358,7 @@ export class PostEditorComponent implements OnInit {
           'Media uploaded and added to the woot! Please fill in the description',
       });
     } catch (error) {
-      console.log(error);
+      console.error(error);
       this.messages.add({
         severity: 'error',
         summary: 'Oh no! something went wrong',
@@ -371,32 +374,40 @@ export class PostEditorComponent implements OnInit {
     });
   }
 
-  async updateMentionsSuggestions(query: string) {
-    if (query) {
-      const backendResponse: any = await this.editorService.searchUser(query);
-      if (backendResponse) {
-        this.mentionSuggestions = backendResponse.users
-          ? backendResponse.users
-          : [];
-        this.mentionSuggestions = this.mentionSuggestions.map((user) => {
-          user.avatar = user.url.startsWith('@')
-            ? this.cacheurl + encodeURIComponent(user.avatar)
-            : this.baseMediaUrl + user.avatar;
-          user.remoteId = user.remoteId
-            ? user.remoteId
-            : `${environment.frontUrl}/blog/${user.url}`;
-          return user;
-        });
-      }
-    } else {
-      this.mentionSuggestions = [];
+  async updateMentionsSuggestions(
+    query: string
+  ): Promise<
+    { id: string; value: string; avatar: string; remoteId: string }[]
+  > {
+    if (!query) {
+      return [];
     }
-  }
 
-  mentionUserSelected(selected: any) {
-    this.postCreatorContent = `${this.postCreatorContent}[mentionuserid="${selected.id}"]`;
-    this.userSelectionMentionValue = '';
-    this.mentionUserSearchPanel.hide();
+    const backendResponse: any = await this.editorService.searchUser(query);
+    if (!backendResponse) {
+      return [];
+    }
+
+    return (backendResponse.users || []).map((user: any) => {
+      user.avatar = user.url.startsWith('@')
+        ? this.cacheurl + encodeURIComponent(user.avatar)
+        : this.baseMediaUrl + user.avatar;
+
+      if (!user.remoteId) {
+        user.remoteId = `${environment.frontUrl}/blog/${user.url}`;
+      }
+
+      let url = user.url;
+      url = url.startsWith('@') ? url.substring(1) : url;
+      return {
+        id: user.id,
+        value: url,
+        avatar: user.avatar,
+        link: user.remoteId
+          ? user.remoteId
+          : `${user.frontUrl}/blog/${user.url}`,
+      };
+    });
   }
 
   adultContentUpdated(index: number) {
@@ -410,13 +421,13 @@ export class PostEditorComponent implements OnInit {
     url: string;
     remoteId: string;
   }): string {
-    const mentionHtml = `<a href="${
-      mention.remoteId
-    }" class="u-url h-card mention" data-id="${mention.id}" data-value="${
-      mention.url
-    }" data-remoteid="${mention.remoteId}" >${
-      mention.url.startsWith('@') ? mention.url : '@' + mention.url
-    }</a>`;
+    const mentionHtml = `<a
+      href="${mention.remoteId}"
+      class="u-url h-card mention"
+      data-id="${mention.id}"
+      data-value="${mention.url}"
+      data-link="${mention.remoteId}"
+    >${mention.url.startsWith('@') ? mention.url : '@' + mention.url}</a>`;
     return mentionHtml;
   }
 

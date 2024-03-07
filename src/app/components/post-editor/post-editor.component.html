@@ -1,4 +1,4 @@
-<mat-dialog-content>
+<mat-dialog-content style="padding: 12px">
   <h2 *ngIf="idPostToReblog && !editing">
     You are replying to the woot. Your wafrn followers will see the full thread
     with your reply on it. Your fedi followers will see the reply and they will
@@ -7,12 +7,7 @@
   <h2 *ngIf="editing">
     You are editing your woot. Sorry you need to write all of it again.
   </h2>
-  <div class="mt-4 mb-2">
-    <mat-form-field class="w-full">
-      <mat-label>Content warning</mat-label>
-      <input [(ngModel)]="contentWarning" matNativeControl />
-    </mat-form-field>
-  </div>
+
   <quill-editor
     #quill
     class="w-full"
@@ -22,7 +17,11 @@
   >
     <div
       quill-editor-toolbar
-      style="border-top-left-radius: 5px; border-top-right-radius: 5px"
+      style="
+        border-bottom: none;
+        border-top-left-radius: 5px;
+        border-top-right-radius: 5px;
+      "
     >
       <select class="ql-size" title="Text Size">
         <option value="small"></option>
@@ -102,22 +101,8 @@
     You seem to have pasted images in the editor. The image will NOT be visible
     once you woot. Please use the upload tool on the top bar of the editor
   </button>
-  <mat-form-field class="w-full">
-    <mat-label>Tags</mat-label>
-    <input
-      [(ngModel)]="tags"
-      placeholder="Separated by commas"
-      matNativeControl
-    />
-  </mat-form-field>
-  @for(tag of tags.split(','); track tag) {
 
-  <span *ngIf="tag && tag !== '' && tag.trim() !== ''" class="tag p-1"
-    >#{{ tag.trim() }}</span
-  >
-
-  }
-  <div>
+  <div id="media-upload" class="mb-4">
     <div class="pb-3 w-full" *ngIf="uploadedMedias.length < 4">
       <app-file-upload (fileUpload)="uploadImage($event)"></app-file-upload>
     </div>
@@ -169,6 +154,26 @@
       </ng-container>
     </div>
   </div>
+
+  <mat-form-field class="w-full">
+    <mat-label>Tags</mat-label>
+    <input
+      [(ngModel)]="tags"
+      placeholder="Separated by commas"
+      matNativeControl
+    />
+  </mat-form-field>
+  <div id="tags">
+    @for(tag of tags.split(','); track tag) {
+    <span *ngIf="tag && tag !== '' && tag.trim() !== ''" class="tag"
+      >#{{ tag.trim() }}</span
+    >
+    }
+  </div>
+  <mat-form-field class="w-full">
+    <mat-label>Content warning</mat-label>
+    <input [(ngModel)]="contentWarning" matNativeControl />
+  </mat-form-field>
   <mat-form-field class="w-full">
     <mat-label>Privacy</mat-label>
     <mat-select [required]="true" [(value)]="privacy">

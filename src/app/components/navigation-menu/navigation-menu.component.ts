@@ -160,7 +160,10 @@ export class NavigationMenuComponent implements OnInit, OnDestroy {
           this.dialogService.open(
             await this.editorService.getEditorComponent(),
             {
-              width: '100%',
+              height: 'min(600px, calc(100% - 30px))',
+              width: 'min(960px, calc(100% - 30px))',
+              maxWidth: '100%',
+              maxHeight: '100%',
             }
           );
         },
