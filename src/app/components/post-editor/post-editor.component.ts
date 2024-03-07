@@ -89,20 +89,19 @@ export class PostEditorComponent implements OnInit {
       renderItem: (item: any, searchTerm: any) => {
         const div = document.createElement('div');
         div.className = 'quill-mention-inner';
+
+        const imgWrapper = document.createElement('div');
+        div.appendChild(imgWrapper);
+
         const img = document.createElement('img');
         img.src = item.avatar;
-        div.appendChild(document.createElement('div').appendChild(img));
+        imgWrapper.appendChild(img);
+
         const span = document.createElement('span');
         span.innerHTML = item.value;
         div.appendChild(span);
+
         return div;
-        // const itemString = `
-        //   <div class="quill-mention-inner">
-        //     <div><img src="${item.avatar}" /></div>
-        //     <span>${item.value}</span>
-        //   </div>`;
-        // return new DOMParser().parseFromString(itemString, 'text/html').body
-        //   .childNodes[0];
       },
       source: async (searchTerm: string, renderList: any) => {
         let matches = await this.updateMentionsSuggestions(searchTerm);
@@ -217,12 +216,8 @@ export class PostEditorComponent implements OnInit {
   }
 
   openEditor(content?: string) {
-    this.postCreatorContent = `${content || ''} `;
+    this.postCreatorContent = content ? `${content}<span>&nbsp;</span>` : '';
 
-    // quill format variables
-    const italic = Quill.import('formats/italic');
-    italic.tagName = 'i'; // Quill uses <em> by default
-    Quill.register(italic, true);
     /*
     const blockBlot = Quill.import('blots/block');
     class MarqueeBlot extends blockBlot {
@@ -240,12 +235,18 @@ export class PostEditorComponent implements OnInit {
       this.displayMarqueeButton = true;
     });
     */
+
+    // quill format variables
+    const italic = Quill.import('formats/italic');
+    italic.tagName = 'i'; // Quill uses <em> by default
+    Quill.register(italic, true);
+
     const strike = Quill.import('formats/strike');
     strike.tagName = 'del'; // Quill uses <s> by default
     Quill.register(strike, true);
 
+    // custom formatting for mentions inserted in the editor
     const mentionBlot = Quill.import('blots/mention');
-
     mentionBlot.setDataValues = (
       node: HTMLElement,
       data: { id: string; value: string; link: string }
@@ -265,18 +266,7 @@ export class PostEditorComponent implements OnInit {
     mentionBlot.tagName = 'a'; // used to be a <span> and masto peps want me dead!
     Quill.register(mentionBlot, true);
 
-    // quill stuff
     this.quill.ngOnInit();
-    // if (content) {
-    //   setTimeout(() => {
-    //     this.quill.quillEditor.clipboard.dangerouslyPasteHTML(content);
-    //     this.quill.quillEditor.insertText(
-    //       this.quill.quillEditor.getLength() - 1,
-    //       ' ',
-    //       'user'
-    //     );
-    //   });
-    // }
   }
 
   postBeingSubmitted = false;
