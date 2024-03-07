@@ -48,6 +48,7 @@ export class ViewBlogComponent implements OnInit, OnDestroy {
   notYetAcceptedFollows: string[] = [];
   userLoggedIn = false;
   avatarUrl = '';
+  headerUrl = '';
   navigationSubscription!: Subscription;
   showModalTheme = false;
 
@@ -130,6 +131,10 @@ export class ViewBlogComponent implements OnInit, OnDestroy {
         ? environment.externalCacheurl +
           encodeURIComponent(this.blogDetails.avatar)
         : environment.baseMediaUrl + this.blogDetails.avatar;
+      this.headerUrl = this.blogDetails.url.startsWith('@')
+        ? environment.externalCacheurl +
+          encodeURIComponent(this.blogDetails.headerImage)
+        : environment.baseMediaUrl + this.blogDetails.headerImage;
       this.titleService.setTitle(`${this.blogDetails.url}'s blog`);
       this.metaTagService.addTags([
         {
