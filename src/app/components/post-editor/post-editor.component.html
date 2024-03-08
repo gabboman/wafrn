@@ -102,10 +102,44 @@
     once you woot. Please use the upload tool on the top bar of the editor
   </button>
 
-  <div id="media-upload" class="mb-4">
-    <div class="pb-3 w-full" *ngIf="uploadedMedias.length < 4">
+  <div class="below-editor-toolbar">
+    <div style="flex-grow: 1">
+      <mat-form-field
+        class="w-full"
+        appearance="outline"
+        subscriptSizing="dynamic"
+      >
+        <mat-label>Privacy</mat-label>
+        <mat-select [required]="true" [(value)]="privacy">
+          @if (privacyOption) {
+          <mat-select-trigger>
+            <fa-icon [icon]="privacyOption.icon"></fa-icon>
+            {{ privacyOption.name }}
+          </mat-select-trigger>
+          } @for (option of privacyOptions; track option) {
+          <mat-option [value]="option.level">
+            <fa-icon [icon]="option.icon"></fa-icon>
+            {{ option.name }}
+          </mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
+    </div>
+    <div style="flex-grow: 5">
+      <mat-form-field
+        class="w-full"
+        appearance="outline"
+        subscriptSizing="dynamic"
+      >
+        <mat-label>Content warning</mat-label>
+        <input [(ngModel)]="contentWarning" matNativeControl />
+      </mat-form-field>
+    </div>
+    <div *ngIf="uploadedMedias.length < 4">
       <app-file-upload (fileUpload)="uploadImage($event)"></app-file-upload>
     </div>
+  </div>
+  <section id="media-upload" class="mb-4">
     <div *ngIf="uploadedMedias.length >= 4">
       Due some fediverse limitations, we can only have 4 medias per woot. Adding
       more would break how the woot is seen in other places. Sorry for the
@@ -153,44 +187,38 @@
         </div>
       </ng-container>
     </div>
-  </div>
+  </section>
 
-  <mat-form-field class="w-full">
-    <mat-label>Tags</mat-label>
-    <input
-      [(ngModel)]="tags"
-      placeholder="Separated by commas"
-      matNativeControl
-    />
-  </mat-form-field>
-  <div id="tags">
-    @for(tag of tags.split(','); track tag) {
-    <span *ngIf="tag && tag !== '' && tag.trim() !== ''" class="tag"
-      >#{{ tag.trim() }}</span
-    >
-    }
-  </div>
-  <mat-form-field class="w-full">
-    <mat-label>Content warning</mat-label>
-    <input [(ngModel)]="contentWarning" matNativeControl />
-  </mat-form-field>
-  <mat-form-field class="w-full">
-    <mat-label>Privacy</mat-label>
-    <mat-select [required]="true" [(value)]="privacy">
-      @for(option of privacyOptions; track option) {
-      <mat-option [value]="option.level">{{ option.name }}</mat-option>
+  <section id="privacy">
+    <div mat-flat-button color="warning" *ngIf="privacy === 10">
+      Attention! ADMINS both of your instance and the target instance can read
+      the DMs
+    </div>
+    <div mat-flat-button color="warning" *ngIf="privacy === 3">
+      Unlisted posts are posts that opt out of search, that including tag
+      (hashtag) search in other instances. They are more public than followers
+      only but less than regular public. I know I am great at explaining stuff
+    </div>
+  </section>
+
+  <section id="tags">
+    <mat-form-field class="w-full">
+      <mat-label>Tags</mat-label>
+      <input
+        [(ngModel)]="tags"
+        placeholder="Separated by commas"
+        matNativeControl
+      />
+    </mat-form-field>
+    <div class="taglist">
+      @for(tag of tags.split(','); track tag) {
+      <span *ngIf="tag && tag !== '' && tag.trim() !== ''" class="tag"
+        >#{{ tag.trim() }}</span
+      >
       }
-    </mat-select>
-  </mat-form-field>
-  <div mat-flat-button color="warning" *ngIf="privacy === 10">
-    Attention! ADMINS both of your instance and the target instance can read the
-    DMs
-  </div>
-  <div mat-flat-button color="warning" *ngIf="privacy === 3">
-    Unlisted posts are posts that opt out of search, that including tag
-    (hashtag) search in other instances. They are more public than followers
-    only but less than regular public. I know I am great at explaining stuff
-  </div>
+    </div>
+  </section>
+
   <button
     mat-flat-button
     color="primary"
