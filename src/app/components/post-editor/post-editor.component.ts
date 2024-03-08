@@ -15,12 +15,21 @@ import { MatDialogContent, MatDialogRef } from '@angular/material/dialog';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { ProcessedPost } from 'src/app/interfaces/processed-post';
 import { MatButtonModule } from '@angular/material/button';
+import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { MatSelectModule } from '@angular/material/select';
 import { MatInputModule } from '@angular/material/input';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { FileUploadComponent } from '../file-upload/file-upload.component';
 import { MediaPreviewComponent } from '../media-preview/media-preview.component';
 import { LoginService } from 'src/app/services/login.service';
+import {
+  faEnvelope,
+  faGlobe,
+  faServer,
+  faUnlock,
+  faUser,
+} from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 
 @Component({
   selector: 'app-post-editor',
@@ -35,26 +44,32 @@ import { LoginService } from 'src/app/services/login.service';
     MediaPreviewComponent,
     MatDialogContent,
     MatButtonModule,
+    MatButtonToggleModule,
     MatSelectModule,
     MatInputModule,
     MatCheckboxModule,
     FileUploadComponent,
+    FontAwesomeModule,
   ],
   providers: [EditorService],
 })
 export class PostEditorComponent implements OnInit {
   privacyOptions = [
-    { level: 0, name: 'Public' },
-    { level: 1, name: 'Followers only' },
-    { level: 2, name: 'This instance only' },
-    { level: 3, name: 'Unlisted' },
-    { level: 10, name: 'Direct Message' },
+    { level: 0, name: 'Public', icon: faGlobe },
+    { level: 1, name: 'Followers only', icon: faUser },
+    { level: 2, name: 'This instance only', icon: faServer },
+    { level: 3, name: 'Unlisted', icon: faUnlock },
+    { level: 10, name: 'Direct Message', icon: faEnvelope },
   ];
 
   displayMarqueeButton = false;
   postCreatorContent: string = '';
   tags: string = '';
   privacy: number;
+
+  get privacyOption() {
+    return this.privacyOptions.find((elem) => elem.level === this.privacy);
+  }
 
   @ViewChild(QuillEditorComponent, { static: true })
   quill!: QuillEditorComponent;

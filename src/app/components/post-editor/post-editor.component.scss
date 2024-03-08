@@ -1,5 +1,5 @@
-#tags {
-  margin-bottom: 8px;
+.taglist {
+  margin-bottom: 16px;
   display: flex;
   flex-wrap: wrap;
   gap: 4px;
@@ -25,4 +25,13 @@
 .grid > div {
   border: 1px solid #999;
   border-radius: 8px;
+}
+
+.below-editor-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: flex-start;
+  gap: 8px;
+  margin-top: 8px;
 }

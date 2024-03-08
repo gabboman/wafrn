@@ -231,7 +231,8 @@ export class PostComponent implements OnInit {
   async replyPost(post: ProcessedPost) {
     this.dialogService.open(await this.editorService.getEditorComponent(), {
       data: { post },
-      width: '100%',
+      width: 'min(960px, calc(100% - 30px))',
+      maxWidth: '100%',
     });
   }
 
@@ -245,7 +246,8 @@ export class PostComponent implements OnInit {
   async editPost(post: ProcessedPost) {
     this.dialogService.open(await this.editorService.getEditorComponent(), {
       data: { post, edit: true },
-      width: '100%',
+      width: 'min(960px, calc(100% - 30px))',
+      maxWidth: '100%',
     });
   }
 
