@@ -135,7 +135,7 @@
         <input [(ngModel)]="contentWarning" matNativeControl />
       </mat-form-field>
     </div>
-    <div *ngIf="uploadedMedias.length < 4">
+    <div class="w-full-mobile" *ngIf="uploadedMedias.length < 4">
       <app-file-upload (fileUpload)="uploadImage($event)"></app-file-upload>
     </div>
   </div>
