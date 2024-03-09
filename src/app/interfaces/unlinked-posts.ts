@@ -52,6 +52,7 @@ interface Mention {
 
 interface Media {
   id: string;
+  order: number;
   NSFW: boolean;
   description: string;
   url: string;

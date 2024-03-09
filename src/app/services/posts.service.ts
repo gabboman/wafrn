@@ -216,7 +216,7 @@ export class PostsService {
       remotePostId: elem.remotePostId
         ? elem.remotePostId
         : `${environment.frontUrl}/post/${elem.id}`,
-      medias: medias,
+      medias: medias.sort((a, b) => a.order - b.order),
       questionPoll: polls[0],
       mentionPost: mentionedUsers as SimplifiedUser[],
     };
