@@ -297,23 +297,9 @@ export class PostEditorComponent implements OnInit {
       });
     tagsToSend = tagsToSend.slice(0, -1);
     let res = undefined;
-    if (this.uploadedMedias.length > 0) {
-      const updateMediaPromises: Promise<any>[] = [];
-      this.uploadedMedias.forEach((elem) => {
-        updateMediaPromises.push(
-          this.mediaService.updateMedia(
-            elem.id,
-            elem.description,
-            elem.NSFW,
-            elem.adultContent
-          )
-        );
-      });
-      await Promise.allSettled(updateMediaPromises);
-    }
     res = await this.editorService.createPost({
       content: this.postCreatorContent ? this.postCreatorContent : '',
-      media: this.uploadedMedias.map((elem) => elem.id),
+      media: this.uploadedMedias,
       privacy: this.privacy,
       tags: tagsToSend,
       idPostToReblog: this.editing ? undefined : this.idPostToReblog,

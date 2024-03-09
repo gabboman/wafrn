@@ -28,7 +28,7 @@ export class EditorService {
 
   async createPost(options: {
     content: string;
-    media: string[];
+    media: WafrnMedia[];
     privacy: number;
     tags?: string;
     idPostToReblog?: string;
