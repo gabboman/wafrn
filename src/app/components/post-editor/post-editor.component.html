@@ -125,7 +125,8 @@
         </mat-select>
       </mat-form-field>
     </div>
-    <div style="flex-grow: 5">
+    <div class="cw-wrapper" [ngClass]="{ 'cw-animation': showContentWarning }">
+      @if (showContentWarning) {
       <mat-form-field
         class="w-full"
         appearance="outline"
@@ -134,6 +135,10 @@
         <mat-label>Content warning</mat-label>
         <input [(ngModel)]="contentWarning" matNativeControl />
       </mat-form-field>
+      }
+      <mat-button-toggle (change)="showContentWarning = !showContentWarning">
+        CW
+      </mat-button-toggle>
     </div>
     <div class="w-full-mobile" *ngIf="uploadedMedias.length < 4">
       <app-file-upload (fileUpload)="uploadImage($event)"></app-file-upload>

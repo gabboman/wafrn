@@ -41,3 +41,26 @@
     width: 100%;
   }
 }
+
+.cw-wrapper {
+  flex-grow: 5;
+  display: flex;
+}
+
+.cw-wrapper mat-button-toggle {
+  flex-shrink: 0;
+  margin-left: -2px;
+}
+
+.cw-animation {
+  animation: slideIn 0.3s ease-in;
+}
+
+@keyframes slideIn {
+  from {
+    transform: translateX(-100%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
