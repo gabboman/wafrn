@@ -19,7 +19,6 @@ import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { MatSelectModule } from '@angular/material/select';
 import { MatInputModule } from '@angular/material/input';
 import { MatCheckboxModule } from '@angular/material/checkbox';
-import { MatIconModule } from '@angular/material/icon';
 import { FileUploadComponent } from '../file-upload/file-upload.component';
 import { MediaPreviewComponent } from '../media-preview/media-preview.component';
 import { LoginService } from 'src/app/services/login.service';
@@ -49,7 +48,6 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
     MatSelectModule,
     MatInputModule,
     MatCheckboxModule,
-    MatIconModule,
     FileUploadComponent,
     FontAwesomeModule,
   ],
