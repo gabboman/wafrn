@@ -62,6 +62,7 @@ export class PostEditorComponent implements OnInit {
     { level: 10, name: 'Direct Message', icon: faEnvelope },
   ];
 
+  showContentWarning = false;
   displayMarqueeButton = false;
   postCreatorContent: string = '';
   tags: string = '';
