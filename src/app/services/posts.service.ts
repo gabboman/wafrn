@@ -396,14 +396,16 @@ export class PostsService {
     sanitized = sanitized.replaceAll(this.wafrnMediaRegex, '');
 
     post.emojis.forEach((emoji) => {
-      if (emoji.name.startsWith(':') && emoji.name.endsWith(':')) {
-        sanitized = sanitized.replaceAll(
-          emoji.name,
-          `<img src="${
-            environment.externalCacheurl + encodeURIComponent(emoji.url)
-          }" class="post-emoji"/>`
-        );
-      }
+      console.log(emoji);
+      const strToReplace = emoji.name.startsWith(':')
+        ? emoji.name
+        : `:${emoji.name}:`;
+      sanitized = sanitized.replaceAll(
+        strToReplace,
+        `<img src="${
+          environment.externalCacheurl + encodeURIComponent(emoji.url)
+        }" class="post-emoji"/>`
+      );
     });
 
     return sanitized;
