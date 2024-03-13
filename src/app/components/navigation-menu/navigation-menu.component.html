@@ -16,9 +16,11 @@
     </a>
     <hr class="mx-3" />
     <mat-nav-list>
-      @for (link of menuItems; track link) {
+      @for (link of menuItems; track link) { @if (link.divider) {
+      <hr style="margin: 16px 0" />
+      } @else {
       <app-menu-item [item]="link"></app-menu-item>
-      }
+      } }
     </mat-nav-list>
   </mat-drawer>
   <mat-drawer-content>
@@ -32,7 +34,9 @@
       class="show-sidebar-menu-button"
       (click)="showMenu()"
       [matBadge]="notifications + adminNotifications + usersAwaitingAproval"
-      [matBadgeHidden]="notifications + adminNotifications + usersAwaitingAproval === 0"
+      [matBadgeHidden]="
+        notifications + adminNotifications + usersAwaitingAproval === 0
+      "
       matBadgePosition="below"
     >
       <fa-icon [icon]="hamburguerIcon"></fa-icon>

@@ -376,6 +376,11 @@ export class NavigationMenuComponent implements OnInit, OnDestroy {
         ],
       },
       {
+        label: '',
+        title: '',
+        divider: true,
+      },
+      {
         label: 'Privacy policy',
         title: 'Privacy policy',
         icon: faEyeSlash,

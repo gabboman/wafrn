@@ -14,9 +14,9 @@
   >
     <fa-icon [icon]="item.icon"></fa-icon>
   </span>
-  <span class="ml-3">{{ item.label }}</span>
+  <span class="ml-3 mr-1">{{ item.label }}</span>
   <span class="menu-item-icon">
-    <fa-icon [icon]="expanded ? chevronUp : chevronDown"></fa-icon>
+    <fa-icon size="xs" [icon]="expanded ? chevronUp : chevronDown"></fa-icon>
   </span>
 </div>
 @if(expanded) {
