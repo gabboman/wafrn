@@ -31,11 +31,14 @@ export class ReportListComponent implements OnInit {
       this.dataSource.data = response.map((elem: any) => {
         elem.user.avatar = elem.user?.url.startsWith('@')
           ? environment.externalCacheurl + encodeURIComponent(elem.user.avatar)
-          : environment.baseMediaUrl + elem.user?.avatar;
+          : environment.externalCacheurl +
+            encodeURIComponent(environment.baseMediaUrl + elem.user?.avatar);
         elem.post.user.avatar = elem.post.user?.url.startsWith('@')
           ? environment.externalCacheurl +
             encodeURIComponent(elem.post.user?.avatar)
-          : environment.baseMediaUrl + elem.post.user?.avatar;
+          : encodeURIComponent(
+              environment.baseMediaUrl + elem.post.user?.avatar
+            );
         return elem;
       });
       this.ready = true;

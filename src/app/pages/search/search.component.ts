@@ -101,7 +101,7 @@ export class SearchComponent implements OnInit, OnDestroy {
     searchResult.users.forEach((user) => {
       this.avatars[user.url] = user.url.startsWith('@')
         ? this.cacheurl + encodeURIComponent(user.avatar)
-        : this.baseMediaUrl + user.avatar;
+        : this.cacheurl + encodeURIComponent(this.baseMediaUrl + user.avatar);
     });
     this.loading = false;
 
@@ -134,7 +134,7 @@ export class SearchComponent implements OnInit, OnDestroy {
       this.users.push(user);
       this.avatars[user.url] = user.url.startsWith('@')
         ? this.cacheurl + encodeURIComponent(user.avatar)
-        : this.baseMediaUrl + user.avatar;
+        : this.cacheurl + encodeURIComponent(this.baseMediaUrl + user.avatar);
     });
   }
 

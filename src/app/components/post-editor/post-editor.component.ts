@@ -383,7 +383,7 @@ export class PostEditorComponent implements OnInit {
     return (backendResponse.users || []).map((user: any) => {
       user.avatar = user.url.startsWith('@')
         ? this.cacheurl + encodeURIComponent(user.avatar)
-        : this.baseMediaUrl + user.avatar;
+        : this.cacheurl + encodeURIComponent(this.baseMediaUrl + user.avatar);
 
       if (!user.remoteId) {
         user.remoteId = `${environment.frontUrl}/blog/${user.url}`;

@@ -119,7 +119,8 @@ export class PostComponent implements OnInit {
     this.avatars = this.post.map((elem) =>
       elem.user.url.startsWith('@')
         ? this.cacheurl + encodeURIComponent(elem.user.avatar)
-        : this.mediaBaseUrl + elem.user.avatar
+        : this.cacheurl +
+          encodeURIComponent(this.mediaBaseUrl + elem.user.avatar)
     );
     this.ready = true;
     const notes = this.post[this.post.length - 1].notes;

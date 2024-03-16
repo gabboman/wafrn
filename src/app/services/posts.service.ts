@@ -461,7 +461,8 @@ export class PostsService {
           if (user) {
             user.avatar = user.url.startsWith('@')
               ? environment.externalCacheurl + encodeURIComponent(user.avatar)
-              : environment.baseMediaUrl + user.avatar;
+              : environment.externalCacheurl +
+                encodeURIComponent(environment.baseMediaUrl + user.avatar);
           }
           return {
             id: elem.id,

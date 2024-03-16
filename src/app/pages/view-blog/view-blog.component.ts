@@ -130,11 +130,17 @@ export class ViewBlogComponent implements OnInit, OnDestroy {
       this.avatarUrl = this.blogDetails.url.startsWith('@')
         ? environment.externalCacheurl +
           encodeURIComponent(this.blogDetails.avatar)
-        : environment.baseMediaUrl + this.blogDetails.avatar;
+        : environment.externalCacheurl +
+          encodeURIComponent(
+            environment.baseMediaUrl + this.blogDetails.avatar
+          );
       this.headerUrl = this.blogDetails.url.startsWith('@')
         ? environment.externalCacheurl +
           encodeURIComponent(this.blogDetails.headerImage)
-        : environment.baseMediaUrl + this.blogDetails.headerImage;
+        : environment.externalCacheurl +
+          encodeURIComponent(
+            environment.baseMediaUrl + this.blogDetails.headerImage
+          );
       this.titleService.setTitle(`${this.blogDetails.url}'s blog`);
       this.metaTagService.addTags([
         {

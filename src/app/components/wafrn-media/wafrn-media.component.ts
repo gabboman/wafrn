@@ -51,7 +51,8 @@ export class WafrnMediaComponent implements OnChanges {
       this.extension = this.getExtension();
       this.tmpUrl = this.data.external
         ? environment.externalCacheurl + encodeURIComponent(this.data.url)
-        : environment.baseMediaUrl + this.data.url;
+        : environment.externalCacheurl +
+          encodeURIComponent(environment.baseMediaUrl + this.data.url);
       this.nsfw = this.data.adultContent
         ? true
         : this.data.NSFW && !this.disableNSFWFilter;

@@ -42,7 +42,8 @@ export class BlocksService {
       return {
         avatar: userBlocked[key].url.startsWith('@')
           ? this.baseCacheUrl + encodeURIComponent(userBlocked[key].avatar)
-          : this.baseMediaUrl + userBlocked[key].avatar,
+          : this.baseCacheUrl +
+            encodeURIComponent(this.baseMediaUrl + userBlocked[key].avatar),
         url: (userBlocked[key].url = userBlocked[key].url),
         reason: userBlocked.reason,
         id: userBlocked[key].id,
