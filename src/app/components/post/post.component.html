@@ -215,52 +215,11 @@
         Awaiting aproval
       </button>
     </div>
-    <div id="fragment-content-warning" *ngIf="content.content_warning">
-      <div class="fragment-content ql-editor -mx-3">
-        {{ content.content_warning }}
-      </div>
-      <button
-        mat-flat-button
-        color="primary"
-        (click)="dismissContentWarning()"
-        class="w-full"
-      >
-        I understand this and I want to see this woot
-      </button>
-    </div>
-    <div
-      id="fragment-content"
-      *ngIf="content.content !== '' || content.tags.length"
-      class="fragment-content text-base ql-editor -mx-3"
-      [ngClass]="{ blurry: content.content_warning }"
-      [injectHTML]="content.content"
-    ></div>
-    <div
-      id="fragment-polls"
-      *ngIf="content.questionPoll"
-      [ngClass]="{ blurry: content.content_warning }"
-    >
-      <app-poll [poll]="content.questionPoll"></app-poll>
-    </div>
-    <div
-      id="fragment-medias"
-      *ngFor="let media of content.medias"
-      [ngClass]="{ blurry: content.content_warning }"
-    >
-      <app-wafrn-media [data]="media"></app-wafrn-media>
-    </div>
-    <div
-      id="fragment-tags"
-      class="flex flex-wrap gap-2 mt-4"
-      *ngIf="content.tags && content.tags.length"
-      [ngClass]="{ blurry: content.content_warning }"
-    >
-      @for(tag of content.tags; track tag) {
-      <a class="tag" [routerLink]="'/dashboard/search/' + tag.tagName">
-        #{{ tag.tagName }}
-      </a>
-      }
-    </div>
+    <app-post-fragment
+      (dismissCw)="dismissContentWarning()"
+      [showCw]="showCw"
+      [fragment]="content"
+    ></app-post-fragment>
   </div>
   }
   <hr />

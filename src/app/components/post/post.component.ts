@@ -76,6 +76,9 @@ export class PostComponent implements OnInit {
   // post seen
   @Output() seenEmitter: EventEmitter<boolean> = new EventEmitter<boolean>();
 
+  // dismiss cw
+  showCw = true;
+
   constructor(
     private postService: PostsService,
     private loginService: LoginService,
@@ -267,12 +270,7 @@ export class PostComponent implements OnInit {
   }
 
   dismissContentWarning() {
-    this.post.forEach((elem) => {
-      elem.content_warning = '';
-    });
-    this.originalPostContent.forEach((elem) => {
-      elem.content_warning = '';
-    });
+    this.showCw = false;
   }
 
   async likePost(postToLike: ProcessedPost) {
