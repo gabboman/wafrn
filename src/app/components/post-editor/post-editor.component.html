@@ -126,7 +126,7 @@
       </mat-form-field>
     </div>
     <div class="cw-wrapper" [ngClass]="{ 'cw-animation': showContentWarning }">
-      @if (showContentWarning) {
+      @if (showContentWarning || contentWarning) {
       <mat-form-field
         class="w-full"
         appearance="outline"
@@ -136,7 +136,10 @@
         <input [(ngModel)]="contentWarning" matNativeControl />
       </mat-form-field>
       }
-      <mat-button-toggle (change)="showContentWarning = !showContentWarning">
+      <mat-button-toggle
+        *ngIf="!showContentWarning && !contentWarning"
+        (change)="showContentWarning = !showContentWarning"
+      >
         CW
       </mat-button-toggle>
     </div>
