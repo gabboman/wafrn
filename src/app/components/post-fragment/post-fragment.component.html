@@ -24,13 +24,13 @@
   ></div>
   <div
     *ngIf="fragment.questionPoll"
-    [ngClass]="{ blurry: fragment.content_warning }"
+    [ngClass]="{ blurry: fragment.content_warning && showCw }"
   >
     <app-poll [poll]="fragment.questionPoll"></app-poll>
   </div>
   <div
     *ngFor="let media of fragment.medias"
-    [ngClass]="{ blurry: fragment.content_warning }"
+    [ngClass]="{ blurry: fragment.content_warning && showCw }"
   >
     <app-wafrn-media [data]="media"></app-wafrn-media>
   </div>
@@ -38,7 +38,7 @@
     id="fragment-tags"
     class="flex flex-wrap gap-2 mt-4"
     *ngIf="fragment.tags && fragment.tags.length"
-    [ngClass]="{ blurry: fragment.content_warning }"
+    [ngClass]="{ blurry: fragment.content_warning && showCw }"
   >
     @for(tag of fragment.tags; track tag) {
     <a class="tag" [routerLink]="'/dashboard/search/' + tag.tagName">
