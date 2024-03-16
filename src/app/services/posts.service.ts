@@ -396,7 +396,6 @@ export class PostsService {
     sanitized = sanitized.replaceAll(this.wafrnMediaRegex, '');
 
     post.emojis.forEach((emoji) => {
-      console.log(emoji);
       const strToReplace = emoji.name.startsWith(':')
         ? emoji.name
         : `:${emoji.name}:`;
