@@ -41,7 +41,7 @@ export class NotificationsService {
           notifications: number;
           reports: number;
           awaitingAproval: number;
-        }>(`${environment.baseUrl}/notificationsCount`, {
+        }>(`${environment.baseUrl}/v2/notificationsCount`, {
           params: petitionData,
         })
       );
