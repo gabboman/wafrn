@@ -34,6 +34,24 @@ export class AppComponent implements OnInit {
         ) {
           window.location.reload();
         }
+        if ('caches' in window) {
+          caches.keys().then(function (keyList) {
+            return Promise.all(
+              keyList.map(function (key) {
+                return caches.delete(key);
+              })
+            );
+          });
+        }
+        if (window.navigator && navigator.serviceWorker) {
+          navigator.serviceWorker
+            .getRegistrations()
+            .then(function (registrations) {
+              for (const registration of registrations) {
+                registration.unregister();
+              }
+            });
+        }
       });
     }
   }
