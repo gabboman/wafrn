@@ -86,7 +86,9 @@ export class NotificationsService {
         reblogs: Reblog[];
         mentions: Reblog[];
         likes: any[];
-      }>(`${environment.baseUrl}/notificationsScroll`, { params: petitionData })
+      }>(`${environment.baseUrl}/v2/notificationsScroll`, {
+        params: petitionData,
+      })
       .toPromise();
     if (tmp) {
       tmp.follows = tmp.follows.map((follow) => {
