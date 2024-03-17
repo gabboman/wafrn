@@ -47,8 +47,8 @@
       "urls": ["https://api.wafrn.net/**"],
       "cacheConfig": {
         "strategy": "freshness",
-        "maxSize": 250,
-        "maxAge": "1m",
+        "maxSize": 10,
+        "maxAge": "1s",
         "timeout": "3000s"
       }
     },
