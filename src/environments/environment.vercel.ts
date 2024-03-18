@@ -12,6 +12,7 @@ export const environment = {
   frontUrl: 'https://wafrn.vercel.app',
   shortenPosts: 5,
   reviewRegistrations: true,
+  disablePWA: false,
 };
 
 /*

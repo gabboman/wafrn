@@ -16,6 +16,7 @@ export const environment = {
   frontUrl: 'http://localhost:4200',
   shortenPosts: 5,
   reviewRegistrations: true,
+  disablePWA: false,
 };
 
 /*
