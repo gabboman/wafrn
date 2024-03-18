@@ -10,6 +10,7 @@ import { JwtService } from './jwt.service';
 import { unlinkedPosts } from '../interfaces/unlinked-posts';
 import { SimplifiedUser } from '../interfaces/simplified-user';
 import { UserOptions } from '../interfaces/userOptions';
+import { Emoji } from '../interfaces/emoji';
 @Injectable({
   providedIn: 'root',
 })
@@ -209,7 +210,9 @@ export class PostsService {
       userLikesPostRelations: unlinked.likes
         .filter((like) => like.postId === elem.id)
         .map((like) => like.userId),
-      emojis: unlinked.emojiRelations.emojis,
+      emojis: unlinked.emojiRelations.postEmojiRelation.map((elem) =>
+        unlinked.emojiRelations.emojis.find((emj) => emj.id === elem.emojiId)
+      ) as Emoji[],
       createdAt: new Date(elem.createdAt),
       updatedAt: new Date(elem.updatedAt),
       notes: elem.notes ? elem.notes : 0,
