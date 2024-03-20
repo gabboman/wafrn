@@ -5,6 +5,8 @@ import { Follower } from '../interfaces/follower';
 import { Reblog } from '../interfaces/reblog';
 import { JwtService } from './jwt.service';
 import { firstValueFrom } from 'rxjs';
+import { SimplifiedUser } from '../interfaces/simplified-user';
+import { basicPost } from '../interfaces/unlinked-posts';
 
 @Injectable({
   providedIn: 'root',
@@ -80,16 +82,18 @@ export class NotificationsService {
       'startScroll',
       dateToCheck.getTime().toString()
     );
-    const tmp = await this.http
-      .get<{
-        follows: Follower[];
-        reblogs: Reblog[];
-        mentions: Reblog[];
+    const tmp = await firstValueFrom(
+      this.http.get<{
+        users: SimplifiedUser[];
+        posts: basicPost[];
+        follows: any[];
+        reblogs: any[];
+        mentions: any[];
         likes: any[];
       }>(`${environment.baseUrl}/v2/notificationsScroll`, {
         params: petitionData,
       })
-      .toPromise();
+    );
     if (tmp) {
       tmp.follows = tmp.follows.map((follow) => {
         return {
@@ -107,16 +111,19 @@ export class NotificationsService {
         };
       });
       tmp.mentions = tmp.mentions.map((mention) => {
+        if (!tmp.users.find((usr) => usr.id === mention.userId)) {
+          console.log('USER MISSING: ' + mention.userId + ',' + mention.id);
+        }
         return {
-          user: mention.user,
-          content: '',
+          user: tmp.users.find((usr) => usr.id === mention.userId),
+          content: mention.content,
           id: mention.id,
           createdAt: new Date(mention.createdAt),
         };
       });
       tmp.reblogs = tmp.reblogs.map((reblog) => {
         return {
-          user: reblog.user,
+          user: tmp.users.find((usr) => usr.id === reblog.userId),
           content: '',
           id: reblog.id,
           createdAt: new Date(reblog.createdAt),

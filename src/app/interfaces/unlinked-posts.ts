@@ -12,7 +12,7 @@ export interface unlinkedPosts {
   likes: Like[];
 }
 
-interface basicPost {
+export interface basicPost {
   len?: number;
   id: string;
   content_warning: string;
