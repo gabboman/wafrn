@@ -19,6 +19,7 @@ export class NotificationsComponent implements OnInit {
   likes: Reblog[] = [];
   reblogs: Reblog[] = [];
   mentions: Reblog[] = [];
+  emojiReacts: UserNotifications[] = [];
   observer: IntersectionObserver;
   reloadIcon = faArrowsRotate;
 
@@ -71,6 +72,8 @@ export class NotificationsComponent implements OnInit {
       this.follows = [];
       this.reblogs = [];
       this.mentions = [];
+      this.emojiReacts = [];
+
       this.notificationsToShow = [];
       this.seen = {
         follows: 0,
@@ -84,12 +87,8 @@ export class NotificationsComponent implements OnInit {
       await this.notificationsService.getNotificationsScroll(page);
     this.follows = this.follows.concat(allNotifications.follows);
     this.mentions = this.mentions.concat(allNotifications.mentions);
-    this.reblogs = this.reblogs.concat(
-      allNotifications.reblogs.filter(
-        (reblog) =>
-          this.mentions.map((mention) => mention.id).indexOf(reblog.id) === -1
-      )
-    );
+    this.reblogs = this.reblogs.concat(allNotifications.reblogs);
+    this.emojiReacts = this.emojiReacts.concat(allNotifications.emojiReactions);
     this.likes = this.likes.concat(allNotifications.likes);
     let processedNotifications: UserNotifications[] = this.follows.map(
       (follow) => {
@@ -110,6 +109,7 @@ export class NotificationsComponent implements OnInit {
         this.reblogToNotification(elem, NotificationType.MENTION)
       )
     );
+    processedNotifications = processedNotifications.concat(this.emojiReacts);
     processedNotifications = processedNotifications.concat(
       this.reblogs.map((elem) =>
         this.reblogToNotification(elem, NotificationType.REBLOG)
@@ -174,8 +174,6 @@ export class NotificationsComponent implements OnInit {
     reblog: Reblog,
     type: NotificationType
   ): UserNotifications {
-    console.log(type);
-    console.log(reblog);
     return {
       url: `/post/${reblog.id}`,
       avatar: reblog.user.url.startsWith('@')

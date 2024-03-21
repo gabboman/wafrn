@@ -7,6 +7,8 @@ import { JwtService } from './jwt.service';
 import { firstValueFrom } from 'rxjs';
 import { SimplifiedUser } from '../interfaces/simplified-user';
 import { basicPost } from '../interfaces/unlinked-posts';
+import { UserNotifications } from '../interfaces/user-notifications';
+import { NotificationType } from '../enums/notification-type';
 
 @Injectable({
   providedIn: 'root',
@@ -63,9 +65,16 @@ export class NotificationsService {
     reblogs: Reblog[];
     mentions: Reblog[];
     likes: Reblog[];
+    emojiReactions: UserNotifications[];
   }> {
     if (!this.jwt.tokenValid()) {
-      return { follows: [], reblogs: [], mentions: [], likes: [] };
+      return {
+        follows: [],
+        reblogs: [],
+        mentions: [],
+        likes: [],
+        emojiReactions: [],
+      };
     }
     let dateToCheck = this.notificationsScrollTime;
     if (page === 0) {
@@ -90,11 +99,30 @@ export class NotificationsService {
         reblogs: any[];
         mentions: any[];
         likes: any[];
+        emojiReactions: any[];
       }>(`${environment.baseUrl}/v2/notificationsScroll`, {
         params: petitionData,
       })
     );
     if (tmp) {
+      tmp.emojiReactions = tmp.emojiReactions.map((emojiReact: any) => {
+        const user = tmp.users.find((usr) => usr.id === emojiReact.userId);
+        return {
+          date: new Date(emojiReact.createdAt),
+          url: emojiReact.postId,
+          userUrl: user?.url,
+          avatar:
+            environment.externalCacheurl +
+            encodeURIComponent(
+              user?.url.startsWith('@')
+                ? user.avatar
+                : environment.baseMediaUrl + user?.avatar
+            ),
+          type: NotificationType.EMOJIREACT,
+          emojiReact: emojiReact.emoji,
+          emojiName: emojiReact.content,
+        };
+      });
       tmp.follows = tmp.follows.map((follow) => {
         return {
           createdAt: new Date(follow.createdAt),
@@ -130,6 +158,14 @@ export class NotificationsService {
         };
       });
     }
-    return tmp ? tmp : { follows: [], reblogs: [], mentions: [], likes: [] };
+    return tmp
+      ? tmp
+      : {
+          follows: [],
+          reblogs: [],
+          mentions: [],
+          likes: [],
+          emojiReactions: [],
+        };
   }
 }
