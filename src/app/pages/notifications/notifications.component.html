@@ -11,7 +11,10 @@
     <fa-icon [icon]="reloadIcon" />
   </button>
 </div>
-@for(notification of notificationsToShow; track notification) {
+@if ( notificationsToShow.length === 0) {
+<app-loader></app-loader>
+
+} @for(notification of notificationsToShow; track notification) {
 <app-single-notification
   [notification]="notification"
 ></app-single-notification>

@@ -6,6 +6,7 @@ import { loginRequiredGuard } from 'src/app/guards/login-required.guard';
 import { SingleNotificationComponent } from 'src/app/components/single-notification/single-notification.component';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { MatButtonModule } from '@angular/material/button';
+import { LoaderComponent } from 'src/app/components/loader/loader.component';
 
 const routes: Route[] = [
   {
@@ -22,6 +23,7 @@ const routes: Route[] = [
     RouterModule.forChild(routes),
     FontAwesomeModule,
     MatButtonModule,
+    LoaderComponent,
   ],
 })
 export class NotificationsModule {}
