@@ -48,6 +48,7 @@
   </div>
   @for (emoji of emojiCollection; track $index) {
   <button
+    [ngClass]="{ blurry: fragment.content_warning && showCw }"
     mat-flat-button
     [matTooltip]="emoji.content + ' by ' + getTooltipUsers(emoji.users)"
   >
