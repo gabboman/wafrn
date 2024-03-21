@@ -56,6 +56,9 @@ export class PostFragmentComponent implements OnInit {
           });
         }
       });
+      this.emojiCollection = this.emojiCollection.sort(
+        (a, b) => b.users.length - a.users.length
+      );
     }
   }
 
