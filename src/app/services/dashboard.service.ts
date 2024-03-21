@@ -145,17 +145,6 @@ export class DashboardService {
     }
   }
 
-  getPost(id: string): Observable<ProcessedPost[]> {
-    const petition: Observable<RawPost> = this.http.get<RawPost>(
-      `${this.baseUrl}/singlePost/${id}`
-    );
-    return petition.pipe(
-      map((elem: RawPost) => {
-        return this.postService.processPost(elem);
-      })
-    );
-  }
-
   async getPostV2(id: string): Promise<ProcessedPost[]> {
     const petition = await firstValueFrom(
       this.http.get<unlinkedPosts>(`${this.baseUrl}/v2/post/${id}`)

@@ -202,8 +202,21 @@ export class PostsService {
         unlinked.users.find((usr) => usr.id === mention.userMentioned)
       )
       .filter((mention) => mention !== undefined);
+    let emojiReactions = unlinked.emojiRelations.postEmojiReactions.filter(
+      (emoji) => emoji.postid === elem.id
+    );
+    emojiReactions = emojiReactions.map((react) => {
+      return {
+        ...react,
+        emoji: unlinked.emojiRelations.emojis.find(
+          (emj) => emj.id === react.emojiId
+        ),
+        user: unlinked.users.find((usr) => usr.id === react.userId),
+      };
+    });
     const newPost: ProcessedPost = {
       ...elem,
+      emojiReactions: emojiReactions,
       user: user ? user : nonExistentUser,
       tags: unlinked.tags.filter((tag) => tag.postId === elem.id),
       descendents: [],
@@ -225,78 +238,6 @@ export class PostsService {
     };
     newPost.content = this.getPostHtml(newPost);
     return newPost;
-  }
-
-  processPost(rawPost: RawPost): ProcessedPost[] {
-    let result: ProcessedPost[] = [];
-    const notes = rawPost.notes;
-    if (rawPost.ancestors) {
-      rawPost.ancestors.forEach((post: RawPost) => {
-        result.push({
-          ...post,
-          createdAt: new Date(post.createdAt),
-          updatedAt: new Date(post.updatedAt),
-          tags: post.postTags,
-          remotePostId: post.remotePostId
-            ? post.remotePostId
-            : `${environment.frontUrl}/post/${post.id}`,
-          userLikesPostRelations: post.userLikesPostRelations.map(
-            (elem) => elem.userId
-          ),
-          notes: notes,
-          descendents: [],
-        });
-      });
-      result = result.sort(
-        (a, b) =>
-          new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
-      );
-      result.push({
-        ...rawPost,
-        tags: rawPost.postTags,
-        userLikesPostRelations: rawPost.userLikesPostRelations.map(
-          (elem) => elem.userId
-        ),
-        remotePostId: rawPost.remotePostId
-          ? rawPost.remotePostId
-          : `${environment.frontUrl}/post/${rawPost.id}`,
-        notes: notes,
-        descendents: [],
-      });
-    }
-    if (rawPost.descendents) {
-      result[result.length - 1].descendents = rawPost.descendents
-        .map((elem) => {
-          elem.user.avatar = elem.user.url.startsWith('@')
-            ? environment.externalCacheurl + encodeURI(elem.user.avatar)
-            : environment.baseMediaUrl + elem.user.avatar;
-          elem.createdAt = new Date(elem.createdAt);
-          elem.updatedAt = new Date(elem.updatedAt);
-          return elem;
-        })
-        .sort(
-          (a: RawPost, b: RawPost) =>
-            new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
-        );
-    }
-    result = result.filter(
-      (elem, index) => elem.content != '' || index === result.length - 1
-    );
-    return result.map((elem) => {
-      elem.user.name = elem.user.name ? elem.user.name : '';
-      elem.user.emojis?.forEach((emoji) => {
-        elem.user.name = elem.user.name.replaceAll(
-          emoji.name,
-          `<img class="post-emoji" src="${
-            environment.externalCacheurl + encodeURIComponent(emoji.url)
-          }">`
-        );
-      });
-      elem.content = this.getPostHtml(elem);
-      elem.createdAt = new Date(elem.createdAt);
-      elem.updatedAt = new Date(elem.updatedAt);
-      return elem;
-    });
   }
 
   getPostHtml(post: ProcessedPost): string {

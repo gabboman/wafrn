@@ -32,6 +32,7 @@ export interface basicPost {
 interface EmojiRelations {
   userEmojiRelation: UserEmojiRelation[];
   postEmojiRelation: PostEmojiRelation[];
+  postEmojiReactions: PostEmojiReaction[];
   emojis: Emoji[];
 }
 
@@ -43,6 +44,15 @@ interface PostEmojiRelation {
 interface UserEmojiRelation {
   userId: string;
   emojiId: string;
+}
+
+export interface PostEmojiReaction {
+  emojiId: string;
+  postid: string;
+  userId: string;
+  content: string;
+  emoji?: Emoji;
+  user?: SimplifiedUser;
 }
 
 interface Mention {
