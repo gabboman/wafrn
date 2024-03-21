@@ -46,4 +46,16 @@
     </a>
     }
   </div>
+  @for (emoji of emojiCollection; track $index) {
+  <button
+    mat-flat-button
+    [matTooltip]="emoji.content + ' by ' + getTooltipUsers(emoji.users)"
+  >
+    @if(emoji.img) {
+    <img class="post-emoji" [src]="emoji.img" [alt]="emoji.content" />
+    } @else{ {{ emoji.content }} } @if(emoji.users.length !== 1) {
+    {{ emoji.users.length }}
+    }
+  </button>
+  }
 </ng-container>
