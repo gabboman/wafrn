@@ -96,6 +96,7 @@ export class PostEditorComponent implements OnInit {
       mentionDenotationChars: ['@'],
       maxChars: 128,
       minChars: 3,
+      positioningStrategy: 'fixed',
       linkTarget: '_self',
       fixMentionsToQuill: false,
       isolateCharacter: true,
