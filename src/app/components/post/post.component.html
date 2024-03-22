@@ -2,229 +2,238 @@
   [id]="'post-element-' + finalPost.id"
   class="p-3 m-2 mb-6 lg:mx-4 scalein wafrn-container"
 >
-  <div *ngIf="post.length > 1" class="center-text overflow-hidden">
-    <div class="avatar">
-      <img
-        [routerLink]="'/blog/' + originalPoster.url"
-        crossorigin="anonymous"
-        loading="lazy"
-        [src]="avatars[avatars.length - 1]"
-        onerror="this.onerror=null;this.src='/api/uploads/default.webp'"
-        alt=""
-        width="40"
-        height="40"
-      />
-    </div>
-    <div
-      class="w-full white-space-nowrap overflow-hidden text-overflow-ellipsis flex flex-column"
-    >
-      <div>
-        <a
+  <div
+    [ngClass]="{
+      'shortened-post': veryLongPost || !showFull
+    }"
+  >
+    <div *ngIf="post.length > 1" class="center-text overflow-hidden">
+      <div class="avatar">
+        <img
           [routerLink]="'/blog/' + originalPoster.url"
-          [innerHTML]="originalPoster.name"
-        ></a>
+          crossorigin="anonymous"
+          loading="lazy"
+          [src]="avatars[avatars.length - 1]"
+          onerror="this.onerror=null;this.src='/api/uploads/default.webp'"
+          alt=""
+          width="40"
+          height="40"
+        />
+      </div>
+      <div
+        class="w-full white-space-nowrap overflow-hidden text-overflow-ellipsis flex flex-column"
+      >
+        <div>
+          <a
+            [routerLink]="'/blog/' + originalPoster.url"
+            [innerHTML]="originalPoster.name"
+          ></a>
+        </div>
+        <div class="date-line mb-1 flex gap-2 align-items-center">
+          <span class="font-small" [innerText]="originalPoster.url"></span>
+          <button
+            mat-stroked-button
+            color="accent"
+            *ngIf="
+              !notYetAcceptedFollows.includes(originalPoster.id) &&
+              !followedUsers.includes(originalPoster.id) &&
+              userLoggedIn
+            "
+            class="follow-button flex-shrink-0"
+            (click)="followUser(originalPoster.id)"
+          >
+            Follow
+          </button>
+          <button
+            mat-stroked-button
+            color="accent"
+            *ngIf="
+              notYetAcceptedFollows.includes(originalPoster.id) && userLoggedIn
+            "
+            class="follow-button flex-shrink-0"
+            (click)="unfollowUser(originalPoster.id)"
+          >
+            Awaiting aproval
+          </button>
+        </div>
+      </div>
+    </div>
+    @for (content of post; track post; let index = $index) {
+    <hr
+      *ngIf="
+        (post.length > 1 && (content.content !== '' || content.tags.length)) ||
+        (post.length > 1 && index === 0)
+      "
+    />
+    <div
+      *ngIf="
+        content.content !== '' ||
+        (content.medias && content.medias.length > 0) ||
+        index === 0 ||
+        content.tags.length > 0
+      "
+      id="fragment"
+    >
+      <div
+        id="fragment-header"
+        class="flex mb-1 gap-1 md:gap-3 align-items-center"
+        style="width: 100%"
+      >
+        <div class="center-text flex-grow-1 flex-shrink-1 min-w-0">
+          <div class="avatar">
+            <img
+              alt=""
+              [routerLink]="'/blog/' + content.user.url"
+              crossorigin="anonymous"
+              loading="lazy"
+              [src]="avatars[index]"
+              onerror="this.onerror=null;this.src='/api/uploads/default.webp'"
+              height="40"
+              width="40"
+            />
+          </div>
+          <div class="w-full overflow-hidden flex flex-column">
+            <a
+              class="max-w-full white-space-nowrap overflow-hidden text-overflow-ellipsis"
+              [routerLink]="'/blog/' + content.user.url"
+              [innerHTML]="content.user.name"
+            ></a>
+            <span
+              class="font-small max-w-full white-space-nowrap overflow-hidden text-overflow-ellipsis"
+              [innerText]="content.user.url"
+            ></span>
+          </div>
+        </div>
+        <div class="flex gap-0 flex-nowrap" id="post-actions">
+          <button
+            mat-button
+            class="split-button-left"
+            (click)="sharePost(content.id)"
+            matTooltip="Copy Wafrn link"
+          >
+            <fa-icon [icon]="shareIcon"></fa-icon>
+          </button>
+          <button
+            mat-button
+            class="split-button-right"
+            [matMenuTriggerFor]="menu"
+            matTooltip="Post actions"
+          >
+            <fa-icon [icon]="expandDownIcon"></fa-icon>
+          </button>
+        </div>
+        <mat-menu #menu="matMenu" xPosition="before">
+          <button (click)="sharePost(content.id)" mat-menu-item>
+            <fa-icon class="mr-2" [icon]="shareIcon"></fa-icon>Share with wafrn
+          </button>
+          <button
+            (click)="shareOriginalPost(content.remotePostId)"
+            mat-menu-item
+          >
+            <fa-icon class="mr-2" [icon]="shareExternalIcon"></fa-icon>
+            Share external URL
+          </button>
+          @if(userLoggedIn) {
+          <button (click)="replyPost(content)" mat-menu-item>
+            <fa-icon class="mr-2" [icon]="reblogIcon"></fa-icon>
+            Reply woot
+          </button>
+          <button
+            *ngIf="content.privacy !== 10"
+            (click)="quickReblog(content)"
+            mat-menu-item
+          >
+            <fa-icon class="mr-2" [icon]="quickReblogIcon"></fa-icon>
+            Quick rewoot
+          </button>
+          @if(content.userId !== myId){ @if
+          (content.userLikesPostRelations.includes(myId)) {
+          <button (click)="unlikePost(content)" mat-menu-item>
+            <fa-icon class="mr-2" [icon]="clearHeartIcon"></fa-icon>
+            Dislike woot
+          </button>
+          } @else {
+          <button (click)="likePost(content)" mat-menu-item>
+            <fa-icon class="mr-2" [icon]="solidHeartIcon"></fa-icon>
+            Like woot
+          </button>
+          }
+          <button (click)="reportPost(content)" mat-menu-item>
+            <fa-icon class="mr-2" [icon]="reportIcon"></fa-icon>Report woot
+          </button>
+          } @else {
+          <button
+            *ngIf="content.privacy === 2"
+            (click)="editPost(content)"
+            mat-menu-item
+          >
+            <fa-icon class="mr-2" [icon]="editedIcon"></fa-icon>Edit woot
+          </button>
+          <button (click)="deletePost(content.id)" mat-menu-item>
+            <fa-icon class="mr-2" [icon]="deleteIcon"></fa-icon>Delete woot
+          </button>
+          } }
+        </mat-menu>
       </div>
       <div class="date-line mb-1 flex gap-2 align-items-center">
-        <span class="font-small" [innerText]="originalPoster.url"></span>
+        <span class="text-xs text-600">
+          {{ content.createdAt | date : "short" }}
+          <fa-icon
+            [icon]="
+              content.privacy === 0
+                ? worldIcon
+                : content.privacy === 1
+                ? userIcon
+                : content.privacy === 2
+                ? serverIcon
+                : content.privacy === 3
+                ? unlockIcon
+                : envelopeIcon
+            "
+          ></fa-icon>
+        </span>
+        <span
+          *ngIf="
+            content.updatedAt.getTime() - content.createdAt.getTime() > 60000
+          "
+          class="text-xs text-600"
+        >
+          <fa-icon [icon]="editedIcon"></fa-icon>
+        </span>
         <button
           mat-stroked-button
           color="accent"
           *ngIf="
-            !notYetAcceptedFollows.includes(originalPoster.id) &&
-            !followedUsers.includes(originalPoster.id) &&
+            !notYetAcceptedFollows.includes(content.userId) &&
+            !followedUsers.includes(content.userId) &&
             userLoggedIn
           "
           class="follow-button flex-shrink-0"
-          (click)="followUser(originalPoster.id)"
+          (click)="followUser(content.userId)"
         >
           Follow
         </button>
         <button
           mat-stroked-button
           color="accent"
-          *ngIf="
-            notYetAcceptedFollows.includes(originalPoster.id) && userLoggedIn
-          "
+          *ngIf="notYetAcceptedFollows.includes(content.userId) && userLoggedIn"
           class="follow-button flex-shrink-0"
-          (click)="unfollowUser(originalPoster.id)"
+          (click)="unfollowUser(content.userId)"
         >
           Awaiting aproval
         </button>
       </div>
+      <app-post-fragment
+        (dismissCw)="dismissContentWarning()"
+        [showCw]="showCw"
+        [fragment]="content"
+      ></app-post-fragment>
     </div>
+    }
   </div>
-  @for (content of post; track post; let index = $index) {
-  <hr
-    *ngIf="
-      (post.length > 1 && (content.content !== '' || content.tags.length)) ||
-      (post.length > 1 && index === 0)
-    "
-  />
-  <div
-    *ngIf="
-      content.content !== '' ||
-      (content.medias && content.medias.length > 0) ||
-      index === 0 ||
-      content.tags.length > 0
-    "
-    id="fragment"
-  >
-    <div
-      id="fragment-header"
-      class="flex mb-1 gap-1 md:gap-3 align-items-center"
-      style="width: 100%"
-    >
-      <div class="center-text flex-grow-1 flex-shrink-1 min-w-0">
-        <div class="avatar">
-          <img
-            alt=""
-            [routerLink]="'/blog/' + content.user.url"
-            crossorigin="anonymous"
-            loading="lazy"
-            [src]="avatars[index]"
-            onerror="this.onerror=null;this.src='/api/uploads/default.webp'"
-            height="40"
-            width="40"
-          />
-        </div>
-        <div class="w-full overflow-hidden flex flex-column">
-          <a
-            class="max-w-full white-space-nowrap overflow-hidden text-overflow-ellipsis"
-            [routerLink]="'/blog/' + content.user.url"
-            [innerHTML]="content.user.name"
-          ></a>
-          <span
-            class="font-small max-w-full white-space-nowrap overflow-hidden text-overflow-ellipsis"
-            [innerText]="content.user.url"
-          ></span>
-        </div>
-      </div>
-      <div class="flex gap-0 flex-nowrap" id="post-actions">
-        <button
-          mat-button
-          class="split-button-left"
-          (click)="sharePost(content.id)"
-          matTooltip="Copy Wafrn link"
-        >
-          <fa-icon [icon]="shareIcon"></fa-icon>
-        </button>
-        <button
-          mat-button
-          class="split-button-right"
-          [matMenuTriggerFor]="menu"
-          matTooltip="Post actions"
-        >
-          <fa-icon [icon]="expandDownIcon"></fa-icon>
-        </button>
-      </div>
-      <mat-menu #menu="matMenu" xPosition="before">
-        <button (click)="sharePost(content.id)" mat-menu-item>
-          <fa-icon class="mr-2" [icon]="shareIcon"></fa-icon>Share with wafrn
-        </button>
-        <button (click)="shareOriginalPost(content.remotePostId)" mat-menu-item>
-          <fa-icon class="mr-2" [icon]="shareExternalIcon"></fa-icon>
-          Share external URL
-        </button>
-        @if(userLoggedIn) {
-        <button (click)="replyPost(content)" mat-menu-item>
-          <fa-icon class="mr-2" [icon]="reblogIcon"></fa-icon>
-          Reply woot
-        </button>
-        <button
-          *ngIf="content.privacy !== 10"
-          (click)="quickReblog(content)"
-          mat-menu-item
-        >
-          <fa-icon class="mr-2" [icon]="quickReblogIcon"></fa-icon>
-          Quick rewoot
-        </button>
-        @if(content.userId !== myId){ @if
-        (content.userLikesPostRelations.includes(myId)) {
-        <button (click)="unlikePost(content)" mat-menu-item>
-          <fa-icon class="mr-2" [icon]="clearHeartIcon"></fa-icon>
-          Dislike woot
-        </button>
-        } @else {
-        <button (click)="likePost(content)" mat-menu-item>
-          <fa-icon class="mr-2" [icon]="solidHeartIcon"></fa-icon>
-          Like woot
-        </button>
-        }
-        <button (click)="reportPost(content)" mat-menu-item>
-          <fa-icon class="mr-2" [icon]="reportIcon"></fa-icon>Report woot
-        </button>
-        } @else {
-        <button
-          *ngIf="content.privacy === 2"
-          (click)="editPost(content)"
-          mat-menu-item
-        >
-          <fa-icon class="mr-2" [icon]="editedIcon"></fa-icon>Edit woot
-        </button>
-        <button (click)="deletePost(content.id)" mat-menu-item>
-          <fa-icon class="mr-2" [icon]="deleteIcon"></fa-icon>Delete woot
-        </button>
-        } }
-      </mat-menu>
-    </div>
-    <div class="date-line mb-1 flex gap-2 align-items-center">
-      <span class="text-xs text-600">
-        {{ content.createdAt | date : "short" }}
-        <fa-icon
-          [icon]="
-            content.privacy === 0
-              ? worldIcon
-              : content.privacy === 1
-              ? userIcon
-              : content.privacy === 2
-              ? serverIcon
-              : content.privacy === 3
-              ? unlockIcon
-              : envelopeIcon
-          "
-        ></fa-icon>
-      </span>
-      <span
-        *ngIf="
-          content.updatedAt.getTime() - content.createdAt.getTime() > 60000
-        "
-        class="text-xs text-600"
-      >
-        <fa-icon [icon]="editedIcon"></fa-icon>
-      </span>
-      <button
-        mat-stroked-button
-        color="accent"
-        *ngIf="
-          !notYetAcceptedFollows.includes(content.userId) &&
-          !followedUsers.includes(content.userId) &&
-          userLoggedIn
-        "
-        class="follow-button flex-shrink-0"
-        (click)="followUser(content.userId)"
-      >
-        Follow
-      </button>
-      <button
-        mat-stroked-button
-        color="accent"
-        *ngIf="notYetAcceptedFollows.includes(content.userId) && userLoggedIn"
-        class="follow-button flex-shrink-0"
-        (click)="unfollowUser(content.userId)"
-      >
-        Awaiting aproval
-      </button>
-    </div>
-    <app-post-fragment
-      (dismissCw)="dismissContentWarning()"
-      [showCw]="showCw"
-      [fragment]="content"
-    ></app-post-fragment>
-  </div>
-  }
   <hr />
   <button
-    *ngIf="!showFull"
+    *ngIf="veryLongPost || !showFull"
     color="accent"
     class="w-full mb-3 mt-2 w-full"
     mat-flat-button

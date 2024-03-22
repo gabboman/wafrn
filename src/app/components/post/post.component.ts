@@ -1,4 +1,11 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  Input,
+  OnInit,
+  Output,
+  ViewChild,
+} from '@angular/core';
 import { ProcessedPost } from 'src/app/interfaces/processed-post';
 import { EditorService } from 'src/app/services/editor.service';
 import { LoginService } from 'src/app/services/login.service';
@@ -56,6 +63,8 @@ export class PostComponent implements OnInit {
   showLikeFinalPost: number = 0;
   finalPost!: ProcessedPost;
 
+  veryLongPost = false;
+
   // icons
   shareIcon = faShareNodes;
   expandDownIcon = faChevronDown;
@@ -105,14 +114,23 @@ export class PostComponent implements OnInit {
       this.notYetAcceptedFollows =
         this.postService.notYetAcceptedFollowedUsersIds;
     });
+    this.originalPostContent = this.post;
     if (!this.showFull) {
-      this.originalPostContent = this.post;
       this.post = this.post.slice(0, environment.shortenPosts);
 
       if (this.originalPostContent.length === this.post.length) {
         this.showFull = true;
       }
     }
+    setTimeout(() => {
+      const postHtmlId = 'post-element-' + this.finalPost.id;
+      const postHtmlElement = document.getElementById(postHtmlId);
+      if (postHtmlElement) {
+        const postHeight = postHtmlElement.getBoundingClientRect().height;
+        this.veryLongPost = postHeight > 1250;
+        this.showFull = this.showFull || this.veryLongPost;
+      }
+    }, 50);
   }
 
   async ngOnChanges(): Promise<void> {
@@ -267,6 +285,7 @@ export class PostComponent implements OnInit {
 
   expandPost() {
     this.post = this.originalPostContent;
+    this.veryLongPost = false;
     this.showFull = true;
   }
 
