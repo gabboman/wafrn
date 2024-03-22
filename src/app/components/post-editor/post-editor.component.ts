@@ -409,6 +409,11 @@ export class PostEditorComponent implements OnInit {
       : this.uploadedMedias[index].NSFW;
   }
 
+  allDescriptionsFilled(): boolean {
+    const disableCheck = localStorage.getItem('disableForceAltText') === 'true';
+    return disableCheck || this.uploadedMedias.every((med) => med.description);
+  }
+
   getMentionHtml(mention: {
     id: string;
     url: string;

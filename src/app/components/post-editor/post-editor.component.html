@@ -207,6 +207,9 @@
       (hashtag) search in other instances. They are more public than followers
       only but less than regular public. I know I am great at explaining stuff
     </div>
+    <div mat-button color="warning" *ngIf="!allDescriptionsFilled()">
+      Please fill the media descriptions
+    </div>
   </section>
 
   <section id="tags">
@@ -232,6 +235,7 @@
     color="primary"
     class="w-full"
     [disabled]="
+      !allDescriptionsFilled() ||
       postBeingSubmitted ||
       (postCreatorContent === '' &&
         tags.length === 0 &&

@@ -34,6 +34,7 @@ export class EditProfileComponent implements OnInit {
     defaultPostEditorPrivacy: new UntypedFormControl(false, []),
     description: new FormControl('', Validators.required),
     federateWithThreads: new FormControl(false),
+    disableForceAltText: new FormControl(false),
   });
 
   constructor(
@@ -62,6 +63,10 @@ export class EditProfileComponent implements OnInit {
         const federateWithThreads = localStorage.getItem('federateWithThreads');
         this.editProfileForm.controls['federateWithThreads'].patchValue(
           federateWithThreads === 'true'
+        );
+        const disableForceAltText = localStorage.getItem('disableForceAltText');
+        this.editProfileForm.controls['disableForceAltText'].patchValue(
+          disableForceAltText === 'true'
         );
         this.loading = false;
       });
