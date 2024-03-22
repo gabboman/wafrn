@@ -130,7 +130,7 @@ export class PostComponent implements OnInit {
         this.veryLongPost = postHeight > 1250;
         this.showFull = this.showFull || this.veryLongPost;
       }
-    }, 50);
+    }, 150);
   }
 
   async ngOnChanges(): Promise<void> {
