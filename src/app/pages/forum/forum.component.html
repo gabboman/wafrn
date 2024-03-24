@@ -1,0 +1,66 @@
+<app-loader *ngIf="loading"></app-loader>
+<ng-container *ngIf="!loading">
+  @for (content of posts; track posts; let index = $index) { @if(content.content
+  !== '' || content.tags.length > 0 || (content.medias && content.medias.length
+  > 0)) {
+  <mat-card class="p-3 m-2 mb-6 lg:mx-4 scalein wafrn-container">
+    <div class="center-text overflow-hidden">
+      <div class="avatar">
+        <img
+          [routerLink]="'/blog/' + content.user.url"
+          crossorigin="anonymous"
+          loading="lazy"
+          [src]="content.user.avatar"
+          onerror="this.onerror=null;this.src='/api/uploads/default.webp'"
+          alt=""
+        />
+      </div>
+      <div
+        class="w-full white-space-nowrap overflow-hidden text-overflow-ellipsis flex flex-column"
+      >
+        <div>
+          <a
+            [routerLink]="'/blog/' + content.user.url"
+            [innerHTML]="content.user.name"
+          ></a>
+        </div>
+        <div class="date-line mb-1 flex gap-2 align-items-center">
+          <span class="font-small" [innerText]="content.user.url"></span>
+          <button
+            mat-stroked-button
+            color="accent"
+            *ngIf="
+              !notYetAcceptedFollows.includes(content.user.id) &&
+              !followedUsers.includes(content.user.id) &&
+              userLoggedIn
+            "
+            class="follow-button flex-shrink-0"
+            (click)="followUser(content.user.id)"
+          >
+            Follow
+          </button>
+          <button
+            mat-stroked-button
+            color="accent"
+            *ngIf="
+              notYetAcceptedFollows.includes(content.user.id) && userLoggedIn
+            "
+            class="follow-button flex-shrink-0"
+            (click)="unfollowUser(content.user.id)"
+          >
+            Awaiting aproval
+          </button>
+        </div>
+      </div>
+      <app-post-actions [content]="content"></app-post-actions>
+    </div>
+    <app-post-fragment [fragment]="content"></app-post-fragment>
+  </mat-card>
+  } }
+</ng-container>
+
+<mat-card *ngIf="!loading" class="p-3 m-2 mb-6 lg:mx-4 scalein wafrn-container">
+  <h1>ATTENTION FORTNITE GAMERS</h1>
+  To add a reply to this thread you need to reply to a post in particular. This
+  is a forum-like view of a "mastodon thread"
+</mat-card>
