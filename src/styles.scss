@@ -196,6 +196,25 @@ blockquote {
   }
 }
 
+.share-button {
+  gap: 0.5em;
+}
+
+.split-button-left {
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+  min-width: 0;
+}
+
+.split-button-right {
+  width: 30px !important;
+  min-width: unset !important;
+  padding: 0 2px;
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+  border-left: 1px solid #ffffff44;
+}
+
 .shortened-post {
   max-height: 1250px;
   overflow: hidden;

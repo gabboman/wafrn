@@ -3,8 +3,9 @@ import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { WafrnMedia } from '../interfaces/wafrn-media';
-import { ProcessedPost } from '../interfaces/processed-post';
 import { Action, EditorLauncherData } from '../interfaces/editor-launcher-data';
+import { MatDialog } from '@angular/material/dialog';
+import { ProcessedPost } from '../interfaces/processed-post';
 
 @Injectable({
   providedIn: 'any',
@@ -16,7 +17,7 @@ export class EditorService {
       action: Action.None,
     });
 
-  constructor(private http: HttpClient) {
+  constructor(private http: HttpClient, private dialogService: MatDialog) {
     this.launchPostEditorEmitter.subscribe((data) => {
       if (data.action !== Action.None) {
         this.launchPostEditorEmitter.next({
@@ -98,5 +99,13 @@ export class EditorService {
       '../components/post-editor/post-editor.component'
     );
     return PostEditorComponent;
+  }
+
+  public async replyPost(post: ProcessedPost, edit = false) {
+    this.dialogService.open(await this.getEditorComponent(), {
+      data: { post, edit: edit },
+      width: 'min(960px, calc(100% - 30px))',
+      maxWidth: '100%',
+    });
   }
 }

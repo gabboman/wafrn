@@ -10,6 +10,7 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { ReportService } from 'src/app/services/report.service';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { PostFragmentComponent } from '../post-fragment/post-fragment.component';
+import { PostActionsComponent } from '../post-actions/post-actions.component';
 
 @NgModule({
   declarations: [PostComponent],
@@ -23,6 +24,7 @@ import { PostFragmentComponent } from '../post-fragment/post-fragment.component'
     MatDialogModule,
     MatTooltipModule,
     PostFragmentComponent,
+    PostActionsComponent,
   ],
   exports: [PostComponent],
   providers: [ReportService],

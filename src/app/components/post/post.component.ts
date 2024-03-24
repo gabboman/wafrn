@@ -95,8 +95,7 @@ export class PostComponent implements OnInit {
     private editor: EditorService,
     private editorService: EditorService,
     private reportService: ReportService,
-    private deletePostService: DeletePostService,
-    private dialogService: MatDialog
+    private deletePostService: DeletePostService
   ) {
     this.userLoggedIn = loginService.checkUserLoggedIn();
     if (this.userLoggedIn) {
@@ -234,14 +233,6 @@ export class PostComponent implements OnInit {
     this.loadingAction = false;
   }
 
-  sharePost(id: string) {
-    navigator.clipboard.writeText(`${environment.frontUrl}/post/${id}`);
-    this.messages.add({
-      severity: 'success',
-      summary: 'The woot URL was copied to your clipboard!',
-    });
-  }
-
   shareOriginalPost(url: string) {
     navigator.clipboard.writeText(url);
     this.messages.add({
@@ -251,36 +242,19 @@ export class PostComponent implements OnInit {
   }
 
   async replyPost(post: ProcessedPost) {
-    this.dialogService.open(await this.editorService.getEditorComponent(), {
-      data: { post },
-      width: 'min(960px, calc(100% - 30px))',
-      maxWidth: '100%',
-    });
+    await this.editorService.replyPost(post);
   }
 
   async reportPost(post: ProcessedPost) {
-    this.dialogService.open(await this.reportService.getReportComponent(), {
-      data: { post },
-      width: '100%',
-    });
+    await this.reportService.openReportPostDialog(post);
   }
 
   async editPost(post: ProcessedPost) {
-    this.dialogService.open(await this.editorService.getEditorComponent(), {
-      data: { post, edit: true },
-      width: 'min(960px, calc(100% - 30px))',
-      maxWidth: '100%',
-    });
+    await this.editorService.replyPost(post, true);
   }
 
   async deletePost(id: string) {
-    this.dialogService.open(
-      await this.deletePostService.getDeletePostComponent(),
-      {
-        data: { id },
-        width: '100%',
-      }
-    );
+    this.deletePostService.openDeletePostDialog(id);
   }
 
   expandPost() {

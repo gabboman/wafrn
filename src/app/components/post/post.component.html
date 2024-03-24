@@ -104,76 +104,7 @@
             ></span>
           </div>
         </div>
-        <div class="flex gap-0 flex-nowrap" id="post-actions">
-          <button
-            mat-button
-            class="split-button-left"
-            (click)="sharePost(content.id)"
-            matTooltip="Copy Wafrn link"
-          >
-            <fa-icon [icon]="shareIcon"></fa-icon>
-          </button>
-          <button
-            mat-button
-            class="split-button-right"
-            [matMenuTriggerFor]="menu"
-            matTooltip="Post actions"
-          >
-            <fa-icon [icon]="expandDownIcon"></fa-icon>
-          </button>
-        </div>
-        <mat-menu #menu="matMenu" xPosition="before">
-          <button (click)="sharePost(content.id)" mat-menu-item>
-            <fa-icon class="mr-2" [icon]="shareIcon"></fa-icon>Share with wafrn
-          </button>
-          <button
-            (click)="shareOriginalPost(content.remotePostId)"
-            mat-menu-item
-          >
-            <fa-icon class="mr-2" [icon]="shareExternalIcon"></fa-icon>
-            Share external URL
-          </button>
-          @if(userLoggedIn) {
-          <button (click)="replyPost(content)" mat-menu-item>
-            <fa-icon class="mr-2" [icon]="reblogIcon"></fa-icon>
-            Reply woot
-          </button>
-          <button
-            *ngIf="content.privacy !== 10"
-            (click)="quickReblog(content)"
-            mat-menu-item
-          >
-            <fa-icon class="mr-2" [icon]="quickReblogIcon"></fa-icon>
-            Quick rewoot
-          </button>
-          @if(content.userId !== myId){ @if
-          (content.userLikesPostRelations.includes(myId)) {
-          <button (click)="unlikePost(content)" mat-menu-item>
-            <fa-icon class="mr-2" [icon]="clearHeartIcon"></fa-icon>
-            Dislike woot
-          </button>
-          } @else {
-          <button (click)="likePost(content)" mat-menu-item>
-            <fa-icon class="mr-2" [icon]="solidHeartIcon"></fa-icon>
-            Like woot
-          </button>
-          }
-          <button (click)="reportPost(content)" mat-menu-item>
-            <fa-icon class="mr-2" [icon]="reportIcon"></fa-icon>Report woot
-          </button>
-          } @else {
-          <button
-            *ngIf="content.privacy === 2"
-            (click)="editPost(content)"
-            mat-menu-item
-          >
-            <fa-icon class="mr-2" [icon]="editedIcon"></fa-icon>Edit woot
-          </button>
-          <button (click)="deletePost(content.id)" mat-menu-item>
-            <fa-icon class="mr-2" [icon]="deleteIcon"></fa-icon>Delete woot
-          </button>
-          } }
-        </mat-menu>
+        <app-post-actions [content]="content"></app-post-actions>
       </div>
       <div class="date-line mb-1 flex gap-2 align-items-center">
         <span class="text-xs text-600">

@@ -4,6 +4,7 @@ import { UntypedFormGroup } from '@angular/forms';
 import { ReplaySubject } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { ProcessedPost } from '../interfaces/processed-post';
+import { MatDialog } from '@angular/material/dialog';
 
 @Injectable({
   providedIn: 'any',
@@ -13,7 +14,8 @@ export class ReportService {
     new ReplaySubject();
 
   constructor(
-    private http: HttpClient //private messages: MessageService
+    private http: HttpClient, //private messages: MessageService
+    private dialogService: MatDialog
   ) {}
 
   async reportPost(
@@ -44,5 +46,12 @@ export class ReportService {
       '../components/report-post/report-post.component'
     );
     return ReportPostComponent;
+  }
+
+  async openReportPostDialog(post: ProcessedPost) {
+    this.dialogService.open(await this.getReportComponent(), {
+      data: { post },
+      width: '100%',
+    });
   }
 }

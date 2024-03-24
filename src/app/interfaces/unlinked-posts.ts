@@ -10,6 +10,7 @@ export interface unlinkedPosts {
   medias: Media[];
   tags: Tag[];
   likes: Like[];
+  lastPostDate: Date;
 }
 
 export interface basicPost {

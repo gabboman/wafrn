@@ -1,5 +1,6 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 import { Observable, ReplaySubject } from 'rxjs';
 import { environment } from 'src/environments/environment';
 
@@ -9,7 +10,7 @@ import { environment } from 'src/environments/environment';
 export class DeletePostService {
   public launchDeleteScreen: ReplaySubject<string> = new ReplaySubject();
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient, private dialogService: MatDialog) {}
 
   public deletePost(id: string): Observable<boolean> {
     let petitionData: HttpParams = new HttpParams();
@@ -24,5 +25,12 @@ export class DeletePostService {
       '../components/delete-post/delete-post.component'
     );
     return DeletePostComponent;
+  }
+
+  async openDeletePostDialog(id: string) {
+    this.dialogService.open(await this.getDeletePostComponent(), {
+      data: { id },
+      width: '100%',
+    });
   }
 }
