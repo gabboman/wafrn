@@ -26,12 +26,17 @@
   <form [hidden]="loading" [formGroup]="loginForm" (ngSubmit)="onSubmit()">
     <mat-form-field class="w-full">
       <mat-label>Email</mat-label>
-      <input formControlName="email" type="email" matInput />
+      <input formControlName="email" name="email" type="email" matInput />
     </mat-form-field>
 
     <mat-form-field class="w-full">
       <mat-label>Password</mat-label>
-      <input formControlName="password" type="password" matInput />
+      <input
+        formControlName="password"
+        name="password"
+        type="password"
+        matInput
+      />
       <mat-hint
         ><a
           routerLink="/recoverPassword"

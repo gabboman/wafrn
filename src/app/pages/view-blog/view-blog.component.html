@@ -99,13 +99,14 @@
     To check this user's complete profile in their instance
     <a [href]="blogDetails.remoteId" target="_blank"> click here</a>.
   </div>
-  <div *ngIf="!blogDetails.url.startsWith('@')" class="grid">
-    <div class="col-6 flex flex-wrap justify-content-center">
-      <p><b>Following</b>: {{ blogDetails.followed }} users</p>
+  <div *ngIf="!blogDetails.url.startsWith('@')" class="follow-counts">
+    <div>
+      <p>Following</p>
+      <p class="big">{{ blogDetails.followed }}</p>
     </div>
-
-    <div class="col-6 flex flex-wrap justify-content-center">
-      <p><b>Followed by</b>: {{ blogDetails.followers }} users</p>
+    <div>
+      <p>Followed</p>
+      <p class="big">{{ blogDetails.followers }}</p>
     </div>
   </div>
 </mat-card>

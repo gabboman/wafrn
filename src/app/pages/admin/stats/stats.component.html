@@ -1,16 +1,19 @@
+<h2 class="mb-1 lg:mx-4 wafrn-container">Stats</h2>
 <mat-card *ngIf="backendReply" class="p-3 mb-6 lg:mx-4 scalein wafrn-container">
-  <div class="flex justify-content-center flex-wrap mt-3 mb-2">
-    <div>Inbox still waiting: {{ backendReply.inboxAwaiting }}</div>
+  <div class="mb-2">
+    <p>Inbox still waiting</p>
+    <p class="big">{{ backendReply.inboxAwaiting }}</p>
   </div>
-  <div class="flex justify-content-center flex-wrap mt-3 mb-2">
-    <div>
-      Preparation send awaiting: {{ backendReply.prepareSendPostAwaiting }}
-    </div>
+  <div class="mb-2">
+    <p>Preparation send awaiting</p>
+    <p class="big">{{ backendReply.prepareSendPostAwaiting }}</p>
   </div>
-  <div class="flex justify-content-center flex-wrap mt-3 mb-2">
-    <div>Send post awaiting: {{ backendReply.sendPostAwaiting }}</div>
+  <div class="mb-2">
+    <p>Send post awaiting</p>
+    <p class="big">{{ backendReply.sendPostAwaiting }}</p>
   </div>
-  <div class="flex justify-content-center flex-wrap mt-3 mb-2">
-    <div>Update user awaiting: {{ backendReply.updateUserAwaiting }}</div>
+  <div class="mb-2">
+    <p>Update user awaiting</p>
+    <p class="big">{{ backendReply.updateUserAwaiting }}</p>
   </div>
 </mat-card>

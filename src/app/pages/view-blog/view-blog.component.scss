@@ -12,3 +12,18 @@
   border-bottom-left-radius: 0;
   border-left: 1px solid #ffffff44;
 }
+
+.follow-counts {
+  margin: 12px auto;
+  display: flex;
+  gap: 32px;
+}
+
+.follow-counts p {
+  margin: 0;
+}
+
+.follow-counts .big {
+  margin-top: 8px;
+  font-size: 24px;
+}
