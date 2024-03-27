@@ -10,6 +10,7 @@ import { MatPaginator } from '@angular/material/paginator';
 import { RawPost } from 'src/app/interfaces/raw-post';
 import { MatTableDataSource } from '@angular/material/table';
 import { faHome } from '@fortawesome/free-solid-svg-icons';
+import { SimplifiedUser } from 'src/app/interfaces/simplified-user';
 @Component({
   selector: 'app-single-post',
   templateUrl: './single-post.component.html',
@@ -115,5 +116,11 @@ export class SinglePostComponent {
     // a bit janky, could do something better but I feel like is the best option today.
     // TODO unjank this
     window.location.reload();
+  }
+
+  getUserAvatar(user: SimplifiedUser): string {
+    return user.url.startsWith('@')
+      ? this.cacheUrl + encodeURIComponent(user.avatar)
+      : this.cacheUrl + encodeURIComponent(this.mediaUrl + user.avatar);
   }
 }

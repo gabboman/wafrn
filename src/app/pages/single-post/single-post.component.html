@@ -25,7 +25,11 @@
           class="flex align-items-center"
           [routerLink]="'/blog/' + element.user.url"
           ><div class="avatar-container">
-            <img class="avatar" [src]="element.user.avatar" alt="" />
+            <img
+              class="avatar"
+              [src]="getUserAvatar(element.user)"
+              [alt]="element.user.url + '\'s avatar'"
+            />
           </div>
           {{ element.user.url }}</a
         >

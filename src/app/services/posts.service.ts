@@ -401,12 +401,6 @@ export class PostsService {
       res.descendents = response.posts
         .map((elem) => {
           const user = response.users.find((usr) => usr.id === elem.userId);
-          if (user) {
-            user.avatar = user.url.startsWith('@')
-              ? environment.externalCacheurl + encodeURIComponent(user.avatar)
-              : environment.externalCacheurl +
-                encodeURIComponent(environment.baseMediaUrl + user.avatar);
-          }
           return {
             id: elem.id,
             content: elem.len ? 'A' : '', // HACK I know this is ugly but because legacy reasons reblogs are empty posts
