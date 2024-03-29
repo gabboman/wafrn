@@ -117,6 +117,13 @@ export class DashboardService {
     );
     if (dashboardPetition) {
       result = this.postService.processPostNew(dashboardPetition);
+      this.startScrollDate = new Date(
+        Math.min(
+          ...result.map((elem) =>
+            new Date(elem[elem.length - 1].createdAt).getTime()
+          )
+        )
+      );
       result = result.filter(
         (post) => !this.postService.postContainsBlocked(post)
       );
