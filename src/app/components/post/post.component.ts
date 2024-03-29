@@ -2,9 +2,9 @@ import {
   Component,
   EventEmitter,
   Input,
+  OnChanges,
   OnInit,
   Output,
-  ViewChild,
 } from '@angular/core';
 import { ProcessedPost } from 'src/app/interfaces/processed-post';
 import { EditorService } from 'src/app/services/editor.service';
@@ -32,15 +32,15 @@ import {
   faUser,
   faUnlock,
   faPen,
+  faClose,
 } from '@fortawesome/free-solid-svg-icons';
-import { MatDialog } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-post',
   templateUrl: './post.component.html',
   styleUrls: ['./post.component.scss'],
 })
-export class PostComponent implements OnInit {
+export class PostComponent implements OnInit, OnChanges {
   @Input() post!: ProcessedPost[];
   @Input() showFull: boolean = false;
   originalPoster!: SimplifiedUser;
@@ -75,6 +75,7 @@ export class PostComponent implements OnInit {
   shareExternalIcon = faArrowUpRightFromSquare;
   reportIcon = faTriangleExclamation;
   deleteIcon = faTrash;
+  closeIcon = faClose;
   worldIcon = faGlobe;
   unlockIcon = faUnlock;
   envelopeIcon = faEnvelope;
@@ -132,7 +133,15 @@ export class PostComponent implements OnInit {
     }, 150);
   }
 
-  async ngOnChanges(): Promise<void> {
+  isEmptyReblog() {
+    return (
+      this.post &&
+      this.post[this.post.length - 1].content == '' &&
+      this.post[this.post.length - 1].tags.length == 0
+    );
+  }
+
+  ngOnChanges() {
     this.avatars = this.post.map((elem) =>
       elem.user.url.startsWith('@')
         ? this.cacheurl + encodeURIComponent(elem.user.avatar)
@@ -145,9 +154,7 @@ export class PostComponent implements OnInit {
 
     // if the last post is an EMPTY reblog we evaluate the like of the parent.
     const postToEvaluate =
-      this.post[this.post.length - 1].content == '' &&
-      this.post[this.post.length - 1].tags.length == 0 &&
-      this.post.length > 1
+      this.isEmptyReblog() && this.post.length > 1
         ? this.post[this.post.length - 2]
         : this.post[this.post.length - 1];
     this.finalPost = postToEvaluate;

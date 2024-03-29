@@ -179,6 +179,14 @@
     </div>
     <div *ngIf="userLoggedIn" class="flex flex-shrink-0">
       <div class="flex gap-3 px-1" *ngIf="!loadingAction">
+        @if (isEmptyReblog() && post[post.length - 1].userId === myId) {
+        <fa-icon
+          (click)="deletePost(post[post.length - 1].id)"
+          class="hover-cursor"
+          [icon]="closeIcon"
+          matTooltip="Delete rewoot"
+        ></fa-icon>
+        } @else {
         <fa-icon
           *ngIf="finalPost.privacy !== 10"
           (click)="quickReblog(finalPost)"
@@ -186,12 +194,15 @@
           [icon]="quickReblogIcon"
           matTooltip="Quick rewoot"
         ></fa-icon>
+        }
+
         <fa-icon
           (click)="replyPost(finalPost)"
           class="hover-cursor"
           [icon]="reblogIcon"
           matTooltip="Reply woot"
         ></fa-icon>
+
         @if(finalPost.userId !== myId ) {
         @if(finalPost.userLikesPostRelations.includes(myId)) {
         <fa-icon
@@ -228,13 +239,6 @@
           class="hover-cursor"
           [icon]="deleteIcon"
           matTooltip="Delete woot"
-        ></fa-icon>
-        } @if (post && post[post.length -1 ].userId === myId ) {
-        <fa-icon
-          (click)="deletePost(post[post.length - 1].id)"
-          class="hover-cursor"
-          [icon]="deleteIcon"
-          matTooltip="Delete  rewoot"
         ></fa-icon>
         }
       </div>
