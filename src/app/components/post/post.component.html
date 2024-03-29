@@ -229,6 +229,13 @@
           [icon]="deleteIcon"
           matTooltip="Delete woot"
         ></fa-icon>
+        } @if (post && post[post.length -1 ].userId === myId ) {
+        <fa-icon
+          (click)="deletePost(post[post.length - 1].id)"
+          class="hover-cursor"
+          [icon]="deleteIcon"
+          matTooltip="Delete  rewoot"
+        ></fa-icon>
         }
       </div>
     </div>
