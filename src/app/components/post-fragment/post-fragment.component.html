@@ -50,7 +50,11 @@
   <button
     [ngClass]="{ blurry: fragment.content_warning && showCw }"
     mat-flat-button
-    [matTooltip]="emoji.content + ' by ' + getTooltipUsers(emoji.users)"
+    [matTooltip]="
+      emoji.content === '♥️'
+        ? 'Liked'
+        : emoji.content + ' by ' + getTooltipUsers(emoji.users)
+    "
   >
     @if(emoji.img) {
     <img class="post-emoji" [src]="emoji.img" [alt]="emoji.content" />

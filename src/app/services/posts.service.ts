@@ -210,7 +210,7 @@ export class PostsService {
       .filter((like) => like.postId === elem.id)
       .map((likeUserId) => {
         return {
-          emojiId: '♥️',
+          emojiId: 'Like',
           postid: elem.id,
           userId: likeUserId.userId,
           content: '♥️',
