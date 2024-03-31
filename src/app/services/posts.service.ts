@@ -7,7 +7,7 @@ import { HttpClient } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
 import { BehaviorSubject, Observable, firstValueFrom } from 'rxjs';
 import { JwtService } from './jwt.service';
-import { unlinkedPosts } from '../interfaces/unlinked-posts';
+import { PostEmojiReaction, unlinkedPosts } from '../interfaces/unlinked-posts';
 import { SimplifiedUser } from '../interfaces/simplified-user';
 import { UserOptions } from '../interfaces/userOptions';
 import { Emoji } from '../interfaces/emoji';
@@ -202,9 +202,22 @@ export class PostsService {
         unlinked.users.find((usr) => usr.id === mention.userMentioned)
       )
       .filter((mention) => mention !== undefined);
-    let emojiReactions = unlinked.emojiRelations.postEmojiReactions.filter(
-      (emoji) => emoji.postid === elem.id
-    );
+    let emojiReactions: PostEmojiReaction[] =
+      unlinked.emojiRelations.postEmojiReactions.filter(
+        (emoji) => emoji.postid === elem.id
+      );
+    const likesAsEmojiReactions: PostEmojiReaction[] = unlinked.likes
+      .filter((like) => like.postId === elem.id)
+      .map((likeUserId) => {
+        return {
+          emojiId: '♥️',
+          postid: elem.id,
+          userId: likeUserId.userId,
+          content: '♥️',
+          //emoji?: Emoji;
+          user: unlinked.users.find((usr) => usr.id === likeUserId.userId),
+        };
+      });
     emojiReactions = emojiReactions.map((react) => {
       return {
         ...react,
@@ -214,6 +227,7 @@ export class PostsService {
         user: unlinked.users.find((usr) => usr.id === react.userId),
       };
     });
+    emojiReactions = emojiReactions.concat(likesAsEmojiReactions);
     const newPost: ProcessedPost = {
       ...elem,
       emojiReactions: emojiReactions,
@@ -293,7 +307,7 @@ export class PostsService {
       const youtubeMatch = link.href.matchAll(this.youtubeRegex);
       if (link.innerText === link.href && youtubeMatch) {
         Array.from(youtubeMatch).forEach((youtubeString) => {
-          link.innerHTML = `  <div class="watermark"><!-- Watermark container --><div class="watermark__inner"><!-- The watermark --><div class="watermark__body"><img alt="youtube logo" class="yt-watermark" loading="lazy" src="/assets/img/youtube_logo.png"></div></div><img class="yt-thumbnail" src="${
+          link.innerHTML = `<div class="watermark"><!-- Watermark container --><div class="watermark__inner"><!-- The watermark --><div class="watermark__body"><img alt="youtube logo" class="yt-watermark" loading="lazy" src="/assets/img/youtube_logo.png"></div></div><img class="yt-thumbnail" src="${
             environment.externalCacheurl +
             encodeURIComponent(
               `https://img.youtube.com/vi/${youtubeString[6]}/hqdefault.jpg`
