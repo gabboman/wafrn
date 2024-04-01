@@ -1,8 +1,13 @@
+//aprils fools
+@font-face {
+  font-family: AprilFoolsPapyrus;
+  src: url("/assets/fonts/papyrus.woff2");
+}
 // wafrn css
 html,
 body {
   //aprils fools
-  font-family: "Papyrus" !important;
+  font-family: "AprilFoolsPapyrus" !important;
   margin: 0;
   height: 100%;
 }
