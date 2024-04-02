@@ -25,12 +25,16 @@
       >
         <div>
           <a
+            class="original-poster-name"
             [routerLink]="'/blog/' + originalPoster.url"
             [innerHTML]="originalPoster.name"
           ></a>
         </div>
         <div class="date-line mb-1 flex gap-2 align-items-center">
-          <span class="font-small" [innerText]="originalPoster.url"></span>
+          <span
+            class="font-small original-poster-url"
+            [innerText]="originalPoster.url"
+          ></span>
           <button
             mat-stroked-button
             color="accent"
@@ -84,6 +88,7 @@
             <img
               alt=""
               [routerLink]="'/blog/' + content.user.url"
+              class="user-avatar"
               crossorigin="anonymous"
               loading="lazy"
               [src]="avatars[index]"
@@ -94,12 +99,12 @@
           </div>
           <div class="w-full overflow-hidden flex flex-column">
             <a
-              class="max-w-full white-space-nowrap overflow-hidden text-overflow-ellipsis"
+              class="max-w-full white-space-nowrap overflow-hidden text-overflow-ellipsis user-name"
               [routerLink]="'/blog/' + content.user.url"
               [innerHTML]="content.user.name"
             ></a>
             <span
-              class="font-small max-w-full white-space-nowrap overflow-hidden text-overflow-ellipsis"
+              class="font-small max-w-full white-space-nowrap overflow-hidden text-overflow-ellipsis user-url"
               [innerText]="content.user.url"
             ></span>
           </div>
