@@ -45,9 +45,12 @@ export class SinglePostComponent {
     this.userLoggedIn = loginService.checkUserLoggedIn();
     this.route.params.subscribe(async (data: any) => {
       this.forceSSR = this.route.snapshot.queryParams['force-ssr'] === 'true';
-      const tmpPost = await this.dashboardService.getPostV2(
-        data ? data.id : ''
-      );
+      const tmpPost = await this.dashboardService
+        .getPostV2(data ? data.id : '')
+        .catch(() => {
+          this.postFound = false;
+          this.loading = false;
+        });
       this.post = tmpPost ? tmpPost : [];
       if (
         this.post &&
