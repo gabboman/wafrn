@@ -238,7 +238,7 @@
     [disabled]="
       !allDescriptionsFilled() ||
       postBeingSubmitted ||
-      (postCreatorContent === '' &&
+      (postCreatorContent === initialContent &&
         tags.length === 0 &&
         uploadedMedias.length === 0)
     "

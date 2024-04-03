@@ -65,6 +65,7 @@ export class PostEditorComponent implements OnInit {
   showContentWarning = false;
   displayMarqueeButton = false;
   postCreatorContent: string = '';
+  initialContent = '';
   tags: string = '';
   privacy: number;
 
@@ -234,6 +235,7 @@ export class PostEditorComponent implements OnInit {
 
   openEditor(content?: string) {
     this.postCreatorContent = content ? `${content}<span>&nbsp;</span>` : '';
+    this.initialContent = this.postCreatorContent;
 
     /*
     const blockBlot = Quill.import('blots/block');
