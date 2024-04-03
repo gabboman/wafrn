@@ -117,13 +117,13 @@ export class ViewBlogComponent implements OnInit, OnDestroy {
       this.blogUrl = blogUrl;
     }
 
-    const blogResponse = await this.dashboardService.getBlogDetails(
-      this.blogUrl
-    );
-
-    if (blogResponse.success === false) {
-      this.found = false;
-    } else {
+    const blogResponse = await this.dashboardService
+      .getBlogDetails(this.blogUrl)
+      .catch(() => {
+        this.found = false;
+        this.loading = false;
+      });
+    if (blogResponse && blogResponse.success !== false) {
       this.blogDetails = blogResponse;
 
       this.loadPosts(this.currentPage).then(() => {});
@@ -153,7 +153,7 @@ export class ViewBlogComponent implements OnInit, OnDestroy {
     }
 
     const userHasCustomTheme = await this.themeService.checkThemeExists(
-      this.blogDetails.id
+      this.blogDetails?.id
     );
 
     if (userHasCustomTheme) {
