@@ -128,7 +128,7 @@ export class DashboardComponent implements OnInit {
       let allFragmentsSeen = true;
       post.forEach((component) => {
         const thisFragmentSeen =
-          this.viewedPostsIds.indexOf(component.id) !== -1 ||
+          this.viewedPostsIds.includes(component.id) ||
           (component.content === '' &&
             component.tags.length === 0 &&
             component.medias?.length === 0);
