@@ -1,4 +1,4 @@
-@if(blogDetails && !loading) {
+@if(blogDetails) {
 <mat-card class="wafrn-container p-3 lg:mx-4 mb-6">
   <div class="flex justify-content-center mb-2">
     <img
@@ -135,7 +135,7 @@
     >.
   </p>
 </footer>
-} @if(loading) {
+} @if(loading && !blogDetails) {
 <app-loader></app-loader>
 } @if(!loading && !found) {
 <app-pagenotfound />

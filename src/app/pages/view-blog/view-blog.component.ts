@@ -51,6 +51,8 @@ export class ViewBlogComponent implements OnInit, OnDestroy {
   headerUrl = '';
   navigationSubscription!: Subscription;
   showModalTheme = false;
+  viewedPostsIds: string[] = [];
+  intersectionObserverForLoadPosts!: IntersectionObserver;
 
   expandDownIcon = faChevronDown;
   muteUserIcon = faVolumeMute;
@@ -126,7 +128,18 @@ export class ViewBlogComponent implements OnInit, OnDestroy {
     if (blogResponse && blogResponse.success !== false) {
       this.blogDetails = blogResponse;
 
-      this.loadPosts(this.currentPage).then(() => {});
+      this.loadPosts(this.currentPage).then(() => {
+        setTimeout(() => {
+          const element = document.querySelector(
+            '#if-you-see-this-load-more-posts'
+          );
+          console.log(element);
+          if (element) {
+            console.log('calling intersect');
+            this.intersectionObserverForLoadPosts.observe(element);
+          }
+        });
+      });
       this.avatarUrl = this.blogDetails.url.startsWith('@')
         ? environment.externalCacheurl +
           encodeURIComponent(this.blogDetails.avatar)
@@ -177,8 +190,7 @@ export class ViewBlogComponent implements OnInit, OnDestroy {
     } else {
       this.themeService.setTheme('');
     }
-    const element = document.querySelector('#if-you-see-this-load-more-posts');
-    const observer = new IntersectionObserver(
+    this.intersectionObserverForLoadPosts = new IntersectionObserver(
       (intersectionEntries: IntersectionObserverEntry[]) => {
         if (intersectionEntries[0].isIntersecting) {
           this.currentPage++;
@@ -186,17 +198,6 @@ export class ViewBlogComponent implements OnInit, OnDestroy {
         }
       }
     );
-    if (element) {
-      observer.observe(element);
-    }
-  }
-
-  async countViewedPost() {
-    this.viewedPosts++;
-    if (this.posts.length === this.viewedPosts) {
-      this.currentPage++;
-      await this.loadPosts(this.currentPage);
-    }
   }
 
   async loadPosts(page: number) {
@@ -205,7 +206,18 @@ export class ViewBlogComponent implements OnInit, OnDestroy {
       page,
       this.blogUrl
     );
-    tmpPosts.forEach((post) => {
+    const filteredPosts = tmpPosts.filter((post: ProcessedPost[]) => {
+      let allFragmentsSeen = true;
+      post.forEach((component) => {
+        const thisFragmentSeen = this.viewedPostsIds.includes(component.id);
+        allFragmentsSeen = thisFragmentSeen && allFragmentsSeen;
+        if (!thisFragmentSeen) {
+          this.viewedPostsIds.push(component.id);
+        }
+      });
+      return !allFragmentsSeen;
+    });
+    filteredPosts.forEach((post) => {
       this.posts.push(post);
     });
     this.loading = false;
