@@ -178,14 +178,15 @@
     Expand woot
   </button>
 
-  <div class="flex">
+  <div class="flex pt-1">
     <div class="flex flex-grow-1">
       <a [routerLink]="'/post/' + finalPost.id"> Notes: {{ notes }} </a>
     </div>
     <div *ngIf="userLoggedIn" class="flex flex-shrink-0">
-      <div class="flex gap-3 px-1" *ngIf="!loadingAction">
+      <div class="flex gap-4 px-1" *ngIf="!loadingAction">
         @if (isEmptyReblog() && post[post.length - 1].userId === myId) {
         <fa-icon
+          size="lg"
           (click)="deletePost(post[post.length - 1].id)"
           class="hover-cursor"
           [icon]="closeIcon"
@@ -193,6 +194,7 @@
         ></fa-icon>
         } @else {
         <fa-icon
+          size="lg"
           *ngIf="finalPost.privacy !== 10"
           (click)="quickReblog(finalPost)"
           class="hover-cursor"
@@ -202,6 +204,7 @@
         }
 
         <fa-icon
+          size="lg"
           (click)="replyPost(finalPost)"
           class="hover-cursor"
           [icon]="reblogIcon"
@@ -211,6 +214,7 @@
         @if(finalPost.userId !== myId ) {
         @if(finalPost.userLikesPostRelations.includes(myId)) {
         <fa-icon
+          size="lg"
           (click)="unlikePost(finalPost)"
           class="hover-cursor"
           [icon]="clearHeartIcon"
@@ -218,6 +222,7 @@
         ></fa-icon>
         } @else {
         <fa-icon
+          size="lg"
           (click)="likePost(finalPost)"
           class="hover-cursor"
           [icon]="solidHeartIcon"
@@ -226,6 +231,7 @@
         }
 
         <fa-icon
+          size="lg"
           (click)="reportPost(finalPost)"
           class="hover-cursor"
           [icon]="reportIcon"
@@ -233,6 +239,7 @@
         ></fa-icon>
         } @else {
         <fa-icon
+          size="lg"
           *ngIf="finalPost.privacy === 2"
           (click)="editPost(finalPost)"
           class="hover-cursor"
@@ -240,6 +247,7 @@
           matTooltip="Edit woot"
         ></fa-icon>
         <fa-icon
+          size="lg"
           (click)="deletePost(finalPost.id)"
           class="hover-cursor"
           [icon]="deleteIcon"
