@@ -10,7 +10,6 @@ import { ProcessedPost } from 'src/app/interfaces/processed-post';
 import { EditorService } from 'src/app/services/editor.service';
 import { LoginService } from 'src/app/services/login.service';
 import { PostsService } from 'src/app/services/posts.service';
-import { ReportService } from 'src/app/services/report.service';
 import { environment } from 'src/environments/environment';
 import { DeletePostService } from 'src/app/services/delete-post.service';
 import { SimplifiedUser } from 'src/app/interfaces/simplified-user';
@@ -73,7 +72,6 @@ export class PostComponent implements OnInit, OnChanges {
   reblogIcon = faRotateLeft;
   quickReblogIcon = faClockRotateLeft;
   shareExternalIcon = faArrowUpRightFromSquare;
-  reportIcon = faTriangleExclamation;
   deleteIcon = faTrash;
   closeIcon = faClose;
   worldIcon = faGlobe;
@@ -95,7 +93,6 @@ export class PostComponent implements OnInit, OnChanges {
     private messages: MessageService,
     private editor: EditorService,
     private editorService: EditorService,
-    private reportService: ReportService,
     private deletePostService: DeletePostService
   ) {
     this.userLoggedIn = loginService.checkUserLoggedIn();
@@ -146,7 +143,7 @@ export class PostComponent implements OnInit, OnChanges {
       elem.user.url.startsWith('@')
         ? this.cacheurl + encodeURIComponent(elem.user.avatar)
         : this.cacheurl +
-          encodeURIComponent(this.mediaBaseUrl + elem.user.avatar)
+        encodeURIComponent(this.mediaBaseUrl + elem.user.avatar)
     );
     this.ready = true;
     const notes = this.post[this.post.length - 1].notes;
@@ -250,10 +247,6 @@ export class PostComponent implements OnInit, OnChanges {
 
   async replyPost(post: ProcessedPost) {
     await this.editorService.replyPost(post);
-  }
-
-  async reportPost(post: ProcessedPost) {
-    await this.reportService.openReportPostDialog(post);
   }
 
   async editPost(post: ProcessedPost) {
