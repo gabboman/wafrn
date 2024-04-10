@@ -16,7 +16,7 @@ import { NotificationType } from '../enums/notification-type';
 export class NotificationsService {
   //lastTimeChecked: Date = new Date();
   notificationsScrollTime: Date = new Date();
-  constructor(private http: HttpClient, private jwt: JwtService) {}
+  constructor(private http: HttpClient, private jwt: JwtService) { }
 
   async getUnseenNotifications(): Promise<{
     notifications: number;
@@ -124,16 +124,17 @@ export class NotificationsService {
         };
       });
       tmp.follows = tmp.follows.map((follow) => {
+        const usr = tmp.users.find(usr => usr.id === follow.followerId)
         return {
           createdAt: new Date(follow.createdAt),
-          url: follow.url,
-          avatar: follow.avatar,
+          url: usr?.url,
+          avatar: usr?.avatar,
         };
       });
       tmp.likes = tmp.likes.map((like) => {
         return {
-          user: like.user,
-          content: '',
+          user: tmp.users.find(usr => usr.id === like.userId),
+          content: tmp.posts.find(post => post.id === like.postId),
           id: like.postId,
           createdAt: new Date(like.createdAt),
         };
@@ -150,8 +151,9 @@ export class NotificationsService {
         };
       });
       tmp.reblogs = tmp.reblogs.map((reblog) => {
+        const usr = tmp.users.find((usr) => usr.id === reblog.userId);
         return {
-          user: tmp.users.find((usr) => usr.id === reblog.userId),
+          user: usr,
           content: '',
           id: reblog.id,
           createdAt: new Date(reblog.createdAt),
@@ -161,11 +163,11 @@ export class NotificationsService {
     return tmp
       ? tmp
       : {
-          follows: [],
-          reblogs: [],
-          mentions: [],
-          likes: [],
-          emojiReactions: [],
-        };
+        follows: [],
+        reblogs: [],
+        mentions: [],
+        likes: [],
+        emojiReactions: [],
+      };
   }
 }

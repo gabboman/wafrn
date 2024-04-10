@@ -98,7 +98,7 @@ export class NotificationsComponent implements OnInit {
           avatar: follow.url.startsWith('@')
             ? environment.externalCacheurl + encodeURIComponent(follow.avatar)
             : environment.externalCacheurl +
-              encodeURIComponent(environment.baseMediaUrl + follow.avatar),
+            encodeURIComponent(environment.baseMediaUrl + follow.avatar),
           date: follow.createdAt,
           userUrl: follow.url,
         };
@@ -179,7 +179,7 @@ export class NotificationsComponent implements OnInit {
       avatar: reblog.user.url.startsWith('@')
         ? environment.externalCacheurl + encodeURIComponent(reblog.user.avatar)
         : environment.externalCacheurl +
-          encodeURIComponent(environment.baseMediaUrl + reblog.user.avatar),
+        encodeURIComponent(environment.baseMediaUrl + reblog.user.avatar),
       date: reblog.createdAt,
       type: type,
       userUrl: reblog.user.url,
