@@ -174,6 +174,9 @@ export class NotificationsComponent implements OnInit {
     reblog: Reblog,
     type: NotificationType
   ): UserNotifications {
+    if (!reblog.user) {
+      console.log(`ERROR WITH ${type}`)
+    }
     return {
       url: `/post/${reblog.id}`,
       avatar: reblog.user.url.startsWith('@')
