@@ -93,13 +93,14 @@ export class NotificationsService {
     );
     const tmp = await firstValueFrom(
       this.http.get<{
-        users: SimplifiedUser[];
-        posts: basicPost[];
-        follows: any[];
-        reblogs: any[];
-        mentions: any[];
-        likes: any[];
-        emojiReactions: any[];
+        users: SimplifiedUser[],
+        posts: basicPost[],
+        medias: any[],
+        follows: any[],
+        reblogs: any[],
+        mentions: any[],
+        likes: any[],
+        emojiReactions: any[],
       }>(`${environment.baseUrl}/v2/notificationsScroll`, {
         params: petitionData,
       })
@@ -123,6 +124,13 @@ export class NotificationsService {
           emojiName: emojiReact.content,
         };
       });
+      tmp.posts = tmp.posts.map((post: any) => {
+        let user = tmp.users.find(usr => usr.id === post.userId) as SimplifiedUser;
+        post.user = user;
+        const medias = tmp.medias.filter(med => med.posts[0].id === post.id)
+        post.medias = medias;
+        return post;
+      })
       tmp.follows = tmp.follows.map((follow) => {
         const usr = tmp.users.find(usr => usr.id === follow.followerId)
         return {
@@ -146,7 +154,7 @@ export class NotificationsService {
         }
         return {
           user: tmp.users.find((usr) => usr.id === mention.userId),
-          content: mention.content,
+          content: tmp.posts.find(post => post.id === mention.postId),
           id: mention.id,
           createdAt: new Date(mention.createdAt),
         };
@@ -155,7 +163,7 @@ export class NotificationsService {
         const usr = tmp.users.find((usr) => usr.id === reblog.userId);
         return {
           user: usr,
-          content: '',
+          content: tmp.posts.find(post => post.id === reblog.id),
           id: reblog.id,
           createdAt: new Date(reblog.createdAt),
         };
