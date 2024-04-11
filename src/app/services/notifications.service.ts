@@ -132,8 +132,9 @@ export class NotificationsService {
         };
       });
       tmp.likes = tmp.likes.map((like) => {
+        const usr = tmp.users.find(usr => usr.id === like.userId)
         return {
-          user: tmp.users.find(usr => usr.id === like.userId),
+          user: usr,
           content: tmp.posts.find(post => post.id === like.postId),
           id: like.postId,
           createdAt: new Date(like.createdAt),
