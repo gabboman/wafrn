@@ -41,7 +41,7 @@ export class NotificationsComponent implements OnInit {
     this.observer = new IntersectionObserver(
       (intersectionEntries: IntersectionObserverEntry[]) => {
         if (intersectionEntries.some((elem) => elem.isIntersecting)) {
-          this.page++;
+          this.page = this.page + 1;
           this.loadNotifications(this.page);
         }
       }
@@ -64,9 +64,6 @@ export class NotificationsComponent implements OnInit {
 
   async loadNotifications(page: number) {
     this.observer.disconnect();
-    const element = document.querySelector(
-      '.load-more-notifications-intersector'
-    );
     if (page === 0) {
       this.likes = [];
       this.follows = [];
@@ -129,15 +126,25 @@ export class NotificationsComponent implements OnInit {
       const notSeenNotifications = processedNotifications.slice(
         this.seen.total + 1
       );
-      this.notificationsToShow.splice(this.seen.total + 1);
+      this.notificationsToShow.splice(this.page * 20 + 1);
       notSeenNotifications.forEach((elem) => {
         this.notificationsToShow.push(elem);
       });
     }
-    if (element) {
-      // TODO fix this?
-      //this.observer.observe(element);
-    }
+    setTimeout(() => {
+      const elements = document.querySelectorAll(
+        '.load-more-notifications-intersector'
+      );
+      if (elements) {
+        //this.observer.observe(element);
+        elements.forEach(element => {
+          this.observer.observe(element)
+        })
+      } else {
+        console.log('observer not ready')
+      }
+    })
+
   }
 
   reblogToNotification(

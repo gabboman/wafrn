@@ -15,8 +15,13 @@ import { ProcessedPost } from '../interfaces/processed-post';
   providedIn: 'root',
 })
 export class NotificationsService {
-  //lastTimeChecked: Date = new Date();
-  notificationsScrollTime: Date = new Date();
+  likesDate = new Date()
+  followsDate = new Date()
+  reblogsDate = new Date()
+  mentionsDate = new Date()
+  emojiReactionDate = new Date()
+
+
   constructor(private http: HttpClient, private jwt: JwtService) { }
 
   async getUnseenNotifications(): Promise<{
@@ -60,7 +65,6 @@ export class NotificationsService {
 
   async getNotificationsScroll(
     page: number,
-    resetDate = true
   ): Promise<{
     follows: Follower[];
     reblogs: Reblog[];
@@ -77,21 +81,21 @@ export class NotificationsService {
         emojiReactions: [],
       };
     }
-    let dateToCheck = this.notificationsScrollTime;
     if (page === 0) {
-      if (resetDate && this.notificationsScrollTime) {
-        this.notificationsScrollTime = new Date();
-        dateToCheck = this.notificationsScrollTime;
-      } else {
-        dateToCheck = new Date();
-      }
+      this.likesDate = new Date()
+      this.followsDate = new Date()
+      this.reblogsDate = new Date()
+      this.mentionsDate = new Date()
+      this.emojiReactionDate = new Date()
     }
     let petitionData: HttpParams = new HttpParams();
-    petitionData = petitionData.set('page', page.toString());
-    petitionData = petitionData.set(
-      'startScroll',
-      dateToCheck.getTime().toString()
-    );
+    petitionData = petitionData.set('likesDate', this.likesDate.toString())
+    petitionData = petitionData.set('followsDate', this.followsDate.toString())
+    petitionData = petitionData.set('reblogsDate', this.reblogsDate.toString())
+    petitionData = petitionData.set('mentionsDate', this.mentionsDate.toString())
+    petitionData = petitionData.set('emojiReactionDate', this.emojiReactionDate.toString())
+    petitionData = petitionData.set('page', page)
+
     const tmp = await firstValueFrom(
       this.http.get<{
         users: SimplifiedUser[],
@@ -173,6 +177,13 @@ export class NotificationsService {
           createdAt: new Date(reblog.createdAt),
         };
       });
+    }
+    if (tmp) {
+      this.followsDate = new Date(Math.min.apply(null, tmp.follows.map(elem => elem.createdAt)))
+      this.likesDate = new Date(Math.min.apply(null, tmp.likes.map(elem => elem.createdAt)))
+      this.reblogsDate = new Date(Math.min.apply(null, tmp.reblogs.map(elem => elem.createdAt)))
+      this.mentionsDate = new Date(Math.min.apply(null, tmp.mentions.map(elem => elem.createdAt)))
+      this.emojiReactionDate = new Date(Math.min.apply(null, tmp.emojiReactions.map(elem => elem.createdAt)))
     }
     return tmp
       ? tmp
