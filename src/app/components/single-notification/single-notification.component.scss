@@ -1,6 +1,6 @@
 .avatar {
-  height: 64px;
-  width: 64px;
+  height: 48px;
+  width: 48px;
   margin-right: 4px;
 
   img {
@@ -18,10 +18,28 @@
 .user-avatar-container {
   height: 3em;
   width: 3em;
+  margin-right: 8px;
+
+  img {
+    border-radius: 4px;
+    max-height: 100%;
+    max-width: 100%;
+  }
 }
 
 .notification-content-shortened {
   max-height: 250px;
   overflow: hidden;
-  mask-image: linear-gradient(rgba(0, 0, 0, 1), rgba(0, 0, 0, 1), rgba(0, 0, 0, 0));
+  mask-image: linear-gradient(
+    rgba(0, 0, 0, 1),
+    rgba(0, 0, 0, 1),
+    rgba(0, 0, 0, 0)
+  );
+}
+
+.inset-0 {
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
 }
