@@ -168,7 +168,7 @@ export class NotificationsService {
         const usr = tmp.users.find((usr) => usr.id === reblog.userId);
         return {
           user: usr,
-          content: tmp.posts.find(post => post.id === reblog.id),
+          content: tmp.posts.find(post => post.id === reblog.parentId),
           id: reblog.id,
           createdAt: new Date(reblog.createdAt),
         };
