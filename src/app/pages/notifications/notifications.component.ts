@@ -124,7 +124,7 @@ export class NotificationsComponent implements OnInit {
       );
     } else {
       const notSeenNotifications = processedNotifications.slice(
-        this.seen.total + 1
+        this.page * 20 + 1
       );
       this.notificationsToShow.splice(this.page * 20 + 1);
       notSeenNotifications.forEach((elem) => {
