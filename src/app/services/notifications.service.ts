@@ -9,6 +9,7 @@ import { SimplifiedUser } from '../interfaces/simplified-user';
 import { basicPost } from '../interfaces/unlinked-posts';
 import { UserNotifications } from '../interfaces/user-notifications';
 import { NotificationType } from '../enums/notification-type';
+import { ProcessedPost } from '../interfaces/processed-post';
 
 @Injectable({
   providedIn: 'root',
@@ -106,24 +107,6 @@ export class NotificationsService {
       })
     );
     if (tmp) {
-      tmp.emojiReactions = tmp.emojiReactions.map((emojiReact: any) => {
-        const user = tmp.users.find((usr) => usr.id === emojiReact.userId);
-        return {
-          date: new Date(emojiReact.createdAt),
-          url: emojiReact.postId,
-          userUrl: user?.url,
-          avatar:
-            environment.externalCacheurl +
-            encodeURIComponent(
-              user?.url.startsWith('@')
-                ? user.avatar
-                : environment.baseMediaUrl + user?.avatar
-            ),
-          type: NotificationType.EMOJIREACT,
-          emojiReact: emojiReact.emoji,
-          emojiName: emojiReact.content,
-        };
-      });
       tmp.posts = tmp.posts.map((post: any) => {
         let user = tmp.users.find(usr => usr.id === post.userId) as SimplifiedUser;
         post.user = user;
@@ -139,6 +122,27 @@ export class NotificationsService {
           avatar: usr?.avatar,
         };
       });
+      tmp.emojiReactions = tmp.emojiReactions.map((emojiReact: any) => {
+        const user = tmp.users.find((usr) => usr.id === emojiReact.userId);
+        const post = tmp.posts.find(post => post.id === emojiReact.postId);
+        return {
+          date: new Date(emojiReact.createdAt),
+          url: emojiReact.postId,
+          userUrl: user?.url,
+          avatar:
+            environment.externalCacheurl +
+            encodeURIComponent(
+              user?.url.startsWith('@')
+                ? user.avatar
+                : environment.baseMediaUrl + user?.avatar
+            ),
+          type: NotificationType.EMOJIREACT,
+          emojiReact: emojiReact.emoji,
+          emojiName: emojiReact.content,
+          fragment: post,
+
+        };
+      });
       tmp.likes = tmp.likes.map((like) => {
         const usr = tmp.users.find(usr => usr.id === like.userId)
         return {
@@ -152,9 +156,10 @@ export class NotificationsService {
         if (!tmp.users.find((usr) => usr.id === mention.userId)) {
           console.log('USER MISSING: ' + mention.userId + ',' + mention.id);
         }
+        const content = tmp.posts.find(post => post.id === mention.id)
         return {
           user: tmp.users.find((usr) => usr.id === mention.userId),
-          content: tmp.posts.find(post => post.id === mention.postId),
+          content: content,
           id: mention.id,
           createdAt: new Date(mention.createdAt),
         };

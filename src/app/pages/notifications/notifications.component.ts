@@ -140,42 +140,14 @@ export class NotificationsComponent implements OnInit {
     }
   }
 
-  async countViewedNotifications(index: number) {
-    let loadMore = false;
-    this.seen.total = this.seen.total + 1;
-    switch (this.notificationsToShow[index].type) {
-      case NotificationType.FOLLOW:
-        this.seen.follows = this.seen.follows + 1;
-        loadMore = loadMore || this.follows.length - this.seen.follows === 3;
-        break;
-      case NotificationType.LIKE:
-        this.seen.likes = this.seen.likes + 1;
-        loadMore = loadMore || this.likes.length - this.seen.likes === 3;
-        break;
-      case NotificationType.MENTION:
-        this.seen.mentions = this.seen.mentions + 1;
-        loadMore = loadMore || this.mentions.length - this.seen.mentions === 3;
-        break;
-      case NotificationType.REBLOG:
-        this.seen.reblogs = this.seen.reblogs + 1;
-        loadMore = loadMore || this.reblogs.length - this.seen.reblogs === 3;
-        break;
-      default:
-        break;
-    }
-
-    if (loadMore) {
-      this.page = this.page + 1;
-      await this.loadNotifications(this.page);
-    }
-  }
-
   reblogToNotification(
     reblog: Reblog,
     type: NotificationType
   ): UserNotifications {
     if (!reblog.user) {
       console.log(`ERROR WITH ${type}`)
+    }
+    if (type === NotificationType.MENTION) {
     }
     return {
       url: `/post/${reblog.id}`,
@@ -186,6 +158,7 @@ export class NotificationsComponent implements OnInit {
       date: reblog.createdAt,
       type: type,
       userUrl: reblog.user.url,
+      fragment: reblog.content
     };
   }
 }

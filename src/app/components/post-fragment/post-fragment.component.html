@@ -1,45 +1,22 @@
 <ng-container *ngIf="fragment">
-  <div
-    id="fragment-content-warning"
-    *ngIf="fragment.content_warning"
-    [ngClass]="{ blurry: !showCw }"
-  >
+  <div id="fragment-content-warning" *ngIf="fragment.content_warning" [ngClass]="{ blurry: !showCw }">
     <div class="fragment-content ql-editor -mx-3">
       {{ fragment.content_warning }}
     </div>
-    <button
-      mat-flat-button
-      color="primary"
-      (click)="dismissCw.emit()"
-      class="w-full"
-    >
+    <button mat-flat-button color="primary" (click)="dismissCw.emit()" class="w-full">
       I understand this and I want to see this woot
     </button>
   </div>
-  <div
-    *ngIf="fragment.content !== '' || fragment.tags.length"
-    class="fragment-content text-base ql-editor -mx-3"
-    [ngClass]="{ blurry: fragment.content_warning && showCw }"
-    [injectHTML]="fragment.content"
-  ></div>
-  <div
-    *ngIf="fragment.questionPoll"
-    [ngClass]="{ blurry: fragment.content_warning && showCw }"
-  >
+  <div *ngIf="fragment.content !== '' || fragment.tags?.length" class="fragment-content text-base ql-editor -mx-3"
+    [ngClass]="{ blurry: fragment.content_warning && showCw }" [injectHTML]="fragment.content"></div>
+  <div *ngIf="fragment.questionPoll" [ngClass]="{ blurry: fragment.content_warning && showCw }">
     <app-poll [poll]="fragment.questionPoll"></app-poll>
   </div>
-  <div
-    *ngFor="let media of fragment.medias"
-    [ngClass]="{ blurry: fragment.content_warning && showCw }"
-  >
+  <div *ngFor="let media of fragment.medias" [ngClass]="{ blurry: fragment.content_warning && showCw }">
     <app-wafrn-media [data]="media"></app-wafrn-media>
   </div>
-  <div
-    id="fragment-tags"
-    class="flex flex-wrap gap-2 mt-4"
-    *ngIf="fragment.tags && fragment.tags.length"
-    [ngClass]="{ blurry: fragment.content_warning && showCw }"
-  >
+  <div id="fragment-tags" class="flex flex-wrap gap-2 mt-4" *ngIf="fragment.tags && fragment.tags.length"
+    [ngClass]="{ blurry: fragment.content_warning && showCw }">
     @for(tag of fragment.tags; track tag) {
     <a class="tag" [routerLink]="'/dashboard/search/' + tag.tagName">
       #{{ tag.tagName }}
@@ -47,15 +24,11 @@
     }
   </div>
   @for (emoji of emojiCollection; track $index) {
-  <button
-    [ngClass]="{ blurry: fragment.content_warning && showCw }"
-    mat-flat-button
-    [matTooltip]="
+  <button [ngClass]="{ blurry: fragment.content_warning && showCw }" mat-flat-button [matTooltip]="
       (emoji.content === '♥️' ? 'Liked' : emoji.content) +
       ' by ' +
       getTooltipUsers(emoji.users)
-    "
-  >
+    ">
     @if(emoji.img) {
     <img class="post-emoji" [src]="emoji.img" [alt]="emoji.content" />
     } @else{ {{ emoji.content }} } @if(emoji.users.length !== 1) {

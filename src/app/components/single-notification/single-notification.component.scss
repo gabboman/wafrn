@@ -14,3 +14,14 @@
     object-fit: cover;
   }
 }
+
+.user-avatar-container {
+  height: 3em;
+  width: 3em;
+}
+
+.notification-content-shortened {
+  max-height: 250px;
+  overflow: hidden;
+  mask-image: linear-gradient(rgba(0, 0, 0, 1), rgba(0, 0, 0, 1), rgba(0, 0, 0, 0));
+}

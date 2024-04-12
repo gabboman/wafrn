@@ -1,5 +1,6 @@
 import { NotificationType } from '../enums/notification-type';
 import { Emoji } from './emoji';
+import { ProcessedPost } from './processed-post';
 
 export interface UserNotifications {
   url: string;
@@ -9,4 +10,5 @@ export interface UserNotifications {
   type: NotificationType;
   emojiReact?: Emoji;
   emojiName?: string;
+  fragment?: ProcessedPost
 }
