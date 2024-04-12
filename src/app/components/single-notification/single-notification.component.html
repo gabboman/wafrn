@@ -1,32 +1,21 @@
-<mat-card
-  *ngIf="notification"
-  class="p-3 pb-2 mb-2 lg:mx-4 scalein wafrn-container"
->
+<mat-card *ngIf="notification" class="p-3 pb-2 mb-2 lg:mx-4 scalein wafrn-container">
   <header class="flex align-items-center">
     <div class="avatar flex align-content-center flex-wrap">
-      <img
-        crossorigin="anonymous"
-        loading="lazy"
-        [src]="notification.avatar"
+      <img crossorigin="anonymous" loading="lazy" [src]="notification.avatar"
         class="notification-image flex align-items-center justify-content-center border-1 border-300 border-round"
-        alt=""
-      />
+        alt="" />
     </div>
     <div class="p-1">
       <p class="m-0 text-md">
         <a [routerLink]="'/blog/' + notification.userUrl">{{
           notification.userUrl
-        }}</a>
+          }}</a>
         @switch (notification.type) { @case(notificationType.MENTION) {
         mentioned you in a woot } @case(notificationType.LIKE) { liked one of
         your woots } @case(notificationType.FOLLOW) { now follows you! }
         @case(notificationType.REBLOG) { rewooted one of your woots }
         @case(notificationType.EMOJIREACT) { reacted with @if (emojiUrl) {
-        <img
-          class="post-emoji"
-          [src]="emojiUrl"
-          [alt]="notification.emojiName"
-        />
+        <img class="post-emoji" [src]="emojiUrl" [alt]="notification.emojiName" />
         } @else {
         {{ notification.emojiName }}
         } to your woot } }
@@ -36,44 +25,27 @@
       </p>
     </div>
   </header>
-  <div
-    class="relative notification-content-shortened"
-    *ngIf="notification.type !== notificationType.FOLLOW"
-  >
+  <div class="relative notification-content-shortened" *ngIf="notification.type !== notificationType.FOLLOW">
     <a [routerLink]="notification.url" class="absolute inset-0">
       <span class="opacity-0">direct link to the post</span>
     </a>
-    <div
-      *ngIf="notification.type !== notificationType.MENTION"
-      class="flex mt-3 center-text overflow-hidden"
-    >
+    <div *ngIf="notification.type !== notificationType.MENTION" class="flex mt-3 center-text overflow-hidden">
       <div class="flex align-content-center user-avatar-container">
-        <img
-          [routerLink]="'/blog/' + notification.fragment?.user?.url"
-          crossorigin="anonymous"
-          loading="lazy"
-          [src]="selfAvatarUrl"
-          alt=""
-        />
+        <img [routerLink]="'/blog/' + notification.fragment?.user?.url" crossorigin="anonymous" loading="lazy"
+          [src]="selfAvatarUrl" alt="" />
       </div>
-      <div
-        class="w-full white-space-nowrap overflow-hidden text-overflow-ellipsis flex flex-column"
-      >
+      <div class="w-full white-space-nowrap overflow-hidden text-overflow-ellipsis flex flex-column">
         <div>
-          <a
-            class="original-poster-name"
-            [routerLink]="'/blog/' + notification.fragment?.user?.url"
-            [innerHTML]="notification.fragment?.user?.name"
-          ></a>
+          <a class="original-poster-name" [routerLink]="'/blog/' + notification.fragment?.user?.url"
+            [innerHTML]="notification.fragment?.user?.name"></a>
         </div>
         <div class="date-line mb-1 flex gap-2 align-items-center">
-          <span
-            class="font-small original-poster-url"
-            [innerText]="notification.fragment?.user?.url"
-          ></span>
+          <span class="font-small original-poster-url" [innerText]="notification.fragment?.user?.url"></span>
         </div>
       </div>
     </div>
-    <app-post-fragment [fragment]="notification.fragment"></app-post-fragment>
+    <div class="hover-cursor" [routerLink]="notification.url">
+      <app-post-fragment [fragment]="notification.fragment"></app-post-fragment>
+    </div>
   </div>
 </mat-card>
