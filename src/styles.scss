@@ -3,6 +3,12 @@
   font-family: AprilFoolsPapyrus;
   src: url("/assets/fonts/papyrus.woff2");
 }
+
+@font-face {
+  font-family: SpaceGrotesk;
+  src: url("/assets/fonts/SpaceGrotesk-Regular.woff2");
+}
+
 // wafrn css
 html,
 body {
@@ -65,7 +71,7 @@ a:visited,
   border-color: #999;
 }
 
-.ql-snow > .ql-editor {
+.ql-snow>.ql-editor {
   background: #20262e !important;
   color: white;
   border-radius: 0 0 5px 5px;
@@ -75,7 +81,7 @@ a:visited,
   overflow-y: auto;
 }
 
-.ql-snow > .ql-editor.ql-blank::before {
+.ql-snow>.ql-editor.ql-blank::before {
   color: white;
   opacity: 0.5;
 }
@@ -107,13 +113,15 @@ a:visited,
   -webkit-user-select: unset;
   user-select: unset;
 }
-.mention > span {
+
+.mention>span {
   margin: 0;
 }
 
 .ql-mention-list-item.selected {
   background-color: #20262e;
 }
+
 .ql-mention-list-container {
   background-color: #2a323d;
 }
@@ -185,6 +193,7 @@ blockquote {
 .ql-tooltip {
   z-index: 999 !important;
 }
+
 .ql-toolbar.ql-snow {
   border-color: #999;
 }
