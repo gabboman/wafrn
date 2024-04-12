@@ -30,11 +30,7 @@
 .notification-content-shortened {
   max-height: 250px;
   overflow: hidden;
-  mask-image: linear-gradient(
-    rgba(0, 0, 0, 1),
-    rgba(0, 0, 0, 1),
-    rgba(0, 0, 0, 0)
-  );
+
 }
 
 .inset-0 {
@@ -42,4 +38,9 @@
   right: 0;
   bottom: 0;
   left: 0;
+}
+
+.dotted {
+  border: 1px dashed;
+  background-color: transparent;
 }

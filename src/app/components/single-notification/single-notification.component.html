@@ -26,6 +26,8 @@
     </div>
   </header>
   <div class="relative notification-content-shortened" *ngIf="notification.type !== notificationType.FOLLOW">
+    <hr class="w-full dotted">
+
     <a [routerLink]="notification.url" class="absolute inset-0">
       <span class="opacity-0">direct link to the post</span>
     </a>
@@ -47,5 +49,6 @@
     <div class="hover-cursor" [routerLink]="notification.url">
       <app-post-fragment [fragment]="notification.fragment"></app-post-fragment>
     </div>
+    <hr class="w-full dotted">
   </div>
 </mat-card>
