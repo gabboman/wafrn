@@ -3,7 +3,7 @@ import { EditorService } from 'src/app/services/editor.service';
 import { MediaService } from 'src/app/services/media.service';
 import { environment } from 'src/environments/environment';
 import { QuillEditorComponent, QuillModule } from 'ngx-quill';
-import 'quill-mention';
+import 'quill-mention-wafrn';
 import Quill from 'quill';
 import { JwtService } from 'src/app/services/jwt.service';
 import { WafrnMedia } from 'src/app/interfaces/wafrn-media';
@@ -256,16 +256,17 @@ export class PostEditorComponent implements OnInit {
     */
 
     // quill format variables
-    const italic = Quill.import('formats/italic');
+    const italic: any = Quill.import('formats/italic');
     italic.tagName = 'i'; // Quill uses <em> by default
     Quill.register(italic, true);
 
-    const strike = Quill.import('formats/strike');
+    const strike: any = Quill.import('formats/strike');
     strike.tagName = 'del'; // Quill uses <s> by default
     Quill.register(strike, true);
 
     // custom formatting for mentions inserted in the editor
-    const mentionBlot = Quill.import('blots/mention');
+    const mentionBlot: any = Quill.import('blots/mention');
+
     mentionBlot.setDataValues = (
       node: HTMLElement,
       data: { id: string; value: string; link: string }

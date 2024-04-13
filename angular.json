@@ -2,7 +2,9 @@
   "$schema": "./node_modules/@angular/cli/lib/config/schema.json",
   "cli": {
     "analytics": "2ed75e61-714f-4d01-bf90-aa49cf351d90",
-    "schematicCollections": ["@angular-eslint/schematics"]
+    "schematicCollections": [
+      "@angular-eslint/schematics"
+    ]
   },
   "version": 1,
   "newProjectRoot": "projects",
@@ -30,7 +32,10 @@
             "polyfills": "src/polyfills.ts",
             "tsConfig": "tsconfig.app.json",
             "inlineStyleLanguage": "scss",
-            "allowedCommonJsDependencies": ["dompurify", "quill"],
+            "allowedCommonJsDependencies": [
+              "dompurify",
+              "quill"
+            ],
             "assets": [
               "src/favicon.ico",
               "src/assets",
@@ -64,7 +69,7 @@
                 "bundleName": "wafrn-css"
               },
               {
-                "input": "node_modules/quill-mention/dist/quill.mention.min.css",
+                "input": "node_modules/quill-mention-wafrn/dist/quill.mention.css",
                 "inject": false,
                 "bundleName": "wafrn-css"
               },
@@ -194,7 +199,10 @@
         "lint": {
           "builder": "@angular-eslint/builder:lint",
           "options": {
-            "lintFilePatterns": ["src/**/*.ts", "src/**/*.html"]
+            "lintFilePatterns": [
+              "src/**/*.ts",
+              "src/**/*.html"
+            ]
           }
         }
       }
