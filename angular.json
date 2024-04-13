@@ -34,7 +34,8 @@
             "inlineStyleLanguage": "scss",
             "allowedCommonJsDependencies": [
               "dompurify",
-              "quill"
+              "quill",
+              "quill-delta"
             ],
             "assets": [
               "src/favicon.ico",
