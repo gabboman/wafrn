@@ -9,6 +9,7 @@ import { PostFragmentComponent } from 'src/app/components/post-fragment/post-fra
 import { ProcessedPost } from 'src/app/interfaces/processed-post';
 import { ForumService } from 'src/app/services/forum.service';
 import { LoginService } from 'src/app/services/login.service';
+import { PostsService } from 'src/app/services/posts.service';
 
 @Component({
   selector: 'app-forum',
@@ -29,6 +30,7 @@ export class ForumComponent implements OnDestroy {
   loading = true;
   posts: ProcessedPost[] = [];
   subscription;
+  updateFollowsSubscription;
   userLoggedIn = false;
   myId = '';
   notYetAcceptedFollows: string[] = [];
@@ -37,8 +39,17 @@ export class ForumComponent implements OnDestroy {
   constructor(
     private forumService: ForumService,
     private route: ActivatedRoute,
-    private loginService: LoginService
+    private loginService: LoginService,
+    private postService: PostsService
   ) {
+    this.followedUsers = this.postService.followedUserIds;
+    this.notYetAcceptedFollows =
+      this.postService.notYetAcceptedFollowedUsersIds;
+      this.updateFollowsSubscription = this.postService.updateFollowers.subscribe(() => {
+        this.followedUsers = this.postService.followedUserIds;
+        this.notYetAcceptedFollows =
+          this.postService.notYetAcceptedFollowedUsersIds;
+      });
     this.userLoggedIn = loginService.checkUserLoggedIn();
     if (this.userLoggedIn) {
       this.myId = loginService.getLoggedUserUUID();
@@ -51,9 +62,18 @@ export class ForumComponent implements OnDestroy {
   }
   ngOnDestroy(): void {
     this.subscription.unsubscribe();
+    this.updateFollowsSubscription.unsubscribe();
   }
 
   followUser(id: string) { }
 
   unfollowUser(id: string) { }
+
+  scrollTo(id: string) {
+    document.getElementById('post-' + id)?.scrollIntoView({
+      behavior: "smooth",
+      block: "start",
+      inline: "nearest"
+      });
+    }
 }

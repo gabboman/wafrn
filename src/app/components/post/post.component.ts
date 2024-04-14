@@ -24,7 +24,6 @@ import {
   faRotateLeft,
   faShareNodes,
   faTrash,
-  faTriangleExclamation,
   faGlobe,
   faEnvelope,
   faServer,
