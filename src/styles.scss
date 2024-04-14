@@ -220,7 +220,22 @@ a:visited,
 }
 
 .hover-cursor {
-  cursor: pointer;
+  cursor: pointer !important;
+}
+
+.avatar {
+  height: 40px;
+  width: 40px;
+  margin-right: 4px;
+
+  img {
+    border-radius: 8px;
+    margin: 0 auto;
+    display: block;
+    //width: auto;
+    max-height: 100%;
+    object-fit: cover;
+  }
 }
 
 .margin-auto {

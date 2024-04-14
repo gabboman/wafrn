@@ -55,11 +55,6 @@
                 "bundleName": "wafrn-css"
               },
               {
-                "input": "node_modules/primeflex/themes/primeone-dark.css",
-                "inject": false,
-                "bundleName": "wafrn-css"
-              },
-              {
                 "input": "node_modules/quill/dist/quill.snow.css",
                 "inject": false,
                 "bundleName": "wafrn-css"

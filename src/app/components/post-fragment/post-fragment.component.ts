@@ -9,6 +9,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { SimplifiedUser } from 'src/app/interfaces/simplified-user';
 import { environment } from 'src/environments/environment';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatCardModule } from '@angular/material/card';
 
 @Component({
   selector: 'app-post-fragment',
@@ -45,7 +46,7 @@ export class PostFragmentComponent implements OnInit {
             content: reaction.content,
             img: reaction.emoji?.url
               ? environment.externalCacheurl +
-                encodeURIComponent(reaction.emoji.url)
+              encodeURIComponent(reaction.emoji.url)
               : undefined,
             users: this.fragment?.emojiReactions
               .filter(

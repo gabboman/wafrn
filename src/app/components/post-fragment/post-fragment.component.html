@@ -12,6 +12,26 @@
   <div *ngIf="fragment.questionPoll" [ngClass]="{ blurry: fragment.content_warning && showCw }">
     <app-poll [poll]="fragment.questionPoll"></app-poll>
   </div>
+  @for(quote of fragment.quotes; track quote) {
+  <div class="quoted-post hover-cursor">
+    <div class="flex">
+      <div class="flex align-content-center user-avatar-container">
+        <img class="avatar" [routerLink]="'/blog/' + quote?.user?.url" crossorigin="anonymous" loading="lazy"
+          [src]="quote.user.avatar" alt="" />
+      </div>
+      <div class="w-full white-space-nowrap overflow-hidden text-overflow-ellipsis flex flex-column">
+        <div>
+          <a class="original-poster-name" [routerLink]="'/blog/' + quote?.user?.url"
+            [innerHTML]="quote?.user?.name"></a>
+        </div>
+        <div class="date-line mb-1 flex gap-2 align-items-center">
+          <span class="font-small original-poster-url" [innerText]="quote?.user?.url"></span>
+        </div>
+      </div>
+    </div>
+    <app-post-fragment [fragment]="quote"></app-post-fragment>
+  </div>
+  }
   <div *ngFor="let media of fragment.medias" [ngClass]="{ blurry: fragment.content_warning && showCw }">
     <app-wafrn-media [data]="media"></app-wafrn-media>
   </div>
