@@ -3,7 +3,7 @@
     <div class="fragment-content ql-editor -mx-3">
       {{ fragment.content_warning }}
     </div>
-    <button mat-flat-button color="primary" (click)="dismissCw.emit()" class="w-full">
+    <button [disabled]="!showCw" mat-flat-button color="primary" (click)="dismissCw.emit()" class="w-full">
       I understand this and I want to see this woot
     </button>
   </div>
