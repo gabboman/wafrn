@@ -1,13 +1,7 @@
 <div class="wafrn-container mx-1 md:mx-4 flex align-items-center">
-  <h3 class="flex-grow-1 m-0 text-2xl">{{ title }}</h3>
-  <button
-    (click)="reloadPosts()"
-    mat-flat-button
-    color="default"
-    aria-label="Refresh"
-    class="refresh-button"
-    style="position: fixed; z-index: 500; top: 1em; right: 0.5em"
-  >
+  <h3 class="flex-grow-1 m-0 text-2xl space-grotesk">{{ title }}</h3>
+  <button (click)="reloadPosts()" mat-flat-button color="default" aria-label="Refresh" class="refresh-button"
+    style="position: fixed; z-index: 500; top: 1em; right: 0.5em">
     <fa-icon [icon]="reloadIcon" />
   </button>
 </div>
@@ -16,11 +10,8 @@
 </div>
 <footer class="p-4 flex gap-3 align-items-center">
   <mat-spinner *ngIf="!noMorePosts" diameter="42"></mat-spinner>
-  <p
-    [hidden]="loadingPosts || noMorePosts"
-    id="if-you-see-this-load-more-posts"
-    class="m-0 text-lg text-600"
-  >
+  <p [hidden]="loadingPosts || noMorePosts" id="if-you-see-this-load-more-posts"
+    class="m-0 text-lg text-600 space-grotesk">
     Loading more...
   </p>
   <p *ngIf="loadingPosts" class="m-0 text-lg text-600">Loading more posts</p>
