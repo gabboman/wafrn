@@ -11,6 +11,8 @@ export interface unlinkedPosts {
   tags: Tag[];
   likes: Like[];
   lastPostDate: Date;
+  quotes: Quote[];
+  quotedPosts: basicPost[]
 }
 
 export interface basicPost {
@@ -35,6 +37,12 @@ interface EmojiRelations {
   postEmojiRelation: PostEmojiRelation[];
   postEmojiReactions: PostEmojiReaction[];
   emojis: Emoji[];
+}
+
+interface Quote {
+  quotedPostId: string;
+  quoterPostId: string;
+  //createdAt: Date;
 }
 
 interface PostEmojiRelation {

@@ -15,6 +15,7 @@ import { Emoji } from '../interfaces/emoji';
   providedIn: 'root',
 })
 export class PostsService {
+  processedQuotes: ProcessedPost[] = []
   parser = new DOMParser();
   wafrnMediaRegex =
     /\[wafrnmediaid="[0-9a-fA-F]{8}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{12}"\]/gm;
@@ -139,11 +140,12 @@ export class PostsService {
   }
 
   processPostNew(unlinked: unlinkedPosts): ProcessedPost[][] {
+    this.processedQuotes = unlinked.quotedPosts.map(quote => this.processSinglePost({ ...unlinked, posts: [quote] }))
     const res = unlinked.posts.map((elem) => {
       const processed = elem.ancestors
         ? elem.ancestors.map((anc) =>
-            this.processSinglePost({ ...unlinked, posts: [anc] })
-          )
+          this.processSinglePost({ ...unlinked, posts: [anc] })
+        )
         : [];
       processed.push(
         this.processSinglePost({
@@ -183,8 +185,7 @@ export class PostsService {
         if (emoji) {
           user.name = user.name.replaceAll(
             emoji.name,
-            `<img class="post-emoji" src="${
-              environment.externalCacheurl + encodeURIComponent(emoji.url)
+            `<img class="post-emoji" src="${environment.externalCacheurl + encodeURIComponent(emoji.url)
             }">`
           );
         }
@@ -249,6 +250,7 @@ export class PostsService {
       medias: medias.sort((a, b) => a.order - b.order),
       questionPoll: polls[0],
       mentionPost: mentionedUsers as SimplifiedUser[],
+      quotes: unlinked.quotes.filter(quote => quote.quoterPostId === elem.id).map(quote => this.processedQuotes.find(pst => pst.id === quote.quotedPostId) as ProcessedPost)
     };
     newPost.content = this.getPostHtml(newPost);
     return newPost;
@@ -295,24 +297,23 @@ export class PostsService {
       : [];
     const mentionedHosts = post.mentionPost
       ? post.mentionPost?.map(
-          (elem) =>
-            this.getURL(
-              elem.remoteId
-                ? elem.remoteId
-                : 'https://adomainthatdoesnotexist.google.com'
-            ).hostname
-        )
+        (elem) =>
+          this.getURL(
+            elem.remoteId
+              ? elem.remoteId
+              : 'https://adomainthatdoesnotexist.google.com'
+          ).hostname
+      )
       : [];
     Array.from(links).forEach((link) => {
       const youtubeMatch = link.href.matchAll(this.youtubeRegex);
       if (link.innerText === link.href && youtubeMatch) {
         Array.from(youtubeMatch).forEach((youtubeString) => {
-          link.innerHTML = `<div class="watermark"><!-- Watermark container --><div class="watermark__inner"><!-- The watermark --><div class="watermark__body"><img alt="youtube logo" class="yt-watermark" loading="lazy" src="/assets/img/youtube_logo.png"></div></div><img class="yt-thumbnail" src="${
-            environment.externalCacheurl +
+          link.innerHTML = `<div class="watermark"><!-- Watermark container --><div class="watermark__inner"><!-- The watermark --><div class="watermark__body"><img alt="youtube logo" class="yt-watermark" loading="lazy" src="/assets/img/youtube_logo.png"></div></div><img class="yt-thumbnail" src="${environment.externalCacheurl +
             encodeURIComponent(
               `https://img.youtube.com/vi/${youtubeString[6]}/hqdefault.jpg`
             )
-          }" loading="lazy" alt="Thumbnail for video"></div>`;
+            }" loading="lazy" alt="Thumbnail for video"></div>`;
         });
       }
       // replace mentioned users with wafrn version of profile.
@@ -359,8 +360,7 @@ export class PostsService {
         : `:${emoji.name}:`;
       sanitized = sanitized.replaceAll(
         strToReplace,
-        `<img src="${
-          environment.externalCacheurl + encodeURIComponent(emoji.url)
+        `<img src="${environment.externalCacheurl + encodeURIComponent(emoji.url)
         }" class="post-emoji"/>`
       );
     });

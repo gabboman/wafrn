@@ -26,4 +26,5 @@ export interface ProcessedPost {
   descendents: RawPost[];
   questionPoll?: QuestionPoll;
   emojiReactions: PostEmojiReaction[];
+  quotes: ProcessedPost[]
 }

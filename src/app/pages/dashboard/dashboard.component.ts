@@ -148,6 +148,7 @@ export class DashboardComponent implements OnInit {
     if (!this.jwtService.tokenValid()) {
       this.posts.push([
         {
+          quotes: [],
           emojiReactions: [],
           id: '872c9649-5043-460e-a9df-c35a568c8aef',
           content_warning: '',
