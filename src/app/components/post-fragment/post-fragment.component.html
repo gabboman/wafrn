@@ -29,7 +29,10 @@
         </div>
       </div>
     </div>
-    <app-post-fragment [fragment]="quote"></app-post-fragment>
+    <div class="hover-cursor" [routerLink]="'/post/' + quote.id">
+      <app-post-fragment [fragment]="quote"></app-post-fragment>
+
+    </div>
   </div>
   }
   <div *ngFor="let media of fragment.medias" [ngClass]="{ blurry: fragment.content_warning && showCw }">
