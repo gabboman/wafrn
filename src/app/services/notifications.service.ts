@@ -98,8 +98,7 @@ export class NotificationsService {
     petitionData = petitionData.set('reblogsDate', this.reblogsDate.toString())
     petitionData = petitionData.set('mentionsDate', this.mentionsDate.toString())
     petitionData = petitionData.set('emojiReactionDate', this.emojiReactionDate.toString())
-    petitionData = petitionData.set('mentionsDate', this.quotesDate.toString())
-
+    petitionData = petitionData.set('quotesDate', this.quotesDate.toString())
     petitionData = petitionData.set('page', page)
 
     const tmp = await firstValueFrom(
