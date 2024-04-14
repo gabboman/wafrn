@@ -9,16 +9,18 @@ import { environment } from 'src/environments/environment';
   providedIn: 'root',
 })
 export class ForumService {
-  constructor(private http: HttpClient, private postService: PostsService) {}
+  constructor(private http: HttpClient, private postService: PostsService) { }
 
   async getForumThread(id: string) {
     const response: unlinkedPosts = await firstValueFrom(
       this.http.get<unlinkedPosts>(environment.baseUrl + '/forum/' + id)
     );
-    let result = this.postService.processPostNew(response);
-    result = result.filter(
+    let processed = this.postService.processPostNew(response);
+    processed = processed.filter(
       (post) => !this.postService.postContainsBlocked(post)
     );
+    let result = processed.map(elem => elem[elem.length - 1]).concat([processed[0][0]])
+    result = result.sort((a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime() )
     return result;
   }
 }

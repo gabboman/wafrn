@@ -45,8 +45,7 @@ export class ForumComponent implements OnDestroy {
     }
     this.subscription = this.route.params.subscribe(async (data: any) => {
       this.loading = true;
-      this.posts = (await this.forumService.getForumThread(data.id))[0];
-      console.log(this.posts);
+      this.posts = (await this.forumService.getForumThread(data.id));
       this.loading = false;
     });
   }
@@ -54,7 +53,7 @@ export class ForumComponent implements OnDestroy {
     this.subscription.unsubscribe();
   }
 
-  followUser(id: string) {}
+  followUser(id: string) { }
 
-  unfollowUser(id: string) {}
+  unfollowUser(id: string) { }
 }
