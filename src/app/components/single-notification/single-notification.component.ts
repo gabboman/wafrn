@@ -27,8 +27,9 @@ export class SingleNotificationComponent implements OnInit {
         environment.externalCacheurl +
         encodeURIComponent(this.notification.emojiReact?.url as string);
     }
-    if (this.notification.type != this.notificationType.FOLLOW) {
+    if (this.notification.type != NotificationType.FOLLOW) {
       this.selfAvatarUrl = environment.externalCacheurl + encodeURIComponent(environment.baseMediaUrl + this.notification.fragment?.user.avatar)
     }
+
   }
 }

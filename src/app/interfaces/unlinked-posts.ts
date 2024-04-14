@@ -30,6 +30,7 @@ export interface basicPost {
   parentId?: string;
   ancestors: basicPost[];
   notes?: number;
+  quotes?: basicPost[]
 }
 
 interface EmojiRelations {
@@ -39,10 +40,10 @@ interface EmojiRelations {
   emojis: Emoji[];
 }
 
-interface Quote {
+export interface Quote {
   quotedPostId: string;
   quoterPostId: string;
-  //createdAt: Date;
+  createdAt: Date;
 }
 
 interface PostEmojiRelation {

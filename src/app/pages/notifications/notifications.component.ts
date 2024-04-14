@@ -19,6 +19,7 @@ export class NotificationsComponent implements OnInit {
   likes: Reblog[] = [];
   reblogs: Reblog[] = [];
   mentions: Reblog[] = [];
+  quotes: Reblog[] = []
   emojiReacts: UserNotifications[] = [];
   observer: IntersectionObserver;
   reloadIcon = faArrowsRotate;
@@ -87,6 +88,7 @@ export class NotificationsComponent implements OnInit {
     this.reblogs = this.reblogs.concat(allNotifications.reblogs);
     this.emojiReacts = this.emojiReacts.concat(allNotifications.emojiReactions);
     this.likes = this.likes.concat(allNotifications.likes);
+    this.quotes = this.quotes.concat(allNotifications.quotes);
     let processedNotifications: UserNotifications[] = this.follows.map(
       (follow) => {
         return {
@@ -117,6 +119,7 @@ export class NotificationsComponent implements OnInit {
         this.reblogToNotification(elem, NotificationType.LIKE)
       )
     );
+    processedNotifications = processedNotifications.concat(this.quotes.map((elem) => this.reblogToNotification(elem, NotificationType.QUOTE)))
     processedNotifications.sort((b, a) => a.date.getTime() - b.date.getTime());
     if (page === 0) {
       processedNotifications.forEach((elem) =>

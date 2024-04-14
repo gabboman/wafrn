@@ -6,7 +6,7 @@ import { Reblog } from '../interfaces/reblog';
 import { JwtService } from './jwt.service';
 import { firstValueFrom } from 'rxjs';
 import { SimplifiedUser } from '../interfaces/simplified-user';
-import { basicPost } from '../interfaces/unlinked-posts';
+import { Quote, basicPost } from '../interfaces/unlinked-posts';
 import { UserNotifications } from '../interfaces/user-notifications';
 import { NotificationType } from '../enums/notification-type';
 import { ProcessedPost } from '../interfaces/processed-post';
@@ -20,6 +20,7 @@ export class NotificationsService {
   reblogsDate = new Date()
   mentionsDate = new Date()
   emojiReactionDate = new Date()
+  quotesDate = new Date()
 
 
   constructor(private http: HttpClient, private jwt: JwtService) { }
@@ -71,6 +72,7 @@ export class NotificationsService {
     mentions: Reblog[];
     likes: Reblog[];
     emojiReactions: UserNotifications[];
+    quotes: Reblog[]
   }> {
     if (!this.jwt.tokenValid()) {
       return {
@@ -79,6 +81,7 @@ export class NotificationsService {
         mentions: [],
         likes: [],
         emojiReactions: [],
+        quotes: []
       };
     }
     if (page === 0) {
@@ -87,6 +90,7 @@ export class NotificationsService {
       this.reblogsDate = new Date()
       this.mentionsDate = new Date()
       this.emojiReactionDate = new Date()
+      this.quotesDate = new Date()
     }
     let petitionData: HttpParams = new HttpParams();
     petitionData = petitionData.set('likesDate', this.likesDate.toString())
@@ -94,6 +98,8 @@ export class NotificationsService {
     petitionData = petitionData.set('reblogsDate', this.reblogsDate.toString())
     petitionData = petitionData.set('mentionsDate', this.mentionsDate.toString())
     petitionData = petitionData.set('emojiReactionDate', this.emojiReactionDate.toString())
+    petitionData = petitionData.set('mentionsDate', this.quotesDate.toString())
+
     petitionData = petitionData.set('page', page)
 
     const tmp = await firstValueFrom(
@@ -106,6 +112,7 @@ export class NotificationsService {
         mentions: any[],
         likes: any[],
         emojiReactions: any[],
+        quotes: any[]
       }>(`${environment.baseUrl}/v2/notificationsScroll`, {
         params: petitionData,
       })
@@ -117,6 +124,12 @@ export class NotificationsService {
         const medias = tmp.medias.filter(med => med.posts[0].id === post.id)
         post.medias = medias;
         return post;
+      })
+      tmp.posts = tmp.posts.map((post: any) => {
+        return {
+          ...post,
+          quotes: tmp.quotes.filter(q => q.quoterPostId === post.id).map(q => tmp.posts.find(p => p.id === q.quotedPostId) as basicPost)
+        }
       })
       tmp.follows = tmp.follows.map((follow) => {
         const usr = tmp.users.find(usr => usr.id === follow.followerId)
@@ -178,12 +191,22 @@ export class NotificationsService {
         };
       });
     }
+    tmp.quotes = tmp.quotes.map(q => {
+      const post = tmp.posts.find((post: any) => post.id === q.quoterPostId) as basicPost
+      return {
+        user: tmp.users.find((usr) => usr.id === post.userId),
+        content: post,
+        id: post.id,
+        createdAt: new Date(post.createdAt)
+      }
+    })
     if (tmp) {
       this.followsDate = new Date(Math.min.apply(null, tmp.follows.map(elem => elem.createdAt)))
       this.likesDate = new Date(Math.min.apply(null, tmp.likes.map(elem => elem.createdAt)))
       this.reblogsDate = new Date(Math.min.apply(null, tmp.reblogs.map(elem => elem.createdAt)))
       this.mentionsDate = new Date(Math.min.apply(null, tmp.mentions.map(elem => elem.createdAt)))
       this.emojiReactionDate = new Date(Math.min.apply(null, tmp.emojiReactions.map(elem => elem.createdAt)))
+      this.quotesDate = new Date(Math.min.apply(null, tmp.quotes.map(elem => elem.createdAt)))
     }
     return tmp
       ? tmp
@@ -193,6 +216,7 @@ export class NotificationsService {
         mentions: [],
         likes: [],
         emojiReactions: [],
+        quotes: []
       };
   }
 }
