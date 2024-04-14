@@ -1,18 +1,8 @@
 <mat-drawer-container>
-  <mat-drawer
-    style="position: fixed"
-    class="side-menu"
-    [mode]="mobile ? 'over' : 'side'"
-    [opened]="menuVisible || !mobile"
-    (closed)="hideMenu()"
-  >
-    <a href="/" class="block" (click)="hideMenu()">
-      <img
-        [src]="logo"
-        class="block mx-auto my-3"
-        alt="instance logo"
-        style="max-width: 200px; max-height: 72px"
-      />
+  <mat-drawer style="position: fixed" class="side-menu" [mode]="mobile ? 'over' : 'side'"
+    [opened]="menuVisible || !mobile" (closed)="hideMenu()">
+    <a [routerLink]="'/'" class="block" (click)="hideMenu()">
+      <img [src]="logo" class="block mx-auto my-3" alt="instance logo" style="max-width: 200px; max-height: 72px" />
     </a>
     <hr class="mx-3" />
     <mat-nav-list>
@@ -24,21 +14,11 @@
     </mat-nav-list>
   </mat-drawer>
   <mat-drawer-content>
-    <button
-      style="position: fixed; z-index: 500; top: 1em; left: 0.5em"
-      mat-flat-button
-      color="primary"
-      *ngIf="!menuVisible"
-      [hidden]="!mobile"
-      type="button"
-      class="show-sidebar-menu-button"
-      (click)="showMenu()"
-      [matBadge]="notifications + adminNotifications + usersAwaitingAproval"
-      [matBadgeHidden]="
+    <button style="position: fixed; z-index: 500; top: 1em; left: 0.5em" mat-flat-button color="primary"
+      *ngIf="!menuVisible" [hidden]="!mobile" type="button" class="show-sidebar-menu-button" (click)="showMenu()"
+      [matBadge]="notifications + adminNotifications + usersAwaitingAproval" [matBadgeHidden]="
         notifications + adminNotifications + usersAwaitingAproval === 0
-      "
-      matBadgePosition="below"
-    >
+      " matBadgePosition="below">
       <fa-icon [icon]="hamburguerIcon"></fa-icon>
     </button>
     <div class="pt-7">

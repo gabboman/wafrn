@@ -19,7 +19,6 @@ export class SingleNotificationComponent implements OnInit {
   emojiUrl: string = '';
   @Input() notification!: UserNotifications;
   notificationType = NotificationType;
-  selfAvatarUrl: string = '';
 
   ngOnInit(): void {
     if (this.notification.emojiReact) {
@@ -27,9 +26,7 @@ export class SingleNotificationComponent implements OnInit {
         environment.externalCacheurl +
         encodeURIComponent(this.notification.emojiReact?.url as string);
     }
-    if (this.notification.type != NotificationType.FOLLOW) {
-      this.selfAvatarUrl = environment.externalCacheurl + encodeURIComponent(environment.baseMediaUrl + this.notification.fragment?.user.avatar)
-    }
+
 
   }
 }

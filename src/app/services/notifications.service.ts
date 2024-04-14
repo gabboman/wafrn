@@ -117,6 +117,16 @@ export class NotificationsService {
       })
     );
     if (tmp) {
+      tmp.users = tmp.users.map(usr => {
+        console.log(usr.url.startsWith('@') ? environment.externalCacheurl + encodeURIComponent(usr.avatar) :
+          environment.externalCacheurl + encodeURIComponent(environment.baseMediaUrl + usr.avatar))
+        return {
+          ...usr,
+          avatar: usr.url.startsWith('@') ? environment.externalCacheurl + encodeURIComponent(usr.avatar) :
+            environment.externalCacheurl + encodeURIComponent(environment.baseMediaUrl + usr.avatar)
+        }
+      })
+
       tmp.posts = tmp.posts.map((post: any) => {
         let user = tmp.users.find(usr => usr.id === post.userId) as SimplifiedUser;
         post.user = user;
@@ -145,13 +155,7 @@ export class NotificationsService {
           date: new Date(emojiReact.createdAt),
           url: emojiReact.postId,
           userUrl: user?.url,
-          avatar:
-            environment.externalCacheurl +
-            encodeURIComponent(
-              user?.url.startsWith('@')
-                ? user.avatar
-                : environment.baseMediaUrl + user?.avatar
-            ),
+          avatar: user?.avatar,
           type: NotificationType.EMOJIREACT,
           emojiReact: emojiReact.emoji,
           emojiName: emojiReact.content,
@@ -193,7 +197,6 @@ export class NotificationsService {
     tmp.quotes = tmp.quotes.map(q => {
       const post = tmp.posts.find((post: any) => post.id === q.quoterPostId) as basicPost
       const user = tmp.users.find((usr) => usr.id === post.userId) as SimplifiedUser
-      user.avatar = user.url.startsWith('@') ? environment.externalCacheurl + encodeURIComponent(user.avatar) : environment.externalCacheurl + encodeURIComponent(environment.baseMediaUrl + user.avatar)
       return {
         user: user,
         content: post,

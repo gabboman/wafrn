@@ -161,10 +161,7 @@ export class NotificationsComponent implements OnInit {
     }
     return {
       url: `/post/${reblog.id}`,
-      avatar: reblog.user.url.startsWith('@')
-        ? environment.externalCacheurl + encodeURIComponent(reblog.user.avatar)
-        : environment.externalCacheurl +
-        encodeURIComponent(environment.baseMediaUrl + reblog.user.avatar),
+      avatar: reblog.user.avatar,
       date: reblog.createdAt,
       type: type,
       userUrl: reblog.user.url,

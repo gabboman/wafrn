@@ -34,7 +34,7 @@
     <div *ngIf="notification.type !== notificationType.MENTION" class="flex mt-3 center-text overflow-hidden">
       <div class="flex align-content-center user-avatar-container">
         <img [routerLink]="'/blog/' + notification.fragment?.user?.url" crossorigin="anonymous" loading="lazy"
-          [src]="selfAvatarUrl" alt="" />
+          [src]="notification.fragment?.user?.avatar" alt="" />
       </div>
       <div class="w-full white-space-nowrap overflow-hidden text-overflow-ellipsis flex flex-column">
         <div>
