@@ -168,9 +168,9 @@ export class PostsService {
   processSinglePost(unlinked: unlinkedPosts): ProcessedPost {
     const elem = unlinked.posts[0];
     const user = unlinked.users.find((usr) => usr.id === elem.userId);
-    if (user) {
-      user.avatar = user?.url.startsWith('@') ? environment.externalCacheurl + encodeURIComponent(user?.avatar) : environment.externalCacheurl +
-        encodeURIComponent(environment.baseMediaUrl + user?.avatar)
+    if (user && !user.avatar.startsWith(environment.externalCacheurl)) {
+      user.avatar = user?.url.startsWith('@') ? environment.externalCacheurl + encodeURIComponent(user.avatar) : environment.externalCacheurl +
+        encodeURIComponent(environment.baseMediaUrl + user.avatar)
     }
     const userEmojis = unlinked.emojiRelations.userEmojiRelation.filter(
       (elem) => elem.userId === user?.id

@@ -50,7 +50,6 @@ export class PostComponent implements OnInit, OnChanges {
   userLoggedIn = false;
   followedUsers: string[] = [];
   notYetAcceptedFollows: string[] = [];
-  avatars: string[] = [];
   notes: string = '---';
   quickReblogPanelVisible = false;
   quickReblogBeingDone = false;
@@ -139,9 +138,6 @@ export class PostComponent implements OnInit, OnChanges {
   }
 
   ngOnChanges() {
-    this.avatars = this.post.map((elem) =>
-      elem.user.avatar
-    );
     this.ready = true;
     const notes = this.post[this.post.length - 1].notes;
     this.notes = notes.toString();

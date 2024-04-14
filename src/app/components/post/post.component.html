@@ -5,7 +5,7 @@
     <div *ngIf="post.length > 1" class="center-text overflow-hidden">
       <div class="avatar">
         <img [routerLink]="'/blog/' + originalPoster.url" crossorigin="anonymous" loading="lazy"
-          [src]="avatars[avatars.length - 1]" onerror="this.onerror=null;this.src='/api/uploads/default.webp'" alt=""
+          [src]="originalPoster.avatar" onerror="this.onerror=null;this.src='/api/uploads/default.webp'" alt=""
           width="40" height="40" />
       </div>
       <div class="w-full white-space-nowrap overflow-hidden text-overflow-ellipsis flex flex-column">
@@ -45,8 +45,8 @@
         <div class="center-text flex-grow-1 flex-shrink-1 min-w-0">
           <div class="avatar">
             <img alt="" [routerLink]="'/blog/' + content.user.url" class="user-avatar" crossorigin="anonymous"
-              loading="lazy" [src]="avatars[index]" onerror="this.onerror=null;this.src='/api/uploads/default.webp'"
-              height="40" width="40" />
+              loading="lazy" [src]="content.user.avatar"
+              onerror="this.onerror=null;this.src='/api/uploads/default.webp'" height="40" width="40" />
           </div>
           <div class="w-full overflow-hidden flex flex-column">
             <a class="max-w-full white-space-nowrap overflow-hidden text-overflow-ellipsis user-name"
