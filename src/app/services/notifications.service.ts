@@ -192,8 +192,10 @@ export class NotificationsService {
     }
     tmp.quotes = tmp.quotes.map(q => {
       const post = tmp.posts.find((post: any) => post.id === q.quoterPostId) as basicPost
+      const user = tmp.users.find((usr) => usr.id === post.userId) as SimplifiedUser
+      user.avatar = user.url.startsWith('@') ? environment.externalCacheurl + encodeURIComponent(user.avatar) : environment.externalCacheurl + encodeURIComponent(environment.baseMediaUrl + user.avatar)
       return {
-        user: tmp.users.find((usr) => usr.id === post.userId),
+        user: user,
         content: post,
         id: post.id,
         createdAt: new Date(post.createdAt)
