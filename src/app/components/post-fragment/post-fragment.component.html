@@ -21,8 +21,7 @@
       </div>
       <div class="w-full white-space-nowrap overflow-hidden text-overflow-ellipsis flex flex-column">
         <div>
-          <a class="original-poster-name" [routerLink]="'/blog/' + quote?.user?.url"
-            [innerHTML]="quote?.user?.name"></a>
+          <a class="original-poster-name" [routerLink]="'/blog/' + quote.user.url" [innerHTML]="quote?.user?.name"></a>
         </div>
         <div class="date-line mb-1 flex gap-2 align-items-center">
           <span class="font-small original-poster-url" [innerText]="quote?.user?.url"></span>
@@ -31,7 +30,6 @@
     </div>
     <div class="hover-cursor" [routerLink]="'/post/' + quote.id">
       <app-post-fragment [fragment]="quote"></app-post-fragment>
-
     </div>
   </div>
   }
