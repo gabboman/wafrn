@@ -13,7 +13,7 @@
     <app-poll [poll]="fragment.questionPoll"></app-poll>
   </div>
   @for(quote of fragment.quotes; track quote) {
-  <div class="quoted-post hover-cursor mb-2">
+  <div [ngClass]="{ blurry: fragment.content_warning && showCw }"  class="quoted-post hover-cursor mb-2">
     <div class="flex">
       <div class="flex align-content-center user-avatar-container">
         <img class="avatar" [routerLink]="'/blog/' + quote?.user?.url" crossorigin="anonymous" loading="lazy"
