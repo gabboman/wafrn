@@ -118,8 +118,6 @@ export class NotificationsService {
     );
     if (tmp) {
       tmp.users = tmp.users.map(usr => {
-        console.log(usr.url.startsWith('@') ? environment.externalCacheurl + encodeURIComponent(usr.avatar) :
-          environment.externalCacheurl + encodeURIComponent(environment.baseMediaUrl + usr.avatar))
         return {
           ...usr,
           avatar: usr.url.startsWith('@') ? environment.externalCacheurl + encodeURIComponent(usr.avatar) :
