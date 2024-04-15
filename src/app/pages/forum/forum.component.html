@@ -1,6 +1,8 @@
 <app-loader *ngIf="loading"></app-loader>
 <ng-container *ngIf="!loading">
-  <h3 class="flex-grow-1 m-0 text-2xl space-grotesk">Forum style view</h3>
+  <div class="wafrn-container mx-1 md:mx-4 flex align-items-center">
+    <h3 class="flex-grow-1 m-0 mb-2 text-2xl space-grotesk">Forum Style View</h3>
+    </div>
   @for (content of posts; track posts; let index = $index) { @if(content.content
   !== '' || content.tags.length > 0 || (content.medias && content.medias.length
   > 0)) {
