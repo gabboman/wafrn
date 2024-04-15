@@ -60,6 +60,7 @@ export class NavigationMenuComponent implements OnInit, OnDestroy {
   defaultIcon = faQuestion;
   navigationSubscription: Subscription;
   loginSubscription: Subscription;
+  scrollSubscription: Subscription;
   hamburguerIcon = faBars;
   constructor(
     private editorService: EditorService,
@@ -72,7 +73,7 @@ export class NavigationMenuComponent implements OnInit, OnDestroy {
     private dashboardService: DashboardService,
     private dialogService: MatDialog
   ) {
-    this.loginSubscription = this.loginService.loginEventEmitter.subscribe(
+    this.loginSubscription = this.loginSubscription = this.loginService.loginEventEmitter.subscribe(
       () => {
         this.drawMenu();
       }
@@ -83,7 +84,7 @@ export class NavigationMenuComponent implements OnInit, OnDestroy {
       }
     });
 
-    this.dashboardService.scrollEventEmitter.subscribe(() => {
+    this.scrollSubscription = this.dashboardService.scrollEventEmitter.subscribe(() => {
       this.updateNotifications('scroll');
     });
   }
@@ -97,6 +98,7 @@ export class NavigationMenuComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.navigationSubscription.unsubscribe();
     this.loginSubscription.unsubscribe();
+    this.scrollSubscription.unsubscribe();
   }
 
   showMenu() {

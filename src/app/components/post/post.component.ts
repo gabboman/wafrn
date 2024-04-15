@@ -3,6 +3,7 @@ import {
   EventEmitter,
   Input,
   OnChanges,
+  OnDestroy,
   OnInit,
   Output,
 } from '@angular/core';
@@ -38,7 +39,7 @@ import {
   templateUrl: './post.component.html',
   styleUrls: ['./post.component.scss'],
 })
-export class PostComponent implements OnInit, OnChanges {
+export class PostComponent implements OnInit, OnChanges, OnDestroy {
   @Input() post!: ProcessedPost[];
   @Input() showFull: boolean = false;
   originalPoster!: SimplifiedUser;
@@ -79,6 +80,9 @@ export class PostComponent implements OnInit, OnChanges {
   userIcon = faUser;
   editedIcon = faPen;
 
+  // subscriptions
+  updateFollowersSubscription;
+
   // post seen
   @Output() seenEmitter: EventEmitter<boolean> = new EventEmitter<boolean>();
 
@@ -97,6 +101,14 @@ export class PostComponent implements OnInit, OnChanges {
     if (this.userLoggedIn) {
       this.myId = loginService.getLoggedUserUUID();
     }
+    this.updateFollowersSubscription = this.postService.updateFollowers.subscribe(() => {
+      this.followedUsers = this.postService.followedUserIds;
+      this.notYetAcceptedFollows =
+        this.postService.notYetAcceptedFollowedUsersIds;
+    });
+  }
+  ngOnDestroy(): void {
+    this.updateFollowersSubscription.unsubscribe();
   }
 
   ngOnInit(): void {
@@ -104,11 +116,6 @@ export class PostComponent implements OnInit, OnChanges {
     this.followedUsers = this.postService.followedUserIds;
     this.notYetAcceptedFollows =
       this.postService.notYetAcceptedFollowedUsersIds;
-    this.postService.updateFollowers.subscribe(() => {
-      this.followedUsers = this.postService.followedUserIds;
-      this.notYetAcceptedFollows =
-        this.postService.notYetAcceptedFollowedUsersIds;
-    });
     this.originalPostContent = this.post;
     if (!this.showFull) {
       this.post = this.post.slice(0, environment.shortenPosts);

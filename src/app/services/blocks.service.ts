@@ -44,7 +44,7 @@ export class BlocksService {
           ? this.baseCacheUrl + encodeURIComponent(userBlocked[key].avatar)
           : this.baseCacheUrl +
             encodeURIComponent(this.baseMediaUrl + userBlocked[key].avatar),
-        url: (userBlocked[key].url = userBlocked[key].url),
+        url: userBlocked[key].url ,
         reason: userBlocked.reason,
         id: userBlocked[key].id,
       };

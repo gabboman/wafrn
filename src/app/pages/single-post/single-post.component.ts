@@ -1,4 +1,4 @@
-import { Component, Inject, PLATFORM_ID, ViewChild } from '@angular/core';
+import { Component, Inject, OnDestroy, PLATFORM_ID, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ProcessedPost } from 'src/app/interfaces/processed-post';
 import { DashboardService } from 'src/app/services/dashboard.service';
@@ -16,7 +16,7 @@ import { SimplifiedUser } from 'src/app/interfaces/simplified-user';
   templateUrl: './single-post.component.html',
   styleUrls: ['./single-post.component.scss'],
 })
-export class SinglePostComponent {
+export class SinglePostComponent implements OnDestroy {
   homeIcon = faHome;
   post: ProcessedPost[] = [];
   loading = true;
@@ -31,6 +31,8 @@ export class SinglePostComponent {
   displayedColumns = ['user', 'action'];
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   dataSource!: MatTableDataSource<RawPost, MatPaginator>;
+  routeParamsSubscription;
+
   constructor(
     private activatedRoute: ActivatedRoute,
     private dashboardService: DashboardService,
@@ -43,7 +45,7 @@ export class SinglePostComponent {
   ) {
     this.themeService.setMyTheme();
     this.userLoggedIn = loginService.checkUserLoggedIn();
-    this.route.params.subscribe(async (data: any) => {
+    this.routeParamsSubscription = this.route.params.subscribe(async (data: any) => {
       this.forceSSR = this.route.snapshot.queryParams['force-ssr'] === 'true';
       const tmpPost = await this.dashboardService
         .getPostV2(data ? data.id : '')
@@ -75,6 +77,9 @@ export class SinglePostComponent {
         this.postFound = false;
       }
     });
+  }
+  ngOnDestroy(): void {
+    this.routeParamsSubscription.unsubscribe();
   }
 
   // gets either the first non video image from the last post, the fist non video image from the initial post OR the wafrn logo

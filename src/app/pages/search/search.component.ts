@@ -6,7 +6,7 @@ import {
 } from '@angular/forms';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { faSearch } from '@fortawesome/free-solid-svg-icons';
-import { filter } from 'rxjs';
+import { Subscription, filter } from 'rxjs';
 import { ProcessedPost } from 'src/app/interfaces/processed-post';
 import { SimplifiedUser } from 'src/app/interfaces/simplified-user';
 import { DashboardService } from 'src/app/services/dashboard.service';
@@ -38,8 +38,8 @@ export class SearchComponent implements OnInit, OnDestroy {
   userLoggedIn = false;
   currentPage = 0;
   loading = false;
-  navigationSubscription;
-
+  navigationSubscription: Subscription;
+  updateFollowersSubscription: Subscription;
   searchIcon = faSearch;
   atLeastOneSearchDone = false;
 
@@ -58,20 +58,21 @@ export class SearchComponent implements OnInit, OnDestroy {
       .subscribe(() => {
         this.ngOnInit();
       });
+      this.updateFollowersSubscription = this.postService.updateFollowers.subscribe(() => {
+        this.followedUsers = this.postService.followedUserIds;
+        this.notYetAcceptedFollows =
+          this.postService.notYetAcceptedFollowedUsersIds;
+      });
   }
   ngOnDestroy(): void {
     this.navigationSubscription.unsubscribe();
+    this.updateFollowersSubscription.unsubscribe();
   }
 
   ngOnInit(): void {
     this.followedUsers = this.postService.followedUserIds;
     this.notYetAcceptedFollows =
       this.postService.notYetAcceptedFollowedUsersIds;
-    this.postService.updateFollowers.subscribe(() => {
-      this.followedUsers = this.postService.followedUserIds;
-      this.notYetAcceptedFollows =
-        this.postService.notYetAcceptedFollowedUsersIds;
-    });
     this.userLoggedIn = this.loginService.checkUserLoggedIn();
     if (this.activatedRoute.snapshot.paramMap.get('term')) {
       this.searchForm.patchValue({

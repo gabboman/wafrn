@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { ProcessedPost } from 'src/app/interfaces/processed-post';
 import { DashboardService } from 'src/app/services/dashboard.service';
@@ -14,7 +14,7 @@ import { faArrowsRotate } from '@fortawesome/free-solid-svg-icons';
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.scss'],
 })
-export class DashboardComponent implements OnInit {
+export class DashboardComponent implements OnInit, OnDestroy {
   loadingPosts = false;
   noMorePosts = false;
   posts: ProcessedPost[][] = [];
@@ -24,6 +24,7 @@ export class DashboardComponent implements OnInit {
   level = 1;
   title = '';
   reloadIcon = faArrowsRotate;
+  updateFollowersSubscription;
 
   constructor(
     private dashboardService: DashboardService,
@@ -46,6 +47,20 @@ export class DashboardComponent implements OnInit {
         content: 'Explore the posts in wafrn and if it looks cool join us!',
       },
     ]);
+    this.updateFollowersSubscription = this.postService.updateFollowers.subscribe(() => {
+      if (this.postService.followedUserIds.length === 1 && this.level === 1) {
+        // if the user follows NO ONE we take them to the explore page!
+        this.messages.add({
+          severity: 'info',
+          summary:
+            "You aren't following anyone, so we took you to the explore page",
+        });
+        this.router.navigate(['/dashboard/exploreLocal']);
+      }
+    });
+  }
+  ngOnDestroy(): void {
+    this.updateFollowersSubscription.unsubscribe();
   }
 
   ngOnInit(): void {
@@ -62,17 +77,7 @@ export class DashboardComponent implements OnInit {
       this.level = 10;
       this.title = 'Private messages';
     }
-    this.postService.updateFollowers.subscribe(() => {
-      if (this.postService.followedUserIds.length === 1 && this.level === 1) {
-        // if the user follows NO ONE we take them to the explore page!
-        this.messages.add({
-          severity: 'info',
-          summary:
-            "You aren't following anyone, so we took you to the explore page",
-        });
-        this.router.navigate(['/dashboard/exploreLocal']);
-      }
-    });
+    
     this.loadPosts(this.currentPage).then(() => {
       setTimeout(() => {
         this.themeService.setMyTheme();

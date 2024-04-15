@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
-import { Injectable } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
+import { Injectable, OnDestroy } from '@angular/core';
+import { BehaviorSubject, Subscription } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { WafrnMedia } from '../interfaces/wafrn-media';
 import { Action, EditorLauncherData } from '../interfaces/editor-launcher-data';
@@ -10,21 +10,25 @@ import { ProcessedPost } from '../interfaces/processed-post';
 @Injectable({
   providedIn: 'any',
 })
-export class EditorService {
+export class EditorService implements OnDestroy{
   base_url = environment.baseUrl;
   public launchPostEditorEmitter: BehaviorSubject<EditorLauncherData> =
     new BehaviorSubject<EditorLauncherData>({
       action: Action.None,
     });
-
+  
+  editorSubscription: Subscription;
   constructor(private http: HttpClient, private dialogService: MatDialog) {
-    this.launchPostEditorEmitter.subscribe((data) => {
+    this.editorSubscription = this.launchPostEditorEmitter.subscribe((data) => {
       if (data.action !== Action.None) {
         this.launchPostEditorEmitter.next({
           action: Action.None,
         });
       }
     });
+  }
+  ngOnDestroy(): void {
+    this.editorSubscription.unsubscribe();
   }
 
   async createPost(options: {

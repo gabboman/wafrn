@@ -1,4 +1,4 @@
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
 import { ReportService } from 'src/app/services/report.service';
 import {
   FormsModule,
@@ -42,11 +42,12 @@ import { MatButtonModule } from '@angular/material/button';
     MatButtonModule,
   ],
 })
-export class ReportPostComponent implements OnInit {
+export class ReportPostComponent implements OnDestroy {
   loading = false;
   visible = false;
   reportForm: UntypedFormGroup;
   postToReport: ProcessedPost[];
+  launchreportScreenSubscription;
 
   reportOptions: Array<{ label: string; value: number }> = [
     {
@@ -82,14 +83,14 @@ export class ReportPostComponent implements OnInit {
       severity: ['', [Validators.required]],
       block: [''],
     });
-  }
-
-  ngOnInit(): void {
-    this.reportService.launchReportScreen.subscribe((reportedPost) => {
+    this.launchreportScreenSubscription = this.reportService.launchReportScreen.subscribe((reportedPost) => {
       if (reportedPost) {
         this.postToReport = reportedPost;
       }
     });
+  }
+  ngOnDestroy(): void {
+    this.launchreportScreenSubscription.unsubscribe();
   }
 
   async submit() {

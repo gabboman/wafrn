@@ -3,6 +3,7 @@ import { Component, OnDestroy } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { ActivatedRoute, RouterModule } from '@angular/router';
+import { Subscription } from 'rxjs';
 import { LoaderComponent } from 'src/app/components/loader/loader.component';
 import { PostActionsComponent } from 'src/app/components/post-actions/post-actions.component';
 import { PostFragmentComponent } from 'src/app/components/post-fragment/post-fragment.component';
@@ -29,13 +30,12 @@ import { PostsService } from 'src/app/services/posts.service';
 export class ForumComponent implements OnDestroy {
   loading = true;
   posts: ProcessedPost[] = [];
-  subscription;
-  updateFollowsSubscription;
+  subscription: Subscription;
+  updateFollowsSubscription: Subscription;
   userLoggedIn = false;
   myId = '';
   notYetAcceptedFollows: string[] = [];
   followedUsers: string[] = [];
-
   constructor(
     private forumService: ForumService,
     private route: ActivatedRoute,

@@ -128,7 +128,7 @@ export class NotificationsService {
       })
 
       tmp.posts = tmp.posts.map((post: any) => {
-        let user = tmp.users.find(usr => usr.id === post.userId) as SimplifiedUser;
+        const user = tmp.users.find(usr => usr.id === post.userId) as SimplifiedUser;
         post.user = user;
         const medias = tmp.medias.filter(med => med.posts[0].id === post.id)
         post.medias = medias;
