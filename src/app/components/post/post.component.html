@@ -4,27 +4,27 @@
     }">
     <div *ngIf="post.length > 1" class="center-text overflow-hidden">
       <div class="avatar">
-        <img [routerLink]="'/blog/' + post[this.post.length - 1].user.url" crossorigin="anonymous" loading="lazy"
-          [src]="post[this.post.length - 1].user.avatar" onerror="this.onerror=null;this.src='/api/uploads/default.webp'" alt=""
+        <img [routerLink]="'/blog/' + originalPostContent[this.originalPostContent.length - 1].user.url" crossorigin="anonymous" loading="lazy"
+          [src]="originalPostContent[this.originalPostContent.length - 1].user.avatar" onerror="this.onerror=null;this.src='/api/uploads/default.webp'" alt=""
           width="40" height="40" />
       </div>
       <div class="w-full white-space-nowrap overflow-hidden text-overflow-ellipsis flex flex-column">
         <div>
-          <a class="original-poster-name" [routerLink]="'/blog/' + post[this.post.length - 1].user.url"
-            [innerHTML]="post[this.post.length - 1].user.name"></a>
+          <a class="original-poster-name" [routerLink]="'/blog/' + originalPostContent[this.originalPostContent.length - 1].user.url"
+            [innerHTML]="originalPostContent[this.originalPostContent.length - 1].user.name"></a>
         </div>
         <div class="date-line mb-1 flex gap-2 align-items-center">
-          <span class="font-small original-poster-url" [innerText]="post[this.post.length - 1].user.url"></span>
+          <span class="font-small original-poster-url" [innerText]="originalPostContent[this.originalPostContent.length - 1].user.url"></span>
           <button mat-stroked-button color="accent" *ngIf="
-              !notYetAcceptedFollows.includes(post[this.post.length - 1].user.id) &&
-              !followedUsers.includes(post[this.post.length - 1].user.id) &&
+              !notYetAcceptedFollows.includes(originalPostContent[this.originalPostContent.length - 1].user.id) &&
+              !followedUsers.includes(originalPostContent[this.originalPostContent.length - 1].user.id) &&
               userLoggedIn
-            " class="follow-button flex-shrink-0" (click)="followUser(post[this.post.length - 1].user.id)">
+            " class="follow-button flex-shrink-0" (click)="followUser(originalPostContent[this.originalPostContent.length - 1].user.id)">
             Follow
           </button>
           <button mat-stroked-button color="accent" *ngIf="
-              notYetAcceptedFollows.includes(post[this.post.length - 1].user.id) && userLoggedIn
-            " class="follow-button flex-shrink-0" (click)="unfollowUser(post[this.post.length - 1].user.id)">
+              notYetAcceptedFollows.includes(originalPostContent[this.originalPostContent.length - 1].user.id) && userLoggedIn
+            " class="follow-button flex-shrink-0" (click)="unfollowUser(originalPostContent[this.originalPostContent.length - 1].user.id)">
             Awaiting aproval
           </button>
         </div>
