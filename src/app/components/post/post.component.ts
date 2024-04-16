@@ -42,7 +42,6 @@ import {
 export class PostComponent implements OnInit, OnChanges, OnDestroy {
   @Input() post!: ProcessedPost[];
   @Input() showFull: boolean = false;
-  originalPoster!: SimplifiedUser;
   originalPostContent: ProcessedPost[] = [];
   ready = false;
   mediaBaseUrl = environment.baseMediaUrl;
@@ -112,7 +111,6 @@ export class PostComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.originalPoster = this.post[this.post.length - 1].user;
     this.followedUsers = this.postService.followedUserIds;
     this.notYetAcceptedFollows =
       this.postService.notYetAcceptedFollowedUsersIds;
