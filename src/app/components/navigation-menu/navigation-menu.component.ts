@@ -39,6 +39,7 @@ import {
   faCog,
   faChartSimple,
   faHourglass,
+  faBellSlash,
 } from '@fortawesome/free-solid-svg-icons';
 import { MenuItem } from 'src/app/interfaces/menu-item';
 import { MatDialog } from '@angular/material/dialog';
@@ -336,16 +337,6 @@ export class NavigationMenuComponent implements OnInit, OnDestroy {
             visible: this.jwtService.tokenValid(),
           },
           {
-            label: 'Import follows',
-            title: 'Import follows',
-            icon: faUserEdit,
-            command: () => {
-              this.hideMenu();
-            },
-            routerLink: '/profile/importFollows',
-            visible: this.jwtService.tokenValid(),
-          },
-          {
             label: 'Manage muted users',
             title: 'Manage muted users',
             icon: faVolumeMute,
@@ -353,6 +344,16 @@ export class NavigationMenuComponent implements OnInit, OnDestroy {
               this.hideMenu();
             },
             routerLink: '/profile/mutes',
+            visible: this.jwtService.tokenValid(),
+          },
+          {
+            label: 'Manage muted posts',
+            title: 'Manage muted posts',
+            icon: faBellSlash,
+            command: () => {
+              this.hideMenu();
+            },
+            routerLink: '/profile/silencedPosts',
             visible: this.jwtService.tokenValid(),
           },
           {
@@ -373,6 +374,16 @@ export class NavigationMenuComponent implements OnInit, OnDestroy {
               this.hideMenu();
             },
             routerLink: '/profile/serverBlocks',
+            visible: this.jwtService.tokenValid(),
+          },
+          {
+            label: 'Import follows',
+            title: 'Import follows',
+            icon: faUserEdit,
+            command: () => {
+              this.hideMenu();
+            },
+            routerLink: '/profile/importFollows',
             visible: this.jwtService.tokenValid(),
           },
         ],

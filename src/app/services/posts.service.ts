@@ -42,6 +42,7 @@ export class PostsService {
           blockedUsers: string[];
           notAcceptedFollows: string[];
           options: UserOptions[];
+          silencedPosts: string[];
         }>(`${environment.baseUrl}/getFollowedUsers`)
       );
       if (followsAndBlocks) {
@@ -49,7 +50,6 @@ export class PostsService {
         this.blockedUserIds = followsAndBlocks.blockedUsers;
         this.notYetAcceptedFollowedUsersIds =
           followsAndBlocks.notAcceptedFollows;
-        this.updateFollowers.next(true);
         // Here we check user options
         if (followsAndBlocks.options?.length > 0) {
           // frontend options start with wafrn.
@@ -63,7 +63,13 @@ export class PostsService {
               );
             });
         }
+        if(followsAndBlocks.silencedPosts) {
+          localStorage.setItem('silencedPostsIds', JSON.stringify(followsAndBlocks.silencedPosts))
+        } else {
+          localStorage.setItem('silencedPostsIds', JSON.stringify([]))
+        }
       }
+      this.updateFollowers.next(true);
     }
   }
 
@@ -73,9 +79,9 @@ export class PostsService {
       userId: id,
     };
     try {
-      const response = await this.http
+      const response = await firstValueFrom(this.http
         .post<{ success: boolean }>(`${environment.baseUrl}/follow`, payload)
-        .toPromise();
+      );
       await this.loadFollowers();
       res = response?.success === true;
     } catch (exception) {
@@ -438,5 +444,27 @@ export class PostsService {
         .sort((b, a) => a.createdAt.getTime() - b.createdAt.getTime());
     }
     return res;
+  }
+
+  async unsilencePost(postId: string): Promise<boolean> {
+    const payload = {
+      postId: postId,
+    };
+    const response = await firstValueFrom(this.http
+      .post<{ success: boolean }>(`${environment.baseUrl}/v2/unsilencePost`, payload)
+    );
+    await this.loadFollowers()
+    return response.success;
+  }
+
+  async silencePost(postId: string): Promise<boolean> {
+    const payload = {
+      postId: postId,
+    };
+    const response = await firstValueFrom(this.http
+      .post<{ success: boolean }>(`${environment.baseUrl}/v2/silencePost`, payload)
+    );
+    await this.loadFollowers()
+    return response.success;
   }
 }

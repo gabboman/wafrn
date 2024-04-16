@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
 import { ProcessedPost } from 'src/app/interfaces/processed-post';
 import { MessageService } from 'src/app/services/message.service';
 import { environment } from 'src/environments/environment';
@@ -12,12 +12,9 @@ import {
   faShareNodes,
   faTrash,
   faTriangleExclamation,
-  faGlobe,
-  faEnvelope,
-  faServer,
-  faUser,
-  faUnlock,
   faPen,
+  faBellSlash,
+  faBell,
 } from '@fortawesome/free-solid-svg-icons';
 import { MatButtonModule } from '@angular/material/button';
 import { MatMenuModule } from '@angular/material/menu';
@@ -28,6 +25,7 @@ import { CommonModule } from '@angular/common';
 import { ReportService } from 'src/app/services/report.service';
 import { DeletePostService } from 'src/app/services/delete-post.service';
 import { PostsService } from 'src/app/services/posts.service';
+import { UtilsService } from 'src/app/services/utils.service';
 @Component({
   selector: 'app-post-actions',
   standalone: true,
@@ -35,10 +33,11 @@ import { PostsService } from 'src/app/services/posts.service';
   templateUrl: './post-actions.component.html',
   styleUrl: './post-actions.component.scss',
 })
-export class PostActionsComponent {
+export class PostActionsComponent implements OnChanges{
   @Input() content!: ProcessedPost;
   userLoggedIn = false;
   myId: string = 'user-not-logged-in ';
+  postSilenced = false;
   // icons
   shareIcon = faShareNodes;
   expandDownIcon = faChevronDown;
@@ -50,6 +49,8 @@ export class PostActionsComponent {
   reportIcon = faTriangleExclamation;
   deleteIcon = faTrash;
   editedIcon = faPen;
+  silenceIcon = faBellSlash;
+  unsilenceIcon = faBell;
 
   constructor(
     private messages: MessageService,
@@ -57,12 +58,16 @@ export class PostActionsComponent {
     private postService: PostsService,
     private loginService: LoginService,
     private reportService: ReportService,
-    private deletePostService: DeletePostService
+    private deletePostService: DeletePostService,
+    private utilsService: UtilsService
   ) {
     this.userLoggedIn = loginService.checkUserLoggedIn();
     if (this.userLoggedIn) {
       this.myId = loginService.getLoggedUserUUID();
     }
+  }
+  ngOnChanges(changes: SimpleChanges): void {
+    this.checkPostSilenced()
   }
 
   sharePost() {
@@ -144,5 +149,38 @@ export class PostActionsComponent {
   }
   deletePost() {
     this.deletePostService.openDeletePostDialog(this.content.id);
+  }
+  async silencePost() {
+    if (await this.postService.silencePost(this.content.id)) {
+      this.messages.add({
+        severity: 'success',
+        summary: 'You successfully silenced the notifications for this woot',
+      });
+      await this.checkPostSilenced()
+    } else {
+      this.messages.add({
+        severity: 'error',
+        summary: 'Something went wrong. Please try again',
+      });
+    }
+  }
+
+  async unsilencePost() {
+    if (await this.postService.unsilencePost(this.content.id)) {
+      this.messages.add({
+        severity: 'success',
+        summary: 'You successfully reactivated the notifications for this woot',
+      });
+      await this.checkPostSilenced()
+    } else {
+      this.messages.add({
+        severity: 'error',
+        summary: 'Something went wrong. Please try again',
+      });
+    }
+  }
+
+  private async checkPostSilenced() {
+    this.postSilenced = (await this.utilsService.getSilencedPostIds()).includes(this.content.id)
   }
 }

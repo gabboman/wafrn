@@ -77,6 +77,10 @@ export class DashboardComponent implements OnInit, OnDestroy {
       this.level = 10;
       this.title = 'Private messages';
     }
+    if (this.router.url.endsWith('silencedPosts')) {
+      this.level = 25;
+      this.title = 'My silenced posts';
+    }
     
     this.loadPosts(this.currentPage).then(() => {
       setTimeout(() => {

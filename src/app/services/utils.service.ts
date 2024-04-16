@@ -16,4 +16,13 @@ export class UtilsService {
     return res;
   }
 
+  async getSilencedPostIds(): Promise<string[]> {
+    let res: string[] = []
+    const localStorageReply = localStorage.getItem('silencedPostsIds');
+    if(localStorageReply) {
+      res = JSON.parse(localStorageReply)
+    }
+    return res;
+  }
+
 }
