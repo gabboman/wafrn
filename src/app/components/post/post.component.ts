@@ -13,16 +13,13 @@ import { LoginService } from 'src/app/services/login.service';
 import { PostsService } from 'src/app/services/posts.service';
 import { environment } from 'src/environments/environment';
 import { DeletePostService } from 'src/app/services/delete-post.service';
-import { SimplifiedUser } from 'src/app/interfaces/simplified-user';
 import { Action } from 'src/app/interfaces/editor-launcher-data';
 import { MessageService } from 'src/app/services/message.service';
 import {
   faArrowUpRightFromSquare,
   faChevronDown,
-  faClockRotateLeft,
   faHeart,
   faHeartBroken,
-  faRotateLeft,
   faShareNodes,
   faTrash,
   faGlobe,
@@ -32,6 +29,8 @@ import {
   faUnlock,
   faPen,
   faClose,
+  faReply,
+  faRepeat,
 } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
@@ -67,8 +66,8 @@ export class PostComponent implements OnInit, OnChanges, OnDestroy {
   expandDownIcon = faChevronDown;
   solidHeartIcon = faHeart;
   clearHeartIcon = faHeartBroken;
-  reblogIcon = faRotateLeft;
-  quickReblogIcon = faClockRotateLeft;
+  reblogIcon = faReply;
+  quickReblogIcon = faRepeat;
   shareExternalIcon = faArrowUpRightFromSquare;
   deleteIcon = faTrash;
   closeIcon = faClose;

@@ -8,13 +8,14 @@ import {
   faClockRotateLeft,
   faHeart,
   faHeartBroken,
-  faRotateLeft,
   faShareNodes,
   faTrash,
   faTriangleExclamation,
   faPen,
   faBellSlash,
   faBell,
+  faReply,
+  faRepeat,
 } from '@fortawesome/free-solid-svg-icons';
 import { MatButtonModule } from '@angular/material/button';
 import { MatMenuModule } from '@angular/material/menu';
@@ -43,8 +44,8 @@ export class PostActionsComponent implements OnChanges{
   expandDownIcon = faChevronDown;
   solidHeartIcon = faHeart;
   clearHeartIcon = faHeartBroken;
-  reblogIcon = faRotateLeft;
-  quickReblogIcon = faClockRotateLeft;
+  reblogIcon = faReply;
+  quickReblogIcon = faRepeat;
   shareExternalIcon = faArrowUpRightFromSquare;
   reportIcon = faTriangleExclamation;
   deleteIcon = faTrash;
