@@ -2,7 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import { faArrowsRotate } from '@fortawesome/free-solid-svg-icons';
 import { NotificationType } from 'src/app/enums/notification-type';
 import { Follower } from 'src/app/interfaces/follower';
+import { ProcessedPost } from 'src/app/interfaces/processed-post';
 import { Reblog } from 'src/app/interfaces/reblog';
+import { SimplifiedUser } from 'src/app/interfaces/simplified-user';
 import { UserNotifications } from 'src/app/interfaces/user-notifications';
 import { NotificationsService } from 'src/app/services/notifications.service';
 import { ThemeService } from 'src/app/services/theme.service';
@@ -108,7 +110,17 @@ export class NotificationsComponent implements OnInit {
         this.reblogToNotification(elem, NotificationType.MENTION)
       )
     );
-    processedNotifications = processedNotifications.concat(this.emojiReacts);
+    processedNotifications = processedNotifications.concat(this.emojiReacts.map(elem => this.reblogToNotification({
+      id: elem.url,
+      user: {
+        id: elem.userUrl,
+        url: elem.userUrl,
+        name: elem.userUrl,
+        avatar: elem.avatar
+      },
+      content: elem.fragment as ProcessedPost,
+      createdAt: elem.date
+    }, NotificationType.EMOJIREACT)));
     processedNotifications = processedNotifications.concat(
       this.reblogs.map((elem) =>
         this.reblogToNotification(elem, NotificationType.REBLOG)
