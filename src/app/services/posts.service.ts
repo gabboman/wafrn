@@ -21,7 +21,8 @@ export class PostsService {
     /\[wafrnmediaid="[0-9a-fA-F]{8}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{12}"\]/gm;
   youtubeRegex =
     /((?:https?:\/\/)?(www.|m.)?(youtube(\-nocookie)?\.com|youtu\.be)\/(v\/|watch\?v=|embed\/)?([\S]{11}))([^\S]|\?[\S]*|\&[\S]*|\b)/g;
-  public updateFollowers: BehaviorSubject<boolean> = new BehaviorSubject(false);
+  public updateFollowers: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
+  public postLiked: BehaviorSubject<{id: string, like: boolean}> = new BehaviorSubject<{id: string, like: boolean}>({id: 'undefined', like: false});
 
   public followedUserIds: Array<string> = [];
   public notYetAcceptedFollowedUsersIds: Array<string> = [];
@@ -123,7 +124,10 @@ export class PostsService {
     } catch (exception) {
       console.log(exception);
     }
-
+    this.postLiked.next({
+      id: id,
+      like: true
+    })
     return res;
   }
 
@@ -141,7 +145,10 @@ export class PostsService {
     } catch (exception) {
       console.log(exception);
     }
-
+    this.postLiked.next({
+      id: id,
+      like: false
+    })
     return res;
   }
 

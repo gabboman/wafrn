@@ -80,6 +80,7 @@ export class PostComponent implements OnInit, OnChanges, OnDestroy {
 
   // subscriptions
   updateFollowersSubscription;
+  updateLikesSubscription;
 
   // post seen
   @Output() seenEmitter: EventEmitter<boolean> = new EventEmitter<boolean>();
@@ -104,9 +105,20 @@ export class PostComponent implements OnInit, OnChanges, OnDestroy {
       this.notYetAcceptedFollows =
         this.postService.notYetAcceptedFollowedUsersIds;
     });
+
+    this.updateLikesSubscription = this.postService.postLiked.subscribe(likeEvent => {
+      if(this.post && likeEvent.id === this.post[this.post.length -1].id) {
+        if(likeEvent.like) {
+          this.originalPostContent[this.originalPostContent.length -1 ].userLikesPostRelations = [this.loginService.getLoggedUserUUID()]
+        } else {
+          this.originalPostContent[this.originalPostContent.length -1 ].userLikesPostRelations = []
+        }
+      }
+    })
   }
   ngOnDestroy(): void {
     this.updateFollowersSubscription.unsubscribe();
+    this.updateLikesSubscription.unsubscribe();
   }
 
   ngOnInit(): void {
@@ -141,6 +153,8 @@ export class PostComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   ngOnChanges() {
+    // TODO recheck if anything else is needed actually
+    this.ngOnInit();
     this.ready = true;
     const notes = this.post[this.post.length - 1].notes;
     this.notes = notes.toString();
