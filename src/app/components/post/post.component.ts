@@ -153,8 +153,6 @@ export class PostComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   ngOnChanges() {
-    // TODO recheck if anything else is needed actually
-    this.ngOnInit();
     this.ready = true;
     const notes = this.post[this.post.length - 1].notes;
     this.notes = notes.toString();
