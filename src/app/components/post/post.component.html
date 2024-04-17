@@ -1,30 +1,30 @@
-<mat-card [id]="'post-element-' + originalPostContent[this.originalPostContent.length - 1].id" class="p-3 m-2 mb-6 lg:mx-4 scalein wafrn-container">
+<mat-card [id]="'post-element-' + finalPost.id" class="p-3 m-2 mb-6 lg:mx-4 scalein wafrn-container">
   <div [ngClass]="{
       'shortened-post': veryLongPost || !showFull
     }">
     <div *ngIf="post.length > 1" class="center-text overflow-hidden">
       <div class="avatar">
-        <img [routerLink]="'/blog/' + originalPostContent[this.originalPostContent.length - 1].user.url" crossorigin="anonymous" loading="lazy"
-          [src]="originalPostContent[this.originalPostContent.length - 1].user.avatar" onerror="this.onerror=null;this.src='/api/uploads/default.webp'" alt=""
+        <img [routerLink]="'/blog/' + finalPost.user.url" crossorigin="anonymous" loading="lazy"
+          [src]="finalPost.user.avatar" onerror="this.onerror=null;this.src='/api/uploads/default.webp'" alt=""
           width="40" height="40" />
       </div>
       <div class="w-full white-space-nowrap overflow-hidden text-overflow-ellipsis flex flex-column">
         <div>
-          <a class="original-poster-name" [routerLink]="'/blog/' + originalPostContent[this.originalPostContent.length - 1].user.url"
-            [innerHTML]="originalPostContent[this.originalPostContent.length - 1].user.name"></a>
+          <a class="original-poster-name" [routerLink]="'/blog/' + finalPost.user.url"
+            [innerHTML]="finalPost.user.name"></a>
         </div>
         <div class="date-line mb-1 flex gap-2 align-items-center">
-          <span class="font-small original-poster-url" [innerText]="originalPostContent[this.originalPostContent.length - 1].user.url"></span>
+          <span class="font-small original-poster-url" [innerText]="finalPost.user.url"></span>
           <button mat-stroked-button color="accent" *ngIf="
-              !notYetAcceptedFollows.includes(originalPostContent[this.originalPostContent.length - 1].user.id) &&
-              !followedUsers.includes(originalPostContent[this.originalPostContent.length - 1].user.id) &&
+              !notYetAcceptedFollows.includes(finalPost.user.id) &&
+              !followedUsers.includes(finalPost.user.id) &&
               userLoggedIn
-            " class="follow-button flex-shrink-0" (click)="followUser(originalPostContent[this.originalPostContent.length - 1].user.id)">
+            " class="follow-button flex-shrink-0" (click)="followUser(finalPost.user.id)">
             Follow
           </button>
           <button mat-stroked-button color="accent" *ngIf="
-              notYetAcceptedFollows.includes(originalPostContent[this.originalPostContent.length - 1].user.id) && userLoggedIn
-            " class="follow-button flex-shrink-0" (click)="unfollowUser(originalPostContent[this.originalPostContent.length - 1].user.id)">
+              notYetAcceptedFollows.includes(finalPost.user.id) && userLoggedIn
+            " class="follow-button flex-shrink-0" (click)="unfollowUser(finalPost.user.id)">
             Awaiting aproval
           </button>
         </div>
@@ -102,7 +102,7 @@
 
   <div class="flex pt-1">
     <div class="flex flex-grow-1">
-      <a [routerLink]="'/post/' + originalPostContent[this.originalPostContent.length - 1].id"> Notes: {{ notes }} </a>
+      <a [routerLink]="'/post/' + finalPost.id"> Notes: {{ notes }} </a>
     </div>
     <div *ngIf="userLoggedIn" class="flex flex-shrink-0">
       <div class="flex gap-4 px-1" *ngIf="!loadingAction">
@@ -110,25 +110,25 @@
         <fa-icon size="lg" (click)="deletePost(post[post.length - 1].id)" class="hover-cursor" [icon]="closeIcon"
           matTooltip="Delete rewoot"></fa-icon>
         } @else {
-        <fa-icon size="lg" *ngIf="originalPostContent[this.originalPostContent.length - 1].privacy !== 10" (click)="quickReblog(originalPostContent[this.originalPostContent.length - 1])" class="hover-cursor"
+        <fa-icon size="lg" *ngIf="finalPost.privacy !== 10" (click)="quickReblog(finalPost)" class="hover-cursor"
           [icon]="quickReblogIcon" matTooltip="Quick rewoot"></fa-icon>
         }
 
-        <fa-icon size="lg" (click)="replyPost(originalPostContent[this.originalPostContent.length - 1])" class="hover-cursor" [icon]="reblogIcon"
+        <fa-icon size="lg" (click)="replyPost(finalPost)" class="hover-cursor" [icon]="reblogIcon"
           matTooltip="Reply woot"></fa-icon>
 
-        @if(originalPostContent[this.originalPostContent.length - 1].userId !== myId ) {
-        @if(originalPostContent[this.originalPostContent.length - 1].userLikesPostRelations.includes(myId)) {
-        <fa-icon size="lg" (click)="unlikePost(originalPostContent[this.originalPostContent.length - 1])" class="hover-cursor" [icon]="clearHeartIcon"
+        @if(finalPost.userId !== myId ) {
+        @if(finalPost.userLikesPostRelations.includes(myId)) {
+        <fa-icon size="lg" (click)="unlikePost(finalPost)" class="hover-cursor" [icon]="clearHeartIcon"
           matTooltip="Remove like"></fa-icon>
         } @else {
-        <fa-icon size="lg" (click)="likePost(originalPostContent[this.originalPostContent.length - 1])" class="hover-cursor" [icon]="solidHeartIcon"
+        <fa-icon size="lg" (click)="likePost(finalPost)" class="hover-cursor" [icon]="solidHeartIcon"
           matTooltip="Like woot"></fa-icon>
         }
         } @else {
-        <fa-icon size="lg" *ngIf="originalPostContent[this.originalPostContent.length - 1].privacy === 2" (click)="editPost(originalPostContent[this.originalPostContent.length - 1])" class="hover-cursor"
+        <fa-icon size="lg" *ngIf="finalPost.privacy === 2" (click)="editPost(finalPost)" class="hover-cursor"
           [icon]="editedIcon" matTooltip="Edit woot"></fa-icon>
-        <fa-icon size="lg" (click)="deletePost(originalPostContent[this.originalPostContent.length - 1].id)" class="hover-cursor" [icon]="deleteIcon"
+        <fa-icon size="lg" (click)="deletePost(finalPost.id)" class="hover-cursor" [icon]="deleteIcon"
           matTooltip="Delete woot"></fa-icon>
         }
       </div>
