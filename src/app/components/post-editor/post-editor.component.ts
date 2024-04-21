@@ -154,7 +154,7 @@ export class PostEditorComponent implements OnInit {
     private dashboardService: DashboardService,
     private dialogRef: MatDialogRef<PostEditorComponent>,
     @Inject(MAT_DIALOG_DATA)
-    public data: { post?: ProcessedPost; edit?: boolean },
+    public data: { post?: ProcessedPost; edit?: boolean, quote?: ProcessedPost },
     private loginService: LoginService
   ) {
     this.privacy = this.loginService.getUserDefaultPostPrivacyLevel();
@@ -312,6 +312,7 @@ export class PostEditorComponent implements OnInit {
       idPostToReblog: this.editing ? undefined : this.idPostToReblog,
       contentWarning: this.contentWarning,
       idPostToEdit: this.editing ? this.idPostToReblog : undefined,
+      idPosToQuote: this.data?.quote?.id
     });
     // its a great time to check notifications isnt it?
     this.dashboardService.scrollEventEmitter.emit('post');

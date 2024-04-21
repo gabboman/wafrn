@@ -31,6 +31,7 @@ import {
   faClose,
   faReply,
   faRepeat,
+  faQuoteLeft,
 } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
@@ -68,6 +69,7 @@ export class PostComponent implements OnInit, OnChanges, OnDestroy {
   clearHeartIcon = faHeartBroken;
   reblogIcon = faReply;
   quickReblogIcon = faRepeat;
+  quoteIcon = faQuoteLeft;
   shareExternalIcon = faArrowUpRightFromSquare;
   deleteIcon = faTrash;
   closeIcon = faClose;
@@ -255,6 +257,10 @@ export class PostComponent implements OnInit, OnChanges, OnDestroy {
 
   async replyPost(post: ProcessedPost) {
     await this.editorService.replyPost(post);
+  }
+
+  async quotePost(post: ProcessedPost) {
+    await this.editorService.quotePost(post);
   }
 
   async editPost(post: ProcessedPost) {

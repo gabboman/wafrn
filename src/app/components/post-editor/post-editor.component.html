@@ -1,5 +1,6 @@
 <mat-dialog-content style="padding: 12px">
-  <div class="in-reply-to-preview" *ngIf="data.post && !editing">
+  <h3 *ngIf="data.post && !editing" >In reply to:</h3>
+  <div class="in-reply-to-preview quoted-post" *ngIf="data.post && !editing">
     <div class="flex"><img class="avatar" [src]="data.post.user.avatar" alt="">{{data.post.user.name}}</div>
     <app-post-fragment [fragment]="data.post" ></app-post-fragment>
   </div>
@@ -97,7 +98,7 @@
     color="danger"
     *ngIf="postCreatorContent?.includes('<img')"
   >
-    You seem to have pasted images in the editor. The image will NOT be visible
+    You somehow have pasted images in the editor. The image will NOT be visible
     once you woot. Please use the upload tool on the top bar of the editor
   </button>
 
@@ -229,6 +230,14 @@
       }
     </div>
   </section>
+
+  <div *ngIf="data.quote">
+    QUOTING:
+    <div class="quoted-post">
+      <div class="flex"><img class="avatar" [src]="data.quote.user.avatar" alt="">{{data.quote.user.name}}</div>
+      <app-post-fragment [fragment]="data.quote" ></app-post-fragment>
+    </div>
+  </div>
 
   <button
     mat-flat-button

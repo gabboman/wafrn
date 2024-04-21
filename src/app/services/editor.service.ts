@@ -39,6 +39,7 @@ export class EditorService implements OnDestroy{
     idPostToReblog?: string;
     contentWarning?: string;
     idPostToEdit?: string;
+    idPosToQuote?: string;
   }): Promise<boolean> {
     const content = options.content;
     const media = options.media;
@@ -56,6 +57,7 @@ export class EditorService implements OnDestroy{
         privacy: privacy,
         content_warning: contentWarning ? contentWarning : '',
         idPostToEdit: options.idPostToEdit,
+        postToQuote: options.idPosToQuote
       };
       const petitionResponse: any = await this.http
         .post(`${this.base_url}/v2/createPost`, formdata)
@@ -106,8 +108,16 @@ export class EditorService implements OnDestroy{
   }
 
   public async replyPost(post: ProcessedPost, edit = false) {
+    await this.openDialogWithData({post: post, edit: edit})
+  }
+
+  public async quotePost(quoteTo: ProcessedPost,) {
+    await this.openDialogWithData({quote: quoteTo})
+  }
+
+  private async openDialogWithData(data: any) {
     this.dialogService.open(await this.getEditorComponent(), {
-      data: { post, edit: edit },
+      data: data,
       width: 'min(960px, calc(100% - 30px))',
       maxWidth: '100%',
     });

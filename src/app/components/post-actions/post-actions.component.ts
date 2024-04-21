@@ -16,6 +16,7 @@ import {
   faBell,
   faReply,
   faRepeat,
+  faQuoteLeft,
 } from '@fortawesome/free-solid-svg-icons';
 import { MatButtonModule } from '@angular/material/button';
 import { MatMenuModule } from '@angular/material/menu';
@@ -52,6 +53,7 @@ export class PostActionsComponent implements OnChanges{
   editedIcon = faPen;
   silenceIcon = faBellSlash;
   unsilenceIcon = faBell;
+  quoteIcon = faQuoteLeft;
 
   constructor(
     private messages: MessageService,
@@ -112,6 +114,9 @@ export class PostActionsComponent implements OnChanges{
 
   replyPost() {
     this.editor.replyPost(this.content);
+  }
+  quoteWoot() {
+    this.editor.quotePost(this.content)
   }
   async unlikePost() {
     if (await this.postService.unlikePost(this.content.id)) {
