@@ -106,7 +106,7 @@
     </div>
     <div *ngIf="userLoggedIn" class="flex flex-shrink-0">
       <div class="flex gap-4 px-1" *ngIf="!loadingAction">
-        <fa-icon *ngIf="finalPost.privacy !== 10 && finalPost.privacy !== 1 && false" size="lg" (click)="quotePost(finalPost)" class="hover-cursor" [icon]="quoteIcon"
+        <fa-icon *ngIf="finalPost.privacy !== 10 && finalPost.privacy !== 1 && finalPost.privacy !== 2" size="lg" (click)="quotePost(finalPost)" class="hover-cursor" [icon]="quoteIcon"
           matTooltip="Quote woot"></fa-icon>
         @if (isEmptyReblog() && post[post.length - 1].userId === myId) {
         <fa-icon size="lg" (click)="deletePost(post[post.length - 1].id)" class="hover-cursor" [icon]="closeIcon"

@@ -196,37 +196,45 @@ export class PostEditorComponent implements OnInit {
   getInitialMentionsHTML() {
     const usersToMention: { id: string; url: string; remoteId: string }[] = [];
     const post = this.data?.post;
-    if (!post) {
-      return '';
-    }
-
     const currentUserId = this.jwtService.getTokenData().userId;
-    if (post.userId !== currentUserId) {
+    if(this.data?.quote && this.data.quote.user.id !== currentUserId ) {
+      const quotedUser = this.data.quote.user
       usersToMention.push({
-        id: post.user.id,
-        url: post.user.url.startsWith('@')
-          ? post.user.url
-          : '@' + post.user.url,
-        remoteId: post.user.remoteId
-          ? post.user.remoteId
-          : `${environment.frontUrl}/blog/${post.user.url}`,
+        url: quotedUser.url.startsWith('@') ? quotedUser.url : '@' + quotedUser.url,
+        id: quotedUser.id,
+        remoteId: quotedUser.remoteId
+          ? quotedUser.remoteId
+          : `${environment.frontUrl}/blog/${quotedUser.url}`,
       });
     }
-
-    post.mentionPost?.forEach((mention) => {
-      if (
-        mention.id !== currentUserId &&
-        !usersToMention.some((elem) => elem.id === mention.id)
-      ) {
+    if(post) {
+      if (post.userId !== currentUserId) {
         usersToMention.push({
-          url: mention.url.startsWith('@') ? mention.url : '@' + mention.url,
-          id: mention.id,
-          remoteId: mention.remoteId
-            ? mention.remoteId
-            : `${environment.frontUrl}/blog/${mention.url}`,
+          id: post.user.id,
+          url: post.user.url.startsWith('@')
+            ? post.user.url
+            : '@' + post.user.url,
+          remoteId: post.user.remoteId
+            ? post.user.remoteId
+            : `${environment.frontUrl}/blog/${post.user.url}`,
         });
       }
-    });
+      post.mentionPost?.forEach((mention) => {
+        if (
+          mention.id !== currentUserId &&
+          !usersToMention.some((elem) => elem.id === mention.id)
+        ) {
+          usersToMention.push({
+            url: mention.url.startsWith('@') ? mention.url : '@' + mention.url,
+            id: mention.id,
+            remoteId: mention.remoteId
+              ? mention.remoteId
+              : `${environment.frontUrl}/blog/${mention.url}`,
+          });
+        }
+      });
+    }
+    
 
     const mentionsHtml = usersToMention
       .map((u) => this.getMentionHtml(u))

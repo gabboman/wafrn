@@ -29,7 +29,7 @@
     <fa-icon class="mr-2" [icon]="reblogIcon"></fa-icon>
     Reply woot
   </button>
-  <button *ngIf="content.privacy !== 10 && content.privacy !== 1 && false" (click)="quoteWoot()" mat-menu-item>
+  <button *ngIf="content.privacy !== 10 && content.privacy !== 1 && content.privacy !== 2" (click)="quoteWoot()" mat-menu-item>
     <fa-icon class="mr-2" [icon]="quoteIcon"></fa-icon>
     Quote woot
   </button>
