@@ -30,6 +30,7 @@ import {
   faUser,
 } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { PostFragmentComponent } from '../post-fragment/post-fragment.component';
 
 @Component({
   selector: 'app-post-editor',
@@ -50,6 +51,7 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
     MatCheckboxModule,
     FileUploadComponent,
     FontAwesomeModule,
+    PostFragmentComponent
   ],
   providers: [EditorService],
 })

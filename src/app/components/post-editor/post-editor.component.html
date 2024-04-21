@@ -1,9 +1,8 @@
 <mat-dialog-content style="padding: 12px">
-  <h2 *ngIf="idPostToReblog && !editing">
-    You are replying to the woot. Your wafrn followers will see the full thread
-    with your reply on it. Your fedi followers will see the reply and they will
-    be able to see the full thread upon clicking
-  </h2>
+  <div class="in-reply-to-preview" *ngIf="data.post && !editing">
+    <div class="flex"><img class="avatar" [src]="data.post.user.avatar" alt="">{{data.post.user.name}}</div>
+    <app-post-fragment [fragment]="data.post" ></app-post-fragment>
+  </div>
   <h2 *ngIf="editing">
     You are editing your woot. Sorry you need to write all of it again.
   </h2>

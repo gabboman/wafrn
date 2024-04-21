@@ -64,3 +64,8 @@
     transform: translateX(0);
   }
 }
+
+.in-reply-to-preview {
+  max-height: 90px;
+  overflow: hidden;
+}
