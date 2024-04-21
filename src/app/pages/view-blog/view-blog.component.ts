@@ -137,7 +137,6 @@ export class ViewBlogComponent implements OnInit, OnDestroy {
           );
           console.log(element);
           if (element) {
-            console.log('calling intersect');
             this.intersectionObserverForLoadPosts.observe(element);
           }
         });
