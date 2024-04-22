@@ -153,48 +153,6 @@
       more would break how the woot is seen in other places. Sorry for the
       inconvenience
     </div>
-    <div class="grid">
-      <ng-container *ngFor="let media of uploadedMedias; let i = index">
-        <div class="col-12 md:col-6 my-4">
-          <div class="w-full">
-            <app-media-preview [media]="media"></app-media-preview>
-            <mat-form-field class="w-full">
-              <mat-label>Image Description</mat-label>
-              <input
-                placeholder="Description. Please FILL THIS"
-                [(ngModel)]="media.description"
-                type="text"
-                matNativeControl
-                required
-                class="w-full mb-3"
-              />
-            </mat-form-field>
-            <div>
-              <mat-checkbox
-                [disabled]="media.adultContent"
-                [(ngModel)]="media.NSFW"
-                class="w-full"
-                >NSFW</mat-checkbox
-              >
-              <mat-checkbox
-                class="w-full"
-                (ngModelChange)="adultContentUpdated(i)"
-                [(ngModel)]="media.adultContent"
-                >Adult content</mat-checkbox
-              >
-              <button
-                class="w-full"
-                mat-flat-button
-                color="warn"
-                (click)="deleteImage(i)"
-              >
-                Delete
-              </button>
-            </div>
-          </div>
-        </div>
-      </ng-container>
-    </div>
   </section>
 
   <section id="privacy">
@@ -230,7 +188,73 @@
       }
     </div>
   </section>
-
+  <div class="grid">
+    <ng-container *ngFor="let media of uploadedMedias; let i = index">
+      <div class="col-12 md:col-6 my-4">
+        <div class="w-full">
+          <app-media-preview [media]="media"></app-media-preview>
+          <mat-form-field class="w-full">
+            <mat-label>Image Description</mat-label>
+            <input
+              placeholder="Description. Please FILL THIS"
+              [(ngModel)]="media.description"
+              type="text"
+              matNativeControl
+              required
+              class="w-full mb-3"
+            />
+          </mat-form-field>
+          <div>
+            <mat-checkbox
+              [disabled]="media.adultContent"
+              [(ngModel)]="media.NSFW"
+              class="w-full"
+              >NSFW</mat-checkbox
+            >
+            <mat-checkbox
+              class="w-full"
+              (ngModelChange)="adultContentUpdated(i)"
+              [(ngModel)]="media.adultContent"
+              >Adult content</mat-checkbox
+            >
+            <button
+              class="w-full"
+              mat-flat-button
+              color="warn"
+              (click)="deleteImage(i)"
+            >
+              Delete
+            </button>
+          </div>
+        </div>
+      </div>
+    </ng-container>
+  </div>
+  <div *ngIf="! data?.quote">
+    <mat-spinner *ngIf="quoteLoading" color="accent" diameter="42"></mat-spinner>
+    <mat-expansion-panel *ngIf="!quoteLoading" hideToggle>
+      <mat-expansion-panel-header>
+        <mat-panel-title>
+          Add quoted post
+        </mat-panel-title>
+      </mat-expansion-panel-header>
+      <mat-form-field class="w-full">
+        <mat-label>Paste the URL of a post to quote it. Can be the external url or the wafrn url</mat-label>
+        <input
+          [(ngModel)]="urlPostToQuote"
+          placeholder="Just paste the post url"
+          matNativeControl
+        />
+      </mat-form-field>
+      <button
+        (click)="loadQuote()"
+        mat-flat-button
+        color="primary"
+        class="w-full"
+        [disabled]="urlPostToQuote === '' "
+        >Add post as quote</button>
+    </mat-expansion-panel>
+  </div>
   <div *ngIf="data && data.quote">
     QUOTING:
     <div class="quoted-post">
@@ -241,8 +265,8 @@
 
   <button
     mat-flat-button
-    color="primary"
-    class="w-full"
+    color="accent"
+    class="w-full mt-2"
     [disabled]="
       !allDescriptionsFilled() ||
       postBeingSubmitted ||
