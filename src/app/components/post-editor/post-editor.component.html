@@ -1,7 +1,7 @@
 <mat-dialog-content style="padding: 12px">
   <h3 *ngIf="data?.post && !editing" >In reply to:</h3>
   <div class="in-reply-to-preview quoted-post" *ngIf="data && data.post && !editing">
-    <div class="flex"><img class="avatar" [src]="data.post.user.avatar" alt="">{{data.post.user.name}}</div>
+    <div class="flex"><img class="avatar" [src]="data.post.user.avatar" alt=""><div [innerHtml]="data.post.user.name" ></div></div>
     <app-post-fragment [fragment]="data.post" ></app-post-fragment>
   </div>
   <h2 *ngIf="editing">
@@ -258,7 +258,7 @@
   <div *ngIf="data && data.quote">
     QUOTING:
     <div class="quoted-post">
-      <div class="flex"><img class="avatar" [src]="data.quote.user.avatar" alt="">{{data.quote.user.name}}</div>
+      <div class="flex"><img class="avatar" [src]="data.quote.user.avatar" alt=""><div [innerHtml]="data.quote.user.name"></div></div>
       <app-post-fragment [fragment]="data.quote" ></app-post-fragment>
     </div>
   </div>
