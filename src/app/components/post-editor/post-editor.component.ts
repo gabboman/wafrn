@@ -22,8 +22,9 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 import { FileUploadComponent } from '../file-upload/file-upload.component';
 import { MediaPreviewComponent } from '../media-preview/media-preview.component';
 import { LoginService } from 'src/app/services/login.service';
-import {MatExpansionModule} from '@angular/material/expansion'; 
+import { MatExpansionModule } from '@angular/material/expansion';
 import {
+  faClose,
   faEnvelope,
   faGlobe,
   faServer,
@@ -34,6 +35,7 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { PostFragmentComponent } from '../post-fragment/post-fragment.component';
 import { PostsService } from 'src/app/services/posts.service';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatCardModule } from '@angular/material/card';
 
 @Component({
   selector: 'app-post-editor',
@@ -56,7 +58,8 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
     FontAwesomeModule,
     PostFragmentComponent,
     MatExpansionModule,
-    MatProgressSpinnerModule
+    MatProgressSpinnerModule,
+    MatCardModule,
   ],
   providers: [EditorService],
 })
@@ -69,13 +72,16 @@ export class PostEditorComponent implements OnInit {
     { level: 10, name: 'Direct Message', icon: faEnvelope },
   ];
 
+  closeIcon = faClose;
+  quoteOpen = false;
+
   showContentWarning = false;
   displayMarqueeButton = false;
   postCreatorContent: string = '';
   initialContent = '';
   tags: string = '';
   privacy: number;
-  urlPostToQuote: string = ''
+  urlPostToQuote: string = '';
   quoteLoading = false;
 
   get privacyOption() {
@@ -162,7 +168,11 @@ export class PostEditorComponent implements OnInit {
     private postService: PostsService,
     private dialogRef: MatDialogRef<PostEditorComponent>,
     @Inject(MAT_DIALOG_DATA)
-    public data: { post?: ProcessedPost; edit?: boolean, quote?: ProcessedPost },
+    public data: {
+      post?: ProcessedPost;
+      edit?: boolean;
+      quote?: ProcessedPost;
+    },
     private loginService: LoginService
   ) {
     this.privacy = this.loginService.getUserDefaultPostPrivacyLevel();
@@ -205,17 +215,19 @@ export class PostEditorComponent implements OnInit {
     const usersToMention: { id: string; url: string; remoteId: string }[] = [];
     const post = this.data?.post;
     const currentUserId = this.jwtService.getTokenData().userId;
-    if(this.data?.quote && this.data.quote.user.id !== currentUserId ) {
-      const quotedUser = this.data.quote.user
+    if (this.data?.quote && this.data.quote.user.id !== currentUserId) {
+      const quotedUser = this.data.quote.user;
       usersToMention.push({
-        url: quotedUser.url.startsWith('@') ? quotedUser.url : '@' + quotedUser.url,
+        url: quotedUser.url.startsWith('@')
+          ? quotedUser.url
+          : '@' + quotedUser.url,
         id: quotedUser.id,
         remoteId: quotedUser.remoteId
           ? quotedUser.remoteId
           : `${environment.frontUrl}/blog/${quotedUser.url}`,
       });
     }
-    if(post) {
+    if (post) {
       if (post.userId !== currentUserId) {
         usersToMention.push({
           id: post.user.id,
@@ -242,7 +254,6 @@ export class PostEditorComponent implements OnInit {
         }
       });
     }
-    
 
     const mentionsHtml = usersToMention
       .map((u) => this.getMentionHtml(u))
@@ -328,7 +339,7 @@ export class PostEditorComponent implements OnInit {
       idPostToReblog: this.editing ? undefined : this.idPostToReblog,
       contentWarning: this.contentWarning,
       idPostToEdit: this.editing ? this.idPostToReblog : undefined,
-      idPosToQuote: this.data?.quote?.id
+      idPosToQuote: this.data?.quote?.id,
     });
     // its a great time to check notifications isnt it?
     this.dashboardService.scrollEventEmitter.emit('post');
@@ -458,60 +469,73 @@ export class PostEditorComponent implements OnInit {
 
   async loadQuote() {
     const urlString = this.urlPostToQuote;
-    this.quoteLoading  = true;
+    this.quoteLoading = true;
     try {
       const url = new URL(urlString);
       let postToAdd: ProcessedPost | undefined;
-      if(url.host === (new URL(environment.frontUrl)).host) {
+      if (url.host === new URL(environment.frontUrl).host) {
         // URL is a local one.  We need to check if it includes an UUID
-        const UUIDRegex = /[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}/gm
-        const matches = urlString.match(UUIDRegex)
-        if(matches) {
-          const uuid = matches[0]
-          const postFromBackend = await this.dashboardService.getPostV2(uuid)
-          if(postFromBackend) {
-            postToAdd = postFromBackend[postFromBackend.length - 1]
+        const UUIDRegex =
+          /[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}/gm;
+        const matches = urlString.match(UUIDRegex);
+        if (matches) {
+          const uuid = matches[0];
+          const postFromBackend = await this.dashboardService.getPostV2(uuid);
+          if (postFromBackend) {
+            postToAdd = postFromBackend[postFromBackend.length - 1];
           }
         } else {
           this.messages.add({
             severity: 'error',
-            summary: 'Sorry the url you pasted does not seem to be valid'
-          })
+            summary: 'Sorry the url you pasted does not seem to be valid',
+          });
         }
       } else {
         // url is external. we call the search function
-        const searchResult = await this.dashboardService.getSearchPage(0, urlString)
-        console.log(searchResult)
-        if (searchResult && searchResult.posts && searchResult.posts.length > 0) {
-          postToAdd = searchResult.posts[0][searchResult.posts[0].length - 1]
+        const searchResult = await this.dashboardService.getSearchPage(
+          0,
+          urlString
+        );
+        console.log(searchResult);
+        if (
+          searchResult &&
+          searchResult.posts &&
+          searchResult.posts.length > 0
+        ) {
+          postToAdd = searchResult.posts[0][searchResult.posts[0].length - 1];
         }
       }
-      if(postToAdd) {
-        if(postToAdd.privacy === 10 || postToAdd.privacy === 1 || postToAdd.privacy === 2) {
+      if (postToAdd) {
+        if (
+          postToAdd.privacy === 10 ||
+          postToAdd.privacy === 1 ||
+          postToAdd.privacy === 2
+        ) {
           this.messages.add({
             severity: 'error',
-            summary: 'Sorry the post you selected is not quotable because of settings of the user'
-          })
+            summary:
+              'Sorry the post you selected is not quotable because of settings of the user',
+          });
         } else {
           postToAdd.quotes = [];
-          if(this.data) {
-            this.data.quote = postToAdd
+          if (this.data) {
+            this.data.quote = postToAdd;
           } else {
-            this.data = {quote: postToAdd}
+            this.data = { quote: postToAdd };
           }
         }
       } else {
         this.messages.add({
           severity: 'error',
-          summary: 'Sorry we could not find the post you requested'
-        })
+          summary: 'Sorry we could not find the post you requested',
+        });
       }
     } catch (error) {
-      console.log(error)
+      console.log(error);
       this.messages.add({
         severity: 'error',
-        summary: 'Something went wrong when trying to load this.'
-      })
+        summary: 'Something went wrong when trying to load this.',
+      });
     }
     this.quoteLoading = false;
   }

@@ -1,5 +1,6 @@
 .taglist {
-  margin-bottom: 16px;
+  margin-top: -8px;
+  margin-bottom: 8px;
   display: flex;
   flex-wrap: wrap;
   gap: 4px;
@@ -49,6 +50,7 @@
 
 .cw-wrapper mat-button-toggle {
   flex-shrink: 0;
+  margin: 3px 0;
   margin-left: -2px;
 }
 
@@ -68,4 +70,27 @@
 .in-reply-to-preview {
   max-height: 90px;
   overflow: hidden;
+}
+
+p {
+  margin: 0;
+}
+
+app-media-preview {
+  display: block;
+  margin-bottom: 8px;
+
+  & + mat-form-field {
+    margin-bottom: -12px;
+  }
+}
+
+.delete-btn {
+  position: absolute;
+  top: -8px;
+  right: -8px;
+}
+
+.quote-container {
+  position: relative;
 }

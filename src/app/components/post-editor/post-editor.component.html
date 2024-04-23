@@ -1,8 +1,14 @@
 <mat-dialog-content style="padding: 12px">
-  <h3 *ngIf="data?.post && !editing" >In reply to:</h3>
-  <div class="in-reply-to-preview quoted-post" *ngIf="data && data.post && !editing">
-    <div class="flex"><img class="avatar" [src]="data.post.user.avatar" alt=""><div [innerHtml]="data.post.user.name" ></div></div>
-    <app-post-fragment [fragment]="data.post" ></app-post-fragment>
+  <h3 *ngIf="data?.post && !editing">In reply to:</h3>
+  <div
+    class="in-reply-to-preview quoted-post"
+    *ngIf="data && data.post && !editing"
+  >
+    <div class="flex">
+      <img class="avatar" [src]="data.post.user.avatar" alt="" />
+      <div [innerHtml]="data.post.user.name"></div>
+    </div>
+    <app-post-fragment [fragment]="data.post"></app-post-fragment>
   </div>
   <h2 *ngIf="editing">
     You are editing your woot. Sorry you need to write all of it again.
@@ -147,51 +153,23 @@
       <app-file-upload (fileUpload)="uploadImage($event)"></app-file-upload>
     </div>
   </div>
-  <section id="media-upload" class="mb-4">
-    <div *ngIf="uploadedMedias.length >= 4">
-      Due some fediverse limitations, we can only have 4 medias per woot. Adding
-      more would break how the woot is seen in other places. Sorry for the
-      inconvenience
-    </div>
-  </section>
 
-  <section id="privacy">
-    <div mat-flat-button color="warning" *ngIf="privacy === 10">
+  <section id="privacy-messages">
+    <p *ngIf="privacy === 10" class="my-2">
       Attention! ADMINS both of your instance and the target instance can read
       the DMs
-    </div>
-    <div mat-flat-button color="warning" *ngIf="privacy === 3">
+    </p>
+    <p *ngIf="privacy === 3" class="my-2">
       Unlisted posts are posts that opt out of search, that including tag
       (hashtag) search in other instances. They are more public than followers
       only but less than regular public. I know I am great at explaining stuff
-    </div>
-    <div mat-button color="warning" *ngIf="!allDescriptionsFilled()">
-      Please fill the media descriptions. If you want to disable this check,
-      there is an option in the profile that you can disable.
-    </div>
+    </p>
   </section>
 
-  <section id="tags">
-    <mat-form-field class="w-full">
-      <mat-label>Tags</mat-label>
-      <input
-        [(ngModel)]="tags"
-        placeholder="Separated by commas"
-        matNativeControl
-      />
-    </mat-form-field>
-    <div class="taglist">
-      @for(tag of tags.split(','); track tag) {
-      <span *ngIf="tag && tag !== '' && tag.trim() !== ''" class="tag"
-        >#{{ tag.trim() }}</span
-      >
-      }
-    </div>
-  </section>
-  <div class="grid">
-    <ng-container *ngFor="let media of uploadedMedias; let i = index">
-      <div class="col-12 md:col-6 my-4">
-        <div class="w-full">
+  <section id="uploaded-media">
+    <div class="grid">
+      <ng-container *ngFor="let media of uploadedMedias; let i = index">
+        <div class="col-12 md:col-6 my-2 relative">
           <app-media-preview [media]="media"></app-media-preview>
           <mat-form-field class="w-full">
             <mat-label>Image Description</mat-label>
@@ -201,7 +179,7 @@
               type="text"
               matNativeControl
               required
-              class="w-full mb-3"
+              class="w-full"
             />
           </mat-form-field>
           <div>
@@ -218,50 +196,109 @@
               >Adult content</mat-checkbox
             >
             <button
-              class="w-full"
-              mat-flat-button
+              mat-mini-fab
+              class="delete-btn"
               color="warn"
               (click)="deleteImage(i)"
             >
-              Delete
+              <fa-icon size="lg" [icon]="closeIcon"></fa-icon>
             </button>
           </div>
         </div>
-      </div>
-    </ng-container>
-  </div>
-  <div *ngIf="! data?.quote">
-    <mat-spinner *ngIf="quoteLoading" color="accent" diameter="42"></mat-spinner>
-    <mat-expansion-panel *ngIf="!quoteLoading" hideToggle>
-      <mat-expansion-panel-header>
-        <mat-panel-title>
-          Add quoted post
-        </mat-panel-title>
-      </mat-expansion-panel-header>
-      <mat-form-field class="w-full">
-        <mat-label>Paste the URL of a post to quote it. Can be the external url or the wafrn url</mat-label>
-        <input
-          [(ngModel)]="urlPostToQuote"
-          placeholder="Just paste the post url"
-          matNativeControl
-        />
-      </mat-form-field>
-      <button
-        (click)="loadQuote()"
-        mat-flat-button
-        color="primary"
-        class="w-full"
-        [disabled]="urlPostToQuote === '' "
-        >Add post as quote</button>
-    </mat-expansion-panel>
-  </div>
-  <div *ngIf="data && data.quote">
-    QUOTING:
-    <div class="quoted-post">
-      <div class="flex"><img class="avatar" [src]="data.quote.user.avatar" alt=""><div [innerHtml]="data.quote.user.name"></div></div>
-      <app-post-fragment [fragment]="data.quote" ></app-post-fragment>
+      </ng-container>
     </div>
-  </div>
+    <p class="my-2" *ngIf="uploadedMedias.length >= 4">
+      Due some fediverse limitations, we can only have 4 medias per woot. Adding
+      more would break how the woot is seen in other places. Sorry for the
+      inconvenience
+    </p>
+    <p class="my-2" *ngIf="!allDescriptionsFilled()">
+      Please fill the media descriptions. If you want to disable this check,
+      there is an option in the profile that you can disable.
+    </p>
+  </section>
+
+  <section id="quote">
+    <div *ngIf="!data?.quote">
+      <mat-spinner
+        *ngIf="quoteLoading"
+        class="my-4"
+        color="accent"
+        diameter="42"
+      ></mat-spinner>
+      @if (quoteOpen) {
+      <mat-card class="p-2 my-4" *ngIf="!quoteLoading">
+        <mat-form-field class="w-full">
+          <mat-label>
+            Paste the URL of a post to quote it. Can be the external url or the
+            wafrn url
+          </mat-label>
+          <input
+            [(ngModel)]="urlPostToQuote"
+            placeholder="Just paste the post url"
+            matNativeControl
+          />
+        </mat-form-field>
+        <button
+          (click)="loadQuote()"
+          mat-flat-button
+          color="primary"
+          class="w-full"
+          [disabled]="urlPostToQuote === ''"
+        >
+          Add post as quote
+        </button>
+      </mat-card>
+      } @else {
+      <div class="flex justify-content-end my-2">
+        <button
+          mat-button
+          color="primary"
+          (click)="quoteOpen = true"
+          mat-flat-button
+        >
+          Add quote
+        </button>
+      </div>
+      }
+    </div>
+    <div *ngIf="data && data.quote" class="my-4">
+      <p class="mb-1">QUOTING:</p>
+      <div class="quoted-post">
+        <button
+          mat-mini-fab
+          class="delete-btn"
+          color="warn"
+          (click)="data ? (data.quote = undefined) : null"
+        >
+          <fa-icon size="lg" [icon]="closeIcon"></fa-icon>
+        </button>
+        <div class="flex">
+          <img class="avatar" [src]="data.quote.user.avatar" alt="" />
+          <div [innerHtml]="data.quote.user.name"></div>
+        </div>
+        <app-post-fragment [fragment]="data.quote"></app-post-fragment>
+      </div>
+    </div>
+  </section>
+
+  <section id="tags" class="mt-2">
+    <mat-form-field class="w-full">
+      <mat-label>Tags</mat-label>
+      <input
+        [(ngModel)]="tags"
+        placeholder="Separated by commas"
+        matNativeControl
+      />
+    </mat-form-field>
+    <div class="taglist">
+      @for(tag of tags.split(','); track tag) {
+      <span *ngIf="tag && tag !== '' && tag.trim() !== ''" class="tag">
+        #{{ tag.trim() }}
+      </span>
+      }
+    </div>
+  </section>
 
   <button
     mat-flat-button
