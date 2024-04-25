@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
-import { Component, EventEmitter, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
@@ -27,6 +27,15 @@ import { environment } from 'src/environments/environment';
 export class FileUploadComponent {
   uploading = false;
   uploadIcon = faFileUpload;
+  @Input() config: {
+    url: string,
+    formats: string,
+    buttonText: string
+  } = {
+    url :`/uploadMedia`,
+    formats: `image/*, video/*`,
+    buttonText: `Upload media`
+  }
   @Output() fileUpload: EventEmitter<WafrnMedia> =
     new EventEmitter<WafrnMedia>();
 
@@ -43,9 +52,8 @@ export class FileUploadComponent {
     const formdata = new FormData();
     if (el.files && el.files[0]) {
       formdata.append('image', el.files[0]);
-      const uploadImageUrl = `${environment.baseUrl}/uploadMedia`;
       const petition: WafrnMedia[] | void = await lastValueFrom(
-        this.http.post<Array<WafrnMedia>>(uploadImageUrl, formdata)
+        this.http.post<Array<WafrnMedia>>(environment.baseUrl + this.config.url, formdata)
       ).catch((error: any) => {
         console.log('error uploading');
         console.warn(error);

@@ -1,5 +1,6 @@
 <input
   type="file"
+  [accept]="config.formats"
   class="file-input"
   (change)="onFileSelected($event)"
   #fileUpload
@@ -12,7 +13,7 @@
     class="upload-btn w-full upload-btn"
     (click)="fileUpload.click()"
   >
-    <fa-icon [icon]="uploadIcon"></fa-icon> Upload media
+    <fa-icon [icon]="uploadIcon"></fa-icon> {{config.buttonText}}
   </button>
 </div>
 
