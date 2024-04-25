@@ -96,10 +96,7 @@ export class NotificationsComponent implements OnInit {
         return {
           type: NotificationType.FOLLOW,
           url: `/blog/${follow.url}`,
-          avatar: follow.url.startsWith('@')
-            ? environment.externalCacheurl + encodeURIComponent(follow.avatar)
-            : environment.externalCacheurl +
-            encodeURIComponent(environment.baseMediaUrl + follow.avatar),
+          avatar: follow.avatar,
           date: follow.createdAt,
           userUrl: follow.url,
         };
