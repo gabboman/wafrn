@@ -40,6 +40,12 @@ const routes: Route[] = [
     loadComponent: () =>
       import('./stats/stats.component').then((m) => m.StatsComponent),
   },
+  {
+    path: 'emojis',
+    // new lazyloading method
+    loadComponent: () =>
+      import('./emoji-uploader/emoji-uploader.component').then((m) => m.EmojiUploaderComponent),
+  },
 ];
 @NgModule({
   declarations: [],

@@ -1,0 +1,9 @@
+<app-loader *ngIf="loading"></app-loader>
+<mat-card *ngIf="!loading" class="p-3 m-2 mb-6 lg:mx-4 scalein wafrn-container">
+<h3>Upload emoji or emoji collection</h3>
+<app-file-upload [config]="{
+    url: '/emojipack/add',
+    formats: 'image/*,zip',
+    buttonText: 'Upload emojis'
+}" ></app-file-upload>
+</mat-card>
