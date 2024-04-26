@@ -11,6 +11,7 @@ import { PostEmojiReaction, unlinkedPosts } from '../interfaces/unlinked-posts';
 import { SimplifiedUser } from '../interfaces/simplified-user';
 import { UserOptions } from '../interfaces/userOptions';
 import { Emoji } from '../interfaces/emoji';
+import { EmojiCollection } from '../interfaces/emoji-collection';
 @Injectable({
   providedIn: 'root',
 })
@@ -25,6 +26,7 @@ export class PostsService {
   public postLiked: BehaviorSubject<{id: string, like: boolean}> = new BehaviorSubject<{id: string, like: boolean}>({id: 'undefined', like: false});
 
   public followedUserIds: Array<string> = [];
+  public emojiCollections: EmojiCollection[] = [];
   public notYetAcceptedFollowedUsersIds: Array<string> = [];
   public blockedUserIds: Array<string> = [];
   constructor(
@@ -44,9 +46,10 @@ export class PostsService {
           notAcceptedFollows: string[];
           options: UserOptions[];
           silencedPosts: string[];
+          emojis: EmojiCollection[]
         }>(`${environment.baseUrl}/my-ui-options`)
       );
-      if (followsAndBlocks) {
+        this.emojiCollections = followsAndBlocks.emojis
         this.followedUserIds = followsAndBlocks.followedUsers;
         this.blockedUserIds = followsAndBlocks.blockedUsers;
         this.notYetAcceptedFollowedUsersIds =
@@ -69,7 +72,6 @@ export class PostsService {
         } else {
           localStorage.setItem('silencedPostsIds', JSON.stringify([]))
         }
-      }
       this.updateFollowers.next(true);
     }
   }
