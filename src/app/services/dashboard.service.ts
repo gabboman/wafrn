@@ -7,6 +7,7 @@ import { PostsService } from './posts.service';
 import { MessageService } from './message.service';
 import { firstValueFrom } from 'rxjs';
 import { unlinkedPosts } from '../interfaces/unlinked-posts';
+import { Emoji } from '../interfaces/emoji';
 
 @Injectable({
   providedIn: 'root',
@@ -137,10 +138,15 @@ export class DashboardService {
   async getBlogDetails(url: string) {
     let petitionData: HttpParams = new HttpParams();
     petitionData = petitionData.append('id', url);
-    const res: any = await this.http
-      .get(`${environment.baseUrl}/user`, { params: petitionData })
-      .toPromise();
+    const res: any = await firstValueFrom(this.http.get(`${environment.baseUrl}/user`, { params: petitionData }));
     if (res.id) {
+      if(res.emojis) {
+        res.emojis.forEach((emoji: Emoji) => {
+          res.name = res.name.replaceAll(emoji.name, `<img class="post-emoji" src="${environment.externalCacheurl + (emoji.external ? encodeURIComponent(emoji.url) : encodeURIComponent(environment.baseMediaUrl + emoji.url) )}">`)
+          res.description = res.description.replaceAll(emoji.name, `<img class="post-emoji" src="${environment.externalCacheurl + (emoji.external ? encodeURIComponent(emoji.url) : encodeURIComponent(environment.baseMediaUrl + emoji.url) )}">`)
+
+        })
+      }
       return { ...res, success: true };
     } else {
       return {
