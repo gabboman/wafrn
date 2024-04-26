@@ -11,6 +11,7 @@ import { RawPost } from 'src/app/interfaces/raw-post';
 import { MatTableDataSource } from '@angular/material/table';
 import { faHome } from '@fortawesome/free-solid-svg-icons';
 import { SimplifiedUser } from 'src/app/interfaces/simplified-user';
+import { SimpleSeoService } from 'src/app/services/simple-seo.service';
 @Component({
   selector: 'app-single-post',
   templateUrl: './single-post.component.html',
@@ -40,6 +41,7 @@ export class SinglePostComponent implements OnDestroy {
     private loginService: LoginService,
     private router: Router,
     private route: ActivatedRoute,
+    private seoService: SimpleSeoService,
     @Inject(PLATFORM_ID) private platformId: Object,
     private themeService: ThemeService
   ) {
@@ -70,9 +72,8 @@ export class SinglePostComponent implements OnDestroy {
       const lastPostFragment = this.post[this.post.length - 1];
       if (lastPostFragment) {
         this.postFound = true;
-
         this.loading = false;
-        //this.seoService.setSEOTags(`Wafrn - Post by ${lastPostFragment.user.url}`, `Wafrn post by ${lastPostFragment.user.url}: ${this.postService.getPostContentSanitized(lastPostFragment.content)}`, lastPostFragment.user.url, this.getImage(this.post));
+        this.seoService.setSEOTags(`Wafrn - Post by ${lastPostFragment.user.url}`, `Wafrn post by ${lastPostFragment.user.url}: ${this.postService.getPostContentSanitized(lastPostFragment.content)}`, lastPostFragment.user.url, this.getImage(this.post));
       } else {
         this.postFound = false;
       }
@@ -84,12 +85,7 @@ export class SinglePostComponent implements OnDestroy {
 
   // gets either the first non video image from the last post, the fist non video image from the initial post OR the wafrn logo
   getImage(processedPost: ProcessedPost[]): string {
-    const posterAvatar =
-      environment.baseMediaUrl +
-      processedPost[processedPost.length - 1]?.user.avatar;
-    let res: string = posterAvatar
-      ? posterAvatar
-      : 'https://app.wafrn.net/favicon.ico';
+    let res = '/assets/linkpreview.png'
     const firstPostMedias = processedPost[0]?.medias;
     if (firstPostMedias) {
       for (let i = 0; i < firstPostMedias.length; i++) {

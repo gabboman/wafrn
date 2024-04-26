@@ -17,6 +17,7 @@ export class PrivacyComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.seo.setSEOTags('Wafrn Privacy Policy', 'The wafrn privacy policy', 'The wafrn team', '/assets/linkpreview.png')
   }
 
 }
