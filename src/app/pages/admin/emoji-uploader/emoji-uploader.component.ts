@@ -20,6 +20,7 @@ import { LoaderComponent } from 'src/app/components/loader/loader.component';
 })
 export class EmojiUploaderComponent {
 
-  loading = false;
-
+  onEmojiUpload(evt: any) {
+    console.log(evt)
+  }
 }

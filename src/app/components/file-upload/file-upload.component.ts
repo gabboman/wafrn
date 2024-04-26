@@ -30,9 +30,11 @@ export class FileUploadComponent {
   @Input() config: {
     url: string,
     formats: string,
-    buttonText: string
+    buttonText: string,
+    formdataName: string
   } = {
     url :`/uploadMedia`,
+    formdataName: 'image',
     formats: `image/*, video/*`,
     buttonText: `Upload media`
   }
@@ -51,7 +53,7 @@ export class FileUploadComponent {
     const el = event.target as HTMLInputElement;
     const formdata = new FormData();
     if (el.files && el.files[0]) {
-      formdata.append('image', el.files[0]);
+      formdata.append(this.config.formdataName, el.files[0]);
       const petition: WafrnMedia[] | void = await lastValueFrom(
         this.http.post<Array<WafrnMedia>>(environment.baseUrl + this.config.url, formdata)
       ).catch((error: any) => {
