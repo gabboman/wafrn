@@ -44,7 +44,7 @@ export class PostsService {
           notAcceptedFollows: string[];
           options: UserOptions[];
           silencedPosts: string[];
-        }>(`${environment.baseUrl}/getFollowedUsers`)
+        }>(`${environment.baseUrl}/my-ui-options`)
       );
       if (followsAndBlocks) {
         this.followedUserIds = followsAndBlocks.followedUsers;
