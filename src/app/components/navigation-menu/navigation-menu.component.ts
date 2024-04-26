@@ -40,6 +40,7 @@ import {
   faChartSimple,
   faHourglass,
   faBellSlash,
+  faIcons,
 } from '@fortawesome/free-solid-svg-icons';
 import { MenuItem } from 'src/app/interfaces/menu-item';
 import { MatDialog } from '@angular/material/dialog';
@@ -209,6 +210,15 @@ export class NavigationMenuComponent implements OnInit, OnDestroy {
             icon: faServer,
             title: 'List of all the servers',
             routerLink: '/admin/server-list',
+            command: () => {
+              this.hideMenu();
+            },
+          },
+          {
+            label: 'Add emojis',
+            icon: faIcons,
+            title: 'Add emoji collection',
+            routerLink: '/admin/emojis',
             command: () => {
               this.hideMenu();
             },
