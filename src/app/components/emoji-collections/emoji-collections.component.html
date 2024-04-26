@@ -1,0 +1,16 @@
+
+<mat-form-field class="w-full mt-2">
+    <mat-label>Filter</mat-label>
+    <input [(ngModel)]="filterText" matInput />
+  </mat-form-field>
+@for (emojiCollection of emojiCollections; track $index) {
+    <h2>{{emojiCollection.name}}</h2>
+    <div class="flex grid">
+    @for(emoji of emojiCollection.emojis; track emoji) {
+        <div *ngIf="emoji.name.includes(filterText)" role="none" (click)="copyEmoji(emoji)" class="p-2 flex align-content-center justify-content-center hover-cursor">
+            <img class="post-emoji-preview mr-2 ml-2" [src]="baseMediaUrl + emoji.url" [alt]="emoji.name">
+            {{emoji.name}}
+        </div>
+    }
+    </div>
+}

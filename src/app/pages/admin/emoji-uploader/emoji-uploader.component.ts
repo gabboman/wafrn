@@ -2,6 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MatCardModule } from '@angular/material/card';
+import { EmojiCollectionsComponent } from 'src/app/components/emoji-collections/emoji-collections.component';
 import { FileUploadComponent } from 'src/app/components/file-upload/file-upload.component';
 import { LoaderComponent } from 'src/app/components/loader/loader.component';
 
@@ -13,7 +14,8 @@ import { LoaderComponent } from 'src/app/components/loader/loader.component';
     FormsModule,
     MatCardModule,
     LoaderComponent,
-    FileUploadComponent
+    FileUploadComponent,
+    EmojiCollectionsComponent
   ],
   templateUrl: './emoji-uploader.component.html',
   styleUrl: './emoji-uploader.component.scss'
