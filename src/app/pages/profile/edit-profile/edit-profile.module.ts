@@ -10,6 +10,8 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { MatCheckboxModule } from '@angular/material/checkbox';
+import { EmojiCollectionsComponent } from 'src/app/components/emoji-collections/emoji-collections.component';
+import { MatExpansionModule } from '@angular/material/expansion';
 
 const routes: Routes = [
   {
@@ -32,6 +34,8 @@ const routes: Routes = [
     MatInputModule,
     MatSelectModule,
     MatCheckboxModule,
+    EmojiCollectionsComponent,
+    MatExpansionModule
   ],
 })
 export class EditProfileModule {}

@@ -4,7 +4,7 @@
     <input [(ngModel)]="filterText" matInput />
   </mat-form-field>
 @for (emojiCollection of emojiCollections; track $index) {
-    <h2>{{emojiCollection.name}}</h2>
+    <h3>{{emojiCollection.name}}</h3>
     <div class="flex grid">
     @for(emoji of emojiCollection.emojis; track emoji) {
         <div *ngIf="emoji.name.includes(filterText)" role="none" (click)="copyEmoji(emoji)" class="p-2 flex align-content-center justify-content-center hover-cursor">
