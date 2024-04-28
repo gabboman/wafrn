@@ -40,9 +40,7 @@ export class EmojiCollectionsComponent implements OnDestroy{
   }
 
   copyEmoji(emoji: Emoji) {
-    navigator.clipboard.writeText(
-      emoji.name
-    );
+    navigator.clipboard.writeText(' ' + emoji.name + ' ');
     this.messages.add({
       severity: 'success',
       summary: `The emoji ${emoji.name} was copied to your clipboard`,
