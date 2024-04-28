@@ -10,7 +10,7 @@
       </div>
       <div class="w-full white-space-nowrap overflow-hidden text-overflow-ellipsis flex flex-column">
         <div>
-          <a class="original-poster-name" [routerLink]="'/blog/' + originalPostContent[this.originalPostContent.length - 1].user.url"
+          <a class="original-poster-name flex" [routerLink]="'/blog/' + originalPostContent[this.originalPostContent.length - 1].user.url"
             [innerHTML]="originalPostContent[this.originalPostContent.length - 1].user.name"></a>
         </div>
         <div class="date-line mb-1 flex gap-2 align-items-center">
@@ -49,7 +49,7 @@
               onerror="this.onerror=null;this.src='/api/uploads/default.webp'" height="40" width="40" />
           </div>
           <div class="w-full overflow-hidden flex flex-column">
-            <a class="max-w-full white-space-nowrap overflow-hidden text-overflow-ellipsis user-name"
+            <a class="max-w-full white-space-nowrap overflow-hidden text-overflow-ellipsis user-name flex"
               [routerLink]="'/blog/' + content.user.url" [innerHTML]="content.user.name"></a>
             <span class="font-small max-w-full white-space-nowrap overflow-hidden text-overflow-ellipsis user-url"
               [innerText]="content.user.url"></span>
