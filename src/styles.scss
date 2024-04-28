@@ -232,6 +232,11 @@ a:visited,
   overflow-y: auto;
 }
 
+.ql-editor  li {
+  list-style-type: unset;
+  padding-left: 0em;
+}
+
 .ql-snow > .ql-editor.ql-blank::before {
   color: white;
   opacity: 0.5;
