@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnDestroy } from '@angular/core';
+import { Component, EventEmitter, OnDestroy, Output } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatInputModule } from '@angular/material/input';
@@ -26,10 +26,11 @@ export class EmojiCollectionsComponent implements OnDestroy{
   filterText = "";
   emojiCollections: EmojiCollection[] = []
   subscription: Subscription;
+  @Output() emoji: EventEmitter<string> = new EventEmitter<string>()
 
   baseMediaUrl = environment.baseMediaUrl
 
-  constructor(private postService: PostsService, private messages: MessageService) {
+  constructor(private postService: PostsService) {
     this.subscription = this.postService.updateFollowers.subscribe(() => {
       this.emojiCollections = this.postService.emojiCollections
     })
@@ -39,12 +40,8 @@ export class EmojiCollectionsComponent implements OnDestroy{
     this.subscription.unsubscribe();
   }
 
-  copyEmoji(emoji: Emoji) {
-    navigator.clipboard.writeText(' ' + emoji.name + ' ');
-    this.messages.add({
-      severity: 'success',
-      summary: `The emoji ${emoji.name} was copied to your clipboard`,
-    });
+  click(emoji: Emoji) {
+    this.emoji.emit(emoji.name)
   }
 
 }

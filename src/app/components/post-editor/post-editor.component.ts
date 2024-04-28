@@ -541,4 +541,11 @@ export class PostEditorComponent implements OnInit {
     }
     this.quoteLoading = false;
   }
+
+  emojiAdded(emoji: string) {
+    this.postCreatorContent = this.postCreatorContent + emoji;
+    this.messages.add({
+      severity: 'success', summary: `Emoji ${emoji} has been added to the post`
+    })
+  }
 }

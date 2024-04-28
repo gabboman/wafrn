@@ -77,7 +77,7 @@
           Avaiable Emojis
         </mat-panel-title>
       </mat-expansion-panel-header>
-      <app-emoji-collections></app-emoji-collections>
+      <app-emoji-collections (emoji)="emojiClicked($event)" ></app-emoji-collections>
     </mat-expansion-panel>
     <mat-expansion-panel hideToggle>
       <mat-expansion-panel-header>

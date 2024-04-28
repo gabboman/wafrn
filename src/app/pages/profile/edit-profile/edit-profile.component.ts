@@ -99,4 +99,12 @@ export class EditProfileComponent implements OnInit {
     }
     this.loading = false;
   }
+
+  emojiClicked(emojiName: string) {
+    navigator.clipboard.writeText(' ' + emojiName + ' ');
+    this.messages.add({
+      severity: 'success',
+      summary: `The emoji ${emojiName} was copied to your clipboard`,
+    });
+  }
 }

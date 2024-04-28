@@ -174,7 +174,7 @@
           Avaiable Emojis
         </mat-panel-title>
       </mat-expansion-panel-header>
-      <app-emoji-collections></app-emoji-collections>
+      <app-emoji-collections (emoji)="emojiAdded($event)" ></app-emoji-collections>
     </mat-expansion-panel>
   </mat-accordion>
   </section>
