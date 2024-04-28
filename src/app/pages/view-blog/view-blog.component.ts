@@ -135,7 +135,6 @@ export class ViewBlogComponent implements OnInit, OnDestroy {
           const element = document.querySelector(
             '#if-you-see-this-load-more-posts'
           );
-          console.log(element);
           if (element) {
             this.intersectionObserverForLoadPosts.observe(element);
           }

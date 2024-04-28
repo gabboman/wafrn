@@ -204,8 +204,7 @@ export class PostsService {
         if (emoji) {
           user.name = user.name.replaceAll(
             emoji.name,
-            `<img class="post-emoji" src="${environment.externalCacheurl + encodeURIComponent(emoji.url)
-            }">`
+            this.emojiToHtml(emoji)
           );
         }
       });
@@ -379,8 +378,7 @@ export class PostsService {
         : `:${emoji.name}:`;
       sanitized = sanitized.replaceAll(
         strToReplace,
-        `<img src="${environment.externalCacheurl + encodeURIComponent(emoji.url)
-        }" class="post-emoji"/>`
+        this.emojiToHtml(emoji)
       );
     });
 
@@ -475,5 +473,10 @@ export class PostsService {
     );
     await this.loadFollowers()
     return response.success;
+  }
+
+
+  emojiToHtml(emoji: any): string {
+    return `<img class="post-emoji" src="${environment.externalCacheurl + (emoji.external ? encodeURIComponent(emoji.url) : encodeURIComponent(environment.baseMediaUrl + emoji.url) )}">`;
   }
 }

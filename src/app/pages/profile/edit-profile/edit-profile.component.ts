@@ -50,7 +50,7 @@ export class EditProfileComponent implements OnInit {
 
   ngOnInit(): void {
     this.dashboardService
-      .getBlogDetails(this.jwtService.getTokenData()['url'])
+      .getBlogDetails(this.jwtService.getTokenData()['url'], true)
       .then(async (blogDetails) => {
         blogDetails['avatar'] = undefined;
         this.editProfileForm.patchValue(blogDetails);

@@ -30,8 +30,7 @@ export class SimpleSeoService {
       {name: 'twitter:site', content: environment.frontUrl },
       {name: 'twitter:description', content: sanitizedDescription },
       {name: 'twitter:image', content: image},
-    ]
-    tags.forEach(tag => this.metaTagService.removeTag(tag.name as string))
+    ];
     this.metaTagService.addTags(tags);
   }
 }

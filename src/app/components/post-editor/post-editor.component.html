@@ -166,6 +166,19 @@
     </p>
   </section>
 
+  <section class="mt-3" id="avaiable-emojis">
+    <mat-accordion>
+    <mat-expansion-panel hideToggle>
+      <mat-expansion-panel-header>
+        <mat-panel-title>
+          Avaiable Emojis
+        </mat-panel-title>
+      </mat-expansion-panel-header>
+      <app-emoji-collections></app-emoji-collections>
+    </mat-expansion-panel>
+  </mat-accordion>
+  </section>
+
   <section id="uploaded-media">
     <div class="grid">
       <ng-container *ngFor="let media of uploadedMedias; let i = index">

@@ -36,6 +36,7 @@ import { PostFragmentComponent } from '../post-fragment/post-fragment.component'
 import { PostsService } from 'src/app/services/posts.service';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatCardModule } from '@angular/material/card';
+import { EmojiCollectionsComponent } from '../emoji-collections/emoji-collections.component';
 
 @Component({
   selector: 'app-post-editor',
@@ -60,6 +61,7 @@ import { MatCardModule } from '@angular/material/card';
     MatExpansionModule,
     MatProgressSpinnerModule,
     MatCardModule,
+    EmojiCollectionsComponent
   ],
   providers: [EditorService],
 })

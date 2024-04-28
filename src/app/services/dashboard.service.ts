@@ -135,15 +135,15 @@ export class DashboardService {
     return result;
   }
 
-  async getBlogDetails(url: string) {
+  async getBlogDetails(url: string, ignoreEmojis = false) {
     let petitionData: HttpParams = new HttpParams();
     petitionData = petitionData.append('id', url);
     const res: any = await firstValueFrom(this.http.get(`${environment.baseUrl}/user`, { params: petitionData }));
     if (res.id) {
-      if(res.emojis) {
+      if(res.emojis && !ignoreEmojis) {
         res.emojis.forEach((emoji: Emoji) => {
-          res.name = res.name.replaceAll(emoji.name, `<img class="post-emoji" src="${environment.externalCacheurl + (emoji.external ? encodeURIComponent(emoji.url) : encodeURIComponent(environment.baseMediaUrl + emoji.url) )}">`)
-          res.description = res.description.replaceAll(emoji.name, `<img class="post-emoji" src="${environment.externalCacheurl + (emoji.external ? encodeURIComponent(emoji.url) : encodeURIComponent(environment.baseMediaUrl + emoji.url) )}">`)
+          res.name = res.name.replaceAll(emoji.name, this.postService.emojiToHtml(emoji))
+          res.description = res.description.replaceAll(emoji.name, this.postService.emojiToHtml(emoji))
 
         })
       }
