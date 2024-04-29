@@ -19,7 +19,7 @@
   </div>
   <div
     *ngIf="fragment.content !== '' || fragment.tags?.length"
-    class="fragment-content text-base"
+    class="fragment-content text-base overflow-hidden"
     [ngClass]="{ blurry: fragment.content_warning && showCw }"
     [injectHTML]="fragment.content"
   ></div>
