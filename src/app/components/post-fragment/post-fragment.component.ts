@@ -12,6 +12,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { PostsService } from 'src/app/services/posts.service';
 import { LoginService } from 'src/app/services/login.service';
 import { JwtService } from 'src/app/services/jwt.service';
+import { EmojiReactComponent } from '../emoji-react/emoji-react.component';
 
 @Component({
   selector: 'app-post-fragment',
@@ -24,6 +25,7 @@ import { JwtService } from 'src/app/services/jwt.service';
     InjectHtmlModule,
     MatButtonModule,
     MatTooltipModule,
+    EmojiReactComponent
   ],
   templateUrl: './post-fragment.component.html',
   styleUrl: './post-fragment.component.scss',

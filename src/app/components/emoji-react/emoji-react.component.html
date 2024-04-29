@@ -1,0 +1,18 @@
+<button mat-flat-button (click)="isOpen = !isOpen" type="button" cdkOverlayOrigin #trigger="cdkOverlayOrigin">
+  <fa-icon [icon]="expandDownIcon"></fa-icon>
+  </button>
+
+<ng-template
+  cdkConnectedOverlay
+  [cdkConnectedOverlayOrigin]="trigger"
+  [cdkConnectedOverlayOpen]="isOpen"
+  [cdkConnectedOverlayScrollStrategy]="scrollStrategy"
+>
+<div class="emojireact-overlay p-3 scalein animation-duration-200"
+>
+<h3 *ngIf="!loading" class="mt-2">React with an emoji</h3>
+  <app-emoji-collections *ngIf="!loading"  (emoji)="reactToPost($event)" ></app-emoji-collections>
+  <app-loader *ngIf="loading" ></app-loader>
+</div>
+  
+</ng-template>

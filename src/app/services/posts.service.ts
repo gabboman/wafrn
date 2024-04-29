@@ -154,6 +154,29 @@ export class PostsService {
     return res;
   }
 
+  async emojiReactPost(postId: string, emojiId: string): Promise<boolean> {
+    let res = false;
+    const payload = {
+      postId: postId,
+      emojiId: emojiId
+    };
+    try {
+      const response = await firstValueFrom(this.http
+        .post<{ success: boolean }>(`${environment.baseUrl}/emojiReact`, payload)
+        );
+      await this.loadFollowers();
+      res = response?.success === true;
+    } catch (exception) {
+      console.log(exception);
+    }
+    /* TODO emojireact thing for likes
+    this.postLiked.next({
+      id: id,
+      like: true
+    })*/
+    return res;
+  }
+
   processPostNew(unlinked: unlinkedPosts): ProcessedPost[][] {
     this.processedQuotes = unlinked.quotedPosts.map(quote => this.processSinglePost({ ...unlinked, posts: [quote] }))
     const res = unlinked.posts.map((elem) => {
