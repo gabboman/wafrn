@@ -41,12 +41,15 @@ export class PostFragmentComponent implements OnInit, OnDestroy{
     users: SimplifiedUser[];
   }[] = [];
   likeSubscription;
+  userId;
 
   constructor (
     private postService: PostsService,
     private loginService: LoginService,
     private jwtService: JwtService
   ) {
+    this.userId = loginService.getLoggedUserUUID();
+
     this.likeSubscription = postService.postLiked.subscribe(likeEvent => {
       if(likeEvent.id === this.fragment?.id) {
         if(likeEvent.like) {
@@ -99,7 +102,7 @@ export class PostFragmentComponent implements OnInit, OnDestroy{
             content: reaction.content,
             img: reaction.emoji?.url
               ? environment.externalCacheurl +
-              encodeURIComponent(reaction.emoji.url)
+              encodeURIComponent(reaction.emoji.external ? reaction.emoji.url : (environment.baseMediaUrl + reaction.emoji.url))
               : undefined,
             users: this.fragment?.emojiReactions
               .filter(

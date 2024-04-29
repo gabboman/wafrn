@@ -105,6 +105,7 @@
       }
     </button>
     }
-    <app-emoji-react [postId]="fragment.id" ></app-emoji-react>
+      <app-emoji-react *ngIf="!(userId === '' || userId === fragment.userId)"  [postId]="fragment.id" ></app-emoji-react>
+
   </section>
 </ng-container>
