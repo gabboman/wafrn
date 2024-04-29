@@ -1,30 +1,3 @@
-.parent {
-  overflow: hidden;
-}
-
-.blurred {
-  filter: blur(3em) grayscale(100%);
-  -webkit-filter: blur(3em) grayscale(100%);
-  max-height: 550px;
-
-}
-
-
-@keyframes unblur {
- 0% {
-    filter: blur(8em) grayscale(100%);
-    -webkit-filter: blur(8em) grayscale(100%);
- }
-  100% {
-    filter: none;
-    -webkit-filter: none;
-  }
-}
-
-.unblurred {
-    animation: unblur;
-    animation-duration: 0.3s;
-}
 img, video {
   max-width: 100%;
   width: 100%;
