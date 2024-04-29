@@ -2,7 +2,7 @@
   <div [ngClass]="{
       'shortened-post': veryLongPost || !showFull
     }">
-    <div *ngIf="post.length > 1" class="center-text overflow-hidden">
+    <div *ngIf="post.length > 1" class="center-text overflow-hidden mx-2">
       <div class="avatar">
         <img [routerLink]="'/blog/' + originalPostContent[this.originalPostContent.length - 1].user.url" crossorigin="anonymous" loading="lazy"
           [src]="originalPostContent[this.originalPostContent.length - 1].user.avatar" onerror="this.onerror=null;this.src='/api/uploads/default.webp'" alt=""
@@ -41,7 +41,7 @@
         index === 0 ||
         content.tags.length > 0
       " id="fragment">
-      <div id="fragment-header" class="flex mb-1 gap-1 md:gap-3 align-items-center" style="width: 100%">
+      <div id="fragment-header" class="flex mb-1 gap-1 md:gap-3 align-items-center mx-2" style="width: 100%">
         <div class="center-text flex-grow-1 flex-shrink-1 min-w-0">
           <div class="avatar">
             <img alt="" [routerLink]="'/blog/' + content.user.url" class="user-avatar" crossorigin="anonymous"
@@ -57,7 +57,7 @@
         </div>
         <app-post-actions [content]="content"></app-post-actions>
       </div>
-      <div class="date-line mb-1 flex gap-2 align-items-center">
+      <div class="date-line mb-1 flex gap-2 align-items-center mx-2 ">
         <span class="text-xs text-600">
           {{ content.createdAt | date : "short" }}
           <fa-icon [icon]="
