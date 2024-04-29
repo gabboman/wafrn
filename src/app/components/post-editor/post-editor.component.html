@@ -23,18 +23,27 @@
   >
     <div
       quill-editor-toolbar
-      style="
-        border-bottom: none;
-        border-top-left-radius: 5px;
-        border-top-right-radius: 5px;
-      "
+      class="post-editor-toolbar"
     >
+
+    <span class="ql-align">
       <select class="ql-size" title="Text Size">
         <option value="small"></option>
         <option selected></option>
         <option value="large"></option>
         <option value="huge"></option>
       </select>
+      <select class="ql-align">
+        <option selected></option>
+        <option value="center"></option>
+        <option value="right"></option>
+        <option value="justify"></option>
+      </select>
+      <select class="ql-color"></select>
+      <select class="ql-background"></select>
+    </span>
+    <button type="button" class="ql-list" value="bullet" aria-label="List" title="List"
+    ></button>
       <button
         type="button"
         class="ql-bold"
