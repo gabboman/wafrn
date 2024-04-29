@@ -217,7 +217,7 @@
           "
           size="lg"
           (click)="quotePost(finalPost)"
-          class="hover-cursor"
+          class="cursor-pointer"
           [icon]="quoteIcon"
           matTooltip="Quote woot"
         ></fa-icon>
@@ -225,7 +225,7 @@
         <fa-icon
           size="lg"
           (click)="deletePost(post[post.length - 1].id)"
-          class="hover-cursor"
+          class="cursor-pointer"
           [icon]="closeIcon"
           matTooltip="Delete rewoot"
         ></fa-icon>
@@ -234,7 +234,7 @@
           size="lg"
           *ngIf="finalPost.privacy !== 10"
           (click)="quickReblog(finalPost)"
-          class="hover-cursor"
+          class="cursor-pointer"
           [icon]="quickReblogIcon"
           matTooltip="Quick rewoot"
         ></fa-icon>
@@ -243,7 +243,7 @@
         <fa-icon
           size="lg"
           (click)="replyPost(finalPost)"
-          class="hover-cursor"
+          class="cursor-pointer"
           [icon]="reblogIcon"
           matTooltip="Reply woot"
         ></fa-icon>
@@ -253,7 +253,7 @@
         <fa-icon
           size="lg"
           (click)="unlikePost(finalPost)"
-          class="hover-cursor"
+          class="cursor-pointer"
           [icon]="clearHeartIcon"
           matTooltip="Remove like"
         ></fa-icon>
@@ -261,7 +261,7 @@
         <fa-icon
           size="lg"
           (click)="likePost(finalPost)"
-          class="hover-cursor"
+          class="cursor-pointer"
           [icon]="solidHeartIcon"
           matTooltip="Like woot"
         ></fa-icon>
@@ -270,14 +270,14 @@
           size="lg"
           *ngIf="finalPost.privacy === 2"
           (click)="editPost(finalPost)"
-          class="hover-cursor"
+          class="cursor-pointer"
           [icon]="editedIcon"
           matTooltip="Edit woot"
         ></fa-icon>
         <fa-icon
           size="lg"
           (click)="deletePost(finalPost.id)"
-          class="hover-cursor"
+          class="cursor-pointer"
           [icon]="deleteIcon"
           matTooltip="Delete woot"
         ></fa-icon>

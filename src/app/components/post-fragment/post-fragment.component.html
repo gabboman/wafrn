@@ -51,7 +51,7 @@
   <div
     *ngIf="quote"
     [ngClass]="{ blurry: fragment.content_warning && showCw }"
-    class="quoted-post hover-cursor mb-2"
+    class="quoted-post cursor-pointer mb-2"
   >
     <div class="flex">
       <div class="flex align-content-center user-avatar-container">
@@ -82,7 +82,7 @@
         </div>
       </div>
     </div>
-    <div class="hover-cursor" [routerLink]="'/post/' + quote.id">
+    <div class="cursor-pointer" [routerLink]="'/post/' + quote.id">
       <app-post-fragment [fragment]="quote"></app-post-fragment>
     </div>
   </div>
