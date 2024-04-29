@@ -223,10 +223,9 @@ a:visited,
 }
 
 .ql-snow > .ql-editor {
-  background: #20262e !important;
   color: white;
   border-radius: 0 0 5px 5px;
-  font-size: 16px;
+  font-size: 1em;
   min-height: 140px;
   max-height: 400px;
   overflow-y: auto;
@@ -242,9 +241,8 @@ a:visited,
   opacity: 0.5;
 }
 
-.ql-syntax {
-  background-color: #23241f;
-  color: #f8f8f2;
+.ql-editor:focus {
+background-color: var(--mdc-filled-text-field-container-color);
 }
 
 .hover-cursor {
