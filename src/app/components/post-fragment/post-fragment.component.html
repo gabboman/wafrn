@@ -1,22 +1,46 @@
 <ng-container *ngIf="fragment">
-  <div id="fragment-content-warning" *ngIf="fragment.content_warning" [ngClass]="{ blurry: !showCw }">
-    <div class="fragment-content px-2">
+  <div
+    id="fragment-content-warning"
+    *ngIf="fragment.content_warning"
+    [ngClass]="{ blurry: !showCw }"
+  >
+    <div class="fragment-content">
       {{ fragment.content_warning }}
     </div>
-    <button [disabled]="!showCw" mat-flat-button color="primary" (click)="dismissCw.emit()" class="w-full">
+    <button
+      [disabled]="!showCw"
+      mat-flat-button
+      color="primary"
+      (click)="dismissCw.emit()"
+      class="w-full"
+    >
       I understand this and I want to see this woot
     </button>
   </div>
-  <div *ngIf="fragment.content !== '' || fragment.tags?.length" class="fragment-content text-base px-2"
-    [ngClass]="{ blurry: fragment.content_warning && showCw }" [injectHTML]="fragment.content"></div>
-  <div class="px-2" *ngIf="fragment.questionPoll" [ngClass]="{ blurry: fragment.content_warning && showCw }">
+  <div
+    *ngIf="fragment.content !== '' || fragment.tags?.length"
+    class="fragment-content text-base"
+    [ngClass]="{ blurry: fragment.content_warning && showCw }"
+    [injectHTML]="fragment.content"
+  ></div>
+  <div
+    *ngIf="fragment.questionPoll"
+    [ngClass]="{ blurry: fragment.content_warning && showCw }"
+  >
     <app-poll [poll]="fragment.questionPoll"></app-poll>
   </div>
-  <div class="px-2" *ngFor="let media of fragment.medias" [ngClass]="{ blurry: fragment.content_warning && showCw }">
+  <div
+    *ngFor="let media of fragment.medias"
+    [ngClass]="{ blurry: fragment.content_warning && showCw }"
+  >
     <app-wafrn-media [data]="media"></app-wafrn-media>
   </div>
-  <div id="fragment-tags" class="flex flex-wrap gap-2 mt-4 px-2" *ngIf="fragment.tags && fragment.tags.length"
-    [ngClass]="{ blurry: fragment.content_warning && showCw }">
+  <div
+    id="fragment-tags"
+    class="flex flex-wrap gap-2 mt-4"
+    *ngIf="fragment.tags && fragment.tags.length"
+    [ngClass]="{ blurry: fragment.content_warning && showCw }"
+  >
     @for(tag of fragment.tags; track tag) {
     <a class="tag" [routerLink]="'/dashboard/search/' + tag.tagName">
       #{{ tag.tagName }}
@@ -24,39 +48,62 @@
     }
   </div>
   @for(quote of fragment.quotes; track quote) {
-    <div *ngIf="quote" [ngClass]="{ blurry: fragment.content_warning && showCw }"  class="quoted-post hover-cursor mb-2 px-2 ">
-      <div class="flex">
-        <div class="flex align-content-center user-avatar-container">
-          <img class="avatar" [routerLink]="'/blog/' + quote?.user?.url" crossorigin="anonymous" loading="lazy"
-            [src]="quote.user.avatar" alt="" />
-        </div>
-        <div class="w-full white-space-nowrap overflow-hidden text-overflow-ellipsis flex flex-column">
-          <div>
-            <a class="original-poster-name flex" [routerLink]="'/blog/' + quote.user.url" [innerHTML]="quote?.user?.name"></a>
-          </div>
-          <div class="date-line mb-1 flex gap-2 align-items-center">
-            <span class="font-small original-poster-url" [innerText]="quote?.user?.url"></span>
-          </div>
-        </div>
+  <div
+    *ngIf="quote"
+    [ngClass]="{ blurry: fragment.content_warning && showCw }"
+    class="quoted-post hover-cursor mb-2"
+  >
+    <div class="flex">
+      <div class="flex align-content-center user-avatar-container">
+        <img
+          class="avatar"
+          [routerLink]="'/blog/' + quote?.user?.url"
+          crossorigin="anonymous"
+          loading="lazy"
+          [src]="quote.user.avatar"
+          alt=""
+        />
       </div>
-      <div class="hover-cursor" [routerLink]="'/post/' + quote.id">
-        <app-post-fragment [fragment]="quote"></app-post-fragment>
+      <div
+        class="w-full white-space-nowrap overflow-hidden text-overflow-ellipsis flex flex-column"
+      >
+        <div>
+          <a
+            class="original-poster-name flex"
+            [routerLink]="'/blog/' + quote.user.url"
+            [innerHTML]="quote?.user?.name"
+          ></a>
+        </div>
+        <div class="date-line mb-1 flex gap-2 align-items-center">
+          <span
+            class="font-small original-poster-url"
+            [innerText]="quote?.user?.url"
+          ></span>
+        </div>
       </div>
     </div>
-    }
+    <div class="hover-cursor" [routerLink]="'/post/' + quote.id">
+      <app-post-fragment [fragment]="quote"></app-post-fragment>
+    </div>
+  </div>
+  }
   <section class="mt-2" id="emoji-reactions">
     @for (emoji of emojiCollection; track $index) {
-      <button [ngClass]="{ blurry: fragment.content_warning && showCw }" mat-flat-button [matTooltip]="
-          (emoji.content === '♥️' ? 'Liked' : emoji.content) +
-          ' by ' +
-          getTooltipUsers(emoji.users)
-        ">
-        @if(emoji.img) {
-        <img class="post-emoji" [src]="emoji.img" [alt]="emoji.content" />
-        } @else{ {{ emoji.content }} } @if(emoji.users.length !== 1) {
-        {{ emoji.users.length }}
-        }
-      </button>
+    <button
+      [ngClass]="{ blurry: fragment.content_warning && showCw }"
+      mat-flat-button
+      [matTooltip]="
+        (emoji.content === '♥️' ? 'Liked' : emoji.content) +
+        ' by ' +
+        getTooltipUsers(emoji.users)
+      "
+    >
+      @if(emoji.img) {
+      <img class="post-emoji" [src]="emoji.img" [alt]="emoji.content" />
+      } @else{ {{ emoji.content }} } @if(emoji.users.length !== 1) {
+      {{ emoji.users.length }}
       }
+    </button>
+    }
   </section>
 </ng-container>
