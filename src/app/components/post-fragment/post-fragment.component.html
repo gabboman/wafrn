@@ -1,21 +1,21 @@
 <ng-container *ngIf="fragment">
   <div id="fragment-content-warning" *ngIf="fragment.content_warning" [ngClass]="{ blurry: !showCw }">
-    <div class="fragment-content ql-editor -mx-3">
+    <div class="fragment-content px-2">
       {{ fragment.content_warning }}
     </div>
     <button [disabled]="!showCw" mat-flat-button color="primary" (click)="dismissCw.emit()" class="w-full">
       I understand this and I want to see this woot
     </button>
   </div>
-  <div *ngIf="fragment.content !== '' || fragment.tags?.length" class="fragment-content text-base ql-editor -mx-3"
+  <div *ngIf="fragment.content !== '' || fragment.tags?.length" class="fragment-content text-base px-2"
     [ngClass]="{ blurry: fragment.content_warning && showCw }" [injectHTML]="fragment.content"></div>
-  <div *ngIf="fragment.questionPoll" [ngClass]="{ blurry: fragment.content_warning && showCw }">
+  <div class="px-2" *ngIf="fragment.questionPoll" [ngClass]="{ blurry: fragment.content_warning && showCw }">
     <app-poll [poll]="fragment.questionPoll"></app-poll>
   </div>
-  <div *ngFor="let media of fragment.medias" [ngClass]="{ blurry: fragment.content_warning && showCw }">
+  <div class="px-2" *ngFor="let media of fragment.medias" [ngClass]="{ blurry: fragment.content_warning && showCw }">
     <app-wafrn-media [data]="media"></app-wafrn-media>
   </div>
-  <div id="fragment-tags" class="flex flex-wrap gap-2 mt-4" *ngIf="fragment.tags && fragment.tags.length"
+  <div id="fragment-tags" class="flex flex-wrap gap-2 mt-4 px-2" *ngIf="fragment.tags && fragment.tags.length"
     [ngClass]="{ blurry: fragment.content_warning && showCw }">
     @for(tag of fragment.tags; track tag) {
     <a class="tag" [routerLink]="'/dashboard/search/' + tag.tagName">
@@ -24,7 +24,7 @@
     }
   </div>
   @for(quote of fragment.quotes; track quote) {
-    <div *ngIf="quote" [ngClass]="{ blurry: fragment.content_warning && showCw }"  class="quoted-post hover-cursor mb-2">
+    <div *ngIf="quote" [ngClass]="{ blurry: fragment.content_warning && showCw }"  class="quoted-post hover-cursor mb-2 px-2 ">
       <div class="flex">
         <div class="flex align-content-center user-avatar-container">
           <img class="avatar" [routerLink]="'/blog/' + quote?.user?.url" crossorigin="anonymous" loading="lazy"
