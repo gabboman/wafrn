@@ -109,6 +109,7 @@
     </button>
     }
     <app-emoji-react
+      [ngClass]="{ blurry: fragment.content_warning && showCw }"
       *ngIf="!(userId === '' || userId === fragment.userId)"
       [postId]="fragment.id"
     ></app-emoji-react>
