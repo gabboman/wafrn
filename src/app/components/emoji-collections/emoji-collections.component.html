@@ -1,16 +1,24 @@
-
 <mat-form-field class="w-full mt-2">
-    <mat-label>Search avaiable emojis</mat-label>
-    <input [(ngModel)]="filterText" matInput />
-  </mat-form-field>
+  <mat-label>Search avaiable emojis</mat-label>
+  <input [(ngModel)]="filterText" matInput />
+</mat-form-field>
 @for (emojiCollection of emojiCollections; track $index) {
-    <h3>{{emojiCollection.name}}</h3>
-    <div class="flex grid">
-    @for(emoji of emojiCollection.emojis; track emoji) {
-        <div *ngIf="emoji.name.includes(filterText)" role="none" (click)="click(emoji)" class="p-2 flex align-content-center justify-content-center cursor-pointer">
-            <img class="post-emoji-preview mr-2 ml-2" [src]="baseMediaUrl + emoji.url" [alt]="emoji.name">
-            {{emoji.name}}
-        </div>
-    }
-    </div>
+<h3 class="text-center mt-3">{{ emojiCollection.name }}</h3>
+<div class="flex grid">
+  @for(emoji of emojiCollection.emojis; track emoji) {
+  <button
+    mat-flat-button
+    [matTooltip]="emoji.name"
+    *ngIf="emoji.name.includes(filterText)"
+    (click)="click(emoji)"
+    class="p-2 flex align-content-center justify-content-center cursor-pointer bg-transparent"
+  >
+    <img
+      class="post-emoji-preview mr-2 ml-2"
+      [src]="baseMediaUrl + emoji.url"
+      [alt]="emoji.name"
+    />
+  </button>
+  }
+</div>
 }

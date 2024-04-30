@@ -1,5 +1,12 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  Input,
+  OnDestroy,
+  OnInit,
+  Output,
+} from '@angular/core';
 import { ProcessedPost } from 'src/app/interfaces/processed-post';
 import { PollModule } from '../poll/poll.module';
 import { WafrnMediaModule } from '../wafrn-media/wafrn-media.module';
@@ -25,12 +32,12 @@ import { EmojiReactComponent } from '../emoji-react/emoji-react.component';
     InjectHtmlModule,
     MatButtonModule,
     MatTooltipModule,
-    EmojiReactComponent
+    EmojiReactComponent,
   ],
   templateUrl: './post-fragment.component.html',
   styleUrl: './post-fragment.component.scss',
 })
-export class PostFragmentComponent implements OnInit, OnDestroy{
+export class PostFragmentComponent implements OnInit, OnDestroy {
   @Input() fragment: ProcessedPost | undefined;
   @Input() showCw: boolean = true;
   @Output() dismissCw: EventEmitter<void> = new EventEmitter<void>();
@@ -43,50 +50,57 @@ export class PostFragmentComponent implements OnInit, OnDestroy{
   likeSubscription;
   userId;
 
-  constructor (
+  constructor(
     private postService: PostsService,
     private loginService: LoginService,
     private jwtService: JwtService
   ) {
     this.userId = loginService.getLoggedUserUUID();
 
-    this.likeSubscription = postService.postLiked.subscribe(likeEvent => {
-      if(likeEvent.id === this.fragment?.id) {
-        if(likeEvent.like) {
+    this.likeSubscription = postService.postLiked.subscribe((likeEvent) => {
+      if (likeEvent.id === this.fragment?.id) {
+        if (likeEvent.like) {
           // CODE TO ADD LIKE
-          let likesCollection = this.emojiCollection.find(elem => elem.id === 'Like');
+          let likesCollection = this.emojiCollection.find(
+            (elem) => elem.id === 'Like'
+          );
           const usr = {
             url: this.jwtService.getTokenData()['url'],
             name: this.jwtService.getTokenData()['url'],
             avatar: '',
-            id: this.loginService.getLoggedUserUUID()
+            id: this.loginService.getLoggedUserUUID(),
           };
           if (!likesCollection) {
             likesCollection = {
               id: 'Like',
               content: '❤️',
               img: undefined,
-              users: [usr]
-            }
-            this.emojiCollection.push(likesCollection)
+              users: [usr],
+            };
+            this.emojiCollection.push(likesCollection);
           } else {
-            likesCollection.users.push(usr)
+            likesCollection.users.push(usr);
           }
-          
         } else {
           // CODE TO REMOVE LIKE
-          const likesCollection = this.emojiCollection.find(elem => elem.id === 'Like');
-          console.log(this.emojiCollection, likesCollection)
-          if(likesCollection) {
+          const likesCollection = this.emojiCollection.find(
+            (elem) => elem.id === 'Like'
+          );
+          console.log(this.emojiCollection, likesCollection);
+          if (likesCollection) {
             if (likesCollection.users.length === 1) {
-              this.emojiCollection = this.emojiCollection.filter((col) => col.id !== 'Like')
+              this.emojiCollection = this.emojiCollection.filter(
+                (col) => col.id !== 'Like'
+              );
             } else {
-              likesCollection.users = likesCollection.users.filter(usr => usr.id !== this.loginService.getLoggedUserUUID())
+              likesCollection.users = likesCollection.users.filter(
+                (usr) => usr.id !== this.loginService.getLoggedUserUUID()
+              );
             }
-          } 
+          }
         }
       }
-    })
+    });
   }
   ngOnDestroy(): void {
     this.likeSubscription.unsubscribe();
@@ -102,7 +116,11 @@ export class PostFragmentComponent implements OnInit, OnDestroy{
             content: reaction.content,
             img: reaction.emoji?.url
               ? environment.externalCacheurl +
-              encodeURIComponent(reaction.emoji.external ? reaction.emoji.url : (environment.baseMediaUrl + reaction.emoji.url))
+                encodeURIComponent(
+                  reaction.emoji.external
+                    ? reaction.emoji.url
+                    : environment.baseMediaUrl + reaction.emoji.url
+                )
               : undefined,
             users: this.fragment?.emojiReactions
               .filter(
@@ -120,6 +138,6 @@ export class PostFragmentComponent implements OnInit, OnDestroy{
   }
 
   getTooltipUsers(users: SimplifiedUser[]): string {
-    return users.map((usr) => usr.url).join(',');
+    return users.map((usr) => usr.url).join(', ');
   }
 }

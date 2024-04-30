@@ -243,7 +243,7 @@ li {
 }
 
 .ql-editor:focus {
-background-color: var(--mdc-filled-text-field-container-color);
+  background-color: var(--mdc-filled-text-field-container-color);
 }
 
 .avatar {
@@ -296,6 +296,7 @@ background-color: var(--mdc-filled-text-field-container-color);
   display: inline-flex;
   max-height: 1.5em;
   max-width: 1.5em;
+  vertical-align: middle;
 }
 
 .ql-picker-options {
@@ -415,7 +416,7 @@ blockquote {
 }
 
 .ql-size-small {
-  font-size: .75em;
+  font-size: 0.75em;
 }
 
 .ql-size-large {
@@ -427,13 +428,13 @@ blockquote {
 }
 
 .ql-align-center {
-  text-align: center
+  text-align: center;
 }
 
 .ql-align-right {
-  text-align: right
+  text-align: right;
 }
 
 .ql-align-justify {
-  text-align: justify
+  text-align: justify;
 }
