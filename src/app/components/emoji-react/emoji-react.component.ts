@@ -1,13 +1,14 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input } from '@angular/core';
+import { Component, HostListener, Input } from '@angular/core';
 import { EmojiCollectionsComponent } from '../emoji-collections/emoji-collections.component';
 import { Overlay, OverlayModule } from '@angular/cdk/overlay';
 import { MatButtonModule } from '@angular/material/button';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { faChevronDown } from '@fortawesome/free-solid-svg-icons';
+import { faMinus, faPlus } from '@fortawesome/free-solid-svg-icons';
 import { PostsService } from 'src/app/services/posts.service';
 import { LoaderComponent } from '../loader/loader.component';
 import { MessageService } from 'src/app/services/message.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-emoji-react',
@@ -25,7 +26,8 @@ import { MessageService } from 'src/app/services/message.service';
 })
 export class EmojiReactComponent {
 
-  expandDownIcon = faChevronDown;
+  plusIcon = faPlus;
+  minusIcon = faMinus;
   scrollStrategy
 
   @Input() postId: string = ''
@@ -38,7 +40,7 @@ export class EmojiReactComponent {
     private postsService: PostsService,
     private messages: MessageService
   ) {
-    this.scrollStrategy = this.overlay.scrollStrategies.close();
+    this.scrollStrategy = this.overlay.scrollStrategies.reposition();
 
   }
 
@@ -62,4 +64,9 @@ export class EmojiReactComponent {
     
   }
 
+  openOverlay() {
+    this.isOpen = !this.isOpen;
+    // TODO it would be cool/nice to only allow SOME scroll before it closed.
+    // that would require some subscriptions and stuff that could be hacky tho
+    }
 }

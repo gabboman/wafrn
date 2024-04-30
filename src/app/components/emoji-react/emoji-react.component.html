@@ -1,5 +1,5 @@
-<button mat-flat-button (click)="isOpen = !isOpen" type="button" cdkOverlayOrigin #trigger="cdkOverlayOrigin">
-  <fa-icon [icon]="expandDownIcon"></fa-icon>
+<button mat-flat-button (click)="openOverlay()" type="button" cdkOverlayOrigin #trigger="cdkOverlayOrigin">
+  <fa-icon [icon]="isOpen ? minusIcon : plusIcon"></fa-icon>
   </button>
 
 <ng-template
@@ -11,6 +11,7 @@
 <div class="emojireact-overlay p-3 scalein animation-duration-200"
 >
 <h3 *ngIf="!loading" class="mt-2">React with an emoji</h3>
+<h6>Mastodon and some other softwares do not support emojireacts yet, so your reaction might go to the void.</h6>
   <app-emoji-collections *ngIf="!loading"  (emoji)="reactToPost($event)" ></app-emoji-collections>
   <app-loader *ngIf="loading" ></app-loader>
 </div>
