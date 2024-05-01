@@ -3,22 +3,31 @@
   <input [(ngModel)]="filterText" matInput />
 </mat-form-field>
 @for (emojiCollection of emojiCollections; track $index) {
-<h3 class="text-center mt-3">{{ emojiCollection.name }}</h3>
-<div class="flex grid">
-  @for(emoji of emojiCollection.emojis; track emoji) {
-  <button
-    mat-flat-button
-    [matTooltip]="emoji.name"
-    *ngIf="emoji.name.toLowerCase().includes(filterText.toLowerCase())"
-    (click)="click(emoji)"
-    class="p-2 flex align-content-center justify-content-center cursor-pointer bg-transparent"
-  >
-    <img
-      class="post-emoji-preview mr-2 ml-2"
-      [src]="baseMediaUrl + emoji.url"
-      [alt]="emoji.name"
-    />
-  </button>
-  }
-</div>
+<mat-expansion-panel hideToggle>
+  <mat-expansion-panel-header>
+    <mat-panel-title>
+      {{ emojiCollection.name }}
+    </mat-panel-title>
+  </mat-expansion-panel-header>
+    <ng-template matExpansionPanelContent>
+      <div class="flex grid">
+      @for(emoji of emojiCollection.emojis; track emoji) {
+        <button
+          mat-flat-button
+          [matTooltip]="emoji.name"
+          *ngIf="emoji.name.toLowerCase().includes(filterText.toLowerCase())"
+          (click)="click(emoji)"
+          class="p-2 flex align-content-center justify-content-center cursor-pointer bg-transparent"
+        >
+          <img
+            class="post-emoji-preview mr-2 ml-2"
+            [src]="baseMediaUrl + emoji.url"
+            [alt]="emoji.name"
+          />
+        </button>
+        }
+      </div>
+    </ng-template>
+</mat-expansion-panel>
+
 }

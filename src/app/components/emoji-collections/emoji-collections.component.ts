@@ -2,6 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, OnDestroy, Output } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
+import { MatExpansionModule } from '@angular/material/expansion';
 import { MatInputModule } from '@angular/material/input';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
@@ -22,6 +23,7 @@ import { environment } from 'src/environments/environment';
     FormsModule,
     MatInputModule,
     MatTooltipModule,
+    MatExpansionModule
   ],
   templateUrl: './emoji-collections.component.html',
   styleUrl: './emoji-collections.component.scss',
