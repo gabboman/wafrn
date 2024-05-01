@@ -116,7 +116,9 @@ export class NotificationsComponent implements OnInit {
         avatar: elem.avatar
       },
       content: elem.fragment as ProcessedPost,
-      createdAt: elem.date
+      createdAt: elem.date,
+      emojiName: elem.emojiName,
+      emojiReact: elem.emojiReact
     }, NotificationType.EMOJIREACT)));
     processedNotifications = processedNotifications.concat(
       this.reblogs.map((elem) =>
@@ -166,15 +168,15 @@ export class NotificationsComponent implements OnInit {
     if (!reblog.user) {
       console.log(`ERROR WITH ${type}`)
     }
-    if (type === NotificationType.MENTION) {
-    }
     return {
       url: `/post/${reblog.id}`,
       avatar: reblog.user.avatar,
       date: reblog.createdAt,
       type: type,
       userUrl: reblog.user.url,
-      fragment: reblog.content
+      fragment: reblog.content,
+      emojiName: reblog.emojiName,
+      emojiReact: reblog.emojiReact
     };
   }
 }

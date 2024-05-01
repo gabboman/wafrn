@@ -1,3 +1,4 @@
+import { Emoji } from "./emoji";
 import { ProcessedPost } from "./processed-post";
 import { SimplifiedUser } from "./simplified-user";
 
@@ -6,5 +7,7 @@ export interface Reblog {
     content: ProcessedPost,
     id: string,
     createdAt: Date,
-    parentId?: string
+    parentId?: string,
+    emojiName?: string,
+    emojiReact?: Emoji 
 }
