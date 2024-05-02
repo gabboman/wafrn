@@ -10,7 +10,7 @@
     </mat-panel-title>
   </mat-expansion-panel-header>
     <ng-template matExpansionPanelContent>
-      {{emojiCollection.comment}}
+      <div class="my-2">{{emojiCollection.comment}}</div>
       <div class="flex grid">
       @for(emoji of emojiCollection.emojis; track emoji) {
         <button
