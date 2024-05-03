@@ -80,6 +80,9 @@ export class NavigationMenuComponent implements OnInit, OnDestroy {
         this.drawMenu();
       }
     );
+    if (this.loginService.getForceClassicLogo()) {
+      this.logo = '/assets/classicLogo.png'
+    }
     this.navigationSubscription = this.router.events.subscribe((ev) => {
       if (ev instanceof NavigationEnd) {
         this.updateNotifications(ev.url);

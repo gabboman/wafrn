@@ -19,7 +19,7 @@ export class LoginService {
     private utils: UtilsService,
     private jwt: JwtService,
     private postsService: PostsService
-  ) {}
+  ) { }
 
   checkUserLoggedIn(): boolean {
     return this.jwt.tokenValid();
@@ -151,5 +151,10 @@ export class LoginService {
   getUserDefaultPostPrivacyLevel(): number {
     const res = localStorage.getItem('defaultPostEditorPrivacy');
     return res ? parseInt(res) : 0;
+  }
+
+  getForceClassicLogo(): boolean {
+    const res = localStorage.getItem('forceClassicLogo');
+    return res ? res === '1' : false
   }
 }

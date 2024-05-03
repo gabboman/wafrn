@@ -35,6 +35,7 @@ export class EditProfileComponent implements OnInit {
     description: new FormControl('', Validators.required),
     federateWithThreads: new FormControl(false),
     disableForceAltText: new FormControl(false),
+    forceClassicLogo: new FormControl(false)
   });
 
   constructor(
@@ -60,6 +61,7 @@ export class EditProfileComponent implements OnInit {
         this.editProfileForm.controls['defaultPostEditorPrivacy'].patchValue(
           this.loginService.getUserDefaultPostPrivacyLevel()
         );
+        this.editProfileForm.controls['forceClassicLogo'].patchValue(this.loginService.getForceClassicLogo())
         const federateWithThreads = localStorage.getItem('federateWithThreads');
         this.editProfileForm.controls['federateWithThreads'].patchValue(
           federateWithThreads === 'true'
