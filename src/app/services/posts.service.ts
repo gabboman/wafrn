@@ -5,7 +5,7 @@ import { MediaService } from './media.service';
 import { sanitize } from 'dompurify';
 import { HttpClient } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
-import { BehaviorSubject, Observable, firstValueFrom } from 'rxjs';
+import { BehaviorSubject, firstValueFrom } from 'rxjs';
 import { JwtService } from './jwt.service';
 import { PostEmojiReaction, unlinkedPosts } from '../interfaces/unlinked-posts';
 import { SimplifiedUser } from '../interfaces/simplified-user';
@@ -16,14 +16,34 @@ import { EmojiCollection } from '../interfaces/emoji-collection';
   providedIn: 'root',
 })
 export class PostsService {
-  processedQuotes: ProcessedPost[] = []
+  processedQuotes: ProcessedPost[] = [];
   parser = new DOMParser();
   wafrnMediaRegex =
     /\[wafrnmediaid="[0-9a-fA-F]{8}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{12}"\]/gm;
   youtubeRegex =
     /((?:https?:\/\/)?(www.|m.)?(youtube(\-nocookie)?\.com|youtu\.be)\/(v\/|watch\?v=|embed\/)?([\S]{11}))([^\S]|\?[\S]*|\&[\S]*|\b)/g;
-  public updateFollowers: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
-  public postLiked: BehaviorSubject<{id: string, like: boolean}> = new BehaviorSubject<{id: string, like: boolean}>({id: 'undefined', like: false});
+  public updateFollowers: BehaviorSubject<boolean> =
+    new BehaviorSubject<boolean>(false);
+  public postLiked: BehaviorSubject<{ id: string; like: boolean }> =
+    new BehaviorSubject<{ id: string; like: boolean }>({
+      id: 'undefined',
+      like: false,
+    });
+
+  public emojiReacted = new BehaviorSubject<{
+    postId: string;
+    emoji: Emoji;
+    type: 'react' | 'undo_react';
+  }>({
+    postId: '',
+    emoji: {
+      id: '',
+      url: '',
+      name: '',
+      external: false,
+    },
+    type: 'react',
+  });
 
   public followedUserIds: Array<string> = [];
   public emojiCollections: EmojiCollection[] = [];
@@ -46,32 +66,34 @@ export class PostsService {
           notAcceptedFollows: string[];
           options: UserOptions[];
           silencedPosts: string[];
-          emojis: EmojiCollection[]
+          emojis: EmojiCollection[];
         }>(`${environment.baseUrl}/my-ui-options`)
       );
-        this.emojiCollections = followsAndBlocks.emojis
-        this.followedUserIds = followsAndBlocks.followedUsers;
-        this.blockedUserIds = followsAndBlocks.blockedUsers;
-        this.notYetAcceptedFollowedUsersIds =
-          followsAndBlocks.notAcceptedFollows;
-        // Here we check user options
-        if (followsAndBlocks.options?.length > 0) {
-          // frontend options start with wafrn.
-          const options = followsAndBlocks.options;
-          options
-            .filter((option) => option.optionName.startsWith('wafrn.'))
-            .forEach((option) => {
-              localStorage.setItem(
-                option.optionName.split('wafrn.')[1],
-                option.optionValue
-              );
-            });
-        }
-        if(followsAndBlocks.silencedPosts) {
-          localStorage.setItem('silencedPostsIds', JSON.stringify(followsAndBlocks.silencedPosts))
-        } else {
-          localStorage.setItem('silencedPostsIds', JSON.stringify([]))
-        }
+      this.emojiCollections = followsAndBlocks.emojis;
+      this.followedUserIds = followsAndBlocks.followedUsers;
+      this.blockedUserIds = followsAndBlocks.blockedUsers;
+      this.notYetAcceptedFollowedUsersIds = followsAndBlocks.notAcceptedFollows;
+      // Here we check user options
+      if (followsAndBlocks.options?.length > 0) {
+        // frontend options start with wafrn.
+        const options = followsAndBlocks.options;
+        options
+          .filter((option) => option.optionName.startsWith('wafrn.'))
+          .forEach((option) => {
+            localStorage.setItem(
+              option.optionName.split('wafrn.')[1],
+              option.optionValue
+            );
+          });
+      }
+      if (followsAndBlocks.silencedPosts) {
+        localStorage.setItem(
+          'silencedPostsIds',
+          JSON.stringify(followsAndBlocks.silencedPosts)
+        );
+      } else {
+        localStorage.setItem('silencedPostsIds', JSON.stringify([]));
+      }
       this.updateFollowers.next(true);
     }
   }
@@ -82,8 +104,11 @@ export class PostsService {
       userId: id,
     };
     try {
-      const response = await firstValueFrom(this.http
-        .post<{ success: boolean }>(`${environment.baseUrl}/follow`, payload)
+      const response = await firstValueFrom(
+        this.http.post<{ success: boolean }>(
+          `${environment.baseUrl}/follow`,
+          payload
+        )
       );
       await this.loadFollowers();
       res = response?.success === true;
@@ -128,8 +153,8 @@ export class PostsService {
     }
     this.postLiked.next({
       id: id,
-      like: true
-    })
+      like: true,
+    });
     return res;
   }
 
@@ -149,41 +174,74 @@ export class PostsService {
     }
     this.postLiked.next({
       id: id,
-      like: false
-    })
+      like: false,
+    });
     return res;
   }
 
-  async emojiReactPost(postId: string, emojiId: string): Promise<boolean> {
+  async emojiReactPost(postId: string, emoji: Emoji): Promise<boolean> {
     let res = false;
     const payload = {
       postId: postId,
-      emojiId: emojiId
+      emojiId: emoji.id,
     };
     try {
-      const response = await firstValueFrom(this.http
-        .post<{ success: boolean }>(`${environment.baseUrl}/emojiReact`, payload)
-        );
+      const response = await firstValueFrom(
+        this.http.post<{ success: boolean }>(
+          `${environment.baseUrl}/emojiReact`,
+          payload
+        )
+      );
       await this.loadFollowers();
       res = response?.success === true;
     } catch (exception) {
       console.log(exception);
     }
-    /* TODO emojireact thing for likes
-    this.postLiked.next({
-      id: id,
-      like: true
-    })*/
+    this.emojiReacted.next({
+      type: 'react',
+      postId: postId,
+      emoji,
+    });
+
+    return res;
+  }
+
+  async undoEmojiReactPost(postId: string, emoji: Emoji): Promise<boolean> {
+    let res = false;
+    const payload = {
+      postId: postId,
+      emojiId: emoji.id,
+    };
+    try {
+      const response = await firstValueFrom(
+        this.http.post<{ success: boolean }>(
+          `${environment.baseUrl}/undoEmojiReact`,
+          payload
+        )
+      );
+      await this.loadFollowers();
+      res = response?.success === true;
+    } catch (exception) {
+      console.log(exception);
+    }
+    this.emojiReacted.next({
+      type: 'undo_react',
+      postId: postId,
+      emoji,
+    });
+
     return res;
   }
 
   processPostNew(unlinked: unlinkedPosts): ProcessedPost[][] {
-    this.processedQuotes = unlinked.quotedPosts.map(quote => this.processSinglePost({ ...unlinked, posts: [quote] }))
+    this.processedQuotes = unlinked.quotedPosts.map((quote) =>
+      this.processSinglePost({ ...unlinked, posts: [quote] })
+    );
     const res = unlinked.posts.map((elem) => {
       const processed = elem.ancestors
         ? elem.ancestors.map((anc) =>
-          this.processSinglePost({ ...unlinked, posts: [anc] })
-        )
+            this.processSinglePost({ ...unlinked, posts: [anc] })
+          )
         : [];
       processed.push(
         this.processSinglePost({
@@ -207,8 +265,10 @@ export class PostsService {
     const elem = unlinked.posts[0];
     const user = unlinked.users.find((usr) => usr.id === elem.userId);
     if (user && !user.avatar.startsWith(environment.externalCacheurl)) {
-      user.avatar = user?.url.startsWith('@') ? environment.externalCacheurl + encodeURIComponent(user.avatar) : environment.externalCacheurl +
-        encodeURIComponent(environment.baseMediaUrl + user.avatar)
+      user.avatar = user?.url.startsWith('@')
+        ? environment.externalCacheurl + encodeURIComponent(user.avatar)
+        : environment.externalCacheurl +
+          encodeURIComponent(environment.baseMediaUrl + user.avatar);
     }
     const userEmojis = unlinked.emojiRelations.userEmojiRelation.filter(
       (elem) => elem.userId === user?.id
@@ -225,10 +285,7 @@ export class PostsService {
           (emojis) => emojis.id === usrEmoji.emojiId
         );
         if (emoji) {
-          user.name = user.name.replaceAll(
-            emoji.name,
-            this.emojiToHtml(emoji)
-          );
+          user.name = user.name.replaceAll(emoji.name, this.emojiToHtml(emoji));
         }
       });
     }
@@ -291,7 +348,14 @@ export class PostsService {
       medias: medias.sort((a, b) => a.order - b.order),
       questionPoll: polls[0],
       mentionPost: mentionedUsers as SimplifiedUser[],
-      quotes: unlinked.quotes.filter(quote => quote.quoterPostId === elem.id).map(quote => this.processedQuotes.find(pst => pst.id === quote.quotedPostId) as ProcessedPost)
+      quotes: unlinked.quotes
+        .filter((quote) => quote.quoterPostId === elem.id)
+        .map(
+          (quote) =>
+            this.processedQuotes.find(
+              (pst) => pst.id === quote.quotedPostId
+            ) as ProcessedPost
+        ),
     };
     newPost.content = this.getPostHtml(newPost);
     return newPost;
@@ -338,23 +402,24 @@ export class PostsService {
       : [];
     const mentionedHosts = post.mentionPost
       ? post.mentionPost?.map(
-        (elem) =>
-          this.getURL(
-            elem.remoteId
-              ? elem.remoteId
-              : 'https://adomainthatdoesnotexist.google.com'
-          ).hostname
-      )
+          (elem) =>
+            this.getURL(
+              elem.remoteId
+                ? elem.remoteId
+                : 'https://adomainthatdoesnotexist.google.com'
+            ).hostname
+        )
       : [];
     Array.from(links).forEach((link) => {
       const youtubeMatch = link.href.matchAll(this.youtubeRegex);
       if (link.innerText === link.href && youtubeMatch) {
         Array.from(youtubeMatch).forEach((youtubeString) => {
-          link.innerHTML = `<div class="watermark"><!-- Watermark container --><div class="watermark__inner"><!-- The watermark --><div class="watermark__body"><img alt="youtube logo" class="yt-watermark" loading="lazy" src="/assets/img/youtube_logo.png"></div></div><img class="yt-thumbnail" src="${environment.externalCacheurl +
+          link.innerHTML = `<div class="watermark"><!-- Watermark container --><div class="watermark__inner"><!-- The watermark --><div class="watermark__body"><img alt="youtube logo" class="yt-watermark" loading="lazy" src="/assets/img/youtube_logo.png"></div></div><img class="yt-thumbnail" src="${
+            environment.externalCacheurl +
             encodeURIComponent(
               `https://img.youtube.com/vi/${youtubeString[6]}/hqdefault.jpg`
             )
-            }" loading="lazy" alt="Thumbnail for video"></div>`;
+          }" loading="lazy" alt="Thumbnail for video"></div>`;
         });
       }
       // replace mentioned users with wafrn version of profile.
@@ -399,10 +464,7 @@ export class PostsService {
       const strToReplace = emoji.name.startsWith(':')
         ? emoji.name
         : `:${emoji.name}:`;
-      sanitized = sanitized.replaceAll(
-        strToReplace,
-        this.emojiToHtml(emoji)
-      );
+      sanitized = sanitized.replaceAll(strToReplace, this.emojiToHtml(emoji));
     });
 
     return sanitized;
@@ -480,10 +542,13 @@ export class PostsService {
     const payload = {
       postId: postId,
     };
-    const response = await firstValueFrom(this.http
-      .post<{ success: boolean }>(`${environment.baseUrl}/v2/unsilencePost`, payload)
+    const response = await firstValueFrom(
+      this.http.post<{ success: boolean }>(
+        `${environment.baseUrl}/v2/unsilencePost`,
+        payload
+      )
     );
-    await this.loadFollowers()
+    await this.loadFollowers();
     return response.success;
   }
 
@@ -491,15 +556,22 @@ export class PostsService {
     const payload = {
       postId: postId,
     };
-    const response = await firstValueFrom(this.http
-      .post<{ success: boolean }>(`${environment.baseUrl}/v2/silencePost`, payload)
+    const response = await firstValueFrom(
+      this.http.post<{ success: boolean }>(
+        `${environment.baseUrl}/v2/silencePost`,
+        payload
+      )
     );
-    await this.loadFollowers()
+    await this.loadFollowers();
     return response.success;
   }
 
-
-  emojiToHtml(emoji: any): string {
-    return `<img class="post-emoji" src="${environment.externalCacheurl + (emoji.external ? encodeURIComponent(emoji.url) : encodeURIComponent(environment.baseMediaUrl + emoji.url) )}">`;
+  emojiToHtml(emoji: Emoji): string {
+    return `<img class="post-emoji" src="${
+      environment.externalCacheurl +
+      (emoji.external
+        ? encodeURIComponent(emoji.url)
+        : encodeURIComponent(environment.baseMediaUrl + emoji.url))
+    }">`;
   }
 }

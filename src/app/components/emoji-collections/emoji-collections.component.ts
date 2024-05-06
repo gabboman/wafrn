@@ -23,7 +23,7 @@ import { environment } from 'src/environments/environment';
     FormsModule,
     MatInputModule,
     MatTooltipModule,
-    MatExpansionModule
+    MatExpansionModule,
   ],
   templateUrl: './emoji-collections.component.html',
   styleUrl: './emoji-collections.component.scss',
@@ -33,7 +33,7 @@ export class EmojiCollectionsComponent implements OnDestroy {
   filterText = '';
   emojiCollections: EmojiCollection[] = [];
   subscription: Subscription;
-  @Output() emoji: EventEmitter<string> = new EventEmitter<string>();
+  @Output() emoji: EventEmitter<Emoji> = new EventEmitter<Emoji>();
 
   baseMediaUrl = environment.baseMediaUrl;
 
@@ -48,6 +48,6 @@ export class EmojiCollectionsComponent implements OnDestroy {
   }
 
   click(emoji: Emoji) {
-    this.emoji.emit(emoji.name);
+    this.emoji.emit(emoji);
   }
 }

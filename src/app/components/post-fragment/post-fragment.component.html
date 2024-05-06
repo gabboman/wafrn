@@ -91,10 +91,12 @@
     @for (emoji of emojiCollection; track $index) {
     <button
       [ngClass]="{ blurry: fragment.content_warning && showCw }"
+      (click)="toggleEmojiReact(emoji)"
+      [disabled]="reactionLoading"
       mat-flat-button
       matTooltipTouchGestures="on"
       [matTooltip]="
-        (['♥️', '❤'].includes(emoji.content) ? 'Liked' : emoji.content) +
+        (isLike(emoji) ? 'Liked' : emoji.content) +
         ' by ' +
         getTooltipUsers(emoji.users)
       "

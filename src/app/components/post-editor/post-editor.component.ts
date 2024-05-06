@@ -1,4 +1,4 @@
-import { Component, Inject, OnInit, ViewChild } from '@angular/core';
+import { Component, Inject, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { EditorService } from 'src/app/services/editor.service';
 import { MediaService } from 'src/app/services/media.service';
 import { environment } from 'src/environments/environment';
@@ -37,6 +37,17 @@ import { PostsService } from 'src/app/services/posts.service';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatCardModule } from '@angular/material/card';
 import { EmojiCollectionsComponent } from '../emoji-collections/emoji-collections.component';
+import { Subscription } from 'rxjs';
+import { EmojiCollection } from 'src/app/interfaces/emoji-collection';
+import { Emoji } from 'src/app/interfaces/emoji';
+
+type Mention = {
+  id: string;
+  value: string;
+  avatar: string;
+  remoteId: string;
+  type: 'mention' | 'emoji';
+};
 
 @Component({
   selector: 'app-post-editor',
@@ -61,11 +72,11 @@ import { EmojiCollectionsComponent } from '../emoji-collections/emoji-collection
     MatExpansionModule,
     MatProgressSpinnerModule,
     MatCardModule,
-    EmojiCollectionsComponent
+    EmojiCollectionsComponent,
   ],
   providers: [EditorService],
 })
-export class PostEditorComponent implements OnInit {
+export class PostEditorComponent implements OnInit, OnDestroy {
   privacyOptions = [
     { level: 0, name: 'Public', icon: faGlobe },
     { level: 1, name: 'Followers only', icon: faUser },
@@ -111,7 +122,7 @@ export class PostEditorComponent implements OnInit {
   modules = {
     mention: {
       allowedChars: /^[A-Z0-9a-z_.@-]*$/,
-      mentionDenotationChars: ['@'],
+      mentionDenotationChars: ['@', ':'],
       maxChars: 128,
       minChars: 3,
       positioningStrategy: 'fixed',
@@ -121,7 +132,7 @@ export class PostEditorComponent implements OnInit {
       allowInlineMentionChar: true,
       defaultMenuOrientation: 'bottom',
       dataAttributes: ['id', 'value', 'avatar', 'link'],
-      renderItem: (item: any, searchTerm: any) => {
+      renderItem: (item: Mention, searchTerm: any) => {
         const div = document.createElement('div');
         div.className = 'quill-mention-inner';
 
@@ -138,15 +149,51 @@ export class PostEditorComponent implements OnInit {
 
         return div;
       },
-      source: async (searchTerm: string, renderList: any) => {
-        let matches = await this.updateMentionsSuggestions(searchTerm);
-        if (searchTerm.length > 0) {
-          matches = matches.filter(
-            (m) =>
-              m.value.toLowerCase().indexOf(searchTerm.toLowerCase()) !== -1
+      source: async (
+        searchTerm: string,
+        renderList: any,
+        denotationChar: string
+      ) => {
+        if (denotationChar === '@') {
+          let matches = await this.updateMentionsSuggestions(searchTerm);
+          if (searchTerm.length > 0) {
+            matches = matches.filter(
+              (m) =>
+                m.value.toLowerCase().indexOf(searchTerm.toLowerCase()) !== -1
+            );
+          }
+          renderList(
+            matches.map((m) => ({ ...m, type: 'mention' })),
+            searchTerm
           );
         }
-        renderList(matches, searchTerm);
+        if (denotationChar === ':') {
+          const matches = this.emojiCollections
+            .map((elem) => {
+              const emojis = elem.emojis.filter((emoji) =>
+                emoji.name.toLowerCase().includes(searchTerm.toLowerCase())
+              );
+              return emojis.map(
+                (emoji) =>
+                  ({
+                    type: 'emoji',
+                    value: emoji.name,
+                    avatar: `${environment.baseMediaUrl}${emoji.url}`,
+                    id: emoji.id,
+                    remoteId: emoji.id,
+                  } as Mention)
+              );
+            })
+            .flat()
+            .slice(0, 10);
+          renderList(matches, searchTerm);
+        }
+      },
+      onSelect(item: any, insertItemFn: any) {
+        insertItemFn(item, true, {
+          blotName: 'mention',
+          showDenotationChar: false,
+        });
       },
     },
     toolbar: [],
@@ -156,6 +203,9 @@ export class PostEditorComponent implements OnInit {
   customOptions = [];
 
   maxFileUploadSize = parseInt(environment.maxUploadSize) * 1024 * 1024;
+
+  emojiCollections: EmojiCollection[] = [];
+  subscription: Subscription;
 
   get idPostToReblog() {
     return this.data?.post?.id;
@@ -178,6 +228,9 @@ export class PostEditorComponent implements OnInit {
     private loginService: LoginService
   ) {
     this.privacy = this.loginService.getUserDefaultPostPrivacyLevel();
+    this.subscription = this.postService.updateFollowers.subscribe(() => {
+      this.emojiCollections = this.postService.emojiCollections;
+    });
   }
 
   ngOnInit(): void {
@@ -211,6 +264,10 @@ export class PostEditorComponent implements OnInit {
     }
 
     this.openEditor(content);
+  }
+
+  ngOnDestroy(): void {
+    this.subscription.unsubscribe();
   }
 
   getInitialMentionsHTML() {
@@ -542,10 +599,11 @@ export class PostEditorComponent implements OnInit {
     this.quoteLoading = false;
   }
 
-  emojiAdded(emoji: string) {
-    this.postCreatorContent = `${this.postCreatorContent} ${emoji}`;
+  emojiAdded(emoji: Emoji) {
+    this.postCreatorContent = `${this.postCreatorContent} ${emoji.name}`;
     this.messages.add({
-      severity: 'success', summary: `Emoji ${emoji} has been added to the post`
-    })
+      severity: 'success',
+      summary: `Emoji ${emoji.name} has been added to the post`,
+    });
   }
 }

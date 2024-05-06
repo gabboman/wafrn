@@ -5,6 +5,7 @@ import {
   UntypedFormGroup,
   Validators,
 } from '@angular/forms';
+import { Emoji } from 'src/app/interfaces/emoji';
 import { DashboardService } from 'src/app/services/dashboard.service';
 import { JwtService } from 'src/app/services/jwt.service';
 import { LoginService } from 'src/app/services/login.service';
@@ -35,7 +36,7 @@ export class EditProfileComponent implements OnInit {
     description: new FormControl('', Validators.required),
     federateWithThreads: new FormControl(false),
     disableForceAltText: new FormControl(false),
-    forceClassicLogo: new FormControl(false)
+    forceClassicLogo: new FormControl(false),
   });
 
   constructor(
@@ -61,7 +62,9 @@ export class EditProfileComponent implements OnInit {
         this.editProfileForm.controls['defaultPostEditorPrivacy'].patchValue(
           this.loginService.getUserDefaultPostPrivacyLevel()
         );
-        this.editProfileForm.controls['forceClassicLogo'].patchValue(this.loginService.getForceClassicLogo())
+        this.editProfileForm.controls['forceClassicLogo'].patchValue(
+          this.loginService.getForceClassicLogo()
+        );
         const federateWithThreads = localStorage.getItem('federateWithThreads');
         this.editProfileForm.controls['federateWithThreads'].patchValue(
           federateWithThreads === 'true'
@@ -102,11 +105,11 @@ export class EditProfileComponent implements OnInit {
     this.loading = false;
   }
 
-  emojiClicked(emojiName: string) {
-    navigator.clipboard.writeText(' ' + emojiName + ' ');
+  emojiClicked(emoji: Emoji) {
+    navigator.clipboard.writeText(' ' + emoji.name + ' ');
     this.messages.add({
       severity: 'success',
-      summary: `The emoji ${emojiName} was copied to your clipboard`,
+      summary: `The emoji ${emoji.name} was copied to your clipboard`,
     });
   }
 }

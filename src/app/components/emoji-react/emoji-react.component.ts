@@ -8,6 +8,7 @@ import { PostsService } from 'src/app/services/posts.service';
 import { LoaderComponent } from '../loader/loader.component';
 import { MessageService } from 'src/app/services/message.service';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { Emoji } from 'src/app/interfaces/emoji';
 
 @Component({
   selector: 'app-emoji-react',
@@ -39,13 +40,13 @@ export class EmojiReactComponent {
     this.scrollStrategy = this.overlay.scrollStrategies.reposition();
   }
 
-  async reactToPost(emoji: string) {
+  async reactToPost(emoji: Emoji) {
     this.loading = true;
     const response = await this.postsService.emojiReactPost(this.postId, emoji);
     if (response) {
       this.messages.add({
         severity: 'success',
-        summary: `Reacted with ${emoji} succesfully`,
+        summary: `Reacted with ${emoji.name} succesfully`,
       });
       this.isOpen = false;
       this.loading = false;
