@@ -90,7 +90,10 @@
   <section class="mt-2" id="emoji-reactions">
     @for (emoji of emojiCollection; track $index) {
     <button
-      [ngClass]="{ blurry: fragment.content_warning && showCw }"
+      [ngClass]="{
+        reacted: emojiReactionIncludesMe(emoji),
+        blurry: fragment.content_warning && showCw
+      }"
       (click)="toggleEmojiReact(emoji)"
       [disabled]="reactionLoading"
       mat-flat-button

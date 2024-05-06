@@ -271,4 +271,8 @@ export class PostFragmentComponent implements OnInit, OnDestroy {
 
     this.reactionLoading = false;
   }
+
+  emojiReactionIncludesMe(emoji: EmojiReaction) {
+    return emoji.users.some((usr) => usr.id === this.userId);
+  }
 }
