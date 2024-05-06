@@ -284,6 +284,10 @@ li {
   margin: 0;
 }
 
+.ql-mention-list-item {
+  margin: 0;
+}
+
 .ql-mention-list-item.selected {
   background-color: #20262e;
 }
@@ -422,6 +426,7 @@ blockquote {
 
 .wafrn-text-default {
   font-size: 1rem;
+  line-height: 1.5;
 }
 
 .ql-size-large {
