@@ -123,7 +123,7 @@ export class PostEditorComponent implements OnInit, OnDestroy {
   modules = {
     mention: {
       allowedChars: /^[A-Z0-9a-z_.@-]*$/,
-      mentionDenotationChars: ['@'], // we will add : soon. Some work needed
+      mentionDenotationChars: ['@', ':'], // we will add : soon. Some work needed
       maxChars: 128,
       minChars: 3,
       positioningStrategy: 'fixed',
@@ -512,7 +512,6 @@ export class PostEditorComponent implements OnInit, OnDestroy {
   }
 
   getMentionHtml(mention: Mention): string {
-    console.log(mention)
     return mention.type === 'mention' ? `<a
     href="${mention.remoteId}"
     class="u-url h-card mention"
@@ -520,7 +519,7 @@ export class PostEditorComponent implements OnInit, OnDestroy {
     data-value="${mention.url}"
     data-link="${mention.remoteId}"
   >${mention.url.startsWith('@') ? mention.url : '@' + mention.url}</a>`
-      : `:${mention.id}:`
+      : `<span>${mention.id}</span>`
   }
 
   deleteImage(index: number) {
@@ -557,7 +556,6 @@ export class PostEditorComponent implements OnInit, OnDestroy {
           0,
           urlString
         );
-        console.log(searchResult);
         if (
           searchResult &&
           searchResult.posts &&
