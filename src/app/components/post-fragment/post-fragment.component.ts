@@ -27,6 +27,7 @@ type EmojiReaction = {
   id: string;
   content: string;
   img?: string;
+  external: boolean;
   users: SimplifiedUser[];
 };
 
@@ -103,6 +104,7 @@ export class PostFragmentComponent implements OnInit, OnDestroy {
         emojiReactions[reaction.emojiId] = {
           id: reaction.emojiId,
           content: reaction.content,
+          external: reaction.emoji?.external == true,
           img: image ? `${environment.externalCacheurl}${image}` : undefined,
           users: [], // this will be filled below
         };
@@ -134,6 +136,7 @@ export class PostFragmentComponent implements OnInit, OnDestroy {
         likesCollection = {
           id: 'Like',
           content: '❤️',
+          external: false,
           img: undefined,
           users: [],
         };
@@ -177,6 +180,7 @@ export class PostFragmentComponent implements OnInit, OnDestroy {
           id: emoji.id,
           content: emoji.name,
           img: emoji.url,
+          external: emoji.external,
           users: [
             {
               url: this.jwtService.getTokenData()['url'],
