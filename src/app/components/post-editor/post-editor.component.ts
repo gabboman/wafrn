@@ -46,6 +46,7 @@ type Mention = {
   value: string;
   avatar: string;
   remoteId: string;
+  url: string;
   type: 'mention' | 'emoji';
 };
 
@@ -122,7 +123,7 @@ export class PostEditorComponent implements OnInit, OnDestroy {
   modules = {
     mention: {
       allowedChars: /^[A-Z0-9a-z_.@-]*$/,
-      mentionDenotationChars: ['@', ':'],
+      mentionDenotationChars: ['@'], // we will add : soon. Some work needed
       maxChars: 128,
       minChars: 3,
       positioningStrategy: 'fixed',
@@ -175,25 +176,19 @@ export class PostEditorComponent implements OnInit, OnDestroy {
               );
               return emojis.map(
                 (emoji) =>
-                  ({
-                    type: 'emoji',
-                    value: emoji.name,
-                    avatar: `${environment.baseMediaUrl}${emoji.url}`,
-                    id: emoji.id,
-                    remoteId: emoji.id,
-                  } as Mention)
+                ({
+                  type: 'emoji',
+                  value: emoji.name,
+                  avatar: `${environment.baseMediaUrl}${emoji.url}`,
+                  id: emoji.id,
+                  remoteId: emoji.id,
+                } as Mention)
               );
             })
             .flat()
             .slice(0, 10);
           renderList(matches, searchTerm);
         }
-      },
-      onSelect(item: any, insertItemFn: any) {
-        insertItemFn(item, true, {
-          blotName: 'mention',
-          showDenotationChar: false,
-        });
       },
     },
     toolbar: [],
@@ -315,7 +310,14 @@ export class PostEditorComponent implements OnInit, OnDestroy {
     }
 
     const mentionsHtml = usersToMention
-      .map((u) => this.getMentionHtml(u))
+      .map((mention) => this.getMentionHtml({
+        id: mention.id,
+        value: mention.id,
+        remoteId: mention.remoteId,
+        type: 'mention',
+        avatar: '',
+        url: mention.url
+      }))
       .join('<span>&nbsp;</span>');
 
     return mentionsHtml;
@@ -367,11 +369,14 @@ export class PostEditorComponent implements OnInit, OnDestroy {
       newNode.innerHTML = this.getMentionHtml({
         id: data.id,
         url: data.value,
-        remoteId: data.link,
+        remoteId: data.link ? data.link : '',
+        avatar: '',
+        type: data.value.startsWith(':') ? 'emoji' : 'mention',
+        value: ''
       }).trim();
       return newNode.firstElementChild;
     };
-    mentionBlot.tagName = 'a'; // used to be a <span> and masto peps want me dead!
+    mentionBlot.tagName = 'span'; // we substitute it in the back
     Quill.register(mentionBlot, true);
 
     this.quill.ngOnInit();
@@ -506,19 +511,16 @@ export class PostEditorComponent implements OnInit, OnDestroy {
     return disableCheck || this.uploadedMedias.every((med) => med.description);
   }
 
-  getMentionHtml(mention: {
-    id: string;
-    url: string;
-    remoteId: string;
-  }): string {
-    const mentionHtml = `<a
-      href="${mention.remoteId}"
-      class="u-url h-card mention"
-      data-id="${mention.id}"
-      data-value="${mention.url}"
-      data-link="${mention.remoteId}"
-    >${mention.url.startsWith('@') ? mention.url : '@' + mention.url}</a>`;
-    return mentionHtml;
+  getMentionHtml(mention: Mention): string {
+    console.log(mention)
+    return mention.type === 'mention' ? `<a
+    href="${mention.remoteId}"
+    class="u-url h-card mention"
+    data-id="${mention.id}"
+    data-value="${mention.url}"
+    data-link="${mention.remoteId}"
+  >${mention.url.startsWith('@') ? mention.url : '@' + mention.url}</a>`
+      : `:${mention.id}:`
   }
 
   deleteImage(index: number) {
