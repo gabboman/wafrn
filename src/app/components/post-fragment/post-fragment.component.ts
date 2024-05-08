@@ -11,7 +11,6 @@ import { ProcessedPost } from 'src/app/interfaces/processed-post';
 import { PollModule } from '../poll/poll.module';
 import { WafrnMediaModule } from '../wafrn-media/wafrn-media.module';
 import { RouterModule } from '@angular/router';
-import { InjectHtmlModule } from 'src/app/directives/inject-html/inject-html.module';
 import { MatButtonModule } from '@angular/material/button';
 import { SimplifiedUser } from 'src/app/interfaces/simplified-user';
 import { environment } from 'src/environments/environment';
@@ -39,7 +38,6 @@ type EmojiReaction = {
     PollModule,
     WafrnMediaModule,
     RouterModule,
-    InjectHtmlModule,
     MatButtonModule,
     MatTooltipModule,
     EmojiReactComponent,

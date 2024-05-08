@@ -9,7 +9,7 @@
   </div>
   <div *ngIf="fragment.content !== '' || fragment.tags?.length"
     class="fragment-content wafrn-text-default overflow-hidden"
-    [ngClass]="{ blurry: fragment.content_warning && showCw }" [injectHTML]="fragment.content"></div>
+    [ngClass]="{ blurry: fragment.content_warning && showCw }" [innerHtml]="fragment.content"></div>
   <div *ngIf="fragment.questionPoll" [ngClass]="{ blurry: fragment.content_warning && showCw }">
     <app-poll [poll]="fragment.questionPoll"></app-poll>
   </div>
