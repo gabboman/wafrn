@@ -179,11 +179,12 @@ export class PostsService {
     return res;
   }
 
-  async emojiReactPost(postId: string, emoji: Emoji): Promise<boolean> {
+  async emojiReactPost(postId: string, emojiName: string, undo = false): Promise<boolean> {
     let res = false;
     const payload = {
       postId: postId,
-      emojiId: emoji.id,
+      emojiName: emojiName,
+      undo: undo
     };
     try {
       const response = await firstValueFrom(
@@ -197,37 +198,12 @@ export class PostsService {
     } catch (exception) {
       console.log(exception);
     }
+    let allEmojis: Emoji[] = [];
+    this.emojiCollections.forEach(col => allEmojis = allEmojis.concat(col.emojis))
     this.emojiReacted.next({
       type: 'react',
       postId: postId,
-      emoji,
-    });
-
-    return res;
-  }
-
-  async undoEmojiReactPost(postId: string, emoji: Emoji): Promise<boolean> {
-    let res = false;
-    const payload = {
-      postId: postId,
-      emojiId: emoji.id,
-    };
-    try {
-      const response = await firstValueFrom(
-        this.http.post<{ success: boolean }>(
-          `${environment.baseUrl}/undoEmojiReact`,
-          payload
-        )
-      );
-      await this.loadFollowers();
-      res = response?.success === true;
-    } catch (exception) {
-      console.log(exception);
-    }
-    this.emojiReacted.next({
-      type: 'undo_react',
-      postId: postId,
-      emoji,
+      emoji: allEmojis.find(elem => elem.name === emojiName) as Emoji,
     });
 
     return res;
@@ -240,8 +216,8 @@ export class PostsService {
     const res = unlinked.posts.map((elem) => {
       const processed = elem.ancestors
         ? elem.ancestors.map((anc) =>
-            this.processSinglePost({ ...unlinked, posts: [anc] })
-          )
+          this.processSinglePost({ ...unlinked, posts: [anc] })
+        )
         : [];
       processed.push(
         this.processSinglePost({
@@ -268,7 +244,7 @@ export class PostsService {
       user.avatar = user?.url.startsWith('@')
         ? environment.externalCacheurl + encodeURIComponent(user.avatar)
         : environment.externalCacheurl +
-          encodeURIComponent(environment.baseMediaUrl + user.avatar);
+        encodeURIComponent(environment.baseMediaUrl + user.avatar);
     }
     const userEmojis = unlinked.emojiRelations.userEmojiRelation.filter(
       (elem) => elem.userId === user?.id
@@ -402,24 +378,23 @@ export class PostsService {
       : [];
     const mentionedHosts = post.mentionPost
       ? post.mentionPost?.map(
-          (elem) =>
-            this.getURL(
-              elem.remoteId
-                ? elem.remoteId
-                : 'https://adomainthatdoesnotexist.google.com'
-            ).hostname
-        )
+        (elem) =>
+          this.getURL(
+            elem.remoteId
+              ? elem.remoteId
+              : 'https://adomainthatdoesnotexist.google.com'
+          ).hostname
+      )
       : [];
     Array.from(links).forEach((link) => {
       const youtubeMatch = link.href.matchAll(this.youtubeRegex);
       if (link.innerText === link.href && youtubeMatch) {
         Array.from(youtubeMatch).forEach((youtubeString) => {
-          link.innerHTML = `<div class="watermark"><!-- Watermark container --><div class="watermark__inner"><!-- The watermark --><div class="watermark__body"><img alt="youtube logo" class="yt-watermark" loading="lazy" src="/assets/img/youtube_logo.png"></div></div><img class="yt-thumbnail" src="${
-            environment.externalCacheurl +
+          link.innerHTML = `<div class="watermark"><!-- Watermark container --><div class="watermark__inner"><!-- The watermark --><div class="watermark__body"><img alt="youtube logo" class="yt-watermark" loading="lazy" src="/assets/img/youtube_logo.png"></div></div><img class="yt-thumbnail" src="${environment.externalCacheurl +
             encodeURIComponent(
               `https://img.youtube.com/vi/${youtubeString[6]}/hqdefault.jpg`
             )
-          }" loading="lazy" alt="Thumbnail for video"></div>`;
+            }" loading="lazy" alt="Thumbnail for video"></div>`;
         });
       }
       // replace mentioned users with wafrn version of profile.
@@ -567,11 +542,10 @@ export class PostsService {
   }
 
   emojiToHtml(emoji: Emoji): string {
-    return `<img class="post-emoji" src="${
-      environment.externalCacheurl +
+    return `<img class="post-emoji" src="${environment.externalCacheurl +
       (emoji.external
         ? encodeURIComponent(emoji.url)
         : encodeURIComponent(environment.baseMediaUrl + emoji.url))
-    }">`;
+      }">`;
   }
 }

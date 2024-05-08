@@ -48,7 +48,7 @@
   }
   <section class="mt-2" id="emoji-reactions">
     @for (emoji of emojiCollection; track $index) {
-    @if (emoji.external) {
+    @if (!avaiableEmojiNames.includes(emoji.name)) {
     <span class="p-3" [matTooltip]="
     (isLike(emoji) ? 'Liked' : emoji.content) +
     ' by ' +

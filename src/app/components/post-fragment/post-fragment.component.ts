@@ -27,6 +27,7 @@ type EmojiReaction = {
   content: string;
   img?: string;
   external: boolean;
+  name: string;
   users: SimplifiedUser[];
 };
 
@@ -52,7 +53,9 @@ export class PostFragmentComponent implements OnInit, OnDestroy {
   emojiCollection: EmojiReaction[] = [];
   likeSubscription;
   emojiSubscription;
+  folowsSubscription;
   userId;
+  avaiableEmojiNames: string[] = []
 
   reactionLoading = false;
 
@@ -62,6 +65,11 @@ export class PostFragmentComponent implements OnInit, OnDestroy {
     private jwtService: JwtService,
     private messages: MessageService
   ) {
+    this.folowsSubscription = this.postService.updateFollowers.subscribe((data) => {
+      this.avaiableEmojiNames = []
+      this.postService.emojiCollections.forEach(collection => this.avaiableEmojiNames = this.avaiableEmojiNames.concat(collection.emojis.map(elem => elem.name)))
+      this.avaiableEmojiNames.push('❤️')
+    })
     this.userId = loginService.getLoggedUserUUID();
     this.likeSubscription = postService.postLiked.subscribe((likeEvent) => {
       if (likeEvent.id === this.fragment?.id) {
@@ -79,6 +87,8 @@ export class PostFragmentComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.likeSubscription.unsubscribe();
+    this.emojiSubscription.unsubscribe();
+    this.folowsSubscription.unsubscribe();
   }
 
   ngOnInit(): void {
@@ -90,7 +100,7 @@ export class PostFragmentComponent implements OnInit, OnDestroy {
     }
 
     this.fragment.emojiReactions.forEach((reaction) => {
-      const hasReaction = !!emojiReactions[reaction.emojiId];
+      const hasReaction = !!emojiReactions[reaction.content];
       if (!hasReaction) {
         let image = '';
         if (reaction.emoji?.url) {
@@ -99,10 +109,11 @@ export class PostFragmentComponent implements OnInit, OnDestroy {
             : `${environment.baseMediaUrl}${reaction.emoji.url}`;
         }
         // create the basic structure to augment later
-        emojiReactions[reaction.emojiId] = {
+        emojiReactions[reaction.content] = {
           id: reaction.emojiId,
           content: reaction.content,
           external: reaction.emoji?.external == true,
+          name: reaction.content,
           img: image ? `${environment.externalCacheurl}${image}` : undefined,
           users: [], // this will be filled below
         };
@@ -111,7 +122,7 @@ export class PostFragmentComponent implements OnInit, OnDestroy {
       // at this point the current reaction is always defined on the map
       // so we can always access it to increment the users array
       if (reaction.user?.avatar) {
-        emojiReactions[reaction.emojiId].users.push(reaction.user);
+        emojiReactions[reaction.content].users.push(reaction.user);
       }
     });
 
@@ -136,6 +147,7 @@ export class PostFragmentComponent implements OnInit, OnDestroy {
           content: '❤️',
           external: false,
           img: undefined,
+          name: '❤️',
           users: [],
         };
         this.emojiCollection.push(likesCollection);
@@ -179,6 +191,7 @@ export class PostFragmentComponent implements OnInit, OnDestroy {
           content: emoji.name,
           img: emoji.url,
           external: emoji.external,
+          name: emoji.name,
           users: [
             {
               url: this.jwtService.getTokenData()['url'],
@@ -225,7 +238,6 @@ export class PostFragmentComponent implements OnInit, OnDestroy {
     const reactionIsToggled = emojiReaction.users.some(
       (usr) => usr.id === this.userId
     );
-    console.log({ emojiReaction, userId: this.userId });
 
     if (this.isLike(emojiReaction)) {
       if (reactionIsToggled) {
@@ -236,12 +248,8 @@ export class PostFragmentComponent implements OnInit, OnDestroy {
     } else {
       let response = false;
       if (reactionIsToggled) {
-        response = await this.postService.undoEmojiReactPost(postId, {
-          id: emojiReaction.id,
-          name: emojiReaction.content,
-          url: emojiReaction.img!,
-          external: false,
-        });
+        response = await this.postService.emojiReactPost(postId, emojiReaction.content, true);
+
         if (response) {
           this.messages.add({
             severity: 'success',
@@ -249,12 +257,7 @@ export class PostFragmentComponent implements OnInit, OnDestroy {
           });
         }
       } else {
-        response = await this.postService.emojiReactPost(postId, {
-          id: emojiReaction.id,
-          name: emojiReaction.content,
-          url: emojiReaction.img!,
-          external: false,
-        });
+        response = await this.postService.emojiReactPost(postId, emojiReaction.content);
         if (response) {
           this.messages.add({
             severity: 'success',

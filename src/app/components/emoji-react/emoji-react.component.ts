@@ -42,7 +42,7 @@ export class EmojiReactComponent {
 
   async reactToPost(emoji: Emoji) {
     this.loading = true;
-    const response = await this.postsService.emojiReactPost(this.postId, emoji);
+    const response = await this.postsService.emojiReactPost(this.postId, emoji.name);
     if (response) {
       this.messages.add({
         severity: 'success',
