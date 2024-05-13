@@ -261,7 +261,7 @@ export class PostFragmentComponent implements OnInit, OnDestroy {
         if (response) {
           this.messages.add({
             severity: 'success',
-            summary: `Reacted with ${emojiReaction.id} succesfully`,
+            summary: `Reacted with ${emojiReaction.name} succesfully`,
           });
         }
       }
