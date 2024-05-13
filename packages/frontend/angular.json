@@ -1,5 +1,5 @@
 {
-  "$schema": "./node_modules/@angular/cli/lib/config/schema.json",
+  "$schema": "../../node_modules/@angular/cli/lib/config/schema.json",
   "cli": {
     "analytics": "2ed75e61-714f-4d01-bf90-aa49cf351d90",
     "schematicCollections": [
@@ -50,22 +50,22 @@
                 "bundleName": "wafrn-css"
               },
               {
-                "input": "node_modules/primeflex/primeflex.css",
+                "input": "../../node_modules/primeflex/primeflex.css",
                 "inject": false,
                 "bundleName": "wafrn-css"
               },
               {
-                "input": "node_modules/quill/dist/quill.snow.css",
+                "input": "../../node_modules/quill/dist/quill.snow.css",
                 "inject": false,
                 "bundleName": "wafrn-css"
               },
               {
-                "input": "node_modules/quill/dist/quill.core.css",
+                "input": "../../node_modules/quill/dist/quill.core.css",
                 "inject": false,
                 "bundleName": "wafrn-css"
               },
               {
-                "input": "node_modules/quill-mention-wafrn/dist/quill.mention.css",
+                "input": "../../node_modules/quill-mention-wafrn/dist/quill.mention.css",
                 "inject": false,
                 "bundleName": "wafrn-css"
               },
