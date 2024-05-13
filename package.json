@@ -5,7 +5,12 @@
   "main": "index.ts",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "backend:prettier-format": "cd packages/backend && prettier --config .prettierrc '**/*.ts' --write"
+    "backend:prettier-format": "cd packages/backend && prettier --config .prettierrc '**/*.ts' --write",
+    "backend:develop": "cd packages/backend && nodemon index.ts",
+    "frontend:serve": "cd packages/frontend && ng serve",
+    "frontend:build": "cd packages/frontend && ng build",
+    "vercel-build": "cd packages/frontend && ng build  --configuration=vercel",
+    "lint": "cd packages/frontend && ng lint"
   },
   "repository": {
     "type": "git",
