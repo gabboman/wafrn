@@ -7,6 +7,8 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "backend:prettier-format": "cd packages/backend && prettier --config .prettierrc '**/*.ts' --write",
     "backend:develop": "cd packages/backend && nodemon index.ts",
+    "backend:worker": "cd packages/backend && ts-node utils/workers.ts",
+    "backend:serve": "cd packages/backend && ts-node index.ts",
     "frontend:serve": "cd packages/frontend && ng serve",
     "frontend:build": "cd packages/frontend && ng build",
     "frontend:deploy": "cd packages/frontend && ng build && rm -rf ../../frontend && mv dist/wafrn/browser ../../frontend",
