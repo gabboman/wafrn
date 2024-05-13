@@ -9,6 +9,7 @@
     "backend:develop": "cd packages/backend && nodemon index.ts",
     "frontend:serve": "cd packages/frontend && ng serve",
     "frontend:build": "cd packages/frontend && ng build",
+    "frontend:deploy": "cd packages/frontend && ng build && rm -rf ../../frontend && mv dist/wafrn/browser ../../frontend",
     "vercel-build": "cd packages/frontend && ng build  --configuration=vercel",
     "lint": "cd packages/frontend && ng lint"
   },
