@@ -1,0 +1,17 @@
+.idea
+.vscode
+.zed
+
+.DS_Store
+
+node_modules
+
+environment.ts
+public
+uploads
+logs
+cache
+environment.prod.ts
+environment.dev.ts
+
+.env

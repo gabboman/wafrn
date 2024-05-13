@@ -1,55 +1,23 @@
 {
   "name": "wafrn",
-  "version": "0.1.0",
+  "version": "0.0.4",
+  "description": "wafrn monorepo",
+  "main": "index.ts",
   "scripts": {
-    "ng": "ng",
-    "start": "ng serve",
-    "build": "ng build",
-    "watch": "ng build --watch --configuration development",
-    "test": "ng test",
-    "vercel-build": "ng build  --configuration=vercel",
-    "lint": "ng lint"
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "private": true,
-  "dependencies": {
-    "@angular/animations": "^17.3.0",
-    "@angular/cdk": "^17.3.7",
-    "@angular/common": "^17.3.0",
-    "@angular/compiler": "^17.3.0",
-    "@angular/core": "^17.3.0",
-    "@angular/forms": "^17.3.0",
-    "@angular/material": "^17.3.7",
-    "@angular/platform-browser": "^17.3.0",
-    "@angular/platform-browser-dynamic": "^17.3.0",
-    "@angular/router": "^17.3.0",
-    "@angular/service-worker": "^17.3.7",
-    "@babel/runtime": "^7.24.5",
-    "@fortawesome/angular-fontawesome": "^0.14.1",
-    "@fortawesome/fontawesome-svg-core": "^6.5.2",
-    "@fortawesome/free-solid-svg-icons": "^6.5.2",
-    "core-js": "^3.37.0",
-    "dompurify": "^3.1.2",
-    "ngx-quill": "^25.3.2",
-    "primeflex": "^3.3.1",
-    "quill": "^2.0.1",
-    "quill-mention-wafrn": "^0.0.3",
-    "rxjs": "~7.8.0",
-    "tslib": "^2.3.0",
-    "zone.js": "~0.14.3"
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/gabboman/wafrn.git"
   },
-  "devDependencies": {
-    "@angular-devkit/build-angular": "^17.3.6",
-    "@angular/cli": "^17.3.6",
-    "@angular/compiler-cli": "^17.3.0",
-    "@types/dompurify": "^3.0.5",
-    "@types/jasmine": "~5.1.0",
-    "@types/quill": "^2.0.14",
-    "jasmine-core": "~5.1.0",
-    "karma": "~6.4.0",
-    "karma-chrome-launcher": "~3.2.0",
-    "karma-coverage": "~2.2.0",
-    "karma-jasmine": "~5.1.0",
-    "karma-jasmine-html-reporter": "~2.1.0",
-    "typescript": "~5.4.2"
-  }
+  "author": "Gabriel Amador García",
+  "license": "AGPL-3.0-or-later",
+  "bugs": {
+    "url": "https://github.com/gabboman/wafrn/issues"
+  },
+  "homepage": "https://github.com/gabboman/wafrn#readme",
+  "workspaces": [
+    "packages/frontend",
+    "packages/backend"
+  ]
 }
