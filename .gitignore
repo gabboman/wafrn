@@ -3,6 +3,7 @@ src/environments/environment.prod.ts
 
 # compiled output
 /frontend
+/logs
 /dist
 /tmp
 /out-tsc
