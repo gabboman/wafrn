@@ -1,4 +1,4 @@
-import { fediverseTag } from "./tags"
+import { fediverseTag } from './tags'
 
 export interface activityPubObject {
   '@context': string | any[]

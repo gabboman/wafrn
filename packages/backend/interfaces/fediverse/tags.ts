@@ -6,8 +6,8 @@ export interface fediverseTag {
   id?: string
   updated?: Date
   icon?: {
-    mediaType: string,
-    url: string,
+    mediaType: string
+    url: string
     type: string
   }
 }

@@ -14,8 +14,8 @@ let adminUser = User.findOne({
 
 async function updateAllUsers() {
   console.log('lets a update all users that we caaaaaaaaan')
-  adminUser = await adminUser;
-  
+  adminUser = await adminUser
+
   const allRemoteUsers = await User.findAll({
     order: [['updatedAt', 'ASC']],
     include: [
@@ -36,7 +36,7 @@ async function updateAllUsers() {
       }
     }
   })
-  
+
   for await (const chunk of _.chunk(allRemoteUsers, 50)) {
     console.log('chunk started')
     await processChunk(chunk)
@@ -46,15 +46,16 @@ async function updateAllUsers() {
 }
 
 async function processChunk(users: any[]) {
-  const promises = users.map(async (actor: any) => getRemoteActorIdProcessor({
-    data: { actorUrl: actor.remoteId, userId: (await adminUser).id, forceUpdate: true }
-  } as Job))
+  const promises = users.map(async (actor: any) =>
+    getRemoteActorIdProcessor({
+      data: { actorUrl: actor.remoteId, userId: (await adminUser).id, forceUpdate: true }
+    } as Job)
+  )
   try {
     await Promise.allSettled(promises)
   } catch (error) {
     console.log('error in one of the chonks')
   }
-  
 }
 
 updateAllUsers()

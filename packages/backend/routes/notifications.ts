@@ -108,7 +108,7 @@ export default function notificationRoutes(app: Application) {
     const userEmojis = await UserEmojiRelation.findAll({
       where: {
         userId: {
-          [Op.in]: (await users).map((usr : any) => usr.id)
+          [Op.in]: (await users).map((usr: any) => usr.id)
         }
       }
     })
@@ -116,11 +116,13 @@ export default function notificationRoutes(app: Application) {
     const emojis = await Emoji.findAll({
       where: {
         id: {
-          [Op.in]: (await newEmojiReactions).map((emojireact: any) => emojireact.emojiId).concat( userEmojis.map((usrEmjRel: any) => usrEmjRel.emojiId ) )
+          [Op.in]: (await newEmojiReactions)
+            .map((emojireact: any) => emojireact.emojiId)
+            .concat(userEmojis.map((usrEmjRel: any) => usrEmjRel.emojiId))
         }
       }
     })
-    
+
     res.send({
       emojiReactions: await newEmojiReactions,
       emojis: await emojis,

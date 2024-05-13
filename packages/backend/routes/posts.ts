@@ -207,7 +207,7 @@ export default function postsRoutes(app: Application) {
           res.send({ success: false, message: 'non existent parent' })
           return false
         }
-        
+
         // we get the privacy of the parent and quoted post. Set body privacy to the max one
         const parentPrivacy: number = parent ? parent.privacy : 0
         let bodyPrivacy: number = req.body.privacy ? req.body.privacy : 0
@@ -369,7 +369,7 @@ export default function postsRoutes(app: Application) {
             parentId: req.body.parent
           })
         }
-        if(postToBeQuoted) {
+        if (postToBeQuoted) {
           post.addQuoted(postToBeQuoted)
         }
         post.setMedias(mediaToAdd.map((media: any) => media.id))

@@ -51,19 +51,23 @@ async function postToJSONLD(post: any) {
   const fediTags: fediverseTag[] = []
   let tagsAndQuotes = '<br>'
   const quotedPosts = await post.getQuoted()
-    if(quotedPosts && quotedPosts.length > 0) {
-      const mainQuotedPost = quotedPosts[0]
-      quotedPostString = mainQuotedPost.remotePostId ? mainQuotedPost.remotePostId : `${environment.frontendUrl}/fediverse/post/${mainQuotedPost.id}`
-      quotedPosts.forEach((quotedPost: any) => {
-        const postUrl = quotedPost.remotePostId ? quotedPost.remotePostId : `${environment.frontendUrl}/fediverse/post/${quotedPost.id}`
-        tagsAndQuotes = tagsAndQuotes + `<p>RE: <a href="${postUrl}">${postUrl}</a></p>`
-        fediTags.push({
-          type: 'Link',
-          name: `RE: ${postUrl}`,
-          href: postUrl
-        })
+  if (quotedPosts && quotedPosts.length > 0) {
+    const mainQuotedPost = quotedPosts[0]
+    quotedPostString = mainQuotedPost.remotePostId
+      ? mainQuotedPost.remotePostId
+      : `${environment.frontendUrl}/fediverse/post/${mainQuotedPost.id}`
+    quotedPosts.forEach((quotedPost: any) => {
+      const postUrl = quotedPost.remotePostId
+        ? quotedPost.remotePostId
+        : `${environment.frontendUrl}/fediverse/post/${quotedPost.id}`
+      tagsAndQuotes = tagsAndQuotes + `<p>RE: <a href="${postUrl}">${postUrl}</a></p>`
+      fediTags.push({
+        type: 'Link',
+        name: `RE: ${postUrl}`,
+        href: postUrl
       })
-    }
+    })
+  }
   for await (const tag of await post.getPostTags()) {
     const externalTagName = tag.tagName.replaceAll(' ', '-').replaceAll('"', "'")
     const link = `${environment.frontendUrl}/dashboard/search/${encodeURIComponent(tag.tagName)}`
@@ -95,7 +99,6 @@ async function postToJSONLD(post: any) {
   })
 
   const emojis = await post.getEmojis()
-
 
   const usersToSend = getToAndCC(post.privacy, mentionedUsers, stringMyFollowers)
   const actorUrl = `${environment.frontendUrl}/fediverse/blog/${localUser.url.toLowerCase()}`
@@ -138,7 +141,7 @@ async function postToJSONLD(post: any) {
             name: media.description
           }
         }),
-      tag: fediMentions.concat(fediTags).concat(emojis.map((emoji: any) =>emojiToAPTag(emoji)))
+      tag: fediMentions.concat(fediTags).concat(emojis.map((emoji: any) => emojiToAPTag(emoji)))
       /*
       replies: {
         id: `${environment.frontendUrl}/fediverse/post/${post.id}/replies`,
@@ -154,9 +157,9 @@ async function postToJSONLD(post: any) {
     }
   }
   const newObject: any = {}
-  const objKeys = Object.keys(postAsJSONLD.object);
-  objKeys.forEach(key => {
-    if(postAsJSONLD.object[key]) {
+  const objKeys = Object.keys(postAsJSONLD.object)
+  objKeys.forEach((key) => {
+    if (postAsJSONLD.object[key]) {
       newObject[key] = postAsJSONLD.object[key]
     }
   })

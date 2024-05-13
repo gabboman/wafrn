@@ -360,24 +360,29 @@ function activityPubRoutes(app: Application) {
   })
 
   app.get('/fediverse/emoji/:id', async (req: Request, res: Response) => {
-    const id = req.params.id;
+    const id = req.params.id
     const emoji = await Emoji.findByPk(id)
-    if(emoji) {
+    if (emoji) {
       res.set({
         'content-type': 'application/activity+json'
       })
       res.send({
-        "@context":["https://www.w3.org/ns/activitystreams",
-        {
-          toot: "http://joinmastodon.org/ns#","Emoji":"toot:Emoji","focalPoint":{"@container":"@list","@id":"toot:focalPoint"}}],
-        id : environment.frontendUrl + '/fediverse/emoji/' + id,
-        type : "Emoji",
-        name : emoji.name,
-        updated : emoji.updatedAt,
-        icon : {
-          type : "Image",
-          mediaType :"image/png",
-          url : environment.mediaUrl + emoji.url
+        '@context': [
+          'https://www.w3.org/ns/activitystreams',
+          {
+            toot: 'http://joinmastodon.org/ns#',
+            Emoji: 'toot:Emoji',
+            focalPoint: { '@container': '@list', '@id': 'toot:focalPoint' }
+          }
+        ],
+        id: environment.frontendUrl + '/fediverse/emoji/' + id,
+        type: 'Emoji',
+        name: emoji.name,
+        updated: emoji.updatedAt,
+        icon: {
+          type: 'Image',
+          mediaType: 'image/png',
+          url: environment.mediaUrl + emoji.url
         }
       })
     } else {

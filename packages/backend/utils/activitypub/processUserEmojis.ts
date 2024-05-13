@@ -5,7 +5,7 @@ async function processUserEmojis(user: any, fediEmojis: any[]) {
     where: {
       userId: user.id
     }
-  });
+  })
   await user.removeEmojis()
   await user.save()
   const emojis: any[] = []
@@ -29,7 +29,7 @@ async function processUserEmojis(user: any, fediEmojis: any[]) {
       emojis.push(emojiToAdd)
     }
   }
-  return await user.setEmojis([... new Set(emojis.map((emoji: any) => emoji.id))])
+  return await user.setEmojis([...new Set(emojis.map((emoji: any) => emoji.id))])
 }
 
 export { processUserEmojis }

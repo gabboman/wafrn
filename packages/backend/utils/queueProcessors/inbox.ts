@@ -158,7 +158,7 @@ async function inboxWorker(job: Job) {
             //activities we ignore update
             case 'Video': {
               await signAndAccept(req, remoteUser, user)
-              break;
+              break
             }
             case 'Question': {
               await loadPoll(body, await getPostThreadRecursive(user, body.id), user)

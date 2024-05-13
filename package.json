@@ -4,7 +4,8 @@
   "description": "wafrn monorepo",
   "main": "index.ts",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "backend:prettier-format": "cd packages/backend && prettier --config .prettierrc '**/*.ts' --write"
   },
   "repository": {
     "type": "git",

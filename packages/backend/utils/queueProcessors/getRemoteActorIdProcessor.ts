@@ -10,7 +10,6 @@ import { logger } from '../logger'
 
 // This function will return userid after processing it.
 async function getRemoteActorIdProcessor(job: Job) {
-  
   const actorUrl: string = job.data.actorUrl
   const forceUpdate: boolean = job.data.forceUpdate
   let res = await getUserIdFromRemoteId(actorUrl)
@@ -50,42 +49,39 @@ async function getRemoteActorIdProcessor(job: Job) {
         }
         let userRes
         if (res) {
-          if(res !== await getDeletedUser()) {
+          if (res !== (await getDeletedUser())) {
             const existingUsers = await User.findAll({
               where: {
                 url: sequelize.where(sequelize.fn('LOWER', sequelize.col('url')), 'LIKE', userData.url.toLowerCase())
               }
             })
 
-              userRes = await User.findByPk(res)
-              if(userRes.id !== existingUsers[0]?.id) {
-                const existingUser = existingUsers[0]
-                existingUser.activated = 0;
-                existingUser.remoteId = `${existingUser.remoteId}_OVERWRITTEN_ON${new Date().getTime()}`
-                existingUser.url = `${existingUser.url}_OVERWRITTEN_ON${new Date().getTime()}`
-                await existingUser.save();
-
-              }
-              userRes.update(userData)
-              await userRes.save()
-            
+            userRes = await User.findByPk(res)
+            if (userRes.id !== existingUsers[0]?.id) {
+              const existingUser = existingUsers[0]
+              existingUser.activated = 0
+              existingUser.remoteId = `${existingUser.remoteId}_OVERWRITTEN_ON${new Date().getTime()}`
+              existingUser.url = `${existingUser.url}_OVERWRITTEN_ON${new Date().getTime()}`
+              await existingUser.save()
+            }
+            userRes.update(userData)
+            await userRes.save()
           }
-          
         } else {
           userRes = await User.create(userData)
         }
         res = userRes.id
         try {
-          const emojis = [... new Set(userPetition.tag?.filter((elem: fediverseTag) => elem.type === 'Emoji'))]
+          const emojis = [...new Set(userPetition.tag?.filter((elem: fediverseTag) => elem.type === 'Emoji'))]
 
-          await processUserEmojis(
-            userRes,
-            emojis
-          )
+          await processUserEmojis(userRes, emojis)
         } catch (error) {
-          logger.info({message: `Error processing emojis from user ${userRes.url}`, error: error, emojis: userPetition.tag?.filter((elem: fediverseTag) => elem.type === 'Emoji') })
+          logger.info({
+            message: `Error processing emojis from user ${userRes.url}`,
+            error: error,
+            emojis: userPetition.tag?.filter((elem: fediverseTag) => elem.type === 'Emoji')
+          })
         }
-        
       }
     }
   }
@@ -98,9 +94,7 @@ async function getHostFromCache(displayName: string): Promise<any> {
 }
 
 async function getDeletedUser() {
-  return await getUserIdFromRemoteId(
-    `https://${environment.instanceUrl}/fediverse/blog/${environment.deletedUser}`
-  )
+  return await getUserIdFromRemoteId(`https://${environment.instanceUrl}/fediverse/blog/${environment.deletedUser}`)
 }
 
 export { getRemoteActorIdProcessor }

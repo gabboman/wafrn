@@ -1,6 +1,17 @@
 import { Application, Response } from 'express'
 import { Op, Sequelize } from 'sequelize'
-import { Blocks, Emoji, EmojiCollection, FederatedHost, Follows, Mutes, ServerBlock, User, UserEmojiRelation, UserOptions } from '../db'
+import {
+  Blocks,
+  Emoji,
+  EmojiCollection,
+  FederatedHost,
+  Follows,
+  Mutes,
+  ServerBlock,
+  User,
+  UserEmojiRelation,
+  UserOptions
+} from '../db'
 import { authenticateToken } from '../utils/authenticateToken'
 
 import generateRandomString from '../utils/generateRandomString'
@@ -105,7 +116,9 @@ export default function userRoutes(app: Application) {
               : `<h1>Welcome to ${environment.instanceUrl}</h1> To activate your account <a href="${
                   environment.instanceUrl
                 }/activate/${encodeURIComponent(req.body.email.toLowerCase())}/${activationCode}">click here!</a>`
-            const emailSent = environment.disableRequireSendEmail ? true : sendActivationEmail(req.body.email.toLowerCase(), activationCode, mailHeader, mailBody)
+            const emailSent = environment.disableRequireSendEmail
+              ? true
+              : sendActivationEmail(req.body.email.toLowerCase(), activationCode, mailHeader, mailBody)
             await Promise.all([userWithEmail, emailSent])
             success = true
             await redisCache.del('allLocalUserIds')
@@ -174,7 +187,9 @@ export default function userRoutes(app: Application) {
           let userEmojis: any[] = []
           if (req.body.description) {
             user.description = req.body.description
-            userEmojis = userEmojis.concat(avaiableEmojis?.filter((emoji: any) => req.body.description.includes(emoji.name)))
+            userEmojis = userEmojis.concat(
+              avaiableEmojis?.filter((emoji: any) => req.body.description.includes(emoji.name))
+            )
           }
 
           if (req.body.federateWithThreads) {
@@ -214,8 +229,8 @@ export default function userRoutes(app: Application) {
               optionValue: req.body.disableForceAltText
             })
           }
-          if(req.body.forceClassicLogo !== undefined && req.body.forceClassicLogo !== null) {
-            const forceClassicKey = 'wafrn.forceClassicLogo';
+          if (req.body.forceClassicLogo !== undefined && req.body.forceClassicLogo !== null) {
+            const forceClassicKey = 'wafrn.forceClassicLogo'
             const forceClassicNewValue = req.body.forceClassicLogo === 'true'
             let dbForceClassic = await UserOptions.findOne({
               where: {
@@ -223,7 +238,7 @@ export default function userRoutes(app: Application) {
                 optionName: forceClassicKey
               }
             })
-            if(dbForceClassic) {
+            if (dbForceClassic) {
               dbForceClassic.optionValue = forceClassicNewValue
             } else {
               dbForceClassic = UserOptions.create({
@@ -259,7 +274,6 @@ export default function userRoutes(app: Application) {
           if (req.body.name) {
             user.name = req.body.name
             userEmojis = userEmojis.concat(avaiableEmojis?.filter((emoji: any) => req.body.name.includes(emoji.name)))
-
           }
 
           if (req.file != null) {
@@ -280,7 +294,7 @@ export default function userRoutes(app: Application) {
             }
           })
           await user.removeEmojis()
-          user.setEmojis([... new Set(userEmojis)])
+          user.setEmojis([...new Set(userEmojis)])
           await user.save()
           success = true
         }
@@ -520,9 +534,7 @@ export default function userRoutes(app: Application) {
     const notAcceptedFollows = getNotYetAcceptedFollowedids(req.jwtData?.userId as string)
     const options = getUserOptions(req.jwtData?.userId as string)
     const localEmojis = EmojiCollection.findAll({
-      include: [
-        {model: Emoji}
-      ]
+      include: [{ model: Emoji }]
     })
     let user = User.findByPk(req.jwtData?.userId, {
       attributes: ['banned']

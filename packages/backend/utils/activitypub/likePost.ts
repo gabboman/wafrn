@@ -128,7 +128,6 @@ async function likePostRemote(like: any, dislike = false) {
 }
 
 async function emojiReactRemote(react: any, undo = false) {
-
   const user = await User.findOne({
     where: {
       id: react.userId

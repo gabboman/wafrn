@@ -328,30 +328,34 @@ const PostTag = sequelize.define(
   }
 )
 
-const Emoji = sequelize.define('emojis', {
-  id: {
-    type: Sequelize.STRING,
-    allowNull: false,
-    primaryKey: true
+const Emoji = sequelize.define(
+  'emojis',
+  {
+    id: {
+      type: Sequelize.STRING,
+      allowNull: false,
+      primaryKey: true
+    },
+    name: Sequelize.STRING,
+    url: Sequelize.TEXT,
+    external: Sequelize.BOOLEAN
   },
-  name: Sequelize.STRING,
-  url: Sequelize.TEXT,
-  external: Sequelize.BOOLEAN
-}, {
-  indexes: [
-    {
-      unique: false,
-      fields: [
-        {
-          attribute: 'name',
-        },
-        {
-          attribute: 'external',
-        }
-      ]
-    }
-  ]
-})
+  {
+    indexes: [
+      {
+        unique: false,
+        fields: [
+          {
+            attribute: 'name'
+          },
+          {
+            attribute: 'external'
+          }
+        ]
+      }
+    ]
+  }
+)
 
 const EmojiReaction = sequelize.define(
   'emojiReaction',
@@ -393,7 +397,7 @@ const EmojiCollection = sequelize.define('emojiCollections', {
   name: Sequelize.STRING,
   comment: {
     allowNull: true,
-    type: Sequelize.TEXT,
+    type: Sequelize.TEXT
   }
 })
 
