@@ -159,8 +159,8 @@ export class NavigationMenuComponent implements OnInit, OnDestroy {
       },
 
       {
-        label: 'Write new post',
-        title: 'Write a post',
+        label: 'Write new woot',
+        title: 'Write a woot',
         icon: faPencil,
         command: async () => {
           this.hideMenu();
