@@ -8,6 +8,7 @@ const prompt = (query: string) => new Promise((resolve) => rl.question(query, re
 
 async function setup() {
   console.log('---- INITIALIZING WAFRN DB ---')
+  console.log('Remember the output of step 1? Ok here we go:')
   /*
   console.log('Hello! Please make sure you read some of the docs at least')
   console.log('This script WILL NOT install the dependencies, so check the README.md!')
