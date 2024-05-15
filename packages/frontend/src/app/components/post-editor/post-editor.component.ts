@@ -395,8 +395,18 @@ export class PostEditorComponent implements OnInit, OnDestroy {
       });
     tagsToSend = tagsToSend.slice(0, -1);
     let res = undefined;
+    const content = this.postCreatorContent ? this.postCreatorContent : ''
+    // if a post includes only tags, we reblog it and then we also create the post with tags. Thanks shadowjonathan
+    if(this.uploadedMedias.length === 0 && content.length === 0 && tagsToSend.length > 0 && this.idPostToReblog && ! this.data?.quote?.id) {
+      await this.editorService.createPost({
+        content: '',
+        idPostToReblog: this.idPostToReblog,
+        privacy: 0,
+        media: [],
+      });
+    }
     res = await this.editorService.createPost({
-      content: this.postCreatorContent ? this.postCreatorContent : '',
+      content: content,
       media: this.uploadedMedias,
       privacy: this.privacy,
       tags: tagsToSend,
