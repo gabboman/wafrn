@@ -404,6 +404,8 @@ export class PostEditorComponent implements OnInit, OnDestroy {
         privacy: 0,
         media: [],
       });
+      // wait 500 miliseconds
+      await new Promise((resolve) => setTimeout(resolve, 500))
     }
     res = await this.editorService.createPost({
       content: content,
