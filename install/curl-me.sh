@@ -20,13 +20,15 @@ echo "Tell us the smtp port"
 read SMTPPORT
 echo "We need the user"
 read SMTPUSER
-echo "We need the password. This one will be hidden"
-read -p SMTPPASSWORD
+read -p  "We need the password. This one will be hidden" SMTPPASSWORD
 echo "We need the address that will send the emails"
 read SMTPFROMMAIL
 echo "ok we are almost there!"
 echo "We will create a new user for wafrn and will clone the repo there. Write the user name. We recommend wafrn. YOU NEED TO REMEMBER THE PASSWORD YOU SET"
 read wafrnUser
+USERNAME=${wafrnUser//[^a-zA-Z0-9]/_}
+echo "we ware going to create the user. Set a password (wont be displayed)"
+adduser $USERNAME
 read -p "Ok thats all the data we need. Lets go!"
 apt update
 apt dist-upgrade -y
@@ -38,9 +40,6 @@ a2enmod rewrite
 systemctl restart apache2
 systemctl enable mariadb
 
-USERNAME=${wafrnUser//[^a-zA-Z0-9]/_}
-echo "we ware going to create the user. Set a password (wont be displayed)"
-adduser $USERNAME
 usermod -aG www-data ${USERNAME}
 usermod -aG  ${USERNAME} www-data
 systemctl restart apache2
@@ -53,6 +52,10 @@ mysql -uroot -e "CREATE DATABASE ${MAINDB};"
 mysql -uroot -e "CREATE USER ${MAINDB}@localhost IDENTIFIED BY '${PASSWDDB}';"
 mysql -uroot -e "GRANT ALL PRIVILEGES ON ${MAINDB}.* TO '${MAINDB}'@'localhost';"
 mysql -uroot -e "FLUSH PRIVILEGES;"
+
+
+echo "Now lets clone the repo"
+su - $USERNAME -c "git clone https://github.com/gabboman/wafrn.git && cd wafrn && git checkout improvedSetup"
 
 
 echo "Preparing apache config"
@@ -70,8 +73,7 @@ systemctl restart apache2
 echo "We need to enable SSL. Select the domain from the list"
 certbot
 
-echo "Now lets clone the repo"
-su - $USERNAME -c "git clone https://github.com/gabboman/wafrn.git && cd wafrn && git checkout improvedSetup"
+
 echo "Preparing backend..."
 JWTSECRET="$(openssl rand -hex 128)"
 ADMINPASSWORD="$(openssl rand -hex 16)"
