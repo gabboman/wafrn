@@ -20,7 +20,8 @@ echo "Tell us the smtp port"
 read SMTPPORT
 echo "We need the user"
 read SMTPUSER
-read -p  "We need the password. This one will be hidden" SMTPPASSWORD
+echo "Introduce the SMTP user password"
+read SMTPPASSWORD
 echo "We need the address that will send the emails"
 read SMTPFROMMAIL
 echo "ok we are almost there!"
