@@ -36,6 +36,7 @@ apt dist-upgrade -y
 apt install -y git mariadb-server curl lsb-release wget dialog apache2 certbot python3-certbot-apache build-essential redis ffmpeg webp graphicsmagick tmux sudo
 
 a2enmod proxy
+a2enmod proxy_http
 a2enmod headers
 a2enmod rewrite
 systemctl restart apache2
@@ -86,6 +87,7 @@ sed -i "s/ADMINUSER/${ADMINUSER}/g" /home/${USERNAME}/wafrn/packages/backend/env
 sed -i "s/forceSync: false/forceSync: true/g" /home/${USERNAME}/wafrn/packages/backend/environment.ts
 sed -i "s/ADMINEMAIL/${ADMINEMAIL}/g" /home/${USERNAME}/wafrn/packages/backend/environment.ts
 sed -i "s/ADMINPASSWORD/${ADMINPASSWORD}/g" /home/${USERNAME}/wafrn/packages/backend/environment.ts
+sed -i "s/JWTSECRET/${JWTSECRET}/g" /home/${USERNAME}/wafrn/packages/backend/environment.ts
 sed -i "s/DBUSER/${MAINDB}/g" /home/${USERNAME}/wafrn/packages/backend/environment.ts
 sed -i "s/DBNAME/${MAINDB}/g" /home/${USERNAME}/wafrn/packages/backend/environment.ts
 sed -i "s/DBPASSWORD/${PASSWDDB}/g" /home/${USERNAME}/wafrn/packages/backend/environment.ts
@@ -108,8 +110,7 @@ chown ${USERNAME}:${USERNAME} /home/${USERNAME}/wafrn/packages/backend/environme
 chown ${USERNAME}:${USERNAME} /home/${USERNAME}/wafrn/packages/frontend/src/environments/environment.prod.ts
 
 
-
-su - $USERNAME -c "cd wafrn && ./install/step-2.sh"
+su - $USERNAME -c "chmod --recursive 755 wafrn && cd wafrn && ./install/step-2.sh"
 
 
 sed -i "s/${ADMINPASSWORD}/DELETED_PASSWORD/g" /home/${USERNAME}/wafrn/packages/backend/environment.ts
