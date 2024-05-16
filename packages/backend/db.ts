@@ -1,3 +1,5 @@
+import { generateKeyPairSync } from 'crypto'
+import bcrypt from 'bcrypt'
 import { environment } from './environment'
 import { logger } from './utils/logger'
 // eslint-disable-next-line @typescript-eslint/no-var-requires
@@ -700,8 +702,60 @@ sequelize
   })
   .then(async () => {
     if (environment.forceSync) {
-      logger.info('CLEANING DATA')
-      // seeder();
+      logger.info('CLEANING DATA. Creating admin and deleted user')
+      const { publicKey, privateKey } = generateKeyPairSync('rsa', {
+        modulusLength: 4096,
+        publicKeyEncoding: {
+          type: 'spki',
+          format: 'pem'
+        },
+        privateKeyEncoding: {
+          type: 'pkcs8',
+          format: 'pem'
+        }
+      })
+
+      const admin = {
+        email: environment.adminEmail,
+        description: 'Admin',
+        url: environment.adminUser,
+        name: environment.adminUser,
+        NSFW: false,
+        password: await bcrypt.hash(environment.adminPassword as string, environment.saltRounds),
+        birthDate: new Date(),
+        avatar: '',
+        role: 10,
+        activated: true,
+        registerIp: '127.0.0.1',
+        lastLoginIp: '127.0.0.1',
+        banned: false,
+        activationCode: '',
+        privateKey,
+        publicKey
+      }
+    
+      const deleted = {
+        email: 'localhost@localhost',
+        description: 'DELETED USER',
+        url: environment.deletedUser,
+        name: environment.deletedUser,
+        NSFW: false,
+        password: await bcrypt.hash('deleted', environment.saltRounds ),
+        birthDate: new Date(),
+        avatar: '',
+        role: 0,
+        activated: true,
+        registerIp: '127.0.0.1',
+        lastLoginIp: '127.0.0.1',
+        banned: true,
+        activationCode: '',
+        privateKey,
+        publicKey
+      }
+    
+      const adminUser = await User.create(admin)
+      const del = await User.create(deleted)
+
     }
   })
 

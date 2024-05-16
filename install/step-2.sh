@@ -14,6 +14,12 @@ nvm install 22
 echo "Node installed"
 npm i -g @angular/cli ts-node pm2 nodemon
 npm ci
-
+pm2 install typescript
+ts-node install/initialize-db.ts
+sed -i "s/forceSync: true/forceSync: false/g" packages/backend/environment.ts
+npm run frontend:deploy
+cd packages/backend
+pm2 start --name wafrn index.ts
+pm2 start --name workers -i max utils/workers.ts
 
 
