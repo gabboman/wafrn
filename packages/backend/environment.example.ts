@@ -67,7 +67,7 @@ export const environment = {
         target: 'pino/file',
         level: 0,
         options: {
-          destination: '../../logs/backendlog.log'
+          destination: 'logs/backendlog.log'
         }
       }
     ]
