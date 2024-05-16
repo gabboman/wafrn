@@ -7,6 +7,7 @@ import { getPetitionSigned } from '../activitypub/getPetitionSigned'
 import { processUserEmojis } from '../activitypub/processUserEmojis'
 import { fediverseTag } from '../../interfaces/fediverse/tags'
 import { logger } from '../logger'
+import { redisCache } from '../redis'
 
 // This function will return userid after processing it.
 async function getRemoteActorIdProcessor(job: Job) {
@@ -63,6 +64,7 @@ async function getRemoteActorIdProcessor(job: Job) {
               existingUser.remoteId = `${existingUser.remoteId}_OVERWRITTEN_ON${new Date().getTime()}`
               existingUser.url = `${existingUser.url}_OVERWRITTEN_ON${new Date().getTime()}`
               await existingUser.save()
+              redisCache.del('userRemoteId:' + existingUser.remoteId)
             }
             userRes.update(userData)
             await userRes.save()
