@@ -63,10 +63,10 @@ cp /home/${USERNAME}/wafrn/install/apache_files/conf.conf /etc/apache2/conf-avai
 sed -i "s/WAFRNUSER/${USERNAME}/g" /etc/apache2/conf-available/wafrn.conf
 a2enconf wafrn
 cp /home/${USERNAME}/wafrn/install/apache_files/siteavaiable.conf /etc/apache2/sites-available/${DOMAINNAME}.conf
-sed -i "s/WAFRNUSER/${USERNAME}/g" /etc/apache2/sites-avaiable/${DOMAINNAME}.conf
-sed -i "s/ADMIN_EMAIL/${ADMINEMAIL}/g" /etc/apache2/sites-avaiable/${DOMAINNAME}.conf
-sed -i "s/DOMAINNAME/${DOMAINNAME}/g" /etc/apache2/sites-avaiable/${DOMAINNAME}.conf
-sed -i "s/PORT/${PORT}/g" /etc/apache2/sites-avaiable/${DOMAINNAME}.conf
+sed -i "s/WAFRNUSER/${USERNAME}/g" /etc/apache2/sites-available/${DOMAINNAME}.conf
+sed -i "s/ADMIN_EMAIL/${ADMINEMAIL}/g" /etc/apache2/sites-available/${DOMAINNAME}.conf
+sed -i "s/DOMAINNAME/${DOMAINNAME}/g" /etc/apache2/sites-available/${DOMAINNAME}.conf
+sed -i "s/PORT/${PORT}/g" /etc/apache2/sites-available/${DOMAINNAME}.conf
 
 a2ensite ${DOMAINNAME}
 
@@ -90,7 +90,7 @@ sed -i "s/DBNAME/${MAINDB}/g" /home/${USERNAME}/wafrn/packages/backend/environme
 sed -i "s/DBPASSWORD/${PASSWDDB}/g" /home/${USERNAME}/wafrn/packages/backend/environment.ts
 sed -i "s/DBPASSWORD/${PASSWDDB}/g" /home/${USERNAME}/wafrn/packages/backend/environment.ts
 sed -i "s/DOMAINNAME/${DOMAINNAME}/g" /home/${USERNAME}/wafrn/packages/backend/environment.ts
-sed -i "s/PORT/${PORT}/g" /home/${USERNAME}/wafrn/packages/backend/environment.ts
+sed -i "s/APPPORT/${PORT}/g" /home/${USERNAME}/wafrn/packages/backend/environment.ts
 sed -i "s/SMTPHOST/${SMTPHOST}/g" /home/${USERNAME}/wafrn/packages/backend/environment.ts
 sed -i "s/SMTPUSER/${SMTPUSER}/g" /home/${USERNAME}/wafrn/packages/backend/environment.ts
 sed -i "s/SMTPPORT/${SMTPPORT}/g" /home/${USERNAME}/wafrn/packages/backend/environment.ts
