@@ -66,6 +66,8 @@ cp /home/${USERNAME}/wafrn/install/apache_files/siteavaiable.conf /etc/apache2/s
 sed -i "s/WAFRNUSER/${USERNAME}/g" /etc/apache2/sites-avaiable/${DOMAINNAME}.conf
 sed -i "s/ADMIN_EMAIL/${ADMINEMAIL}/g" /etc/apache2/sites-avaiable/${DOMAINNAME}.conf
 sed -i "s/DOMAINNAME/${DOMAINNAME}/g" /etc/apache2/sites-avaiable/${DOMAINNAME}.conf
+sed -i "s/PORT/${PORT}/g" /etc/apache2/sites-avaiable/${DOMAINNAME}.conf
+
 a2ensite ${DOMAINNAME}
 
 systemctl restart apache2
