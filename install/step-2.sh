@@ -18,8 +18,7 @@ pm2 install typescript
 ts-node install/initialize-db.ts
 sed -i "s/forceSync: true/forceSync: false/g" packages/backend/environment.ts
 npm run frontend:deploy
-cd packages/backend
-pm2 start --name wafrn index.ts
-pm2 start --name workers -i max utils/workers.ts
+pm2 start --name wafrn start.sh
+pm2 start --name workers -i max script_workers.sh
 
 
