@@ -17,9 +17,9 @@ export const environment = {
   //YOU SHOULD TOTALLY USE MYSQL AND DO NOT COMMIT THE SAME MISTAKES AS ME. Mariadb works, but there were some performance issues because indexes
   databaseConnectionString: "mariadb://DBUSER:DBPASSWORD@127.0.0.1/DBNAME",
   listenIp: '127.0.0.1',
-  port: PORT,
+  port: APPPORT,
   // this was a dev  thing might be useful some day in the future to use another process to process the /fediverse petitions
-  fediPort: PORT,
+  fediPort: APPPORT,
   saltRounds: 14,
   // for jwt secret you should use something like https://www.grc.com/passwords.htm please this is SUPER DUPER SECRET.
   jwtSecret: 'JWTSECRET',
