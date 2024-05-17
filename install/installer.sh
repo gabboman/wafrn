@@ -61,9 +61,9 @@ su - $USERNAME -c "git clone https://github.com/gabboman/wafrn.git && cd wafrn &
 
 
 echo "Preparing apache config"
-cp /home/${USERNAME}/wafrn/install/apache_files/conf.conf /etc/apache2/conf-available/wafrn.conf
-sed -i "s/WAFRNUSER/${USERNAME}/g" /etc/apache2/conf-available/wafrn.conf
-a2enconf wafrn
+#cp /home/${USERNAME}/wafrn/install/apache_files/conf.conf /etc/apache2/conf-available/wafrn.conf
+#sed -i "s/WAFRNUSER/${USERNAME}/g" /etc/apache2/conf-available/wafrn.conf
+#a2enconf wafrn
 cp /home/${USERNAME}/wafrn/install/apache_files/siteavaiable.conf /etc/apache2/sites-available/${DOMAINNAME}.conf
 sed -i "s/WAFRNUSER/${USERNAME}/g" /etc/apache2/sites-available/${DOMAINNAME}.conf
 sed -i "s/ADMIN_EMAIL/${ADMINEMAIL}/g" /etc/apache2/sites-available/${DOMAINNAME}.conf
@@ -116,6 +116,7 @@ su - $USERNAME -c "chmod --recursive 755 wafrn && cd wafrn && ./install/step-2.s
 sed -i "s/${ADMINPASSWORD}/DELETED_PASSWORD/g" /home/${USERNAME}/wafrn/packages/backend/environment.ts
 chown ${USERNAME}:${USERNAME} /home/${USERNAME}/wafrn/packages/backend/environment.ts
 
+ln -s /home/${USERNAME}/wafrn/ /var/www/
 
 echo "Well done. The database user and password have been introduced in the config file of the repo"
 

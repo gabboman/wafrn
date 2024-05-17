@@ -19,4 +19,8 @@ sed -i "s/forceSync: true/forceSync: false/g" packages/backend/environment.ts
 npm run frontend:deploy
 pm2 start --name workers -i max script_workers.sh
 
+pm2 save
+
+pm2 startup
+
 
