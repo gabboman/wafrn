@@ -14,13 +14,6 @@ nvm install 20
 echo "Node installed"
 npm i -g @angular/cli ts-node pm2 nodemon
 npm ci
-pm2 start --name wafrn start.sh
-sed -i "s/forceSync: true/forceSync: false/g" packages/backend/environment.ts
 npm run frontend:deploy
-pm2 start --name workers -i max script_workers.sh
-
-pm2 save
-
-pm2 startup
 
 

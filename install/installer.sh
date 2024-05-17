@@ -114,7 +114,6 @@ ln -s /home/${USERNAME}/wafrn/ /var/www/
 
 su - $USERNAME -c "cd wafrn && ./install/step-2.sh"
 
-sed -i "s/${ADMINPASSWORD}/DELETED_PASSWORD/g" /home/${USERNAME}/wafrn/packages/backend/environment.ts
 chown ${USERNAME}:${USERNAME} /home/${USERNAME}/wafrn/packages/backend/environment.ts
 
 echo "Well done. The database user and password have been introduced in the config file of the repo"
