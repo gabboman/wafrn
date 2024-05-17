@@ -94,8 +94,8 @@ export const environment = {
   ignoreBlockHosts: [],
   // default SEO data that will be used when trying to load server data
   defaultSEOData: {
-    title: 'DEFAULT_SEO_TITLE',
-    description: 'DEFAULT_SEO_DESCRIPTION',
-    img: 'DEFAULT_IMG'
+    title: 'DOMAINNAME',
+    description: 'DOMAINNAME, a wafrn instance',
+    img: 'https://DOMAINNAME/assets/logo.png'
   }
 }
