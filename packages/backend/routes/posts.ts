@@ -463,7 +463,7 @@ export default function postsRoutes(app: Application) {
         // next replies to process
         let next = postPetition.replies.first
         while (next) {
-          const petitions = next.items.map((elem: string) => getPostThreadRecursive(user, elem))
+          const petitions = next.items.map((elem: any) => getPostThreadRecursive(user, elem.id ? elem.id : elem ))
           await Promise.allSettled(petitions)
           next = next.next ? await getPetitionSigned(user, next.next) : undefined
         }
