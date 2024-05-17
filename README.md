@@ -9,6 +9,8 @@ Wafrn is an opensource social network that connects with the fediverse. The fron
 
 ## What will you need
 
+Before trying to host your own wafrn, we advice you to please, very please, [join our matrix channel](https://matrix.to/#/!KFbQcLWJSAEcoKGxhl:matrix.org?via=matrix.org&via=t2bot.io) to get support
+
 First of all, you will need a DEBIAN 12 vps. The cheap contabo one can do the trick with no problem. Maybe even the ovh one that costs 3 euros too. But I advice as a minimum the contabo one.
 You also need a domain.
 You will also need a way of sending emails to the people registering.. An SMTP server or a free brevo account with smtp enabled can do the trick.
