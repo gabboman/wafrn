@@ -30,6 +30,7 @@ read wafrnUser
 USERNAME=${wafrnUser//[^a-zA-Z0-9]/_}
 echo "we ware going to create the user. Set a password (wont be displayed)"
 adduser $USERNAME
+chmod 755 --recursive /home/${USERNAME}
 read -p "Ok thats all the data we need. Lets go!"
 apt update
 apt dist-upgrade -y
@@ -40,7 +41,7 @@ a2enmod proxy_http
 a2enmod headers
 a2enmod rewrite
 systemctl restart apache2
-systemctl enable mariadb
+systemctl enable --now mariadb
 
 usermod -aG www-data ${USERNAME}
 usermod -aG  ${USERNAME} www-data
@@ -84,7 +85,6 @@ ADMINPASSWORD="$(openssl rand -hex 16)"
 
 su - $USERNAME -c "cd wafrn/packages/backend && cp environment.example.ts environment.ts"
 sed -i "s/ADMINUSER/${ADMINUSER}/g" /home/${USERNAME}/wafrn/packages/backend/environment.ts
-sed -i "s/forceSync: false/forceSync: true/g" /home/${USERNAME}/wafrn/packages/backend/environment.ts
 sed -i "s/ADMINEMAIL/${ADMINEMAIL}/g" /home/${USERNAME}/wafrn/packages/backend/environment.ts
 sed -i "s/ADMINPASSWORD/${ADMINPASSWORD}/g" /home/${USERNAME}/wafrn/packages/backend/environment.ts
 sed -i "s/JWTSECRET/${JWTSECRET}/g" /home/${USERNAME}/wafrn/packages/backend/environment.ts
@@ -110,12 +110,12 @@ chown ${USERNAME}:${USERNAME} /home/${USERNAME}/wafrn/packages/backend/environme
 chown ${USERNAME}:${USERNAME} /home/${USERNAME}/wafrn/packages/frontend/src/environments/environment.prod.ts
 
 
-chmod 755 --recursive /home/${USERNAME}
+ln -s /home/${USERNAME}/wafrn/ /var/www/
+
+su - $USERNAME -c "cd wafrn && ./install/step-2.sh"
 
 sed -i "s/${ADMINPASSWORD}/DELETED_PASSWORD/g" /home/${USERNAME}/wafrn/packages/backend/environment.ts
 chown ${USERNAME}:${USERNAME} /home/${USERNAME}/wafrn/packages/backend/environment.ts
-
-ln -s /home/${USERNAME}/wafrn/ /var/www/
 
 echo "Well done. The database user and password have been introduced in the config file of the repo"
 
