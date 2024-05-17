@@ -110,8 +110,7 @@ chown ${USERNAME}:${USERNAME} /home/${USERNAME}/wafrn/packages/backend/environme
 chown ${USERNAME}:${USERNAME} /home/${USERNAME}/wafrn/packages/frontend/src/environments/environment.prod.ts
 
 
-su - $USERNAME -c "chmod --recursive 755 wafrn && cd wafrn && ./install/step-2.sh"
-
+chmod 755 --recursive /home/${USERNAME}
 
 sed -i "s/${ADMINPASSWORD}/DELETED_PASSWORD/g" /home/${USERNAME}/wafrn/packages/backend/environment.ts
 chown ${USERNAME}:${USERNAME} /home/${USERNAME}/wafrn/packages/backend/environment.ts
