@@ -4,6 +4,7 @@ import { environment } from '../../environment'
 import { fediverseTag } from '../../interfaces/fediverse/tags'
 import { activityPubObject } from '../../interfaces/fediverse/activityPubObject'
 import { emojiToAPTag } from './emojiToAPTag'
+import { getPostReplies } from './getPostReplies'
 
 async function postToJSONLD(post: any) {
   const tmpUser = await User.findByPk(post.userId)
@@ -141,19 +142,16 @@ async function postToJSONLD(post: any) {
             name: media.description
           }
         }),
-      tag: fediMentions.concat(fediTags).concat(emojis.map((emoji: any) => emojiToAPTag(emoji)))
-      /*
+      tag: fediMentions.concat(fediTags).concat(emojis.map((emoji: any) => emojiToAPTag(emoji))),
       replies: {
         id: `${environment.frontendUrl}/fediverse/post/${post.id}/replies`,
         type: 'Collection',
         first: {
           type: 'CollectionPage',
-          next: `${environment.frontendUrl}/fediverse/post/${post.id}/replies&page=true`,
           partOf: `${environment.frontendUrl}/fediverse/post/${post.id}/replies`,
-          items: []
+          items: await getPostReplies(post.id)
         }
       }
-      */
     }
   }
   const newObject: any = {}

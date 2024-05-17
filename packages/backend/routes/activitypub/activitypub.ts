@@ -10,6 +10,7 @@ import { Queue } from 'bullmq'
 import { getLocalUserId } from '../../utils/cacheGetters/getLocalUserId'
 import { SignedRequest } from '../../interfaces/fediverse/signedRequest'
 import { emojiToAPTag } from '../../utils/activitypub/emojiToAPTag'
+import { getPostReplies } from '../../utils/activitypub/getPostReplies'
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const Cacher = require('cacher')
 const cacher = new Cacher()
@@ -389,6 +390,16 @@ function activityPubRoutes(app: Application) {
       res.sendStatus(404)
     }
   })
+
+  app.get('/fediverse/post/:id/replies', async (req: Request, res: Response) => {
+    res.send(
+      {
+        type: "CollectionPage",
+        partOf: `${environment.frontendUrl}/fediverse/post/${req.params?.id as string}/replies`,
+        items: await getPostReplies(req.params?.id as string)}
+    )
+  });
+
 
   app.get('/fediverse/accept/:id', (req: SignedRequest, res: Response) => {
     res.sendStatus(200)
