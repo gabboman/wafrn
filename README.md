@@ -6,6 +6,7 @@ Wafrn is an opensource social network that connects with the fediverse. The fron
 - [First steps](#first-steps)
 - [Populate database](#populate-database)
 - [Useful commands](#useful-commands)
+- [Update wafrn](#update-wafrn)
 
 ## What will you need
 
@@ -78,5 +79,11 @@ This last command asks you to run something as root. Do it, so when the server r
 You're ready!
 
 Remember, remove the admin password from the environment.ts in the backend package!
+
+## Update wafrn
+
+To update wafrn, you just do the command npm run full:upgrade in the wafrn folder.
+
+This will do a pull the latest changes and keep the waffle up to date
 
 > Written with [StackEdit](https://stackedit.io/).
