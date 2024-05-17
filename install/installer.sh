@@ -58,7 +58,7 @@ mysql -uroot -e "FLUSH PRIVILEGES;"
 
 
 echo "Now lets clone the repo"
-su - $USERNAME -c "git clone https://github.com/gabboman/wafrn.git && cd wafrn && git checkout improvedSetup"
+su - $USERNAME -c "git clone https://github.com/gabboman/wafrn.git && cd wafrn"
 
 
 echo "Preparing apache config"
