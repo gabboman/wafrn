@@ -191,6 +191,7 @@ export default function postsRoutes(app: Application) {
     async (req: AuthorizedRequest, res: Response) => {
       let success = false
       const posterId = req.jwtData?.userId
+      const posterUser = await User.findByPk(posterId)
       const postToBeQuoted = await Post.findByPk(req.body.postToQuote)
       try {
         const parent = await Post.findByPk(req.body.parent, {
@@ -248,7 +249,7 @@ export default function postsRoutes(app: Application) {
         }
 
         let content = req.body.content ? req.body.content.trim() : ''
-        const content_warning = req.body.content_warning ? req.body.content_warning.trim() : ''
+        const content_warning = req.body.content_warning ? req.body.content_warning.trim() : posterUser?.NSFW ? 'This user has been marked as NSFW and the post has been labeled automatically as NSFW' : ''
         const mentionsToAdd: string[] = []
         let mediaToAdd: any[] = []
         const avaiableEmojis = await getAvaiableEmojis()
