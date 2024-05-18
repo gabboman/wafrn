@@ -58,7 +58,7 @@ async function getRemoteActorIdProcessor(job: Job) {
             })
 
             userRes = await User.findByPk(res)
-            if (userRes.id !== existingUsers[0]?.id) {
+            if (userRes?.id !== existingUsers[0]?.id) {
               const existingUser = existingUsers[0]
               existingUser.activated = 0
               existingUser.remoteId = `${existingUser.remoteId}_OVERWRITTEN_ON${new Date().getTime()}`
