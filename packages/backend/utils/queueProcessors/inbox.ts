@@ -160,10 +160,7 @@ async function inboxWorker(job: Job) {
               await signAndAccept(req, remoteUser, user)
               break
             }
-            case 'Question': {
-              await loadPoll(body, await getPostThreadRecursive(user, body.id), user)
-            }
-            // eslint-disable-next-line no-fallthrough
+            case 'Question':
             case 'Note': {
               const localPost = await Post.findOne({
                 where: {
