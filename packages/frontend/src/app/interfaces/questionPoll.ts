@@ -1,6 +1,6 @@
 export interface QuestionPoll {
   id: number
-  endDate: string
+  endDate: Date
   multiChoice: boolean
   createdAt: string
   updatedAt: string
