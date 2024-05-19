@@ -1,12 +1,35 @@
-<div *ngFor="let question of poll.questionPollQuestions">
-  {{ question.questionText }} ({{ question.remoteReplies }} votes out of
-  {{ total }}, {{ (question.remoteReplies * 100) / total | number : "1.0-0" }}%
-  )
-  <div class="w-full">
-    <mat-progress-bar
-      mode="determinate"
-      color="primary"
-      [value]="(question.remoteReplies * 100) / total"
-    ></mat-progress-bar>
-  </div>
-</div>
+
+  <form
+  [formGroup]="form"
+  >
+
+  @if(poll.multiChoice){
+    @for (option of poll.questionPollQuestions; track option) {
+      <div class="w-full">
+        <mat-checkbox [disabled]="!openPoll" [formControlName]="option.id">{{option.questionText}}</mat-checkbox>
+      </div>
+    }
+  } @else {
+    <mat-radio-group
+  aria-labelledby="example-radio-group-label"
+  class="example-radio-group"
+  formControlName="singleValue"
+  >
+  @for (option of poll.questionPollQuestions; track option) {
+    <div class="w-full">
+      <mat-radio-button [disabled]="!openPoll" [value]="option.id">{{option.questionText}}</mat-radio-button>
+    </div>
+  }
+</mat-radio-group>
+  }
+  </form>
+
+
+<button *ngIf="openPoll"
+    mat-flat-button
+    color="primary"
+    class="w-full mt-2"
+    [disabled]="!isFormValid()"
+    (click)="vote()"
+  >Vote</button>
+
