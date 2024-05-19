@@ -26,6 +26,9 @@ export class PollComponent  implements OnInit{
         this.form.addControl(question.id.toString(), new FormControl(''))
       })
     }
+
+    // TODO finish this. enable polls.
+    this.openPoll = false;
   }
 
 
