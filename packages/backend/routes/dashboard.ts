@@ -104,7 +104,19 @@ export default function dashboardRoutes(app: Application) {
           ],
           where: {
             privacy: 10,
-            createdAt: { [Op.lt]: getStartScrollParam(req) }
+            createdAt: { [Op.lt]: getStartScrollParam(req)  }
+          }
+        })
+        const minDate =  new Date(Math.min.apply(null,dms.map((elem: any) => new Date(elem.createdAt)))) 
+       
+        const myPosts = await Post.findAll({
+          where: {
+            userId: posterId,
+            privacy: 10,
+            createdAt: {
+              [Op.gt]: minDate,
+              [Op.lt]: getStartScrollParam(req)
+            }
           }
         })
 
@@ -113,14 +125,11 @@ export default function dashboardRoutes(app: Application) {
           [Op.or]: [
             {
               id: {
-                [Op.in]: dms.map((pst: any) => pst.id) //latestMentionedPosts.map((elem: any) => elem.id)
+                [Op.in]: dms.map((pst: any) => pst.id).concat(myPosts.map((pst: any) => pst.id)) //latestMentionedPosts.map((elem: any) => elem.id)
               },
               userId: {
                 [Op.notIn]: await getBlockedIds(posterId)
               }
-            },
-            {
-              userId: posterId
             }
           ]
         }
