@@ -6,7 +6,7 @@
   @if(poll.multiChoice){
     @for (option of poll.questionPollQuestions; track option) {
       <div class="w-full">
-        <mat-checkbox [disabled]="!openPoll" [formControlName]="option.id">{{option.questionText}}</mat-checkbox>
+        <mat-checkbox [disabled]="!openPoll || !userLoggedIn" [formControlName]="option.id">{{option.questionText}}</mat-checkbox>
       </div>
     }
   } @else {
@@ -17,7 +17,7 @@
   >
   @for (option of poll.questionPollQuestions; track option) {
     <div class="w-full">
-      <mat-radio-button [disabled]="!openPoll" [value]="option.id">{{option.questionText}}</mat-radio-button>
+      <mat-radio-button [disabled]="!openPoll || !userLoggedIn" [value]="option.id">{{option.questionText}}</mat-radio-button>
     </div>
   }
 </mat-radio-group>
@@ -25,7 +25,7 @@
   </form>
 
 
-<button *ngIf="openPoll"
+<button *ngIf="openPoll && userLoggedIn"
     mat-flat-button
     color="primary"
     class="w-full mt-2"

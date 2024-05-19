@@ -1,6 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { AbstractControl, FormControl, UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
 import { QuestionPoll } from 'src/app/interfaces/questionPoll';
+import { LoginService } from 'src/app/services/login.service';
 
 @Component({
   selector: 'app-poll',
@@ -15,6 +16,13 @@ export class PollComponent  implements OnInit{
   form = new UntypedFormGroup({
     singleValue: new FormControl('', Validators.required)
   })
+  userLoggedIn = false
+
+  constructor(
+    private loginService: LoginService
+  ) {
+    this.userLoggedIn = loginService.checkUserLoggedIn()
+  }
 
   ngOnInit(): void {
     this.openPoll = new Date().getTime() < this.poll.endDate.getTime()
