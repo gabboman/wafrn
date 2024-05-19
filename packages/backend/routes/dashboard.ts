@@ -89,21 +89,11 @@ export default function dashboardRoutes(app: Application) {
       }
       case 10: {
         // we get the list of posts twice woopsie. Should fix but this way is not going to be "that much"
-        const dms = await Post.findAll({
+        const dms = await PostMentionsUserRelation.findAll({
           order: [['createdAt', 'DESC']],
           limit: POSTS_PER_PAGE,
-          include: [
-            {
-              model: User,
-              as: 'mentionPost',
-              where: {
-                id: posterId
-              },
-              attributes: []
-            }
-          ],
           where: {
-            privacy: 10,
+            userId: posterId,
             createdAt: { [Op.lt]: getStartScrollParam(req)  }
           }
         })
@@ -125,7 +115,7 @@ export default function dashboardRoutes(app: Application) {
           [Op.or]: [
             {
               id: {
-                [Op.in]: dms.map((pst: any) => pst.id).concat(myPosts.map((pst: any) => pst.id)) //latestMentionedPosts.map((elem: any) => elem.id)
+                [Op.in]: dms.map((pst: any) => pst.postId).concat(myPosts.map((pst: any) => pst.id)) //latestMentionedPosts.map((elem: any) => elem.id)
               },
               userId: {
                 [Op.notIn]: await getBlockedIds(posterId)
