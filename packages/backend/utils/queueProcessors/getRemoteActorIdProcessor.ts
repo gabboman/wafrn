@@ -1,5 +1,5 @@
 import { Job } from 'bullmq'
-import { FederatedHost, User, sequelize } from '../../db'
+import { Blocks, EmojiReaction, FederatedHost, Follows, Mutes, Post, PostMentionsUserRelation, User, UserLikesPostRelations, sequelize } from '../../db'
 import { environment } from '../../environment'
 import { getUserIdFromRemoteId } from '../cacheGetters/getUserIdFromRemoteId'
 import { getFederatedHostIdFromUrl } from '../cacheGetters/getHostIdFromUrl'
@@ -64,7 +64,80 @@ async function getRemoteActorIdProcessor(job: Job) {
               existingUser.remoteId = `${existingUser.remoteId}_OVERWRITTEN_ON${new Date().getTime()}`
               existingUser.url = `${existingUser.url}_OVERWRITTEN_ON${new Date().getTime()}`
               await existingUser.save()
-              redisCache.del('userRemoteId:' + existingUser.remoteId)
+              const updates = [
+                Follows.update({
+                followerId: userRes.id
+              }, {
+                where: {
+                  followerId: existingUser.id
+                }
+              }),
+              Follows.update({
+                followedId: userRes.id
+              }, {
+                where: {
+                  followedId: existingUser.id
+                }
+              }),
+              Post.update({
+                userId: userRes.id
+              }, {
+                where: {
+                  userId: existingUser.id
+                }
+              }),
+              UserLikesPostRelations.update({
+                userId: userRes.id
+              }, {
+                where: {
+                  userId: existingUser.id
+                }
+              }),
+              EmojiReaction.update({
+                userId: userRes.id
+              }, {
+                where: {
+                  userId: existingUser.id
+                }
+              }),
+              Blocks.update({
+                blockedid: userRes.id
+              }, {
+                where: {
+                  blockedid: existingUser.id
+                }
+              }),
+              Blocks.update({
+                blockerId: userRes.id
+              }, {
+                where: {
+                  blockerId: existingUser.id
+                }
+              }),
+              Mutes.update({
+                muterid: userRes.id
+              }, {
+                where: {
+                  muterid: existingUser.id
+                }
+              }),
+              Mutes.update({
+                mutedId: userRes.id
+              }, {
+                where: {
+                  mutedId: existingUser.id
+                }
+              }),
+              PostMentionsUserRelation.update({
+                userid: userRes.id
+              }, {
+                where: {
+                  userid: existingUser.id
+                }
+              })
+            ]
+              await Promise.all(updates)
+              await redisCache.del('userRemoteId:' + existingUser.remoteId)
             }
             userRes.update(userData)
             await userRes.save()
