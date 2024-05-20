@@ -28,6 +28,7 @@ async function getPostThreadRecursive(
   } catch (error) {
     logger.debug('HERE IS THE ISSUE')
     logger.debug(remotePostId)
+    return;
   }
   if (remotePostId.startsWith(`${environment.frontendUrl}/fediverse/post/`)) {
     // we are looking at a local post
