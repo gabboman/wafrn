@@ -541,6 +541,14 @@ export class PostsService {
     return response.success;
   }
 
+  async voteInPoll(pollId: number, votes: number[]) {
+    const payload = {
+      votes: votes,
+    };
+    const response = await firstValueFrom(this.http.post(`${environment.baseUrl}/v2/pollVote/${pollId}`, payload))
+    console.log(response)
+  }
+
   emojiToHtml(emoji: Emoji): string {
     return `<img class="post-emoji" src="${environment.externalCacheurl +
       (emoji.external

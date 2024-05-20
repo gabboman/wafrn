@@ -2,6 +2,7 @@ import { Component, Input, OnInit } from '@angular/core';
 import { AbstractControl, FormControl, UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
 import { QuestionPoll } from 'src/app/interfaces/questionPoll';
 import { LoginService } from 'src/app/services/login.service';
+import { PostsService } from 'src/app/services/posts.service';
 
 @Component({
   selector: 'app-poll',
@@ -14,12 +15,12 @@ export class PollComponent  implements OnInit{
   total = 0;
   openPoll = false;
   form = new UntypedFormGroup({
-    singleValue: new FormControl('', Validators.required)
   })
   userLoggedIn = false
 
   constructor(
-    private loginService: LoginService
+    private loginService: LoginService,
+    private postsService: PostsService
   ) {
     this.userLoggedIn = loginService.checkUserLoggedIn()
   }
@@ -29,20 +30,34 @@ export class PollComponent  implements OnInit{
     this.poll.questionPollQuestions.forEach(elem => {
       this.total = this.total + elem.remoteReplies
     })
-    if(this.openPoll && this.poll?.questionPollQuestions && this.poll.questionPollQuestions.length > 0 && this.poll.multiChoice) {
+    let alreadyReplied = this.poll?.questionPollQuestions.some(question => question.questionPollAnswers.length > 0)
+    if(this.poll?.questionPollQuestions && this.poll.questionPollQuestions.length > 0 && this.poll.multiChoice) {
       this.poll.questionPollQuestions.forEach(question => {
-        this.form.addControl(question.id.toString(), new FormControl(''))
+        this.form.addControl(question.id.toString(), new FormControl({value: question.questionPollAnswers.length > 0, disabled: alreadyReplied || !this.userLoggedIn || !this.openPoll}))
       })
     }
-
-    // TODO finish this. enable polls.
-    this.openPoll = false;
+    if(!this.poll.multiChoice) {
+      const existingReply = this.poll.questionPollQuestions.find(reply => reply.questionPollAnswers.length > 0)
+      this.form.addControl('singleValue', new FormControl({value: existingReply ? existingReply.id : '', disabled: alreadyReplied || !this.userLoggedIn || !this.openPoll}, Validators.required)
+    )
+    }
   }
 
 
 
-  vote() {
-    console.log(this.form.value)
+  async vote() {
+    let votes: number[] = []
+    const formValue = this.form.value
+    if(this.poll.multiChoice){
+      Object.keys(formValue).forEach(key => {
+        if(formValue[key]) {
+          votes.push(parseInt(key))
+        }
+      })
+    } else {
+      votes.push(parseInt(formValue.singleValue))
+    }
+    await this.postsService.voteInPoll(this.poll.id, votes)
     
   }
 
