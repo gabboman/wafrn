@@ -212,6 +212,7 @@ async function getPostThreadRecursive(
 
       if (existingPost) {
         existingPost.update(postToCreate)
+        await loadPoll(postPetition,existingPost, user)
       }
 
       const newPost = existingPost ? existingPost : await Post.create(postToCreate)

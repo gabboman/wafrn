@@ -8,6 +8,8 @@ import { Queue } from 'bullmq'
 import _ from 'underscore'
 import { emojiToAPTag } from './emojiToAPTag'
 import { wait } from '../wait'
+import { loadPoll } from './loadPollFromPost'
+import { getPostThreadRecursive } from './getPostThreadRecursive'
 
 const sendPostQueue = new Queue('sendPostToInboxes', {
   connection: environment.bullmqConnection,
@@ -80,6 +82,9 @@ async function voteInPoll(userId: string, pollId: number) {
               priority: Number.MAX_SAFE_INTEGER
             }
           )
+        // HACK just add this to a queue
+        await wait(5000)
+        await getPostThreadRecursive(user,vote.questionPoll.post.remotePostId, undefined, vote.questionPoll.postId)
     }
     
 
