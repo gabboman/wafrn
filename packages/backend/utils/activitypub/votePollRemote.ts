@@ -4,7 +4,7 @@ import { environment } from '../../environment'
 import { activityPubObject } from '../../interfaces/fediverse/activityPubObject'
 import { postPetitionSigned } from './postPetitionSigned'
 import { logger } from '../logger'
-import { Queue } from 'bullmq'
+import { Queue, QueueEvents } from 'bullmq'
 import _ from 'underscore'
 import { emojiToAPTag } from './emojiToAPTag'
 import { wait } from '../wait'
@@ -24,6 +24,9 @@ const sendPostQueue = new Queue('sendPostToInboxes', {
   }
 })
 
+const queueEvents = new QueueEvents('sendPostToInboxes', {
+    connection: environment.bullmqConnection
+  })
 async function voteInPoll(userId: string, pollId: number) {
     const user = await User.findByPk(userId)
     const votesToSend = await QuestionPollQuestion.findAll({
@@ -71,7 +74,7 @@ async function voteInPoll(userId: string, pollId: number) {
             type: 'Create'
           }
         const inboxes = [vote.questionPoll.post.user.remoteInbox];
-        await sendPostQueue.add(
+        const sendVoteJob = await sendPostQueue.add(
             'sencChunk',
             {
               objectToSend: voteObject,
@@ -82,9 +85,9 @@ async function voteInPoll(userId: string, pollId: number) {
               priority: Number.MAX_SAFE_INTEGER
             }
           )
-        // HACK just add this to a queue
-        await wait(5000)
-        await getPostThreadRecursive(user,vote.questionPoll.post.remotePostId, undefined, vote.questionPoll.postId)
+        sendVoteJob.waitUntilFinished(queueEvents).then(async () => {
+            await getPostThreadRecursive(user,vote.questionPoll.post.remotePostId, undefined, vote.questionPoll.postId)
+        })
     }
     
 
