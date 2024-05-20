@@ -3,7 +3,7 @@
   <input [(ngModel)]="filterText" matInput />
 </mat-form-field>
 @for (emojiCollection of emojiCollections; track $index) {
-<mat-expansion-panel hideToggle>
+<mat-expansion-panel *ngIf="shoCollection(emojiCollection)" hideToggle>
   <mat-expansion-panel-header>
     <mat-panel-title>
       {{ emojiCollection.name }}

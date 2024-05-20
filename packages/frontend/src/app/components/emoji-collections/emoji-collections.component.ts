@@ -50,4 +50,9 @@ export class EmojiCollectionsComponent implements OnDestroy {
   click(emoji: Emoji) {
     this.emoji.emit(emoji);
   }
+
+  shoCollection(collection: EmojiCollection): boolean {
+    return collection.emojis.map(elem => elem.name).some(elem => elem.includes(this.filterText))
+
+  }
 }
