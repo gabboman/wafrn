@@ -1,8 +1,9 @@
 import { Application, Response } from 'express'
 import AuthorizedRequest from '../interfaces/authorizedRequest'
 import { authenticateToken } from '../utils/authenticateToken'
-import { QuestionPoll, QuestionPollAnswer, QuestionPollQuestion } from '../db';
+import { Post, QuestionPoll, QuestionPollAnswer, QuestionPollQuestion, User } from '../db';
 import { Op } from 'sequelize';
+import { voteInPoll } from '../utils/activitypub/votePollRemote';
 export default function pollRoutes(app: Application) {
 
     app.post('/api/v2/pollVote/:poll', authenticateToken, async (req: AuthorizedRequest, res: Response) => {
@@ -61,11 +62,32 @@ export default function pollRoutes(app: Application) {
             }
             // Now we create the poll and we send the thing to the user and the voters
             // first we store the vote in the db 
-            pollOptions.forEach(async (pollOption: any) => await QuestionPollAnswer.create({
-                userId: posterId,
-                questionPollQuestionId: pollOption.id
-            }) )
+            for await (const pollOption of pollOptions) {
+                await QuestionPollAnswer.create({
+                    userId: posterId,
+                    questionPollQuestionId: pollOption.id
+                })
+            }
+             
             res.send({success: true})
+            if(
+                (await QuestionPoll.findByPk(pollId, {
+                    include: [
+                        {
+                            model: Post,
+                            include: [
+                                {
+                                    model: User,
+                                    as: 'user'
+                                }
+                            ]
+                        }
+                    ]
+                })).post.user.url.startsWith('@')
+            ){
+                voteInPoll(posterId, parseInt(pollId))
+
+            }
 
         } else {
             res.send({success: false, message: 'The poll and options do not exist'})
