@@ -19,8 +19,10 @@ function wellKnownRoutes(app: Application) {
   app.get('/.well-known/webfinger/', cacher.cache('seconds', 15), async (req: Request, res: Response) => {
     if (req.query?.resource) {
       const urlQueryResource: string = req.query.resource as string
-      if (urlQueryResource.startsWith('acct:') && urlQueryResource.endsWith(environment.instanceUrl)) {
-        const userUrl = urlQueryResource.slice(5).slice(0, -(environment.instanceUrl.length + 1))
+      if (urlQueryResource.startsWith('acct:') && (urlQueryResource.endsWith(environment.instanceUrl) || urlQueryResource.startsWith(`acct:${environment.frontendUrl}/fediverse/blog/`) )) {
+        const userUrl = urlQueryResource.endsWith(environment.instanceUrl) ? 
+        urlQueryResource.slice(5).slice(0, -(environment.instanceUrl.length + 1)) :
+        urlQueryResource.slice(`acct:${environment.frontendUrl}/fediverse/blog/`.length)
         const user = await User.findOne({
           where: sequelize.where(sequelize.fn('LOWER', sequelize.col('url')), 'LIKE', userUrl.toLowerCase())
         })
