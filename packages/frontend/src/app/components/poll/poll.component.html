@@ -7,6 +7,11 @@
     @for (option of poll.questionPollQuestions; track option) {
       <div class="w-full">
         <mat-checkbox  [formControlName]="option.id">{{option.questionText}}</mat-checkbox>
+        <mat-progress-bar
+          mode="determinate"
+          color="primary"
+          [value]="(option.remoteReplies * 100) / total"
+        ></mat-progress-bar>
       </div>
     }
   } @else {
@@ -18,6 +23,11 @@
   @for (option of poll.questionPollQuestions; track option) {
     <div class="w-full">
       <mat-radio-button [value]="option.id">{{option.questionText}}</mat-radio-button>
+        <mat-progress-bar
+          mode="determinate"
+          color="primary"
+          [value]="(option.remoteReplies * 100) / total"
+        ></mat-progress-bar>
     </div>
   }
 </mat-radio-group>
@@ -25,7 +35,7 @@
   </form>
 
 
-<button *ngIf="openPoll && userLoggedIn"
+<button *ngIf="!alreadyVoted && this.userLoggedIn && this.openPoll"
     mat-flat-button
     color="primary"
     class="w-full mt-2"

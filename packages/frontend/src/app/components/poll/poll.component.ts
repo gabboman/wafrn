@@ -17,6 +17,7 @@ export class PollComponent  implements OnInit{
   form = new UntypedFormGroup({
   })
   userLoggedIn = false
+  alreadyVoted = true
 
   constructor(
     private loginService: LoginService,
@@ -30,15 +31,15 @@ export class PollComponent  implements OnInit{
     this.poll.questionPollQuestions.forEach(elem => {
       this.total = this.total + elem.remoteReplies
     })
-    let alreadyReplied = this.poll?.questionPollQuestions.some(question => question.questionPollAnswers.length > 0)
+    this.alreadyVoted = this.poll?.questionPollQuestions.some(question => question.questionPollAnswers.length > 0)
     if(this.poll?.questionPollQuestions && this.poll.questionPollQuestions.length > 0 && this.poll.multiChoice) {
       this.poll.questionPollQuestions.forEach(question => {
-        this.form.addControl(question.id.toString(), new FormControl({value: question.questionPollAnswers.length > 0, disabled: alreadyReplied || !this.userLoggedIn || !this.openPoll}))
+        this.form.addControl(question.id.toString(), new FormControl({value: question.questionPollAnswers.length > 0, disabled: this.alreadyVoted || !this.userLoggedIn || !this.openPoll}))
       })
     }
     if(!this.poll.multiChoice) {
       const existingReply = this.poll.questionPollQuestions.find(reply => reply.questionPollAnswers.length > 0)
-      this.form.addControl('singleValue', new FormControl({value: existingReply ? existingReply.id : '', disabled: alreadyReplied || !this.userLoggedIn || !this.openPoll}, Validators.required)
+      this.form.addControl('singleValue', new FormControl({value: existingReply ? existingReply.id : '', disabled: this.alreadyVoted || !this.userLoggedIn || !this.openPoll}, Validators.required)
     )
     }
   }
@@ -57,7 +58,11 @@ export class PollComponent  implements OnInit{
     } else {
       votes.push(parseInt(formValue.singleValue))
     }
-    await this.postsService.voteInPoll(this.poll.id, votes)
+    const voteSuccess = await this.postsService.voteInPoll(this.poll.id, votes);
+    if(voteSuccess) {
+      this.alreadyVoted = true;
+      
+    }
     
   }
 
