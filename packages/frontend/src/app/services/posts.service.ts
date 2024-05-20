@@ -12,6 +12,7 @@ import { SimplifiedUser } from '../interfaces/simplified-user';
 import { UserOptions } from '../interfaces/userOptions';
 import { Emoji } from '../interfaces/emoji';
 import { EmojiCollection } from '../interfaces/emoji-collection';
+import { MessageService } from './message.service';
 @Injectable({
   providedIn: 'root',
 })
@@ -52,7 +53,8 @@ export class PostsService {
   constructor(
     private mediaService: MediaService,
     private http: HttpClient,
-    private jwtService: JwtService
+    private jwtService: JwtService,
+    private messageService: MessageService
   ) {
     this.loadFollowers();
   }
@@ -539,6 +541,22 @@ export class PostsService {
     );
     await this.loadFollowers();
     return response.success;
+  }
+
+  async voteInPoll(pollId: number, votes: number[]) {
+    let res = false;
+    const payload = {
+      votes: votes,
+    };
+    try {
+      const response = await firstValueFrom(this.http.post<{success: boolean, message?: string}>(`${environment.baseUrl}/v2/pollVote/${pollId}`, payload))
+      res = response.success
+      this.messageService.add({severity: res ? 'success' :'error', summary: response.message ? response.message : res ? 'You voted succesfuly. It can take some time to display' : 'Something went wrong'})
+    } catch (error) {
+      console.error(error)
+      this.messageService.add({severity: 'error', summary: 'Something went wrong'})
+    }
+    return res;
   }
 
   emojiToHtml(emoji: Emoji): string {

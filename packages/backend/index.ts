@@ -30,6 +30,7 @@ import { SignedRequest } from './interfaces/fediverse/signedRequest'
 import silencePostRoutes from './routes/silencePost'
 import emojiRoutes from './routes/emojis'
 import emojiReactRoutes from './routes/emojiReact'
+import pollRoutes from './routes/polls'
 
 const swaggerJSON = require('./swagger.json')
 // rest of the code remains same
@@ -86,6 +87,7 @@ forumRoutes(app)
 silencePostRoutes(app)
 statusRoutes(app)
 emojiRoutes(app)
+pollRoutes(app)
 frontend(app)
 
 app.listen(PORT, environment.listenIp, () => {
