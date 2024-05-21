@@ -174,6 +174,15 @@ async function getPostThreadRecursive(
         logger.info('problem processing mentions')
         logger.info(error)
       }
+
+      const existingPost = localPostToForceUpdate ? await Post.findByPk(localPostToForceUpdate) : undefined
+
+      if (existingPost) {
+        existingPost.update(postToCreate)
+      }
+
+      const newPost = existingPost ? existingPost : await Post.create(postToCreate)
+
       try {
         if (postPetition.quoteUrl) {
           const postToQuote = await getPostThreadRecursive(user, postPetition.quoteUrl)
@@ -206,17 +215,10 @@ async function getPostThreadRecursive(
       }
       if (postPetition.inReplyTo) {
         const parent = await getPostThreadRecursive(user, postPetition.inReplyTo)
-        postToCreate.parentId = parent?.id
+        if(parent) {
+          newPost.parentId = parent.id
+        }
       }
-
-      const existingPost = localPostToForceUpdate ? await Post.findByPk(localPostToForceUpdate) : undefined
-
-      if (existingPost) {
-        existingPost.update(postToCreate)
-        await loadPoll(postPetition,existingPost, user)
-      }
-
-      const newPost = existingPost ? existingPost : await Post.create(postToCreate)
       try {
         if (!remoteUser.banned && !remoteUserServerBaned && fediEmojis) {
           processEmojis(newPost, fediEmojis)
@@ -227,6 +229,7 @@ async function getPostThreadRecursive(
       newPost.setMedias(medias)
       newPost.setQuoted(quotes)
       await newPost.save()
+      await loadPoll(postPetition,newPost, user)
       try {
         if (!remoteUser.banned && !remoteUserServerBaned) {
           await addTagsToPost(newPost, fediTags)
