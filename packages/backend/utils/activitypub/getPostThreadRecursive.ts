@@ -175,14 +175,27 @@ async function getPostThreadRecursive(
         logger.info(error)
       }
 
+      if (postPetition.inReplyTo) {
+        const parent = await getPostThreadRecursive(user, postPetition.inReplyTo)
+        postToCreate.parentId = parent?.id
+      }
+
       const existingPost = localPostToForceUpdate ? await Post.findByPk(localPostToForceUpdate) : undefined
 
       if (existingPost) {
         existingPost.update(postToCreate)
+        await loadPoll(postPetition,existingPost, user)
       }
 
       const newPost = existingPost ? existingPost : await Post.create(postToCreate)
-
+      try {
+        if (!remoteUser.banned && !remoteUserServerBaned && fediEmojis) {
+          processEmojis(newPost, fediEmojis)
+        }
+      } catch (error) {
+        logger.debug('Problem processing emojis')
+      }
+      newPost.setMedias(medias)
       try {
         if (postPetition.quoteUrl) {
           const postToQuote = await getPostThreadRecursive(user, postPetition.quoteUrl)
@@ -213,23 +226,8 @@ async function getPostThreadRecursive(
         logger.info('Error processing quotes')
         logger.debug(error)
       }
-      if (postPetition.inReplyTo) {
-        const parent = await getPostThreadRecursive(user, postPetition.inReplyTo)
-        if(parent) {
-          newPost.parentId = parent.id
-        }
-      }
-      try {
-        if (!remoteUser.banned && !remoteUserServerBaned && fediEmojis) {
-          processEmojis(newPost, fediEmojis)
-        }
-      } catch (error) {
-        logger.debug('Problem processing emojis')
-      }
-      newPost.setMedias(medias)
       newPost.setQuoted(quotes)
       await newPost.save()
-      await loadPoll(postPetition,newPost, user)
       try {
         if (!remoteUser.banned && !remoteUserServerBaned) {
           await addTagsToPost(newPost, fediTags)
