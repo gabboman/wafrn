@@ -53,7 +53,7 @@ async function getRemoteActor(actorUrl: string, user: any, forceUpdate = false):
         'getRemoteActorId',
         { actorUrl: actorUrl, userId: user.id, forceUpdate: true },
         {
-          jobId: actorUrl
+          jobId: actorUrl.replaceAll(':','_').replaceAll('/','_')
         }
       )
     }
