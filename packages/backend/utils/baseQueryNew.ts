@@ -16,6 +16,7 @@ import {
   UserLikesPostRelations
 } from '../db'
 import getPosstGroupDetails from './getPostGroupDetails'
+import getFollowedsIds from './cacheGetters/getFollowedsIds';
 
 async function getQuotes(
   postIds: string[]
@@ -220,16 +221,39 @@ async function getUnjointedPosts(postIdsInput: string[], posterId: string) {
   })
   const postWithNotes = getPosstGroupDetails(posts)
   await Promise.all([emojis, users, polls, medias, tags, postWithNotes])
+  const usersFollowedByPoster = await getFollowedsIds(posterId)
+  const postsMentioningUser: string [] = mentions.postMentionRelation.filter((mention: any) => mention.userMentioned === posterId ).map((mention: any) => mention.post)
+  const allPosts = (await postWithNotes).concat((await postWithNotes).flatMap((elem: any) => elem.ancestors))
+  const postIdsToFullySend: string[] = allPosts.filter((post: any) => 
+    post.privacy === 0 || post.privacy === 2 || post.privacy === 3 || 
+    (post.privacy === 1 && usersFollowedByPoster.includes(post.userId)) 
+    || postsMentioningUser.includes(post.id)
+    ).map((post: any) => post.id)
+
+  const postsToSend = (await postWithNotes).map((post: any) => {
+    const res = {... post}
+    if(!postIdsToFullySend.includes(res.id)) {
+      res.content = res.privacy === 10 ? 'This post is marked as private and you do not have access to it' :'You do not follow this user and this post is marked as followers only.'
+    }
+    res.ancestors = res.ancestors.filter((elem: any) => postIdsToFullySend.includes(elem.id) )
+    return res
+  })
+
+  const mediasToSend = (await medias).filter((elem: any) => {
+    return postIdsToFullySend.includes(elem.posts[0].id)
+  })
+  const tagsFiltered = (await tags).filter((tag: any) => postIdsToFullySend.includes(tag.postId))
+  const quotesFiltered = quotes.filter((quote: any) => postIdsToFullySend.includes(quote.quoterPostId))
   return {
-    posts: await postWithNotes,
+    posts: postsToSend,
     emojiRelations: await emojis,
     mentions: mentions.postMentionRelation,
     users: await users,
     polls: await polls,
-    medias: await medias,
-    tags: await tags,
+    medias: mediasToSend,
+    tags: tagsFiltered,
     likes: likes,
-    quotes: quotes,
+    quotes: quotesFiltered,
     quotedPosts: await quotedPosts
   }
 }
