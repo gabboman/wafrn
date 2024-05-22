@@ -236,7 +236,14 @@ async function getUnjointedPosts(postIdsInput: string[], posterId: string) {
     if(!postIdsToFullySend.includes(res.id)) {
       res.content = res.privacy === 10 ? 'This post is marked as private and you do not have access to it' :'You do not follow this user and this post is marked as followers only.'
     }
-    res.ancestors = res.ancestors.filter((elem: any) => postIdsToFullySend.includes(elem.id) )
+    res.ancestors = res.ancestors.map((elem: any) => {
+      if(postIdsToFullySend.includes(elem.id)) {
+        return elem
+      } else {
+        elem.content = elem.privacy === 10 ? 'This post is marked as private and you do not have access to it' :'You do not follow this user and this post is marked as followers only.'
+        return elem;
+      }
+    } )
     return res
   })
 
