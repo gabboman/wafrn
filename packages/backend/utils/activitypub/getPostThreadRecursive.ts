@@ -175,7 +175,7 @@ async function getPostThreadRecursive(
         logger.info(error)
       }
 
-      if (postPetition.inReplyTo) {
+      if (postPetition.inReplyTo && postPetition.id !== postPetition.inReplyTo) {
         const parent = await getPostThreadRecursive(user, postPetition.inReplyTo)
         postToCreate.parentId = parent?.id
       }
