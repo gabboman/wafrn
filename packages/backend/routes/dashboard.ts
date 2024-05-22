@@ -97,14 +97,12 @@ export default function dashboardRoutes(app: Application) {
             createdAt: { [Op.lt]: getStartScrollParam(req)  }
           }
         })
-        const minDate =  new Date(Math.min.apply(null,dms.map((elem: any) => new Date(elem.createdAt)))) 
        
         const myPosts = await Post.findAll({
           where: {
             userId: posterId,
             privacy: 10,
             createdAt: {
-              [Op.gt]: minDate,
               [Op.lt]: getStartScrollParam(req)
             }
           }
