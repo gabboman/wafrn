@@ -40,6 +40,7 @@ import { EmojiCollectionsComponent } from '../emoji-collections/emoji-collection
 import { Subscription } from 'rxjs';
 import { EmojiCollection } from 'src/app/interfaces/emoji-collection';
 import { Emoji } from 'src/app/interfaces/emoji';
+import { QuestionPollQuestion } from 'src/app/interfaces/questionPoll';
 
 type Mention = {
   id: string;
@@ -119,6 +120,7 @@ export class PostEditorComponent implements OnInit, OnDestroy {
   userSelectionMentionValue = '';
   contentWarning = '';
   enablePrivacyEdition = true;
+  pollQuestions: QuestionPollQuestion[] = []
 
   modules = {
     mention: {
