@@ -1,7 +1,7 @@
 import { NgModule, isDevMode } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
+import { HTTP_INTERCEPTORS, provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -19,31 +19,25 @@ const globalRippleConfig: RippleGlobalOptions = {
     exitDuration: 0
   }
 };
-@NgModule({
-  declarations: [AppComponent],
-  imports: [
-    BrowserModule,
-    BrowserAnimationsModule,
-    CommonModule,
-    FormsModule,
-    ReactiveFormsModule,
-    AppRoutingModule,
-    HttpClientModule,
-    MatNativeDateModule,
-    ServiceWorkerModule.register('ngsw-worker.js', {
-      enabled: !isDevMode(),
-      // Register the ServiceWorker as soon as the application is stable
-      // or after 30 seconds (whichever comes first).
-      registrationStrategy: 'registerWhenStable:30000',
-    }),
-    FontAwesomeModule,
-    MatSnackBarModule,
-  ],
-  providers: [
-    { provide: HTTP_INTERCEPTORS, useClass: WafrnAuthInterceptor, multi: true },
-    {provide: MAT_RIPPLE_GLOBAL_OPTIONS, useValue: globalRippleConfig}
-  ],
-  bootstrap: [AppComponent],
-  exports: [],
-})
+@NgModule({ declarations: [AppComponent],
+    bootstrap: [AppComponent],
+    exports: [], imports: [BrowserModule,
+        BrowserAnimationsModule,
+        CommonModule,
+        FormsModule,
+        ReactiveFormsModule,
+        AppRoutingModule,
+        MatNativeDateModule,
+        ServiceWorkerModule.register('ngsw-worker.js', {
+            enabled: !isDevMode(),
+            // Register the ServiceWorker as soon as the application is stable
+            // or after 30 seconds (whichever comes first).
+            registrationStrategy: 'registerWhenStable:30000',
+        }),
+        FontAwesomeModule,
+        MatSnackBarModule], providers: [
+        { provide: HTTP_INTERCEPTORS, useClass: WafrnAuthInterceptor, multi: true },
+        { provide: MAT_RIPPLE_GLOBAL_OPTIONS, useValue: globalRippleConfig },
+        provideHttpClient(withInterceptorsFromDi())
+    ] })
 export class AppModule {}
