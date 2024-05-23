@@ -161,6 +161,7 @@ async function inboxWorker(job: Job) {
               break
             }
             case 'Question':
+            case 'Article':
             case 'Note': {
               const localPost = await Post.findOne({
                 where: {
