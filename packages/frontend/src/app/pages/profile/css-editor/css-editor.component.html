@@ -9,7 +9,7 @@
         Edit your css
       </div>
     </quill-editor>
-    <button  *ngIf="ready"  (click)="submit()" pButton pRipple label="Update your theme" class="w-full"></button>
+    <button  *ngIf="ready"  (mousedown)="submit()" pButton pRipple label="Update your theme" class="w-full"></button>
 
   </p-card>
   </div>
@@ -36,7 +36,7 @@
     mat-flat-button
     color="primary"
     *ngIf="ready"
-    (click)="submit()"
+    (mousedown)="submit()"
     class="w-full"
   >
     Update your theme

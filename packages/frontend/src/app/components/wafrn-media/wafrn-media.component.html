@@ -6,7 +6,7 @@
       !extensionsToHideImgTag.includes(extension) ||
       mimeType === 'UNKNOWN'
     "
-    (click)="showPicture()"
+    (mousedown)="showPicture()"
     (keyup)="showPicture()"
     [src]="displayUrl"
     [alt]="data.description"

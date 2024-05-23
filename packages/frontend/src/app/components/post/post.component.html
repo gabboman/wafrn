@@ -60,7 +60,7 @@
               userLoggedIn
             "
             class="follow-button flex-shrink-0"
-            (click)="
+            (mousedown)="
               followUser(
                 originalPostContent[this.originalPostContent.length - 1].user.id
               )
@@ -77,7 +77,7 @@
               ) && userLoggedIn
             "
             class="follow-button flex-shrink-0"
-            (click)="
+            (mousedown)="
               unfollowUser(
                 originalPostContent[this.originalPostContent.length - 1].user.id
               )
@@ -170,7 +170,7 @@
             userLoggedIn
           "
           class="follow-button flex-shrink-0"
-          (click)="followUser(content.userId)"
+          (mousedown)="followUser(content.userId)"
         >
           Follow
         </button>
@@ -179,7 +179,7 @@
           color="accent"
           *ngIf="notYetAcceptedFollows.includes(content.userId) && userLoggedIn"
           class="follow-button flex-shrink-0"
-          (click)="unfollowUser(content.userId)"
+          (mousedown)="unfollowUser(content.userId)"
         >
           Awaiting aproval
         </button>
@@ -198,7 +198,7 @@
     color="accent"
     class="w-full mb-3 mt-2 w-full"
     mat-flat-button
-    (click)="expandPost()"
+    (mousedown)="expandPost()"
   >
     Expand woot
   </button>
@@ -216,7 +216,7 @@
             finalPost.privacy !== 2
           "
           size="lg"
-          (click)="quotePost(finalPost)"
+          (mousedown)="quotePost(finalPost)"
           class="cursor-pointer"
           [icon]="quoteIcon"
           matTooltip="Quote woot"
@@ -224,7 +224,7 @@
         @if (isEmptyReblog() && post[post.length - 1].userId === myId) {
         <fa-icon
           size="lg"
-          (click)="deletePost(post[post.length - 1].id)"
+          (mousedown)="deletePost(post[post.length - 1].id)"
           class="cursor-pointer"
           [icon]="closeIcon"
           matTooltip="Delete rewoot"
@@ -242,7 +242,7 @@
 
         <fa-icon
           size="lg"
-          (click)="replyPost(finalPost)"
+          (mousedown)="replyPost(finalPost)"
           class="cursor-pointer"
           [icon]="reblogIcon"
           matTooltip="Reply woot"
@@ -252,7 +252,7 @@
         @if(finalPost.userLikesPostRelations.includes(myId)) {
         <fa-icon
           size="lg"
-          (click)="unlikePost(finalPost)"
+          (mousedown)="unlikePost(finalPost)"
           class="cursor-pointer"
           [icon]="clearHeartIcon"
           matTooltip="Remove like"
@@ -260,7 +260,7 @@
         } @else {
         <fa-icon
           size="lg"
-          (click)="likePost(finalPost)"
+          (mousedown)="likePost(finalPost)"
           class="cursor-pointer"
           [icon]="solidHeartIcon"
           matTooltip="Like woot"
@@ -269,14 +269,14 @@
         <fa-icon
           size="lg"
           *ngIf="finalPost.privacy === 2"
-          (click)="editPost(finalPost)"
+          (mousedown)="editPost(finalPost)"
           class="cursor-pointer"
           [icon]="editedIcon"
           matTooltip="Edit woot"
         ></fa-icon>
         <fa-icon
           size="lg"
-          (click)="deletePost(finalPost.id)"
+          (mousedown)="deletePost(finalPost.id)"
           class="cursor-pointer"
           [icon]="deleteIcon"
           matTooltip="Delete woot"

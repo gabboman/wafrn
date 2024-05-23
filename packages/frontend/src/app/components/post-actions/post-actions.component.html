@@ -2,7 +2,7 @@
   <button
     mat-button
     class="split-button-left"
-    (click)="sharePost()"
+    (mousedown)="sharePost()"
     matTooltip="Copy Wafrn link"
   >
     <fa-icon [icon]="shareIcon"></fa-icon>
@@ -17,53 +17,53 @@
   </button>
 </div>
 <mat-menu #menu="matMenu" xPosition="before">
-  <button (click)="sharePost()" mat-menu-item>
+  <button (mousedown)="sharePost()" mat-menu-item>
     <fa-icon class="mr-2" [icon]="shareIcon"></fa-icon>Share with wafrn
   </button>
-  <button (click)="shareOriginalPost()" mat-menu-item>
+  <button (mousedown)="shareOriginalPost()" mat-menu-item>
     <fa-icon class="mr-2" [icon]="shareExternalIcon"></fa-icon>
     Share external URL
   </button>
   @if(userLoggedIn) {
-  <button (click)="replyPost()" mat-menu-item>
+  <button (mousedown)="replyPost()" mat-menu-item>
     <fa-icon class="mr-2" [icon]="reblogIcon"></fa-icon>
     Reply woot
   </button>
-  <button *ngIf="content.privacy !== 10" (click)="quickReblog()" mat-menu-item>
+  <button *ngIf="content.privacy !== 10" (mousedown)="quickReblog()" mat-menu-item>
     <fa-icon class="mr-2" [icon]="quickReblogIcon"></fa-icon>
     Quick rewoot
   </button>
-  <button *ngIf="content.privacy !== 10 && content.privacy !== 1 && content.privacy !== 2" (click)="quoteWoot()" mat-menu-item>
+  <button *ngIf="content.privacy !== 10 && content.privacy !== 1 && content.privacy !== 2" (mousedown)="quoteWoot()" mat-menu-item>
     <fa-icon class="mr-2" [icon]="quoteIcon"></fa-icon>
     Quote woot
   </button>
 
   @if(content.userId !== myId){ @if
   (content.userLikesPostRelations.includes(myId)) {
-  <button (click)="unlikePost()" mat-menu-item>
+  <button (mousedown)="unlikePost()" mat-menu-item>
     <fa-icon class="mr-2" [icon]="clearHeartIcon"></fa-icon>
     Dislike woot
   </button>
   } @else {
-  <button (click)="likePost()" mat-menu-item>
+  <button (mousedown)="likePost()" mat-menu-item>
     <fa-icon class="mr-2" [icon]="solidHeartIcon"></fa-icon>
     Like woot
   </button>
   }
-  <button (click)="reportPost()" mat-menu-item>
+  <button (mousedown)="reportPost()" mat-menu-item>
     <fa-icon class="mr-2" [icon]="reportIcon"></fa-icon>Report woot
   </button>
   } @else {
-  <button *ngIf="content.privacy === 2" (click)="editPost()" mat-menu-item>
+  <button *ngIf="content.privacy === 2" (mousedown)="editPost()" mat-menu-item>
     <fa-icon class="mr-2" [icon]="editedIcon"></fa-icon>Edit woot
   </button>
-  <button *ngIf="!postSilenced" (click)="silencePost()" mat-menu-item>
+  <button *ngIf="!postSilenced" (mousedown)="silencePost()" mat-menu-item>
     <fa-icon class="mr-2" [icon]="silenceIcon"></fa-icon>Silence notifications 
   </button>
-  <button *ngIf="postSilenced" (click)="unsilencePost()" mat-menu-item>
+  <button *ngIf="postSilenced" (mousedown)="unsilencePost()" mat-menu-item>
     <fa-icon class="mr-2" [icon]="unsilenceIcon"></fa-icon>Reactivate notifications
   </button>
-  <button (click)="deletePost()" mat-menu-item>
+  <button (mousedown)="deletePost()" mat-menu-item>
     <fa-icon class="mr-2" [icon]="deleteIcon"></fa-icon>Delete woot
   </button>
   } }

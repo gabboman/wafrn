@@ -45,7 +45,7 @@
           mat-flat-button
           color="primary"
           *ngIf="!element.resolved"
-          (click)="ignore(element.id)"
+          (mousedown)="ignore(element.id)"
         >
           Ignore report
         </button>
@@ -53,7 +53,7 @@
           mat-flat-button
           color="warn"
           *ngIf="!element.resolved"
-          (click)="ban(element.post.user.id)"
+          (mousedown)="ban(element.post.user.id)"
         >
           Ban user
         </button>

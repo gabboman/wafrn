@@ -3,7 +3,7 @@
     <div class="fragment-content">
       {{ fragment.content_warning }}
     </div>
-    <button [disabled]="!showCw" mat-flat-button color="primary" (click)="dismissCw.emit()" class="w-full">
+    <button [disabled]="!showCw" mat-flat-button color="primary" (mousedown)="dismissCw.emit()" class="w-full">
       I understand this and I want to see this woot
     </button>
   </div>
@@ -68,7 +68,7 @@
     <button [disabled]=" reactionLoading" [ngClass]="{
           reacted: emojiReactionIncludesMe(emoji),
           blurry: fragment.content_warning && showCw
-        }" (click)="toggleEmojiReact(emoji)" mat-flat-button matTooltipTouchGestures="on" [matTooltip]="
+        }" (mousedown)="toggleEmojiReact(emoji)" mat-flat-button matTooltipTouchGestures="on" [matTooltip]="
           (isLike(emoji) ? 'Liked' : emoji.content) +
           ' by ' +
           getTooltipUsers(emoji.users)

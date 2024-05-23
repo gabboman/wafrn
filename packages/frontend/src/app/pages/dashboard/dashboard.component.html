@@ -1,6 +1,6 @@
 <div class="wafrn-container mx-1 md:mx-4 flex align-items-center">
   <h3 class="flex-grow-1 m-0 text-2xl space-grotesk">{{ title }}</h3>
-  <button (click)="reloadPosts()" mat-flat-button color="default" aria-label="Refresh" class="refresh-button"
+  <button (mousedown)="reloadPosts()" mat-flat-button color="default" aria-label="Refresh" class="refresh-button"
     style="position: fixed; z-index: 500; top: 1em; right: 0.5em">
     <fa-icon [icon]="reloadIcon" />
   </button>

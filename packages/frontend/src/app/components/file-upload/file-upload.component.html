@@ -11,7 +11,7 @@
     mat-flat-button
     color="accent"
     class="upload-btn w-full upload-btn"
-    (click)="fileUpload.click()"
+    (mousedown)="fileUpload.click()"
   >
     <fa-icon [icon]="uploadIcon"></fa-icon> {{config.buttonText}}
   </button>

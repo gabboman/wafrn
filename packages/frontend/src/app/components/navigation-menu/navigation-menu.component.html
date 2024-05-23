@@ -1,7 +1,7 @@
 <mat-drawer-container>
   <mat-drawer style="position: fixed" class="side-menu" [mode]="mobile ? 'over' : 'side'"
     [opened]="menuVisible || !mobile" (closed)="hideMenu()">
-    <a [routerLink]="'/'" class="block" (click)="hideMenu()">
+    <a [routerLink]="'/'" class="block" (mousedown)="hideMenu()">
       <img [src]="logo" class="block mx-auto my-3" alt="instance logo" style="max-width: 200px; max-height: 72px" />
     </a>
     <hr class="mx-3" />
@@ -15,7 +15,7 @@
   </mat-drawer>
   <mat-drawer-content>
     <button style="position: fixed; z-index: 500; top: 1em; left: 0.5em" mat-flat-button color="primary"
-      *ngIf="!menuVisible" [hidden]="!mobile" type="button" class="show-sidebar-menu-button" (click)="showMenu()"
+      *ngIf="!menuVisible" [hidden]="!mobile" type="button" class="show-sidebar-menu-button" (mousedown)="showMenu()"
       [matBadge]="notifications + adminNotifications + usersAwaitingAproval" [matBadgeHidden]="
         notifications + adminNotifications + usersAwaitingAproval === 0
       " matBadgePosition="below">

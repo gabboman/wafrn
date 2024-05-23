@@ -168,7 +168,7 @@
           class="w-full"
           mat-button
           color="accent"
-          (click)="quoteOpen = true"
+          (mousedown)="quoteOpen = true"
           mat-flat-button
         >
           add poll
@@ -221,7 +221,7 @@
               mat-mini-fab
               class="delete-btn"
               color="warn"
-              (click)="deleteImage(i)"
+              (mousedown)="deleteImage(i)"
             >
               <fa-icon size="lg" [icon]="closeIcon"></fa-icon>
             </button>
@@ -262,7 +262,7 @@
           />
         </mat-form-field>
         <button
-          (click)="loadQuote()"
+          (mousedown)="loadQuote()"
           mat-flat-button
           color="primary"
           class="w-full"
@@ -277,7 +277,7 @@
           class="w-full"
           mat-button
           color="primary"
-          (click)="quoteOpen = true"
+          (mousedown)="quoteOpen = true"
           mat-flat-button
         >
           Add quote
@@ -292,7 +292,7 @@
           mat-mini-fab
           class="delete-btn"
           color="warn"
-          (click)="data ? (data.quote = undefined) : null"
+          (mousedown)="data ? (data.quote = undefined) : null"
         >
           <fa-icon size="lg" [icon]="closeIcon"></fa-icon>
         </button>
@@ -334,7 +334,7 @@
         tags.length === 0 &&
         uploadedMedias.length === 0)
     "
-    (click)="submitPost()"
+    (mousedown)="submitPost()"
   >
     {{
       editing

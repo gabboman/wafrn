@@ -1,5 +1,5 @@
 @if (item.items && item.visible !== false) {
-<a mat-list-item (click)="expanded = !expanded" role="none"
+<a mat-list-item (mousedown)="expanded = !expanded" role="none"
   class="h-3rem flex align-items-center justify-content-start mdc-list-item">
   <span [matBadge]="item.badge" [matBadgeHidden]="item.badge === 0" matBadgePosition="above after"
     class="menu-item-icon" *ngIf="item.icon">
@@ -18,7 +18,7 @@
 </div>
 } } @else {
 <a mat-list-item *ngIf="item.visible !== false" [routerLink]="item.routerLink ? item.routerLink : null"
-  (click)="doCommand()">
+  (mousedown)="doCommand()">
   <div class="h-3rem flex align-items-center justify-content-start">
     <span [matBadge]="item.badge" [matBadgeHidden]="item.badge === 0" matBadgePosition="above after"
       class="menu-item-icon" *ngIf="item.icon">

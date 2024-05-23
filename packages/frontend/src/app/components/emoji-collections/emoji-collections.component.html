@@ -14,7 +14,7 @@
     <div class="flex grid">
       @for(emoji of emojiCollection.emojis; track emoji) {
       <button mat-flat-button [matTooltip]="emoji.name"
-        *ngIf="emoji.name.toLowerCase().includes(filterText.toLowerCase())" (click)="click(emoji)"
+        *ngIf="emoji.name.toLowerCase().includes(filterText.toLowerCase())" (mousedown)="click(emoji)"
         class="p-2 flex align-content-center justify-content-center cursor-pointer bg-transparent">
         <img loading="lazy" class="post-emoji-preview mr-2 ml-2" [src]="baseMediaUrl + emoji.url" [alt]="emoji.name" />
       </button>
