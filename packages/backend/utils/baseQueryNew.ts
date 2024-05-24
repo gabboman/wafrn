@@ -231,21 +231,7 @@ async function getUnjointedPosts(postIdsInput: string[], posterId: string) {
     (post.content = '' && !(await tags).some((tag: any) => tag.postId === post.id) && ! (await medias).some((media: any) => media.posts[0].id === post.id) )
     ).map((post: any) => post.id)
 
-  const postsToSend = (await postWithNotes).map((post: any) => {
-    const res = {... post}
-    if(!postIdsToFullySend.includes(res.id)) {
-      res.content = res.privacy === 10 ? 'This post is marked as private and you do not have access to it' :'You do not follow this user and this post is marked as followers only.'
-    }
-    res.ancestors = res.ancestors.map((elem: any) => {
-      if(postIdsToFullySend.includes(elem.id)) {
-        return elem
-      } else {
-        elem.content = elem.privacy === 10 ? 'This post is marked as private and you do not have access to it' :'You do not follow this user and this post is marked as followers only.'
-        return elem;
-      }
-    } )
-    return res
-  })
+  const postsToSend = (await postWithNotes).map((post: any) => filterPost(post, postIdsToFullySend))
 
   const mediasToSend = (await medias).filter((elem: any) => {
     return postIdsToFullySend.includes(elem.posts[0].id)
@@ -264,6 +250,15 @@ async function getUnjointedPosts(postIdsInput: string[], posterId: string) {
     quotes: quotesFiltered,
     quotedPosts: await quotedPosts
   }
+}
+
+function filterPost(postToBeFilter: any, postIdsToFullySend: string[]): any {
+  const res = postToBeFilter
+  if(!postIdsToFullySend.includes(res.id)) {
+    res.content = res.privacy === 10 ? 'This post is marked as private and you do not have access to it' :'You do not follow this user and this post is marked as followers only.'
+  }
+  res.ancestors = res.ancestors ? res.ancestors.map((elem: any) => filterPost(elem, postIdsToFullySend)) : []
+  return res
 }
 
 export { getUnjointedPosts, getMedias, getQuotes, getMentionedUserIds, getTags, getLikes, getEmojis }
