@@ -228,11 +228,12 @@ async function getUnjointedPosts(postIdsInput: string[], posterId: string) {
   const allPosts = (await postWithNotes).concat((await postWithNotes).flatMap((elem: any) => elem.ancestors)).concat(await quotedPosts).map((elem: any) => elem.dataValues ? elem.dataValues : elem)
   const postsToFullySend = allPosts.filter((post: any) => 
     {
+      const postIsPostedByUser = post.userId === posterId
       const isReblog = post.content === '' && ! tagsAwaited.some((tag: any) => tag.postId === post.id) && ! mediasAwaited.some((media: any) => media.posts[0].id === post.id) 
       const validPrivacy = [0, 2, 3].includes(post.privacy)
       const userFollowsPoster = usersFollowedByPoster.includes(post.userId) && post.privacy === 1
       const userIsMentioned = postsMentioningUser.includes(post.id)
-      return validPrivacy || userFollowsPoster || userIsMentioned || isReblog
+      return postIsPostedByUser || validPrivacy || userFollowsPoster || userIsMentioned || isReblog
     }
     )
   const postIdsToFullySend: string[] = postsToFullySend.map((post: any) => post.id)
