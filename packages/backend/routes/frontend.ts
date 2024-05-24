@@ -64,7 +64,12 @@ async function getPostSEOCache(id: string): Promise<{ title: string; description
   let res = { ...environment.defaultSEOData }
   if (!resData) {
     const post = await Post.findByPk(id, {
-      attributes: ['content', 'id'],
+      attributes: ['content', 'id', 'privacy', 'content_warning'],
+      where: {
+        privacy: {
+          [Op.in]: [0, 2, 3]
+        }
+      },
       include: [
         {
           model: User,
