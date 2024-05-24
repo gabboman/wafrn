@@ -223,7 +223,7 @@ async function getUnjointedPosts(postIdsInput: string[], posterId: string) {
   await Promise.all([emojis, users, polls, medias, tags, postWithNotes])
   const usersFollowedByPoster = await getFollowedsIds(posterId)
   const postsMentioningUser: string [] = mentions.postMentionRelation.filter((mention: any) => mention.userMentioned === posterId ).map((mention: any) => mention.post)
-  const allPosts = (await postWithNotes).concat((await postWithNotes).flatMap((elem: any) => elem.ancestors))
+  const allPosts = (await postWithNotes).concat((await postWithNotes).flatMap((elem: any) => elem.ancestors)).concat(await quotedPosts)
   const postIdsToFullySend: string[] = allPosts.filter(async (post: any) => 
     post.privacy === 0 || post.privacy === 2 || post.privacy === 3 || 
     (post.privacy === 1 && usersFollowedByPoster.includes(post.userId)) 
@@ -248,7 +248,7 @@ async function getUnjointedPosts(postIdsInput: string[], posterId: string) {
     tags: tagsFiltered,
     likes: likes,
     quotes: quotesFiltered,
-    quotedPosts: await quotedPosts
+    quotedPosts: (await quotedPosts).map((elem: any) => filterPost(elem, postIdsToFullySend))
   }
 }
 
