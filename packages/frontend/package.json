@@ -24,7 +24,7 @@
     "@angular/router": "^18.0.0",
     "@angular/service-worker": "^18.0.0",
     "@babel/runtime": "^7.24.5",
-    "@fortawesome/angular-fontawesome": "^0.14.1",
+    "@fortawesome/angular-fontawesome": "^0.15.0",
     "@fortawesome/fontawesome-svg-core": "^6.5.2",
     "@fortawesome/free-solid-svg-icons": "^6.5.2",
     "core-js": "^3.37.0",
