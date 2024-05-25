@@ -184,6 +184,7 @@ async function getPostThreadRecursive(
 
       if (existingPost) {
         existingPost.update(postToCreate)
+        await existingPost.save()
         await loadPoll(postPetition,existingPost, user)
       }
 

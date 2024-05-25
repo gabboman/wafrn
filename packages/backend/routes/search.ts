@@ -86,8 +86,21 @@ export default function searchRoutes(app: Application) {
         }
         const urlPattern = /(?:https?):\/\/(\w+:?\w*)?(\S+)(:\d+)?(\/|\/([\w#!:.?+=&%!\-\/]))?/
         if (searchTerm.match(urlPattern)) {
-          remotePost = getPostThreadRecursive(usr, searchTerm)
-          promises.push(remotePost)
+          const existingPost = await Post.findOne({
+            where: {
+              remotePostid: searchTerm
+            }
+          })
+          if(existingPost) {
+            // We have the post. We ask for an update of it!
+            remotePost = getPostThreadRecursive(usr, searchTerm, undefined, existingPost.id)
+            promises.push(remotePost)
+
+
+          } else {
+            remotePost = getPostThreadRecursive(usr, searchTerm)
+            promises.push(remotePost)
+          }
         }
       }
 

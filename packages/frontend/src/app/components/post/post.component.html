@@ -159,7 +159,7 @@
           "
           class="text-xs text-600"
         >
-          <fa-icon [icon]="editedIcon"></fa-icon>
+          <fa-icon [matTooltip]="content.updatedAt.toLocaleString()" [icon]="editedIcon"></fa-icon>
         </span>
         <button
           mat-stroked-button
