@@ -129,7 +129,10 @@ const User = sequelize.define(
       type: Sequelize.BOOLEAN,
       defaultValue: false
     },
-    headerImage: Sequelize.TEXT
+    headerImage: Sequelize.TEXT,
+    followersCollectionUrl: Sequelize.TEXT,
+    followingCollectionUrl: Sequelize.TEXT
+
   },
   {
     indexes: [

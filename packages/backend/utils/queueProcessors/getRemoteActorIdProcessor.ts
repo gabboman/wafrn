@@ -46,6 +46,8 @@ async function getRemoteActorIdProcessor(job: Job) {
           activated: true,
           federatedHostId: federatedHost.id,
           remoteMentionUrl: remoteMentionUrl,
+          followersCollectionUrl: userPetition.followers,
+          followingCollectionUrl: userPetition.following,
           updatedAt: new Date()
         }
         let userRes
