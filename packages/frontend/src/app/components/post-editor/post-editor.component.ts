@@ -29,6 +29,7 @@ import {
   faGlobe,
   faQuoteLeft,
   faServer,
+  faSquarePollHorizontal,
   faUnlock,
   faUser,
 } from '@fortawesome/free-solid-svg-icons';
@@ -91,6 +92,7 @@ export class PostEditorComponent implements OnInit, OnDestroy {
 
   closeIcon = faClose;
   quoteIcon = faQuoteLeft;
+  pollIcon = faSquarePollHorizontal;
   quoteOpen = false;
 
   showContentWarning = false;
@@ -124,6 +126,8 @@ export class PostEditorComponent implements OnInit, OnDestroy {
   contentWarning = '';
   enablePrivacyEdition = true;
   pollQuestions: QuestionPollQuestion[] = []
+  pollOpen = false;
+  pollType: 'Single' | 'Multiple' = 'Single'
 
   modules = {
     mention: {
