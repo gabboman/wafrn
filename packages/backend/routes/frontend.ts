@@ -60,12 +60,13 @@ function sanitizeStringForSEO(unsanitized: string): string {
 }
 
 async function getPostSEOCache(id: string): Promise<{ title: string; description: string; img: string }> {
-  const resData = undefined // await redisCache.get('postSeoCache:' + id)
+  const resData = await redisCache.get('postSeoCache:' + id)
   let res = { ...environment.defaultSEOData }
   if (!resData) {
-    const post = await Post.findByPk(id, {
+    const post = await Post.findOne({
       attributes: ['content', 'id', 'privacy', 'content_warning'],
       where: {
+        id: id,
         privacy: {
           [Op.in]: [0, 2, 3]
         }
