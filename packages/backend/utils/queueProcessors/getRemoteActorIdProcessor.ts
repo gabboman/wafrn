@@ -51,14 +51,13 @@ async function getRemoteActorIdProcessor(job: Job) {
           updatedAt: new Date()
         }
         let userRes
+        const existingUsers = await User.findAll({
+          where: {
+            url: sequelize.where(sequelize.fn('LOWER', sequelize.col('url')), 'LIKE', userData.url.toLowerCase())
+          }
+        })
         if (res) {
           if (res !== (await getDeletedUser())) {
-            const existingUsers = await User.findAll({
-              where: {
-                url: sequelize.where(sequelize.fn('LOWER', sequelize.col('url')), 'LIKE', userData.url.toLowerCase())
-              }
-            })
-
             userRes = await User.findByPk(res)
             if (existingUsers && existingUsers.length > 0 && userRes?.id !== existingUsers[0]?.id) {
               const existingUser = existingUsers[0]
@@ -145,7 +144,12 @@ async function getRemoteActorIdProcessor(job: Job) {
             await userRes.save()
           }
         } else {
-          userRes = await User.create(userData)
+          if(existingUsers) {
+            existingUsers[0].update(userData)
+            await existingUsers[0].save()
+          } else {
+            userRes = await User.create(userData)
+          }
         }
         res = userRes.id
         try {
