@@ -8,12 +8,11 @@
 
 <div *ngIf="!uploading" class="file-upload">
   <button
-    mat-flat-button
-    color="accent"
-    class="upload-btn w-full upload-btn"
+    mat-button
+    class="w-full input-height-btn"
     (mousedown)="fileUpload.click()"
   >
-    <fa-icon [icon]="uploadIcon"></fa-icon> {{config.buttonText}}
+    <fa-icon size="lg" [icon]="uploadIcon"></fa-icon> {{config.buttonText}}
   </button>
 </div>
 

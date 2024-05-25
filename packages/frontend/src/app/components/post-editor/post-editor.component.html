@@ -107,30 +107,40 @@
   </button>
 
   <div class="below-editor-toolbar">
-    <div style="flex-grow: 1">
-      <mat-form-field
-        class="w-full"
-        appearance="outline"
-        subscriptSizing="dynamic"
+    <div class="flex justify-content-end my-2">
+      <button
+      mat-button
+      [matMenuTriggerFor]="menu"
+      aria-label="Edit privacy of post"
+      class="input-height-btn"
       >
-        <mat-label>Privacy</mat-label>
-        <mat-select [required]="true" [(value)]="privacy">
-          @if (privacyOption) {
-          <mat-select-trigger>
-            <fa-icon [icon]="privacyOption.icon"></fa-icon>
-            {{ privacyOption.name }}
-          </mat-select-trigger>
-          } @for (option of privacyOptions; track option) {
-          <mat-option [value]="option.level">
-            <fa-icon [icon]="option.icon"></fa-icon>
-            {{ option.name }}
-          </mat-option>
-          }
-        </mat-select>
-      </mat-form-field>
+        <fa-icon  size="lg" [icon]="getPrivacyIcon()"></fa-icon>
+      </button>
     </div>
-    <div class="cw-wrapper" [ngClass]="{ 'cw-animation': showContentWarning }">
-      @if (showContentWarning || contentWarning) {
+    <div class="flex justify-content-end my-2">
+      <button
+        aria-label="Enable the quote setter"
+        mat-button
+        (mousedown)="quoteOpen = !quoteOpen"
+        class="input-height-btn"
+      >
+      <fa-icon size="lg" [icon]="quoteIcon"></fa-icon>
+      </button>
+    </div>
+    <div class="flex justify-content-end my-2" *ngIf="uploadedMedias.length < 4 && pollQuestions.length === 0">
+      <app-file-upload  (fileUpload)="uploadImage($event)"></app-file-upload>
+    </div>
+    <div class="flex justify-content-end my-2">
+      <button
+      class="input-height-btn"
+      mat-flat-button
+        (mousedown)="showContentWarning = !showContentWarning"
+      >
+        CW
+      </button>
+    </div>
+    <div class="flex justify-content-end my-2 flex-grow-1 w-full-mobile">
+    @if (showContentWarning || contentWarning) {
       <mat-form-field
         class="w-full"
         appearance="outline"
@@ -140,15 +150,6 @@
         <input [(ngModel)]="contentWarning" matNativeControl />
       </mat-form-field>
       }
-      <mat-button-toggle
-        *ngIf="!showContentWarning && !contentWarning"
-        (change)="showContentWarning = !showContentWarning"
-      >
-        CW
-      </mat-button-toggle>
-    </div>
-    <div class="w-full-mobile" *ngIf="uploadedMedias.length < 4 && pollQuestions.length === 0">
-      <app-file-upload  (fileUpload)="uploadImage($event)"></app-file-upload>
     </div>
   </div>
 
@@ -173,19 +174,6 @@
         >
           add poll
         </button>
-  </section>
-
-  <section class="mt-3" id="avaiable-emojis">
-    <mat-accordion>
-    <mat-expansion-panel hideToggle>
-      <mat-expansion-panel-header>
-        <mat-panel-title>
-          Avaiable Emojis
-        </mat-panel-title>
-      </mat-expansion-panel-header>
-      You add search emojis in the post by writing the symbol : and a word for search. That will activate the emoji search
-    </mat-expansion-panel>
-  </mat-accordion>
   </section>
 
   <section id="uploaded-media">
@@ -271,18 +259,6 @@
           Add post as quote
         </button>
       </mat-card>
-      } @else {
-      <div class="flex justify-content-end my-2">
-        <button
-          class="w-full"
-          mat-button
-          color="primary"
-          (mousedown)="quoteOpen = true"
-          mat-flat-button
-        >
-          Add quote
-        </button>
-      </div>
       }
     </div>
     <div *ngIf="data && data.quote" class="my-4">
@@ -345,3 +321,13 @@
     }}
   </button>
 </mat-dialog-content>
+
+
+<mat-menu #menu="matMenu">
+  @for (option of privacyOptions; track option) {
+    <button (mousedown)="this.privacy = option.level" mat-menu-item>
+      <fa-icon [icon]="option.icon"></fa-icon>
+      {{ option.name }}
+  </button>
+  }
+</mat-menu>

@@ -449,3 +449,17 @@ blockquote {
 .ql-align-justify {
   text-align: justify;
 }
+
+// mobile only styles
+@media (max-width: 992px) {
+  .w-full-mobile {
+    width: 100%;
+  }
+}
+
+// not mobile only styles
+@media (min-width: 992px) {
+  .input-height-btn {
+    height: 56px!important;
+  }
+}

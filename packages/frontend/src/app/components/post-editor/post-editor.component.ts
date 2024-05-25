@@ -15,7 +15,6 @@ import { MatDialogContent, MatDialogRef } from '@angular/material/dialog';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { ProcessedPost } from 'src/app/interfaces/processed-post';
 import { MatButtonModule } from '@angular/material/button';
-import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { MatSelectModule } from '@angular/material/select';
 import { MatInputModule } from '@angular/material/input';
 import { MatCheckboxModule } from '@angular/material/checkbox';
@@ -24,9 +23,11 @@ import { MediaPreviewComponent } from '../media-preview/media-preview.component'
 import { LoginService } from 'src/app/services/login.service';
 import { MatExpansionModule } from '@angular/material/expansion';
 import {
+  IconDefinition,
   faClose,
   faEnvelope,
   faGlobe,
+  faQuoteLeft,
   faServer,
   faUnlock,
   faUser,
@@ -41,6 +42,7 @@ import { Subscription } from 'rxjs';
 import { EmojiCollection } from 'src/app/interfaces/emoji-collection';
 import { Emoji } from 'src/app/interfaces/emoji';
 import { QuestionPollQuestion } from 'src/app/interfaces/questionPoll';
+import { MatMenuModule } from '@angular/material/menu';
 
 type Mention = {
   id: string;
@@ -64,7 +66,6 @@ type Mention = {
     MediaPreviewComponent,
     MatDialogContent,
     MatButtonModule,
-    MatButtonToggleModule,
     MatSelectModule,
     MatInputModule,
     MatCheckboxModule,
@@ -75,6 +76,7 @@ type Mention = {
     MatProgressSpinnerModule,
     MatCardModule,
     EmojiCollectionsComponent,
+    MatMenuModule
   ],
   providers: [EditorService],
 })
@@ -88,6 +90,7 @@ export class PostEditorComponent implements OnInit, OnDestroy {
   ];
 
   closeIcon = faClose;
+  quoteIcon = faQuoteLeft;
   quoteOpen = false;
 
   showContentWarning = false;
@@ -619,5 +622,10 @@ export class PostEditorComponent implements OnInit, OnDestroy {
       severity: 'success',
       summary: `Emoji ${emoji.name} has been added to the post`,
     });
+  }
+
+  getPrivacyIcon(){
+    const res =  this.privacyOptions.find(elem => elem.level === this.privacy)?.icon as IconDefinition
+    return res;
   }
 }
