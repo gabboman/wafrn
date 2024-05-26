@@ -1,10 +1,9 @@
-import { FederatedHost, User } from '../db'
 import { Job, Queue } from 'bullmq'
-import { environment } from '../environment'
 import { Op } from 'sequelize'
-import { getRemoteActorIdProcessor } from './queueProcessors/getRemoteActorIdProcessor'
-import { all } from 'axios'
 import _ from 'underscore'
+import { FederatedHost, User } from '../../db'
+import { environment } from '../../environment'
+import { getRemoteActorIdProcessor } from '../queueProcessors/getRemoteActorIdProcessor'
 
 let adminUser = User.findOne({
   where: {
