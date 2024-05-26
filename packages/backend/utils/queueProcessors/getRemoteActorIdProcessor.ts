@@ -59,7 +59,7 @@ async function getRemoteActorIdProcessor(job: Job) {
         if (res) {
           if (res !== (await getDeletedUser())) {
             userRes = await User.findByPk(res)
-            if (existingUsers && existingUsers.length > 0 && userRes?.id !== existingUsers[0]?.id) {
+            if (existingUsers && existingUsers.length > 0 && existingUsers[0] && userRes?.id !== existingUsers[0]?.id) {
               const existingUser = existingUsers[0]
               existingUser.activated = 0
               existingUser.remoteId = `${existingUser.remoteId}_OVERWRITTEN_ON${new Date().getTime()}`
@@ -144,7 +144,7 @@ async function getRemoteActorIdProcessor(job: Job) {
             await userRes.save()
           }
         } else {
-          if(existingUsers) {
+          if(existingUsers && existingUsers[0]) {
             existingUsers[0].update(userData)
             await existingUsers[0].save()
           } else {
