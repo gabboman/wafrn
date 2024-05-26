@@ -25,7 +25,7 @@ export default function adminRoutes(app: Application) {
           }
         }
       })
-      const promises: Array<Promise<any>> = []
+      let promises: Array<Promise<any>> = []
       dbElements.forEach(async (elemToUpdate: any) => {
         const newValue = petitionBody.find((elem) => elem.id === elemToUpdate.id)
         if (newValue) {
@@ -41,11 +41,7 @@ export default function adminRoutes(app: Application) {
             redisCache.set('server:' + elemToUpdate.displayName, 'false')
           }
           if (newValue.blocked) {
-            promises.push(
-              PostReport.update(
-                {
-                  resolved: true
-                },
+              const reportsToClose = await PostReport.findAll(
                 {
                   include: [
                     {
@@ -53,6 +49,7 @@ export default function adminRoutes(app: Application) {
                       include: [
                         {
                           model: User,
+                          as: 'user',
                           include: [
                             {
                               model: FederatedHost,
@@ -67,8 +64,8 @@ export default function adminRoutes(app: Application) {
                     }
                   ]
                 }
-              )
             )
+            promises = promises.concat(reportsToClose?.map( (report: any) => report.update({ resolved: true}) ))
           }
         }
       })
