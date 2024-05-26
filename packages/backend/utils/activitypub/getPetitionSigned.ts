@@ -65,7 +65,8 @@ async function getPetitionSigned(user: any, target: string): Promise<any> {
     res = axiosResponse.data
   } catch (error: any) {
     if (error.response?.status === 410) {
-      const webFingerCase = target.split('.well-known/webfinger/?resource=acct:')[1]
+      const webfingerUrl = target.split('.well-known/webfinger/?resource=acct:')[1]
+      const webFingerCase = webfingerUrl ? webfingerUrl : '@@NOT_VALID_URL@@NOTVALID'
       const userToRemove = await User.findOne({
         where: {
           [Op.or]: [
