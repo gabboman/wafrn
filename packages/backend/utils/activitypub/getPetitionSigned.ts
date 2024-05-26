@@ -4,6 +4,7 @@ import axios from 'axios'
 import { logger } from '../logger'
 import { User } from '../../db'
 import { removeUser } from './removeUser'
+import { Op } from 'sequelize'
 
 async function getPetitionSigned(user: any, target: string): Promise<any> {
   let res = undefined
@@ -66,7 +67,14 @@ async function getPetitionSigned(user: any, target: string): Promise<any> {
     if (error.response?.status === 410) {
       const userToRemove = await User.findOne({
         where: {
-          remoteInbox: target
+          [Op.or]: [
+            {
+              remoteInbox: target
+            },
+            {
+              remoteId: target
+            }
+          ]
         }
       })
       if (userToRemove) {
