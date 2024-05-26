@@ -27,7 +27,6 @@ async function updateAllUsers() {
     ],
     where: {
       banned: false,
-      followingCollectionUrl: '',
       url: {
         [Op.like]: '@%@%'
       }
