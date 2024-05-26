@@ -48,6 +48,7 @@ async function getRemoteActorIdProcessor(job: Job) {
           remoteMentionUrl: remoteMentionUrl,
           followersCollectionUrl: userPetition.followers,
           followingCollectionUrl: userPetition.following,
+          isBot: userPetition.type != 'Person',
           updatedAt: new Date()
         }
         let userRes

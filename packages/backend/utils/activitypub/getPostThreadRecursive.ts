@@ -102,6 +102,9 @@ async function getPostThreadRecursive(
       if (postPetition.to[0].toString().indexOf('followers') !== -1) {
         privacy = 1
       }
+      if(remoteUser.isBot) {
+        privacy = privacy >= 3 ? privacy : 3
+      }
 
       let postTextContent = '' + postPetition.content
       if (postPetition.attachment && postPetition.attachment.length > 0 && !remoteUser.banned) {
