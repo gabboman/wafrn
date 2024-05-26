@@ -99,7 +99,7 @@ async function getPostThreadRecursive(
         // unlisted
         privacy = 3
       }
-      if (postPetition.to[0].toString().indexOf('followers') !== -1) {
+      if (postPetition.to[0].toString().includes(remoteUser.followersCollectionUrl)) {
         privacy = 1
       }
       if(remoteUser.isBot) {
