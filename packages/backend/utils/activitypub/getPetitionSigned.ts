@@ -78,7 +78,7 @@ async function getPetitionSigned(user: any, target: string): Promise<any> {
         }
       })
       if (userToRemove) {
-        removeUser(userToRemove.id)
+        await removeUser(userToRemove.id)
       }
     } else {
       logger.trace({

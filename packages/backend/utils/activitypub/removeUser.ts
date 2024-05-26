@@ -1,5 +1,5 @@
 import { Op } from 'sequelize'
-import { Follows, Post, PostMentionsUserRelation, User } from '../../db'
+import { EmojiReaction, Follows, Post, PostMentionsUserRelation, QuestionPollAnswer, User, UserEmojiRelation } from '../../db'
 import { environment } from '../../environment'
 import { logger } from '../logger'
 
@@ -47,6 +47,21 @@ async function removeUser(userId: string) {
           }
         }
       )
+      await EmojiReaction.destroy({
+        where: {
+          userId: userToRemove.id
+        }
+      })
+      await UserEmojiRelation.destroy({
+        where: {
+          userId: userToRemove.id
+        }
+      })
+      await QuestionPollAnswer.destroy({
+        where: {
+          userId: userToRemove.id
+        }
+      })
       //await userToRemove.save()
       await userToRemove.destroy()
       deleted = true
