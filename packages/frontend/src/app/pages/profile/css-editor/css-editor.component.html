@@ -1,22 +1,5 @@
-<!--
-<div class="grid">
-  <div class="col-12 sm:col-12 md:col-12 lg:col-5 margin-auto pb-6">
-    <p-card>
-    <p-progressSpinner *ngIf="!ready"></p-progressSpinner>
-
-    <quill-editor format="text" *ngIf="ready" #quill [(ngModel)]="myCSS" class="w-full" [modules]="modules" >
-      <div quill-editor-toolbar style="border-top-left-radius: 5px; border-top-right-radius: 5px;">
-        Edit your css
-      </div>
-    </quill-editor>
-    <button  *ngIf="ready"  (mousedown)="submit()" pButton pRipple label="Update your theme" class="w-full"></button>
-
-  </p-card>
-  </div>
-</div>
-
--->
 <mat-card class="p-3 mb-6 lg:mx-4 scalein wafrn-container">
+  <h2>You can see a base template and some advices <a href="https://github.com/gabboman/wafrn/blob/main/THEMING.md" target="_blank">in this guide</a></h2>
   <quill-editor
     format="text"
     *ngIf="ready"
