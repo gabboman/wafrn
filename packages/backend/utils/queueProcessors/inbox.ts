@@ -172,6 +172,7 @@ async function inboxWorker(job: Job) {
               await signAndAccept(req, remoteUser, user)
               break
             }
+            case 'Service':
             case 'Person': {
               if (body.id) {
                 await getRemoteActor(body.id, user, true)
