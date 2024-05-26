@@ -2,6 +2,7 @@ import { Op } from 'sequelize'
 import { EmojiReaction, Follows, Post, PostMentionsUserRelation, QuestionPollAnswer, User, UserEmojiRelation } from '../../db'
 import { environment } from '../../environment'
 import { logger } from '../logger'
+import { redisCache } from '../redis'
 
 async function removeUser(userId: string) {
   let deleted = false
@@ -63,6 +64,7 @@ async function removeUser(userId: string) {
         }
       })
       //await userToRemove.save()
+      redisCache.del('userRemoteId:' + userToRemove.remoteId.toLocaleLowerCase())
       await userToRemove.destroy()
       deleted = true
     }
