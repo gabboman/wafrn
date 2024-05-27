@@ -35,6 +35,7 @@ async function updateAllUsers() {
 
   for await (const chunk of _.chunk(allRemoteUsers, 50)) {
     console.log('chunk started')
+    console.log(chunk[0].url)
     await processChunk(chunk)
     console.log('chunk finished')
   }
