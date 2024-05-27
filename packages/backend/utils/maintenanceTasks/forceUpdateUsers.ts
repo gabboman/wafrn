@@ -29,6 +29,10 @@ async function updateAllUsers() {
       banned: false,
       url: {
         [Op.like]: '@%@%'
+      },
+      updatedAt: {
+        // there are some old users that havent been updated in ages and could be deleted. will need fix later
+        [Op.gt]: new Date().setFullYear(2001)
       }
     }
   })
