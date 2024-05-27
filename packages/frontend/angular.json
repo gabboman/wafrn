@@ -44,36 +44,12 @@
               "src/manifest.webmanifest"
             ],
             "styles": [
-              {
-                "input": "@angular/material/prebuilt-themes/purple-green.css",
-                "inject": false,
-                "bundleName": "wafrn-css"
-              },
-              {
-                "input": "../../node_modules/primeflex/primeflex.css",
-                "inject": false,
-                "bundleName": "wafrn-css"
-              },
-              {
-                "input": "../../node_modules/quill/dist/quill.snow.css",
-                "inject": false,
-                "bundleName": "wafrn-css"
-              },
-              {
-                "input": "../../node_modules/quill/dist/quill.core.css",
-                "inject": false,
-                "bundleName": "wafrn-css"
-              },
-              {
-                "input": "../../node_modules/quill-mention-wafrn/dist/quill.mention.css",
-                "inject": false,
-                "bundleName": "wafrn-css"
-              },
-              {
-                "input": "src/styles.scss",
-                "inject": false,
-                "bundleName": "wafrn-css"
-              }
+              "@angular/material/prebuilt-themes/purple-green.css",
+              "../../node_modules/primeflex/primeflex.css",
+              "../../node_modules/quill/dist/quill.snow.css",
+              "../../node_modules/quill/dist/quill.core.css",
+              "../../node_modules/quill-mention-wafrn/dist/quill.mention.css",
+              "src/styles.scss"
             ],
             "scripts": [],
             "serviceWorker": true,
@@ -84,7 +60,7 @@
               "budgets": [
                 {
                   "type": "initial",
-                  "maximumWarning": "950kb",
+                  "maximumWarning": "2mb",
                   "maximumError": "5mb"
                 },
                 {
