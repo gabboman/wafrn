@@ -34,6 +34,11 @@ export default function frontend(app: Application) {
   )
 
   app.get('/post/:id', async function (req, res) {
+    const acceptHeader = req.header('accept');
+    if(acceptHeader?.includes('ld+json')) {
+      res.redirect('/fediverse/post/' + req.params?.id)
+      return;
+    }
     if (req.params?.id) {
       try {
         const postData = await getPostSEOCache(req.params.id)
