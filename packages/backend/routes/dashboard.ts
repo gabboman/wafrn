@@ -94,10 +94,10 @@ export default function dashboardRoutes(app: Application) {
           limit: POSTS_PER_PAGE,
           where: {
             userId: posterId,
-            createdAt: { [Op.lt]: getStartScrollParam(req)  }
+            createdAt: { [Op.lt]: getStartScrollParam(req) }
           }
         })
-       
+
         const myPosts = await Post.findAll({
           where: {
             userId: posterId,

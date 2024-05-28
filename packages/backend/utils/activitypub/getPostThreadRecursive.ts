@@ -28,7 +28,7 @@ async function getPostThreadRecursive(
   } catch (error) {
     logger.debug('HERE IS THE ISSUE')
     logger.debug(remotePostId)
-    return;
+    return
   }
   if (remotePostId.startsWith(`${environment.frontendUrl}/fediverse/post/`)) {
     // we are looking at a local post
@@ -91,7 +91,12 @@ async function getPostThreadRecursive(
       const fediEmojis: any[] = postPetition.tag?.filter((elem: fediverseTag) => elem.type === 'Emoji')
 
       let privacy = 10
-      if (postPetition.to[0].toString().includes(remoteUser.followersCollectionUrl) || postPetition.to[0].toString().includes('follow') || postPetition.to.includes(remoteUser.followersCollectionUrl) || postPetition.to.includes('follow') ) {
+      if (
+        postPetition.to[0].toString().includes(remoteUser.followersCollectionUrl) ||
+        postPetition.to[0].toString().includes('follow') ||
+        postPetition.to.includes(remoteUser.followersCollectionUrl) ||
+        postPetition.to.includes('follow')
+      ) {
         privacy = 1
       }
       if (postPetition.cc.includes('https://www.w3.org/ns/activitystreams#Public')) {
@@ -102,7 +107,7 @@ async function getPostThreadRecursive(
         // post is PUBLIC
         privacy = 0
       }
-      if(remoteUser.isBot) {
+      if (remoteUser.isBot) {
         privacy = privacy >= 3 ? privacy : 3
       }
 
@@ -188,7 +193,7 @@ async function getPostThreadRecursive(
       if (existingPost) {
         existingPost.update(postToCreate)
         await existingPost.save()
-        await loadPoll(postPetition,existingPost, user)
+        await loadPoll(postPetition, existingPost, user)
       }
 
       const newPost = existingPost ? existingPost : await Post.create(postToCreate)

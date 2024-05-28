@@ -249,7 +249,11 @@ export default function postsRoutes(app: Application) {
         }
 
         let content = req.body.content ? req.body.content.trim() : ''
-        const content_warning = req.body.content_warning ? req.body.content_warning.trim() : posterUser?.NSFW ? 'This user has been marked as NSFW and the post has been labeled automatically as NSFW' : ''
+        const content_warning = req.body.content_warning
+          ? req.body.content_warning.trim()
+          : posterUser?.NSFW
+          ? 'This user has been marked as NSFW and the post has been labeled automatically as NSFW'
+          : ''
         const mentionsToAdd: string[] = []
         let mediaToAdd: any[] = []
         const avaiableEmojis = await getAvaiableEmojis()
@@ -464,7 +468,7 @@ export default function postsRoutes(app: Application) {
         // next replies to process
         let next = postPetition.replies.first
         while (next) {
-          const petitions = next.items.map((elem: any) => getPostThreadRecursive(user, elem.id ? elem.id : elem ))
+          const petitions = next.items.map((elem: any) => getPostThreadRecursive(user, elem.id ? elem.id : elem))
           await Promise.allSettled(petitions)
           next = next.next ? await getPetitionSigned(user, next.next) : undefined
         }

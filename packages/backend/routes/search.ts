@@ -91,12 +91,10 @@ export default function searchRoutes(app: Application) {
               remotePostid: searchTerm
             }
           })
-          if(existingPost) {
+          if (existingPost) {
             // We have the post. We ask for an update of it!
             remotePost = getPostThreadRecursive(usr, searchTerm, undefined, existingPost.id)
             promises.push(remotePost)
-
-
           } else {
             remotePost = getPostThreadRecursive(usr, searchTerm)
             promises.push(remotePost)

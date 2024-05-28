@@ -181,10 +181,10 @@ async function inboxWorker(job: Job) {
               break
             }
             // ignore cases
-            case 'CacheFile':
-              {
-                break
-              }
+            case 'CacheFile': {
+              await signAndAccept(req, remoteUser, user)
+              break
+            }
             default: {
               logger.info(`update not implemented ${body.type}`)
               logger.info(body)
@@ -412,16 +412,16 @@ async function inboxWorker(job: Job) {
         }
         case 'Remove': {
           const postToNotFeature = await getPostThreadRecursive(user, req.body.object)
-          if(postToNotFeature) {
+          if (postToNotFeature) {
             postToNotFeature.featured = false
             await postToNotFeature.save()
           }
           await signAndAccept(req, remoteUser, user)
-          break;
+          break
         }
         case 'Add': {
           const postToFeature = await getPostThreadRecursive(user, req.body.object)
-          if(postToFeature) {
+          if (postToFeature) {
             postToFeature.featured = true
             await postToFeature.save()
           }

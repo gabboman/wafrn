@@ -21,7 +21,9 @@ const adminUser = environment.forceSync
 
 export default async function checkFediverseSignature(req: SignedRequest, res: Response, next: NextFunction) {
   let success = false
-  let hostUrl = req.header('user-agent') ? `petition without sighead ${req.header('user-agent')}` : 'somewhere not specified'
+  let hostUrl = req.header('user-agent')
+    ? `petition without sighead ${req.header('user-agent')}`
+    : 'somewhere not specified'
   try {
     const sigHead = httpSignature.parseRequest(req, {
       headers: ['(request-target)', 'digest', 'host', 'date']

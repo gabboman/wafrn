@@ -3,7 +3,7 @@ import { logger } from '../logger'
 
 async function loadPoll(apObj: any, internalPostObject: any, user: any) {
   let res = false
-  if ((!apObj) || (apObj && apObj.anyOf == undefined && apObj.oneOf == undefined)) {
+  if (!apObj || (apObj && apObj.anyOf == undefined && apObj.oneOf == undefined)) {
     return res
   }
   try {
@@ -54,7 +54,7 @@ async function loadPoll(apObj: any, internalPostObject: any, user: any) {
     }
     res = true
   } catch (error) {
-    logger.trace({problem: error, ap: apObj, internalPostObject: internalPostObject})
+    logger.trace({ problem: error, ap: apObj, internalPostObject: internalPostObject })
   }
 
   return res

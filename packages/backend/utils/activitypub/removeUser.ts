@@ -1,5 +1,13 @@
 import { Op } from 'sequelize'
-import { EmojiReaction, Follows, Post, PostMentionsUserRelation, QuestionPollAnswer, User, UserEmojiRelation } from '../../db'
+import {
+  EmojiReaction,
+  Follows,
+  Post,
+  PostMentionsUserRelation,
+  QuestionPollAnswer,
+  User,
+  UserEmojiRelation
+} from '../../db'
 import { environment } from '../../environment'
 import { logger } from '../logger'
 import { redisCache } from '../redis'

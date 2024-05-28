@@ -140,7 +140,6 @@ const User = sequelize.define(
     headerImage: Sequelize.TEXT,
     followersCollectionUrl: Sequelize.TEXT,
     followingCollectionUrl: Sequelize.TEXT
-
   },
   {
     indexes: [
@@ -748,14 +747,14 @@ sequelize
         privateKey,
         publicKey
       }
-    
+
       const deleted = {
         email: 'localhost@localhost',
         description: 'DELETED USER',
         url: environment.deletedUser,
         name: environment.deletedUser,
         NSFW: false,
-        password: await bcrypt.hash('deleted', environment.saltRounds ),
+        password: await bcrypt.hash('deleted', environment.saltRounds),
         birthDate: new Date(),
         avatar: '',
         role: 0,
@@ -767,10 +766,9 @@ sequelize
         privateKey,
         publicKey
       }
-    
+
       const adminUser = await User.create(admin)
       const del = await User.create(deleted)
-
     }
   })
 

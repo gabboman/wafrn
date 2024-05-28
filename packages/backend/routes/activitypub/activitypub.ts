@@ -392,14 +392,12 @@ function activityPubRoutes(app: Application) {
   })
 
   app.get('/fediverse/post/:id/replies', async (req: Request, res: Response) => {
-    res.send(
-      {
-        type: "CollectionPage",
-        partOf: `${environment.frontendUrl}/fediverse/post/${req.params?.id as string}/replies`,
-        items: await getPostReplies(req.params?.id as string)}
-    )
-  });
-
+    res.send({
+      type: 'CollectionPage',
+      partOf: `${environment.frontendUrl}/fediverse/post/${req.params?.id as string}/replies`,
+      items: await getPostReplies(req.params?.id as string)
+    })
+  })
 
   app.get('/fediverse/accept/:id', (req: SignedRequest, res: Response) => {
     res.sendStatus(200)

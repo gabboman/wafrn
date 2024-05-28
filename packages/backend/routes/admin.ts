@@ -41,31 +41,29 @@ export default function adminRoutes(app: Application) {
             redisCache.set('server:' + elemToUpdate.displayName, 'false')
           }
           if (newValue.blocked) {
-              const reportsToClose = await PostReport.findAll(
+            const reportsToClose = await PostReport.findAll({
+              include: [
                 {
+                  model: Post,
                   include: [
                     {
-                      model: Post,
+                      model: User,
+                      as: 'user',
                       include: [
                         {
-                          model: User,
-                          as: 'user',
-                          include: [
-                            {
-                              model: FederatedHost,
-                              required: true,
-                              where: {
-                                id: elemToUpdate.id
-                              }
-                            }
-                          ]
+                          model: FederatedHost,
+                          required: true,
+                          where: {
+                            id: elemToUpdate.id
+                          }
                         }
                       ]
                     }
                   ]
                 }
-            )
-            promises = promises.concat(reportsToClose?.map( (report: any) => report.update({ resolved: true}) ))
+              ]
+            })
+            promises = promises.concat(reportsToClose?.map((report: any) => report.update({ resolved: true })))
           }
         }
       })
