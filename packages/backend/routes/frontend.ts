@@ -35,11 +35,13 @@ export default function frontend(app: Application) {
   )
 
   app.get('/post/:id', async function (req, res) {
-    const acceptHeader = req.header('accept');
+    const acceptHeader = req.header('accept') as string;
     logger.debug('Header: ' + acceptHeader)
-    if(acceptHeader?.includes('activity+json')) {
-      res.redirect('/fediverse/post/' + req.params?.id)
+    if(acceptHeader.includes('activity+json') || acceptHeader.includes('application/activity+json') || acceptHeader.includes('/ld+json')) {
+      const urlToRedirect = '/fediverse/post/' + req.params?.id
+      res.redirect(urlToRedirect)
       res.send()
+      logger.debug('Redirecting to....' + urlToRedirect)
       return;
     }
     if (req.params?.id) {
