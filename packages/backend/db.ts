@@ -59,6 +59,10 @@ const FederatedHost = sequelize.define(
   {
     indexes: [
       {
+        unique: false,
+        fields: ['blocked']
+      },
+      {
         unique: true, // fucking hell mysql
         fields: [
           {
@@ -158,6 +162,10 @@ const User = sequelize.define(
           }
         ]
       },
+      {
+        unique: false,
+        fields: ['banned']
+      }
       {
         unique: true,
         fields: [
