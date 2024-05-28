@@ -35,7 +35,7 @@ export default async function checkFediverseSignature(req: SignedRequest, res: R
       const newResult = await FederatedHost.findOne({
         where: {
           [Op.or]: [
-            sequelize.where(sequelize.fn('LOWER', sequelize.col('displayName')), 'LIKE', `${hostUrl.toLowerCase()}`)
+            sequelize.where(sequelize.fn('LOWER', sequelize.col('displayName')), '=', `${hostUrl.toLowerCase()}`)
           ]
         }
       })

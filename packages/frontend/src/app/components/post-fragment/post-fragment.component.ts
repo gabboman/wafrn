@@ -143,7 +143,7 @@ export class PostFragmentComponent implements OnInit, OnDestroy {
       // CODE TO ADD LIKE
       if (!likesCollection) {
         likesCollection = {
-          id: 'Like',
+          id: '=',
           content: '❤️',
           external: false,
           img: undefined,

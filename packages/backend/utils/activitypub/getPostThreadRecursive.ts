@@ -163,8 +163,7 @@ async function getPostThreadRecursive(
                   [Op.or]: [
                     sequelize.where(
                       sequelize.fn('LOWER', sequelize.col('url')),
-                      'LIKE',
-                      // TODO fix
+                      '=',
                       username.toLowerCase()
                     )
                   ]

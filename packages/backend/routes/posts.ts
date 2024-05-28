@@ -138,7 +138,7 @@ export default function postsRoutes(app: Application) {
     if (id) {
       const blog = await User.findOne({
         where: {
-          url: sequelize.where(sequelize.fn('LOWER', sequelize.col('url')), 'LIKE', (id as string).toLowerCase())
+          url: sequelize.where(sequelize.fn('LOWER', sequelize.col('url')), '=', (id as string).toLowerCase())
         }
       })
       const blogId = blog?.id

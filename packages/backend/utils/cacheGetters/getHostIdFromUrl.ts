@@ -12,7 +12,7 @@ async function getFederatedHostIdFromUrl(hostname: string): Promise<string> {
       where: {
         displayName: sequelize.where(
           sequelize.fn('LOWER', sequelize.col('displayName')),
-          'LIKE',
+          '=',
           hostname.toLowerCase()
         )
       }

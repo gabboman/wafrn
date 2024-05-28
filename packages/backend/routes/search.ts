@@ -55,7 +55,7 @@ export default function searchRoutes(app: Application) {
                 [Op.notLike]: '@%'
               }
             },
-            [sequelize.where(sequelize.fn('LOWER', sequelize.col('url')), 'LIKE', `%${searchTerm}%`)]
+            [sequelize.where(sequelize.fn('LOWER', sequelize.col('url')), '=', `%${searchTerm}%`)]
           ]
         },
         attributes: ['url', 'avatar', 'id', 'remoteId', 'description']
@@ -70,7 +70,7 @@ export default function searchRoutes(app: Application) {
             [Op.notIn]: await getallBlockedServers()
           },
           banned: false,
-          [Op.or]: [sequelize.where(sequelize.fn('LOWER', sequelize.col('url')), 'LIKE', `%${searchTerm}%`)]
+          [Op.or]: [sequelize.where(sequelize.fn('LOWER', sequelize.col('url')), '=', `%${searchTerm}%`)]
         },
         attributes: ['url', 'avatar', 'id', 'remoteId', 'description']
       })
@@ -136,7 +136,7 @@ export default function searchRoutes(app: Application) {
           [Op.notIn]: await getallBlockedServers()
         },
         banned: false,
-        [Op.or]: [sequelize.where(sequelize.fn('LOWER', sequelize.col('url')), 'LIKE', `%${searchTerm}%`)]
+        [Op.or]: [sequelize.where(sequelize.fn('LOWER', sequelize.col('url')), '=', `%${searchTerm}%`)]
       },
       attributes: ['url', 'avatar', 'id', 'remoteId']
     })
@@ -151,7 +151,7 @@ export default function searchRoutes(app: Application) {
               [Op.notLike]: '@%'
             }
           },
-          [sequelize.where(sequelize.fn('LOWER', sequelize.col('url')), 'LIKE', `%${searchTerm}%`)]
+          [sequelize.where(sequelize.fn('LOWER', sequelize.col('url')), '=', `%${searchTerm}%`)]
         ]
       },
       attributes: ['url', 'avatar', 'id', 'remoteId']
