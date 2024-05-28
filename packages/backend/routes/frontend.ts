@@ -5,6 +5,7 @@ import { Media, Post, User, sequelize } from '../db'
 import fs from 'fs'
 import * as DOMPurify from 'isomorphic-dompurify'
 import { redisCache } from '../utils/redis'
+import { logger } from '../utils/logger'
 
 const cacheOptions = {
   etag: false,
@@ -35,6 +36,7 @@ export default function frontend(app: Application) {
 
   app.get('/post/:id', async function (req, res) {
     const acceptHeader = req.header('accept');
+    logger.debug('Header: ' + acceptHeader)
     if(acceptHeader?.includes('activity+json')) {
       res.redirect('/fediverse/post/' + req.params?.id)
       res.send()
