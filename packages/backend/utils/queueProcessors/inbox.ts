@@ -180,6 +180,11 @@ async function inboxWorker(job: Job) {
               }
               break
             }
+            // ignore cases
+            case 'CacheFile':
+              {
+                break
+              }
             default: {
               logger.info(`update not implemented ${body.type}`)
               logger.info(body)
