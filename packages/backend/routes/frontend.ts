@@ -35,8 +35,9 @@ export default function frontend(app: Application) {
 
   app.get('/post/:id', async function (req, res) {
     const acceptHeader = req.header('accept');
-    if(acceptHeader?.includes('ld+json')) {
+    if(acceptHeader?.includes('activity+json')) {
       res.redirect('/fediverse/post/' + req.params?.id)
+      res.send()
       return;
     }
     if (req.params?.id) {
