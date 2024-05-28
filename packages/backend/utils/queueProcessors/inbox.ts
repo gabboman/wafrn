@@ -285,9 +285,7 @@ async function inboxWorker(job: Job) {
               // GOD DAMMIT MISSKEY emojireact from misskey
               const existingReaction = await EmojiReaction.findOne({
                 where: {
-                  userId: remoteUser.id,
-                  postId: postToBeLiked.id,
-                  content: body.content
+                  remoteId: body.id
                 }
               })
               const reaction = existingReaction
