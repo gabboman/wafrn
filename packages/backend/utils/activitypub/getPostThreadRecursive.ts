@@ -91,7 +91,7 @@ async function getPostThreadRecursive(
       const fediEmojis: any[] = postPetition.tag?.filter((elem: fediverseTag) => elem.type === 'Emoji')
 
       let privacy = 10
-      if (postPetition.to[0].toString().includes(remoteUser.followersCollectionUrl) || postPetition.to[0].toString().includes('follow') ) {
+      if (postPetition.to[0].toString().includes(remoteUser.followersCollectionUrl) || postPetition.to[0].toString().includes('follow') || postPetition.to.includes(remoteUser.followersCollectionUrl) || postPetition.to.includes('follow') ) {
         privacy = 1
       }
       if (postPetition.cc.includes('https://www.w3.org/ns/activitystreams#Public')) {
