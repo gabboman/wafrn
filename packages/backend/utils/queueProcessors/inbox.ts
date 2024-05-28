@@ -405,10 +405,21 @@ async function inboxWorker(job: Job) {
           await signAndAccept(req, remoteUser, user)
           break
         }
+        case 'Remove': {
+          const postToNotFeature = await getPostThreadRecursive(user, req.body.object)
+          if(postToNotFeature) {
+            postToNotFeature.featured = false
+            await postToNotFeature.save()
+          }
+          await signAndAccept(req, remoteUser, user)
+          break;
+        }
         case 'Add': {
           const postToFeature = await getPostThreadRecursive(user, req.body.object)
-          postToFeature.featured = true
-          await postToFeature.save()
+          if(postToFeature) {
+            postToFeature.featured = true
+            await postToFeature.save()
+          }
           await signAndAccept(req, remoteUser, user)
           break
         }
