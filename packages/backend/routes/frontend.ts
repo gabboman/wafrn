@@ -38,7 +38,7 @@ export default function frontend(app: Application) {
     const acceptHeader = req.header('accept') as string;
     logger.debug('Header: ' + acceptHeader)
     if(acceptHeader.includes('activity+json') || acceptHeader.includes('application/activity+json') || acceptHeader.includes('/ld+json')) {
-      const urlToRedirect = '/fediverse/post/' + req.params?.id
+      const urlToRedirect = environment.frontendUrl + '/fediverse/post/' + req.params?.id
       res.redirect(urlToRedirect)
       res.send()
       logger.debug('Redirecting to....' + urlToRedirect)
