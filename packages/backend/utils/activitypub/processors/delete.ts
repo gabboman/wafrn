@@ -8,7 +8,7 @@ import { signAndAccept } from '../signAndAccept'
 
 async function DeleteActivity(body: any, remoteUser: any, user: any) {
   // TODO ????
-  const apObject: activityPubObject = body.object.object ? body.object : body
+  const apObject: activityPubObject = body.object.type ? body.object : body
   // TODO divide in files
   try {
     if (typeof apObject.object === 'string') {
