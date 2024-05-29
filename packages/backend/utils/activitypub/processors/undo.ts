@@ -106,7 +106,10 @@ async function UndoActivity(body: any, remoteUser: any, user: any) {
       break
     }
     default: {
-      logger.debug(`UNDO NOT IMPLEMENTED: ${apObject.type} attemping to delete post`)
+      logger.debug({
+        message:`UNDO NOT IMPLEMENTED: ${apObject.type} attemping to delete post`,
+        object: apObject
+      })
       const postToDelete = await getPostThreadRecursive(user, apObject.object)
       if (postToDelete) {
         await deletePostCommon(postToDelete.id)
