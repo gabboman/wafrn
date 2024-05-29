@@ -3,7 +3,7 @@ import { getPostThreadRecursive } from '../getPostThreadRecursive'
 import { signAndAccept } from '../signAndAccept'
 
 async function RemoveActivity(body: any, remoteUser: any, user: any) {
-  const apObject: activityPubObject = body.object
+  const apObject: activityPubObject = body
   const postToNotFeature = await getPostThreadRecursive(user, apObject.object)
   if (postToNotFeature) {
     postToNotFeature.featured = false

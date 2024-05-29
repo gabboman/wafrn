@@ -3,7 +3,7 @@ import { getPostThreadRecursive } from '../getPostThreadRecursive'
 import { signAndAccept } from '../signAndAccept'
 
 async function AddActivity(body: any, remoteUser: any, user: any) {
-  const apObject: activityPubObject = body.object
+  const apObject: activityPubObject = body
   const postToFeature = await getPostThreadRecursive(user, apObject.object)
   if (postToFeature) {
     postToFeature.featured = true

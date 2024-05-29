@@ -4,7 +4,7 @@ import { getPostThreadRecursive } from '../getPostThreadRecursive'
 import { signAndAccept } from '../signAndAccept'
 
 async function EmojiReactActivity(body: any, remoteUser: any, user: any) {
-  const apObject: activityPubObject = body.object
+  const apObject: activityPubObject = body
   const postToReact = await getPostThreadRecursive(user, apObject.object)
   let emojiToAdd: any
   if (apObject.tag && apObject.tag.length === 1 && apObject.tag[0]?.icon) {

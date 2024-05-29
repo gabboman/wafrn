@@ -1,7 +1,8 @@
-import { EmojiReaction, Follows, Post, UserLikesPostRelations } from '../../../db'
+import { Blocks, EmojiReaction, Follows, Post, UserLikesPostRelations } from '../../../db'
 import { activityPubObject } from '../../../interfaces/fediverse/activityPubObject'
 import { deletePostCommon } from '../../deletePost'
 import { logger } from '../../logger'
+import { redisCache } from '../../redis'
 import { getPostThreadRecursive } from '../getPostThreadRecursive'
 import { signAndAccept } from '../signAndAccept'
 
@@ -10,12 +11,30 @@ async function UndoActivity(body: any, remoteUser: any, user: any) {
   // TODO divide this one in files too
 
   // Unfollow? Destroy post? what else can be undone
-  switch (apObject.object.type) {
+  switch (apObject.type) {
+    case 'Block': {
+      logger.info('Remove block')
+      logger.debug(apObject)
+      const blockToRemove = await Blocks.findOne({
+        where: {
+          remoteBlockId: apObject.id
+        }
+      })
+      if (blockToRemove) {
+        await blockToRemove.destroy()
+      }
+      redisCache.del('blocks:mutes:onlyUser:' + user.id)
+      redisCache.del('blocks:mutes:' + user.id)
+      redisCache.del('blocks:mutes:' + user.id)
+      redisCache.del('blocks:' + user.id)
+      await signAndAccept({ body: body }, remoteUser, user)
+      break
+    }
     case 'Follow': {
       const remoteFollow = await Follows.findOne({
         where: {
           // I think i was doing something wrong here. Changed so when remote unfollow does not cause you to unfollow them instead lol
-          remoteFollowId: apObject.object.id
+          remoteFollowId: apObject.id
         }
       })
       if (remoteFollow) {
@@ -28,7 +47,7 @@ async function UndoActivity(body: any, remoteUser: any, user: any) {
       // just undo? Might be like might be something else.
       const likeToRemove = await UserLikesPostRelations.findOne({
         where: {
-          remoteId: apObject.object.id
+          remoteId: apObject.id
         }
       })
       if (likeToRemove) {
@@ -36,7 +55,7 @@ async function UndoActivity(body: any, remoteUser: any, user: any) {
       }
       const emojiReactionToRemove = await EmojiReaction.findOne({
         where: {
-          remoteId: apObject.object.id
+          remoteId: apObject.id
         }
       })
       if (emojiReactionToRemove) {
@@ -49,7 +68,7 @@ async function UndoActivity(body: any, remoteUser: any, user: any) {
     case 'Announce': {
       const postToDelete = await Post.findOne({
         where: {
-          remotePostId: apObject.object.id
+          remotePostId: apObject.id
         }
       })
       if (postToDelete) {
@@ -87,7 +106,7 @@ async function UndoActivity(body: any, remoteUser: any, user: any) {
       break
     }
     default: {
-      logger.debug(`UNDO NOT IMPLEMENTED: ${apObject.object.type} attemping to delete post`)
+      logger.debug(`UNDO NOT IMPLEMENTED: ${apObject.type} attemping to delete post`)
       const postToDelete = await getPostThreadRecursive(user, apObject.object)
       if (postToDelete) {
         await deletePostCommon(postToDelete.id)

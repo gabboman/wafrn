@@ -4,7 +4,7 @@ import { getRemoteActor } from '../getRemoteActor'
 import { signAndAccept } from '../signAndAccept'
 
 async function FollowActivity(body: any, remoteUser: any, user: any) {
-  const apObject: activityPubObject = body.object
+  const apObject: activityPubObject = body
   // Follow user
   const userToBeFollowed = await getRemoteActor(apObject.object, user)
   let remoteFollow = await Follows.findOne({

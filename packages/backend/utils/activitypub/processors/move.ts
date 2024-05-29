@@ -5,7 +5,7 @@ async function MoveActivity(body: any, remoteUser: any, user: any) {
   // WIP move
   // TODO get list of users who where following old account
   // then make them follow the new one, sending petition
-  const apObject: activityPubObject = body.object
+  const apObject: activityPubObject = body
   logger.warn({ message: 'moving user being ignored', object: apObject })
   /*
           const newUser = await getRemoteActor(req.body.object, user)

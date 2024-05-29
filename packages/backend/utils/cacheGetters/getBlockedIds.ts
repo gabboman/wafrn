@@ -2,9 +2,14 @@ import { Op } from 'sequelize'
 import { Blocks, Mutes, User } from '../../db'
 import { redisCache } from '../redis'
 
-export default async function getBlockedIds(userId: string, includeMutes = true): Promise<string[]> {
+export default async function getBlockedIds(
+  userId: string,
+  includeMutes = true,
+  onlyUserBlocks = false
+): Promise<string[]> {
+  const cacheKey = 'blocks:' + includeMutes ? 'mutes:' : '' + onlyUserBlocks ? 'onlyUser:' : ''
   try {
-    const cacheResult = await redisCache.get('blocks:full:' + userId)
+    const cacheResult = undefined // await redisCache.get(cacheKey + userId)
     if (cacheResult) {
       return JSON.parse(cacheResult)
     }
@@ -14,9 +19,14 @@ export default async function getBlockedIds(userId: string, includeMutes = true)
           {
             blockerId: userId
           },
-          {
-            blockedId: userId
-          }
+          // if only user blocks we ask twice for the users that only the user has blocked
+          onlyUserBlocks
+            ? {
+                blockerId: userId
+              }
+            : {
+                blockedId: userId
+              }
         ]
       }
     })
@@ -31,7 +41,7 @@ export default async function getBlockedIds(userId: string, includeMutes = true)
     const res = (await blocks)
       .map((block: any) => (block.blockerId !== userId ? block.blockerId : block.blockedId))
       .concat((await mutes).map((mute: any) => mute.mutedId))
-    redisCache.set('blocks:' + userId, JSON.stringify(res))
+    redisCache.set(cacheKey + userId, JSON.stringify(res))
     return res
   } catch (error) {
     return []

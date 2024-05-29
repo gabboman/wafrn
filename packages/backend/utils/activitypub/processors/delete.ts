@@ -2,6 +2,7 @@ import { Blocks, Post } from '../../../db'
 import { activityPubObject } from '../../../interfaces/fediverse/activityPubObject'
 import { deletePostCommon } from '../../deletePost'
 import { logger } from '../../logger'
+import { redisCache } from '../../redis'
 import { removeUser } from '../removeUser'
 import { signAndAccept } from '../signAndAccept'
 
@@ -16,20 +17,6 @@ async function DeleteActivity(body: any, remoteUser: any, user: any) {
       return
     } else {
       switch (apObject.type) {
-        case 'Block': {
-          logger.info('Remove block')
-          logger.debug(apObject)
-          const blockToRemove = await Blocks.findOne({
-            where: {
-              remoteId: apObject.id
-            }
-          })
-          if (blockToRemove) {
-            await blockToRemove.destroy()
-          }
-          await signAndAccept({ body: body }, remoteUser, user)
-          break
-        }
         case 'Tombstone': {
           const postToDelete = await Post.findOne({
             where: {

@@ -46,11 +46,15 @@ async function inboxWorker(job: Job) {
       }
     })
     // we check if the user has blocked the user or the server. This will mostly work for follows and dms. Will investigate further down the line
-    const userBlocks: string[] = await getBlockedIds(user.id, false)
+    const userBlocks: string[] = await getBlockedIds(user.id, false, true)
     const blocksExisting = userBlocks.includes(remoteUser.id) ? 1 : 0
     const blockedServersData = await getUserBlockedServers(user.id)
     const blocksServers = blockedServersData.find((elem: any) => elem.id === host.id) ? 1 : 0
-    if (!remoteUser?.banned && !host?.blocked && blocksExisting + blocksServers === 0) {
+    if (
+      (!remoteUser?.banned && !host?.blocked && blocksExisting + blocksServers === 0) ||
+      req.body.type === 'Undo' ||
+      req.body.type === 'Deletee'
+    ) {
       switch (req.body.type) {
         case 'Accept': {
           await AcceptActivity(body, remoteUser, user)

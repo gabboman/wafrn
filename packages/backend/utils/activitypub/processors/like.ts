@@ -5,7 +5,7 @@ import { getPostThreadRecursive } from '../getPostThreadRecursive'
 import { signAndAccept } from '../signAndAccept'
 
 async function LikeActivity(body: any, remoteUser: any, user: any) {
-  const apObject: activityPubObject = body.object
+  const apObject: activityPubObject = body
   const postToBeLiked = await getPostThreadRecursive(user, apObject.object)
   if (postToBeLiked) {
     if (apObject.content) {
