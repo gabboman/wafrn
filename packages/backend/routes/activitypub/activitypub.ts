@@ -44,6 +44,13 @@ function activityPubRoutes(app: Application) {
     async (req: SignedRequest, res: Response) => {
       if (req.params?.id) {
         const post = await Post.findOne({
+          include: [
+            {
+              model: User,
+              as: 'user',
+              required: true
+            }
+          ],
           where: {
             id: req.params.id,
             privacy: {
@@ -52,8 +59,13 @@ function activityPubRoutes(app: Application) {
           }
         })
         if (post) {
-          const user = await User.findByPk(post.userId)
-          if (user && user.banned) {
+          const user = post.user
+          if (user.url.startsWith('@')) {
+            // EXTERNAL USER LOL
+            res.redirect(post.remotePostId)
+            return;
+          } 
+          if (user.banned) {
             res.sendStatus(410)
             return
           }
