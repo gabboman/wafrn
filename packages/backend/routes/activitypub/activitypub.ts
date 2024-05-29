@@ -63,8 +63,8 @@ function activityPubRoutes(app: Application) {
           if (user.url.startsWith('@')) {
             // EXTERNAL USER LOL
             res.redirect(post.remotePostId)
-            return;
-          } 
+            return
+          }
           if (user.banned) {
             res.sendStatus(410)
             return

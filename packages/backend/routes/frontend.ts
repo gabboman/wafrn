@@ -35,12 +35,16 @@ export default function frontend(app: Application) {
   )
 
   app.get('/post/:id', async function (req, res) {
-    const acceptHeader = req.header('accept') as string;
-    if(acceptHeader.includes('activity+json') || acceptHeader.includes('application/activity+json') || acceptHeader.includes('/ld+json')) {
+    const acceptHeader = req.header('accept') as string
+    if (
+      acceptHeader.includes('activity+json') ||
+      acceptHeader.includes('application/activity+json') ||
+      acceptHeader.includes('/ld+json')
+    ) {
       const urlToRedirect = environment.frontendUrl + '/fediverse/post/' + req.params?.id
       res.redirect(urlToRedirect)
       res.send()
-      return;
+      return
     }
     if (req.params?.id) {
       try {
@@ -132,14 +136,14 @@ async function getBlogSEOCache(url: string): Promise<{ title: string; descriptio
   if (!resData) {
     const blog = await User.findOne({
       where: {
-        url: sequelize.where(sequelize.fn('LOWER', sequelize.col('url')), 'LIKE', (url).toLowerCase())
+        url: sequelize.where(sequelize.fn('LOWER', sequelize.col('url')), 'LIKE', url.toLowerCase())
       }
     })
-    if(blog) {
+    if (blog) {
       const url = sanitizeStringForSEO(blog.url).substring(0, 65)
-      const name = sanitizeStringForSEO(blog.name).substring(0,65)
+      const name = sanitizeStringForSEO(blog.name).substring(0, 65)
       const description = sanitizeStringForSEO(blog.description).substring(0, 200)
-      res.title = blog.url.startsWith('@') ? `Blog from external user ${url}`: `@${name}'s wafrn blog`
+      res.title = blog.url.startsWith('@') ? `Blog from external user ${url}` : `@${name}'s wafrn blog`
       res.description = description
       res.img = blog.url.startsWith('@') ? blog.avatar : `${environment.mediaUrl}${blog.avatar}`
       await redisCache.set('blogSeoCache:' + url, JSON.stringify(res), 'EX', 300)

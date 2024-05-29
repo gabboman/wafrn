@@ -17,6 +17,7 @@ import { getRemoteActor } from './getRemoteActor'
 import { getPetitionSigned } from './getPetitionSigned'
 import { fediverseTag } from '../../interfaces/fediverse/tags'
 import { loadPoll } from './loadPollFromPost'
+import { getApObjectPrivacy } from './getPrvacy'
 async function getPostThreadRecursive(
   user: any,
   remotePostId: string,
@@ -90,26 +91,7 @@ async function getPostThreadRecursive(
       }
       const fediEmojis: any[] = postPetition.tag?.filter((elem: fediverseTag) => elem.type === 'Emoji')
 
-      let privacy = 10
-      if (
-        postPetition.to[0].toString().includes(remoteUser.followersCollectionUrl) ||
-        postPetition.to[0].toString().includes('follow') ||
-        postPetition.to.includes(remoteUser.followersCollectionUrl) ||
-        postPetition.to.includes('follow')
-      ) {
-        privacy = 1
-      }
-      if (postPetition.cc.includes('https://www.w3.org/ns/activitystreams#Public')) {
-        // unlisted
-        privacy = 3
-      }
-      if (postPetition.to.includes('https://www.w3.org/ns/activitystreams#Public')) {
-        // post is PUBLIC
-        privacy = 0
-      }
-      if (remoteUser.isBot) {
-        privacy = privacy >= 3 ? privacy : 3
-      }
+      const privacy = getApObjectPrivacy(postPetition, remoteUser)
 
       let postTextContent = '' + postPetition.content
       if (postPetition.attachment && postPetition.attachment.length > 0 && !remoteUser.banned) {
@@ -160,13 +142,7 @@ async function getPostThreadRecursive(
               const username = mention.href?.substring(`${environment.frontendUrl}/fediverse/blog/`.length) as string
               mentionedUser = await User.findOne({
                 where: {
-                  [Op.or]: [
-                    sequelize.where(
-                      sequelize.fn('LOWER', sequelize.col('url')),
-                      '=',
-                      username.toLowerCase()
-                    )
-                  ]
+                  [Op.or]: [sequelize.where(sequelize.fn('LOWER', sequelize.col('url')), '=', username.toLowerCase())]
                 }
               })
             } else {
