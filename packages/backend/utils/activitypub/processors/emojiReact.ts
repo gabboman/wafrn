@@ -22,10 +22,10 @@ async function EmojiReactActivity(body: any, remoteUser: any, user: any) {
   if (postToReact && apObject.content) {
     const existing = await EmojiReaction.findOne({
       where: {
-        remoteId: apObject.id,
+        remoteId: apObject.id
       }
     })
-    if(!existing){
+    if (!existing) {
       await EmojiReaction.create({
         remoteId: apObject.id,
         userId: remoteUser.id,
@@ -33,8 +33,7 @@ async function EmojiReactActivity(body: any, remoteUser: any, user: any) {
         postId: postToReact.id,
         emojiId: emojiToAdd?.id
       })
-    } 
-    
+    }
   }
   await signAndAccept({ body: body }, remoteUser, user)
 }
