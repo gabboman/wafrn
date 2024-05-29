@@ -7,7 +7,8 @@ import { removeUser } from '../removeUser'
 import { signAndAccept } from '../signAndAccept'
 
 async function DeleteActivity(body: any, remoteUser: any, user: any) {
-  const apObject: activityPubObject = body
+  // TODO ????
+  const apObject: activityPubObject = body.object.object ? body.object : body
   // TODO divide in files
   try {
     if (typeof apObject.object === 'string') {
