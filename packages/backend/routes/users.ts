@@ -453,7 +453,7 @@ export default function userRoutes(app: Application) {
     if (req.query?.id) {
       const blogId: string = (req.query.id || '').toString().toLowerCase().trim()
       const blog = await User.findOne({
-        attributes: ['id', 'url', 'name', 'description', 'remoteId', 'avatar', 'federatedHostId', 'headerImage'],
+        attributes: ['id', 'url', 'name', 'description', 'remoteId', 'avatar', 'federatedHostId', 'headerImage', 'followingCount','followerCount'],
         include: [
           {
             model: Emoji,
@@ -473,13 +473,13 @@ export default function userRoutes(app: Application) {
         res.sendStatus(404)
         return
       }
-      let followed = Follows.count({
+      let followed = blog.url.startsWith('@') ? blog.followingCount :  Follows.count({
         where: {
           followerId: blog.id,
           accepted: true
         }
       })
-      let followers = Follows.count({
+      let followers =  blog.url.startsWith('@') ? blog.followerCount : Follows.count({
         where: {
           followedId: blog.id,
           accepted: true
