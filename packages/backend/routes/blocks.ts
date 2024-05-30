@@ -20,7 +20,13 @@ export default function blockRoutes(app: Application) {
         }
 
         success = true
+        redisCache.del('blocks:mutes:onlyUser:' + posterId)
+        redisCache.del('blocks:mutes:' + posterId)
+        redisCache.del('blocks:mutes:' + posterId)
         redisCache.del('blocks:' + posterId)
+        redisCache.del('blocks:mutes:onlyUser:' + req.body.userId)
+        redisCache.del('blocks:mutes:' + req.body.userId)
+        redisCache.del('blocks:mutes:' + req.body.userId)
         redisCache.del('blocks:' + req.body.userId)
         redisCache.del('follows:full:' + posterId)
         redisCache.del('follows:local:' + posterId)
@@ -49,7 +55,13 @@ export default function blockRoutes(app: Application) {
     res.send({
       success
     })
+    redisCache.del('blocks:mutes:onlyUser:' + posterId)
+    redisCache.del('blocks:mutes:' + posterId)
+    redisCache.del('blocks:mutes:' + posterId)
     redisCache.del('blocks:' + posterId)
+    redisCache.del('blocks:mutes:onlyUser:' + req.body.userId)
+    redisCache.del('blocks:mutes:' + req.body.userId)
+    redisCache.del('blocks:mutes:' + req.body.userId)
     redisCache.del('blocks:' + req.body.userId)
     redisCache.del('follows:full:' + posterId)
     redisCache.del('follows:local:' + posterId)
