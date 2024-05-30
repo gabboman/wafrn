@@ -8,7 +8,7 @@ export const environment = {
   logo: '/assets/logo.png',
   baseUrl: 'https://api.wafrn.net/api',
   baseMediaUrl: 'https://media.wafrn.net',
-  externalCacheurl: 'https://wafrncache.b-cdn.net/?media=',
+  externalCacheurl: 'https://wafrncache.b-cdn.net/api/cache/?media=',
   frontUrl: 'https://wafrn.vercel.app',
   shortenPosts: 5,
   reviewRegistrations: true,
