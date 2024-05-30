@@ -12,8 +12,12 @@ async function AnnounceActivity(body: any, remoteUser: any, user: any) {
   let urlToGet = typeof body.object === 'string' ? body.object : body.object.object
   urlToGet = typeof urlToGet === 'string' ? urlToGet : urlToGet?.id
   if (!urlToGet) {
-    logger.debug(`trying to get a non existing url`)
-    logger.debug(apObject)
+    const error = new Error();
+    logger.debug({
+      message: `trying to get a non existing url`,
+      trace: error.stack,
+      object: apObject
+    })
     return null
   }
   // GOD LORD, THIS IS HERE JUST BECAUSE LEMMY.
