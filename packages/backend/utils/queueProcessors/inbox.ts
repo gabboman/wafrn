@@ -21,6 +21,7 @@ import { RemoveActivity } from '../activitypub/processors/remove'
 import { AddActivity } from '../activitypub/processors/add'
 import { BlockActivity } from '../activitypub/processors/block'
 import { MoveActivity } from '../activitypub/processors/move'
+import { RejectActivity } from '../activitypub/processors/reject'
 
 async function inboxWorker(job: Job) {
   try {
@@ -58,6 +59,10 @@ async function inboxWorker(job: Job) {
       switch (req.body.type) {
         case 'Accept': {
           await AcceptActivity(body, remoteUser, user)
+          break
+        }
+        case 'Reject': {
+          await RejectActivity(body, remoteUser, user)
           break
         }
         case 'Announce': {
