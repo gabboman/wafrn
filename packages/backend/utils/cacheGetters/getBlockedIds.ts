@@ -9,7 +9,7 @@ export default async function getBlockedIds(
 ): Promise<string[]> {
   const cacheKey = 'blocks:' + includeMutes ? 'mutes:' : '' + onlyUserBlocks ? 'onlyUser:' : ''
   try {
-    const cacheResult =  await redisCache.get(cacheKey + userId)
+    const cacheResult = await redisCache.get(cacheKey + userId)
     if (cacheResult) {
       return JSON.parse(cacheResult)
     }

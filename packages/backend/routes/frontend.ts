@@ -35,7 +35,7 @@ export default function frontend(app: Application) {
   )
 
   app.get('/post/:id', async function (req, res) {
-    const acceptHeader = req.header('accept') ? req.header('accept') as string : ''
+    const acceptHeader = req.header('accept') ? (req.header('accept') as string) : ''
     if (
       acceptHeader.includes('activity+json') ||
       acceptHeader.includes('application/activity+json') ||

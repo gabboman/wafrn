@@ -9,10 +9,15 @@ import { signAndAccept } from '../signAndAccept'
 async function AnnounceActivity(body: any, remoteUser: any, user: any) {
   const apObject: activityPubObject = body
   // LEMMY HACK
-  let urlToGet = typeof apObject.object === 'string' ? apObject.object : apObject.object.object ? apObject.object.object : apObject.id
+  let urlToGet =
+    typeof apObject.object === 'string'
+      ? apObject.object
+      : apObject.object.object
+      ? apObject.object.object
+      : apObject.id
   urlToGet = typeof urlToGet === 'string' ? urlToGet : urlToGet?.id
   if (!urlToGet) {
-    const error = new Error();
+    const error = new Error()
     logger.debug({
       message: `trying to get a non existing url`,
       trace: error.stack,
