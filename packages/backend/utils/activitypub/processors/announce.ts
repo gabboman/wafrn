@@ -6,7 +6,7 @@ import { getPostThreadRecursive } from '../getPostThreadRecursive'
 import { getApObjectPrivacy } from '../getPrvacy'
 import { signAndAccept } from '../signAndAccept'
 
-async function AnnounceActivity(body: any, remoteUser: any, user: any) {
+async function AnnounceActivity(body: activityPubObject, remoteUser: any, user: any) {
   const apObject: activityPubObject = body
   // LEMMY HACK
   let urlToGet =

@@ -6,7 +6,7 @@ import { redisCache } from '../../redis'
 import { removeUser } from '../removeUser'
 import { signAndAccept } from '../signAndAccept'
 
-async function DeleteActivity(body: any, remoteUser: any, user: any) {
+async function DeleteActivity(body: activityPubObject, remoteUser: any, user: any) {
   // TODO ????
   const apObject: activityPubObject = body.object.type ? body.object : body
   // TODO divide in files

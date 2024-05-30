@@ -1,7 +1,7 @@
 import { activityPubObject } from '../../../interfaces/fediverse/activityPubObject'
 import { logger } from '../../logger'
 
-async function MoveActivity(body: any, remoteUser: any, user: any) {
+async function MoveActivity(body: activityPubObject, remoteUser: any, user: any) {
   // WIP move
   // TODO get list of users who where following old account
   // then make them follow the new one, sending petition

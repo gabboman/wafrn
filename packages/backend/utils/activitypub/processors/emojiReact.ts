@@ -3,7 +3,7 @@ import { activityPubObject } from '../../../interfaces/fediverse/activityPubObje
 import { getPostThreadRecursive } from '../getPostThreadRecursive'
 import { signAndAccept } from '../signAndAccept'
 
-async function EmojiReactActivity(body: any, remoteUser: any, user: any) {
+async function EmojiReactActivity(body: activityPubObject, remoteUser: any, user: any) {
   const apObject: activityPubObject = body
   const postToReact = await getPostThreadRecursive(user, apObject.object)
   let emojiToAdd: any

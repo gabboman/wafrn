@@ -4,7 +4,7 @@ import { redisCache } from '../../redis'
 import { getRemoteActor } from '../getRemoteActor'
 import { signAndAccept } from '../signAndAccept'
 
-async function RejectActivity(body: any, remoteUser: any, user: any) {
+async function RejectActivity(body: activityPubObject, remoteUser: any, user: any) {
   const apObject: activityPubObject = body
   // someone rejected your follow request :(
   const userWichFollowWasRejected = await getRemoteActor(apObject.object.actor, user)

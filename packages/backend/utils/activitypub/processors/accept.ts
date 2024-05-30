@@ -4,7 +4,7 @@ import { activityPubObject } from '../../../interfaces/fediverse/activityPubObje
 import { redisCache } from '../../redis'
 import { signAndAccept } from '../signAndAccept'
 
-async function AcceptActivity(body: any, remoteUser: any, user: any) {
+async function AcceptActivity(body: activityPubObject, remoteUser: any, user: any) {
   const apObject: activityPubObject = body.object
   if (apObject.type === 'Follow' && apObject.id.startsWith(environment.frontendUrl)) {
     const followUrl = apObject.id

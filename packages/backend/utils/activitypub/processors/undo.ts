@@ -6,7 +6,7 @@ import { redisCache } from '../../redis'
 import { getPostThreadRecursive } from '../getPostThreadRecursive'
 import { signAndAccept } from '../signAndAccept'
 
-async function UndoActivity(body: any, remoteUser: any, user: any) {
+async function UndoActivity(body: activityPubObject, remoteUser: any, user: any) {
   const apObject: activityPubObject = body.object?.id && body.object?.type ? body.object : body
   // TODO divide this one in files too
 

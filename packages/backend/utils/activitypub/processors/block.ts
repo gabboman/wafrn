@@ -5,7 +5,7 @@ import { getPostThreadRecursive } from '../getPostThreadRecursive'
 import { getRemoteActor } from '../getRemoteActor'
 import { signAndAccept } from '../signAndAccept'
 
-async function BlockActivity(body: any, remoteUser: any, user: any) {
+async function BlockActivity(body: activityPubObject, remoteUser: any, user: any) {
   const apObject: activityPubObject = body
   const userToBeBlocked = await getRemoteActor(apObject.object, user)
   await Blocks.create({

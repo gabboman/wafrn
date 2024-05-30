@@ -5,7 +5,7 @@ import { getPostThreadRecursive } from '../getPostThreadRecursive'
 import { getRemoteActor } from '../getRemoteActor'
 import { signAndAccept } from '../signAndAccept'
 
-async function UpdateActivity(body: any, remoteUser: any, user: any) {
+async function UpdateActivity(body: activityPubObject, remoteUser: any, user: any) {
   const apObject: activityPubObject = body.object
   // TODO divide this one in files too?
   switch (apObject.type) {

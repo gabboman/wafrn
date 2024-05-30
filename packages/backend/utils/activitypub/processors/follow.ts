@@ -3,7 +3,7 @@ import { activityPubObject } from '../../../interfaces/fediverse/activityPubObje
 import { getRemoteActor } from '../getRemoteActor'
 import { signAndAccept } from '../signAndAccept'
 
-async function FollowActivity(body: any, remoteUser: any, user: any) {
+async function FollowActivity(body: activityPubObject, remoteUser: any, user: any) {
   const apObject: activityPubObject = body
   // Follow user
   const userToBeFollowed = await getRemoteActor(apObject.object, user)

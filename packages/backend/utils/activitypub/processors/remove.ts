@@ -2,7 +2,7 @@ import { activityPubObject } from '../../../interfaces/fediverse/activityPubObje
 import { getPostThreadRecursive } from '../getPostThreadRecursive'
 import { signAndAccept } from '../signAndAccept'
 
-async function RemoveActivity(body: any, remoteUser: any, user: any) {
+async function RemoveActivity(body: activityPubObject, remoteUser: any, user: any) {
   const apObject: activityPubObject = body
   const postToNotFeature = await getPostThreadRecursive(user, apObject.object)
   if (postToNotFeature) {
