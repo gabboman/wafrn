@@ -147,7 +147,7 @@ const User = sequelize.define(
     followingCount: {
       type: Sequelize.INTEGER,
       defaultValue: 0
-    },
+    }
   },
   {
     indexes: [

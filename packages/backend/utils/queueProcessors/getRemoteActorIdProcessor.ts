@@ -43,17 +43,17 @@ async function getRemoteActorIdProcessor(job: Job) {
           federatedHost = await FederatedHost.create(federatedHostToCreate)
         }
         const remoteMentionUrl = typeof userPetition.url === 'string' ? userPetition.url : ''
-        let followers = 0;
-        let followed = 0;
-        if(userPetition.followers) {
+        let followers = 0
+        let followed = 0
+        if (userPetition.followers) {
           const followersPetition = await getPetitionSigned(user, userPetition.followers)
-          if(followersPetition  && followersPetition.totalItems) {
+          if (followersPetition && followersPetition.totalItems) {
             followers = followersPetition.totalItems
           }
         }
-        if(userPetition.following) {
+        if (userPetition.following) {
           const followingPetition = await getPetitionSigned(user, userPetition.following)
-          if(followingPetition && followingPetition.totalItems) {
+          if (followingPetition && followingPetition.totalItems) {
             followed = followingPetition.totalItems
           }
         }

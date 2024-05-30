@@ -26,7 +26,7 @@ async function UpdateActivity(body: activityPubObject, remoteUser: any, user: an
       // we force an update of the user who asked for this. Not the nicest thing to do but well
       await getRemoteActor(remoteUser.url, user, true)
       await signAndAccept({ body: body }, remoteUser, user)
-      break;
+      break
     }
     case 'Service':
     case 'Person': {
