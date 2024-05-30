@@ -139,7 +139,15 @@ const User = sequelize.define(
     },
     headerImage: Sequelize.TEXT,
     followersCollectionUrl: Sequelize.TEXT,
-    followingCollectionUrl: Sequelize.TEXT
+    followingCollectionUrl: Sequelize.TEXT,
+    followerCount: {
+      type: Sequelize.INTEGER,
+      defaultValue: 0
+    },
+    followingCount: {
+      type: Sequelize.INTEGER,
+      defaultValue: 0
+    },
   },
   {
     indexes: [
