@@ -9,7 +9,7 @@ import { signAndAccept } from '../signAndAccept'
 async function AnnounceActivity(body: any, remoteUser: any, user: any) {
   const apObject: activityPubObject = body
   // LEMMY HACK
-  let urlToGet = typeof body.object === 'string' ? body.object : body.object.object
+  let urlToGet = typeof apObject.object === 'string' ? apObject.object : apObject.object.object ? apObject.object.object : apObject.id
   urlToGet = typeof urlToGet === 'string' ? urlToGet : urlToGet?.id
   if (!urlToGet) {
     const error = new Error();
