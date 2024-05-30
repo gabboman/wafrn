@@ -22,6 +22,7 @@ async function UpdateActivity(body: activityPubObject, remoteUser: any, user: an
       break
     }
     case 'OrderedCollection': {
+      // TODO do something better than this
       // we force an update of the user who asked for this. Not the nicest thing to do but well
       await getRemoteActor(remoteUser.url, user, true)
       await signAndAccept({ body: body }, remoteUser, user)
