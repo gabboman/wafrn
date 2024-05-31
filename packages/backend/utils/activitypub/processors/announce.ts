@@ -3,7 +3,7 @@ import { environment } from '../../../environment'
 import { activityPubObject } from '../../../interfaces/fediverse/activityPubObject'
 import { logger } from '../../logger'
 import { getPostThreadRecursive } from '../getPostThreadRecursive'
-import { getApObjectPrivacy } from '../getPrvacy'
+import { getApObjectPrivacy } from '../getPrivacy'
 import { signAndAccept } from '../signAndAccept'
 
 async function AnnounceActivity(body: activityPubObject, remoteUser: any, user: any) {

@@ -17,7 +17,7 @@ import { getRemoteActor } from './getRemoteActor'
 import { getPetitionSigned } from './getPetitionSigned'
 import { fediverseTag } from '../../interfaces/fediverse/tags'
 import { loadPoll } from './loadPollFromPost'
-import { getApObjectPrivacy } from './getPrvacy'
+import { getApObjectPrivacy } from './getPrivacy'
 async function getPostThreadRecursive(
   user: any,
   remotePostId: string,
