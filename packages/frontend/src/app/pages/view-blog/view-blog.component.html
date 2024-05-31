@@ -92,14 +92,7 @@
       [innerHtml]="blogDetails.description"
     ></div>
   </div>
-  <div class="mt-6 text-600 text-sm" *ngIf="blogDetails.url.startsWith('@')">
-    <strong>Attention!</strong>
-    This is an external user, and the profile might not be complete.
-    <br />
-    To check this user's complete profile in their instance
-    <a [href]="blogDetails.remoteId" target="_blank"> click here</a>.
-  </div>
-  <div *ngIf="!blogDetails.url.startsWith('@')" class="follow-counts">
+  <div *ngIf="!blogDetails.url.startsWith('@') || (blogDetails.followers && blogDetails.followed)" class="follow-counts">
     <div>
       <p>Following</p>
       <p class="big text-center">{{ blogDetails.followed }}</p>
@@ -108,6 +101,13 @@
       <p>Followed</p>
       <p class="big text-center">{{ blogDetails.followers }}</p>
     </div>
+  </div>
+  <div class="mt-6 text-600 text-sm" *ngIf="blogDetails.url.startsWith('@')">
+    <strong>Attention!</strong>
+    This is an external user, and the profile might not be complete.
+    <br />
+    To check this user's complete profile in their instance
+    <a [href]="blogDetails.remoteId" target="_blank"> click here</a>.
   </div>
 </mat-card>
 
