@@ -4,8 +4,8 @@ function getApObjectPrivacy(apObject: activityPubObject, remoteUser: any): numbe
   let privacy = 10
   if (
     apObject.to &&
-    (apObject.to[0].toString().includes(remoteUser.followersCollectionUrl) ||
-      apObject.to[0].toString().includes('follow') ||
+    (apObject.to[0]?.toString().includes(remoteUser.followersCollectionUrl) ||
+      apObject.to[0]?.toString().includes('follow') ||
       apObject.to.includes(remoteUser.followersCollectionUrl) ||
       apObject.to.includes('follow'))
   ) {
