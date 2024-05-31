@@ -58,7 +58,10 @@ export class NotificationsService {
       );
       res = notifications ? notifications : res;
     } catch (error) {
-      console.warn('error processing notifications');
+      console.warn({
+        message: 'error processing notifications',
+        error: error
+      })
     }
 
     return res;
