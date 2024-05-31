@@ -22,6 +22,14 @@
       <fa-icon [icon]="hamburguerIcon"></fa-icon>
     </button>
     <div class="pt-7">
+      <div *ngIf="maintenanceMode">
+        <h1>ATTENTION FORNITE GAMERS</h1>
+        <h2>We are in maintenance mode</h2>
+        <h3>Expect a few hours of downtime</h3>
+        <h4>We are making wafrn worse</h4>
+        <h5>You can come <a href="https://discord.gg/wyrfTUJewg">to this chatroom</a> and read the details and stuff</h5>
+        <h6>But it will be just a few hours</h6>
+      </div>
       <router-outlet></router-outlet>
     </div>
   </mat-drawer-content>

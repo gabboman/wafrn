@@ -52,6 +52,7 @@ import { MatDialog } from '@angular/material/dialog';
 })
 export class NavigationMenuComponent implements OnInit, OnDestroy {
   menuItems: MenuItem[] = [];
+  maintenanceMode = environment.maintenance;
   menuVisible = false;
   notifications = 0;
   adminNotifications = 0;

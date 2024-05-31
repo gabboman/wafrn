@@ -9,4 +9,6 @@ export const environment = {
   shortenPosts: 5, // at what point should we shorten the posts
   disablePWA: false, // Disable pwa mode. Recomended until you have the headers settings right
   reviewRegistrations: true, // an admin will check the new registrations
+  maintenance: false, // compile with this to true to enable a maintenance message of a few hours. Edit code in navigation menu
+
 };
