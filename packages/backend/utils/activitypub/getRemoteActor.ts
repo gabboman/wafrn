@@ -45,7 +45,7 @@ async function getRemoteActor(actorUrl: string, user: any, forceUpdate = false):
     logger.trace(`Error fetching user ${actorUrl}`)
   }
   // update user if last update was more than 24 hours ago
-  if (remoteUser.url !== environment.deletedUser) {
+  if (remoteUser && remoteUser.url !== environment.deletedUser) {
     const lastUpdate = new Date(remoteUser.updatedAt)
     const now = new Date()
     if (now.getTime() - lastUpdate.getTime() > 24 * 3600 * 1000 || forceUpdate) {
@@ -58,7 +58,7 @@ async function getRemoteActor(actorUrl: string, user: any, forceUpdate = false):
       )
     }
   }
-  return remoteUser
+  return remoteUser ? remoteUser : deletedUser
 }
 
 export { getRemoteActor }
