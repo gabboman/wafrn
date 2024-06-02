@@ -67,7 +67,7 @@ const FederatedHost = sequelize.define(
         fields: [
           {
             attribute: 'displayName',
-            length: 768
+            type: 'FULLTEXT'
           }
         ]
       }
@@ -156,7 +156,7 @@ const User = sequelize.define(
         fields: [
           {
             attribute: 'remoteId',
-            length: 768
+            type: 'FULLTEXT'
           }
         ]
       },
@@ -165,7 +165,7 @@ const User = sequelize.define(
         fields: [
           {
             attribute: 'remoteInbox',
-            length: 512
+            type: 'FULLTEXT'
           }
         ]
       },
@@ -178,7 +178,7 @@ const User = sequelize.define(
         fields: [
           {
             attribute: 'url',
-            length: 768
+            type: 'FULLTEXT'
           }
         ]
       },
@@ -187,7 +187,7 @@ const User = sequelize.define(
         fields: [
           {
             attribute: 'email',
-            length: 768
+            type: 'FULLTEXT'
           }
         ]
       }
@@ -306,7 +306,7 @@ const Post = sequelize.define(
         fields: [
           {
             attribute: 'remotePostId',
-            length: 512
+            type: 'FULLTEXT'
           }
         ]
       },
@@ -345,7 +345,7 @@ const PostTag = sequelize.define(
         fields: [
           {
             attribute: 'tagName',
-            length: 512
+            type: 'FULLTEXT'
           },
           {
             attribute: 'postId'
@@ -407,7 +407,7 @@ const EmojiReaction = sequelize.define(
         fields: [
           {
             attribute: 'remoteId',
-            length: 768
+            type: 'FULLTEXT'
           }
         ]
       }
@@ -479,8 +479,7 @@ const PostMentionsUserRelation = sequelize.define(
         // unique: true,
         fields: [
           {
-            attribute: 'postId'
-            //length: 1024
+            attribute: 'postId',
           }
         ]
       },
@@ -536,7 +535,7 @@ const UserLikesPostRelations = sequelize.define(
         fields: [
           {
             attribute: 'remoteId',
-            length: 768
+            type: 'FULLTEXT'
           }
         ]
       }
