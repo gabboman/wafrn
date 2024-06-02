@@ -325,6 +325,10 @@ const Post = sequelize.define(
       {
         unique: false,
         fields: ['createdAt', 'userId']
+      },
+      {
+        unique: false,
+        fields: ['featured']
       }
     ]
   }
