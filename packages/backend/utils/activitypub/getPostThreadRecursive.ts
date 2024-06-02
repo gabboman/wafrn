@@ -316,10 +316,10 @@ async function processEmojis(post: any, fediEmojis: any[]) {
     try {
       const newEmojis = notFoundEmojis.map((newEmoji: any) => {
         return {
-          id: newEmoji.id,
+          id: newEmoji.id ? newEmoji.id : newEmoji.name + newEmoji.icon?.url ,
           name: newEmoji.name,
           external: true,
-          url: newEmoji.icon.url
+          url: newEmoji.icon?.url
         }
       })
       emojis = emojis.concat(await Emoji.bulkCreate(newEmojis))
