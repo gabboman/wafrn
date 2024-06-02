@@ -27,8 +27,11 @@ async function getPostThreadRecursive(
   try {
     remotePostId.startsWith(`${environment.frontendUrl}/fediverse/post/`)
   } catch (error) {
-    logger.debug('HERE IS THE ISSUE')
-    logger.debug(remotePostId)
+    logger.info({
+      message: 'Error with url on post',
+      object: remotePostId,
+      stack: new Error().stack
+    })
     return
   }
   if (remotePostId.startsWith(`${environment.frontendUrl}/fediverse/post/`)) {
