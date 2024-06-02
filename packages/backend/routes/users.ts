@@ -240,14 +240,14 @@ export default function userRoutes(app: Application) {
             })
             if (dbForceClassic) {
               dbForceClassic.optionValue = forceClassicNewValue
+              await dbForceClassic.save()
             } else {
-              dbForceClassic = UserOptions.create({
+              dbForceClassic = await UserOptions.create({
                 userId: posterId,
                 optionName: forceClassicKey,
                 optionValue: forceClassicNewValue
               })
             }
-            await dbForceClassic.save()
           }
           if (req.body.defaultPostEditorPrivacy) {
             const defaultPostEditorPrivacyKey = 'wafrn.defaultPostEditorPrivacy'
