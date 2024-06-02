@@ -28,6 +28,7 @@ async function UpdateActivity(body: activityPubObject, remoteUser: any, user: an
       await signAndAccept({ body: body }, remoteUser, user)
       break
     }
+    case 'Application':
     case 'Service':
     case 'Person': {
       if (apObject.id) {
