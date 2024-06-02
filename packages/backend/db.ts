@@ -479,7 +479,7 @@ const PostMentionsUserRelation = sequelize.define(
         // unique: true,
         fields: [
           {
-            attribute: 'postId',
+            attribute: 'postId'
           }
         ]
       },

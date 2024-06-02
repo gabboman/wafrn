@@ -453,7 +453,18 @@ export default function userRoutes(app: Application) {
     if (req.query?.id) {
       const blogId: string = (req.query.id || '').toString().toLowerCase().trim()
       const blog = await User.findOne({
-        attributes: ['id', 'url', 'name', 'description', 'remoteId', 'avatar', 'federatedHostId', 'headerImage', 'followingCount','followerCount'],
+        attributes: [
+          'id',
+          'url',
+          'name',
+          'description',
+          'remoteId',
+          'avatar',
+          'federatedHostId',
+          'headerImage',
+          'followingCount',
+          'followerCount'
+        ],
         include: [
           {
             model: Emoji,
@@ -473,18 +484,22 @@ export default function userRoutes(app: Application) {
         res.sendStatus(404)
         return
       }
-      let followed = blog.url.startsWith('@') ? blog.followingCount :  Follows.count({
-        where: {
-          followerId: blog.id,
-          accepted: true
-        }
-      })
-      let followers =  blog.url.startsWith('@') ? blog.followerCount : Follows.count({
-        where: {
-          followedId: blog.id,
-          accepted: true
-        }
-      })
+      let followed = blog.url.startsWith('@')
+        ? blog.followingCount
+        : Follows.count({
+            where: {
+              followerId: blog.id,
+              accepted: true
+            }
+          })
+      let followers = blog.url.startsWith('@')
+        ? blog.followerCount
+        : Follows.count({
+            where: {
+              followedId: blog.id,
+              accepted: true
+            }
+          })
       let muted = false
       let blocked = false
       let serverBlocked = false || blog?.federatedHost?.blocked

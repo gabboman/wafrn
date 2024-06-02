@@ -41,10 +41,10 @@ async function follow(followerId: string, followedId: string, petition?: Respons
     const existingFollow = await Follows.findOne({
       where: {
         followerId: followerId,
-        followedId: userFollowed.id,
+        followedId: userFollowed.id
       }
     })
-    if(!existingFollow) {
+    if (!existingFollow) {
       const follow = await Follows.create({
         followerId: followerId,
         followedId: userFollowed.id,
