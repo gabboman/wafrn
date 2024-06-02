@@ -174,6 +174,10 @@ const User = sequelize.define(
         fields: ['banned']
       },
       {
+        unique: false,
+        fields: ['activated']
+      },
+      {
         unique: true,
         fields: [
           {
