@@ -38,27 +38,35 @@ async function follow(followerId: string, followedId: string, petition?: Respons
       res = false
       return res
     }
-    const follow = await Follows.create({
-      followerId: followerId,
-      followedId: userFollowed.id,
-      accepted: userFollowed.url.startsWith('@') ? false : !userFollowed.manuallyAcceptsFollows
+    const existingFollow = await Follows.findOne({
+      where: {
+        followerId: followerId,
+        followedId: userFollowed.id,
+      }
     })
-    res = true
-    if (userFollowed.remoteId) {
-      res = true
-      const localUser = await User.findOne({ where: { id: followerId } })
-      remoteFollow(localUser, userFollowed)
-        .then((response) => {
-          redisCache.del('follows:full:' + followerId)
-          redisCache.del('follows:local:' + followerId)
-          redisCache.del('follows:notYetAcceptedFollows:' + followerId)
-        })
-        .catch(async (error) => {
-          logger.info('error following remote user')
-          await follow.destroy()
-          // TODO INFORM USER ABOUT THE ISSUE
-        })
+    if(!existingFollow) {
+      const follow = await Follows.create({
+        followerId: followerId,
+        followedId: userFollowed.id,
+        accepted: userFollowed.url.startsWith('@') ? false : !userFollowed.manuallyAcceptsFollows
+      })
+      if (userFollowed.remoteId) {
+        res = true
+        const localUser = await User.findOne({ where: { id: followerId } })
+        remoteFollow(localUser, userFollowed)
+          .then((response) => {
+            redisCache.del('follows:full:' + followerId)
+            redisCache.del('follows:local:' + followerId)
+            redisCache.del('follows:notYetAcceptedFollows:' + followerId)
+          })
+          .catch(async (error) => {
+            logger.info('error following remote user')
+            await follow.destroy()
+            // TODO INFORM USER ABOUT THE ISSUE
+          })
+      }
     }
+    res = true
     redisCache.del('follows:full:' + followerId)
     redisCache.del('follows:local:' + followerId)
     redisCache.del('follows:notYetAcceptedFollows:' + followerId)
