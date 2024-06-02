@@ -25,9 +25,21 @@ async function getRemoteActorIdProcessor(job: Job) {
   const actorUrl: string = job.data.actorUrl
   const forceUpdate: boolean = job.data.forceUpdate
   let res = await getUserIdFromRemoteId(actorUrl)
-  if (res === '' || forceUpdate) {
-    const url = new URL(actorUrl)
-    let federatedHost = await getHostFromCache(url.host)
+  let url = undefined
+  try {
+    url = new URL(actorUrl)
+  } catch (error) {
+    res = await getDeletedUser()
+    url = undefined
+    logger.debug({
+      message: 'Invalid url',
+      url: actorUrl,
+      stack: new Error().stack
+    })
+
+  }
+  if (res === '' || (forceUpdate && url != undefined)) {
+    let federatedHost = await getHostFromCache(url?.host ? url.host : '')
     const hostBanned = federatedHost?.blocked
     if (hostBanned) {
       res = await getDeletedUser()
@@ -37,7 +49,7 @@ async function getRemoteActorIdProcessor(job: Job) {
       if (userPetition) {
         if (!federatedHost) {
           const federatedHostToCreate = {
-            displayName: url.host.toLocaleLowerCase(),
+            displayName: url?.host.toLocaleLowerCase(),
             publicInbox: userPetition.endpoints?.sharedInbox
           }
           federatedHost = await FederatedHost.create(federatedHostToCreate)
@@ -58,7 +70,7 @@ async function getRemoteActorIdProcessor(job: Job) {
           }
         }
         const userData = {
-          url: `@${userPetition.preferredUsername}@${url.host}`,
+          url: `@${userPetition.preferredUsername}@${url?.host}`,
           name: userPetition.name ? userPetition.name : userPetition.preferredUsername,
           email: null,
           description: userPetition.summary,
