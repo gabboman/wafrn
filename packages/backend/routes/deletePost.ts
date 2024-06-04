@@ -94,7 +94,7 @@ export default function deletePost(app: Application) {
               'sencChunk',
               {
                 objectToSend: { ...objectToSend, signature: bodySignature.signature },
-                petitionBy: user.dataValues,
+                petitionBy: user,
                 inboxList: inboxChunk
               },
               {
