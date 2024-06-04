@@ -165,9 +165,7 @@ export class ViewBlogComponent implements OnInit, OnDestroy {
       ]);
     }
 
-    const userHasCustomTheme = await this.themeService.checkThemeExists(
-      this.blogDetails?.id
-    );
+    const userHasCustomTheme = !this.blogDetails.url.startsWith('@') //await this.themeService.checkThemeExists(this.blogDetails?.id);
 
     if (userHasCustomTheme) {
       let userResponseToCustomThemes =
