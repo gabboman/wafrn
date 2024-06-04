@@ -14,7 +14,7 @@ async function DeleteActivity(body: activityPubObject, remoteUser: any, user: an
     if (typeof apObject.object === 'string') {
       // we assume its just the url of an user
       await removeUser(apObject.object)
-      await signAndAccept({ body: body }, remoteUser, user)
+      // await signAndAccept({ body: body }, remoteUser, user)
       return
     } else {
       switch (apObject.type) {
@@ -27,7 +27,7 @@ async function DeleteActivity(body: activityPubObject, remoteUser: any, user: an
           if (postToDelete) {
             await deletePostCommon(postToDelete.id)
           }
-          await signAndAccept({ body: body }, remoteUser, user)
+          // await signAndAccept({ body: body }, remoteUser, user)
           break
         }
         default: {

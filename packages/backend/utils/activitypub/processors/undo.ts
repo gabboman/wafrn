@@ -27,7 +27,7 @@ async function UndoActivity(body: activityPubObject, remoteUser: any, user: any)
       redisCache.del('blocks:mutes:' + user.id)
       redisCache.del('blocks:mutes:' + user.id)
       redisCache.del('blocks:' + user.id)
-      await signAndAccept({ body: body }, remoteUser, user)
+      // await signAndAccept({ body: body }, remoteUser, user)
       break
     }
     case 'Follow': {
@@ -40,7 +40,7 @@ async function UndoActivity(body: activityPubObject, remoteUser: any, user: any)
       if (remoteFollow) {
         await remoteFollow.destroy()
       }
-      await signAndAccept({ body: body }, remoteUser, user)
+      // await signAndAccept({ body: body }, remoteUser, user)
       break
     }
     case 'Undo': {
@@ -61,7 +61,7 @@ async function UndoActivity(body: activityPubObject, remoteUser: any, user: any)
       if (emojiReactionToRemove) {
         await emojiReactionToRemove.destroy()
       }
-      await signAndAccept({ body: body }, remoteUser, user)
+      // await signAndAccept({ body: body }, remoteUser, user)
 
       break
     }
@@ -74,7 +74,7 @@ async function UndoActivity(body: activityPubObject, remoteUser: any, user: any)
       if (postToDelete) {
         await deletePostCommon(postToDelete.id)
       }
-      await signAndAccept({ body: body }, remoteUser, user)
+      // await signAndAccept({ body: body }, remoteUser, user)
       break
     }
     case 'Like': {
@@ -97,12 +97,12 @@ async function UndoActivity(body: activityPubObject, remoteUser: any, user: any)
       if (reactionToRemove) {
         await reactionToRemove.destroy()
       }
-      await signAndAccept({ body: body }, remoteUser, user)
+      // await signAndAccept({ body: body }, remoteUser, user)
       break
     }
     // activities that we ignore:
     case 'View': {
-      await signAndAccept({ body: body }, remoteUser, user)
+      // await signAndAccept({ body: body }, remoteUser, user)
       break
     }
     default: {
@@ -114,7 +114,7 @@ async function UndoActivity(body: activityPubObject, remoteUser: any, user: any)
       if (postToDelete) {
         await deletePostCommon(postToDelete.id)
       }
-      await signAndAccept({ body: body }, remoteUser, user)
+      // await signAndAccept({ body: body }, remoteUser, user)
       logger.debug(apObject)
     }
   }

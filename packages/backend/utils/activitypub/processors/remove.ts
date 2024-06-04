@@ -9,7 +9,7 @@ async function RemoveActivity(body: activityPubObject, remoteUser: any, user: an
     postToNotFeature.featured = false
     await postToNotFeature.save()
   }
-  await signAndAccept({ body: body }, remoteUser, user)
+  // await signAndAccept({ body: body }, remoteUser, user)
 }
 
 export { RemoveActivity }

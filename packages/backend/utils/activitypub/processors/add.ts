@@ -9,7 +9,7 @@ async function AddActivity(body: activityPubObject, remoteUser: any, user: any) 
     postToFeature.featured = true
     await postToFeature.save()
   }
-  await signAndAccept({ body: body }, remoteUser, user)
+  // await signAndAccept({ body: body }, remoteUser, user)
 }
 
 export { AddActivity }

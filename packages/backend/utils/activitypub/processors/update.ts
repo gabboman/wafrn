@@ -18,14 +18,14 @@ async function UpdateActivity(body: activityPubObject, remoteUser: any, user: an
         }
       })
       await getPostThreadRecursive(user, apObject.id, apObject.object, localPost ? localPost.id : undefined)
-      await signAndAccept({ body: body }, remoteUser, user)
+      // await signAndAccept({ body: body }, remoteUser, user)
       break
     }
     case 'OrderedCollection': {
       // TODO do something better than this
       // we force an update of the user who asked for this. Not the nicest thing to do but well
       await getRemoteActor(remoteUser.remoteId, user, true)
-      await signAndAccept({ body: body }, remoteUser, user)
+      // await signAndAccept({ body: body }, remoteUser, user)
       break
     }
     case 'Application':
@@ -33,14 +33,14 @@ async function UpdateActivity(body: activityPubObject, remoteUser: any, user: an
     case 'Person': {
       if (apObject.id) {
         await getRemoteActor(apObject.id, user, true)
-        await signAndAccept({ body: body }, remoteUser, user)
+        // await signAndAccept({ body: body }, remoteUser, user)
       }
       break
     }
     // ignore cases
     case 'Video':
     case 'CacheFile': {
-      await signAndAccept({ body: body }, remoteUser, user)
+      // await signAndAccept({ body: body }, remoteUser, user)
       break
     }
     default: {

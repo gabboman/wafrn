@@ -18,7 +18,7 @@ async function BlockActivity(body: activityPubObject, remoteUser: any, user: any
   redisCache.del('blocks:mutes:' + userToBeBlocked.id)
   redisCache.del('blocks:' + userToBeBlocked.id)
 
-  await signAndAccept({ body: body }, remoteUser, user)
+  // await signAndAccept({ body: body }, remoteUser, user)
 }
 
 export { BlockActivity }

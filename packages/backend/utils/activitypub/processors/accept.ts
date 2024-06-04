@@ -24,7 +24,7 @@ async function AcceptActivity(body: activityPubObject, remoteUser: any, user: an
         redisCache.del('follows:notYetAcceptedFollows:' + followToUpdate.followerId)
       }
     }
-    signAndAccept({ body: body }, remoteUser, user)
+    // signAndAccept({ body: body }, remoteUser, user)
   }
 }
 

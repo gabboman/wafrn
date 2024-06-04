@@ -47,7 +47,7 @@ async function AnnounceActivity(body: activityPubObject, remoteUser: any, user: 
     }
     const newToot = await Post.create(postToCreate)
     await newToot.save()
-    await signAndAccept({ body: body }, remoteUser, user)
+    // await signAndAccept({ body: body }, remoteUser, user)
   }
 }
 

@@ -117,8 +117,9 @@ async function inboxWorker(job: Job) {
 
         // activities that we ignore:
         case 'CacheFile':
+        case 'Playlist':
         case 'View': {
-          await signAndAccept(req, remoteUser, user)
+          // await signAndAccept(req, remoteUser, user)
           break
         }
 

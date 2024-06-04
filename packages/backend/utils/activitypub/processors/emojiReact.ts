@@ -35,7 +35,7 @@ async function EmojiReactActivity(body: activityPubObject, remoteUser: any, user
       })
     }
   }
-  await signAndAccept({ body: body }, remoteUser, user)
+  // await signAndAccept({ body: body }, remoteUser, user)
 }
 
 export { EmojiReactActivity }

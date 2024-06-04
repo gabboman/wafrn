@@ -16,7 +16,7 @@ async function RejectActivity(body: activityPubObject, remoteUser: any, user: an
   })
   redisCache.del('follows:full:' + userWichFollowWasRejected.id)
   redisCache.del('follows:notYetAcceptedFollows:' + userWichFollowWasRejected.id)
-  await signAndAccept({ body: body }, remoteUser, user)
+  // await signAndAccept({ body: body }, remoteUser, user)
 }
 
 export { RejectActivity }

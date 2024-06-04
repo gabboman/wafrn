@@ -48,7 +48,7 @@ async function LikeActivity(body: activityPubObject, remoteUser: any, user: any)
         logger.trace(`Error processing like user ${remoteUser.url} post ${postToBeLiked.id} ${apObject.id}`)
       }
     }
-    await signAndAccept({ body: body }, remoteUser, user)
+    // await signAndAccept({ body: body }, remoteUser, user)
   }
 }
 
