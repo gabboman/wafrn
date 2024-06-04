@@ -7,7 +7,7 @@ async function signAndAccept(req: any, remoteUser: any, user: any) {
     '@context': 'https://www.w3.org/ns/activitystreams',
     id: `${environment.frontendUrl}/fediverse/accept/${encodeURIComponent(req.body.id)}`,
     type: 'Accept',
-    actor: `${environment.frontendUrl}/fediverse/blog/${user.url.toLowerCase()}`,
+    actor: `${environment.frontendUrl}/fediverse/blog/${(await user).url.toLowerCase()}`,
     object: req.body
   }
   if (remoteUser.remoteInbox === '') {
