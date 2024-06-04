@@ -11,6 +11,7 @@ import { getLocalUserId } from '../../utils/cacheGetters/getLocalUserId'
 import { SignedRequest } from '../../interfaces/fediverse/signedRequest'
 import { emojiToAPTag } from '../../utils/activitypub/emojiToAPTag'
 import { getPostReplies } from '../../utils/activitypub/getPostReplies'
+import { redisCache } from '../../utils/redis'
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const Cacher = require('cacher')
 const cacher = new Cacher()
@@ -19,6 +20,19 @@ const cacher = new Cacher()
 async function getLocalUserByUrl(url: string): Promise<any> {
   const userId = await getLocalUserId(url)
   return await User.findByPk(userId)
+}
+
+async function getLocalUserByUrlCache(url: string): Promise<any> {
+  let cacheResult = await redisCache.get('localUserData:' + url)
+  if(!cacheResult) {
+    cacheResult = JSON.stringify((await getLocalUserByUrl(url)).dataValues);
+    if(cacheResult) {
+      redisCache.set('localUserData:' + url, cacheResult, 'EX', 60)
+    } 
+  }
+  // this function can return undefined
+  return cacheResult ? JSON.parse(cacheResult): cacheResult;
+
 }
 
 const inboxQueue = new Queue('inbox', {
@@ -94,7 +108,7 @@ function activityPubRoutes(app: Application) {
     async (req: SignedRequest, res: Response) => {
       if (!req.params.url?.startsWith('@')) {
         const url = req.params.url.toLowerCase()
-        const user = await getLocalUserByUrl(url)
+        const user = await getLocalUserByUrlCache(url)
         const emojis = await user.getEmojis()
         if (user && user.banned) {
           res.sendStatus(410)
@@ -356,7 +370,7 @@ function activityPubRoutes(app: Application) {
   app.get('/fediverse/blog/:url/outbox', checkFediverseSignature, async (req: SignedRequest, res: Response) => {
     if (req.params?.url) {
       const url = req.params.url.toLowerCase()
-      const user = await getLocalUserByUrl(url)
+      const user = await getLocalUserByUrlCache(url)
       if (user && user.banned) {
         res.sendStatus(410)
         return
