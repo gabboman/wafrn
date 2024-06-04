@@ -13,6 +13,7 @@ import { emojiToAPTag } from '../../utils/activitypub/emojiToAPTag'
 import { getPostReplies } from '../../utils/activitypub/getPostReplies'
 import { redisCache } from '../../utils/redis'
 import { getUserEmojis } from '../../utils/cacheGetters/getUserEmojis'
+import { getFollowedRemoteIds } from '../../utils/cacheGetters/getFollowedRemoteIds'
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const Cacher = require('cacher')
 const cacher = new Cacher()
@@ -179,56 +180,20 @@ function activityPubRoutes(app: Application) {
   app.get('/fediverse/blog/:url/following', async (req: SignedRequest, res: Response) => {
     if (req.params?.url) {
       const url = req.params.url.toLowerCase()
-      const user = await getLocalUserByUrl(url)
+      const user = await getLocalUserByUrlCache(url)
       if (user && user.banned) {
         res.sendStatus(410)
         return
       }
-      if (user) {
-        const followedNumber = await User.count({
-          where: {
-            literal: sequelize.literal(`id in (SELECT followedId from follows where followerId like "${user.id}")`)
-          }
-        })
-        let response: any = {
-          '@context': 'https://www.w3.org/ns/activitystreams',
-          id: `${environment.frontendUrl}/fediverse/blog/${user.url.toLowerCase()}/following`,
-          type: 'OrderedCollectionPage',
-          totalItems: followedNumber,
-          first: `${environment.frontendUrl}/fediverse/blog/${user.url.toLowerCase()}/following?page=1`
-        }
-        if (req.query?.page && parseInt(req.query.page as string) > 0) {
-          const pageNumber = parseInt(req.query.page as string)
-          const maxPage = Math.floor(followedNumber / 10)
-          const followed = await User.findAll({
-            where: {
-              literal: sequelize.literal(`id in (SELECT followedId from follows where followerId like "${user.id}")`)
-            },
-            order: [['createdAt', 'DESC']],
-            limit: 10,
-            offset: (pageNumber - 1) * 10
-          })
-          response = {
+      if (user && ! user.banned) {
+        const followedUsers = await getFollowedRemoteIds(user.id);
+          const response = {
             '@context': 'https://www.w3.org/ns/activitystreams',
             id: `${environment.frontendUrl}/fediverse/blog/${user.url.toLowerCase()}/following`,
             type: 'OrderedCollection',
-            totalItems: followedNumber,
+            totalItems: followedUsers.length,
             partOf: `${environment.frontendUrl}/fediverse/blog/${user.url.toLowerCase()}/following`,
-            orderedItems: followed.map((elem: any) =>
-              elem.remoteId ? elem.remoteId : `${environment.frontendUrl}/fediverse/blog/${elem.url}`
-            )
-          }
-
-          if (pageNumber > 1) {
-            response['prev'] = `${environment.frontendUrl}/fediverse/blog/${user.url.toLowerCase()}/following?page=${
-              pageNumber - 1
-            }`
-          }
-          if (pageNumber < maxPage) {
-            response['next'] = `${environment.frontendUrl}/fediverse/blog/${user.url.toLowerCase()}/following?page=${
-              pageNumber + 1
-            }`
-          }
+            orderedItems: followedUsers
         }
         res.set({
           'content-type': 'application/activity+json'
