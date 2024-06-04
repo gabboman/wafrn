@@ -1,5 +1,5 @@
 import { Application, Request, Response } from 'express'
-import { User, Follows, Post, Media, UserLikesPostRelations, Emoji } from '../../db'
+import { User, Follows, Post, Media, UserLikesPostRelations, Emoji, UserEmojiRelation } from '../../db'
 import checkFediverseSignature from '../../utils/activitypub/checkFediverseSignature'
 import { sequelize } from '../../db'
 import { Op } from 'sequelize'
@@ -108,13 +108,24 @@ function activityPubRoutes(app: Application) {
     async (req: SignedRequest, res: Response) => {
       if (!req.params.url?.startsWith('@')) {
         const url = req.params.url.toLowerCase()
-        const user = await getLocalUserByUrl(url)
-        const emojis = await user.getEmojis()
+        const user = await getLocalUserByUrlCache(url)
         if (user && user.banned) {
           res.sendStatus(410)
           return
         }
         if (user && !user.banned) {
+          const emojiIds = await UserEmojiRelation.findAll({
+            where: {
+              userId: user.id
+            },
+          })
+          const emojis = await Emoji.findAll({
+            where: {
+              id: {
+                [Op.in]: emojiIds.map((elem: any) => elem.id)
+              }
+            }
+          })
           const userForFediverse = {
             '@context': ['https://www.w3.org/ns/activitystreams', 'https://w3id.org/security/v1'],
             id: `${environment.frontendUrl}/fediverse/blog/${user.url.toLowerCase()}`,
