@@ -12,6 +12,7 @@ import { SignedRequest } from '../../interfaces/fediverse/signedRequest'
 import { emojiToAPTag } from '../../utils/activitypub/emojiToAPTag'
 import { getPostReplies } from '../../utils/activitypub/getPostReplies'
 import { redisCache } from '../../utils/redis'
+import { getUserEmojis } from '../../utils/cacheGetters/getUserEmojis'
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const Cacher = require('cacher')
 const cacher = new Cacher()
@@ -114,18 +115,7 @@ function activityPubRoutes(app: Application) {
           return
         }
         if (user && !user.banned) {
-          const emojiIds = await UserEmojiRelation.findAll({
-            where: {
-              userId: user.id
-            },
-          })
-          const emojis = await Emoji.findAll({
-            where: {
-              id: {
-                [Op.in]: emojiIds.map((elem: any) => elem.id)
-              }
-            }
-          })
+          const emojis = await getUserEmojis(user.id)
           const userForFediverse = {
             '@context': ['https://www.w3.org/ns/activitystreams', 'https://w3id.org/security/v1'],
             id: `${environment.frontendUrl}/fediverse/blog/${user.url.toLowerCase()}`,
