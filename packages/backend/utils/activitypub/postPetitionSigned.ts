@@ -55,7 +55,7 @@ async function postPetitionSigned(message: object, user: any, target: string): P
         removeUser(userToRemove.id)
       }
     } else {
-      logger.debug({
+      logger.trace({
         message: 'error with signed post petition',
         error: error,
         inputMessage: message,
