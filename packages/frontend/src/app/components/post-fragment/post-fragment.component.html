@@ -18,13 +18,13 @@
   </div>
   <div id="fragment-tags" class="flex flex-wrap gap-2 mt-4" *ngIf="fragment.tags && fragment.tags.length"
     [ngClass]="{ blurry: fragment.content_warning && showCw }">
-    @for(tag of fragment.tags; track tag) {
+    @for(tag of fragment.tags; track $index) {
     <a class="tag" [routerLink]="'/dashboard/search/' + tag.tagName">
       #{{ tag.tagName }}
     </a>
     }
   </div>
-  @for(quote of fragment.quotes; track quote) {
+  @for(quote of fragment.quotes; track $index) {
   <div *ngIf="quote" [ngClass]="{ blurry: fragment.content_warning && showCw }" class="quoted-post cursor-pointer mb-2">
     <div class="flex">
       <div class="flex align-content-center user-avatar-container">

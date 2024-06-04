@@ -3,7 +3,7 @@
   <div class="wafrn-container mx-1 md:mx-4 flex align-items-center">
     <h3 class="flex-grow-1 m-0 mb-2 text-2xl space-grotesk">Forum Style View</h3>
     </div>
-  @for (content of posts; track posts; let index = $index) { @if(content.content
+  @for (content of posts; track $index; let index = $index) { @if(content.content
   !== '' || content.tags.length > 0 || (content.medias && content.medias.length
   > 0)) {
   <mat-card [id]="'post-' + content.id" class="p-3 m-2 mb-6 lg:mx-4 scalein wafrn-container">

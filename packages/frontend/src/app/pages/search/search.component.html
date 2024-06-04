@@ -46,7 +46,7 @@
     </mat-tab>
     <mat-tab *ngIf="users && users.length > 0" label="Users">
       <div class="mt-4">
-        @for (user of users; track user) {
+        @for (user of users; track $index) {
         <mat-card mat-list-item class="user-preview text-center p-4 m-4">
           <img
             [alt]="user.name + ' avatar'"

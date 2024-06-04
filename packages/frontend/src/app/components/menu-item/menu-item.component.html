@@ -12,7 +12,7 @@
 </a>
 @if(expanded) {
 <div class="ml-4">
-  @for (internal of item.items; track internal) {
+  @for (internal of item.items; track $index) {
   <app-menu-item [item]="internal"></app-menu-item>
   }
 </div>

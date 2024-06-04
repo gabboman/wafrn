@@ -12,7 +12,7 @@
   <ng-template matExpansionPanelContent>
     <div [innerHtml]="emojiCollection.comment" class="my-2"></div>
     <div class="flex grid">
-      @for(emoji of emojiCollection.emojis; track emoji) {
+      @for(emoji of emojiCollection.emojis; track $index) {
       <button mat-flat-button [matTooltip]="emoji.name"
         *ngIf="emoji.name.toLowerCase().includes(filterText.toLowerCase())" (mousedown)="click(emoji)"
         class="p-2 flex align-content-center justify-content-center cursor-pointer bg-transparent">

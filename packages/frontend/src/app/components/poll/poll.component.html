@@ -4,7 +4,7 @@
   >
 
   @if(poll.multiChoice){
-    @for (option of poll.questionPollQuestions; track option) {
+    @for (option of poll.questionPollQuestions; track $index) {
       <div class="w-full">
         <mat-checkbox  [formControlName]="option.id">{{option.questionText}}</mat-checkbox>
         <mat-progress-bar
@@ -20,7 +20,7 @@
   class="example-radio-group"
   formControlName="singleValue"
   >
-  @for (option of poll.questionPollQuestions; track option) {
+  @for (option of poll.questionPollQuestions; track $index) {
     <div class="w-full">
       <mat-radio-button [value]="option.id">{{option.questionText}}</mat-radio-button>
         <mat-progress-bar

@@ -41,7 +41,7 @@
   <mat-form-field class="w-full">
     <mat-label>Severity</mat-label>
     <mat-select [required]="true" formControlName="severity">
-      @for(option of reportOptions; track option) {
+      @for(option of reportOptions; track $index) {
       <mat-option [value]="option.value">{{ option.label }}</mat-option>
       }
     </mat-select>

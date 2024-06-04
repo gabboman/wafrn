@@ -291,7 +291,7 @@
       />
     </mat-form-field>
     <div class="taglist">
-      @for(tag of tags.split(','); track tag) {
+      @for(tag of tags.split(','); track $index) {
       <span *ngIf="tag && tag !== '' && tag.trim() !== ''" class="tag">
         #{{ tag.trim() }}
       </span>
@@ -324,7 +324,7 @@
 
 
 <mat-menu #menu="matMenu">
-  @for (option of privacyOptions; track option) {
+  @for (option of privacyOptions; track $index) {
     <button (mousedown)="this.privacy = option.level" mat-menu-item>
       <fa-icon [icon]="option.icon"></fa-icon>
       {{ option.name }}

@@ -27,6 +27,7 @@ import { environment } from 'src/environments/environment';
 export class FileUploadComponent {
   uploading = false;
   uploadIcon = faFileUpload;
+  @Input() disabled = false;
   @Input() config: {
     url: string,
     formats: string,

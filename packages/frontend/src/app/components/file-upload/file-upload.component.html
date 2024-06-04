@@ -8,6 +8,7 @@
 
 <div *ngIf="!uploading" class="file-upload">
   <button
+    [disabled]="disabled"
     mat-button
     class="w-full input-height-btn"
     (mousedown)="fileUpload.click()"

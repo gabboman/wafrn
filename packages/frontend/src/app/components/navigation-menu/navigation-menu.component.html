@@ -6,7 +6,7 @@
     </a>
     <hr class="mx-3" />
     <mat-nav-list>
-      @for (link of menuItems; track link) { @if (link.divider) {
+      @for (link of menuItems; track $index) { @if (link.divider) {
       <hr style="margin: 16px 0" />
       } @else {
       <app-menu-item [item]="link"></app-menu-item>

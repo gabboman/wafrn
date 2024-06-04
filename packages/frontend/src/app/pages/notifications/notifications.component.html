@@ -8,7 +8,7 @@
 @if ( notificationsToShow.length === 0) {
 <app-loader></app-loader>
 
-} @for(notification of notificationsToShow; track notification) {
+} @for(notification of notificationsToShow; track $index) {
 <app-single-notification [notification]="notification"></app-single-notification>
 @if($index % 19 === 0 && $index > 0) {
 <!--This element is the one that says NOTIFICATION LOAD TIME-->
