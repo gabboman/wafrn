@@ -108,7 +108,7 @@ function activityPubRoutes(app: Application) {
     async (req: SignedRequest, res: Response) => {
       if (!req.params.url?.startsWith('@')) {
         const url = req.params.url.toLowerCase()
-        const user = await getLocalUserByUrlCache(url)
+        const user = await getLocalUserByUrl(url)
         const emojis = await user.getEmojis()
         if (user && user.banned) {
           res.sendStatus(410)
