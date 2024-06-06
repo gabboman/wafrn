@@ -23,9 +23,7 @@
           "/*.css",
           "/*.js",
           "/assets/logo.png",
-          "/assets/logo_w.png",
-          "/assets/fonts/NotoSans-Regular.ttf",
-          "/assets/fonts/NotoColorEmoji-Regular.ttf"
+          "/assets/logo_w.png"
         ]
       }
     },
@@ -63,7 +61,7 @@
       ],
       "cacheConfig": {
         "strategy": "performance",
-        "maxSize": 10000,
+        "maxSize": 500,
         "maxAge": "3d",
         "timeout": "30s"
       }
