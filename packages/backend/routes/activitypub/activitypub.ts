@@ -14,6 +14,7 @@ import { getPostReplies } from '../../utils/activitypub/getPostReplies'
 import { redisCache } from '../../utils/redis'
 import { getUserEmojis } from '../../utils/cacheGetters/getUserEmojis'
 import { getFollowedRemoteIds } from '../../utils/cacheGetters/getFollowedRemoteIds'
+import { getFollowerRemoteIds } from '../../utils/cacheGetters/getFollowerRemoteIds'
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const Cacher = require('cacher')
 const cacher = new Cacher()
@@ -219,51 +220,17 @@ function activityPubRoutes(app: Application) {
           res.sendStatus(410)
           return
         }
-        if (user) {
-          const followersNumber = await User.count({
-            where: {
-              literal: sequelize.literal(`id in (SELECT followerId from follows where followedId like "${user.id}")`)
-            }
-          })
+        if (user && ! user.banned) {
+          const followers = await getFollowerRemoteIds(user.id);
+
+          const followersNumber = followers.length
           let response: any = {
             '@context': 'https://www.w3.org/ns/activitystreams',
             id: `${environment.frontendUrl}/fediverse/blog/${user.url.toLowerCase()}/followers`,
             type: 'OrderedCollectionPage',
             totalItems: followersNumber,
+            orderedItems: followers,
             first: `${environment.frontendUrl}/fediverse/blog/${user.url.toLowerCase()}/followers?page=1`
-          }
-          if (req.query?.page && parseInt(req.query.page as string) > 0) {
-            const pageNumber = parseInt(req.query.page as string)
-            const maxPage = Math.floor(followersNumber / 10)
-            const followers = await User.findAll({
-              where: {
-                literal: sequelize.literal(`id in (SELECT followerId from follows where followedId like "${user.id}")`)
-              },
-              order: [['createdAt', 'DESC']],
-              limit: 10,
-              offset: (pageNumber - 1) * 10
-            })
-            response = {
-              '@context': 'https://www.w3.org/ns/activitystreams',
-              id: `${environment.frontendUrl}/fediverse/blog/${user.url.toLowerCase()}/followers`,
-              type: 'OrderedCollection',
-              totalItems: followersNumber,
-              partOf: `${environment.frontendUrl}/fediverse/blog/${user.url.toLowerCase()}/followers`,
-              orderedItems: followers.map((elem: any) =>
-                elem.remoteId ? elem.remoteId : `${environment.frontendUrl}/fediverse/blog/${elem.url}`
-              )
-            }
-
-            if (pageNumber > 1) {
-              response['prev'] = `${environment.frontendUrl}/fediverse/blog/${user.url.toLowerCase()}/followers?page=${
-                pageNumber - 1
-              }`
-            }
-            if (pageNumber < maxPage) {
-              response['next'] = `${environment.frontendUrl}/fediverse/blog/${user.url.toLowerCase()}/followers?page=${
-                pageNumber + 1
-              }`
-            }
           }
           res.set({
             'content-type': 'application/activity+json'

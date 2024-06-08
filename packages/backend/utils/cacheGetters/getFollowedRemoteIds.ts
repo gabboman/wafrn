@@ -1,5 +1,5 @@
 import { Op } from "sequelize"
-import { User } from "../../db"
+import { Follows, User } from "../../db"
 import { redisCache } from "../redis"
 import getFollowedsIds from "./getFollowedsIds"
 import { environment } from "../../environment"
@@ -9,16 +9,17 @@ async function getFollowedRemoteIds(id: string) {
     if (cacheResult) {
         return JSON.parse(cacheResult)
     } else {
-        const followedIds = await getFollowedsIds(id)
-        const followedUsers = await User.findAll({
-            attributes: ['remoteId', 'url', 'id'],
+        const follows = await Follows.findAll({
+            order: [['createdAt', 'DESC']],
+            include: [{
+                model: User,
+                as: 'followed'
+            }],
             where: {
-                id: {
-                    [Op.in]: followedIds
-                }
+                followerId: id
             }
         })
-        const res = followedUsers.map((usr: any) => usr.url.startsWith('@') ? usr.remoteId : `${environment.frontendUrl}/fediverse/blog/${usr.url}`)
+        const res = follows.map((follow: any) => follow.followed.url.startsWith('@') ? follow.followed.remoteId : `${environment.frontendUrl}/fediverse/blog/${follow.followed.url}`)
         await redisCache.set('remoteFollowed:' + id, JSON.stringify(res), 'EX', 300)
         return res;
     }
