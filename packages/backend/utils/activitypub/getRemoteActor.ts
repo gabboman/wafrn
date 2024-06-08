@@ -38,7 +38,7 @@ async function getRemoteActor(actorUrl: string, user: any, forceUpdate = false):
       userId = await job.waitUntilFinished(queueEvents)
     }
     remoteUser = await User.findByPk(userId)
-    if (!remoteUser || (remoteUser && remoteUser.banned)) {
+    if (!remoteUser || (remoteUser && remoteUser.banned) || (remoteUser && (await remoteUser.getFederatedHost()).blocked)) {
       remoteUser = await deletedUser
     }
   } catch (error) {
