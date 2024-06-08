@@ -76,7 +76,6 @@ interface Media {
   NSFW: boolean;
   description: string;
   url: string;
-  adultContent: boolean;
   external: boolean;
   posts: Array<{
     postMediaRelations: postMediaRelations;

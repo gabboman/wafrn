@@ -103,7 +103,6 @@ async function getPostThreadRecursive(
             const wafrnMedia = await Media.create({
               url: remoteFile.url,
               NSFW: postPetition?.sensitive,
-              adultContent: !!postPetition?.sensitive,
               userId: remoteUser.id,
               description: remoteFile.name,
               ipUpload: 'IMAGE_FROM_OTHER_FEDIVERSE_INSTANCE',

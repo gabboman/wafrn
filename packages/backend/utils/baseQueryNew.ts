@@ -32,7 +32,7 @@ async function getQuotes(
 
 async function getMedias(postIds: string[]) {
   return await Media.findAll({
-    attributes: ['id', 'NSFW', 'description', 'url', 'adultContent', 'external', 'order'],
+    attributes: ['id', 'NSFW', 'description', 'url', 'external', 'order'],
     include: [
       {
         model: Post,

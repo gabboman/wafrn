@@ -448,7 +448,6 @@ const Media = sequelize.define('medias', {
   description: Sequelize.TEXT,
   url: Sequelize.TEXT,
   ipUpload: Sequelize.STRING,
-  adultContent: Sequelize.BOOLEAN,
   external: {
     defaultValue: false,
     type: Sequelize.BOOLEAN,

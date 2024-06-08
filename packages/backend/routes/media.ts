@@ -33,18 +33,16 @@ export default function mediaRoutes(app: Application) {
             fileUrl = fileUrl.slice('/uploads/'.length - 1)
           }
 
-          const isAdultContent = req.body.adultContent === 'true'
           const isNSFW = req.body.nsfw === 'true'
 
           picturesPromise.push(
             Media.create({
               url: fileUrl,
               // if its marked as adult content it must be NSFW
-              NSFW: isAdultContent ? true : isNSFW,
+              NSFW: isNSFW,
               userId: req.jwtData?.userId,
               description: req.body.description,
               ipUpload: getIp(req),
-              adultContent: isAdultContent
             })
           )
         }
@@ -68,8 +66,7 @@ export default function mediaRoutes(app: Application) {
           }
         })
         if (mediaToUpdate) {
-          mediaToUpdate.NSFW = req.query.adultContent === 'true' ? true : req.query.NSFW === 'true'
-          mediaToUpdate.adultContent = req.query.adultContent === 'true'
+          mediaToUpdate.NSFW = req.query.NSFW === 'true'
           mediaToUpdate.description = req.query.description
           await mediaToUpdate.save()
           success = true

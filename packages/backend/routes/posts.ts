@@ -280,7 +280,6 @@ export default function postsRoutes(app: Application) {
                 mediaToUpdate.order = index
                 mediaToUpdate.description = media.description
                 mediaToUpdate.NSFW = media.NSFW
-                mediaToUpdate.adultContent = media.adultContent
                 await mediaToUpdate.save()
               }
             })
