@@ -85,7 +85,14 @@ function activityPubRoutes(app: Application) {
             res.sendStatus(410)
             return
           }
-          // TODO corregir esto seguramente
+          if(post.privacy === 1) {
+            const followerIds = await getFollowerRemoteIds(user.id)
+            if(!req.fediData?.remoteUserUrl || !followerIds.include(req.fediData.remoteUserUrl)) {
+              res.sendStatus(404)
+              return
+            }
+          }
+
           res.set({
             'content-type': 'application/activity+json'
           })
