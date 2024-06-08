@@ -19,61 +19,73 @@ const adminUser = environment.forceSync
       }
     })
 
-export default async function checkFediverseSignature(req: SignedRequest, res: Response, next: NextFunction) {
-  let success = false
-  let hostUrl = req.header('user-agent')
-    ? `petition without sighead ${req.header('user-agent')}`
-    : 'somewhere not specified'
-  try {
-    const sigHead = httpSignature.parseRequest(req, {
-      headers: ['(request-target)', 'digest', 'host', 'date']
-    })
-    const remoteUserUrl = sigHead.keyId.split('#')[0]
-    hostUrl = new URL(remoteUserUrl).host
-    let bannedHostInCache = await redisCache.get('server:' + hostUrl)
-    if (bannedHostInCache === null || bannedHostInCache === undefined) {
-      const newResult = await FederatedHost.findOne({
-        where: {
-          [Op.or]: [
-            sequelize.where(sequelize.fn('LOWER', sequelize.col('displayName')), '=', `${hostUrl.toLowerCase()}`)
-          ]
-        }
+function getCheckFediverseSignatureFucnction(force = false) {
+  return async function checkFediverseSignature(req: SignedRequest, res: Response, next: NextFunction) {
+    let success = !force
+    let hostUrl = req.header('user-agent')
+      ? `petition without sighead ${req.header('user-agent')}`
+      : 'somewhere not specified'
+    try {
+      const sigHead = httpSignature.parseRequest(req, {
+        headers: ['(request-target)', 'digest', 'host', 'date']
       })
-      bannedHostInCache = newResult?.blocked.toString().toLowerCase()
-      redisCache.set('server:' + hostUrl, bannedHostInCache ? bannedHostInCache : 'false', 'EX', 300)
+      const remoteUserUrl = sigHead.keyId.split('#')[0]
+      hostUrl = new URL(remoteUserUrl).host
+      let bannedHostInCache = await redisCache.get('server:' + hostUrl)
+      if (bannedHostInCache === null || bannedHostInCache === undefined) {
+        const newResult = await FederatedHost.findOne({
+          where: {
+            [Op.or]: [
+              sequelize.where(sequelize.fn('LOWER', sequelize.col('displayName')), '=', `${hostUrl.toLowerCase()}`)
+            ]
+          }
+        })
+        bannedHostInCache = newResult?.blocked.toString().toLowerCase()
+        redisCache.set('server:' + hostUrl, bannedHostInCache ? bannedHostInCache : 'false', 'EX', 300)
+      }
+      if (bannedHostInCache === 'true') {
+        return res.sendStatus(401)
+      }
+      const fediData = {
+        fediHost: hostUrl,
+        remoteUserUrl: remoteUserUrl
+      }
+      req.fediData = fediData
+      const remoteKey = await getKey(remoteUserUrl, await adminUser)
+      success =
+        verifyDigest(req.rawBody ? req.rawBody : '', req.headers.digest) ||
+        httpSignature.verifySignature(sigHead, remoteKey)
+    } catch (error: any) {
+      if(force){
+        logger.trace({
+          message: 'Failed to verify signature',
+          host: hostUrl,
+          error: error
+        })
+      }
     }
-    if (bannedHostInCache === 'true') {
+  
+    if (!success) {
+      logger.trace(`Failed to verify signature in petition from ${hostUrl}`)
       return res.sendStatus(401)
+    } else {
+      next()
     }
-    const fediData = {
-      fediHost: hostUrl,
-      remoteUserUrl: remoteUserUrl
+  }
+}
+
+    // stolen from catodon/firefish https://codeberg.org/catodon/catodon/src/branch/dev/packages/backend/src/remote/activitypub/check-fetch.ts
+    function verifyDigest(body: string, digest: string | string[] | undefined): boolean {
+      digest = toSingle(digest)
+      if (body == null || digest == null || !digest.toLowerCase().startsWith('sha-256=')) return false
+  
+      return createHash('sha256').update(body).digest('base64') === digest.substring(8)
     }
-    req.fediData = fediData
-    const remoteKey = await getKey(remoteUserUrl, await adminUser)
-    success =
-      verifyDigest(req.rawBody ? req.rawBody : '', req.headers.digest) ||
-      httpSignature.verifySignature(sigHead, remoteKey)
-  } catch (error: any) {
-    success = false
-  }
+    // also from catodon lol sorry
+    function toSingle<T>(x: T | T[] | undefined): T | undefined {
+      return Array.isArray(x) ? x[0] : x
+    }
 
-  if (!success) {
-    logger.trace(`Failed to verify signature in petition from ${hostUrl}`)
-    return res.sendStatus(401)
-  } else {
-    next()
-  }
-
-  // stolen from catodon/firefish https://codeberg.org/catodon/catodon/src/branch/dev/packages/backend/src/remote/activitypub/check-fetch.ts
-  function verifyDigest(body: string, digest: string | string[] | undefined): boolean {
-    digest = toSingle(digest)
-    if (body == null || digest == null || !digest.toLowerCase().startsWith('sha-256=')) return false
-
-    return createHash('sha256').update(body).digest('base64') === digest.substring(8)
-  }
-  // also from catodon lol sorry
-  function toSingle<T>(x: T | T[] | undefined): T | undefined {
-    return Array.isArray(x) ? x[0] : x
-  }
+export {
+  getCheckFediverseSignatureFucnction
 }
