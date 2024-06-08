@@ -48,7 +48,8 @@ function getCheckFediverseSignatureFucnction(force = false) {
       }
       const fediData = {
         fediHost: hostUrl,
-        remoteUserUrl: remoteUserUrl
+        remoteUserUrl: remoteUserUrl,
+        valid: true
       }
       req.fediData = fediData
       const remoteKey = await getKey(remoteUserUrl, await adminUser)
@@ -56,7 +57,7 @@ function getCheckFediverseSignatureFucnction(force = false) {
         verifyDigest(req.rawBody ? req.rawBody : '', req.headers.digest) ||
         httpSignature.verifySignature(sigHead, remoteKey)
     } catch (error: any) {
-      req.fediData = {fediHost: hostUrl}
+      req.fediData = {fediHost: hostUrl, valid: false}
       if (force) {
         logger.trace({
           message: 'Failed to verify signature',

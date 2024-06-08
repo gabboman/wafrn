@@ -87,7 +87,7 @@ function activityPubRoutes(app: Application) {
           }
           if(post.privacy === 1) {
             const followerIds = await getFollowerRemoteIds(user.id)
-            if(!req.fediData?.remoteUserUrl || !followerIds.include(req.fediData.remoteUserUrl)) {
+            if(!req.fediData?.valid ||!req.fediData?.remoteUserUrl || !followerIds.include(req.fediData.remoteUserUrl)) {
               res.sendStatus(404)
               return
             }
