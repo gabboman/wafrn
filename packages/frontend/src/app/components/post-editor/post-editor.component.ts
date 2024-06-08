@@ -517,11 +517,6 @@ export class PostEditorComponent implements OnInit, OnDestroy {
     });
   }
 
-  adultContentUpdated(index: number) {
-    this.uploadedMedias[index].NSFW = this.uploadedMedias[index].adultContent
-      ? true
-      : this.uploadedMedias[index].NSFW;
-  }
 
   allDescriptionsFilled(): boolean {
     const disableCheck = localStorage.getItem('disableForceAltText') === 'true';

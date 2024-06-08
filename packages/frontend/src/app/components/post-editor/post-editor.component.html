@@ -194,16 +194,9 @@
           </mat-form-field>
           <div>
             <mat-checkbox
-              [disabled]="media.adultContent"
               [(ngModel)]="media.NSFW"
               class="w-full"
               >NSFW</mat-checkbox
-            >
-            <mat-checkbox
-              class="w-full"
-              (ngModelChange)="adultContentUpdated(i)"
-              [(ngModel)]="media.adultContent"
-              >Adult content</mat-checkbox
             >
             <button
               mat-mini-fab

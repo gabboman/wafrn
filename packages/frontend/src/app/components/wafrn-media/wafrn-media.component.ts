@@ -17,7 +17,6 @@ import { environment } from 'src/environments/environment';
 })
 export class WafrnMediaComponent implements OnChanges {
   nsfw = true;
-  adultContent = true;
   @Input() data!: WafrnMedia;
   tmpUrl = '';
   displayUrl: string = '';
@@ -53,10 +52,7 @@ export class WafrnMediaComponent implements OnChanges {
         ? environment.externalCacheurl + encodeURIComponent(this.data.url)
         : environment.externalCacheurl +
           encodeURIComponent(environment.baseMediaUrl + this.data.url);
-      this.nsfw = this.data.adultContent
-        ? true
-        : this.data.NSFW && !this.disableNSFWFilter;
-      this.adultContent = this.data.adultContent;
+      this.nsfw =  this.data.NSFW && !this.disableNSFWFilter;
       this.displayUrl = this.nsfw ? '/assets/img/nsfw_image.webp' : this.tmpUrl;
       switch (this.extension) {
         case 'mp4': {
@@ -105,18 +101,9 @@ export class WafrnMediaComponent implements OnChanges {
   }
 
   showPicture() {
-    if (!(this.adultContent && !this.mediaService.checkAge())) {
-      this.nsfw = false;
-      this.adultContent = false;
-      this.displayUrl = this.tmpUrl;
-      this.viewLongImage = true;
-    } else {
-      this.messagesService.add({
-        severity: 'warn',
-        summary:
-          'This image has been flagged as adult content and you are a minor, or you are not logged in',
-      });
-    }
+    this.nsfw = false;
+    this.displayUrl = this.tmpUrl;
+    this.viewLongImage = true;
   }
 
   imgLoaded() {
