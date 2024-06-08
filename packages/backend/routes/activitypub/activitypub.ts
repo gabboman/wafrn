@@ -1,6 +1,6 @@
 import { Application, Request, Response } from 'express'
 import { User, Follows, Post, Media, UserLikesPostRelations, Emoji, UserEmojiRelation } from '../../db'
-import {getCheckFediverseSignatureFucnction} from '../../utils/activitypub/checkFediverseSignature'
+import { getCheckFediverseSignatureFucnction } from '../../utils/activitypub/checkFediverseSignature'
 import { sequelize } from '../../db'
 import { Op } from 'sequelize'
 import { environment } from '../../environment'
@@ -27,15 +27,14 @@ async function getLocalUserByUrl(url: string): Promise<any> {
 
 async function getLocalUserByUrlCache(url: string): Promise<any> {
   let cacheResult = await redisCache.get('localUserData:' + url)
-  if(!cacheResult) {
-    cacheResult = JSON.stringify((await getLocalUserByUrl(url)).dataValues);
-    if(cacheResult) {
+  if (!cacheResult) {
+    cacheResult = JSON.stringify((await getLocalUserByUrl(url)).dataValues)
+    if (cacheResult) {
       redisCache.set('localUserData:' + url, cacheResult, 'EX', 60)
-    } 
+    }
   }
   // this function can return undefined
-  return cacheResult ? JSON.parse(cacheResult): cacheResult;
-
+  return cacheResult ? JSON.parse(cacheResult) : cacheResult
 }
 
 const inboxQueue = new Queue('inbox', {
@@ -186,15 +185,15 @@ function activityPubRoutes(app: Application) {
         res.sendStatus(410)
         return
       }
-      if (user && ! user.banned) {
-        const followedUsers = await getFollowedRemoteIds(user.id);
-          const response = {
-            '@context': 'https://www.w3.org/ns/activitystreams',
-            id: `${environment.frontendUrl}/fediverse/blog/${user.url.toLowerCase()}/following`,
-            type: 'OrderedCollection',
-            totalItems: followedUsers.length,
-            partOf: `${environment.frontendUrl}/fediverse/blog/${user.url.toLowerCase()}/following`,
-            orderedItems: followedUsers
+      if (user && !user.banned) {
+        const followedUsers = await getFollowedRemoteIds(user.id)
+        const response = {
+          '@context': 'https://www.w3.org/ns/activitystreams',
+          id: `${environment.frontendUrl}/fediverse/blog/${user.url.toLowerCase()}/following`,
+          type: 'OrderedCollection',
+          totalItems: followedUsers.length,
+          partOf: `${environment.frontendUrl}/fediverse/blog/${user.url.toLowerCase()}/following`,
+          orderedItems: followedUsers
         }
         res.set({
           'content-type': 'application/activity+json'
@@ -220,8 +219,8 @@ function activityPubRoutes(app: Application) {
           res.sendStatus(410)
           return
         }
-        if (user && ! user.banned) {
-          const followers = await getFollowerRemoteIds(user.id);
+        if (user && !user.banned) {
+          const followers = await getFollowerRemoteIds(user.id)
 
           const followersNumber = followers.length
           let response: any = {
@@ -300,24 +299,28 @@ function activityPubRoutes(app: Application) {
     }
   )
 
-  app.get('/fediverse/blog/:url/outbox', getCheckFediverseSignatureFucnction(true), async (req: SignedRequest, res: Response) => {
-    if (req.params?.url) {
-      const url = req.params.url.toLowerCase()
-      const user = await getLocalUserByUrlCache(url)
-      if (user && user.banned) {
-        res.sendStatus(410)
-        return
-      }
-      if (user) {
-        res.sendStatus(200)
+  app.get(
+    '/fediverse/blog/:url/outbox',
+    getCheckFediverseSignatureFucnction(true),
+    async (req: SignedRequest, res: Response) => {
+      if (req.params?.url) {
+        const url = req.params.url.toLowerCase()
+        const user = await getLocalUserByUrlCache(url)
+        if (user && user.banned) {
+          res.sendStatus(410)
+          return
+        }
+        if (user) {
+          res.sendStatus(200)
+        } else {
+          return404(res)
+        }
       } else {
         return404(res)
       }
-    } else {
-      return404(res)
+      res.end()
     }
-    res.end()
-  })
+  )
 
   app.get('/fediverse/emoji/:id', async (req: Request, res: Response) => {
     const id = req.params.id

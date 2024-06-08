@@ -23,7 +23,7 @@ async function FollowActivity(body: activityPubObject, remoteUser: any, user: an
   }
   remoteFollow.save()
   // we accept it
-  if(remoteFollow.accepted) {
+  if (remoteFollow.accepted) {
     await signAndAccept({ body: body }, remoteUser, user)
   }
 }

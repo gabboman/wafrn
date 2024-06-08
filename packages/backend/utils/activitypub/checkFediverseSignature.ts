@@ -56,7 +56,7 @@ function getCheckFediverseSignatureFucnction(force = false) {
         verifyDigest(req.rawBody ? req.rawBody : '', req.headers.digest) ||
         httpSignature.verifySignature(sigHead, remoteKey)
     } catch (error: any) {
-      if(force){
+      if (force) {
         logger.trace({
           message: 'Failed to verify signature',
           host: hostUrl,
@@ -64,7 +64,7 @@ function getCheckFediverseSignatureFucnction(force = false) {
         })
       }
     }
-  
+
     if (!success) {
       logger.trace(`Failed to verify signature in petition from ${hostUrl}`)
       return res.sendStatus(401)
@@ -74,18 +74,16 @@ function getCheckFediverseSignatureFucnction(force = false) {
   }
 }
 
-    // stolen from catodon/firefish https://codeberg.org/catodon/catodon/src/branch/dev/packages/backend/src/remote/activitypub/check-fetch.ts
-    function verifyDigest(body: string, digest: string | string[] | undefined): boolean {
-      digest = toSingle(digest)
-      if (body == null || digest == null || !digest.toLowerCase().startsWith('sha-256=')) return false
-  
-      return createHash('sha256').update(body).digest('base64') === digest.substring(8)
-    }
-    // also from catodon lol sorry
-    function toSingle<T>(x: T | T[] | undefined): T | undefined {
-      return Array.isArray(x) ? x[0] : x
-    }
+// stolen from catodon/firefish https://codeberg.org/catodon/catodon/src/branch/dev/packages/backend/src/remote/activitypub/check-fetch.ts
+function verifyDigest(body: string, digest: string | string[] | undefined): boolean {
+  digest = toSingle(digest)
+  if (body == null || digest == null || !digest.toLowerCase().startsWith('sha-256=')) return false
 
-export {
-  getCheckFediverseSignatureFucnction
+  return createHash('sha256').update(body).digest('base64') === digest.substring(8)
 }
+// also from catodon lol sorry
+function toSingle<T>(x: T | T[] | undefined): T | undefined {
+  return Array.isArray(x) ? x[0] : x
+}
+
+export { getCheckFediverseSignatureFucnction }

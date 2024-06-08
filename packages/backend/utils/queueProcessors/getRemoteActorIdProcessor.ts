@@ -36,7 +36,6 @@ async function getRemoteActorIdProcessor(job: Job) {
       url: actorUrl,
       stack: new Error().stack
     })
-
   }
   if (res === '' || (forceUpdate && url != undefined)) {
     let federatedHost = await getHostFromCache(url?.host ? url.host : '')

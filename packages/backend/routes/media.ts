@@ -42,7 +42,7 @@ export default function mediaRoutes(app: Application) {
               NSFW: isNSFW,
               userId: req.jwtData?.userId,
               description: req.body.description,
-              ipUpload: getIp(req),
+              ipUpload: getIp(req)
             })
           )
         }
