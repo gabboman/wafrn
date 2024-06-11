@@ -1,7 +1,7 @@
 import { Emoji, EmojiCollection } from '../../db'
 import { redisCache } from '../redis'
 
-async function getAvaiableEmojis(): Promise<Array<string>> {
+async function getAvaiableEmojisCache(): Promise<Array<string>> {
   let res: string[] = []
   const cacheResult = await redisCache.get('avaiableEmojis')
   if (cacheResult) {
@@ -16,4 +16,4 @@ async function getAvaiableEmojis(): Promise<Array<string>> {
   return res
 }
 
-export { getAvaiableEmojis }
+export { getAvaiableEmojisCache }

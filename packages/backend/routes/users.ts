@@ -40,6 +40,7 @@ import { getUserOptions } from '../utils/cacheGetters/getUserOptions'
 import { getMutedPosts } from '../utils/cacheGetters/getMutedPosts'
 import { getAvaiableEmojis } from '../utils/getAvaiableEmojis'
 import { getMutedUsers } from '../utils/cacheGetters/getMutedUsers'
+import { getAvaiableEmojisCache } from '../utils/cacheGetters/getAvaiableEmojis'
 
 const forbiddenCharacters = [':', '@', '/', '<', '>', '"']
 
@@ -550,7 +551,7 @@ export default function userRoutes(app: Application) {
     const blockedUsers = getBlockedIds(userId)
     const notAcceptedFollows = getNotYetAcceptedFollowedids(userId)
     const options = getUserOptions(userId)
-    const localEmojis = getAvaiableEmojis()
+    const localEmojis = getAvaiableEmojisCache()
     const mutedUsers = getMutedUsers(userId)
     let user = User.findByPk(req.jwtData?.userId, {
       attributes: ['banned']
