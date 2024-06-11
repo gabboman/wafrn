@@ -74,7 +74,7 @@ export class PostsService {
           mutedUsers: string[];
         }>(`${environment.baseUrl}/my-ui-options`)
       );
-      this.emojiCollections = followsAndBlocks.emojis;
+      this.emojiCollections = followsAndBlocks.emojis ? followsAndBlocks.emojis : [];
       this.followedUserIds = followsAndBlocks.followedUsers;
       this.blockedUserIds = followsAndBlocks.blockedUsers;
       this.notYetAcceptedFollowedUsersIds = followsAndBlocks.notAcceptedFollows;
