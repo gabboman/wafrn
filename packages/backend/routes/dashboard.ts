@@ -7,20 +7,8 @@ import { authenticateToken } from '../utils/authenticateToken'
 import optionalAuthentication from '../utils/optionalAuthentication'
 import AuthorizedRequest from '../interfaces/authorizedRequest'
 import {
-  Emoji,
-  EmojiReaction,
-  Media,
   Post,
-  PostEmojiRelations,
-  PostMediaRelations,
   PostMentionsUserRelation,
-  PostTag,
-  QuestionPoll,
-  QuestionPollAnswer,
-  QuestionPollQuestion,
-  User,
-  UserEmojiRelation,
-  UserLikesPostRelations
 } from '../db'
 import { Op } from 'sequelize'
 import getStartScrollParam from '../utils/getStartScrollParam'
@@ -28,7 +16,6 @@ import { environment } from '../environment'
 import getFollowedsIds from '../utils/cacheGetters/getFollowedsIds'
 import getNonFollowedLocalUsersIds from '../utils/cacheGetters/getNotFollowedLocalUsersIds'
 import getBlockedIds from '../utils/cacheGetters/getBlockedIds'
-import getPosstGroupDetails from '../utils/getPostGroupDetails'
 import { getUnjointedPosts } from '../utils/baseQueryNew'
 import { getMutedPosts } from '../utils/cacheGetters/getMutedPosts'
 
