@@ -229,7 +229,9 @@ async function getRemoteActorIdProcessor(job: Job) {
           logger.info({
             message: `Error processing emojis from user ${userRes.url}`,
             error: error,
-            emojis: userPetition?.tag ? userPetition.tag.filter((elem: fediverseTag) => elem.type === 'Emoji') : 'undefined',
+            emojis: userPetition?.tag
+              ? userPetition.tag.filter((elem: fediverseTag) => elem.type === 'Emoji')
+              : 'undefined',
             userPetition: userPetition
           })
         }

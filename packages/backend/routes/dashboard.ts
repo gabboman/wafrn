@@ -6,10 +6,7 @@ import { Application, Response } from 'express'
 import { authenticateToken } from '../utils/authenticateToken'
 import optionalAuthentication from '../utils/optionalAuthentication'
 import AuthorizedRequest from '../interfaces/authorizedRequest'
-import {
-  Post,
-  PostMentionsUserRelation,
-} from '../db'
+import { Post, PostMentionsUserRelation } from '../db'
 import { Op } from 'sequelize'
 import getStartScrollParam from '../utils/getStartScrollParam'
 import { environment } from '../environment'

@@ -545,7 +545,7 @@ export default function userRoutes(app: Application) {
   })
 
   app.get('/api/my-ui-options', authenticateToken, async (req: AuthorizedRequest, res: Response) => {
-    const userId = req.jwtData?.userId as string;
+    const userId = req.jwtData?.userId as string
     const followedUsers = getFollowedsIds(userId)
     const blockedUsers = getBlockedIds(userId)
     const notAcceptedFollows = getNotYetAcceptedFollowedids(userId)
@@ -556,7 +556,17 @@ export default function userRoutes(app: Application) {
       attributes: ['banned']
     })
     const silencedPosts = getMutedPosts(userId)
-    Promise.all([user, followedUsers, blockedUsers, user, notAcceptedFollows, options, silencedPosts, localEmojis, mutedUsers])
+    Promise.all([
+      user,
+      followedUsers,
+      blockedUsers,
+      user,
+      notAcceptedFollows,
+      options,
+      silencedPosts,
+      localEmojis,
+      mutedUsers
+    ])
     user = await user
     if (!user || user.banned) {
       res.sendStatus(401)

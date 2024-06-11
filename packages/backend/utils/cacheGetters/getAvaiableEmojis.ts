@@ -8,8 +8,8 @@ async function getAvaiableEmojis(): Promise<Array<string>> {
     res = JSON.parse(cacheResult)
   } else {
     const avaiableEmojis = await EmojiCollection.findAll({
-        include: [{ model: Emoji }]
-      })
+      include: [{ model: Emoji }]
+    })
     res = avaiableEmojis.dataValues
     await redisCache.set('avaiableEmojis', JSON.stringify(res))
   }
