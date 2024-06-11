@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { ProcessedPost } from 'src/app/interfaces/processed-post';
 import { DashboardService } from 'src/app/services/dashboard.service';
 import { JwtService } from 'src/app/services/jwt.service';
@@ -22,6 +22,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
   viewedPostsIds: string[] = [];
   currentPage = 0;
   level = 1;
+  timestamp = new Date().getTime()
   title = '';
   reloadIcon = faArrowsRotate;
   updateFollowersSubscription;
@@ -34,7 +35,8 @@ export class DashboardComponent implements OnInit, OnDestroy {
     private messages: MessageService,
     private titleService: Title,
     private metaTagService: Meta,
-    private themeService: ThemeService
+    private themeService: ThemeService,
+    private activatedRoute: ActivatedRoute
   ) {
     this.titleService.setTitle('Wafrn - the social network that respects you');
     this.metaTagService.addTags([
@@ -65,19 +67,21 @@ export class DashboardComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     window.scrollTo(0, 0);
-    if (this.router.url.endsWith('explore')) {
+    const purePath = this.router.url.split('?')[0];
+    console.log(this.activatedRoute.snapshot.params)
+    if (purePath.endsWith('explore')) {
       this.level = 0;
       this.title = 'Explore the fediverse';
     }
-    if (this.router.url.endsWith('exploreLocal')) {
+    if (purePath.endsWith('exploreLocal')) {
       this.level = 2;
       this.title = 'Explore WAFRN';
     }
-    if (this.router.url.endsWith('private')) {
+    if (purePath.endsWith('private')) {
       this.level = 10;
       this.title = 'Private messages';
     }
-    if (this.router.url.endsWith('silencedPosts')) {
+    if (purePath.endsWith('silencedPosts')) {
       this.level = 25;
       this.title = 'My silenced posts';
     }
@@ -109,6 +113,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
     this.currentPage = 0;
     this.viewedPostsNumber = 0;
     this.viewedPostsIds = [];
+    this.timestamp = new Date().getTime()
     this.loadPosts(this.currentPage);
     window.scrollTo(0, 0);
   }
@@ -123,7 +128,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
 
   async loadPosts(page: number) {
     this.loadingPosts = true;
-    let scrollDate = new Date();
+    let scrollDate = new Date(this.timestamp);
     if (page !== 0) {
       const lastPostBlock = this.posts[this.posts.length - 1];
       scrollDate = new Date(lastPostBlock[lastPostBlock.length - 1].createdAt);
