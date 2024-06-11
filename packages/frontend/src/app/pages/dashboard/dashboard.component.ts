@@ -68,7 +68,6 @@ export class DashboardComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     window.scrollTo(0, 0);
     const purePath = this.router.url.split('?')[0];
-    console.log(this.activatedRoute.snapshot.params)
     if (purePath.endsWith('explore')) {
       this.level = 0;
       this.title = 'Explore the fediverse';
