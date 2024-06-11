@@ -1,11 +1,14 @@
 import { Injectable } from '@angular/core';
+import { PostsService } from './posts.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class UtilsService {
 
-  constructor() { }
+  constructor(
+    private postsService: PostsService
+  ) { }
 
 
   objectToFormData(obj: any): FormData {
@@ -17,12 +20,7 @@ export class UtilsService {
   }
 
   async getSilencedPostIds(): Promise<string[]> {
-    let res: string[] = []
-    const localStorageReply = localStorage.getItem('silencedPostsIds');
-    if(localStorageReply) {
-      res = JSON.parse(localStorageReply)
-    }
-    return res;
+    return this.postsService.silencedPostsIds;
   }
 
 }

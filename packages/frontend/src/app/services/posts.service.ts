@@ -46,6 +46,7 @@ export class PostsService {
     type: 'react',
   });
 
+  public silencedPostsIds: string[] = []
   public followedUserIds: Array<string> = [];
   public emojiCollections: EmojiCollection[] = [];
   public notYetAcceptedFollowedUsersIds: Array<string> = [];
@@ -89,12 +90,9 @@ export class PostsService {
           });
       }
       if (followsAndBlocks.silencedPosts) {
-        localStorage.setItem(
-          'silencedPostsIds',
-          JSON.stringify(followsAndBlocks.silencedPosts)
-        );
+        this.silencedPostsIds = followsAndBlocks.silencedPosts
       } else {
-        localStorage.setItem('silencedPostsIds', JSON.stringify([]));
+        this.silencedPostsIds = [];
       }
       this.updateFollowers.next(true);
     }
