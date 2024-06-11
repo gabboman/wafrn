@@ -46,7 +46,8 @@ export class PostsService {
     type: 'react',
   });
 
-  public silencedPostsIds: string[] = []
+  public silencedPostsIds: string[] = [];
+  public mutedUsers: string[] = [];
   public followedUserIds: Array<string> = [];
   public emojiCollections: EmojiCollection[] = [];
   public notYetAcceptedFollowedUsersIds: Array<string> = [];
@@ -70,12 +71,14 @@ export class PostsService {
           options: UserOptions[];
           silencedPosts: string[];
           emojis: EmojiCollection[];
+          mutedUsers: string[];
         }>(`${environment.baseUrl}/my-ui-options`)
       );
       this.emojiCollections = followsAndBlocks.emojis;
       this.followedUserIds = followsAndBlocks.followedUsers;
       this.blockedUserIds = followsAndBlocks.blockedUsers;
       this.notYetAcceptedFollowedUsersIds = followsAndBlocks.notAcceptedFollows;
+      this.mutedUsers = followsAndBlocks.mutedUsers;
       // Here we check user options
       if (followsAndBlocks.options?.length > 0) {
         // frontend options start with wafrn.
@@ -443,16 +446,6 @@ export class PostsService {
     });
 
     return sanitized;
-  }
-
-  postContainsBlocked(processedPost: ProcessedPost[]): boolean {
-    let res = false;
-    processedPost.forEach((fragment) => {
-      if (this.blockedUserIds.includes(fragment.userId)) {
-        res = true;
-      }
-    });
-    return res;
   }
 
   getPostContentSanitized(content: string): string {
