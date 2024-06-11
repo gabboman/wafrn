@@ -96,7 +96,7 @@ async function getPostThreadRecursive(
 
       const privacy = getApObjectPrivacy(postPetition, remoteUser)
 
-      let postTextContent = '' + postPetition.content
+      let postTextContent = `${postPetition.content ? postPetition.content : ''}` // Fix for bridgy giving this as undefined
       if (postPetition.attachment && postPetition.attachment.length > 0 && !remoteUser.banned) {
         for await (const remoteFile of postPetition.attachment) {
           if (remoteFile.type !== 'Link') {
