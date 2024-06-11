@@ -39,6 +39,7 @@ import { getNotYetAcceptedFollowedids } from '../utils/cacheGetters/getNotYetAcc
 import { getUserOptions } from '../utils/cacheGetters/getUserOptions'
 import { getMutedPosts } from '../utils/cacheGetters/getMutedPosts'
 import { getAvaiableEmojis } from '../utils/getAvaiableEmojis'
+import { getMutedUsers } from '../utils/cacheGetters/getMutedUsers'
 
 const forbiddenCharacters = [':', '@', '/', '<', '>', '"']
 
@@ -544,18 +545,18 @@ export default function userRoutes(app: Application) {
   })
 
   app.get('/api/my-ui-options', authenticateToken, async (req: AuthorizedRequest, res: Response) => {
-    const followedUsers = getFollowedsIds(req.jwtData?.userId as string)
-    const blockedUsers = getBlockedIds(req.jwtData?.userId as string)
-    const notAcceptedFollows = getNotYetAcceptedFollowedids(req.jwtData?.userId as string)
-    const options = getUserOptions(req.jwtData?.userId as string)
-    const localEmojis = EmojiCollection.findAll({
-      include: [{ model: Emoji }]
-    })
+    const userId = req.jwtData?.userId as string;
+    const followedUsers = getFollowedsIds(userId)
+    const blockedUsers = getBlockedIds(userId)
+    const notAcceptedFollows = getNotYetAcceptedFollowedids(userId)
+    const options = getUserOptions(userId)
+    const localEmojis = getAvaiableEmojis()
+    const mutedUsers = getMutedUsers(userId)
     let user = User.findByPk(req.jwtData?.userId, {
       attributes: ['banned']
     })
-    const silencedPosts = getMutedPosts(req.jwtData?.userId as string)
-    Promise.all([user, followedUsers, blockedUsers, user, notAcceptedFollows, options, silencedPosts, localEmojis])
+    const silencedPosts = getMutedPosts(userId)
+    Promise.all([user, followedUsers, blockedUsers, user, notAcceptedFollows, options, silencedPosts, localEmojis, mutedUsers])
     user = await user
     if (!user || user.banned) {
       res.sendStatus(401)
@@ -566,7 +567,8 @@ export default function userRoutes(app: Application) {
         notAcceptedFollows: await notAcceptedFollows,
         options: await options,
         silencedPosts: await silencedPosts,
-        emojis: await localEmojis
+        emojis: await localEmojis,
+        mutedUsers: await mutedUsers
       })
     }
   })
