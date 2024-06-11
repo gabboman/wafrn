@@ -45,7 +45,7 @@ export class DashboardService {
     );
     result = this.postService.processPostNew(dashboardPetition);
     result = result.filter(
-      (post) => !this.postContainsBlockedOrMuted(post, true)
+      (post) => !this.postService.postContainsBlockedOrMuted(post, true)
     );
     this.scrollEventEmitter.emit('scrollingtime');
     return result;
@@ -79,7 +79,7 @@ export class DashboardService {
     if (dashboardPetition) {
       postResult = this.postService.processPostNew(dashboardPetition.posts);
       postResult = postResult.filter(
-        (post) => !this.postContainsBlockedOrMuted(post, false)
+        (post) => !this.postService.postContainsBlockedOrMuted(post, false)
       );
     } else {
       // TODO show error message
@@ -123,7 +123,7 @@ export class DashboardService {
         )
       );
       result = result.filter(
-        (post) => !this.postContainsBlockedOrMuted(post, false)
+        (post) => !this.postService.postContainsBlockedOrMuted(post, false)
       );
     } else {
       this.messageService.add({
@@ -163,18 +163,5 @@ export class DashboardService {
     const result = this.postService.processPostNew(petition);
 
     return result[0];
-  }
-
-  private postContainsBlockedOrMuted(post: ProcessedPost[], isDashboard: boolean ) {
-    let res = false;
-    post.forEach((fragment) => {
-      if (this.postService.blockedUserIds.includes(fragment.userId)) {
-        res = true;
-      }
-      if(isDashboard && this.postService.mutedUsers.includes(fragment.userId)) {
-        res = true;
-      }
-    });
-    return res;
   }
 }

@@ -557,4 +557,17 @@ export class PostsService {
         : encodeURIComponent(environment.baseMediaUrl + emoji.url))
       }">`;
   }
+
+  postContainsBlockedOrMuted(post: ProcessedPost[], isDashboard: boolean ) {
+    let res = false;
+    post.forEach((fragment) => {
+      if (this.blockedUserIds.includes(fragment.userId)) {
+        res = true;
+      }
+      if(isDashboard && this.mutedUsers.includes(fragment.userId)) {
+        res = true;
+      }
+    });
+    return res;
+  }
 }

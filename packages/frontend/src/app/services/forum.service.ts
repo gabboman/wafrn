@@ -17,7 +17,7 @@ export class ForumService {
     );
     let processed = this.postService.processPostNew(response);
     processed = processed.filter(
-      (post) => !this.postService.postContainsBlocked(post)
+      (post) => !this.postService.postContainsBlockedOrMuted(post, false)
     );
     let result = processed.map(elem => elem[elem.length - 1]).concat([processed[0][0]])
     result = result.sort((a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime() )
