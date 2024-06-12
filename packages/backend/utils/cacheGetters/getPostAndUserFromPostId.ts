@@ -63,7 +63,7 @@ async function getPostAndUserFromPostId(postId: string): Promise<{found: boolean
         } else {
             res = {found: false}
         }
-        await redisCache.set('postAndUser:' + postId, JSON.stringify(res), 'EX', 60)
+        await redisCache.set('postAndUser:' + postId, JSON.stringify(res))
     }
     return res;
 }

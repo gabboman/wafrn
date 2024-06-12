@@ -10,6 +10,7 @@ import _ from 'underscore'
 import AuthorizedRequest from '../interfaces/authorizedRequest'
 import { LdSignature } from '../utils/activitypub/rsa2017'
 import { deletePostCommon } from '../utils/deletePost'
+import { redisCache } from '../utils/redis'
 
 const sendPostQueue = new Queue('sendPostToInboxes', {
   connection: environment.bullmqConnection,
@@ -103,7 +104,7 @@ export default function deletePost(app: Application) {
             )
           }
         }
-
+        await redisCache.del('postAndUser:' + id)
         await deletePostCommon(id)
         success = true
       }
