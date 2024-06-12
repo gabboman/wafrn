@@ -120,8 +120,11 @@ export class DashboardService {
           ...result.map((elem) =>
             new Date(elem[elem.length - 1].createdAt).getTime()
           )
-        )
+        ) - 1
       );
+      if(result.length === 0){
+        this.startScrollDate = new Date(0);
+      }
       result = result.filter(
         (post) => !this.postService.postContainsBlockedOrMuted(post, false)
       );
