@@ -100,7 +100,7 @@ async function postToJSONLD(postId: string) {
     id: `${environment.frontendUrl}/fediverse/activity/post/${post.id}`,
     type: 'Create',
     actor: actorUrl,
-    published: post.createdAt.toISOString(),
+    published: new Date(post.createdAt).toISOString(),
     to: usersToSend.to,
     cc: usersToSend.cc,
     object: {
@@ -109,7 +109,7 @@ async function postToJSONLD(postId: string) {
       type: 'Note',
       summary: post.content_warning ? post.content_warning : '',
       inReplyTo: parentPostString,
-      published: post.createdAt.toISOString(),
+      published: new Date(post.createdAt).toISOString(),
       url: `${environment.frontendUrl}/fediverse/post/${post.id}`,
       attributedTo: `${environment.frontendUrl}/fediverse/blog/${localUser.url.toLowerCase()}`,
       to: usersToSend.to,
@@ -160,7 +160,7 @@ async function postToJSONLD(postId: string) {
       id: `${environment.frontendUrl}/fediverse/post/${post.id}`,
       type: 'Announce',
       actor: `${environment.frontendUrl}/fediverse/blog/${localUser.url.toLowerCase()}`,
-      published: post.createdAt.toISOString(),
+      published: new Date(post.createdAt).toISOString(),
       to:
         post.privacy / 1 === 10
           ? mentionedUsers
