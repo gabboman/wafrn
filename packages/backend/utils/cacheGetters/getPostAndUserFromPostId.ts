@@ -3,7 +3,7 @@ import { Emoji, Media, Post, PostTag, User } from "../../db";
 import { redisCache } from "../redis";
 
 async function getPostAndUserFromPostId(postId: string): Promise<{found: boolean, data?: any}> {
-    const cacheResult = undefined //await redisCache.get('postAndUser:' + postId)
+    const cacheResult = await redisCache.get('postAndUser:' + postId)
     let res: {found: boolean, data?: any} = cacheResult ? JSON.parse(cacheResult) : {found: false}
     if(!cacheResult) {
         const dbQuery = await Post.findOne({
