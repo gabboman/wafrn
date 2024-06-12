@@ -321,11 +321,6 @@ export default function notificationRoutes(app: Application) {
         createdAt: {
           [operator]: startCountDate
         },
-        quotedPostId: {
-          [Op.notIn]: (await getMentionedPostsId(userId, startCountDate, operator)).map(
-            (mention: any) => mention.postId
-          )
-        },
         literal: Sequelize.literal(`quotedPostId IN (SELECT id FROM posts WHERE userId= "${userId}")`)
       }
     }
