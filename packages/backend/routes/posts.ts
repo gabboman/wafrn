@@ -33,6 +33,7 @@ const cheerio = require('cheerio')
 import getFollowedsIds from '../utils/cacheGetters/getFollowedsIds'
 import { federatePostHasBeenEdited } from '../utils/activitypub/editPost'
 import { getAvaiableEmojis } from '../utils/getAvaiableEmojis'
+import { redisCache } from '../utils/redis'
 
 const prepareSendPostQueue = new Queue('prepareSendPost', {
   connection: environment.bullmqConnection,
@@ -365,6 +366,9 @@ export default function postsRoutes(app: Application) {
           post.privacy = bodyPrivacy
           await post.save()
         } else {
+          if(req.body.parent){
+            await redisCache.del('postAndUser:' + req.body.parent)
+          }
           post = await Post.create({
             content,
             content_warning,
