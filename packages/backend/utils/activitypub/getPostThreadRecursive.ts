@@ -18,6 +18,15 @@ import { getPetitionSigned } from './getPetitionSigned'
 import { fediverseTag } from '../../interfaces/fediverse/tags'
 import { loadPoll } from './loadPollFromPost'
 import { getApObjectPrivacy } from './getPrivacy'
+
+const deletedUser = environment.forceSync
+    ? undefined
+    : User.findOne({
+        where: {
+          url: environment.deletedUser
+        }
+      })
+
 async function getPostThreadRecursive(
   user: any,
   remotePostId: string,
@@ -103,7 +112,7 @@ async function getPostThreadRecursive(
             const wafrnMedia = await Media.create({
               url: remoteFile.url,
               NSFW: postPetition?.sensitive,
-              userId: remoteUser.id,
+              userId: remoteUserServerBaned || remoteUser.banned ? (await deletedUser).id :remoteUser.id,
               description: remoteFile.name,
               ipUpload: 'IMAGE_FROM_OTHER_FEDIVERSE_INSTANCE',
               order: postPetition.attachment.indexOf(remoteFile), // could be non consecutive but its ok
@@ -127,7 +136,7 @@ async function getPostThreadRecursive(
           : '',
         createdAt: new Date(postPetition.published),
         updatedAt: new Date(),
-        userId: remoteUser.id,
+        userId: remoteUserServerBaned || remoteUser.banned ? (await deletedUser).id :remoteUser.id,
         remotePostId: postPetition.id,
         privacy: privacy
       }
