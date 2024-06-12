@@ -17,7 +17,7 @@
   }
 </div>
 } } @else {
-<a mat-list-item *ngIf="item.visible !== false" [href]="item.routerLink ? item.routerLink : null"
+<a mat-list-item *ngIf="item.visible !== false" [routerLink]="item.routerLink ? item.routerLink : null"
   (mousedown)="doCommand()">
   <div class="h-3rem flex align-items-center justify-content-start">
     <span [matBadge]="item.badge" [matBadgeHidden]="item.badge === 0" matBadgePosition="above after"
