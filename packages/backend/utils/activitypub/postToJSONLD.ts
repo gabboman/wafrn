@@ -5,18 +5,14 @@ import { fediverseTag } from '../../interfaces/fediverse/tags'
 import { activityPubObject } from '../../interfaces/fediverse/activityPubObject'
 import { emojiToAPTag } from './emojiToAPTag'
 import { getPostReplies } from './getPostReplies'
+import { getPostAndUserFromPostId } from '../cacheGetters/getPostAndUserFromPostId'
 
-async function postToJSONLD(post: any) {
-  const tmpUser = await User.findByPk(post.userId)
-  const localUser = tmpUser
-    ? tmpUser
-    : await User.findOne({
-        where: {
-          url: environment.deletedUser
-        }
-      })
+async function postToJSONLD(postId: string) {
+  const post = (await getPostAndUserFromPostId(postId)).data
+  const localUser = post.user
+
   const stringMyFollowers = `${environment.frontendUrl}/fediverse/blog/${localUser.url.toLowerCase()}/followers`
-  const dbMentions = await post.getMentionPost()
+  const dbMentions = post.mentionPost
   let mentionedUsers: string[] = []
 
   if (dbMentions) {
@@ -26,32 +22,28 @@ async function postToJSONLD(post: any) {
   let quotedPostString = null
   const conversationString = `${environment.frontendUrl}/fediverse/conversation/${post.id}`
   if (post.parentId) {
-    let dbPost = await Post.findOne({
-      where: {
-        id: post.parentId
-      }
-    })
-    while (dbPost && dbPost.content === '' && dbPost.hierarchyLevel !== 0) {
+    let dbPost = post.parent
+    while (dbPost && dbPost.content === '' && dbPost.hierarchyLevel !== 0 && dbPost.postTags.length != 0 && dbPost.medias.length != 0) {
       // TODO optimize this
-      const tmpPost = await dbPost.getParent()
+      const tmpPost = post.parent
       dbPost = tmpPost
     }
     parentPostString = dbPost?.remotePostId
       ? dbPost.remotePostId
       : `${environment.frontendUrl}/fediverse/post/${dbPost ? dbPost.id : post.parentId}`
   }
-  const postMedias = await post.getMedias()
+  const postMedias = await post.medias
   let processedContent = post.content
   const wafrnMediaRegex =
     /\[wafrnmediaid="[0-9a-fA-F]{8}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{12}"\]/gm
 
   // we remove the wafrnmedia from the post for the outside world, as they get this on the attachments
   processedContent = processedContent.replaceAll(wafrnMediaRegex, '')
-  const mentions: string[] = (await post.getMentionPost()).map((elem: any) => elem.id)
+  const mentions: string[] = post.mentionPost.map((elem: any) => elem.id)
   const fediMentions: fediverseTag[] = []
   const fediTags: fediverseTag[] = []
   let tagsAndQuotes = '<br>'
-  const quotedPosts = await post.getQuoted()
+  const quotedPosts =  post.quoted
   if (quotedPosts && quotedPosts.length > 0) {
     const mainQuotedPost = quotedPosts[0]
     quotedPostString = mainQuotedPost.remotePostId
@@ -69,7 +61,7 @@ async function postToJSONLD(post: any) {
       })
     })
   }
-  for await (const tag of await post.getPostTags()) {
+  for await (const tag of post.postTags) {
     const externalTagName = tag.tagName.replaceAll(' ', '-').replaceAll('"', "'")
     const link = `${environment.frontendUrl}/dashboard/search/${encodeURIComponent(tag.tagName)}`
     tagsAndQuotes = `${tagsAndQuotes}  <a class="hashtag" data-tag="post" href="${link}" rel="tag ugc">#${externalTagName}</a>`
@@ -99,7 +91,7 @@ async function postToJSONLD(post: any) {
     }
   })
 
-  const emojis = await post.getEmojis()
+  const emojis = post.emojis
 
   const usersToSend = getToAndCC(post.privacy, mentionedUsers, stringMyFollowers)
   const actorUrl = `${environment.frontendUrl}/fediverse/blog/${localUser.url.toLowerCase()}`
@@ -162,7 +154,7 @@ async function postToJSONLD(post: any) {
     }
   })
   postAsJSONLD.object = newObject
-  if (post.content === '' && (await post.getPostTags()).length === 0 && (await post.getMedias()).length === 0) {
+  if (post.content === '' && post.postTags.length === 0 && post.medias.length === 0) {
     postAsJSONLD = {
       '@context': 'https://www.w3.org/ns/activitystreams',
       id: `${environment.frontendUrl}/fediverse/post/${post.id}`,

@@ -22,7 +22,7 @@ async function federatePostHasBeenEdited(postToEdit: any) {
   return
   const user = await User.findByPk(postToEdit.userId)
 
-  const postAsJSONLD = await postToJSONLD(postToEdit)
+  const postAsJSONLD = await postToJSONLD(postToEdit.id)
   const objectToSend = {
     '@context': [`${environment.frontendUrl}/contexts/litepub-0.1.jsonld`],
     actor: `${environment.frontendUrl}/fediverse/blog/${user.url.toLowerCase()}`,

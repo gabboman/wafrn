@@ -15,6 +15,7 @@ import { redisCache } from '../../utils/redis'
 import { getUserEmojis } from '../../utils/cacheGetters/getUserEmojis'
 import { getFollowedRemoteIds } from '../../utils/cacheGetters/getFollowedRemoteIds'
 import { getFollowerRemoteIds } from '../../utils/cacheGetters/getFollowerRemoteIds'
+import { getPostAndUserFromPostId } from '../../utils/cacheGetters/getPostAndUserFromPostId'
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const Cacher = require('cacher')
 const cacher = new Cacher()
@@ -59,21 +60,8 @@ function activityPubRoutes(app: Application) {
     getCheckFediverseSignatureFucnction(false),
     async (req: SignedRequest, res: Response) => {
       if (req.params?.id) {
-        const post = await Post.findOne({
-          include: [
-            {
-              model: User,
-              as: 'user',
-              required: true
-            }
-          ],
-          where: {
-            id: req.params.id,
-            privacy: {
-              [Op.notIn]: [2, 10]
-            }
-          }
-        })
+        const cachePost = await getPostAndUserFromPostId(req.params.id);
+        const post = cachePost.data
         if (post) {
           const user = post.user
           if (user.url.startsWith('@')) {
@@ -100,7 +88,7 @@ function activityPubRoutes(app: Application) {
           res.set({
             'content-type': 'application/activity+json'
           })
-          const response = await postToJSONLD(post)
+          const response = await postToJSONLD(post.id)
           res.send({
             ...response.object,
             '@context': response['@context']

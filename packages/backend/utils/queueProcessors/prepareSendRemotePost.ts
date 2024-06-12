@@ -95,7 +95,7 @@ async function prepareSendRemotePostWorker(job: Job) {
       })
     }
   }
-  const objectToSend = await postToJSONLD(post)
+  const objectToSend = await postToJSONLD(post.id)
   const ldSignature = new LdSignature()
   const bodySignature = await ldSignature.signRsaSignature2017(
     objectToSend,

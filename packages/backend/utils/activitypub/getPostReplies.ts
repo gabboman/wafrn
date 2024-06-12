@@ -3,9 +3,13 @@ import { Post } from '../../db'
 import { environment } from '../../environment'
 
 async function getPostReplies(postId: string) {
+  // TODO: cache this. Also make it so if the post has no text but medias or tags also apears on the list
   const posts = await Post.findAll({
     attributes: ['id', 'parentId', 'remotePostId', 'privacy'],
     where: {
+      content: {
+        [Op.ne]: ''
+      },
       parentId: postId,
       privacy: {
         [Op.notIn]: [2, 10]
