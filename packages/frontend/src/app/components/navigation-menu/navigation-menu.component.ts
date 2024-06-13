@@ -76,6 +76,7 @@ export class NavigationMenuComponent implements OnInit, OnDestroy {
     private dashboardService: DashboardService,
     private dialogService: MatDialog
   ) {
+    this.router.routeReuseStrategy.shouldReuseRoute = () => false
     this.loginSubscription = this.loginSubscription = this.loginService.loginEventEmitter.subscribe(
       () => {
         this.drawMenu();

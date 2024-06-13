@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component, Input } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatListModule } from '@angular/material/list';
-import { RouterModule } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { MenuItem } from 'src/app/interfaces/menu-item';
 import { faChevronUp, faChevronDown } from '@fortawesome/free-solid-svg-icons';
@@ -30,6 +30,8 @@ export class MenuItemComponent {
   @Input() item!: MenuItem;
   expanded = false;
 
+  constructor(private router: Router) {
+  }
 
   doCommand() {
     // TODO href and routerlink in the same page, a way of not doing it this dirty way
@@ -37,6 +39,10 @@ export class MenuItemComponent {
     // the other option was an ngif and displaying it depending on this. not cool!
     if(this.item.url) {
       window.open(this.item.url, '_blank');
+    }
+    if(this.item.routerLink) {
+      this.router.navigate([this.item.routerLink])
+      console.log('navigationg to... '+ this.item.routerLink)
     }
     if(this.item.command) {
       this.item.command();

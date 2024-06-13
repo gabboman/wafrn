@@ -69,10 +69,13 @@ export class ThemeService {
   }
 
   setTheme(themeToSet: string) {
-    this.setStyle(
-      'customUserTheme',
-      `${environment.baseUrl}/uploads/themes/${themeToSet}.css`
-    );
+    try {
+      this.setStyle(
+        'customUserTheme',
+        `${environment.baseUrl}/uploads/themes/${themeToSet}.css`
+      );
+    } catch (error) {
+    }
   }
 
   private getLinkElementForKey(key: string) {
