@@ -17,6 +17,7 @@ import {
   faReply,
   faRepeat,
   faQuoteLeft,
+  faGlobe,
 } from '@fortawesome/free-solid-svg-icons';
 import { MatButtonModule } from '@angular/material/button';
 import { MatMenuModule } from '@angular/material/menu';
@@ -48,6 +49,7 @@ export class PostActionsComponent implements OnChanges{
   reblogIcon = faReply;
   quickReblogIcon = faRepeat;
   shareExternalIcon = faArrowUpRightFromSquare;
+  goExternalPost = faGlobe;
   reportIcon = faTriangleExclamation;
   deleteIcon = faTrash;
   editedIcon = faPen;
@@ -89,6 +91,12 @@ export class PostActionsComponent implements OnChanges{
       severity: 'success',
       summary: 'The woot original URL was copied to your clipboard!',
     });
+  }
+
+  viewOriginalPost() {
+    navigator.clipboard.writeText(this.content.remotePostId);
+    window.open(
+      this.content.remotePostId, "_blank");
   }
 
   async quickReblog() {

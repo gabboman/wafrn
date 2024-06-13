@@ -20,9 +20,13 @@
   <button (mousedown)="sharePost()" mat-menu-item>
     <fa-icon class="mr-2" [icon]="shareIcon"></fa-icon>Share with wafrn
   </button>
-  <button (mousedown)="shareOriginalPost()" mat-menu-item>
+  <button *ngIf="content.user.url.startsWith('@')"  (mousedown)="shareOriginalPost()" mat-menu-item>
     <fa-icon class="mr-2" [icon]="shareExternalIcon"></fa-icon>
     Share external URL
+  </button>
+  <button *ngIf="content.user.url.startsWith('@') && content.privacy != 1 && content.privacy != 10" (mousedown)="viewOriginalPost()" mat-menu-item>
+    <fa-icon class="mr-2" [icon]="goExternalPost"></fa-icon>
+    Go to original post in original instance
   </button>
   @if(userLoggedIn) {
   <button (mousedown)="replyPost()" mat-menu-item>
