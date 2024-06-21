@@ -314,25 +314,30 @@ export default function userRoutes(app: Application) {
     const resetCode = generateRandomString()
     try {
       if (req.body?.email && validateEmail(req.body.email)) {
-        const user = await User.findOne({
-          where: {
-            email: req.body.email.toLowerCase()
-          }
-        })
+        const email = req.body.email.toLowerCase()
+        const user = await User.findOne({ where: { email } })
         if (user) {
           user.activationCode = resetCode
           user.requestedPasswordReset = new Date()
           user.save()
-          // eslint-disable-next-line no-unused-vars
-          const email = await sendActivationEmail(
+
+          const link = `${environment.instanceUrl}/resetPassword/${encodeURIComponent(email)}/${resetCode}`
+          await sendActivationEmail(
             req.body.email.toLowerCase(),
             '',
             `So you forgot your ${environment.instanceUrl} password`,
-            `<h1>Use this link to reset your password</h1> Click <a href="${
-              environment.instanceUrl
-            }/resetPassword/${encodeURIComponent(
-              req.body.email.toLowerCase()
-            )}/${resetCode}">here</a> to reset your password`
+            `
+            <h1>Use this link to reset your password</h1>
+            <p>
+              Click <a href="${link}">here</a> to reset your password.
+            </p>
+            <p>
+              Or copy this link: ${link}
+            </p>
+            <p>
+              If you didn't request this, please ignore this email.
+            </p>
+            `
           )
         }
       }
