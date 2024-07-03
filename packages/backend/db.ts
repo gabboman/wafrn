@@ -201,7 +201,7 @@ const User = sequelize.define(
 )
 
 User.addHook('beforeSave', 'userToLower', (user: any, options: any) => {
-  user.descriptionToLower = user.description.toLowerCase();
+  user.descriptionToLower = user.description ? user.description.toLowerCase() : '';
   user.nameToLower = user.name.toLowerCase();
   user.urlToLower = user.url.toLowerCase();
 });
