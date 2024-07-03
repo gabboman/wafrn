@@ -90,10 +90,11 @@ const User = sequelize.define(
       //unique: true
     },
     description: Sequelize.TEXT,
+    descriptionToLower: Sequelize.TEXT,
     name: Sequelize.TEXT,
-    url: {
-      type: Sequelize.TEXT
-    },
+    nameToLower: Sequelize.TEXT,
+    url:  Sequelize.TEXT,
+    urlToLower: Sequelize.TEXT,
     NSFW: Sequelize.BOOLEAN,
     avatar: Sequelize.TEXT,
     password: Sequelize.TEXT,
@@ -198,6 +199,12 @@ const User = sequelize.define(
     ]
   }
 )
+
+User.addHook('beforeSave', 'userToLower', (user: any, options: any) => {
+  user.descriptionToLower = user.description.toLowerCase();
+  user.nameToLower = user.name.toLowerCase();
+  user.urlToLower = user.url.toLowerCase();
+});
 
 const UserOptions = sequelize.define(
   'userOptions',
@@ -341,7 +348,8 @@ const SilencedPost = sequelize.define('silencedPost', {})
 const PostTag = sequelize.define(
   'postTags',
   {
-    tagName: Sequelize.TEXT
+    tagName: Sequelize.TEXT,
+    tagToLower: Sequelize.TEXT
   },
   {
     indexes: [
@@ -359,6 +367,10 @@ const PostTag = sequelize.define(
     ]
   }
 )
+
+PostTag.addHook('beforeSave', 'tagToLower', (postTag: any, options: any) => {
+  postTag.tagToLower = postTag.tagName.toLowerCase();
+});
 
 const Emoji = sequelize.define(
   'emojis',

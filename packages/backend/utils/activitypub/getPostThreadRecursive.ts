@@ -252,6 +252,7 @@ async function addTagsToPost(post: any, tags: fediverseTag[]) {
       if (elem.name) {
         return {
           tagName: elem.name.replace('#', ''),
+          tagToLower: elem.name.replace('#', '').toLowerCase(),
           postId: post.id
         }
       }

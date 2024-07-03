@@ -397,6 +397,7 @@ export default function postsRoutes(app: Application) {
             tagList.map((tag) => {
               return {
                 tagName: tag,
+                tagToLower: tag.toLowerCase(),
                 postId: post.id
               }
             })
