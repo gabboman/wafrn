@@ -78,7 +78,7 @@ function activityPubRoutes(app: Application) {
             if (
               !req.fediData?.valid ||
               !req.fediData?.remoteUserUrl ||
-              !followerIds.include(req.fediData.remoteUserUrl)
+              !followerIds?.include(req.fediData.remoteUserUrl)
             ) {
               res.sendStatus(404)
               return
