@@ -190,6 +190,45 @@ export class NavigationMenuComponent implements OnInit, OnDestroy {
         },
       },
       {
+        label: 'Explore',
+        title: 'See the local posts of the server or the fediverse!',
+        visible: this.jwtService.tokenValid(),
+        icon: faCompass,
+        items: [
+          {
+            label: 'Explore WAFRN',
+            icon: faServer,
+            title: 'See the local posts of the server!',
+            routerLink: '/dashboard/exploreLocal',
+            visible: this.jwtService.tokenValid(),
+            command: () => {
+              this.hideMenu();
+            },
+          },
+          {
+            label: 'Explore the fediverse',
+            icon: faCompass,
+            title:
+              'Take a look to all the public posts avaiable to us, not only of people in this servers',
+            routerLink: '/dashboard/explore',
+            visible: this.jwtService.tokenValid(),
+            command: () => {
+              this.hideMenu();
+            },
+          },
+        ],
+      },
+      {
+        label: 'Private messages',
+        icon: faEnvelope,
+        title: 'Private messages are here!',
+        routerLink: '/dashboard/private',
+        command: () => {
+          this.hideMenu();
+        },
+        visible: this.jwtService.tokenValid(),
+      },
+      {
         label: 'My blog',
         title: 'View your own blog',
         icon: faUser,
@@ -276,45 +315,6 @@ export class NavigationMenuComponent implements OnInit, OnDestroy {
             },
           },
         ],
-      },
-      {
-        label: 'Explore',
-        title: 'See the local posts of the server or the fediverse!',
-        visible: this.jwtService.tokenValid(),
-        icon: faCompass,
-        items: [
-          {
-            label: 'Explore WAFRN',
-            icon: faServer,
-            title: 'See the local posts of the server!',
-            routerLink: '/dashboard/exploreLocal',
-            visible: this.jwtService.tokenValid(),
-            command: () => {
-              this.hideMenu();
-            },
-          },
-          {
-            label: 'Explore the fediverse',
-            icon: faCompass,
-            title:
-              'Take a look to all the public posts avaiable to us, not only of people in this servers',
-            routerLink: '/dashboard/explore',
-            visible: this.jwtService.tokenValid(),
-            command: () => {
-              this.hideMenu();
-            },
-          },
-        ],
-      },
-      {
-        label: 'Private messages',
-        icon: faEnvelope,
-        title: 'Private messages are here!',
-        routerLink: '/dashboard/private',
-        command: () => {
-          this.hideMenu();
-        },
-        visible: this.jwtService.tokenValid(),
       },
       {
         label: 'Search',
