@@ -4,7 +4,6 @@ import { Blocks, Emoji, EmojiReaction, FederatedHost, Follows, Post, User, UserL
 import { getRemoteActor } from '../activitypub/getRemoteActor'
 import { signAndAccept } from '../activitypub/signAndAccept'
 import { removeUser } from '../activitypub/removeUser'
-import { getPostThreadRecursive } from '../activitypub/getPostThreadRecursive'
 import getBlockedIds from '../cacheGetters/getBlockedIds'
 import getUserBlockedServers from '../cacheGetters/getUserBlockedServers'
 import { deletePostCommon } from '../deletePost'
@@ -69,6 +68,7 @@ async function inboxWorker(job: Job) {
           await AnnounceActivity(body, remoteUser, user)
           break
         }
+        case 'Page':
         case 'Create': {
           await CreateActivity(body, remoteUser, user)
           break
