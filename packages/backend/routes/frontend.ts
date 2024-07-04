@@ -136,7 +136,7 @@ async function getBlogSEOCache(url: string): Promise<{ title: string; descriptio
   if (!resData) {
     const blog = await User.findOne({
       where: {
-        url: sequelize.where(sequelize.fn('LOWER', sequelize.col('url')), 'LIKE', url.toLowerCase())
+        urlToLower: url.toLowerCase()
       }
     })
     if (blog) {

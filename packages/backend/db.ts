@@ -157,18 +157,19 @@ const User = sequelize.define(
         fields: [
           {
             attribute: 'remoteId',
-            type: 'FULLTEXT'
           }
-        ]
+        ],
+        type: 'FULLTEXT'
       },
       {
         unique: false,
         fields: [
           {
             attribute: 'remoteInbox',
-            type: 'FULLTEXT'
           }
-        ]
+        ],
+        type: 'FULLTEXT'
+
       },
       {
         unique: false,
@@ -183,18 +184,18 @@ const User = sequelize.define(
         fields: [
           {
             attribute: 'url',
-            type: 'FULLTEXT'
           }
-        ]
+        ],
+        type: 'FULLTEXT'
       },
       {
         unique: true,
         fields: [
           {
             attribute: 'email',
-            type: 'FULLTEXT'
           }
-        ]
+        ],
+        type: 'FULLTEXT'
       }
     ]
   }
@@ -356,13 +357,13 @@ const PostTag = sequelize.define(
       {
         fields: [
           {
-            attribute: 'tagName',
-            type: 'FULLTEXT'
+            attribute: 'tagToLower',
           },
-          {
-            attribute: 'postId'
-          }
-        ]
+        ],
+        type: 'FULLTEXT',
+      },
+      {
+        fields: ['postId']
       }
     ]
   }

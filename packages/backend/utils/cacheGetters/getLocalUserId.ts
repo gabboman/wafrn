@@ -10,7 +10,7 @@ async function getLocalUserId(url: string): Promise<string> {
     const localUser = await User.findOne({
       attributes: ['id'],
       where: {
-        url: sequelize.where(sequelize.fn('LOWER', sequelize.col('url')), '=', url.toLowerCase())
+        urlToLower: url.toLowerCase()
       }
     })
     if (localUser) {

@@ -63,11 +63,9 @@ export default function userRoutes(app: Application) {
             where: {
               [Op.or]: [
                 { email: req.body.email.toLowerCase() },
-                sequelize.where(
-                  sequelize.fn('LOWER', sequelize.col('url')),
-                  '=',
-                  req.body.url.toLowerCase().trim().replace(' ', '_')
-                )
+                {
+                  urlToLower: req.body.url.toLowerCase().trim().replace(' ', '_')
+                }
               ]
             }
           })
@@ -483,7 +481,7 @@ export default function userRoutes(app: Application) {
           }
         ],
         where: {
-          url: sequelize.where(sequelize.fn('LOWER', sequelize.col('url')), '=', blogId),
+          urlToLower: blogId,
           banned: false
         }
       })

@@ -34,9 +34,7 @@ export default function searchRoutes(app: Application) {
       const page = Number(req?.query.page) || 0
       let taggedPostsId = PostTag.findAll({
         where: {
-          [Op.and]: [
-            [sequelize.where(sequelize.fn('LOWER', sequelize.col('tagName')), 'LIKE', `${searchTerm.toLowerCase()}`)]
-          ]
+            tagToLower: searchTerm
         },
         attributes: ['postId'],
         order: [['createdAt', 'DESC']],
@@ -55,7 +53,12 @@ export default function searchRoutes(app: Application) {
                 [Op.notLike]: '@%'
               }
             },
-            [sequelize.where(sequelize.fn('LOWER', sequelize.col('url')), 'LIKE', `%${searchTerm}%`)]
+            {
+              urlToLower: {
+                [Op.like]: `%${searchTerm}%`
+              }
+            }
+            
           ]
         },
         attributes: ['url', 'avatar', 'id', 'remoteId', 'description']
@@ -70,7 +73,13 @@ export default function searchRoutes(app: Application) {
             [Op.notIn]: await getallBlockedServers()
           },
           banned: false,
-          [Op.or]: [sequelize.where(sequelize.fn('LOWER', sequelize.col('url')), 'LIKE', `%${searchTerm}%`)]
+          [Op.or]: [
+            {
+              urlToLower: {
+                [Op.like]: `%${searchTerm}%`
+              }
+            }
+            ]
         },
         attributes: ['url', 'avatar', 'id', 'remoteId', 'description']
       })
@@ -136,7 +145,11 @@ export default function searchRoutes(app: Application) {
           [Op.notIn]: await getallBlockedServers()
         },
         banned: false,
-        [Op.or]: [sequelize.where(sequelize.fn('LOWER', sequelize.col('url')), 'LIKE', `%${searchTerm}%`)]
+        [Op.or]: [{
+          urlToLower: {
+            [Op.like]: `%${searchTerm}%`
+          }
+        }]
       },
       attributes: ['url', 'avatar', 'id', 'remoteId']
     })
@@ -151,7 +164,11 @@ export default function searchRoutes(app: Application) {
               [Op.notLike]: '@%'
             }
           },
-          [sequelize.where(sequelize.fn('LOWER', sequelize.col('url')), 'LIKE', `%${searchTerm}%`)]
+          [{
+            urlToLower: {
+              [Op.like]: `%${searchTerm}%`
+            }
+          }]
         ]
       },
       attributes: ['url', 'avatar', 'id', 'remoteId']

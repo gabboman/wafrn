@@ -153,7 +153,11 @@ async function getPostThreadRecursive(
               const username = mention.href?.substring(`${environment.frontendUrl}/fediverse/blog/`.length) as string
               mentionedUser = await User.findOne({
                 where: {
-                  [Op.or]: [sequelize.where(sequelize.fn('LOWER', sequelize.col('url')), '=', username.toLowerCase())]
+                  [Op.or]: [
+                    {
+                      urlToLower: username.toLowerCase()
+                    }
+                  ]
                 }
               })
             } else {
