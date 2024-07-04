@@ -192,6 +192,15 @@ const User = sequelize.define(
         unique: true,
         fields: [
           {
+            attribute: 'urlToLower',
+            length: 768
+          }
+        ]
+      },
+      {
+        unique: true,
+        fields: [
+          {
             attribute: 'email',
           }
         ],
@@ -358,9 +367,9 @@ const PostTag = sequelize.define(
         fields: [
           {
             attribute: 'tagToLower',
+            length: 768
           },
         ],
-        type: 'FULLTEXT',
       },
       {
         fields: ['postId']
