@@ -18,7 +18,7 @@ async function getUserIdFromRemoteId(remoteId: string): Promise<string> {
       : await User.findOne({
           attributes: ['id'],
           where: {
-            remoteId: sequelize.where(sequelize.fn('LOWER', sequelize.col('remoteId')), '=', remoteId.toLowerCase())
+            remoteId: remoteId
           }
         })
     if (user) {
