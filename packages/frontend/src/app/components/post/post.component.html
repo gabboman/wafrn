@@ -232,7 +232,7 @@
         } @else {
         <fa-icon
           size="lg"
-          *ngIf="finalPost.privacy !== 10"
+          *ngIf="finalPost.privacy !== 10 && finalPost.privacy != 1"
           (click)="quickReblog(finalPost)"
           class="cursor-pointer"
           [icon]="quickReblogIcon"
