@@ -16,6 +16,7 @@ import { getUserEmojis } from '../../utils/cacheGetters/getUserEmojis'
 import { getFollowedRemoteIds } from '../../utils/cacheGetters/getFollowedRemoteIds'
 import { getFollowerRemoteIds } from '../../utils/cacheGetters/getFollowerRemoteIds'
 import { getPostAndUserFromPostId } from '../../utils/cacheGetters/getPostAndUserFromPostId'
+import { logger } from '../../utils/logger'
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const Cacher = require('cacher')
 const cacher = new Cacher()
@@ -75,14 +76,26 @@ function activityPubRoutes(app: Application) {
           }
           if (post.privacy === 1) {
             const followerIds = await getFollowerRemoteIds(user.id)
-            if (
-              !req.fediData?.valid ||
-              !req.fediData?.remoteUserUrl ||
-              !followerIds?.include(req.fediData.remoteUserUrl)
-            ) {
-              res.sendStatus(404)
+            try {
+              if (
+                !req.fediData?.valid ||
+                !req.fediData?.remoteUserUrl ||
+                (followerIds && !followerIds?.include(req.fediData.remoteUserUrl))
+              ) {
+                res.sendStatus(404)
+                return
+              }
+            } catch (error) {
+              logger.warn({
+                message: 'Error on post',
+                fediData: req.fediData,
+                user: user.id,
+                followerIds: followerIds
+              })
+              res.sendStatus(500)
               return
             }
+            
           }
 
           res.set({
