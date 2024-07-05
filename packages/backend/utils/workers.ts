@@ -4,8 +4,9 @@ import { inboxWorker } from './queueProcessors/inbox'
 import { prepareSendRemotePostWorker } from './queueProcessors/prepareSendRemotePost'
 import { sendPostToInboxes } from './queueProcessors/sendPostToInboxes'
 import { getRemoteActorIdProcessor } from './queueProcessors/getRemoteActorIdProcessor'
+import { logger } from './logger'
 
-console.log('starting workers')
+logger.info('starting workers')
 const workerInbox = new Worker('inbox', (job: Job) => inboxWorker(job), {
   connection: environment.bullmqConnection,
   metrics: {

@@ -91,7 +91,7 @@ pollRoutes(app)
 frontend(app)
 
 app.listen(PORT, environment.listenIp, () => {
-  console.log('started app')
+  logger.info('Started app')
 
   if (environment.workers.mainThread) {
     workerInbox.on('completed', (job) => {})
