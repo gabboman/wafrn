@@ -265,7 +265,7 @@ export default function notificationRoutes(app: Application) {
           [Op.notIn]: await getMutedPosts(userId)
         },
         createdAt: {
-          [operator]: startCountDate
+          [operator]: isNaN(startCountDate.getDate()) ? new Date() : startCountDate
         },
         userId: {
           [Op.notIn]: await getBlockedIds(userId)

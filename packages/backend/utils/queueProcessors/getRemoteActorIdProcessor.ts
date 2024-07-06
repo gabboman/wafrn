@@ -209,8 +209,17 @@ async function getRemoteActorIdProcessor(job: Job) {
               await Promise.all(updates)
               await redisCache.del('userRemoteId:' + existingUser.remoteId)
             }
-            userRes.update(userData)
-            await userRes.save()
+            if(userRes){
+              userRes.update(userData)
+              await userRes.save()
+            } else {
+              logger.debug({
+                message: 'user is null',
+                id: res,
+                url: actorUrl
+              })
+            }
+            
           }
         } else {
           if (existingUsers && existingUsers[0]) {
@@ -222,7 +231,7 @@ async function getRemoteActorIdProcessor(job: Job) {
         }
         res = userRes?.id ? userRes.id : await getDeletedUser()
         try {
-          const emojis = [...new Set(userPetition.tag?.filter((elem: fediverseTag) => elem.type === 'Emoji'))]
+          const emojis = [...new Set(userPetition?.tag ? userPetition.tag.filter((elem: fediverseTag) => elem.type === 'Emoji') : [])]
 
           await processUserEmojis(userRes, emojis)
         } catch (error) {
