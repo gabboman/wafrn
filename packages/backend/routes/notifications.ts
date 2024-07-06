@@ -207,7 +207,7 @@ export default function notificationRoutes(app: Application) {
       where: {
         userId: userId,
         createdAt: {
-          [operator]: startCountDate
+          [operator]:  isNaN(startCountDate.getDate()) ? new Date() : startCountDate
         }
       }
     })
@@ -232,7 +232,7 @@ export default function notificationRoutes(app: Application) {
           [Op.notIn]: await getMutedPosts(userId)
         },
         createdAt: {
-          [operator]: startCountDate
+          [operator]:  isNaN(startCountDate.getDate()) ? new Date() : startCountDate
         },
         userId: {
           [Op.notIn]: await getBlockedIds(userId)
@@ -319,7 +319,7 @@ export default function notificationRoutes(app: Application) {
       limit: limit ? environment.postsPerPage : 50,
       where: {
         createdAt: {
-          [operator]: startCountDate
+          [operator]:  isNaN(startCountDate.getDate()) ? new Date() : startCountDate
         },
         literal: Sequelize.literal(`quotedPostId IN (SELECT id FROM posts WHERE userId= "${userId}")`)
       }
