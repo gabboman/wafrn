@@ -28,7 +28,7 @@
     "@fortawesome/fontawesome-svg-core": "^6.5.2",
     "@fortawesome/free-solid-svg-icons": "^6.5.2",
     "core-js": "^3.37.0",
-    "dompurify": "^3.1.2",
+    "dompurify": "^3.1.6",
     "esbuild": "^0.21.3",
     "ngx-quill": "^26.0.5",
     "parchment": "^2.0.1",

@@ -21,6 +21,7 @@ import { JwtService } from 'src/app/services/jwt.service';
 import { EmojiReactComponent } from '../emoji-react/emoji-react.component';
 import { MessageService } from 'src/app/services/message.service';
 import { Emoji } from 'src/app/interfaces/emoji';
+import { InjectHtmlModule } from 'src/app/directives/inject-html/inject-html.module';
 
 type EmojiReaction = {
   id: string;
@@ -42,6 +43,7 @@ type EmojiReaction = {
     MatButtonModule,
     MatTooltipModule,
     EmojiReactComponent,
+    InjectHtmlModule
   ],
   templateUrl: './post-fragment.component.html',
   styleUrl: './post-fragment.component.scss',

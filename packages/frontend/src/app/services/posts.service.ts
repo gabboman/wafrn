@@ -368,7 +368,7 @@ export class PostsService {
         'font',
         'blockquote',
       ],
-      ALLOWED_ATTR: ['style', 'class', 'href', 'color'],
+      ALLOWED_ATTR: ['href', 'color'],
     });
     // we remove stuff like img and script tags. we only allow certain stuff.
     const parsedAsHTML = this.parser.parseFromString(sanitized, 'text/html');
