@@ -43,7 +43,7 @@ async function getPetitionSigned(user: any, target: string): Promise<any> {
       Digest: `SHA-256=${digest}`,
       Signature: header
     }
-    const axiosResponse = await axios.get(target, { headers: headers })
+    const axiosResponse = await axios.get(url.href, { headers: headers })
     /*
     const contentType = axiosResponse.headers['Content-Type']?.toString().toLowerCase()
     if (

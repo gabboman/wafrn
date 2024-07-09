@@ -28,7 +28,7 @@ export default function forumRoutes(app: Application) {
     if (postsToGet) {
       if (postsToGet.hierarchyLevel === 1) {
         let postIds = (
-          await sequelize.query(`SELECT DISTINCT postsId FROM postsancestors where ancestorId = "${postId}"`, {
+          await sequelize.query(`SELECT DISTINCT postsId FROM postsancestors where ancestorId = "${postsToGet.id}"`, {
             type: QueryTypes.SELECT
           })
         ).map((elem: any) => elem.postsId)

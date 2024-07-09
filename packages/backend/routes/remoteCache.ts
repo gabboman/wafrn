@@ -6,9 +6,9 @@ import { logger } from '../utils/logger'
 export default function cacheRoutes(app: Application) {
   app.get('/api/cache', async (req: Request, res: Response) => {
     if (req.query?.media) {
-      const mediaLink: string = req.query.media as string
+      const mediaLink: string = new URL(req.query.media).href
       const mediaLinkArray = mediaLink.split('.')
-      let linkExtension = mediaLinkArray[mediaLinkArray.length - 1].toLowerCase()
+      let linkExtension = mediaLinkArray[mediaLinkArray.length - 1].toLowerCase().replaceAll('/', '_')
       if (linkExtension.includes('/')) {
         linkExtension = ''
       }
