@@ -23,7 +23,13 @@ async function postToJSONLD(postId: string) {
   const conversationString = `${environment.frontendUrl}/fediverse/conversation/${post.id}`
   if (post.parentId) {
     let dbPost = post.parent
-    while (dbPost && dbPost.content === '' && dbPost.hierarchyLevel !== 0 && dbPost.postTags.length != 0 && dbPost.medias.length != 0) {
+    while (
+      dbPost &&
+      dbPost.content === '' &&
+      dbPost.hierarchyLevel !== 0 &&
+      dbPost.postTags.length != 0 &&
+      dbPost.medias.length != 0
+    ) {
       // TODO optimize this
       const tmpPost = post.parent
       dbPost = tmpPost
@@ -43,7 +49,7 @@ async function postToJSONLD(postId: string) {
   const fediMentions: fediverseTag[] = []
   const fediTags: fediverseTag[] = []
   let tagsAndQuotes = '<br>'
-  const quotedPosts =  post.quoted
+  const quotedPosts = post.quoted
   if (quotedPosts && quotedPosts.length > 0) {
     const mainQuotedPost = quotedPosts[0]
     quotedPostString = mainQuotedPost.remotePostId

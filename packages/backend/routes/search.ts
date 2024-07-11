@@ -34,7 +34,7 @@ export default function searchRoutes(app: Application) {
       const page = Number(req?.query.page) || 0
       let taggedPostsId = PostTag.findAll({
         where: {
-            tagToLower: searchTerm
+          tagToLower: searchTerm
         },
         attributes: ['postId'],
         order: [['createdAt', 'DESC']],
@@ -58,7 +58,6 @@ export default function searchRoutes(app: Application) {
                 [Op.like]: `%${searchTerm}%`
               }
             }
-            
           ]
         },
         attributes: ['url', 'avatar', 'id', 'remoteId', 'description']
@@ -79,7 +78,7 @@ export default function searchRoutes(app: Application) {
                 [Op.like]: `%${searchTerm}%`
               }
             }
-            ]
+          ]
         },
         attributes: ['url', 'avatar', 'id', 'remoteId', 'description']
       })
@@ -145,11 +144,13 @@ export default function searchRoutes(app: Application) {
           [Op.notIn]: await getallBlockedServers()
         },
         banned: false,
-        [Op.or]: [{
-          urlToLower: {
-            [Op.like]: `%${searchTerm}%`
+        [Op.or]: [
+          {
+            urlToLower: {
+              [Op.like]: `%${searchTerm}%`
+            }
           }
-        }]
+        ]
       },
       attributes: ['url', 'avatar', 'id', 'remoteId']
     })
@@ -164,11 +165,13 @@ export default function searchRoutes(app: Application) {
               [Op.notLike]: '@%'
             }
           },
-          [{
-            urlToLower: {
-              [Op.like]: `%${searchTerm}%`
+          [
+            {
+              urlToLower: {
+                [Op.like]: `%${searchTerm}%`
+              }
             }
-          }]
+          ]
         ]
       },
       attributes: ['url', 'avatar', 'id', 'remoteId']

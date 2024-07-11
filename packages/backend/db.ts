@@ -93,7 +93,7 @@ const User = sequelize.define(
     descriptionToLower: Sequelize.TEXT,
     name: Sequelize.TEXT,
     nameToLower: Sequelize.TEXT,
-    url:  Sequelize.TEXT,
+    url: Sequelize.TEXT,
     urlToLower: Sequelize.TEXT,
     NSFW: Sequelize.BOOLEAN,
     avatar: Sequelize.TEXT,
@@ -156,7 +156,7 @@ const User = sequelize.define(
         unique: true,
         fields: [
           {
-            attribute: 'remoteId',
+            attribute: 'remoteId'
           }
         ],
         type: 'FULLTEXT'
@@ -165,11 +165,10 @@ const User = sequelize.define(
         unique: false,
         fields: [
           {
-            attribute: 'remoteInbox',
+            attribute: 'remoteInbox'
           }
         ],
         type: 'FULLTEXT'
-
       },
       {
         unique: false,
@@ -183,7 +182,7 @@ const User = sequelize.define(
         unique: true,
         fields: [
           {
-            attribute: 'url',
+            attribute: 'url'
           }
         ],
         type: 'FULLTEXT'
@@ -201,7 +200,7 @@ const User = sequelize.define(
         unique: true,
         fields: [
           {
-            attribute: 'email',
+            attribute: 'email'
           }
         ],
         type: 'FULLTEXT'
@@ -211,10 +210,10 @@ const User = sequelize.define(
 )
 
 User.addHook('beforeSave', 'userToLower', (user: any, options: any) => {
-  user.descriptionToLower = user.description ? user.description.toLowerCase() : '';
-  user.nameToLower = user.name.toLowerCase();
-  user.urlToLower = user.url.toLowerCase();
-});
+  user.descriptionToLower = user.description ? user.description.toLowerCase() : ''
+  user.nameToLower = user.name.toLowerCase()
+  user.urlToLower = user.url.toLowerCase()
+})
 
 const UserOptions = sequelize.define(
   'userOptions',
@@ -368,8 +367,8 @@ const PostTag = sequelize.define(
           {
             attribute: 'tagToLower',
             length: 768
-          },
-        ],
+          }
+        ]
       },
       {
         fields: ['postId']
@@ -379,8 +378,8 @@ const PostTag = sequelize.define(
 )
 
 PostTag.addHook('beforeSave', 'tagToLower', (postTag: any, options: any) => {
-  postTag.tagToLower = postTag.tagName.toLowerCase();
-});
+  postTag.tagToLower = postTag.tagName.toLowerCase()
+})
 
 const Emoji = sequelize.define(
   'emojis',

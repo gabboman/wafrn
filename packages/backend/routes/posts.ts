@@ -366,7 +366,7 @@ export default function postsRoutes(app: Application) {
           post.privacy = bodyPrivacy
           await post.save()
         } else {
-          if(req.body.parent){
+          if (req.body.parent) {
             await redisCache.del('postAndUser:' + req.body.parent)
           }
           post = await Post.create({

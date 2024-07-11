@@ -92,7 +92,7 @@ async function getRemoteActorIdProcessor(job: Job) {
         let userRes
         const existingUsers = await User.findAll({
           where: {
-            urlToLower:  userData.url.toLowerCase()
+            urlToLower: userData.url.toLowerCase()
           }
         })
         if (res) {
@@ -209,7 +209,7 @@ async function getRemoteActorIdProcessor(job: Job) {
               await Promise.all(updates)
               await redisCache.del('userRemoteId:' + existingUser.remoteId)
             }
-            if(userRes){
+            if (userRes) {
               userRes.update(userData)
               await userRes.save()
             } else {
@@ -219,7 +219,6 @@ async function getRemoteActorIdProcessor(job: Job) {
                 url: actorUrl
               })
             }
-            
           }
         } else {
           if (existingUsers && existingUsers[0]) {
@@ -231,7 +230,9 @@ async function getRemoteActorIdProcessor(job: Job) {
         }
         res = userRes?.id ? userRes.id : await getDeletedUser()
         try {
-          const emojis = [...new Set(userPetition?.tag ? userPetition.tag.filter((elem: fediverseTag) => elem.type === 'Emoji') : [])]
+          const emojis = [
+            ...new Set(userPetition?.tag ? userPetition.tag.filter((elem: fediverseTag) => elem.type === 'Emoji') : [])
+          ]
 
           await processUserEmojis(userRes, emojis)
         } catch (error) {

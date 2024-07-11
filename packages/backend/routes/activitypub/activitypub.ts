@@ -61,7 +61,7 @@ function activityPubRoutes(app: Application) {
     getCheckFediverseSignatureFucnction(false),
     async (req: SignedRequest, res: Response) => {
       if (req.params?.id) {
-        const cachePost = await getPostAndUserFromPostId(req.params.id);
+        const cachePost = await getPostAndUserFromPostId(req.params.id)
         const post = cachePost.data
         if (post) {
           const user = post.user
@@ -95,7 +95,6 @@ function activityPubRoutes(app: Application) {
               res.sendStatus(500)
               return
             }
-            
           }
 
           res.set({
