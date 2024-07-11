@@ -5,25 +5,24 @@ import axios from 'axios'
 import { logger } from '../utils/logger'
 export default function cacheRoutes(app: Application) {
   app.get('/api/cache', async (req: Request, res: Response) => {
-    if (req.query?.media) {
-      const mediaLink: string = new URL(req.query.media).href
-      const mediaLinkArray = mediaLink.split('.')
-      let linkExtension = mediaLinkArray[mediaLinkArray.length - 1].toLowerCase().replaceAll('/', '_')
-      if (linkExtension.includes('/')) {
-        linkExtension = ''
-      }
-      linkExtension = linkExtension.split('?')[0]
-      // calckey images have no extension
-      const mediaLinkHash = crypto.createHash('sha256').update(mediaLink).digest('hex')
-      const localFileName = linkExtension ? `cache/${mediaLinkHash}.${linkExtension}` : `cache/${mediaLinkHash}`
-      if (fs.existsSync(localFileName)) {
-        // we set some cache
-        res.set('Cache-control', 'public, max-age=3600')
-        // We have the image! we just serve it
-        res.sendFile(localFileName, { root: '.' })
-      } else {
-        // its downloading time!
-        try {
+    try {
+      if (req.query?.media) {
+        const mediaLink: string = new URL(req.query.media).href
+        const mediaLinkArray = mediaLink.split('.')
+        let linkExtension = mediaLinkArray[mediaLinkArray.length - 1].toLowerCase().replaceAll('/', '_')
+        if (linkExtension.includes('/')) {
+          linkExtension = ''
+        }
+        linkExtension = linkExtension.split('?')[0]
+        // calckey images have no extension
+        const mediaLinkHash = crypto.createHash('sha256').update(mediaLink).digest('hex')
+        const localFileName = linkExtension ? `cache/${mediaLinkHash}.${linkExtension}` : `cache/${mediaLinkHash}`
+        if (fs.existsSync(localFileName)) {
+          // we set some cache
+          res.set('Cache-control', 'public, max-age=3600')
+          // We have the image! we just serve it
+          res.sendFile(localFileName, { root: '.' })
+        } else {
           const remoteResponse = await axios.get(mediaLink, { responseType: 'stream' })
           const path = `${localFileName}`
           const filePath = fs.createWriteStream(path)
@@ -34,13 +33,16 @@ export default function cacheRoutes(app: Application) {
             res.sendFile(localFileName, { root: '.' })
           })
           remoteResponse.data.pipe(filePath)
-        } catch (error) {
-          logger.trace(error)
-          res.sendStatus(404)
         }
+      } else {
+        res.sendStatus(404)
       }
-    } else {
-      res.sendStatus(404)
+    } catch (error) {
+      logger.trace({
+        message: 'error on cache',
+        url: req.query?.media,
+        error: error
+      })
     }
   })
 }
