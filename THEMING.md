@@ -1,5 +1,19 @@
 # Theme template for WAFRN
 
+### Small rickroll detector
+
+Add this to detect rickrolls
+
+````
+a[href *= "dQw4w9WgXcQ"]::before {
+    content: "this is a rickroll → ";
+    color: red;
+    background-color: white;
+    border-radius: 5px;
+    padding: 2px;
+}
+```
+
 ### Initial template made by @fizzyday@app.wafrn.net
 
 Here is a theming template you can use to customize the appearance of your profile and how the dashboard appears to you.
@@ -945,3 +959,4 @@ transition: var(--color-trans);
 
 }
 ```
+````
