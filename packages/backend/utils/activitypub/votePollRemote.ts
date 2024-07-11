@@ -91,7 +91,7 @@ async function voteInPoll(userId: string, pollId: number) {
         inboxList: inboxes
       },
       {
-        priority: Number.MAX_SAFE_INTEGER
+        priority: 2097152
       }
     )
     sendVoteJob.waitUntilFinished(queueEvents).then(async () => {

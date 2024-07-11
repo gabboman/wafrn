@@ -120,7 +120,7 @@ async function likePostRemote(like: any, dislike = false) {
           inboxList: inboxChunk
         },
         {
-          priority: Number.MAX_SAFE_INTEGER
+          priority: 2097152
         }
       )
     }
@@ -229,7 +229,7 @@ async function emojiReactRemote(react: any, undo = false) {
           inboxList: inboxChunk
         },
         {
-          priority: Number.MAX_SAFE_INTEGER
+          priority: 2097152
         }
       )
     }
