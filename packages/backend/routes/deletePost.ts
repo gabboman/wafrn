@@ -99,7 +99,7 @@ export default function deletePost(app: Application) {
                 inboxList: inboxChunk
               },
               {
-                priority: 50
+                priority: 2097152
               }
             )
           }
