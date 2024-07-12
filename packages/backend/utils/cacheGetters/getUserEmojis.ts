@@ -13,7 +13,7 @@ async function getUserEmojis(id: string) {
     const emojis = await Emoji.findAll({
       where: {
         id: {
-          [Op.in]: emojiIds.map((elem: any) => elem.id)
+          [Op.in]: emojiIds.map((elem: any) => elem.emojiId)
         }
       }
     })
