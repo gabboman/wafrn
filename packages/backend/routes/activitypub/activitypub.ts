@@ -30,7 +30,7 @@ async function getLocalUserByUrl(url: string): Promise<any> {
 async function getLocalUserByUrlCache(url: string): Promise<any> {
   let cacheResult = await redisCache.get('localUserData:' + url)
   if (!cacheResult) {
-    cacheResult = JSON.stringify((await getLocalUserByUrl(url)).dataValues)
+    cacheResult = JSON.stringify((await getLocalUserByUrl(url))?.dataValues)
     if (cacheResult) {
       redisCache.set('localUserData:' + url, cacheResult, 'EX', 60)
     }
