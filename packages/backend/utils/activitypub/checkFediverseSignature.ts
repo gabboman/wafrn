@@ -56,6 +56,10 @@ function getCheckFediverseSignatureFucnction(force = false) {
       success =
         verifyDigest(req.rawBody ? req.rawBody : '', req.headers.digest) ||
         httpSignature.verifySignature(sigHead, remoteKey)
+        if (req.method === 'POST') {
+          // we check that the petition is done by who it says its done
+          success = success && remoteUserUrl.toLowerCase() === req.body.actor.toLowerCase()
+        }
     } catch (error: any) {
       req.fediData = { fediHost: hostUrl, valid: false }
       if (force) {
