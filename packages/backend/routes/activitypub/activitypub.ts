@@ -17,6 +17,7 @@ import { getFollowedRemoteIds } from '../../utils/cacheGetters/getFollowedRemote
 import { getFollowerRemoteIds } from '../../utils/cacheGetters/getFollowerRemoteIds'
 import { getPostAndUserFromPostId } from '../../utils/cacheGetters/getPostAndUserFromPostId'
 import { logger } from '../../utils/logger'
+import { checkuserAllowsThreads } from '../../utils/checkUserAllowsThreads'
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const Cacher = require('cacher')
 const cacher = new Cacher()
@@ -127,6 +128,10 @@ function activityPubRoutes(app: Application) {
           return
         }
         if (user && !user.banned) {
+          if(! (await checkuserAllowsThreads(req, user))){
+              res.sendStatus(403);
+              return;
+          }
           const emojis = await getUserEmojis(user.id)
           const userForFediverse = {
             '@context': ['https://www.w3.org/ns/activitystreams', 'https://w3id.org/security/v1'],
@@ -197,6 +202,10 @@ function activityPubRoutes(app: Application) {
         return
       }
       if (user && !user.banned) {
+        if(! (await checkuserAllowsThreads(req, user))){
+          res.sendStatus(403);
+          return;
+      }
         const followedUsers = await getFollowedRemoteIds(user.id)
         const response = {
           '@context': 'https://www.w3.org/ns/activitystreams',
@@ -231,6 +240,10 @@ function activityPubRoutes(app: Application) {
           return
         }
         if (user && !user.banned) {
+          if(! (await checkuserAllowsThreads(req, user))){
+            res.sendStatus(403);
+            return;
+        }
           const followers = await getFollowerRemoteIds(user.id)
 
           const followersNumber = followers.length
@@ -268,6 +281,10 @@ function activityPubRoutes(app: Application) {
           return
         }
         if (user) {
+          if(! (await checkuserAllowsThreads(req, user))){
+            res.sendStatus(403);
+            return;
+        }
           res.set({
             'content-type': 'application/activity+json'
           })
@@ -296,6 +313,10 @@ function activityPubRoutes(app: Application) {
       const urlToSearch = req.params?.url ? req.params.url : environment.adminUser
       const url = urlToSearch.toLowerCase()
       const user = await getLocalUserByUrl(url)
+      if(user.url !== environment.adminUser && !(await checkuserAllowsThreads(req, user))){
+        res.sendStatus(403);
+        return;
+    }
       if (user && user.banned) {
         res.sendStatus(410)
         return
