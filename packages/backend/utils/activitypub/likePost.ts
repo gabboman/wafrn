@@ -7,6 +7,7 @@ import { logger } from '../logger'
 import { Queue } from 'bullmq'
 import _ from 'underscore'
 import { emojiToAPTag } from './emojiToAPTag'
+import { isDatabaseMysql } from '../isDatabaseMysql'
 
 const sendPostQueue = new Queue('sendPostToInboxes', {
   connection: environment.bullmqConnection,
@@ -86,7 +87,9 @@ async function likePostRemote(like: any, dislike = false) {
       [Op.or]: [
         {
           literal: sequelize.literal(
-            `id in (SELECT federatedHostId from users where users.id IN (SELECT followerId from follows where followedId = '${like.userId}') and federatedHostId is not NULL)`
+            isDatabaseMysql() ?
+            `id in (SELECT federatedHostId from users where users.id IN (SELECT followerId from follows where followedId = '${like.userId}') and federatedHostId is not NULL)` :
+            `"id" in (SELECT "federatedHostId" from "users" where "users"."id" IN (SELECT "followerId" from "follows" where "followedId" = '${like.userId}') and "federatedHostId" is not NULL)`
           )
         },
         {
@@ -195,7 +198,10 @@ async function emojiReactRemote(react: any, undo = false) {
       [Op.or]: [
         {
           literal: sequelize.literal(
-            `id in (SELECT federatedHostId from users where users.id IN (SELECT followerId from follows where followedId = '${react.userId}') and federatedHostId is not NULL)`
+            isDatabaseMysql() ?
+            `id in (SELECT federatedHostId from users where users.id IN (SELECT followerId from follows where followedId = '${react.userId}') and federatedHostId is not NULL)` :
+            `"id" in (SELECT "federatedHostId" from "users" where "users"."id" IN (SELECT "followerId" from "follows" where "followedId" = '${react.userId}') and "federatedHostId" is not NULL)`
+
           )
         },
         {
