@@ -1,4 +1,5 @@
 import { User, sequelize } from '../../db'
+import { environment } from '../../environment'
 import { redisCache } from '../redis'
 
 async function getLocalUserId(url: string): Promise<string> {
@@ -18,7 +19,12 @@ async function getLocalUserId(url: string): Promise<string> {
       await redisCache.set('localUserId:' + url, res)
     }
   }
-  return res
+  
+  return res != '' ? res : (await User.findOne({
+    where: {
+      urlToLower: environment.deletedUser.toLowerCase()
+    }
+  })).id
 }
 
 export { getLocalUserId }
