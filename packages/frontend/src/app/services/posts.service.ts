@@ -282,14 +282,14 @@ export class PostsService {
       .filter((mention) => mention !== undefined);
     let emojiReactions: PostEmojiReaction[] =
       unlinked.emojiRelations.postEmojiReactions.filter(
-        (emoji) => emoji.postid === elem.id
+        (emoji) => emoji.postId === elem.id
       );
     const likesAsEmojiReactions: PostEmojiReaction[] = unlinked.likes
       .filter((like) => like.postId === elem.id)
       .map((likeUserId) => {
         return {
           emojiId: 'Like',
-          postid: elem.id,
+          postId: elem.id,
           userId: likeUserId.userId,
           content: '♥️',
           //emoji?: Emoji;

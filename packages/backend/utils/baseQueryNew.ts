@@ -23,7 +23,7 @@ async function getQuotes(
 ): Promise<{ quoterPostId: string; quotedPostId: string; createdAt: Date }[]> {
   return await Quotes.findAll({
     where: {
-      quoterPostid: {
+      quoterPostId: {
         [Op.in]: postIds
       }
     }
@@ -93,7 +93,7 @@ async function getEmojis(input: { userIds: string[]; postIds: string[] }): Promi
   emojis: []
 }> {
   let postEmojisIds = PostEmojiRelations.findAll({
-    attributes: ['emojiId', 'postid'],
+    attributes: ['emojiId', 'postId'],
     where: {
       postId: {
         [Op.in]: input.postIds
@@ -102,7 +102,7 @@ async function getEmojis(input: { userIds: string[]; postIds: string[] }): Promi
   })
 
   let postEmojiReactions = EmojiReaction.findAll({
-    attributes: ['emojiId', 'postid', 'userId', 'content'],
+    attributes: ['emojiId', 'postId', 'userId', 'content'],
     where: {
       postId: {
         [Op.in]: input.postIds

@@ -58,7 +58,7 @@ interface UserEmojiRelation {
 
 export interface PostEmojiReaction {
   emojiId: string;
-  postid: string;
+  postId: string;
   userId: string;
   content: string;
   emoji?: Emoji;
