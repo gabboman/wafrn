@@ -58,7 +58,7 @@ function activityPubRoutes(app: Application) {
   // get post
   app.get(
     ['/fediverse/post/:id', '/fediverse/activity/post/:id'],
-    getCheckFediverseSignatureFucnction(false),
+    getCheckFediverseSignatureFucnction(true),
     async (req: SignedRequest, res: Response) => {
       if (req.params?.id) {
         const cachePost = await getPostAndUserFromPostId(req.params.id)
@@ -117,7 +117,7 @@ function activityPubRoutes(app: Application) {
   // Get blog for fediverse
   app.get(
     '/fediverse/blog/:url',
-    //getCheckFediverseSignatureFucnction(true),
+    getCheckFediverseSignatureFucnction(true),
     async (req: SignedRequest, res: Response) => {
       if (!req.params.url?.startsWith('@')) {
         const url = req.params.url.toLowerCase()

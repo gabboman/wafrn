@@ -27,7 +27,7 @@ function getCheckFediverseSignatureFucnction(force = false) {
       : 'somewhere not specified'
     try {
       const sigHead = httpSignature.parseRequest(req, {
-        headers: ['(request-target)', 'digest', 'host', 'date']
+        headers: req.method === 'GET' ? ['(request-target)', 'host', 'date'] :['(request-target)', 'digest', 'host', 'date']
       })
       const remoteUserUrl = sigHead.keyId.split('#')[0]
       hostUrl = new URL(remoteUserUrl).host
@@ -59,7 +59,7 @@ function getCheckFediverseSignatureFucnction(force = false) {
     } catch (error: any) {
       req.fediData = { fediHost: hostUrl, valid: false }
       if (force) {
-        logger.trace({
+        logger.debug({
           message: 'Failed to verify signature',
           host: hostUrl,
           error: error
