@@ -250,7 +250,16 @@ async function getRemoteActorIdProcessor(job: Job) {
 }
 
 async function getHostFromCache(displayName: string): Promise<any> {
-  const res = await FederatedHost.findByPk(await getFederatedHostIdFromUrl(displayName))
+  let res = undefined;
+  try {
+    res = await FederatedHost.findByPk(await getFederatedHostIdFromUrl(displayName))
+  } catch(error) {
+    logger.debug({
+      message: 'Error on getHostFromCache',
+      host: displayName,
+      error: error
+    })
+  }
   return res
 }
 
