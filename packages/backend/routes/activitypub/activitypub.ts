@@ -91,7 +91,8 @@ function activityPubRoutes(app: Application) {
                 message: 'Error on post',
                 fediData: req.fediData,
                 user: user.id,
-                followerIds: followerIds
+                followerIds: followerIds,
+                error: error
               })
               res.sendStatus(500)
               return
