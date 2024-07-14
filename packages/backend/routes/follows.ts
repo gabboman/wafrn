@@ -22,11 +22,13 @@ export default function followsRoutes(app: Application) {
     try {
       const posterId = req.jwtData?.userId ? req.jwtData.userId : environment.deletedUser
       const options = await getUserOptions(posterId)
-      const userFederatesWithThreads = options.filter(elem => elem.optionName === 'wafrn.federateWithThreads' && elem.optionValue === 'true')
-      if(userFederatesWithThreads.length === 0) {
+      const userFederatesWithThreads = options.filter(
+        (elem) => elem.optionName === 'wafrn.federateWithThreads' && elem.optionValue === 'true'
+      )
+      if (userFederatesWithThreads.length === 0) {
         const userToBeFollowed = await User.findByPk(req.body.userId)
-        if(userToBeFollowed.urlToLower.endsWith('threads.net')) {
-          res.status(500);
+        if (userToBeFollowed.urlToLower.endsWith('threads.net')) {
+          res.status(500)
           res.send({
             error: true,
             message: 'You are trying to follow a threads user but you did not enable threads federation'

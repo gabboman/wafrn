@@ -230,12 +230,14 @@ async function getRemoteActorIdProcessor(job: Job) {
         }
         res = userRes?.id ? userRes.id : await getDeletedUser()
         try {
-          if(userRes) {
+          if (userRes) {
             const emojis = [
-              ...new Set(userPetition?.tag ? userPetition.tag.filter((elem: fediverseTag) => elem.type === 'Emoji') : [])
+              ...new Set(
+                userPetition?.tag ? userPetition.tag.filter((elem: fediverseTag) => elem.type === 'Emoji') : []
+              )
             ]
             await processUserEmojis(userRes, emojis)
-          } 
+          }
         } catch (error) {
           logger.info({
             message: `Error processing emojis from user ${userRes?.url}`,
@@ -251,10 +253,10 @@ async function getRemoteActorIdProcessor(job: Job) {
 }
 
 async function getHostFromCache(displayName: string): Promise<any> {
-  let res = undefined;
+  let res = undefined
   try {
     res = await FederatedHost.findByPk(await getFederatedHostIdFromUrl(displayName))
-  } catch(error) {
+  } catch (error) {
     logger.debug({
       message: 'Error on getHostFromCache',
       host: displayName,

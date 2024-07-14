@@ -1,7 +1,7 @@
-import { environment } from "../environment";
+import { environment } from '../environment'
 
 function isDatabaseMysql(): boolean {
-    return environment.databaseConnectionString.toLowerCase().startsWith('m')
+  return environment.databaseConnectionString.toLowerCase().startsWith('m')
 }
 
-export {isDatabaseMysql}
+export { isDatabaseMysql }

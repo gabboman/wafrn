@@ -222,8 +222,10 @@ export default function postsRoutes(app: Application) {
           postParentsUsers.push(parent.userId)
           // we then check if the user has threads federation enabled and if not we check that no threads user is in the thread
           const options = await getUserOptions(posterId)
-          const userFederatesWithThreads = options.filter(elem => elem.optionName === 'wafrn.federateWithThreads' && elem.optionValue === 'true')
-          if(userFederatesWithThreads.length === 0) {
+          const userFederatesWithThreads = options.filter(
+            (elem) => elem.optionName === 'wafrn.federateWithThreads' && elem.optionValue === 'true'
+          )
+          if (userFederatesWithThreads.length === 0) {
             const ancestorPostsUsers = await User.findAll({
               where: {
                 id: {
@@ -232,14 +234,17 @@ export default function postsRoutes(app: Application) {
               }
             })
             const ancestorUrls: string[] = ancestorPostsUsers.map((elem: any) => elem.urlToLower)
-            if(ancestorUrls.some(elem => elem.endsWith('threads.net'))) {
+            if (ancestorUrls.some((elem) => elem.endsWith('threads.net'))) {
               success = false
               res.status(500)
-              res.send({ success: false, message: 'You do not federate with threads and this thread contains a post from threads' })
+              res.send({
+                success: false,
+                message: 'You do not federate with threads and this thread contains a post from threads'
+              })
               return false
             }
           }
-          
+
           const bannedUsers = await User.count({
             where: {
               id: {
@@ -317,8 +322,10 @@ export default function postsRoutes(app: Application) {
           }
           // we check if user federates with threads and if not we check they are not mentioning anyone from threads
           const options = await getUserOptions(posterId)
-          const userFederatesWithThreads = options.filter(elem => elem.optionName === 'wafrn.federateWithThreads' && elem.optionValue === 'true')
-          if(userFederatesWithThreads.length === 0) {
+          const userFederatesWithThreads = options.filter(
+            (elem) => elem.optionName === 'wafrn.federateWithThreads' && elem.optionValue === 'true'
+          )
+          if (userFederatesWithThreads.length === 0) {
             const mentionedUsers = await User.findAll({
               where: {
                 id: {
@@ -326,10 +333,13 @@ export default function postsRoutes(app: Application) {
                 }
               }
             })
-            if(mentionedUsers.some((usr: any) => usr.urlToLower.endsWith('threads.net'))) {
+            if (mentionedUsers.some((usr: any) => usr.urlToLower.endsWith('threads.net'))) {
               success = false
               res.status(500)
-              res.send({ success: false, message: 'You do not federate with threads and this thread contains a post from threads' })
+              res.send({
+                success: false,
+                message: 'You do not federate with threads and this thread contains a post from threads'
+              })
               return false
             }
           }

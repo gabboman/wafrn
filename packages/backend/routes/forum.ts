@@ -30,12 +30,13 @@ export default function forumRoutes(app: Application) {
       if (postsToGet.hierarchyLevel === 1) {
         let postIds = (
           await sequelize.query(
-            isDatabaseMysql() ?
-            `SELECT DISTINCT postsId FROM postsancestors where ancestorId = "${postsToGet.id}"` :
-            `SELECT DISTINCT "postsId" FROM "postsancestors" where "ancestorId" = '${postsToGet.id}'`
-            , {
-            type: QueryTypes.SELECT
-          })
+            isDatabaseMysql()
+              ? `SELECT DISTINCT postsId FROM postsancestors where ancestorId = "${postsToGet.id}"`
+              : `SELECT DISTINCT "postsId" FROM "postsancestors" where "ancestorId" = '${postsToGet.id}'`,
+            {
+              type: QueryTypes.SELECT
+            }
+          )
         ).map((elem: any) => elem.postsId)
         const fullPostsToGet = await Post.findAll({
           where: {

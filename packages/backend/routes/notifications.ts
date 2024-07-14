@@ -308,9 +308,9 @@ export default function notificationRoutes(app: Application) {
           [Op.notIn]: [userId].concat(await getBlockedIds(userId))
         },
         literal: Sequelize.literal(
-          isDatabaseMysql() ? 
-          `posts.id IN (select id from posts where parentId in (select id from posts where userId = "${userId}"))` :
-          `"posts"."id" IN (select "id" from "posts" where "parentId" in (select "id" from "posts" where "userId" = '${userId}'))`
+          isDatabaseMysql()
+            ? `posts.id IN (select id from posts where parentId in (select id from posts where userId = "${userId}"))`
+            : `"posts"."id" IN (select "id" from "posts" where "parentId" in (select "id" from "posts" where "userId" = '${userId}'))`
         )
       }
     }
@@ -324,11 +324,11 @@ export default function notificationRoutes(app: Application) {
         createdAt: {
           [operator]: isNaN(startCountDate.getDate()) ? new Date() : startCountDate
         },
-      literal: Sequelize.literal(
-        isDatabaseMysql() ? 
-        `quotedPostId IN (SELECT id FROM posts WHERE userId= "${userId}")` :
-        `"quotedPostId" IN (SELECT "id" FROM "posts" WHERE "userId"= '${userId}')`
-      )
+        literal: Sequelize.literal(
+          isDatabaseMysql()
+            ? `quotedPostId IN (SELECT id FROM posts WHERE userId= "${userId}")`
+            : `"quotedPostId" IN (SELECT "id" FROM "posts" WHERE "userId"= '${userId}')`
+        )
       }
     }
   }

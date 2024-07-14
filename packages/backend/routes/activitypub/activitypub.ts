@@ -128,9 +128,9 @@ function activityPubRoutes(app: Application) {
           return
         }
         if (user && !user.banned) {
-          if(! (await checkuserAllowsThreads(req, user))){
-              res.sendStatus(403);
-              return;
+          if (!(await checkuserAllowsThreads(req, user))) {
+            res.sendStatus(403)
+            return
           }
           const emojis = await getUserEmojis(user.id)
           const userForFediverse = {
@@ -193,42 +193,44 @@ function activityPubRoutes(app: Application) {
     }
   )
 
-  app.get('/fediverse/blog/:url/following',
+  app.get(
+    '/fediverse/blog/:url/following',
     getCheckFediverseSignatureFucnction(false),
     async (req: SignedRequest, res: Response) => {
-    if (req.params?.url) {
-      const url = req.params.url.toLowerCase()
-      const user = await getLocalUserByUrlCache(url)
-      if (user && user.banned) {
-        res.sendStatus(410)
-        return
-      }
-      if (user && !user.banned) {
-        if(! (await checkuserAllowsThreads(req, user))){
-          res.sendStatus(403);
-          return;
-      }
-        const followedUsers = await getFollowedRemoteIds(user.id)
-        const response = {
-          '@context': 'https://www.w3.org/ns/activitystreams',
-          id: `${environment.frontendUrl}/fediverse/blog/${user.url.toLowerCase()}/following`,
-          type: 'OrderedCollection',
-          totalItems: followedUsers.length,
-          partOf: `${environment.frontendUrl}/fediverse/blog/${user.url.toLowerCase()}/following`,
-          orderedItems: followedUsers
+      if (req.params?.url) {
+        const url = req.params.url.toLowerCase()
+        const user = await getLocalUserByUrlCache(url)
+        if (user && user.banned) {
+          res.sendStatus(410)
+          return
         }
-        res.set({
-          'content-type': 'application/activity+json'
-        })
-        res.send(response)
+        if (user && !user.banned) {
+          if (!(await checkuserAllowsThreads(req, user))) {
+            res.sendStatus(403)
+            return
+          }
+          const followedUsers = await getFollowedRemoteIds(user.id)
+          const response = {
+            '@context': 'https://www.w3.org/ns/activitystreams',
+            id: `${environment.frontendUrl}/fediverse/blog/${user.url.toLowerCase()}/following`,
+            type: 'OrderedCollection',
+            totalItems: followedUsers.length,
+            partOf: `${environment.frontendUrl}/fediverse/blog/${user.url.toLowerCase()}/following`,
+            orderedItems: followedUsers
+          }
+          res.set({
+            'content-type': 'application/activity+json'
+          })
+          res.send(response)
+        } else {
+          return404(res)
+        }
       } else {
         return404(res)
       }
-    } else {
-      return404(res)
+      res.end()
     }
-    res.end()
-  })
+  )
 
   app.get(
     '/fediverse/blog/:url/followers',
@@ -242,10 +244,10 @@ function activityPubRoutes(app: Application) {
           return
         }
         if (user && !user.banned) {
-          if(! (await checkuserAllowsThreads(req, user))){
-            res.sendStatus(403);
-            return;
-        }
+          if (!(await checkuserAllowsThreads(req, user))) {
+            res.sendStatus(403)
+            return
+          }
           const followers = await getFollowerRemoteIds(user.id)
 
           const followersNumber = followers.length
@@ -283,10 +285,10 @@ function activityPubRoutes(app: Application) {
           return
         }
         if (user) {
-          if(! (await checkuserAllowsThreads(req, user))){
-            res.sendStatus(403);
-            return;
-        }
+          if (!(await checkuserAllowsThreads(req, user))) {
+            res.sendStatus(403)
+            return
+          }
           res.set({
             'content-type': 'application/activity+json'
           })
@@ -315,10 +317,10 @@ function activityPubRoutes(app: Application) {
       const urlToSearch = req.params?.url ? req.params.url : environment.adminUser
       const url = urlToSearch.toLowerCase()
       const user = await getLocalUserByUrl(url)
-      if(user.url !== environment.adminUser && !(await checkuserAllowsThreads(req, user))){
-        res.sendStatus(403);
-        return;
-    }
+      if (user.url !== environment.adminUser && !(await checkuserAllowsThreads(req, user))) {
+        res.sendStatus(403)
+        return
+      }
       if (user && user.banned) {
         res.sendStatus(410)
         return

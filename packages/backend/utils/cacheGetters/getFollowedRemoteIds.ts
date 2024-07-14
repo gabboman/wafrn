@@ -5,7 +5,7 @@ import getFollowedsIds from './getFollowedsIds'
 import { environment } from '../../environment'
 
 async function getFollowedRemoteIds(id: string) {
-  const cacheResult = undefined//await redisCache.get('remoteFollowed:' + id)
+  const cacheResult = undefined //await redisCache.get('remoteFollowed:' + id)
   if (cacheResult) {
     return JSON.parse(cacheResult)
   } else {

@@ -33,12 +33,14 @@ export default function likeRoutes(app: Application) {
       await Promise.all([user, post, like])
       if ((await user) && (await post) && !(await like)) {
         const options = await getUserOptions((await user).id)
-        const userFederatesWithThreads = options.filter(elem => elem.optionName === 'wafrn.federateWithThreads' && elem.optionValue === 'true')
-        if(userFederatesWithThreads.length === 0) {
+        const userFederatesWithThreads = options.filter(
+          (elem) => elem.optionName === 'wafrn.federateWithThreads' && elem.optionValue === 'true'
+        )
+        if (userFederatesWithThreads.length === 0) {
           const userPosterOfPostToBeLiked = await User.findByPk((await post).userId)
-          if(userPosterOfPostToBeLiked.urlToLower.endsWith('threads.net')) {
-            res.sendStatus(500);
-            return;
+          if (userPosterOfPostToBeLiked.urlToLower.endsWith('threads.net')) {
+            res.sendStatus(500)
+            return
           }
         }
         const likedPost = await UserLikesPostRelations.create({

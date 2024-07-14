@@ -27,7 +27,8 @@ function getCheckFediverseSignatureFucnction(force = false) {
       : 'somewhere not specified'
     try {
       const sigHead = httpSignature.parseRequest(req, {
-        headers: req.method === 'GET' ? ['(request-target)', 'host', 'date'] :['(request-target)', 'digest', 'host', 'date']
+        headers:
+          req.method === 'GET' ? ['(request-target)', 'host', 'date'] : ['(request-target)', 'digest', 'host', 'date']
       })
       const remoteUserUrl = sigHead.keyId.split('#')[0]
       hostUrl = new URL(remoteUserUrl).host
@@ -56,10 +57,10 @@ function getCheckFediverseSignatureFucnction(force = false) {
       success =
         verifyDigest(req.rawBody ? req.rawBody : '', req.headers.digest) ||
         httpSignature.verifySignature(sigHead, remoteKey)
-        if (req.method === 'POST') {
-          // we check that the petition is done by who it says its done
-          success = success && remoteUserUrl.toLowerCase() === req.body.actor.toLowerCase()
-        }
+      if (req.method === 'POST') {
+        // we check that the petition is done by who it says its done
+        success = success && remoteUserUrl.toLowerCase() === req.body.actor.toLowerCase()
+      }
     } catch (error: any) {
       req.fediData = { fediHost: hostUrl, valid: false }
       if (force) {

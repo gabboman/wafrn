@@ -19,12 +19,16 @@ async function getLocalUserId(url: string): Promise<string> {
       await redisCache.set('localUserId:' + url, res)
     }
   }
-  
-  return res != '' ? res : (await User.findOne({
-    where: {
-      urlToLower: environment.deletedUser.toLowerCase()
-    }
-  })).id
+
+  return res != ''
+    ? res
+    : (
+        await User.findOne({
+          where: {
+            urlToLower: environment.deletedUser.toLowerCase()
+          }
+        })
+      ).id
 }
 
 export { getLocalUserId }
