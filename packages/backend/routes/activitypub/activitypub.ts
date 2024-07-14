@@ -81,7 +81,7 @@ function activityPubRoutes(app: Application) {
               if (
                 !req.fediData?.valid ||
                 !req.fediData?.remoteUserUrl ||
-                (followerIds && !followerIds?.include(req.fediData.remoteUserUrl))
+                (followerIds && !followerIds.include(req.fediData.remoteUserUrl))
               ) {
                 res.sendStatus(404)
                 return
@@ -89,6 +89,7 @@ function activityPubRoutes(app: Application) {
             } catch (error) {
               logger.warn({
                 message: 'Error on post',
+                postId: post.id,
                 fediData: req.fediData,
                 user: user.id,
                 followerIds: followerIds,
