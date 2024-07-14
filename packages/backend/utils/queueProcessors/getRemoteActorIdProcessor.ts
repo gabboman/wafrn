@@ -230,11 +230,12 @@ async function getRemoteActorIdProcessor(job: Job) {
         }
         res = userRes?.id ? userRes.id : await getDeletedUser()
         try {
-          const emojis = [
-            ...new Set(userPetition?.tag ? userPetition.tag.filter((elem: fediverseTag) => elem.type === 'Emoji') : [])
-          ]
-
-          await processUserEmojis(userRes, emojis)
+          if(userRes) {
+            const emojis = [
+              ...new Set(userPetition?.tag ? userPetition.tag.filter((elem: fediverseTag) => elem.type === 'Emoji') : [])
+            ]
+            await processUserEmojis(userRes, emojis)
+          } 
         } catch (error) {
           logger.info({
             message: `Error processing emojis from user ${userRes?.url}`,
