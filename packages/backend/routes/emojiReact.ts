@@ -4,6 +4,7 @@ import AuthorizedRequest from '../interfaces/authorizedRequest'
 import { Emoji, EmojiReaction, Post, User } from '../db'
 import { logger } from '../utils/logger'
 import { emojiReactRemote } from '../utils/activitypub/likePost'
+import { getUserOptions } from '../utils/cacheGetters/getUserOptions'
 
 export default function emojiReactRoutes(app: Application) {
   app.post('/api/emojiReact', authenticateToken, async (req: AuthorizedRequest, res: Response) => {
@@ -31,6 +32,15 @@ export default function emojiReactRoutes(app: Application) {
     try {
       await Promise.all([user, post, emoji, existing])
       if ((await user) && (await post) && !(await existing)) {
+        const options = await getUserOptions(user.id)
+        const userFederatesWithThreads = options.filter(elem => elem.optionName === 'wafrn.federateWithThreads' && elem.optionValue === 'true')
+        if(userFederatesWithThreads.length === 0) {
+          const userOfPostToBeReacted = await User.findByPk(post.userId)
+          if(userOfPostToBeReacted.urlToLower.endsWith('threads.net')) {
+            res.sendStatus(500);
+            return;
+          }
+        }
         const reaction = await EmojiReaction.create({
           userId: userId,
           postId: postId,

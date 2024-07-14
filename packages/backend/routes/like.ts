@@ -5,6 +5,7 @@ import { Post, User, UserLikesPostRelations } from '../db'
 import { logger } from '../utils/logger'
 import { likePostRemote } from '../utils/activitypub/likePost'
 import AuthorizedRequest from '../interfaces/authorizedRequest'
+import { getUserOptions } from '../utils/cacheGetters/getUserOptions'
 
 export default function likeRoutes(app: Application) {
   app.post('/api/like', authenticateToken, async (req: AuthorizedRequest, res: Response) => {
@@ -31,6 +32,15 @@ export default function likeRoutes(app: Application) {
     try {
       await Promise.all([user, post, like])
       if ((await user) && (await post) && !(await like)) {
+        const options = await getUserOptions(user.id)
+        const userFederatesWithThreads = options.filter(elem => elem.optionName === 'wafrn.federateWithThreads' && elem.optionValue === 'true')
+        if(userFederatesWithThreads.length === 0) {
+          const userPosterOfPostToBeLiked = await User.findByPk(post.userId)
+          if(userPosterOfPostToBeLiked.urlToLower.endsWith('threads.net')) {
+            res.sendStatus(500);
+            return;
+          }
+        }
         const likedPost = await UserLikesPostRelations.create({
           userId: userId,
           postId: postId

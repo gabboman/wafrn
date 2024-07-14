@@ -34,6 +34,7 @@ import getFollowedsIds from '../utils/cacheGetters/getFollowedsIds'
 import { federatePostHasBeenEdited } from '../utils/activitypub/editPost'
 import { getAvaiableEmojis } from '../utils/getAvaiableEmojis'
 import { redisCache } from '../utils/redis'
+import { getUserOptions } from '../utils/cacheGetters/getUserOptions'
 
 const prepareSendPostQueue = new Queue('prepareSendPost', {
   connection: environment.bullmqConnection,
@@ -191,7 +192,7 @@ export default function postsRoutes(app: Application) {
     createPostLimiter,
     async (req: AuthorizedRequest, res: Response) => {
       let success = false
-      const posterId = req.jwtData?.userId
+      const posterId = req.jwtData?.userId ? req.jwtData.userId : environment.deletedUser
       const posterUser = await User.findByPk(posterId)
       const postToBeQuoted = await Post.findByPk(req.body.postToQuote)
       try {
@@ -219,6 +220,26 @@ export default function postsRoutes(app: Application) {
         if (parent) {
           const postParentsUsers: string[] = parent.ancestors.map((elem: any) => elem.userId)
           postParentsUsers.push(parent.userId)
+          // we then check if the user has threads federation enabled and if not we check that no threads user is in the thread
+          const options = await getUserOptions(posterId)
+          const userFederatesWithThreads = options.filter(elem => elem.optionName === 'wafrn.federateWithThreads' && elem.optionValue === 'true')
+          if(userFederatesWithThreads.length === 0) {
+            const ancestorPostsUsers = await User.findAll({
+              where: {
+                id: {
+                  [Op.in]: postParentsUsers
+                }
+              }
+            })
+            const ancestorUrls: string[] = ancestorPostsUsers.map((elem: any) => elem.urlToLower)
+            if(ancestorUrls.some(elem => elem.endsWith('threads.net'))) {
+              success = false
+              res.status(500)
+              res.send({ success: false, message: 'You do not federate with threads and this thread contains a post from threads' })
+              return false
+            }
+          }
+          
           const bannedUsers = await User.count({
             where: {
               id: {
@@ -292,6 +313,24 @@ export default function postsRoutes(app: Application) {
             const elem = mentionsInPost[index]
             if (elem.attribs['data-id'] && !mentionsToAdd.includes(elem.attribs['data-id'])) {
               mentionsToAdd.push(elem.attribs['data-id'])
+            }
+          }
+          // we check if user federates with threads and if not we check they are not mentioning anyone from threads
+          const options = await getUserOptions(posterId)
+          const userFederatesWithThreads = options.filter(elem => elem.optionName === 'wafrn.federateWithThreads' && elem.optionValue === 'true')
+          if(userFederatesWithThreads.length === 0) {
+            const mentionedUsers = await User.findAll({
+              where: {
+                id: {
+                  [Op.in]: mentionsToAdd
+                }
+              }
+            })
+            if(mentionedUsers.some((usr: any) => usr.urlToLower.endsWith('threads.net'))) {
+              success = false
+              res.status(500)
+              res.send({ success: false, message: 'You do not federate with threads and this thread contains a post from threads' })
+              return false
             }
           }
           const blocksExisting = await Blocks.count({
