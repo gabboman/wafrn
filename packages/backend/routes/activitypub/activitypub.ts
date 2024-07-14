@@ -193,7 +193,9 @@ function activityPubRoutes(app: Application) {
     }
   )
 
-  app.get('/fediverse/blog/:url/following', async (req: SignedRequest, res: Response) => {
+  app.get('/fediverse/blog/:url/following',
+    getCheckFediverseSignatureFucnction(false),
+    async (req: SignedRequest, res: Response) => {
     if (req.params?.url) {
       const url = req.params.url.toLowerCase()
       const user = await getLocalUserByUrlCache(url)
@@ -230,7 +232,7 @@ function activityPubRoutes(app: Application) {
 
   app.get(
     '/fediverse/blog/:url/followers',
-    getCheckFediverseSignatureFucnction(true),
+    getCheckFediverseSignatureFucnction(false),
     async (req: SignedRequest, res: Response) => {
       if (req.params?.url) {
         const url = req.params.url.toLowerCase()
