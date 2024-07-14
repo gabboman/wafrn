@@ -13,7 +13,7 @@ async function getFollowerRemoteIds(id: string) {
       include: [
         {
           model: User,
-          as: 'follower'
+          as: 'followed'
         }
       ],
       where: {
