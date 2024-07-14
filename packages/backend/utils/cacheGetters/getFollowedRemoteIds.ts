@@ -5,7 +5,7 @@ import getFollowedsIds from './getFollowedsIds'
 import { environment } from '../../environment'
 
 async function getFollowedRemoteIds(id: string) {
-  const cacheResult = await redisCache.get('remoteFollowed:' + id)
+  const cacheResult = undefined//await redisCache.get('remoteFollowed:' + id)
   if (cacheResult) {
     return JSON.parse(cacheResult)
   } else {
@@ -14,17 +14,18 @@ async function getFollowedRemoteIds(id: string) {
       include: [
         {
           model: User,
-          as: 'followed'
+          as: 'follower'
         }
       ],
       where: {
-        followerId: id
+        followerId: id,
+        accepted: true
       }
     })
     const res = follows.map((follow: any) =>
-      follow.followed.url.startsWith('@')
-        ? follow.followed.remoteId
-        : `${environment.frontendUrl}/fediverse/blog/${follow.followed.url}`
+      follow.follower.url.startsWith('@')
+        ? follow.follower.remoteId
+        : `${environment.frontendUrl}/fediverse/blog/${follow.follower.url}`
     )
     await redisCache.set('remoteFollowed:' + id, JSON.stringify(res), 'EX', 300)
     return res

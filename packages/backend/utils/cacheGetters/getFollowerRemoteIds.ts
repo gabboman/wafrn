@@ -17,7 +17,8 @@ async function getFollowerRemoteIds(id: string) {
         }
       ],
       where: {
-        followedId: id
+        followedId: id,
+        accepted: true
       }
     })
     const res = follows.map((follow: any) =>
