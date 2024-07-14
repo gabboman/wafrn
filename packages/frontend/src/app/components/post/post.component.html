@@ -195,15 +195,15 @@
   <hr />
   <button
     *ngIf="veryLongPost || !showFull"
-    color="accent"
-    class="w-full mb-3 mt-2 w-full"
+    class="w-full mb-3 mt-2 w-full px-2"
     mat-flat-button
     (mousedown)="expandPost()"
+    class="expand-post-button"
   >
     Expand woot
   </button>
 
-  <div class="flex pt-1">
+  <div class="flex pt-1 px-2">
     <div class="flex flex-grow-1">
       <a [routerLink]="'/post/' + finalPost.id"> Notes: {{ notes }} </a>
     </div>
