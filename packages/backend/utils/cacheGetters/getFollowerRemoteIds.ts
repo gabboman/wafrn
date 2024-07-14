@@ -13,7 +13,7 @@ async function getFollowerRemoteIds(id: string) {
       include: [
         {
           model: User,
-          as: 'followed'
+          as: 'follower'
         }
       ],
       where: {
@@ -22,8 +22,8 @@ async function getFollowerRemoteIds(id: string) {
     })
     const res = follows.map((follow: any) =>
       follow.follower.url.startsWith('@')
-        ? follow.followed.remoteId
-        : `${environment.frontendUrl}/fediverse/blog/${follow.followed.url}`
+        ? follow.follower.remoteId
+        : `${environment.frontendUrl}/fediverse/blog/${follow.follower.url}`
     )
     await redisCache.set('remoteFollower:' + id, JSON.stringify(res), 'EX', 300)
     return res
