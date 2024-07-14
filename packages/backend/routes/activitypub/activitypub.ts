@@ -230,7 +230,7 @@ function activityPubRoutes(app: Application) {
 
   app.get(
     '/fediverse/blog/:url/followers',
-    // getCheckFediverseSignatureFucnction(true),
+    getCheckFediverseSignatureFucnction(true),
     async (req: SignedRequest, res: Response) => {
       if (req.params?.url) {
         const url = req.params.url.toLowerCase()
@@ -271,7 +271,7 @@ function activityPubRoutes(app: Application) {
 
   app.get(
     '/fediverse/blog/:url/featured',
-    //getCheckFediverseSignatureFucnction(true),
+    getCheckFediverseSignatureFucnction(true),
     async (req: SignedRequest, res: Response) => {
       if (req.params?.url) {
         const url = req.params.url.toLowerCase()
