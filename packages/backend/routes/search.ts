@@ -96,7 +96,7 @@ export default function searchRoutes(app: Application) {
         if (searchTerm.match(urlPattern)) {
           const existingPost = await Post.findOne({
             where: {
-              remotePostid: searchTerm
+              remotePostId: searchTerm
             }
           })
           if (existingPost) {

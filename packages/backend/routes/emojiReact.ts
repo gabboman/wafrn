@@ -32,10 +32,10 @@ export default function emojiReactRoutes(app: Application) {
     try {
       await Promise.all([user, post, emoji, existing])
       if ((await user) && (await post) && !(await existing)) {
-        const options = await getUserOptions(user.id)
+        const options = await getUserOptions((await user).id)
         const userFederatesWithThreads = options.filter(elem => elem.optionName === 'wafrn.federateWithThreads' && elem.optionValue === 'true')
         if(userFederatesWithThreads.length === 0) {
-          const userOfPostToBeReacted = await User.findByPk(post.userId)
+          const userOfPostToBeReacted = await User.findByPk((await post).userId)
           if(userOfPostToBeReacted.urlToLower.endsWith('threads.net')) {
             res.sendStatus(500);
             return;
