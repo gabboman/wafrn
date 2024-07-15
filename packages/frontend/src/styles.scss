@@ -1,4 +1,15 @@
+@use '@angular/material' as mat;
+@use 'src/app/styles/m3-theme';
 
+@include mat.core();
+
+:root {
+  @include mat.all-component-themes(m3-theme.$dark-theme);
+
+}
+@include mat.typography-hierarchy(m3-theme.$dark-theme, $back-compat: true);
+
+@include mat.color-variants-backwards-compatibility(m3-theme.$dark-theme);
 // wafrn css
 html,
 body {
@@ -9,10 +20,6 @@ body {
 
 .ql-container {
   //font-family: "Roboto" !important;
-}
-
-.space-grotesk {
-  // font-family: "spaceGrotesk" !important;
 }
 
 $wafrn-blue: rgb(56, 254, 241);

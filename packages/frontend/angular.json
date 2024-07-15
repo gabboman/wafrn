@@ -44,11 +44,11 @@
               "src/manifest.webmanifest"
             ],
             "styles": [
-              "@angular/material/prebuilt-themes/purple-green.css",
               "../../node_modules/primeflex/primeflex.css",
               "../../node_modules/quill/dist/quill.snow.css",
               "../../node_modules/quill/dist/quill.core.css",
               "../../node_modules/quill-mention-wafrn/dist/quill.mention.css",
+              "src/app/styles/m3-theme.scss",
               "src/styles.scss"
             ],
             "scripts": [],
@@ -162,7 +162,6 @@
               "src/manifest.webmanifest"
             ],
             "styles": [
-              "@angular/material/prebuilt-themes/purple-green.css",
               "src/styles.scss"
             ],
             "scripts": []

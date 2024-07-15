@@ -6,7 +6,7 @@ export const environment = {
   production: false,
   maxUploadSize: '250',
   logo: '/assets/logo.png',
-  baseUrl: 'https://api.wafrn.net/api',
+  baseUrl: 'https://app.wafrn.net/api',
   baseMediaUrl: 'https://media.wafrn.net',
   externalCacheurl: 'https://wafrncache.b-cdn.net/api/cache/?media=',
   frontUrl: 'https://wafrn.vercel.app',
