@@ -1,26 +1,38 @@
 @use '@angular/material' as mat;
-@use 'src/app/styles/m3-theme';
+
+$font-family: sans-serif;
+// Define a dark theme
+$dark-theme: mat.define-theme((
+  color: (
+    theme-type: dark,
+    primary: mat.$violet-palette,
+  ),
+  typography: (
+    brand-family:  $font-family,
+    plain-family:  $font-family,
+    
+    bold-weight: 900,
+  )
+));
 
 @include mat.core();
 
-:root {
-  @include mat.all-component-themes(m3-theme.$dark-theme);
-
-}
-@include mat.typography-hierarchy(m3-theme.$dark-theme, $back-compat: true);
-
-@include mat.color-variants-backwards-compatibility(m3-theme.$dark-theme);
-// wafrn css
-html,
-body {
-  //font-family: "Roboto" !important;
-  margin: 0;
-  height: 100%;
+html {
+  // Apply the dark theme by default
+  @include mat.core-theme($dark-theme);
+  @include mat.all-component-typographies($dark-theme);
+  @include mat.all-component-themes($dark-theme);
+  font-family: $font-family;
+  background-color: #131313
 }
 
-.ql-container {
-  //font-family: "Roboto" !important;
+@include mat.color-variants-backwards-compatibility($dark-theme);
+@include mat.typography-hierarchy($dark-theme);  // typography styles could be included too
+
+.mat-drawer-content {
+  background-color: #131313
 }
+
 
 $wafrn-blue: rgb(56, 254, 241);
 // $wafrn-dark: rgb(18, 95, 90);
