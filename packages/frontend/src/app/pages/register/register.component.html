@@ -12,7 +12,7 @@
     >
   </div>
 
-  <button mat-flat-button color="warn" class="w-full h-full py-2" *ngIf="manuallyReview">
+  <button mat-flat-button color="warn" class="w-full h-full py-2 mb-3" *ngIf="manuallyReview">
     An administrator will review your profile before you can join. This process
     can take a few hours.
   </button>
@@ -54,7 +54,7 @@
         [max]="minimumRegistrationDate"
         [matDatepicker]="picker"
       />
-      <mat-hint>MM/DD/YYYY</mat-hint>
+      <mat-hint>MM/DD/YYYY - Your birthday date is required for legal reasons in the european union and USA. Its not shared with anyone</mat-hint>
       <mat-datepicker-toggle
         matIconSuffix
         [for]="picker"

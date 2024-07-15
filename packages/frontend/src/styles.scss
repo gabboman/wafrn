@@ -328,3 +328,21 @@ blockquote {
     height: 56px!important;
   }
 }
+
+
+.tag {
+  padding: 0 6px;
+  cursor: pointer;
+  background-color: var(--mat-stepper-header-selected-state-icon-background-color);
+  color: var(--mdc-filled-button-label-text-color) !important;
+  text-decoration: none;
+  border-radius: 5px;
+  font-size: 13px;
+  line-height: 16px;
+  padding-top: 2px;
+  word-break: break-all;
+}
+
+.mat-mdc-card {
+  background-color: #2a323d !important;
+}

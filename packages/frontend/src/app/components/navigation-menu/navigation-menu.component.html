@@ -1,5 +1,5 @@
 <mat-drawer-container>
-  <mat-drawer style="position: fixed" class="side-menu" [mode]="mobile ? 'over' : 'side'"
+  <mat-drawer style="position: fixed; border-radius: 0" class="side-menu" [mode]="mobile ? 'over' : 'side'"
     [opened]="menuVisible || !mobile" (closed)="hideMenu()">
     <a [href]="'/'" class="block" (mousedown)="hideMenu()">
       <img [src]="logo" class="block mx-auto my-3" alt="instance logo" style="max-width: 200px; max-height: 72px" />

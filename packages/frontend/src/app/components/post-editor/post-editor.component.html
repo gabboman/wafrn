@@ -133,7 +133,7 @@
     <div class="flex justify-content-end my-2">
       <button
       class="input-height-btn"
-      mat-flat-button
+      mat-button
         (mousedown)="showContentWarning = !showContentWarning"
       >
         CW
@@ -168,7 +168,6 @@
     <button
           class="w-full"
           mat-button
-          color="accent"
           (mousedown)="quoteOpen = true"
           mat-flat-button
         >
@@ -201,7 +200,6 @@
             <button
               mat-mini-fab
               class="delete-btn"
-              color="warn"
               (mousedown)="deleteImage(i)"
             >
               <fa-icon size="lg" [icon]="closeIcon"></fa-icon>
@@ -244,7 +242,7 @@
         </mat-form-field>
         <button
           (mousedown)="loadQuote()"
-          mat-flat-button
+          mat-stroked-button
           color="primary"
           class="w-full"
           [disabled]="urlPostToQuote === ''"
@@ -294,7 +292,6 @@
 
   <button
     mat-flat-button
-    color="accent"
     class="w-full mt-2"
     [disabled]="
       !allDescriptionsFilled() ||
