@@ -1,8 +1,8 @@
-<mat-card *ngIf="notification" class="p-3 pb-2 mb-2 lg:mx-4 scalein wafrn-container">
+<mat-card *ngIf="notification" class="p-3 pb-2 mb-2 lg:mx-4 scalein wafrn-container flex-shrink-0">
   <header class="flex align-items-center">
-    <div class="avatar flex align-content-center flex-wrap">
+    <div class="avatar flex align-content-center flex-wrap ">
       <img crossorigin="anonymous" loading="lazy" [src]="notification.avatar"
-        class="notification-image flex align-items-center justify-content-center border-1 border-300 border-round"
+        class="notification-image flex align-items-center justify-content-center border-1 border-300 border-round flex-shrink-0"
         alt="" />
     </div>
     <div class="p-1">
@@ -32,8 +32,8 @@
       <span class="opacity-0">direct link to the post</span>
     </a>
     <div *ngIf="notification.type !== notificationType.MENTION" class="flex mt-3 center-text overflow-hidden">
-      <div class="flex align-content-center user-avatar-container">
-        <img [routerLink]="'/blog/' + notification.fragment?.user?.url" crossorigin="anonymous" loading="lazy"
+      <div class="flex align-content-center user-avatar-container ">
+        <img class="flex-shrink-0" [routerLink]="'/blog/' + notification.fragment?.user?.url" crossorigin="anonymous" loading="lazy"
           [src]="notification.fragment?.user?.avatar" alt="" />
       </div>
       <div class="w-full white-space-nowrap overflow-hidden text-overflow-ellipsis flex flex-column">
