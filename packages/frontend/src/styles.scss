@@ -15,6 +15,9 @@ $dark-theme: mat.define-theme((
   )
 ));
 
+$bgcolor: #151116;
+$cardcolor: #2a323d !important;
+
 @include mat.core();
 
 html {
@@ -23,14 +26,14 @@ html {
   @include mat.all-component-typographies($dark-theme);
   @include mat.all-component-themes($dark-theme);
   font-family: $font-family;
-  background-color: #131313
+  background-color: $bgcolor
 }
 
 @include mat.color-variants-backwards-compatibility($dark-theme);
 @include mat.typography-hierarchy($dark-theme);  // typography styles could be included too
 
 .mat-drawer-content {
-  background-color: #131313
+  background-color: $bgcolor
 }
 
 
@@ -157,9 +160,6 @@ li {
   background-color: #20262e;
 }
 
-.ql-mention-list-container {
-  background-color: #2a323d;
-}
 
 .post-emoji {
   display: inline-flex;
@@ -343,6 +343,7 @@ blockquote {
   word-break: break-all;
 }
 
-.mat-mdc-card {
-  background-color: #2a323d !important;
+
+.mat-mdc-card, table, mat-paginator, .ql-mention-list-container, .mat-mdc-menu-panel {
+  background-color: $cardcolor;
 }
