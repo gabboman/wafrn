@@ -71,7 +71,6 @@
         }"
         (mousedown)="toggleEmojiReact(emoji)"
         mat-stroked-button
-        [disabled]="isLike(emoji)"
         matTooltipTouchGestures="on"
         [matTooltip]="
           (isLike(emoji) ? 'Liked' : emoji.content) +
