@@ -19,7 +19,7 @@ import { sequelize } from '../db'
 import getStartScrollParam from '../utils/getStartScrollParam'
 import getPosstGroupDetails from '../utils/getPostGroupDetails'
 import { logger } from '../utils/logger'
-import { createPostLimiter } from '../utils/rateLimiters'
+import { createPostLimiter, navigationRateLimiter } from '../utils/rateLimiters'
 import { environment } from '../environment'
 import { Queue } from 'bullmq'
 import AuthorizedRequest from '../interfaces/authorizedRequest'
@@ -49,7 +49,7 @@ const prepareSendPostQueue = new Queue('prepareSendPost', {
   }
 })
 export default function postsRoutes(app: Application) {
-  app.get('/api/v2/post/:id', optionalAuthentication, checkIpBlocked, async (req: AuthorizedRequest, res: Response) => {
+  app.get('/api/v2/post/:id', optionalAuthentication, checkIpBlocked, navigationRateLimiter, async (req: AuthorizedRequest, res: Response) => {
     let success = false
     const userId = req.jwtData?.userId
     if (req.params?.id) {

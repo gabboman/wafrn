@@ -15,9 +15,10 @@ import getNonFollowedLocalUsersIds from '../utils/cacheGetters/getNotFollowedLoc
 import getBlockedIds from '../utils/cacheGetters/getBlockedIds'
 import { getUnjointedPosts } from '../utils/baseQueryNew'
 import { getMutedPosts } from '../utils/cacheGetters/getMutedPosts'
+import { navigationRateLimiter } from '../utils/rateLimiters'
 
 export default function dashboardRoutes(app: Application) {
-  app.get('/api/v2/dashboard', optionalAuthentication, async (req: AuthorizedRequest, res: Response) => {
+  app.get('/api/v2/dashboard', optionalAuthentication, navigationRateLimiter, async (req: AuthorizedRequest, res: Response) => {
     const level = parseInt(req.query.level as string) // level of dashboard: localExplore, explore, dashboard or DMs
     const posterId = req.jwtData?.userId ? req.jwtData?.userId : 'NOT-LOGGED-IN'
     const POSTS_PER_PAGE = environment.postsPerPage
