@@ -68,7 +68,11 @@
     <button [disabled]=" reactionLoading" [ngClass]="{
           reacted: emojiReactionIncludesMe(emoji),
           blurry: fragment.content_warning && showCw
-        }" (mousedown)="toggleEmojiReact(emoji)" mat-flat-button matTooltipTouchGestures="on" [matTooltip]="
+        }"
+        (mousedown)="toggleEmojiReact(emoji)"
+        mat-stroked-button
+        matTooltipTouchGestures="on"
+        [matTooltip]="
           (isLike(emoji) ? 'Liked' : emoji.content) +
           ' by ' +
           getTooltipUsers(emoji.users)
