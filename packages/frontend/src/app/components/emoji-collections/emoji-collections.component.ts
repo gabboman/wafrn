@@ -10,6 +10,7 @@ import { faCopy } from '@fortawesome/free-solid-svg-icons';
 import { Subscription } from 'rxjs';
 import { Emoji } from 'src/app/interfaces/emoji';
 import { EmojiCollection } from 'src/app/interfaces/emoji-collection';
+import { emojis } from 'src/app/lists/emoji-compact';
 import { PostsService } from 'src/app/services/posts.service';
 import { environment } from 'src/environments/environment';
 
@@ -51,7 +52,7 @@ export class EmojiCollectionsComponent implements OnDestroy {
     this.emoji.emit(emoji);
   }
 
-  shoCollection(collection: EmojiCollection): boolean {
+  showCollection(collection: EmojiCollection): boolean {
     return collection.emojis.map(elem => elem.name).some(elem => elem.includes(this.filterText))
 
   }

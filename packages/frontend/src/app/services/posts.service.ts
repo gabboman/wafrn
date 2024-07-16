@@ -13,6 +13,7 @@ import { UserOptions } from '../interfaces/userOptions';
 import { Emoji } from '../interfaces/emoji';
 import { EmojiCollection } from '../interfaces/emoji-collection';
 import { MessageService } from './message.service';
+import { emojis } from '../lists/emoji-compact';
 @Injectable({
   providedIn: 'root',
 })
@@ -46,6 +47,15 @@ export class PostsService {
     type: 'react',
   });
 
+  keyboardEmojis: Emoji[] = emojis.map(emoji => {
+    return {
+      id: emoji,
+      name: emoji,
+      url: '',
+      external: false
+    }
+  });
+
   public silencedPostsIds: string[] = [];
   public mutedUsers: string[] = [];
   public followedUserIds: Array<string> = [];
@@ -75,6 +85,11 @@ export class PostsService {
         }>(`${environment.baseUrl}/my-ui-options`)
       );
       this.emojiCollections = followsAndBlocks.emojis ? followsAndBlocks.emojis : [];
+      this.emojiCollections = this.emojiCollections.concat({
+        name: 'Keyboard Emojis',
+        comment: 'Your phone emojis',
+        emojis: this.keyboardEmojis
+      })
       this.followedUserIds = followsAndBlocks.followedUsers;
       this.blockedUserIds = followsAndBlocks.blockedUsers;
       this.notYetAcceptedFollowedUsersIds = followsAndBlocks.notAcceptedFollows;

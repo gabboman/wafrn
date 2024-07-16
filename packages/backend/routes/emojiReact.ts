@@ -21,7 +21,11 @@ export default function emojiReactRoutes(app: Application) {
 
     const user = User.findByPk(userId)
     const post = Post.findByPk(postId)
-    const emoji = await Emoji.findByPk(emojiName) // our special emojis share name and id, remote ones should not
+    let emoji = await Emoji.findByPk(emojiName)
+    emoji = emojiName.startsWith(':') && emojiName.endsWith(':') ? emoji : {
+      id: emojiName,
+      // name: emojiName
+    }
     const existing = EmojiReaction.findOne({
       where: {
         userId: userId,
@@ -46,8 +50,8 @@ export default function emojiReactRoutes(app: Application) {
         const reaction = await EmojiReaction.create({
           userId: userId,
           postId: postId,
-          emojiId: (await emoji) ? emoji.name : null,
-          content: (await emoji) ? emoji.name : emojiName
+          emojiId: (await emoji).name ? emoji.name : null,
+          content: (await emoji).name ? emoji.name : emojiName
         })
         await reaction.save()
         success = true

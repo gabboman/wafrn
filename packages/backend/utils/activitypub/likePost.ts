@@ -167,8 +167,8 @@ async function emojiReactRemote(react: any, undo = false) {
         object: reactedPost.remotePostId
           ? reactedPost.remotePostId
           : `${environment.frontendUrl}/fediverse/post/${reactedPost.id}`,
-        tag: [emojiToAPTag(emoji)],
-        content: emoji.name,
+        tag: emoji ?  [emojiToAPTag(emoji)] : undefined,
+        content: emoji ? emoji.name: react.content,
         type: 'EmojiReact'
       }
     : {
