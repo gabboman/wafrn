@@ -8,6 +8,7 @@ import { redisCache } from '../utils/redis'
 import { logger } from '../utils/logger'
 import { getCheckFediverseSignatureFucnction } from '../utils/activitypub/checkFediverseSignature'
 import { SignedRequest } from '../interfaces/fediverse/signedRequest'
+import { handlePostRequest } from '../utils/activitypub/handlePostRequest'
 
 const cacheOptions = {
   etag: false,
@@ -41,14 +42,11 @@ export default function frontend(app: Application) {
     if (
       req.fediData?.valid
     ) {
-      const urlToRedirect = '/fediverse' + req.url
-
       logger.debug({
-        message: `redirecting to ${urlToRedirect}`,
-        fediData: req.fediData
+        message: `Redirecting regular post to ap object`,
+        url: req.url
       })
-      res.redirect(urlToRedirect)
-      res.send();
+      await handlePostRequest(req, res)
       return;
     }
     if (req.params?.id) {
