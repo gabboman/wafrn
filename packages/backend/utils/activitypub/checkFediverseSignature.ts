@@ -66,6 +66,7 @@ function getCheckFediverseSignatureFucnction(force = false) {
       if (force) {
         logger.debug({
           message: 'Failed to verify signature',
+          url: req.url,
           host: hostUrl,
           error: error
         })
