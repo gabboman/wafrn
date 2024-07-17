@@ -42,6 +42,11 @@ export default function frontend(app: Application) {
       req.fediData?.valid
     ) {
       const urlToRedirect = '/fediverse/post/' + req.params?.id
+
+      logger.debug({
+        message: `redirecting to ${urlToRedirect}`,
+        fediData: req.fediData
+      })
       res.redirect(urlToRedirect)
       res.send();
       return;
