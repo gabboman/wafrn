@@ -148,6 +148,10 @@ const User = sequelize.define(
     followingCount: {
       type: Sequelize.INTEGER,
       defaultValue: 0
+    },
+    disableEmailNotifications: {
+      type: Sequelize.BOOLEAN,
+      defaultValue: 0
     }
   },
   {
