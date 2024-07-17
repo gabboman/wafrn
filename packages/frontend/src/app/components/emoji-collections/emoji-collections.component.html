@@ -12,9 +12,9 @@
   <ng-template matExpansionPanelContent>
     <div [innerHtml]="emojiCollection.comment" class="my-2"></div>
     <div class="flex grid">
-      @for(emoji of emojiCollection.emojis.slice(0, 250) ; track $index) {
+      @for(emoji of getEmojiCollectionFiltered(emojiCollection, filterText); track $index) {
       <button mat-flat-button [matTooltip]="emoji.name"
-        *ngIf="emoji.name.toLowerCase().includes(filterText.toLowerCase())" (mousedown)="click(emoji)"
+        (mousedown)="click(emoji)"
         class="p-2 flex align-content-center justify-content-center cursor-pointer bg-transparent">
         <img loading="lazy" class="post-emoji-preview mr-2 ml-2" [src]="baseMediaUrl + emoji.url" [alt]="emoji.name" />
       </button>
