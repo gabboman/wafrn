@@ -6,6 +6,8 @@ import fs from 'fs'
 import * as DOMPurify from 'isomorphic-dompurify'
 import { redisCache } from '../utils/redis'
 import { logger } from '../utils/logger'
+import { getCheckFediverseSignatureFucnction } from '../utils/activitypub/checkFediverseSignature'
+import { SignedRequest } from '../interfaces/fediverse/signedRequest'
 
 const cacheOptions = {
   etag: false,
@@ -34,17 +36,15 @@ export default function frontend(app: Application) {
     }
   )
 
-  app.get('/post/:id', async function (req, res) {
+  app.get('/post/:id', getCheckFediverseSignatureFucnction(false), async function (req: SignedRequest, res) {
     const acceptHeader = req.header('accept') ? (req.header('accept') as string) : ''
     if (
-      acceptHeader.includes('activity+json') ||
-      acceptHeader.includes('application/activity+json') ||
-      acceptHeader.includes('/ld+json')
+      req.fediData?.valid
     ) {
       const urlToRedirect = environment.frontendUrl + '/fediverse/post/' + req.params?.id
       res.redirect(urlToRedirect)
-      res.send()
-      return
+      res.send();
+      return;
     }
     if (req.params?.id) {
       try {
