@@ -9,6 +9,7 @@ import mediaRoutes from './routes/media'
 import postsRoutes from './routes/posts'
 import searchRoutes from './routes/search'
 import deletePost from './routes/deletePost'
+import overrideContentType from './utils/overrideContentType'
 import { environment } from './environment'
 import frontend from './routes/frontend'
 import { activityPubRoutes } from './routes/activitypub/activitypub'
@@ -36,6 +37,7 @@ const swaggerJSON = require('./swagger.json')
 const app = express()
 const PORT = environment.port
 
+app.use(overrideContentType)
 app.use(
   bodyParser.json({
     limit: '50mb',

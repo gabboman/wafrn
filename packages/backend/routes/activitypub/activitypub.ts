@@ -19,7 +19,6 @@ import { getPostAndUserFromPostId } from '../../utils/cacheGetters/getPostAndUse
 import { logger } from '../../utils/logger'
 import { checkuserAllowsThreads } from '../../utils/checkUserAllowsThreads'
 import { handlePostRequest } from '../../utils/activitypub/handlePostRequest'
-import overrideContentType from '../../utils/overrideContentType'
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const Cacher = require('cacher')
 const cacher = new Cacher()
@@ -62,7 +61,6 @@ function activityPubRoutes(app: Application) {
   app.get(
     ['/fediverse/post/:id', '/fediverse/activity/post/:id'],
     getCheckFediverseSignatureFucnction(false),
-    overrideContentType,
     async (req: SignedRequest, res: Response) => {
       await handlePostRequest(req, res)
     }
@@ -71,7 +69,6 @@ function activityPubRoutes(app: Application) {
   app.get(
     '/fediverse/blog/:url',
     getCheckFediverseSignatureFucnction(false),
-    overrideContentType,
     async (req: SignedRequest, res: Response) => {
       if (!req.params.url?.startsWith('@')) {
         const url = req.params.url.toLowerCase()
@@ -266,7 +263,6 @@ function activityPubRoutes(app: Application) {
   app.post(
     ['/fediverse/blog/:url/inbox', '/fediverse/sharedInbox'],
     getCheckFediverseSignatureFucnction(true),
-    overrideContentType,
     async (req: SignedRequest, res: Response) => {
       const urlToSearch = req.params?.url ? req.params.url : environment.adminUser
       const url = urlToSearch.toLowerCase()
@@ -292,7 +288,6 @@ function activityPubRoutes(app: Application) {
   app.get(
     '/fediverse/blog/:url/outbox',
     getCheckFediverseSignatureFucnction(true),
-    overrideContentType,
     async (req: SignedRequest, res: Response) => {
       if (req.params?.url) {
         const url = req.params.url.toLowerCase()
