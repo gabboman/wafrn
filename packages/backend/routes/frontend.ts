@@ -46,7 +46,8 @@ export default function frontend(app: Application) {
         message: `Redirecting regular post to ap object`,
         url: req.url
       })
-      await handlePostRequest(req, res)
+      res.redirect('/fediverse' + req.url);
+      res.send()
       return;
     }
     if (req.params?.id) {
