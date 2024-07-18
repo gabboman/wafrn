@@ -1,4 +1,4 @@
-import express, { Application } from 'express'
+import express, { Application, Response } from 'express'
 import { environment } from '../environment'
 import { Op } from 'sequelize'
 import { Media, Post, User, sequelize } from '../db'
@@ -37,17 +37,19 @@ export default function frontend(app: Application) {
     }
   )
 
-  app.get('/post/:id', getCheckFediverseSignatureFucnction(false), async function (req: SignedRequest, res) {
+  app.get('/post/:id', getCheckFediverseSignatureFucnction(false), async function (req: SignedRequest, res: Response) {
     const acceptHeader = req.header('accept') ? (req.header('accept') as string) : ''
     if (
       req.fediData?.valid
-    ) {
+    ) {      
+      const urlToRedirect = `${environment.frontendUrl}/fediverse${req.url}`
+      res.redirect(urlToRedirect);
+      res.send();
       logger.debug({
-        message: `Redirecting regular post to ap object`,
-        url: req.url
+        message: `redirected regular post to ap object`,
+        url: req.url,
+        target: urlToRedirect
       })
-      res.redirect('/fediverse' + req.url);
-      res.send()
       return;
     }
     if (req.params?.id) {
