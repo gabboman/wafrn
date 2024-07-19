@@ -34,7 +34,9 @@ async function getRemoteActor(actorUrl: string, user: any, forceUpdate = false):
     if(actorUrl.toLowerCase().startsWith(environment.frontendUrl + '/fediverse/blog/')) {
       const urlToSearch = actorUrl.split(environment.frontendUrl + '/fediverse/blog/')[1].toLowerCase()
       return User.findOne({
-        urlToLower: urlToSearch
+        where: {
+          urlToLower: urlToSearch
+        }
       })
     }
     let userId = await getUserIdFromRemoteId(actorUrl)
