@@ -12,7 +12,7 @@ import { LdSignature } from '../utils/activitypub/rsa2017'
 import { deletePostCommon } from '../utils/deletePost'
 import { redisCache } from '../utils/redis'
 
-const sendPostQueue = new Queue('sendPostToInboxes', {
+const deletePostQueue = new Queue('deletePostQueue', {
   connection: environment.bullmqConnection,
   defaultJobOptions: {
     removeOnComplete: true,
@@ -90,16 +90,13 @@ export default function deletePost(app: Application) {
           new Date()
         )
         if (postToDelete.privacy != 2) {
-          for await (const inboxChunk of _.chunk(inboxes, 50)) {
-            await sendPostQueue.add(
+          for await (const inboxChunk of _.chunk(inboxes, 1)) {
+            await deletePostQueue.add(
               'sencChunk',
               {
                 objectToSend: { ...objectToSend, signature: bodySignature.signature },
                 petitionBy: user,
                 inboxList: inboxChunk
-              },
-              {
-                priority: 2097152
               }
             )
           }

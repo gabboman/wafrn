@@ -30,6 +30,20 @@ export default function statusRoutes(app: Application) {
         removeOnFail: 25000
       }
     })
+
+    const deletePostQueue = new Queue('deletePostQueue', {
+      connection: environment.bullmqConnection,
+      defaultJobOptions: {
+        removeOnComplete: true,
+        attempts: 3,
+        backoff: {
+          type: 'exponential',
+          delay: 1000
+        },
+        removeOnFail: 25000
+      }
+    })
+
     const inboxQueue = new Queue('inbox', {
       connection: environment.bullmqConnection,
       defaultJobOptions: {
@@ -51,6 +65,8 @@ export default function statusRoutes(app: Application) {
     const inboxFail = inboxQueue.getMetrics('failed')
     const inboxSuccess = inboxQueue.getMetrics('completed')
     const inboxAwaiting = inboxQueue.count()
+    const deletePostAwaiting = deletePostQueue.count()
+
     await Promise.allSettled([
       sendPostFailed,
       sendPostSuccess,
@@ -72,7 +88,8 @@ export default function statusRoutes(app: Application) {
       prepareSendPostAwaiting: await prepareSendPostAwaiting,
       inboxFail: await inboxFail,
       inboxSuccess: await inboxSuccess,
-      inboxAwaiting: await inboxAwaiting
+      inboxAwaiting: await inboxAwaiting,
+      deletePostAwaiting: await deletePostAwaiting,
     })
   })
 }

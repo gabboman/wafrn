@@ -13,4 +13,5 @@ export interface statsReply {
   prepareSendPostAwaiting: number;
   inboxAwaiting: number;
   updateUserAwaiting: number;
+  deletePostAwaiting: number;
 }

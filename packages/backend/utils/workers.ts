@@ -33,6 +33,15 @@ const workerSendPostChunk = new Worker('sendPostToInboxes', (job: Job) => sendPo
   lockDuration: 120000
 })
 
+const workerDeletePost = new Worker('deletePostQueue', (job: Job) => sendPostToInboxes(job), {
+  connection: environment.bullmqConnection,
+  metrics: {
+    maxDataPoints: MetricsTime.ONE_WEEK * 2
+  },
+  concurrency: environment.workers.low,
+  lockDuration: 120000
+})
+
 const workerGetUser = new Worker('getRemoteActorId', async (job: Job) => await getRemoteActorIdProcessor(job), {
   connection: environment.bullmqConnection,
   metrics: {
