@@ -284,7 +284,7 @@ function activityPubRoutes(app: Application) {
 
   app.get(
     '/fediverse/blog/:url/outbox',
-    getCheckFediverseSignatureFucnction(true),
+    getCheckFediverseSignatureFucnction(false),
     async (req: SignedRequest, res: Response) => {
       if (req.params?.url) {
         const url = req.params.url.toLowerCase()
