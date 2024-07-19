@@ -39,14 +39,16 @@ function frontend(app: Application) {
 
   app.get('/post/:id', getCheckFediverseSignatureFucnction(false), async function (req: SignedRequest, res) {
     //res.redirect(`/fediverse${req.url}`)
-    res.send(`<a href="${environment.frontendUrl}/fediverse${req.url}">Hello. Post has been moved here. Please click to go</a>`)
+    res.send(
+      `<a href="${environment.frontendUrl}/fediverse${req.url}">Hello. Post has been moved here. Please click to go</a>`
+    )
   })
-  
+
   app.get(
     ['/fediverse/post/:id', '/fediverse/activity/post/:id'],
     getCheckFediverseSignatureFucnction(false),
     async (req: SignedRequest, res: Response) => {
-      if(req.headers['accept']?.includes('json') || req.headers['accept']?.includes('activity') ) {
+      if (req.headers['accept']?.includes('json') || req.headers['accept']?.includes('activity')) {
         await handlePostRequest(req, res)
       } else {
         const defaultSeoData = environment.defaultSEOData
@@ -199,5 +201,4 @@ function getIndexSeo(title: string, description: string, image?: string) {
   return indexWithSeo
 }
 
-
-export { frontend, getIndexSeo, getPostSEOCache, getBlogSEOCache}
+export { frontend, getIndexSeo, getPostSEOCache, getBlogSEOCache }

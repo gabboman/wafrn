@@ -13,7 +13,7 @@ export default function cacheRoutes(app: Application) {
         if (linkExtension.includes('/')) {
           linkExtension = ''
         }
-        linkExtension = linkExtension.split('?')[0].substring(0,3)
+        linkExtension = linkExtension.split('?')[0].substring(0, 3)
         // calckey images have no extension
         const mediaLinkHash = crypto.createHash('sha256').update(mediaLink).digest('hex')
         const localFileName = linkExtension ? `cache/${mediaLinkHash}.${linkExtension}` : `cache/${mediaLinkHash}`

@@ -6,6 +6,5 @@ export default function overrideContentType(req: Request, res: Response, next: N
   if (UrlPath.startsWith('/fediverse')) {
     req.headers['content-type'] = 'application/json;charset=UTF-8'
   }
-  
-    next()
+  next()
 }

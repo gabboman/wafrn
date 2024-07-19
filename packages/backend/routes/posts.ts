@@ -49,25 +49,31 @@ const prepareSendPostQueue = new Queue('prepareSendPost', {
   }
 })
 export default function postsRoutes(app: Application) {
-  app.get('/api/v2/post/:id', optionalAuthentication, checkIpBlocked, navigationRateLimiter, async (req: AuthorizedRequest, res: Response) => {
-    let success = false
-    const userId = req.jwtData?.userId
-    if (req.params?.id) {
-      const unjointedPost = await getUnjointedPosts([req.params.id], userId ? userId : 'NOT-LOGGED-IN')
-      const post = unjointedPost.posts[0]
-      if (post) {
-        const mentions = unjointedPost.mentions.map((elem: any) => elem.userMentioned)
-        if (post.userId === userId || mentions.includes(userId) || post.privacy !== 10) {
-          res.send(unjointedPost)
-          success = true
+  app.get(
+    '/api/v2/post/:id',
+    optionalAuthentication,
+    checkIpBlocked,
+    navigationRateLimiter,
+    async (req: AuthorizedRequest, res: Response) => {
+      let success = false
+      const userId = req.jwtData?.userId
+      if (req.params?.id) {
+        const unjointedPost = await getUnjointedPosts([req.params.id], userId ? userId : 'NOT-LOGGED-IN')
+        const post = unjointedPost.posts[0]
+        if (post) {
+          const mentions = unjointedPost.mentions.map((elem: any) => elem.userMentioned)
+          if (post.userId === userId || mentions.includes(userId) || post.privacy !== 10) {
+            res.send(unjointedPost)
+            success = true
+          }
         }
       }
-    }
 
-    if (!success) {
-      res.send({ success: false })
+      if (!success) {
+        res.send({ success: false })
+      }
     }
-  })
+  )
 
   app.get(
     '/api/v2/descendents/:id',

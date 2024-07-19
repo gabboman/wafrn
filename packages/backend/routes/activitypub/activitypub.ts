@@ -58,16 +58,15 @@ const inboxQueue = new Queue('inbox', {
 // all the stuff related to activitypub goes here
 
 function activityPubRoutes(app: Application) {
-
   // Get blog for fediverse
   app.get(
     '/fediverse/blog/:url',
     getCheckFediverseSignatureFucnction(false),
     async (req: SignedRequest, res: Response) => {
       const url = req.params.url.toLowerCase()
-      if(req.headers['accept']?.includes('*')) {
+      if (req.headers['accept']?.includes('*')) {
         res.redirect(`/blog/${url}`)
-        return;
+        return
       }
       if (!req.params.url?.startsWith('@')) {
         const user = await getLocalUserByUrlCache(url)

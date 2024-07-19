@@ -22,10 +22,13 @@ export default function emojiReactRoutes(app: Application) {
     const user = User.findByPk(userId)
     const post = Post.findByPk(postId)
     let emoji = await Emoji.findByPk(emojiName)
-    emoji = emojiName.startsWith(':') && emojiName.endsWith(':') ? emoji : {
-      id: emojiName,
-      // name: emojiName
-    }
+    emoji =
+      emojiName.startsWith(':') && emojiName.endsWith(':')
+        ? emoji
+        : {
+            id: emojiName
+            // name: emojiName
+          }
     const existing = EmojiReaction.findOne({
       where: {
         userId: userId,

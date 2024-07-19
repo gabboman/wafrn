@@ -29,8 +29,8 @@ function getCheckFediverseSignatureFucnction(force = false) {
       const sigHead = httpSignature.parseRequest(req, {
         headers:
           req.method === 'GET' ? ['(request-target)', 'host', 'date'] : ['(request-target)', 'digest', 'host', 'date'],
-          clockSkew: 600,
-          //strict: true
+        clockSkew: 600
+        //strict: true
       })
       const remoteUserUrl = sigHead.keyId.split('#')[0]
       hostUrl = new URL(remoteUserUrl).host
@@ -56,9 +56,10 @@ function getCheckFediverseSignatureFucnction(force = false) {
       }
       req.fediData = fediData
       const remoteKey = await getKey(remoteUserUrl, await adminUser)
-      success = req.method === 'POST' ?
-        verifyDigest(req.rawBody ? req.rawBody : '', req.headers.digest) :
-        httpSignature.verifySignature(sigHead, remoteKey)
+      success =
+        req.method === 'POST'
+          ? verifyDigest(req.rawBody ? req.rawBody : '', req.headers.digest)
+          : httpSignature.verifySignature(sigHead, remoteKey)
       if (req.method === 'POST') {
         // we check that the petition is done by who it says its done
         success = success && remoteUserUrl.toLowerCase() === req.body.actor.toLowerCase()
@@ -66,7 +67,7 @@ function getCheckFediverseSignatureFucnction(force = false) {
     } catch (error: any) {
       req.fediData = { fediHost: hostUrl, valid: false }
       if (force) {
-        success = false;
+        success = false
         logger.debug({
           message: 'Failed to verify signature',
           url: req.url,
