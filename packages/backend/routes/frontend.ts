@@ -38,7 +38,8 @@ function frontend(app: Application) {
   )
 
   app.get('/post/:id', getCheckFediverseSignatureFucnction(false), async function (req: SignedRequest, res) {
-    res.redirect(`/fediverse${req.url}`)
+    //res.redirect(`/fediverse${req.url}`)
+    res.send(`<a href="${environment.frontendUrl}/fediverse${req.url}">Hello. Post has been moved here. Please click to go</a>`)
   })
   
   app.get(

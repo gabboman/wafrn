@@ -62,6 +62,10 @@ const routes: Routes = [
           ),
       },
       {
+        path: 'post/:id',
+        redirectTo: '/fediverse/post/:id'
+      },
+      {
         path: 'fediverse/post',
         loadChildren: () =>
           import('./pages/single-post/single-post.module').then(
