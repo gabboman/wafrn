@@ -89,6 +89,8 @@ async function getRemoteActorIdProcessor(job: Job) {
           followingCount: followed,
           updatedAt: new Date()
         }
+        federatedHost.publicInbox = userPetition.endpoints?.sharedInbox;
+        await federatedHost.save()
         let userRes
         const existingUsers = await User.findAll({
           where: {
