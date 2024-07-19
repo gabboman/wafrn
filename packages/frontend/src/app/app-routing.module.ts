@@ -62,7 +62,7 @@ const routes: Routes = [
           ),
       },
       {
-        path: 'post',
+        path: 'fediverse/post',
         loadChildren: () =>
           import('./pages/single-post/single-post.module').then(
             (m) => m.SinglePostModule

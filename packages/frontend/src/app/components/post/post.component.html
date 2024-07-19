@@ -205,7 +205,7 @@
 
   <div class="flex pt-1">
     <div class="flex flex-grow-1">
-      <a [routerLink]="'/post/' + finalPost.id"> Notes: {{ notes }} </a>
+      <a [routerLink]="'/fediverse/post/' + finalPost.id"> Notes: {{ notes }} </a>
     </div>
     <div *ngIf="userLoggedIn" class="flex flex-shrink-0">
       <div class="flex gap-4 px-1" *ngIf="!loadingAction">

@@ -1,4 +1,4 @@
-import express, { Application } from 'express'
+import express, { Application, Response } from 'express'
 import { environment } from '../environment'
 import { Op } from 'sequelize'
 import { Media, Post, User, sequelize } from '../db'
@@ -15,7 +15,7 @@ const cacheOptions = {
   maxAge: '1'
 }
 
-export default function frontend(app: Application) {
+function frontend(app: Application) {
   const defaultSeoData = environment.defaultSEOData
 
   // serve default angular application
@@ -38,33 +38,34 @@ export default function frontend(app: Application) {
   )
 
   app.get('/post/:id', getCheckFediverseSignatureFucnction(false), async function (req: SignedRequest, res) {
-    const acceptHeader = req.header('accept') ? (req.header('accept') as string) : ''
-    if (
-      req.fediData?.valid
-    ) {
-      logger.debug({
-        message: `Redirecting regular post to ap object`,
-        url: req.url
-      })
-      res.redirect('/fediverse' + req.url);
-      res.send()
-      return;
-    }
-    if (req.params?.id) {
-      try {
-        const postData = await getPostSEOCache(req.params.id)
-        if (postData) {
-          res.send(getIndexSeo(postData.title, postData.description, postData.img))
+    res.redirect(`/fediverse${req.url}`)
+  })
+  
+  app.get(
+    ['/fediverse/post/:id', '/fediverse/activity/post/:id'],
+    getCheckFediverseSignatureFucnction(false),
+    async (req: SignedRequest, res: Response) => {
+      if(req.headers['accept']?.includes('json') || req.headers['accept']?.includes('activity') ) {
+        await handlePostRequest(req, res)
+      } else {
+        const defaultSeoData = environment.defaultSEOData
+        if (req.params?.id) {
+          try {
+            const postData = await getPostSEOCache(req.params.id)
+            if (postData) {
+              res.send(getIndexSeo(postData.title, postData.description, postData.img))
+            } else {
+              res.send(getIndexSeo(defaultSeoData.title, defaultSeoData.description, defaultSeoData.img))
+            }
+          } catch (error) {
+            res.send(getIndexSeo(defaultSeoData.title, defaultSeoData.description, defaultSeoData.img))
+          }
         } else {
           res.send(getIndexSeo(defaultSeoData.title, defaultSeoData.description, defaultSeoData.img))
         }
-      } catch (error) {
-        res.send(getIndexSeo(defaultSeoData.title, defaultSeoData.description, defaultSeoData.img))
       }
-    } else {
-      res.send(getIndexSeo(defaultSeoData.title, defaultSeoData.description, defaultSeoData.img))
     }
-  })
+  )
 
   app.get('/blog/:url', async function (req, res) {
     if (req.params?.url) {
@@ -196,3 +197,6 @@ function getIndexSeo(title: string, description: string, image?: string) {
 
   return indexWithSeo
 }
+
+
+export { frontend, getIndexSeo, getPostSEOCache, getBlogSEOCache}

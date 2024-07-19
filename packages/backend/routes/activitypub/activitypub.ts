@@ -19,6 +19,7 @@ import { getPostAndUserFromPostId } from '../../utils/cacheGetters/getPostAndUse
 import { logger } from '../../utils/logger'
 import { checkuserAllowsThreads } from '../../utils/checkUserAllowsThreads'
 import { handlePostRequest } from '../../utils/activitypub/handlePostRequest'
+import { getPostSEOCache, getIndexSeo } from '../frontend'
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const Cacher = require('cacher')
 const cacher = new Cacher()
@@ -57,14 +58,7 @@ const inboxQueue = new Queue('inbox', {
 // all the stuff related to activitypub goes here
 
 function activityPubRoutes(app: Application) {
-  // get post
-  app.get(
-    ['/fediverse/post/:id', '/fediverse/activity/post/:id'],
-    getCheckFediverseSignatureFucnction(false),
-    async (req: SignedRequest, res: Response) => {
-      await handlePostRequest(req, res)
-    }
-  )
+
   // Get blog for fediverse
   app.get(
     '/fediverse/blog/:url',

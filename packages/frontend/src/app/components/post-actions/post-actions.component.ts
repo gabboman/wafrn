@@ -77,7 +77,7 @@ export class PostActionsComponent implements OnChanges{
 
   sharePost() {
     navigator.clipboard.writeText(
-      `${environment.frontUrl}/post/${this.content.id}`
+      `${environment.frontUrl}/fediverse/post/${this.content.id}`
     );
     this.messages.add({
       severity: 'success',

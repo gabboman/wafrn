@@ -7,7 +7,7 @@
     "/profile",
     "profile/**",
     "/blog/**",
-    "/post/**",
+    "/fediverse/post/**",
     "/search",
     "/search/**"
   ],
