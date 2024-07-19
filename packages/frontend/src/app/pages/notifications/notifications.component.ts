@@ -169,7 +169,7 @@ export class NotificationsComponent implements OnInit {
       console.log(`ERROR WITH ${type}`)
     }
     return {
-      url: `/post/${reblog.id}`,
+      url: `/fediverse/post/${reblog.id}`,
       avatar: reblog.user.avatar,
       date: reblog.createdAt,
       type: type,
