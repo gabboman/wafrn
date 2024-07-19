@@ -31,7 +31,12 @@ async function getRemoteActor(actorUrl: string, user: any, forceUpdate = false):
   let remoteUser
   try {
     // we check its a string. A little bit dirty but could be worse
-    actorUrl.startsWith(environment.frontendUrl + '/fediverse/blog/')
+    if(actorUrl.toLowerCase().startsWith(environment.frontendUrl + '/fediverse/blog/')) {
+      const urlToSearch = actorUrl.split(environment.frontendUrl + '/fediverse/blog/')[1].toLowerCase()
+      return User.findOne({
+        urlToLower: urlToSearch
+      })
+    }
     let userId = await getUserIdFromRemoteId(actorUrl)
     if (userId === '') {
       const job = await queue.add('getRemoteActorId', { actorUrl: actorUrl, userId: user.id, forceUpdate: forceUpdate })
