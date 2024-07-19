@@ -586,6 +586,10 @@ const QuestionPollAnswer = sequelize.define('questionPollAnswer', {
   remoteId: Sequelize.TEXT
 })
 
+const postHostView = sequelize.define('postHostView', {})
+
+const remoteUserPostView = sequelize.define('remoteUserPostView', {})
+
 Post.hasOne(QuestionPoll)
 QuestionPoll.belongsTo(Post)
 QuestionPoll.hasMany(QuestionPollQuestion, { onDelete: 'cascade' })
@@ -749,6 +753,24 @@ UserLikesPostRelations.belongsTo(Post)
 User.hasMany(UserLikesPostRelations)
 Post.hasMany(UserLikesPostRelations)
 
+FederatedHost.belongsToMany(Post, {
+  through: postHostView,
+  as: 'postView'
+})
+Post.belongsToMany(FederatedHost, {
+  through: postHostView,
+  as: 'hostView'
+})
+
+Post.belongsToMany(User, {
+  through: remoteUserPostView,
+  as: 'view'
+})
+User.belongsToMany(Post, {
+  through: remoteUserPostView,
+  as: 'postView'
+})
+
 sequelize
   .sync({
     force: environment.forceSync
@@ -837,5 +859,7 @@ export {
   UserEmojiRelation,
   PostEmojiRelations,
   PostMediaRelations,
-  Quotes
+  Quotes,
+  postHostView,
+  remoteUserPostView
 }

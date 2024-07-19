@@ -39,9 +39,9 @@ export default function deletePost(app: Application) {
             userId: posterId
           }
         })
-        if(!postToDelete) {
-          res.sendStatus(500);
-          return;
+        if (!postToDelete) {
+          res.sendStatus(500)
+          return
         }
         const objectToSend: activityPubObject = {
           '@context': [`${environment.frontendUrl}/contexts/litepub-0.1.jsonld`],
@@ -95,14 +95,11 @@ export default function deletePost(app: Application) {
         )
         if (postToDelete.privacy != 2) {
           for await (const inboxChunk of _.chunk(inboxes, 1)) {
-            await deletePostQueue.add(
-              'sencChunk',
-              {
-                objectToSend: { ...objectToSend, signature: bodySignature.signature },
-                petitionBy: user,
-                inboxList: inboxChunk
-              }
-            )
+            await deletePostQueue.add('sencChunk', {
+              objectToSend: { ...objectToSend, signature: bodySignature.signature },
+              petitionBy: user,
+              inboxList: inboxChunk
+            })
           }
         }
         await redisCache.del('postAndUser:' + id)

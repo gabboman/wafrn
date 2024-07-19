@@ -31,7 +31,7 @@ async function getRemoteActor(actorUrl: string, user: any, forceUpdate = false):
   let remoteUser
   try {
     // we check its a string. A little bit dirty but could be worse
-    if(actorUrl.toLowerCase().startsWith(environment.frontendUrl + '/fediverse/blog/')) {
+    if (actorUrl.toLowerCase().startsWith(environment.frontendUrl + '/fediverse/blog/')) {
       const urlToSearch = actorUrl.split(environment.frontendUrl + '/fediverse/blog/')[1].toLowerCase()
       return User.findOne({
         where: {

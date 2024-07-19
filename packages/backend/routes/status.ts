@@ -89,7 +89,7 @@ export default function statusRoutes(app: Application) {
       inboxFail: await inboxFail,
       inboxSuccess: await inboxSuccess,
       inboxAwaiting: await inboxAwaiting,
-      deletePostAwaiting: await deletePostAwaiting,
+      deletePostAwaiting: await deletePostAwaiting
     })
   })
 }

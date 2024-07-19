@@ -4,18 +4,31 @@ import { getPostAndUserFromPostId } from '../cacheGetters/getPostAndUserFromPost
 import { getFollowerRemoteIds } from '../cacheGetters/getFollowerRemoteIds'
 import { logger } from '../logger'
 import { postToJSONLD } from './postToJSONLD'
+import { getRemoteActor } from './getRemoteActor'
 
 async function handlePostRequest(req: SignedRequest, res: Response) {
   if (req.params?.id) {
     const cachePost = await getPostAndUserFromPostId(req.params.id)
     const post = cachePost.data
-    if(!req.fediData?.valid) {
-      logger.debug({
-        message: `Accessing post without a valid signature!!`,
-        fediData: req.fediData
-      })
-    }
     if (post) {
+      // we get remote user async-ly
+      const fediData = req.fediData as {
+        fediHost: string
+        remoteUserUrl: string
+        valid: boolean
+      }
+      getRemoteActor(fediData.remoteUserUrl, cachePost.data.user, false).then(async (remoteActor) => {
+        const federatedHost = await remoteActor.getFederatedHost()
+        try {
+          if (federatedHost.publicInbox) {
+            await federatedHost.addPostView(post.id)
+          } else {
+            await remoteActor.addPostView(post.id)
+          }
+        } catch (error: any) {
+          // we should do something for a time
+        }
+      })
       const user = post.user
       if (user.url.startsWith('@')) {
         // EXTERNAL USER LOL

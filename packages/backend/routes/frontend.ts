@@ -51,7 +51,10 @@ function frontend(app: Application) {
     ['/fediverse/post/:id', '/fediverse/activity/post/:id'],
     getCheckFediverseSignatureFucnction(false),
     async (req: SignedRequest, res: Response) => {
-      if (req.headers['accept']?.includes('json') || req.headers['accept']?.includes('activity')) {
+      if (
+        (req.headers['accept']?.includes('json') || req.headers['accept']?.includes('activity')) &&
+        req.fediData?.valid
+      ) {
         await handlePostRequest(req, res)
       } else {
         const defaultSeoData = environment.defaultSEOData
