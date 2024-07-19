@@ -33,7 +33,7 @@ html {
 @include mat.typography-hierarchy($dark-theme);  // typography styles could be included too
 
 .mat-drawer-content {
-  background-color: $bgcolor
+  background-color: transparent
 }
 
 
