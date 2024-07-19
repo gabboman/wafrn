@@ -38,7 +38,7 @@ const workerDeletePost = new Worker('deletePostQueue', (job: Job) => sendPostToI
   metrics: {
     maxDataPoints: MetricsTime.ONE_WEEK * 2
   },
-  concurrency: environment.workers.medium,
+  concurrency: environment.workers.high,
   lockDuration: 120000
 })
 
