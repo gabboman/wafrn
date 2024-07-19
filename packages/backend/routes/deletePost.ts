@@ -39,6 +39,10 @@ export default function deletePost(app: Application) {
             userId: posterId
           }
         })
+        if(!postToDelete) {
+          res.sendStatus(500);
+          return;
+        }
         const objectToSend: activityPubObject = {
           '@context': [`${environment.frontendUrl}/contexts/litepub-0.1.jsonld`],
           actor: `${environment.frontendUrl}/fediverse/blog/${user.url.toLowerCase()}`,

@@ -38,7 +38,7 @@ const workerDeletePost = new Worker('deletePostQueue', (job: Job) => sendPostToI
   metrics: {
     maxDataPoints: MetricsTime.ONE_WEEK * 2
   },
-  concurrency: environment.workers.low,
+  concurrency: environment.workers.medium,
   lockDuration: 120000
 })
 
@@ -51,4 +51,4 @@ const workerGetUser = new Worker('getRemoteActorId', async (job: Job) => await g
   lockDuration: 120000
 })
 
-export { workerInbox, workerSendPostChunk, workerPrepareSendPost, workerGetUser }
+export { workerInbox, workerSendPostChunk, workerPrepareSendPost, workerGetUser, workerDeletePost }
