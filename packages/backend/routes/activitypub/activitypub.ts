@@ -64,8 +64,12 @@ function activityPubRoutes(app: Application) {
     '/fediverse/blog/:url',
     getCheckFediverseSignatureFucnction(false),
     async (req: SignedRequest, res: Response) => {
+      const url = req.params.url.toLowerCase()
+      if(req.headers['accept']?.includes('*')) {
+        res.redirect(`/blog/${url}`)
+        return;
+      }
       if (!req.params.url?.startsWith('@')) {
-        const url = req.params.url.toLowerCase()
         const user = await getLocalUserByUrlCache(url)
         if (user && user.banned) {
           res.sendStatus(410)
