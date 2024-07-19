@@ -9,6 +9,12 @@ async function handlePostRequest(req: SignedRequest, res: Response) {
   if (req.params?.id) {
     const cachePost = await getPostAndUserFromPostId(req.params.id)
     const post = cachePost.data
+    if(!req.fediData?.valid) {
+      logger.debug({
+        message: `Accessing post without a valid signature!!`,
+        fediData: req.fediData
+      })
+    }
     if (post) {
       const user = post.user
       if (user.url.startsWith('@')) {
