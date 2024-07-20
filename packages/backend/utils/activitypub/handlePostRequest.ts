@@ -8,7 +8,6 @@ import { getRemoteActor } from './getRemoteActor'
 import { Queue } from 'bullmq'
 import { environment } from '../../environment'
 
-
 const sendPostQueue = new Queue('processRemoteView', {
   connection: environment.bullmqConnection,
   defaultJobOptions: {
@@ -35,11 +34,11 @@ async function handlePostRequest(req: SignedRequest, res: Response) {
       }
       getRemoteActor(fediData.remoteUserUrl, cachePost.data.user, false).then(async (remoteActor) => {
         const federatedHost = await remoteActor.getFederatedHost()
-          await sendPostQueue.add('processPost', {
-            postId: post.id,
-            federatedHostId:  federatedHost.publicInbox ? federatedHost.id : '',
-            userId: federatedHost.publicInbox ? '' : remoteActor.id
-          })
+        await sendPostQueue.add('processPost', {
+          postId: post.id,
+          federatedHostId: federatedHost.publicInbox ? federatedHost.id : '',
+          userId: federatedHost.publicInbox ? '' : remoteActor.id
+        })
       })
       const user = post.user
       if (user.url.startsWith('@')) {

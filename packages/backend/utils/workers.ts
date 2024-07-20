@@ -52,13 +52,17 @@ const workerGetUser = new Worker('getRemoteActorId', async (job: Job) => await g
   lockDuration: 120000
 })
 
-const workerProcessRemotePostView = new Worker('processRemoteView', async (job: Job) => await processRemotePostView(job), {
-  connection: environment.bullmqConnection,
-  metrics: {
-    maxDataPoints: MetricsTime.ONE_WEEK * 2
-  },
-  concurrency: environment.workers.low,
-  lockDuration: 120000
-})
+const workerProcessRemotePostView = new Worker(
+  'processRemoteView',
+  async (job: Job) => await processRemotePostView(job),
+  {
+    connection: environment.bullmqConnection,
+    metrics: {
+      maxDataPoints: MetricsTime.ONE_WEEK * 2
+    },
+    concurrency: environment.workers.low,
+    lockDuration: 120000
+  }
+)
 
 export { workerInbox, workerSendPostChunk, workerPrepareSendPost, workerGetUser, workerDeletePost }
