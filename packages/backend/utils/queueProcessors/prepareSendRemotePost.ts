@@ -50,7 +50,7 @@ async function prepareSendRemotePostWorker(job: Job) {
       {
         required: true,
         model: User,
-        attributes: ['remoteInbox'],
+        attributes: ['remoteInbox', 'id'],
         where: {
           banned: false,
           id: {
@@ -104,14 +104,15 @@ async function prepareSendRemotePostWorker(job: Job) {
       }
     })
   )
-  /*await RemoteUserPostView.bulkCreate(
-    usersToSendThePost.map((usr: any) => {
+  
+  await RemoteUserPostView.bulkCreate(
+    usersToSendThePost.flatMap((usr: any) => usr.users).map((elem: any) => {
       return {
-        userId: usr.id,
+        userId: elem.id,
         postId: post.id
       }
-    })
-  ) */
+    }) 
+  )
 
   const objectToSend = await postToJSONLD(post.id)
   const ldSignature = new LdSignature()
