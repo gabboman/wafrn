@@ -62,7 +62,6 @@ async function prepareSendRemotePostWorker(job: Job) {
   })
   // mentioned users
   const mentionedUsers = await post.getMentionPost({
-    attributes: ['remoteInbox'],
     where: {
       federatedHostId: { [Op.ne]: null }
     }
@@ -106,7 +105,7 @@ async function prepareSendRemotePostWorker(job: Job) {
     })
   )
   await RemoteUserPostView.bulkCreate(
-    usersToSendThePost.map((usr: any) => {
+    usersToSendThePost.concat(mentionedUsers).map((usr: any) => {
       return {
         userId: usr.id,
         postId: post.id
