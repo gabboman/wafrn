@@ -61,11 +61,7 @@ async function prepareSendRemotePostWorker(job: Job) {
     ]
   })
   // mentioned users
-  const mentionedUsers = await post.getMentionPost({
-    where: {
-      federatedHostId: { [Op.ne]: null }
-    }
-  })
+  const mentionedUsers = await post.getMentionPost()
   switch (post.privacy) {
     case 2: {
       break
@@ -111,7 +107,14 @@ async function prepareSendRemotePostWorker(job: Job) {
         userId: elem.id,
         postId: post.id
       }
-    }) 
+    }).concat(
+      mentionedUsers.map((elem: any) => {
+        return {
+          userId: elem.id,
+          postId: post.id
+        }
+      })
+    ) 
   )
 
   const objectToSend = await postToJSONLD(post.id)
