@@ -350,6 +350,7 @@ blockquote {
 
 
 .post-danger {
+  //filter: blur(2px);
   background: repeating-linear-gradient(
     45deg,
     $bgcolor,

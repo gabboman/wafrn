@@ -1,5 +1,4 @@
 <ng-container *ngIf="fragment">
-  <div [ngClass]="{ 'post-danger': fragment.content_warning && showCw }" >
   <div id="fragment-content-warning" *ngIf="fragment.content_warning" [ngClass]="{ blurry: !showCw }">
     <div class="fragment-content">
       {{ fragment.content_warning }}
@@ -8,6 +7,7 @@
       I understand this and I want to see this woot
     </button>
   </div>
+  <div [ngClass]="{ 'post-danger': fragment.content_warning && showCw }" >
   <div *ngIf="fragment.content !== '' || fragment.tags?.length"
     class="fragment-content wafrn-text-default overflow-hidden"
     [ngClass]="{ blurry: fragment.content_warning && showCw }" [injectHTML]="fragment.content"></div>
