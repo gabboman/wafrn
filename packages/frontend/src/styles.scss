@@ -16,7 +16,7 @@ $dark-theme: mat.define-theme((
 ));
 
 $bgcolor: #151116;
-$cardcolor: #2a323d !important;
+$cardcolor: #2a323d;
 
 @include mat.core();
 
@@ -345,5 +345,16 @@ blockquote {
 
 
 .mat-mdc-card, table, mat-paginator, .ql-mention-list-container, .mat-mdc-menu-panel {
-  background-color: $cardcolor;
+  background-color: $cardcolor !important;
+}
+
+
+.post-danger {
+  background: repeating-linear-gradient(
+    45deg,
+    $bgcolor,
+    $bgcolor 10px,
+    $cardcolor 10px,
+    $cardcolor 20px
+   ) ;
 }
