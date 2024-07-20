@@ -3,7 +3,7 @@ import { logger } from '../logger'
 import { postPetitionSigned } from '../activitypub/postPetitionSigned'
 import { postToJSONLD } from '../activitypub/postToJSONLD'
 import { LdSignature } from '../activitypub/rsa2017'
-import { FederatedHost, Post, User, postHostView, remoteUserPostView, sequelize } from '../../db'
+import { FederatedHost, Post, User, PostHostView, RemoteUserPostView, sequelize } from '../../db'
 import { environment } from '../../environment'
 import { Job, Queue } from 'bullmq'
 import _ from 'underscore'
@@ -97,7 +97,7 @@ async function prepareSendRemotePostWorker(job: Job) {
   }
 
   // before sending we store the fact that we have sent the post
-  await postHostView.bulkCreate(
+  await PostHostView.bulkCreate(
     serversToSendThePost.map((host: any) => {
       return {
         federatedHostId: host.id,
@@ -105,7 +105,7 @@ async function prepareSendRemotePostWorker(job: Job) {
       }
     })
   )
-  await remoteUserPostView.bulkCreate(
+  await RemoteUserPostView.bulkCreate(
     usersToSendThePost.map((usr: any) => {
       return {
         userId: usr.id,

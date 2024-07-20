@@ -586,9 +586,9 @@ const QuestionPollAnswer = sequelize.define('questionPollAnswer', {
   remoteId: Sequelize.TEXT
 })
 
-const postHostView = sequelize.define('postHostView', {})
+const PostHostView = sequelize.define('postHostView', {})
 
-const remoteUserPostView = sequelize.define('remoteUserPostView', {})
+const RemoteUserPostView = sequelize.define('remoteUserPostView', {})
 
 Post.hasOne(QuestionPoll)
 QuestionPoll.belongsTo(Post)
@@ -754,20 +754,20 @@ User.hasMany(UserLikesPostRelations)
 Post.hasMany(UserLikesPostRelations)
 
 FederatedHost.belongsToMany(Post, {
-  through: postHostView,
+  through: PostHostView,
   as: 'postView'
 })
 Post.belongsToMany(FederatedHost, {
-  through: postHostView,
+  through: PostHostView,
   as: 'hostView'
 })
 
 Post.belongsToMany(User, {
-  through: remoteUserPostView,
+  through: RemoteUserPostView,
   as: 'view'
 })
 User.belongsToMany(Post, {
-  through: remoteUserPostView,
+  through: RemoteUserPostView,
   as: 'postView'
 })
 
@@ -860,6 +860,6 @@ export {
   PostEmojiRelations,
   PostMediaRelations,
   Quotes,
-  postHostView,
-  remoteUserPostView
+  PostHostView,
+  RemoteUserPostView
 }

@@ -5,6 +5,7 @@ import { prepareSendRemotePostWorker } from './queueProcessors/prepareSendRemote
 import { sendPostToInboxes } from './queueProcessors/sendPostToInboxes'
 import { getRemoteActorIdProcessor } from './queueProcessors/getRemoteActorIdProcessor'
 import { logger } from './logger'
+import { processRemotePostView } from './queueProcessors/processRemotePostView'
 
 logger.info('starting workers')
 const workerInbox = new Worker('inbox', (job: Job) => inboxWorker(job), {
@@ -48,6 +49,15 @@ const workerGetUser = new Worker('getRemoteActorId', async (job: Job) => await g
     maxDataPoints: MetricsTime.ONE_WEEK * 2
   },
   concurrency: environment.workers.high,
+  lockDuration: 120000
+})
+
+const workerProcessRemotePostView = new Worker('processRemoteView', async (job: Job) => await processRemotePostView(job), {
+  connection: environment.bullmqConnection,
+  metrics: {
+    maxDataPoints: MetricsTime.ONE_WEEK * 2
+  },
+  concurrency: environment.workers.low,
   lockDuration: 120000
 })
 

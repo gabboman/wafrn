@@ -5,6 +5,22 @@ import { getFollowerRemoteIds } from '../cacheGetters/getFollowerRemoteIds'
 import { logger } from '../logger'
 import { postToJSONLD } from './postToJSONLD'
 import { getRemoteActor } from './getRemoteActor'
+import { Queue } from 'bullmq'
+import { environment } from '../../environment'
+
+
+const sendPostQueue = new Queue('processRemoteView', {
+  connection: environment.bullmqConnection,
+  defaultJobOptions: {
+    removeOnComplete: true,
+    attempts: 3,
+    backoff: {
+      type: 'exponential',
+      delay: 25000
+    },
+    removeOnFail: 25000
+  }
+})
 
 async function handlePostRequest(req: SignedRequest, res: Response) {
   if (req.params?.id) {
@@ -19,19 +35,15 @@ async function handlePostRequest(req: SignedRequest, res: Response) {
       }
       getRemoteActor(fediData.remoteUserUrl, cachePost.data.user, false).then(async (remoteActor) => {
         const federatedHost = await remoteActor.getFederatedHost()
-        try {
-          if (federatedHost.publicInbox) {
-            await federatedHost.addPostView(post.id)
-          } else {
-            await remoteActor.addPostView(post.id)
-          }
-        } catch (error: any) {
-          // we should do something for a time
-        }
+          await sendPostQueue.add('processPost', {
+            postId: post.id,
+            federatedHostId:  federatedHost.publicInbox ? federatedHost.id : '',
+            userId: federatedHost.publicInbox ? '' : remoteActor.id
+          })
       })
       const user = post.user
       if (user.url.startsWith('@')) {
-        // EXTERNAL USER LOL
+        // EXTERNAL USER
         res.redirect(post.remotePostId)
         return
       }
