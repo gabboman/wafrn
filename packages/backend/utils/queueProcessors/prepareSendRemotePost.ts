@@ -104,14 +104,14 @@ async function prepareSendRemotePostWorker(job: Job) {
       }
     })
   )
-  await RemoteUserPostView.bulkCreate(
+  /*await RemoteUserPostView.bulkCreate(
     usersToSendThePost.map((usr: any) => {
       return {
         userId: usr.id,
         postId: post.id
       }
     })
-  )
+  ) */
 
   const objectToSend = await postToJSONLD(post.id)
   const ldSignature = new LdSignature()
