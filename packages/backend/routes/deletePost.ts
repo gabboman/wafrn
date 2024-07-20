@@ -1,5 +1,5 @@
 import { Application, Response } from 'express'
-import { FederatedHost, Post, PostMentionsUserRelation, PostTag, User, UserLikesPostRelations } from '../db'
+import { FederatedHost, Post, PostHostView, PostMentionsUserRelation, PostTag, RemoteUserPostView, User, UserLikesPostRelations } from '../db'
 import { authenticateToken } from '../utils/authenticateToken'
 import { Op, Sequelize } from 'sequelize'
 import { logger } from '../utils/logger'
@@ -56,27 +56,62 @@ export default function deletePost(app: Application) {
           type: 'Delete'
         }
 
-        let serversToSendThePost = FederatedHost.findAll({
-          where: {
-            publicInbox: { [Op.ne]: null },
-            blocked: false
-          }
-        })
-        let usersToSendThePost = FederatedHost.findAll({
-          where: {
-            publicInbox: { [Op.eq]: null },
-            blocked: false
-          },
-          include: [
-            {
-              model: User,
-              attributes: ['remoteInbox'],
-              where: {
-                banned: false
+        let serversToSendThePost;
+        let usersToSendThePost;
+        // if the post is previous to the new functionality of storing who has seen the post, send to everyone
+        // or NUKE has been requested
+        if ((new Date(postToDelete.createdAt)).getTime() < 1721437200091 || req.query?.nuke) {
+          serversToSendThePost = FederatedHost.findAll({
+            where: {
+              publicInbox: { [Op.ne]: null },
+              blocked: false
+            }
+          })
+          usersToSendThePost = FederatedHost.findAll({
+            where: {
+              publicInbox: { [Op.eq]: null },
+              blocked: false
+            },
+            include: [
+              {
+                model: User,
+                attributes: ['remoteInbox'],
+                where: {
+                  banned: false
+                }
+              }
+            ]
+          })
+        } else {
+          const serverViews = await PostHostView.findAll({
+            where: {
+              postId: postToDelete.id
+            }
+          })
+          const userViews = await RemoteUserPostView.findAll({
+            where: {
+              postId: postToDelete.id
+            }
+          })
+
+          serversToSendThePost = FederatedHost.findAll({
+            where: {
+              id: {
+                [Op.in]: serverViews.map((view: any) => view.federatedHostId)
               }
             }
-          ]
-        })
+          })
+          usersToSendThePost = User.findAll({
+            where: {
+              id: {
+                [Op.in]: userViews.map((view: any) => view.userId)
+              }
+            }
+          })
+
+
+        }
+        
         await Promise.all([serversToSendThePost, usersToSendThePost])
         serversToSendThePost = await serversToSendThePost
         usersToSendThePost = await usersToSendThePost
