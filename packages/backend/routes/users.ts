@@ -590,15 +590,15 @@ export default function userRoutes(app: Application) {
   app.get('/api/user/:url/follows', authenticateToken, async (req: AuthorizedRequest, res: Response) => {
     const url = req.params?.url as string
     const followers = req.query?.followers === 'true'
-    if(url) {
+    if (url) {
       const user = await User.findOne({
         where: {
           urlToLower: url.toLowerCase()
         }
-      });
-      if(user){
-        let responseData;
-        if(followers) {
+      })
+      if (user) {
+        let responseData
+        if (followers) {
           //people who follow :url
           responseData = await user.getFollwer({
             attributes: ['id', 'url', 'avatar', 'description']
@@ -610,12 +610,11 @@ export default function userRoutes(app: Application) {
           })
         }
         res.send(responseData)
-      }else {
+      } else {
         res.send(404)
       }
     } else {
       res.sendStatus(404)
     }
-    
   })
 }

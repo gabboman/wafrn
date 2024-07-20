@@ -100,21 +100,24 @@ async function prepareSendRemotePostWorker(job: Job) {
       }
     })
   )
-  
+
   await RemoteUserPostView.bulkCreate(
-    usersToSendThePost.flatMap((usr: any) => usr.users).map((elem: any) => {
-      return {
-        userId: elem.id,
-        postId: post.id
-      }
-    }).concat(
-      mentionedUsers.map((elem: any) => {
+    usersToSendThePost
+      .flatMap((usr: any) => usr.users)
+      .map((elem: any) => {
         return {
           userId: elem.id,
           postId: post.id
         }
       })
-    ) 
+      .concat(
+        mentionedUsers.map((elem: any) => {
+          return {
+            userId: elem.id,
+            postId: post.id
+          }
+        })
+      )
   )
 
   const objectToSend = await postToJSONLD(post.id)
