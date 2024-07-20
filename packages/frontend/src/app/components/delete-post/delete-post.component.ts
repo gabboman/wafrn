@@ -10,6 +10,7 @@ import {
   MatDialogRef,
   MAT_DIALOG_DATA,
 } from '@angular/material/dialog';
+import { LoaderComponent } from "../loader/loader.component";
 @Component({
   selector: 'app-delete-post',
   templateUrl: './delete-post.component.html',
@@ -21,10 +22,12 @@ import {
     MatDialogTitle,
     MatDialogActions,
     MatDialogClose,
-  ],
+    LoaderComponent
+],
 })
 export class DeletePostComponent {
   postToDelete: string;
+  deleting = false;
 
   constructor(
     private deletePostService: DeletePostService,
@@ -40,6 +43,7 @@ export class DeletePostComponent {
   }
 
   deletePost() {
+    this.deleting = true;
     if (this.postToDelete) {
       const subscription = this.deletePostService
         .deletePost(this.postToDelete)
@@ -53,6 +57,7 @@ export class DeletePostComponent {
                   summary:
                     'The post has been deleted and now the page will be reloaded',
                 });
+                this.dialogRef.close();
                 setTimeout(() => {
                   window.location.reload();
                 }, 1000);
@@ -77,5 +82,6 @@ export class DeletePostComponent {
           }
         );
     }
+    this.deleting = false;
   }
 }
