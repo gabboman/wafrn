@@ -1,5 +1,14 @@
 import { Application, Response } from 'express'
-import { FederatedHost, Post, PostHostView, PostMentionsUserRelation, PostTag, RemoteUserPostView, User, UserLikesPostRelations } from '../db'
+import {
+  FederatedHost,
+  Post,
+  PostHostView,
+  PostMentionsUserRelation,
+  PostTag,
+  RemoteUserPostView,
+  User,
+  UserLikesPostRelations
+} from '../db'
 import { authenticateToken } from '../utils/authenticateToken'
 import { Op, Sequelize } from 'sequelize'
 import { logger } from '../utils/logger'
@@ -56,18 +65,18 @@ export default function deletePost(app: Application) {
           type: 'Delete'
         }
 
-        let serversToSendThePost;
-        let usersToSendThePost;
+        let serversToSendThePost
+        let usersToSendThePost
         // if the post is previous to the new functionality of storing who has seen the post, send to everyone
         // or NUKE has been requested
-        if ((new Date(postToDelete.createdAt)).getTime() < 1721437200091 || req.query?.nuke) {
+        if (new Date(postToDelete.createdAt).getTime() < 1721437200091 || req.query?.nuke) {
           serversToSendThePost = FederatedHost.findAll({
             where: {
               publicInbox: { [Op.ne]: null },
               blocked: false
             }
           })
-          usersToSendThePost = FederatedHost.findAll({
+          const usersToSendThePostHost = await FederatedHost.findAll({
             where: {
               publicInbox: { [Op.eq]: null },
               blocked: false
@@ -82,6 +91,7 @@ export default function deletePost(app: Application) {
               }
             ]
           })
+          usersToSendThePost = usersToSendThePostHost.flatMap((elem: any) => elem.users)
         } else {
           const serverViews = await PostHostView.findAll({
             where: {
@@ -108,18 +118,15 @@ export default function deletePost(app: Application) {
               }
             }
           })
-
-
         }
-        
+
         await Promise.all([serversToSendThePost, usersToSendThePost])
         serversToSendThePost = await serversToSendThePost
         usersToSendThePost = await usersToSendThePost
         let inboxes: string[] = []
-        inboxes = inboxes.concat(serversToSendThePost.map((elem: any) => elem.publicInbox))
-        usersToSendThePost?.forEach((server: any) => {
-          inboxes = inboxes.concat(server.users.map((elem: any) => elem.remoteInbox))
-        })
+        inboxes = inboxes
+          .concat(serversToSendThePost.map((elem: any) => elem.publicInbox))
+          .concat(usersToSendThePost.map((usr: any) => usr.remoteInbox))
         const ldSignature = new LdSignature()
         const bodySignature = await ldSignature.signRsaSignature2017(
           objectToSend,
