@@ -105,7 +105,7 @@ async function prepareSendRemotePostWorker(job: Job) {
     })
   )
   await RemoteUserPostView.bulkCreate(
-    usersToSendThePost.concat(mentionedUsers).map((usr: any) => {
+    usersToSendThePost.map((usr: any) => {
       return {
         userId: usr.id,
         postId: post.id
