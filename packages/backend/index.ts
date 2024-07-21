@@ -73,8 +73,10 @@ mediaRoutes(app)
 postsRoutes(app)
 searchRoutes(app)
 deletePost(app)
-activityPubRoutes(app)
-wellKnownRoutes(app)
+if(environment.fediPort == environment.port) {
+  activityPubRoutes(app)
+  wellKnownRoutes(app)
+}
 cacheRoutes(app)
 likeRoutes(app)
 emojiReactRoutes(app)
