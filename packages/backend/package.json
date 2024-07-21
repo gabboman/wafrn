@@ -13,6 +13,7 @@
   "author": "",
   "license": "MIT",
   "dependencies": {
+    "@digitalbazaar/http-client": "^4.1.1",
     "@noble/ed25519": "^1.7.1",
     "@opera7133/mfmp": "^1.0.2-5",
     "@peertube/http-signature": "^1.7.0",
