@@ -42,7 +42,14 @@ async function getRemoteActor(actorUrl: string, user: any, forceUpdate = false):
     let userId = await getUserIdFromRemoteId(actorUrl)
     if (userId === '') {
       const job = await queue.add('getRemoteActorId', { actorUrl: actorUrl, userId: user.id, forceUpdate: forceUpdate })
-      userId = await job.waitUntilFinished(queueEvents)
+      userId = await job.waitUntilFinished(queueEvents).catch((error) => {
+        logger.debug({
+          message: `Error while geting user`,
+          user: actorUrl,
+          by: user.id,
+          error: error
+        })
+      })
     }
     remoteUser = await User.findByPk(userId)
     if (
@@ -53,7 +60,10 @@ async function getRemoteActor(actorUrl: string, user: any, forceUpdate = false):
       remoteUser = await deletedUser
     }
   } catch (error) {
-    logger.trace(`Error fetching user ${actorUrl}`)
+    logger.trace({
+      message: `Error fetching user ${actorUrl}`,
+      error: error
+    })
   }
   // update user if last update was more than 24 hours ago
   if (remoteUser && remoteUser.url !== environment.deletedUser) {
