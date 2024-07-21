@@ -20,7 +20,7 @@
     @if (userLoggedIn) {
     <div *ngIf="userLoggedIn" class="flex gap-0 flex-nowrap w-min mx-auto">
       <button
-        mat-flat-button
+        mat-stroked-button
         [color]="
           followedUsers.indexOf(blogDetails.id) === -1 ? 'primary' : 'warn'
         "
@@ -35,7 +35,7 @@
       </button>
       <button
         [matMenuTriggerFor]="menu"
-        mat-flat-button
+        mat-stroked-button
         [color]="
           followedUsers.indexOf(blogDetails.id) === -1 ? 'primary' : 'warn'
         "

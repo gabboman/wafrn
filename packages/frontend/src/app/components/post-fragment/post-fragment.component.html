@@ -3,7 +3,7 @@
     <div class="fragment-content">
       {{ fragment.content_warning }}
     </div>
-    <button mat-flat-button color="primary" (mousedown)="dismissCw.emit()" class="w-full">
+    <button mat-button color="primary" (mousedown)="dismissCw.emit()" class="w-full">
       @if(!showCw){
         Hide again
       }
