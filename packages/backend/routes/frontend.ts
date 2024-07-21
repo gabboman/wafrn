@@ -180,6 +180,7 @@ function getIndexSeo(title: string, description: string, image?: string) {
       ? environment.externalCacheurl + encodeURIComponent(image)
       : environment.mediaUrl + image
   }
+  imgUrl = sanitizeStringForSEO(imgUrl)
   let indexWithSeo = fs.readFileSync(`${environment.frontedLocation}/index.html`).toString()
   // index html must have a section with this html comment that we will edit out to put the seo there
   const commentToReplace =
@@ -188,19 +189,19 @@ function getIndexSeo(title: string, description: string, image?: string) {
     commentToReplace,
     `
     <meta property="og:title" content="${sanitizedTitle}">
-    <meta property="twitter:card" content="summary_large_image">
-    <meta property="twitter:title" content="${sanitizedTitle}">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="${sanitizedTitle}">
     <meta property="description" content="${sanitizedDescription}">
     <meta property="og:description" content="${sanitizedDescription}">
-    <meta property="twitter:description" content="${sanitizedDescription}">
+    <meta name="twitter:description" content="${sanitizedDescription}">
     ${
       imgUrl
         ? `<meta property="og:image" content="${imgUrl}">
-    <meta property="twitter:image" content="${imgUrl}">`
+    <meta name="twitter:image" content="${imgUrl}">`
         : ''
     }
     <meta property="og:site_name" content="${environment.instanceUrl}">
-    <meta property="twitter:site" content="${environment.instanceUrl}">
+    <meta name="twitter:site" content="${environment.instanceUrl}">
     `
   )
 
