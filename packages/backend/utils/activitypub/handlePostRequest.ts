@@ -33,7 +33,14 @@ async function handlePostRequest(req: SignedRequest, res: Response) {
         valid: boolean
       }
       getRemoteActor(fediData.remoteUserUrl, cachePost.data.user, false).then(async (remoteActor) => {
-        const federatedHost = await remoteActor.getFederatedHost()
+        if(!remoteActor) {
+          logger.debug({
+            message: `remote actor not found`,
+            fedidata: fediData
+          })
+          return;
+        }
+        const federatedHost = await remoteActor.getFederatedHost();
         await sendPostQueue.add('processPost', {
           postId: post.id,
           federatedHostId: federatedHost.publicInbox ? federatedHost.id : '',
