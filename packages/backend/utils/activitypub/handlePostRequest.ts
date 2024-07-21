@@ -36,9 +36,8 @@ async function handlePostRequest(req: SignedRequest, res: Response) {
         if(!remoteActor) {
           logger.debug({
             message: `remote actor not found`,
-            fedidata: fediData
+            fedidata: fediData,
           })
-          return;
         }
         const federatedHost = await remoteActor.getFederatedHost();
         await sendPostQueue.add('processPost', {
