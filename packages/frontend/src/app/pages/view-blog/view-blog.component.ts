@@ -48,19 +48,13 @@ export class ViewBlogComponent implements OnInit, OnDestroy {
   notYetAcceptedFollows: string[] = [];
   userLoggedIn = false;
   avatarUrl = '';
-  headerUrl = '';
   navigationSubscription!: Subscription;
   updateFollowersSubscription: Subscription;
   showModalTheme = false;
   viewedPostsIds: string[] = [];
   intersectionObserverForLoadPosts!: IntersectionObserver;
 
-  expandDownIcon = faChevronDown;
-  muteUserIcon = faVolumeMute;
-  unmuteUserIcon = faVolumeUp;
-  userIcon = faUser;
-  blockUserIcon = faUserSlash;
-  unblockServerIcon = faServer;
+  
   shareExternalIcon = faArrowUpRightFromSquare;
   solidHeartIcon = faHeart;
   clearHeartIcon = faHeartBroken;
@@ -147,13 +141,6 @@ export class ViewBlogComponent implements OnInit, OnDestroy {
           encodeURIComponent(
             environment.baseMediaUrl + this.blogDetails.avatar
           );
-      this.headerUrl = this.blogDetails.url.startsWith('@')
-        ? environment.externalCacheurl +
-          encodeURIComponent(this.blogDetails.headerImage)
-        : environment.externalCacheurl +
-          encodeURIComponent(
-            environment.baseMediaUrl + this.blogDetails.headerImage
-          );
       this.titleService.setTitle(`${this.blogDetails.url}'s blog`);
       this.metaTagService.addTags([
         {
@@ -224,35 +211,4 @@ export class ViewBlogComponent implements OnInit, OnDestroy {
     }
   }
 
-  async unfollowUser(id: string) {
-    const response = await this.postService.unfollowUser(id);
-    if (response) {
-      this.messages.add({
-        severity: 'success',
-        summary: 'You no longer follow this user!',
-      });
-    } else {
-      this.messages.add({
-        severity: 'error',
-        summary:
-          'Something went wrong! Check your internet conectivity and try again',
-      });
-    }
-  }
-
-  async followUser(id: string) {
-    const response = await this.postService.followUser(id);
-    if (response) {
-      this.messages.add({
-        severity: 'success',
-        summary: 'You now follow this user!',
-      });
-    } else {
-      this.messages.add({
-        severity: 'error',
-        summary:
-          'Something went wrong! Check your internet conectivity and try again',
-      });
-    }
-  }
 }

@@ -10,12 +10,16 @@ import { MatButtonModule } from '@angular/material/button';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { MatMenuModule } from '@angular/material/menu';
 import { LoaderComponent } from 'src/app/components/loader/loader.component';
-
+import { BlogHeaderComponent } from "../../components/blog-header/blog-header.component";
 const routes: Routes = [
   {
     path: ':url',
     component: ViewBlogComponent,
   },
+  {
+    path: ':url/followers',
+    loadComponent: () => import('../../pages/profile/follows/follows.component').then(m => m.FollowsComponent)
+  }
 ];
 
 @NgModule({
@@ -31,6 +35,7 @@ const routes: Routes = [
     FontAwesomeModule,
     MatMenuModule,
     LoaderComponent,
-  ],
+    BlogHeaderComponent
+],
 })
 export class ViewBlogModule {}
