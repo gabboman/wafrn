@@ -278,7 +278,7 @@ export class PostComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   dismissContentWarning() {
-    this.showCw = false;
+    this.showCw = !this.showCw;
   }
 
   async likePost(postToLike: ProcessedPost) {

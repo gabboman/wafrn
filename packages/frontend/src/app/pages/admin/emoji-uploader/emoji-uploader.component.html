@@ -6,6 +6,6 @@
     formats: 'image/*,application/zip',
     buttonText: 'Upload emojis',
     formdataName: 'emoji'
-}" (fileUpload)="onEmojiUpload" ></app-file-upload>
+}" (fileUpload)="onEmojiUpload($event)" ></app-file-upload>
 <app-emoji-collections></app-emoji-collections>
 </mat-card>

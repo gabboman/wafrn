@@ -1,10 +1,17 @@
 <ng-container *ngIf="fragment">
-  <div id="fragment-content-warning" *ngIf="fragment.content_warning" [ngClass]="{ blurry: !showCw }">
+  <div id="fragment-content-warning" *ngIf="fragment.content_warning">
     <div class="fragment-content">
       {{ fragment.content_warning }}
     </div>
-    <button [disabled]="!showCw" mat-flat-button color="primary" (mousedown)="dismissCw.emit()" class="w-full">
-      I understand this and I want to see this woot
+    <button mat-flat-button color="primary" (mousedown)="dismissCw.emit()" class="w-full">
+      @if(!showCw){
+        Hide again
+      }
+      @else {
+        I understand this and I want to see this woot
+
+      }
+      
     </button>
   </div>
   <div [ngClass]="{ 'post-danger': fragment.content_warning && showCw }" >
