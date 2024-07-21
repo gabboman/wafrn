@@ -14,7 +14,7 @@
       
     </button>
   </div>
-  <div [ngClass]="{ 'post-danger': fragment.content_warning && showCw }" >
+  <div [ngClass]="{ 'post-danger': fragment.content_warning && showCw, 'mt-4': fragment.content_warning}" >
   <div *ngIf="fragment.content !== '' || fragment.tags?.length"
     class="fragment-content wafrn-text-default overflow-hidden"
     [ngClass]="{ blurry: fragment.content_warning && showCw }" [injectHTML]="fragment.content"></div>
