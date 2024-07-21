@@ -63,8 +63,6 @@ app.get('/api/', (req, res) =>
 // serve static images
 app.use('/api/uploads', express.static('uploads'))
 
-app.use('/contexts', express.static('contexts'))
-
 userRoutes(app)
 followsRoutes(app)
 blockRoutes(app)
@@ -74,6 +72,7 @@ postsRoutes(app)
 searchRoutes(app)
 deletePost(app)
 if(environment.fediPort == environment.port) {
+  app.use('/contexts', express.static('contexts'))
   activityPubRoutes(app)
   wellKnownRoutes(app)
 }
