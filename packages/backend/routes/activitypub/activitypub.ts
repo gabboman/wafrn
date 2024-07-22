@@ -1,11 +1,8 @@
 import { Application, Request, Response } from 'express'
 import { User, Follows, Post, Media, UserLikesPostRelations, Emoji, UserEmojiRelation } from '../../db'
 import { getCheckFediverseSignatureFucnction } from '../../utils/activitypub/checkFediverseSignature'
-import { sequelize } from '../../db'
-import { Op } from 'sequelize'
 import { environment } from '../../environment'
 import { return404 } from '../../utils/return404'
-import { postToJSONLD } from '../../utils/activitypub/postToJSONLD'
 import { Queue } from 'bullmq'
 import { getLocalUserId } from '../../utils/cacheGetters/getLocalUserId'
 import { SignedRequest } from '../../interfaces/fediverse/signedRequest'
@@ -15,14 +12,9 @@ import { redisCache } from '../../utils/redis'
 import { getUserEmojis } from '../../utils/cacheGetters/getUserEmojis'
 import { getFollowedRemoteIds } from '../../utils/cacheGetters/getFollowedRemoteIds'
 import { getFollowerRemoteIds } from '../../utils/cacheGetters/getFollowerRemoteIds'
-import { getPostAndUserFromPostId } from '../../utils/cacheGetters/getPostAndUserFromPostId'
-import { logger } from '../../utils/logger'
 import { checkuserAllowsThreads } from '../../utils/checkUserAllowsThreads'
 import { handlePostRequest } from '../../utils/activitypub/handlePostRequest'
 import { getPostSEOCache, getIndexSeo } from '../frontend'
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const Cacher = require('cacher')
-const cacher = new Cacher()
 
 // we get the user from the memory cache. if does not exist we try to find it
 async function getLocalUserByUrl(url: string): Promise<any> {

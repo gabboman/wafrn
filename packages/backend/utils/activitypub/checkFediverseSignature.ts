@@ -12,6 +12,7 @@ import { redisCache } from '../redis'
 import { getKey } from '../cacheGetters/getKey'
 import { SignedRequest } from '../../interfaces/fediverse/signedRequest'
 import { getRemoteActor } from './getRemoteActor'
+import { LdSignature } from './rsa2017'
 const adminUser = environment.forceSync
   ? null
   : User.findOne({
@@ -91,21 +92,22 @@ function getCheckFediverseSignatureFucnction(force = false) {
           logger.trace('STARTING TO SEE SIGNATURE')
           const signature = req.body.signature;
           const remoteActor = await getRemoteActor(signature.creator.split('#')[0], adminUser);
-          const jsonld = require('jsonld')
-          success = await jsonld.verifyRsaSignature2017(req.body, remoteActor.publicKey).catch(() => {
+          const jsonld = new LdSignature()
+          success = !!await jsonld.verifyRsaSignature2017(req.body, remoteActor.publicKey).catch(() => {
             logger.debug(`Problem with jsonld signature ${hostUrl}: ${remoteUserUrl}`)
           })
           logger.trace({
             message: `after rsa verify`,
             success: success
           })
-          await jsonld.compact(req.body).catch((error: any) => {
+          /*await jsonld.compact(req.body).catch((error: any) => {
             success = false
             logger.debug({
               message: `Problem with jsonld signature ${hostUrl}: ${remoteUserUrl}`,
               error: error
             })
           })
+            */
         } else if(!success) {
           logger.debug({
             message: `No success but no signature`,
