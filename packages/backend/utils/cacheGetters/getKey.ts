@@ -4,6 +4,7 @@ import { getRemoteActor } from '../activitypub/getRemoteActor'
 import { redisCache } from '../redis'
 import { getUserIdFromRemoteId } from './getUserIdFromRemoteId'
 import { environment } from '../../environment'
+import { logger } from '../logger'
 
 const queue = new Queue('getRemoteActorId', {
   connection: environment.bullmqConnection,
@@ -35,6 +36,9 @@ async function getKey(remoteUserUrl: string, adminUser: any): Promise<{key?: any
           jobId: remoteUserUrl.replaceAll(':', '_').replaceAll('/', '_')
         }
       )
+      logger.debug({
+        message: `User not found in db for key ${remoteUserUrl}`
+      })
       return {}
     }
   }
