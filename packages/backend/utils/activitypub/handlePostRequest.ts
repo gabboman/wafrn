@@ -59,13 +59,16 @@ async function handlePostRequest(req: SignedRequest, res: Response) {
       if (post.privacy === 1) {
         const followerIds = await getFollowerRemoteIds(user.id)
         try {
-          if (
-            !req.fediData?.valid ||
-            !req.fediData?.remoteUserUrl ||
-            (followerIds && !followerIds.include(req.fediData.remoteUserUrl))
-          ) {
-            res.sendStatus(404)
-            return
+
+          if ( req.fediData?.remoteUserUrl) {
+            const remoteUser = await getRemoteActor(fediData.remoteUserUrl, cachePost.data.user, false);
+            if(remoteUser){
+              if(!followerIds.includes(remoteUser.remoteId)) {
+                return res.sendStatus(403);
+              }
+            } else {
+              return res.sendStatus(403);
+            }
           }
         } catch (error) {
           logger.warn({
@@ -73,7 +76,6 @@ async function handlePostRequest(req: SignedRequest, res: Response) {
             postId: post.id,
             fediData: req.fediData,
             user: user.id,
-            followerIds: followerIds,
             error: error
           })
           res.sendStatus(500)
