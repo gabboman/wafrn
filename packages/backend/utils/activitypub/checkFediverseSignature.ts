@@ -104,7 +104,7 @@ function getCheckFediverseSignatureFucnction(force = false) {
     }
 
     if (!success && force) {
-      logger.trace(`Failed to verify signature in petition from ${hostUrl}`)
+      logger.debug(`Failed to verify signature in petition from ${hostUrl}`)
       return res.sendStatus(401)
     } else {
       next()
