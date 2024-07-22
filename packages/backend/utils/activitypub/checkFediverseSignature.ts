@@ -100,15 +100,12 @@ function getCheckFediverseSignatureFucnction(force = false) {
               error: error
             })
           })
-
-          /*
-          {
-      "type": "RsaSignature2017",
-      "creator": "https://ecoevo.social/users/EVDHmn#main-key",
-      "created": "2024-07-22T21:52:51Z",
-      "signatureValue": "ej0O/lGegrZrXEDUuFW3WyWgm7DvVQbdKUnsqqFyOaIZhPYCxZs+2zLUHZ96aiB55Kl+ixx65E+XE4yJUz0vUBsqCINfQkiXYipKo+3mESp+//39hmy87jqcEP02xGytJhq1DZOM/vYjik7S+lecMOlRh/GN8FezUYLlXbGdteG3MzxNLzG8cbiCcORN54zrSbXUaZuylitdFJEbagQAimG7RJcUV94OdxWGUCYbP23lwFO15JYgucoso9BSg1lSgodQEz8W4XILgBUz0pMum7/7XNiWiLUjhJatHAoYwcfjLyWc8L5DEqLV9pnGVuWqTHRuPXzZqIi5gQXzKuM6Dg=="
-    }
-          */
+        } else if(!success) {
+          logger.debug({
+            message: `No success but no signature`,
+            sign: req.body.signature,
+            type: req.body.signature.type
+          })
         }
       }
 
