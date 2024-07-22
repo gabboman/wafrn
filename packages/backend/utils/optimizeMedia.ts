@@ -30,6 +30,12 @@ export default function optimizeMedia(inputPath: string): string {
       fileAndExtension[0] = `${fileAndExtension[0]}_processed`
     // eslint-disable-next-line no-fallthrough
     case 'webm':
+    case 'ogg':
+    case 'aac':
+    case 'mp3':
+    case 'wav':
+    case 'oga':
+    case 'm4a':
     case 'mov':
     case 'mkv':
       fileAndExtension[1] = 'mp4'

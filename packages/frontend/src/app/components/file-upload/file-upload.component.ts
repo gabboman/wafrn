@@ -36,7 +36,7 @@ export class FileUploadComponent {
   } = {
     url :`/uploadMedia`,
     formdataName: 'image',
-    formats: `image/*, video/*`,
+    formats: `image/*, video/*, audio/*`,
     buttonText: ``
   }
   @Output() fileUpload: EventEmitter<WafrnMedia> =

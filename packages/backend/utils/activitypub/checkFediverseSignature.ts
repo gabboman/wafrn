@@ -25,6 +25,7 @@ function getCheckFediverseSignatureFucnction(force = false) {
     let hostUrl = req.header('user-agent')
       ? `petition without sighead ${req.header('user-agent')}`
       : 'somewhere not specified'
+      let remoteUserUrl = ''
     try {
       const sigHead = httpSignature.parseRequest(req, {
         headers:
@@ -32,7 +33,7 @@ function getCheckFediverseSignatureFucnction(force = false) {
         clockSkew: 600,
         strict: true
       })
-      const remoteUserUrl = sigHead.keyId.split('#')[0]
+      remoteUserUrl = sigHead.keyId.split('#')[0]
       hostUrl = new URL(remoteUserUrl).host
       let bannedHostInCache = await redisCache.get('server:' + hostUrl)
       if (bannedHostInCache === null || bannedHostInCache === undefined) {
@@ -104,7 +105,7 @@ function getCheckFediverseSignatureFucnction(force = false) {
     }
 
     if (!success && force) {
-      logger.debug(`Failed to verify signature in petition from ${hostUrl}`)
+      logger.debug(`fail signature ${hostUrl}: ${remoteUserUrl}`)
       return res.sendStatus(401)
     } else {
       next()

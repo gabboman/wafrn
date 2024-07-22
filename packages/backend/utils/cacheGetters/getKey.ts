@@ -36,9 +36,6 @@ async function getKey(remoteUserUrl: string, adminUser: any): Promise<{key?: any
           jobId: remoteUserUrl.replaceAll(':', '_').replaceAll('/', '_')
         }
       )
-      logger.debug({
-        message: `User not found in db for key ${remoteUserUrl}`
-      })
       return {}
     }
   }
