@@ -86,7 +86,9 @@ function getCheckFediverseSignatureFucnction(force = false) {
       if (req.method === 'POST') {
         // we check that the petition is done by who it says its done
         success = success && remoteUserUrl.toLowerCase() === req.body.actor.toLowerCase()
+        logger.trace('prev TO SEE SIGNATURE')
         if(!success && req.body.signature && req.body.signature.type === 'RsaSignature2017') {
+          logger.trace('STARTING TO SEE SIGNATURE')
           const signature = req.body.signature;
           const remoteActor = await getRemoteActor(signature.creator.split('#')[0], adminUser);
           const jsonld = require('jsonld')
