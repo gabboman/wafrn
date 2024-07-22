@@ -76,7 +76,9 @@ if(environment.fediPort == environment.port) {
   activityPubRoutes(app)
   wellKnownRoutes(app)
 }
-cacheRoutes(app)
+if(environment.cachePort == environment.port) {
+  cacheRoutes(app)
+}
 likeRoutes(app)
 emojiReactRoutes(app)
 adminRoutes(app)

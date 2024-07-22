@@ -54,7 +54,13 @@ function getCheckFediverseSignatureFucnction(force = false) {
         remoteUserUrl: remoteUserUrl,
         valid: false
       }
-      const remoteKey = await getKey(remoteUserUrl, await adminUser)
+      let remoteKey = await getKey(remoteUserUrl, await adminUser)
+      if(remoteKey.key) {
+        remoteKey = remoteKey.key;
+      } else {
+        res.set('Retry-After', '25')
+        return res.sendStatus(429)
+      }
       success =
         req.method === 'POST'
           ? verifyDigest(req.rawBody ? req.rawBody : '', req.headers.digest)

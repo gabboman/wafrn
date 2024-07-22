@@ -353,7 +353,6 @@ function activityPubRoutes(app: Application) {
     getCheckFediverseSignatureFucnction(false),
     async (req: SignedRequest, res: Response) => {
       if (
-        (req.headers['accept']?.includes('json') || req.headers['accept']?.includes('activity')) &&
         req.fediData?.valid
       ) {
         await handlePostRequest(req, res)
