@@ -47,34 +47,7 @@ function frontend(app: Application) {
     )
   })
 
-  app.get(
-    ['/fediverse/post/:id', '/fediverse/activity/post/:id'],
-    getCheckFediverseSignatureFucnction(false),
-    async (req: SignedRequest, res: Response) => {
-      if (
-        (req.headers['accept']?.includes('json') || req.headers['accept']?.includes('activity')) &&
-        req.fediData?.valid
-      ) {
-        await handlePostRequest(req, res)
-      } else {
-        const defaultSeoData = environment.defaultSEOData
-        if (req.params?.id) {
-          try {
-            const postData = await getPostSEOCache(req.params.id)
-            if (postData) {
-              res.send(getIndexSeo(postData.title, postData.description, postData.img))
-            } else {
-              res.send(getIndexSeo(defaultSeoData.title, defaultSeoData.description, defaultSeoData.img))
-            }
-          } catch (error) {
-            res.send(getIndexSeo(defaultSeoData.title, defaultSeoData.description, defaultSeoData.img))
-          }
-        } else {
-          res.send(getIndexSeo(defaultSeoData.title, defaultSeoData.description, defaultSeoData.img))
-        }
-      }
-    }
-  )
+
 
   app.get('/blog/:url', async function (req, res) {
     if (req.params?.url) {
