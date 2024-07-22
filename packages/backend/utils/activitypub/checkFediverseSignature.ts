@@ -86,6 +86,7 @@ function getCheckFediverseSignatureFucnction(force = false) {
         // we check that the petition is done by who it says its done
         success = success && remoteUserUrl.toLowerCase() === req.body.actor.toLowerCase()
       }
+
       req.fediData = {
         fediHost: hostUrl,
         remoteUserUrl: remoteUserUrl,
@@ -106,6 +107,7 @@ function getCheckFediverseSignatureFucnction(force = false) {
 
     if (!success && force) {
       logger.debug(`fail signature ${hostUrl}: ${remoteUserUrl}`)
+      logger.debug(req.body)
       return res.sendStatus(401)
     } else {
       next()
