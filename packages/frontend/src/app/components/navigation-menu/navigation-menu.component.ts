@@ -420,26 +420,26 @@ export class NavigationMenuComponent implements OnInit, OnDestroy {
       {
         label: 'Check the source code!',
         icon: faCode,
-        title: 'The frontend is made in angular, you can check the code here',
+        title: 'The frontend is made in angular, and the backend in typescript. you can check the code here',
         url: 'https://github.com/gabboman/wafrn',
         command: () => {
           this.hideMenu();
         },
       },
       {
-        label: 'Check the backend code!',
-        icon: faCode,
-        title: 'The backend is made in node, you can check the code here',
-        url: 'https://github.com/gabboman/wafrn-backend',
+        label: 'Patreon',
+        title: 'Give us some money through patreon',
+        icon: faEuro,
+        url: 'https://patreon.com/wafrn',
         command: () => {
           this.hideMenu();
         },
       },
       {
-        label: 'Give us some money',
-        title: 'Give us some money through patreon',
+        label: 'Ko-fi',
+        title: 'Give us some money through ko-fi',
         icon: faEuro,
-        url: 'https://patreon.com/wafrn',
+        url: 'https://ko-fi.com/wafrn',
         command: () => {
           this.hideMenu();
         },
