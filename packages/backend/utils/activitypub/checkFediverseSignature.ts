@@ -94,6 +94,7 @@ function getCheckFediverseSignatureFucnction(force = false) {
             logger.debug(`Problem with jsonld signature ${hostUrl}: ${remoteUserUrl}`)
           })
           await jsonld.compact(req.body).catch((error: any) => {
+            success = false
             logger.debug({
               message: `Problem with jsonld signature ${hostUrl}: ${remoteUserUrl}`,
               error: error
