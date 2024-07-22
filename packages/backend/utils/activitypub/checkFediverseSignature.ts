@@ -29,8 +29,8 @@ function getCheckFediverseSignatureFucnction(force = false) {
       const sigHead = httpSignature.parseRequest(req, {
         headers:
           req.method === 'GET' ? ['(request-target)', 'host', 'date'] : ['(request-target)', 'digest', 'host', 'date'],
-        clockSkew: 600
-        //strict: true
+        clockSkew: 600,
+        strict: true
       })
       const remoteUserUrl = sigHead.keyId.split('#')[0]
       hostUrl = new URL(remoteUserUrl).host
@@ -49,12 +49,11 @@ function getCheckFediverseSignatureFucnction(force = false) {
       if (bannedHostInCache === 'true') {
         return res.sendStatus(401)
       }
-      const fediData = {
+      req.fediData = {
         fediHost: hostUrl,
         remoteUserUrl: remoteUserUrl,
-        valid: true
+        valid: false
       }
-      req.fediData = fediData
       const remoteKey = await getKey(remoteUserUrl, await adminUser)
       success =
         req.method === 'POST'
@@ -63,6 +62,11 @@ function getCheckFediverseSignatureFucnction(force = false) {
       if (req.method === 'POST') {
         // we check that the petition is done by who it says its done
         success = success && remoteUserUrl.toLowerCase() === req.body.actor.toLowerCase()
+      }
+      req.fediData = {
+        fediHost: hostUrl,
+        remoteUserUrl: remoteUserUrl,
+        valid: success
       }
     } catch (error: any) {
       req.fediData = { fediHost: hostUrl, valid: false }
