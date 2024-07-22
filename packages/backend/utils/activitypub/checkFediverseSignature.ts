@@ -58,12 +58,24 @@ function getCheckFediverseSignatureFucnction(force = false) {
       if(remoteKey.key) {
         remoteKey = remoteKey.key;
       } else {
-        res.set('Retry-After', '25')
-        logger.debug({
-          message: `Problem finding user for signature`,
-          body: req.method == 'POST' ? req.body : `GET petition`
-        })
-        return res.sendStatus(429)
+        // we check for deleted users
+        if(req.method === 'POST' && req.body.type == 'Delete' && req.body.actor == req.body.object && req.body.actor == remoteUserUrl) {
+          // well, this is a "delete this user". We should process this ASAP
+          req.fediData = {
+            fediHost: hostUrl,
+            remoteUserUrl: remoteUserUrl,
+            valid: true
+          }
+          next();
+          return;
+        } else {
+          res.set('Retry-After', '25')
+          logger.debug({
+            message: `Problem finding user for signature`,
+            body: req.method == 'POST' ? req.body : `GET petition`
+          })
+          return res.sendStatus(429)
+        }
       }
       success =
         req.method === 'POST'
