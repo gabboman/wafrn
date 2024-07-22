@@ -107,7 +107,7 @@ function getCheckFediverseSignatureFucnction(force = false) {
 
     if (!success && force) {
       logger.debug(`fail signature ${hostUrl}: ${remoteUserUrl}`)
-      logger.debug(req.body)
+      // logger.debug(req.body)
       return res.sendStatus(401)
     } else {
       next()
