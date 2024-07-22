@@ -93,6 +93,10 @@ function getCheckFediverseSignatureFucnction(force = false) {
           success = await jsonld.verifyRsaSignature2017(req.body, remoteActor.publicKey).catch(() => {
             logger.debug(`Problem with jsonld signature ${hostUrl}: ${remoteUserUrl}`)
           })
+          logger.trace({
+            message: `after rsa verify`,
+            success: success
+          })
           await jsonld.compact(req.body).catch((error: any) => {
             success = false
             logger.debug({
