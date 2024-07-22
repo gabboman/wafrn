@@ -11,6 +11,7 @@ import { createHash } from 'node:crypto'
 import { redisCache } from '../redis'
 import { getKey } from '../cacheGetters/getKey'
 import { SignedRequest } from '../../interfaces/fediverse/signedRequest'
+import { getRemoteActor } from './getRemoteActor'
 const adminUser = environment.forceSync
   ? null
   : User.findOne({
@@ -85,6 +86,29 @@ function getCheckFediverseSignatureFucnction(force = false) {
       if (req.method === 'POST') {
         // we check that the petition is done by who it says its done
         success = success && remoteUserUrl.toLowerCase() === req.body.actor.toLowerCase()
+        if(!success && req.body.signature && req.body.signature.type === 'RsaSignature2017') {
+          const signature = req.body.signature;
+          const remoteActor = await getRemoteActor(signature.creator.split('#')[0], adminUser);
+          const jsonld = require('jsonld')
+          success = await jsonld.verifyRsaSignature2017(req.body, remoteActor.publicKey).catch(() => {
+            logger.debug(`Problem with jsonld signature ${hostUrl}: ${remoteUserUrl}`)
+          })
+          await jsonld.compact(req.body).catch((error: any) => {
+            logger.debug({
+              message: `Problem with jsonld signature ${hostUrl}: ${remoteUserUrl}`,
+              error: error
+            })
+          })
+
+          /*
+          {
+      "type": "RsaSignature2017",
+      "creator": "https://ecoevo.social/users/EVDHmn#main-key",
+      "created": "2024-07-22T21:52:51Z",
+      "signatureValue": "ej0O/lGegrZrXEDUuFW3WyWgm7DvVQbdKUnsqqFyOaIZhPYCxZs+2zLUHZ96aiB55Kl+ixx65E+XE4yJUz0vUBsqCINfQkiXYipKo+3mESp+//39hmy87jqcEP02xGytJhq1DZOM/vYjik7S+lecMOlRh/GN8FezUYLlXbGdteG3MzxNLzG8cbiCcORN54zrSbXUaZuylitdFJEbagQAimG7RJcUV94OdxWGUCYbP23lwFO15JYgucoso9BSg1lSgodQEz8W4XILgBUz0pMum7/7XNiWiLUjhJatHAoYwcfjLyWc8L5DEqLV9pnGVuWqTHRuPXzZqIi5gQXzKuM6Dg=="
+    }
+          */
+        }
       }
 
       req.fediData = {
