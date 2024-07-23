@@ -32,20 +32,21 @@ async function handlePostRequest(req: SignedRequest, res: Response) {
         remoteUserUrl: string
         valid: boolean
       }
-      getRemoteActor(fediData.remoteUserUrl, cachePost.data.user, false).then(async (remoteActor) => {
-        if(!remoteActor) {
+
+      const remoteActor = await getRemoteActor(fediData.remoteUserUrl, cachePost.data.user, false)
+      if(!remoteActor) {
           logger.debug({
             message: `remote actor not found`,
             fedidata: fediData,
           })
-        }
-        const federatedHost = await remoteActor.getFederatedHost();
-        await sendPostQueue.add('processPost', {
-          postId: post.id,
-          federatedHostId: ( federatedHost && federatedHost.publicInbox) ? federatedHost.id : '',
-          userId: federatedHost?.publicInbox ? '' : remoteActor.id
-        })
-      })
+      } else {
+          const federatedHost = await remoteActor.getFederatedHost();
+          await sendPostQueue.add('processPost', {
+            postId: post.id,
+            federatedHostId: ( federatedHost && federatedHost.publicInbox) ? federatedHost.id : '',
+            userId: federatedHost?.publicInbox ? '' : remoteActor.id
+          })
+      }
       const user = post.user
       if (user.url.startsWith('@')) {
         // EXTERNAL USER
@@ -60,16 +61,17 @@ async function handlePostRequest(req: SignedRequest, res: Response) {
         const followerIds = await getFollowerRemoteIds(user.id)
         try {
 
-          if ( req.fediData?.remoteUserUrl) {
-            const remoteUser = await getRemoteActor(fediData.remoteUserUrl, cachePost.data.user, false);
-            if(remoteUser){
-              if(!followerIds.includes(remoteUser.remoteId)) {
-                return res.sendStatus(403);
+          
+            if(remoteActor){
+              if(!followerIds.includes(remoteActor.remoteId)) {
+                res.sendStatus(403);
+                return
               }
             } else {
-              return res.sendStatus(403);
+              res.sendStatus(403);
+              return
             }
-          }
+          
         } catch (error) {
           logger.warn({
             message: 'Error on post',
