@@ -42,8 +42,8 @@ async function handlePostRequest(req: SignedRequest, res: Response) {
         const federatedHost = await remoteActor.getFederatedHost();
         await sendPostQueue.add('processPost', {
           postId: post.id,
-          federatedHostId: federatedHost.publicInbox ? federatedHost.id : '',
-          userId: federatedHost.publicInbox ? '' : remoteActor.id
+          federatedHostId: ( federatedHost && federatedHost.publicInbox) ? federatedHost.id : '',
+          userId: federatedHost?.publicInbox ? '' : remoteActor.id
         })
       })
       const user = post.user
