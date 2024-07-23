@@ -7,6 +7,7 @@ import overrideContentType from './utils/overrideContentType'
 import { logger } from './utils/logger'
 import bodyParser from 'body-parser'
 import { SignedRequest } from './interfaces/fediverse/signedRequest'
+import {pinoHttp} from 'pino-http'
 
 
 const PORT = environment.fediPort
@@ -14,6 +15,7 @@ const PORT = environment.fediPort
 
 
 const app = express()
+app.use(pinoHttp())
 app.use(cors())
 app.use(overrideContentType)
 app.set('trust proxy', 1)
