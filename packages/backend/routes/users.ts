@@ -598,9 +598,9 @@ export default function userRoutes(app: Application) {
       })
       if (user) {
         let responseData
-        if (followers) {
+        if (!followers) {
           //people who follow :url
-          responseData = await user.getFollwer({
+          responseData = await user.getFollower({
             attributes: ['id', 'url', 'avatar', 'description']
           })
         } else {
