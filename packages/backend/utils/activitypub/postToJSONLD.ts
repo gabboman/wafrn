@@ -136,7 +136,7 @@ async function postToJSONLD(postId: string) {
             type: 'Document',
             mediaType: extension === 'mp4' ? 'video/mp4' : 'image/webp',
             url: environment.mediaUrl + media.url,
-            sensitive: media.NSFW ? `Marked as NSFW: ${media.description}` : '',
+            sensitive: media.NSFW ? true : false,
             name: media.description
           }
         }),
