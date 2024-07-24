@@ -49,8 +49,8 @@ export class PostsService {
 
   keyboardEmojis: Emoji[] = emojis.map(emoji => {
     return {
-      id: emoji,
-      name: emoji,
+      id: emoji.char,
+      name: emoji.char, // todo add a display name?
       url: '',
       external: false
     }
