@@ -17,7 +17,7 @@ import { getAllLocalUserIds } from '../utils/cacheGetters/getAllLocalUserIds'
 import { getallBlockedServers } from '../utils/cacheGetters/getAllBlockedServers'
 import { getUnjointedPosts } from '../utils/baseQueryNew'
 export default function searchRoutes(app: Application) {
-  app.get('/api/v2/search/', checkIpBlocked, optionalAuthentication, async (req: AuthorizedRequest, res: Response) => {
+  app.get('/api/v2/search/', optionalAuthentication, async (req: AuthorizedRequest, res: Response) => {
     // const success = false;
     // eslint-disable-next-line max-len
     const searchTerm: string = (req.query.term || '').toString().toLowerCase().trim()

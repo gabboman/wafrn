@@ -17,7 +17,7 @@ import getFollowedsIds from '../utils/cacheGetters/getFollowedsIds'
 import { isDatabaseMysql } from '../utils/isDatabaseMysql'
 
 export default function forumRoutes(app: Application) {
-  app.get('/api/forum/:id', optionalAuthentication, checkIpBlocked, async (req: AuthorizedRequest, res: Response) => {
+  app.get('/api/forum/:id', optionalAuthentication, async (req: AuthorizedRequest, res: Response) => {
     const userId = req.jwtData?.userId ? req.jwtData.userId : 'NOT-LOGGED-IN'
     const postId = req.params?.id as string
     const postsToGet = await Post.findOne({

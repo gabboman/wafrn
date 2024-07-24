@@ -52,7 +52,7 @@ export default function postsRoutes(app: Application) {
   app.get(
     '/api/v2/post/:id',
     optionalAuthentication,
-    checkIpBlocked,
+   
     navigationRateLimiter,
     async (req: AuthorizedRequest, res: Response) => {
       let success = false
@@ -78,7 +78,7 @@ export default function postsRoutes(app: Application) {
   app.get(
     '/api/v2/descendents/:id',
     optionalAuthentication,
-    checkIpBlocked,
+   
     async (req: AuthorizedRequest, res: Response) => {
       const userId = req.jwtData?.userId ? req.jwtData.userId : 'NOT-LOGGED-IN'
       if (req.params?.id) {
@@ -139,7 +139,7 @@ export default function postsRoutes(app: Application) {
       }
     }
   )
-  app.get('/api/v2/blog', checkIpBlocked, optionalAuthentication, async (req: AuthorizedRequest, res: Response) => {
+  app.get('/api/v2/blog', optionalAuthentication, async (req: AuthorizedRequest, res: Response) => {
     let success = false
     const id = req.query.id
 
@@ -193,7 +193,7 @@ export default function postsRoutes(app: Application) {
 
   app.post(
     '/api/v2/createPost',
-    checkIpBlocked,
+   
     authenticateToken,
     createPostLimiter,
     async (req: AuthorizedRequest, res: Response) => {

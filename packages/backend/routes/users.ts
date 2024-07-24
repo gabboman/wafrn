@@ -47,7 +47,7 @@ const forbiddenCharacters = [':', '@', '/', '<', '>', '"']
 export default function userRoutes(app: Application) {
   app.post(
     '/api/register',
-    checkIpBlocked,
+   
     createAccountLimiter,
     uploadHandler().single('avatar'),
     async (req, res) => {
@@ -308,7 +308,7 @@ export default function userRoutes(app: Application) {
     }
   )
 
-  app.post('/api/forgotPassword', checkIpBlocked, createAccountLimiter, async (req, res) => {
+  app.post('/api/forgotPassword', createAccountLimiter, async (req, res) => {
     const resetCode = generateRandomString()
     try {
       if (req.body?.email && validateEmail(req.body.email)) {
@@ -346,7 +346,7 @@ export default function userRoutes(app: Application) {
     res.send({ success: true })
   })
 
-  app.post('/api/activateUser', checkIpBlocked, async (req, res) => {
+  app.post('/api/activateUser', async (req, res) => {
     let success = false
     if (req.body?.email && validateEmail(req.body.email) && req.body.code && !environment.reviewRegistrations) {
       const user = await User.findOne({
@@ -367,7 +367,7 @@ export default function userRoutes(app: Application) {
     })
   })
 
-  app.post('/api/resetPassword', checkIpBlocked, async (req, res) => {
+  app.post('/api/resetPassword', async (req, res) => {
     let success = false
 
     try {
@@ -398,7 +398,7 @@ export default function userRoutes(app: Application) {
     })
   })
 
-  app.post('/api/login', checkIpBlocked, loginRateLimiter, async (req, res) => {
+  app.post('/api/login', loginRateLimiter, async (req, res) => {
     let success = false
     try {
       if (req.body?.email && req.body.password) {
@@ -453,7 +453,7 @@ export default function userRoutes(app: Application) {
     }
   })
 
-  app.get('/api/user', checkIpBlocked, optionalAuthentication, async (req: AuthorizedRequest, res) => {
+  app.get('/api/user', optionalAuthentication, async (req: AuthorizedRequest, res) => {
     let success = false
     if (req.query?.id) {
       const blogId: string = (req.query.id || '').toString().toLowerCase().trim()
