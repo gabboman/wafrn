@@ -1,5 +1,5 @@
 import { Op } from 'sequelize'
-import { Post, User } from '../../db'
+import { Media, Post, PostTag, User } from '../../db'
 import { environment } from '../../environment'
 import { fediverseTag } from '../../interfaces/fediverse/tags'
 import { activityPubObject } from '../../interfaces/fediverse/activityPubObject'
@@ -9,7 +9,6 @@ import { getPostAndUserFromPostId } from '../cacheGetters/getPostAndUserFromPost
 import { logger } from '../logger'
 
 async function postToJSONLD(postId: string) {
-  logger.info('tojsonld entry')
   const cacheData = await getPostAndUserFromPostId(postId)
   logger.info(cacheData)
   const post = cacheData.data
@@ -34,11 +33,22 @@ async function postToJSONLD(postId: string) {
       dbPost &&
       dbPost.content === '' &&
       dbPost.hierarchyLevel !== 0 &&
-      dbPost.postTags.length != 0 &&
-      dbPost.medias.length != 0
+      dbPost.postTags.length == 0 &&
+      dbPost.medias.length == 0
     ) {
       // TODO optimize this
-      const tmpPost = post.parent
+      const tmpPost = await Post.findByPk(dbPost.parentId, {
+        include: [
+          {
+            model: Media,
+            required: false
+          },
+          {
+            model: PostTag,
+            required: false
+          }
+        ]
+      })
       dbPost = tmpPost
     }
     parentPostString = dbPost?.remotePostId
