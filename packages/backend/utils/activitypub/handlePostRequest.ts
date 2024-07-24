@@ -84,9 +84,7 @@ async function handlePostRequest(req: SignedRequest, res: Response) {
           return
         }
       }
-      logger.info(`before jsonld`)
       const response = await postToJSONLD(post.id)
-      logger.info(response)
       res.set({
         'content-type': 'application/activity+json'
       })

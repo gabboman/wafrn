@@ -6,8 +6,10 @@ import { activityPubObject } from '../../interfaces/fediverse/activityPubObject'
 import { emojiToAPTag } from './emojiToAPTag'
 import { getPostReplies } from './getPostReplies'
 import { getPostAndUserFromPostId } from '../cacheGetters/getPostAndUserFromPostId'
+import { logger } from '../logger'
 
 async function postToJSONLD(postId: string) {
+  logger.info('tojsonld entry')
   const post = (await getPostAndUserFromPostId(postId)).data
   const localUser = post.user
 
@@ -15,12 +17,16 @@ async function postToJSONLD(postId: string) {
   const dbMentions = post.mentionPost
   let mentionedUsers: string[] = []
 
+  logger.info('20')
+
   if (dbMentions) {
     mentionedUsers = dbMentions.filter((elem: any) => elem.remoteInbox).map((elem: any) => elem.remoteId)
   }
   let parentPostString = null
   let quotedPostString = null
   const conversationString = `${environment.frontendUrl}/fediverse/conversation/${post.id}`
+  logger.info('28')
+
   if (post.parentId) {
     let dbPost = post.parent
     while (
@@ -34,6 +40,7 @@ async function postToJSONLD(postId: string) {
       const tmpPost = post.parent
       dbPost = tmpPost
     }
+    logger.info(`so its this loop`)
     parentPostString = dbPost?.remotePostId
       ? dbPost.remotePostId
       : `${environment.frontendUrl}/fediverse/post/${dbPost ? dbPost.id : post.parentId}`
@@ -50,6 +57,7 @@ async function postToJSONLD(postId: string) {
   const fediTags: fediverseTag[] = []
   let tagsAndQuotes = '<br>'
   const quotedPosts = post.quoted
+  logger.info(`line 60`)
   if (quotedPosts && quotedPosts.length > 0) {
     const mainQuotedPost = quotedPosts[0]
     quotedPostString = mainQuotedPost.remotePostId
@@ -67,6 +75,7 @@ async function postToJSONLD(postId: string) {
       })
     })
   }
+  logger.info(`78`)
   for await (const tag of post.postTags) {
     const externalTagName = tag.tagName.replaceAll(' ', '-').replaceAll('"', "'")
     const link = `${environment.frontendUrl}/dashboard/search/${encodeURIComponent(tag.tagName)}`
