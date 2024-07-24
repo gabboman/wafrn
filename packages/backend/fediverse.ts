@@ -7,10 +7,12 @@ import overrideContentType from './utils/overrideContentType'
 import { logger } from './utils/logger'
 import bodyParser from 'body-parser'
 import { SignedRequest } from './interfaces/fediverse/signedRequest'
+import checkIpBlocked from './utils/checkIpBlocked'
 
 const PORT = environment.fediPort
 const app = express()
 app.use(cors())
+app.use(checkIpBlocked)
 app.use(overrideContentType)
 app.set('trust proxy', 1)
 app.use(

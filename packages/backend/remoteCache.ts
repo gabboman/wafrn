@@ -3,6 +3,7 @@ import cors from 'cors'
 import { environment } from './environment'
 import { logger } from './utils/logger'
 import cacheRoutes from './routes/remoteCache'
+import checkIpBlocked from './utils/checkIpBlocked'
 
 
 const PORT = environment.cachePort
@@ -10,6 +11,7 @@ const PORT = environment.cachePort
 
 
 const app = express()
+app.use(checkIpBlocked)
 app.use(cors())
 app.set('trust proxy', 1)
 

@@ -31,6 +31,7 @@ import silencePostRoutes from './routes/silencePost'
 import emojiRoutes from './routes/emojis'
 import emojiReactRoutes from './routes/emojiReact'
 import pollRoutes from './routes/polls'
+import checkIpBlocked from './utils/checkIpBlocked'
 
 const swaggerJSON = require('./swagger.json')
 // rest of the code remains same
@@ -38,6 +39,7 @@ const app = express()
 const PORT = environment.port
 
 app.use(overrideContentType)
+app.use(checkIpBlocked)
 app.use(
   bodyParser.json({
     limit: '50mb',

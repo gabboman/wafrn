@@ -5,6 +5,7 @@ import getIp from './getIP'
 export default function checkIpBlocked(req: Request, res: Response, next: NextFunction) {
   const petitionIp = getIp(req)
   if (environment.blockedIps.includes(petitionIp)) {
+    res.status(401),
     res.send({
       message:
         'Hello, so would you mind sending me an email explaining why the spam or scrapping? Just I want to know. Have a good day. Remember info@wafrn.net',
