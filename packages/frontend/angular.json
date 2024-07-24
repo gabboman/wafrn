@@ -41,7 +41,8 @@
               "src/favicon.ico",
               "src/assets",
               "src/.htaccess",
-              "src/manifest.webmanifest"
+              "src/manifest.webmanifest",
+              "src/robots.txt"
             ],
             "styles": [
               "../../node_modules/primeflex/primeflex.css",
