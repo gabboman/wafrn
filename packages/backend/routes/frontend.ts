@@ -123,7 +123,12 @@ async function getPostSEOCache(id: string): Promise<{ title: string; description
         {
           model: User,
           as: 'user',
-          attributes: ['url', 'avatar']
+          attributes: ['url', 'avatar'],
+          where: {
+            url: {
+              [Op.notLike]: '@%'
+            }
+          }
         },
         {
           model: Media,
