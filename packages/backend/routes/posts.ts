@@ -58,7 +58,7 @@ export default function postsRoutes(app: Application) {
       let success = false
       const userId = req.jwtData?.userId
       if (req.params?.id) {
-        const unjointedPost = await getUnjointedPosts([req.params.id], userId ? userId : 'NOT-LOGGED-IN')
+        const unjointedPost = await getUnjointedPosts([req.params.id], userId ? userId : '00000000-0000-0000-0000-000000000000')
         const post = unjointedPost.posts[0]
         if (post) {
           const mentions = unjointedPost.mentions.map((elem: any) => elem.userMentioned)
@@ -80,7 +80,7 @@ export default function postsRoutes(app: Application) {
     optionalAuthentication,
    
     async (req: AuthorizedRequest, res: Response) => {
-      const userId = req.jwtData?.userId ? req.jwtData.userId : 'NOT-LOGGED-IN'
+      const userId = req.jwtData?.userId ? req.jwtData.userId : '00000000-0000-0000-0000-000000000000'
       if (req.params?.id) {
         const posts = await Post.findOne({
           where: {
@@ -179,7 +179,7 @@ export default function postsRoutes(app: Application) {
         })
         const postsByBlog = await getUnjointedPosts(
           postIds.map((post: any) => post.id),
-          req.jwtData?.userId ? req.jwtData.userId : 'NOT-LOGGED-IN'
+          req.jwtData?.userId ? req.jwtData.userId : '00000000-0000-0000-0000-000000000000'
         )
         success = true
         res.send(postsByBlog)

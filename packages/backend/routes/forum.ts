@@ -18,7 +18,7 @@ import { isDatabaseMysql } from '../utils/isDatabaseMysql'
 
 export default function forumRoutes(app: Application) {
   app.get('/api/forum/:id', optionalAuthentication, async (req: AuthorizedRequest, res: Response) => {
-    const userId = req.jwtData?.userId ? req.jwtData.userId : 'NOT-LOGGED-IN'
+    const userId = req.jwtData?.userId ? req.jwtData.userId : '00000000-0000-0000-0000-000000000000'
     const postId = req.params?.id as string
     const postsToGet = await Post.findOne({
       where: {

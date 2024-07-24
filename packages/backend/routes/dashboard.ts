@@ -24,11 +24,11 @@ export default function dashboardRoutes(app: Application) {
     navigationRateLimiter,
     async (req: AuthorizedRequest, res: Response) => {
       const level = parseInt(req.query.level as string) // level of dashboard: localExplore, explore, dashboard or DMs
-      const posterId = req.jwtData?.userId ? req.jwtData?.userId : 'NOT-LOGGED-IN'
+      const posterId = req.jwtData?.userId ? req.jwtData?.userId : '00000000-0000-0000-0000-000000000000'
       const POSTS_PER_PAGE = environment.postsPerPage
 
       // level: 0 explore 1 dashboard 2 localExplore 10 dms
-      if (level !== 2 && posterId === 'NOT-LOGGED-IN') {
+      if (level !== 2 && posterId === '00000000-0000-0000-0000-000000000000') {
         res.sendStatus(403)
         return
       }

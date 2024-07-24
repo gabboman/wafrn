@@ -28,7 +28,7 @@ export default function searchRoutes(app: Application) {
     let remoteUsers: any = []
     let remotePost: any
     const promises: Array<Promise<any>> = []
-    const posterId = req.jwtData ? req.jwtData.userId : 'NOT-LOGGED-IN'
+    const posterId = req.jwtData ? req.jwtData.userId : '00000000-0000-0000-0000-000000000000'
 
     if (searchTerm) {
       const page = Number(req?.query.page) || 0
@@ -87,7 +87,7 @@ export default function searchRoutes(app: Application) {
       const usr = await User.findByPk(posterId)
 
       // remote user search time
-      if (posterId !== 'NOT-LOGGED-IN' && page === 0) {
+      if (posterId !== '00000000-0000-0000-0000-000000000000' && page === 0) {
         if (searchTerm.split('@').length === 3) {
           remoteUsers = searchRemoteUser(searchTerm, usr)
           promises.push(remoteUsers)
