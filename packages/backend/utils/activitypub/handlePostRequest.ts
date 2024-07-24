@@ -32,21 +32,6 @@ async function handlePostRequest(req: SignedRequest, res: Response) {
         remoteUserUrl: string
         valid: boolean
       }
-
-      const remoteActor = await getRemoteActor(fediData.remoteUserUrl, cachePost.data.user, false)
-      if(!remoteActor) {
-          logger.debug({
-            message: `remote actor not found`,
-            fedidata: fediData,
-          })
-      } else {
-          const federatedHost = await remoteActor.getFederatedHost();
-          await sendPostQueue.add('processPost', {
-            postId: post.id,
-            federatedHostId: ( federatedHost && federatedHost.publicInbox) ? federatedHost.id : '',
-            userId: federatedHost?.publicInbox ? '' : remoteActor.id
-          })
-      }
       const user = post.user
       if (user.url.startsWith('@')) {
         // EXTERNAL USER
@@ -56,6 +41,22 @@ async function handlePostRequest(req: SignedRequest, res: Response) {
       if (user.banned) {
         res.sendStatus(410)
         return
+      }
+      const remoteActor = await getRemoteActor(fediData.remoteUserUrl, cachePost.data.user, false)
+      if(!remoteActor) {
+          logger.debug({
+            message: `remote actor not found`,
+            fedidata: fediData,
+          })
+          return res.sendStatus(500)
+      } else {
+          logger.info(remoteActor)
+          const federatedHost = await remoteActor.getFederatedHost();
+          await sendPostQueue.add('processPost', {
+            postId: post.id,
+            federatedHostId: ( federatedHost && federatedHost.publicInbox) ? federatedHost.id : '',
+            userId: federatedHost?.publicInbox ? '' : remoteActor.id
+          })
       }
       if (post.privacy === 1) {
         const followerIds = await getFollowerRemoteIds(user.id)
