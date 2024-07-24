@@ -4,7 +4,7 @@
 
 <IfModule mod_rewrite.c>
   RewriteEngine On
-
+  RewriteRule ^robots.txt - [L]
 # Redirection to HTTPS:
 
 RewriteCond %{HTTPS} !on
