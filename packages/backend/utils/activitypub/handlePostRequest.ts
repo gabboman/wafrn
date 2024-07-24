@@ -50,7 +50,6 @@ async function handlePostRequest(req: SignedRequest, res: Response) {
           })
           return res.sendStatus(500)
       } else {
-          logger.info(remoteActor)
           const federatedHost = await remoteActor.getFederatedHost();
           await sendPostQueue.add('processPost', {
             postId: post.id,
@@ -85,11 +84,12 @@ async function handlePostRequest(req: SignedRequest, res: Response) {
           return
         }
       }
-
+      logger.info(`before jsonld`)
+      const response = await postToJSONLD(post.id)
+      logger.info(response)
       res.set({
         'content-type': 'application/activity+json'
       })
-      const response = await postToJSONLD(post.id)
       res.send({
         ...response.object,
         '@context': response['@context']
