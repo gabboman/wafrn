@@ -177,7 +177,7 @@ export class PostEditorComponent implements OnInit, OnDestroy {
           const matches = this.emojiCollections
             .map((elem) => {
               const emojis = elem.emojis.filter((emoji) =>
-                emoji.name.toLowerCase().includes(searchTerm.toLowerCase())
+                emoji.id == emoji.name && emoji.name.toLowerCase().includes(searchTerm.toLowerCase())
               );
               return emojis.map(
                 (emoji) =>
