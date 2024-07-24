@@ -87,18 +87,12 @@ function getCheckFediverseSignatureFucnction(force = false) {
       if (req.method === 'POST') {
         // we check that the petition is done by who it says its done
         success = success && remoteUserUrl.toLowerCase() === req.body.actor.toLowerCase()
-        logger.trace('prev TO SEE SIGNATURE')
         if(!success && req.body.signature && req.body.signature.type === 'RsaSignature2017') {
-          logger.trace('STARTING TO SEE SIGNATURE')
           const signature = req.body.signature;
           const remoteActor = await getRemoteActor(signature.creator.split('#')[0], adminUser);
           const jsonld = new LdSignature()
           success = !!await jsonld.verifyRsaSignature2017(req.body, remoteActor.publicKey).catch(() => {
-            logger.debug(`Problem with jsonld signature ${hostUrl}: ${remoteUserUrl}`)
-          })
-          logger.trace({
-            message: `after rsa verify`,
-            success: success
+            // logger.debug(`Problem with jsonld signature ${hostUrl}: ${remoteUserUrl}`)
           })
           /*await jsonld.compact(req.body).catch((error: any) => {
             success = false
@@ -108,12 +102,6 @@ function getCheckFediverseSignatureFucnction(force = false) {
             })
           })
             */
-        } else if(!success) {
-          logger.debug({
-            message: `No success but no signature`,
-            sign: req.body.signature,
-            type: req.body.signature.type
-          })
         }
       }
 
