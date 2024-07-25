@@ -4,6 +4,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { ActivatedRoute, RouterModule } from '@angular/router';
 import { Subscription } from 'rxjs';
+import { AvatarSmallComponent } from 'src/app/components/avatar-small/avatar-small.component';
 import { LoaderComponent } from 'src/app/components/loader/loader.component';
 import { PostActionsComponent } from 'src/app/components/post-actions/post-actions.component';
 import { PostFragmentComponent } from 'src/app/components/post-fragment/post-fragment.component';
@@ -23,6 +24,7 @@ import { PostsService } from 'src/app/services/posts.service';
     MatCardModule,
     MatButtonModule,
     PostActionsComponent,
+    AvatarSmallComponent
   ],
   templateUrl: './forum.component.html',
   styleUrl: './forum.component.scss',

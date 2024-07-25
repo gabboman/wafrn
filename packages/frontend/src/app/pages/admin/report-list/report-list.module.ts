@@ -9,6 +9,7 @@ import { MatInputModule } from '@angular/material/input';
 import { FormsModule } from '@angular/forms';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatButtonModule } from '@angular/material/button';
+import { AvatarSmallComponent } from 'src/app/components/avatar-small/avatar-small.component';
 
 @NgModule({
   declarations: [ReportListComponent],
@@ -27,6 +28,7 @@ import { MatButtonModule } from '@angular/material/button';
     MatInputModule,
     MatCheckboxModule,
     MatButtonModule,
+    AvatarSmallComponent
   ],
 })
 export class ReportListModule {}

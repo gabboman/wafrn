@@ -27,11 +27,6 @@ export class BansComponent {
 
   processUsers(users: any[]) {
     return users.map((elem) => {
-      elem.avatar = elem.url.startsWith('@')
-        ? environment.externalCacheurl + encodeURIComponent(elem.avatar)
-        : environment.externalCacheurl +
-          encodeURIComponent(environment.baseMediaUrl + elem.avatar);
-
       return elem;
     });
   }

@@ -43,6 +43,7 @@ import { EmojiCollection } from 'src/app/interfaces/emoji-collection';
 import { Emoji } from 'src/app/interfaces/emoji';
 import { QuestionPollQuestion } from 'src/app/interfaces/questionPoll';
 import { MatMenuModule } from '@angular/material/menu';
+import { AvatarSmallComponent } from '../avatar-small/avatar-small.component';
 
 type Mention = {
   id: string;
@@ -76,7 +77,8 @@ type Mention = {
     MatProgressSpinnerModule,
     MatCardModule,
     EmojiCollectionsComponent,
-    MatMenuModule
+    MatMenuModule,
+    AvatarSmallComponent
   ],
   providers: [EditorService],
 })
@@ -496,10 +498,6 @@ export class PostEditorComponent implements OnInit, OnDestroy {
     }
 
     return (backendResponse.users || []).map((user: any) => {
-      user.avatar = user.url.startsWith('@')
-        ? this.cacheurl + encodeURIComponent(user.avatar)
-        : this.cacheurl + encodeURIComponent(this.baseMediaUrl + user.avatar);
-
       if (!user.remoteId) {
         user.remoteId = `${environment.frontUrl}/blog/${user.url}`;
       }

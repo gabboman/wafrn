@@ -36,8 +36,7 @@
   <div *ngIf="quote" [ngClass]="{ blurry: fragment.content_warning && showCw }" class="quoted-post cursor-pointer mb-2">
     <div class="flex">
       <div class="flex align-content-center user-avatar-container">
-        <img class="avatar" [routerLink]="'/blog/' + quote?.user?.url" crossorigin="anonymous" loading="lazy"
-          [src]="quote.user.avatar" alt="" />
+        <app-avatar-small [user]="quote.user"></app-avatar-small>
       </div>
       <div class="w-full white-space-nowrap overflow-hidden text-overflow-ellipsis flex flex-column">
         <div>

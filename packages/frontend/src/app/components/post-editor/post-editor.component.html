@@ -5,7 +5,7 @@
     *ngIf="data && data.post && !editing"
   >
     <div class="flex">
-      <img class="avatar" [src]="data.post.user.avatar" alt="" />
+      <app-avatar-small [user]="data.post.user" ></app-avatar-small>
       <div [innerHtml]="data.post.user.name"></div>
     </div>
     <app-post-fragment [fragment]="data.post"></app-post-fragment>

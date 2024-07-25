@@ -39,7 +39,7 @@ import { UtilsService } from 'src/app/services/utils.service';
 export class PostActionsComponent implements OnChanges{
   @Input() content!: ProcessedPost;
   userLoggedIn = false;
-  myId: string = 'user-not-logged-in ';
+  myId: string = 'user-00000000-0000-0000-0000-000000000000 ';
   postSilenced = false;
   // icons
   shareIcon = faShareNodes;

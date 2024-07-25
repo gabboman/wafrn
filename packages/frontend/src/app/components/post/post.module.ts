@@ -11,6 +11,7 @@ import { ReportService } from 'src/app/services/report.service';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { PostFragmentComponent } from '../post-fragment/post-fragment.component';
 import { PostActionsComponent } from '../post-actions/post-actions.component';
+import { AvatarSmallComponent } from '../avatar-small/avatar-small.component';
 
 @NgModule({
   declarations: [PostComponent],
@@ -25,6 +26,7 @@ import { PostActionsComponent } from '../post-actions/post-actions.component';
     MatTooltipModule,
     PostFragmentComponent,
     PostActionsComponent,
+    AvatarSmallComponent
   ],
   exports: [PostComponent],
   providers: [ReportService],

@@ -1,1 +1,49 @@
-<p>follows works!</p>
+@if(loading) {
+    <app-loader></app-loader>
+} @else {
+    <app-blog-header [blogDetails]="blogDetails" ></app-blog-header>
+
+    <mat-card class="p-3 mb-6 lg:mx-4 scalein wafrn-container">
+        <mat-form-field class="w-full">
+          <mat-label>Search user</mat-label>
+          <input matInput class="w-full" [(ngModel)]="dataSource.filter" />
+        </mat-form-field>
+      
+        <table mat-table [dataSource]="dataSource">
+            <ng-container matColumnDef="avatar">
+                <th mat-header-cell *matHeaderCellDef></th>
+                <td mat-cell *matCellDef="let element">
+                  <app-avatar-small [user]="element"></app-avatar-small>
+                </td>
+              </ng-container>
+              <ng-container matColumnDef="url">
+                <th mat-header-cell *matHeaderCellDef>User</th>
+                <td mat-cell *matCellDef="let element">
+                    <a [routerLink]="['/blog', element.url]">{{ element.url }}</a>
+                  </td>
+              </ng-container>
+              <ng-container matColumnDef="date">
+                <th mat-header-cell *matHeaderCellDef>Since</th>
+                <td mat-cell *matCellDef="let element">
+                  {{element.follows.createdAt | date:'short'}}
+                </td>
+              </ng-container>
+              <ng-container matColumnDef="actions">
+                <th mat-header-cell *matHeaderCellDef></th>
+                <td mat-cell *matCellDef="let element">
+                  actions go here
+                </td>
+              </ng-container>
+
+              <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+              <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+        </table>
+
+        <mat-paginator
+        [pageSizeOptions]="[10, 25, 50, 100]"
+        showFirstLastButtons
+        aria-label="Select page of periodic elements"
+      >
+      </mat-paginator>
+    </mat-card>
+}

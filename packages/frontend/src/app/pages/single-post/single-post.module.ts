@@ -11,6 +11,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { LoaderComponent } from 'src/app/components/loader/loader.component';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { AvatarSmallComponent } from 'src/app/components/avatar-small/avatar-small.component';
 
 const routes: Routes = [
   {
@@ -33,6 +34,7 @@ const routes: Routes = [
     MatProgressSpinnerModule,
     LoaderComponent,
     FontAwesomeModule,
+    AvatarSmallComponent
   ],
 })
 export class SinglePostModule {}

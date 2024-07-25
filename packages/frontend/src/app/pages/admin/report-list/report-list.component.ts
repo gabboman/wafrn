@@ -29,16 +29,6 @@ export class ReportListComponent implements OnInit {
     this.ready = false;
     this.adminService.getReports().then((response: any) => {
       this.dataSource.data = response.map((elem: any) => {
-        elem.user.avatar = elem.user?.url.startsWith('@')
-          ? environment.externalCacheurl + encodeURIComponent(elem.user.avatar)
-          : environment.externalCacheurl +
-            encodeURIComponent(environment.baseMediaUrl + elem.user?.avatar);
-        elem.post.user.avatar = elem.post.user?.url.startsWith('@')
-          ? environment.externalCacheurl +
-            encodeURIComponent(elem.post.user?.avatar)
-          : encodeURIComponent(
-              environment.baseMediaUrl + elem.post.user?.avatar
-            );
         return elem;
       });
       this.ready = true;

@@ -44,12 +44,9 @@ export class ViewBlogComponent implements OnInit, OnDestroy {
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   blogDetails: any;
-  followedUsers: string[] = [];
-  notYetAcceptedFollows: string[] = [];
   userLoggedIn = false;
   avatarUrl = '';
   navigationSubscription!: Subscription;
-  updateFollowersSubscription: Subscription;
   showModalTheme = false;
   viewedPostsIds: string[] = [];
   intersectionObserverForLoadPosts!: IntersectionObserver;
@@ -77,18 +74,13 @@ export class ViewBlogComponent implements OnInit, OnDestroy {
     private dialog: MatDialog
   ) {
     this.userLoggedIn = loginService.checkUserLoggedIn();
-    this.updateFollowersSubscription = this.postService.updateFollowers.subscribe(() => {
-      this.followedUsers = this.postService.followedUserIds;
-      this.notYetAcceptedFollows =
-        this.postService.notYetAcceptedFollowedUsersIds;
-    });
+
   }
 
   ngOnDestroy(): void {
     if (this.navigationSubscription) {
       this.navigationSubscription.unsubscribe();
     }
-    this.updateFollowersSubscription.unsubscribe();
   }
 
   async ngOnInit() {
@@ -106,9 +98,6 @@ export class ViewBlogComponent implements OnInit, OnDestroy {
         this.ngOnInit();
       });
 
-    this.followedUsers = this.postService.followedUserIds;
-    this.notYetAcceptedFollows =
-      this.postService.notYetAcceptedFollowedUsersIds;
 
     const blogUrl = this.activatedRoute.snapshot.paramMap.get('url');
     if (blogUrl) {

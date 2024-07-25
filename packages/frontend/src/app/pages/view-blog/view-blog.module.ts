@@ -19,6 +19,10 @@ const routes: Routes = [
   {
     path: ':url/followers',
     loadComponent: () => import('../../pages/profile/follows/follows.component').then(m => m.FollowsComponent)
+  },
+  {
+    path: ':url/following',
+    loadComponent: () => import('../../pages/profile/follows/follows.component').then(m => m.FollowsComponent)
   }
 ];
 

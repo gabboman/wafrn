@@ -9,14 +9,7 @@
   <mat-card [id]="'post-' + content.id" class="p-3 m-2 mb-6 lg:mx-4 scalein wafrn-container">
     <div class="center-text overflow-hidden">
       <div class="avatar">
-        <img
-          [routerLink]="'/blog/' + content.user.url"
-          crossorigin="anonymous"
-          loading="lazy"
-          [src]="content.user.avatar"
-          onerror="this.onerror=null;this.src='/api/uploads/default.webp'"
-          alt=""
-        />
+        <app-avatar-small [user]="content.user"></app-avatar-small>
       </div>
       <div
         class="w-full white-space-nowrap overflow-hidden text-overflow-ellipsis flex flex-column"

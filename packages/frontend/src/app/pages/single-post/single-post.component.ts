@@ -122,9 +122,4 @@ export class SinglePostComponent implements OnDestroy {
     window.location.reload();
   }
 
-  getUserAvatar(user: SimplifiedUser): string {
-    return user.url.startsWith('@')
-      ? this.cacheUrl + encodeURIComponent(user.avatar)
-      : this.cacheUrl + encodeURIComponent(this.mediaUrl + user.avatar);
-  }
 }
