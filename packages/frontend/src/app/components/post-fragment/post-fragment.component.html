@@ -56,7 +56,7 @@
   }
   <section class="mt-2" id="emoji-reactions">
     @for (emoji of emojiCollection; track $index) {
-    @if (!avaiableEmojiNames.includes(emoji.name)) {
+    @if (!avaiableEmojiNames.includes(emoji.name) && emoji.img) {
     <span [ngClass]="{
       blurry: fragment.content_warning && showCw
     }" class="p-3" [matTooltip]="
