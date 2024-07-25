@@ -49,7 +49,12 @@ export class EmojiCollectionsComponent implements OnDestroy {
   }
 
   click(emoji: Emoji) {
-    this.emoji.emit(emoji);
+    this.emoji.emit({
+      id: emoji.id,
+      name: emoji.url ? emoji.name : emoji.id,
+      url: emoji.url,
+      external: false
+    });
   }
 
   showCollection(collection: EmojiCollection): boolean {
