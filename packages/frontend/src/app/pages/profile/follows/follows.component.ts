@@ -17,6 +17,10 @@ import { FollowsService } from 'src/app/services/follows.service';
 import { PostsService } from 'src/app/services/posts.service';
 import { environment } from 'src/environments/environment';
 import { AvatarSmallComponent } from "../../../components/avatar-small/avatar-small.component";
+import { LoginService } from 'src/app/services/login.service';
+import { faTrash } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { SimplifiedUser } from 'src/app/interfaces/simplified-user';
 
 @Component({
   selector: 'app-follows',
@@ -32,13 +36,15 @@ import { AvatarSmallComponent } from "../../../components/avatar-small/avatar-sm
     MatInputModule,
     MatButtonModule,
     RouterModule,
-    AvatarSmallComponent
+    AvatarSmallComponent,
+    FontAwesomeModule
 ],
   templateUrl: './follows.component.html',
   styleUrl: './follows.component.scss'
 })
 export class FollowsComponent implements OnInit, OnDestroy{
   navigationSubscription: Subscription
+  followsSubscription: Subscription;
   loading = true;
   blogDetails: any;
   followedUsers: string[] = [];
@@ -46,20 +52,28 @@ export class FollowsComponent implements OnInit, OnDestroy{
   blogUrl: string = '';
   found = true;
   following = false;
-  displayedColumns = ['avatar', 'url', 'date', 'actions'];
+  displayedColumns = ['avatar', 'url', 'date', 'actions', 'removeFollower'];
+  myId: string;
+  deleteIcon = faTrash;
+
   @ViewChild(MatPaginator) paginator!: MatPaginator;
 
 
   dataSource!: MatTableDataSource<followsResponse, MatPaginator>;
 
   constructor(
-    private activatedRoute: ActivatedRoute,
+    private loginService: LoginService,
+    public activatedRoute: ActivatedRoute,
     private router: Router,
-    private postService: PostsService,
+    public postService: PostsService,
     private dashboardService: DashboardService,
     private followsService: FollowsService
   ) {
-
+    this.myId = loginService.getLoggedUserUUID()
+    this.followsSubscription = this.postService.updateFollowers.subscribe(()=> {
+      this.followedUsers = this.postService.followedUserIds;
+      this.notYetAcceptedFollows = this.postService.notYetAcceptedFollowedUsersIds;
+    })
     this.navigationSubscription = this.router.events
       .pipe(filter((event) => event instanceof NavigationEnd))
       .subscribe(() => {
@@ -70,9 +84,6 @@ export class FollowsComponent implements OnInit, OnDestroy{
 
   async ngOnInit(): Promise<void> {
     this.dataSource = new MatTableDataSource<followsResponse, MatPaginator>([]);
-      
-    this.followedUsers = this.postService.followedUserIds;
-    this.notYetAcceptedFollows = this.postService.notYetAcceptedFollowedUsersIds;
     this.blogUrl = this.activatedRoute.snapshot.paramMap.get('url') as string;
     this.following = !!this.activatedRoute.snapshot.routeConfig?.path?.toLowerCase()?.endsWith('following')
     const blogPromise = this.dashboardService
@@ -98,6 +109,12 @@ export class FollowsComponent implements OnInit, OnDestroy{
 
   ngOnDestroy(): void {
     this.navigationSubscription.unsubscribe();
+    this.followsSubscription.unsubscribe();
+  }
+
+  async deleteFollower(user: SimplifiedUser) {
+    await this.followsService.deleteFollow(user.id)
+    this.ngOnInit();
   }
 
 }

@@ -115,8 +115,8 @@ li {
 }
 
 .avatar {
-  height: 40px;
-  width: 40px;
+  max-height: 40px;
+  max-width: 40px;
   margin-right: 4px;
 
   img {

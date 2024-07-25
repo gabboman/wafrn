@@ -3,6 +3,9 @@
 } @else {
     <app-blog-header [blogDetails]="blogDetails" ></app-blog-header>
 
+    @if(blogDetails.url.startsWith('@')){
+      <h2>This is a remote user, this list is most probably incomplete</h2>
+    }
     <mat-card class="p-3 mb-6 lg:mx-4 scalein wafrn-container">
         <mat-form-field class="w-full">
           <mat-label>Search user</mat-label>
@@ -31,7 +34,45 @@
               <ng-container matColumnDef="actions">
                 <th mat-header-cell *matHeaderCellDef></th>
                 <td mat-cell *matCellDef="let element">
-                  actions go here
+                  @if(!notYetAcceptedFollows.includes(element.id) && !followedUsers.includes(element.id)){
+                    <button
+                    mat-stroked-button
+                    color="accent"
+                    class="follow-button flex-shrink-0"
+                    (mousedown)="postService.followUser(element.id)"
+                  >
+                    Follow user
+                  </button>
+                  }
+                  @if(notYetAcceptedFollows.includes(element.id)) {
+                    <button
+                    mat-stroked-button
+                    color="accent"
+                    class="follow-button flex-shrink-0"
+                    (mousedown)="postService.unfollowUser(element.id)"
+                  >
+                    Awaiting aproval
+                  </button>
+                  }
+                  
+                </td>
+              </ng-container>
+              <ng-container matColumnDef="removeFollower">
+                <th mat-header-cell *matHeaderCellDef></th>
+                <td  *matCellDef="let element">
+                  @if(activatedRoute.snapshot.routeConfig?.path?.toLowerCase()?.endsWith('followers') && blogDetails.id === myId) {
+                    <button
+                    mat-mini-fab
+                    (mouseup)="deleteFollower(element)"
+                    >
+                    <fa-icon
+                    size="lg"
+                    class="cursor-pointer"
+                    [icon]="deleteIcon"
+                    matTooltip="Remove this follower"
+                  ></fa-icon>
+                  </button>
+                  }
                 </td>
               </ng-container>
 

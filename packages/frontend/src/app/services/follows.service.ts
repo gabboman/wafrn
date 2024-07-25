@@ -14,6 +14,15 @@ export class FollowsService {
   ) {}
 
   async getFollowers(url: string, followed = false): Promise<followsResponse[]> {
-    return await firstValueFrom(this.http.get<followsResponse[]>(environment.baseUrl + `/user/${url}/follows?followers=${followed.toString()}`))
+    const res =  await firstValueFrom(this.http.get<followsResponse[]>(environment.baseUrl + `/user/${url}/follows?followers=${followed.toString()}`));
+    // we get all data on the front. we could order it on the back but that is server time
+    // also its two different queries so its double work. here is just once! also 
+    res.sort((a, b) => new Date(b.follows.createdAt).getTime() - new Date(a.follows.createdAt).getTime() )
+    return res;
+  }
+
+  async deleteFollow(id: string): Promise<boolean>   {
+    const res = await firstValueFrom(this.http.get(environment.baseUrl + `/user/deleteFollow/${id}`))
+    return true;
   }
 }
