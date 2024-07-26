@@ -48,7 +48,12 @@ async function postToJSONLD(postId: string) {
           {
             model: PostTag,
             required: false
-          }
+          },
+          {
+            model: Post,
+            as: 'quoted',
+            required: false
+          },
         ]
       })
       dbPost = tmpPost
