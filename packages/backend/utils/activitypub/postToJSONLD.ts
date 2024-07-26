@@ -34,7 +34,9 @@ async function postToJSONLD(postId: string) {
       dbPost.content === '' &&
       dbPost.hierarchyLevel !== 0 &&
       dbPost.postTags.length == 0 &&
-      dbPost.medias.length == 0
+      dbPost.medias.length == 0 &&
+      dbPost.quoted.length == 0 &&
+      dbPost.content_warning == 0
     ) {
       // TODO optimize this
       const tmpPost = await Post.findByPk(dbPost.parentId, {
