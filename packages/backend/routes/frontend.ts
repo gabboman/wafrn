@@ -48,6 +48,9 @@ function frontend(app: Application) {
   })
 
 
+  app.get('/blog/:url/:somethingElse', async function (req, res) {
+    res.send(getIndexSeo(defaultSeoData.title, defaultSeoData.description, defaultSeoData.img))
+  })
 
   app.get('/blog/:url', async function (req, res) {
     if (req.params?.url) {
@@ -79,7 +82,7 @@ function frontend(app: Application) {
         header: req.header('accept')
       })
       if (
-        req.fediData?.valid
+        req.fediData?.valid || 1 == 1
       ) {
         await handlePostRequest(req, res)
       } else {
