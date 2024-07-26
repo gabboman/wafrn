@@ -57,7 +57,9 @@
         "https://media.wafrn.net/**",
         "https://wafrnmedia.b-cdn.nett/**",
         "https://wafrnmediacache.b-cdn.net/**",
-        "https://wafrncache.b-cdn.net/**"
+        "https://wafrncache.b-cdn.net/**",
+        "https:/cdn.wafrn.net/**"
+
       ],
       "cacheConfig": {
         "strategy": "performance",
