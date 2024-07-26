@@ -10,9 +10,7 @@ import { logger } from '../logger'
 
 async function postToJSONLD(postId: string) {
   const cacheData = await getPostAndUserFromPostId(postId)
-  logger.info(cacheData)
   const post = cacheData.data
-  logger.info(post)
   const localUser = post.user
 
   const stringMyFollowers = `${environment.frontendUrl}/fediverse/blog/${localUser.url.toLowerCase()}/followers`
@@ -184,7 +182,7 @@ async function postToJSONLD(postId: string) {
     }
   })
   postAsJSONLD.object = newObject
-  if (post.content === '' && post.postTags.length === 0 && post.medias.length === 0) {
+  if (post.content === '' && post.postTags.length === 0 && post.medias.length === 0 && post.quoted.length === 0 && post.content_warning == 0 ) {
     postAsJSONLD = {
       '@context': 'https://www.w3.org/ns/activitystreams',
       id: `${environment.frontendUrl}/fediverse/post/${post.id}`,
