@@ -49,7 +49,7 @@
   </mat-paginator>
   <button *ngIf="
       !post[post.length - 1].remotePostId.startsWith(localUrl) && userLoggedIn
-    " class="w-full" (mousedown)="loadRepliesFromFediverse()" color="primary" mat-flat-button>
+    " class="w-full" (mousedown)="loadRepliesFromFediverse()" color="primary" mat-stroked-button>
     Fetch more external replies
   </button>
 </mat-card>
