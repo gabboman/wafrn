@@ -92,11 +92,11 @@
       ></div>
     </div>
     <div *ngIf="!blogDetails.url.startsWith('@') || (blogDetails.followers && blogDetails.followed)" class="follow-counts">
-      <div>
+      <div [routerLink]="['/blog', blogDetails.url ,'following']">
         <p>Following</p>
         <p class="big text-center">{{ blogDetails.followed }}</p>
       </div>
-      <div>
+      <div [routerLink]="['/blog', blogDetails.url ,'followers']">
         <p>Followed</p>
         <p class="big text-center">{{ blogDetails.followers }}</p>
       </div>
