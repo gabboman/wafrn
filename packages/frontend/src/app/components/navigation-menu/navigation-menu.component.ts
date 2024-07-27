@@ -314,15 +314,6 @@ export class NavigationMenuComponent implements OnInit, OnDestroy {
         routerLink: '/dashboard/search',
       },
       {
-        label: 'DOOM',
-        title: 'DOOM',
-        icon: faSkull,
-        command: () => {
-          this.hideMenu();
-        },
-        routerLink: '/doom',
-      },
-      {
         label: 'Settings',
         title: 'Your blog, your profile, blocks, and other stuff',
         visible: this.jwtService.tokenValid(),
@@ -406,6 +397,16 @@ export class NavigationMenuComponent implements OnInit, OnDestroy {
             },
             routerLink: '/profile/importFollows',
             visible: this.jwtService.tokenValid(),
+          },
+          {
+            label: 'Special secret menu',
+            title: 'Special secret menu',
+            icon: faSkull,
+            visible: this.jwtService.tokenValid(),
+            command: () => {
+              this.hideMenu();
+            },
+            routerLink: '/doom',
           },
         ],
       },
