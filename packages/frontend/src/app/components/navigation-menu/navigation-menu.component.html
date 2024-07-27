@@ -16,8 +16,8 @@
   <mat-drawer-content>
     <button style="position: fixed; z-index: 500; top: 1em; left: 0.5em" mat-flat-button color="primary"
       *ngIf="!menuVisible" [hidden]="!mobile" type="button" class="show-sidebar-menu-button" (mousedown)="showMenu()"
-      [matBadge]="notifications + adminNotifications + usersAwaitingAproval" [matBadgeHidden]="
-        notifications + adminNotifications + usersAwaitingAproval === 0
+      [matBadge]="notifications + adminNotifications + usersAwaitingAproval + followsAwaitingAproval" [matBadgeHidden]="
+        notifications + adminNotifications + usersAwaitingAproval + followsAwaitingAproval === 0
       " matBadgePosition="below">
       <fa-icon [icon]="hamburguerIcon"></fa-icon>
     </button>
