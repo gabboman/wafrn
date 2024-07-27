@@ -101,6 +101,11 @@ const routes: Routes = [
           import('./pages/forum/forum.component').then((m) => m.ForumComponent),
       },
       {
+        path: 'doom',
+        loadChildren: () =>
+          import('./pages/doom/doom.module').then((m) => m.DoomModule),
+      },
+      {
         path: '**',
         loadChildren: () =>
           import('./pages/pagenotfound/pagenotfound.module').then(
