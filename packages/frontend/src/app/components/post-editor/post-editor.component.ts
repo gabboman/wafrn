@@ -507,7 +507,7 @@ export class PostEditorComponent implements OnInit, OnDestroy {
       return {
         id: user.id,
         value: url,
-        avatar: user.avatar,
+        avatar: environment.externalCacheurl + encodeURIComponent(user.url.startsWith('@') ? user.avatar : (environment.baseMediaUrl + user.avatar)),
         link: user.remoteId
           ? user.remoteId
           : `${user.frontUrl}/blog/${user.url}`,
