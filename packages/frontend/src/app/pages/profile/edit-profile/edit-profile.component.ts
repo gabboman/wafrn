@@ -37,6 +37,7 @@ export class EditProfileComponent implements OnInit {
     federateWithThreads: new FormControl(false),
     disableForceAltText: new FormControl(false),
     forceClassicLogo: new FormControl(false),
+    manuallyAcceptsFollows: new FormControl(false),
   });
 
   constructor(

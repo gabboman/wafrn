@@ -186,7 +186,10 @@ export default function userRoutes(app: Application) {
         })
         if (req.body) {
           const avaiableEmojis = await getAvaiableEmojis()
-          let userEmojis: any[] = []
+          let userEmojis: any[] = [];
+          if (req.body.manuallyAcceptsFollows) {
+            user.manuallyAcceptsFollows = req.body.manuallyAcceptsFollows
+          }
           if (req.body.description) {
             user.description = req.body.description
             userEmojis = userEmojis.concat(
@@ -470,7 +473,8 @@ export default function userRoutes(app: Application) {
           'federatedHostId',
           'headerImage',
           'followingCount',
-          'followerCount'
+          'followerCount',
+          'manuallyAcceptsFollows'
         ],
         include: [
           {
