@@ -41,6 +41,7 @@ import {
   faHourglass,
   faBellSlash,
   faIcons,
+  faSkull
 } from '@fortawesome/free-solid-svg-icons';
 import { MenuItem } from 'src/app/interfaces/menu-item';
 import { MatDialog } from '@angular/material/dialog';
@@ -310,6 +311,15 @@ export class NavigationMenuComponent implements OnInit, OnDestroy {
           this.hideMenu();
         },
         routerLink: '/dashboard/search',
+      },
+      {
+        label: 'DOOM',
+        title: 'DOOM',
+        icon: faSkull,
+        command: () => {
+          this.hideMenu();
+        },
+        routerLink: '/doom',
       },
       {
         label: 'Settings',
