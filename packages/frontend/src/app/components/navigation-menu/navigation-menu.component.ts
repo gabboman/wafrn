@@ -57,6 +57,7 @@ export class NavigationMenuComponent implements OnInit, OnDestroy {
   notifications = 0;
   adminNotifications = 0;
   usersAwaitingAproval = 0;
+  followsAwaitingAproval = 0;
   privateMessagesNotifications = '';
   mobile = false;
   logo = environment.logo;
@@ -316,7 +317,16 @@ export class NavigationMenuComponent implements OnInit, OnDestroy {
         title: 'Your blog, your profile, blocks, and other stuff',
         visible: this.jwtService.tokenValid(),
         icon: faCog,
+        badge: this.followsAwaitingAproval,
         items: [
+          {
+            label: 'Awaiting follows',
+            title: 'awaiting follows',
+            badge: this.followsAwaitingAproval,
+            icon: faUser,
+            command: () => this.hideMenu(),
+            routerLink: '/blog/' + this.jwtService.getTokenData().url + '/followers'
+          },
           {
             label: 'Edit profile',
             title: 'Edit profile',
@@ -467,7 +477,8 @@ export class NavigationMenuComponent implements OnInit, OnDestroy {
           await this.notificationsService.getUnseenNotifications();
         this.notifications = response.notifications;
         this.adminNotifications = response.reports;
-        this.usersAwaitingAproval = response.awaitingAproval;
+        this.usersAwaitingAproval = response.usersAwaitingAproval;
+        this.followsAwaitingAproval = response.followsAwaitingAproval
       }
       this.drawMenu();
       this.cdr.detectChanges();

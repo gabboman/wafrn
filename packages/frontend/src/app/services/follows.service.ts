@@ -25,4 +25,10 @@ export class FollowsService {
     const res = await firstValueFrom(this.http.get(environment.baseUrl + `/user/deleteFollow/${id}`))
     return true;
   }
+  
+  async approveFollow(id: string): Promise<boolean> {
+    const res = await firstValueFrom(this.http.get(environment.baseUrl + `/user/approveFollow/${id}`))
+
+    return true;
+  }
 }

@@ -28,12 +28,19 @@ export class NotificationsService {
   async getUnseenNotifications(): Promise<{
     notifications: number;
     reports: number;
-    awaitingAproval: number;
+    usersAwaitingAproval: number;
+    followsAwaitingAproval: number;
   }> {
-    let res = {
+    let res: {
+      notifications: number;
+      reports: number;
+      usersAwaitingAproval: number;
+      followsAwaitingAproval: number;
+    } = {
       notifications: 0,
       reports: 0,
-      awaitingAproval: 0,
+      followsAwaitingAproval: 0,
+      usersAwaitingAproval: 0,
     };
     try {
       const lastTimeCheckedString = localStorage.getItem(
@@ -51,7 +58,8 @@ export class NotificationsService {
         this.http.get<{
           notifications: number;
           reports: number;
-          awaitingAproval: number;
+          usersAwaitingAproval: number;
+          followsAwaitingAproval: number;
         }>(`${environment.baseUrl}/v2/notificationsCount`, {
           params: petitionData,
         })

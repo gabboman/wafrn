@@ -1,5 +1,6 @@
 import { Follows } from '../../../db'
 import { activityPubObject } from '../../../interfaces/fediverse/activityPubObject'
+import { acceptRemoteFollow } from '../acceptRemoteFollow'
 import { getRemoteActor } from '../getRemoteActor'
 import { signAndAccept } from '../signAndAccept'
 
@@ -21,10 +22,10 @@ async function FollowActivity(body: activityPubObject, remoteUser: any, user: an
       accepted: userToBeFollowed.url.startsWith('@') ? true : !userToBeFollowed.manuallyAcceptsFollows
     })
   }
-  remoteFollow.save()
-  // we accept it
+  await remoteFollow.save()
+  // we accept it if user accepts follows automaticaly
   if (remoteFollow.accepted) {
-    await signAndAccept({ body: body }, remoteUser, user)
+    await acceptRemoteFollow(userToBeFollowed.id, remoteUser.id)
   }
 }
 

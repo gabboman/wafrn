@@ -42,6 +42,7 @@ import { getAvaiableEmojis } from '../utils/getAvaiableEmojis'
 import { getMutedUsers } from '../utils/cacheGetters/getMutedUsers'
 import { getAvaiableEmojisCache } from '../utils/cacheGetters/getAvaiableEmojis'
 import { rejectremoteFollow } from '../utils/activitypub/rejectRemoteFollow'
+import { acceptRemoteFollow } from '../utils/activitypub/acceptRemoteFollow'
 
 const forbiddenCharacters = [':', '@', '/', '<', '>', '"']
 
@@ -606,6 +607,33 @@ export default function userRoutes(app: Application) {
     }catch (error) {
       logger.debug({
         message: `Remote force unfollow failed`,
+        error: error
+      });
+      success = false;
+      res.status(500);
+    }
+    res.send({success: success})
+  })
+
+  app.get('/api/user/approveFollow/:id', authenticateToken, async (req: AuthorizedRequest, res: Response) => {
+    const userId = req.jwtData?.userId as string;
+    const forceUnfollowId = req.params?.id as string;
+    let success = true;
+    try {
+      let follow = await Follows.findOne({
+        where: {
+          followerId: forceUnfollowId,
+          followedId: userId
+        }
+      })
+      if(follow.remoteFollowId){
+        await acceptRemoteFollow(userId, forceUnfollowId)
+      } 
+      follow.accepted = 1;
+      await follow.save();
+    }catch (error) {
+      logger.debug({
+        message: `Accept follow failed`,
         error: error
       });
       success = false;

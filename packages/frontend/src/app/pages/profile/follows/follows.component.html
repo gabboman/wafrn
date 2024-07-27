@@ -61,6 +61,19 @@
                 <th mat-header-cell *matHeaderCellDef></th>
                 <td  *matCellDef="let element">
                   @if(activatedRoute.snapshot.routeConfig?.path?.toLowerCase()?.endsWith('followers') && blogDetails.id === myId) {
+                    @if(!element.follows.accepted){
+                      <button
+                    mat-mini-fab
+                    (mouseup)="acceptFollower(element)"
+                    >
+                    <fa-icon
+                    size="lg"
+                    class="cursor-pointer"
+                    [icon]="acceptIcon"
+                    matTooltip="Accept this follower"
+                  ></fa-icon>
+                  </button>
+                    }
                     <button
                     mat-mini-fab
                     (mouseup)="deleteFollower(element)"

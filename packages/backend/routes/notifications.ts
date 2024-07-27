@@ -149,9 +149,14 @@ export default function notificationRoutes(app: Application) {
     const newFollows = Follows.count(await getNewFollows(userId, startCountDate))
     const newQuotes = Quotes.count(await getQuotedPostsQuery(userId, startCountDate, Op.gt))
     const newLikes = (await getLikedPostsId(userId, startCountDate, Op.gt)).length
-
+    const pendingFollows = Follows.count({
+      where: {
+        followedId: userId,
+        accepted: false,
+      }
+    })
     let reports = 0
-    let awaitingAproval = 0
+    let usersAwaitingAproval = 0
 
     if (req.jwtData?.role === 10) {
       // well the user is an admin!
@@ -160,7 +165,7 @@ export default function notificationRoutes(app: Application) {
           resolved: false
         }
       })
-      awaitingAproval = User.count({
+      usersAwaitingAproval = User.count({
         where: {
           activated: false,
           url: {
@@ -176,10 +181,11 @@ export default function notificationRoutes(app: Application) {
       postMentions,
       newLikes,
       reports,
-      awaitingAproval,
+      usersAwaitingAproval,
       newPostReblogs,
       newEmojiReactions,
-      newQuotes
+      newQuotes,
+      pendingFollows
     ])
 
     res.send({
@@ -190,9 +196,9 @@ export default function notificationRoutes(app: Application) {
         (await newPostReblogs) +
         (await newEmojiReactions).length +
         (await newQuotes),
-
+      followsAwaitingAproval: await pendingFollows,
       reports: await reports,
-      awaitingAproval: await awaitingAproval
+      usersAwaitingAproval: await usersAwaitingAproval
     })
   })
   async function getMentionedPostsId(
@@ -285,7 +291,8 @@ export default function notificationRoutes(app: Application) {
         createdAt: {
           [Op.gt]: startCountDate
         },
-        followedId: userId
+        followedId: userId,
+        accepted: true
       }
     }
   }

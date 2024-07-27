@@ -18,7 +18,7 @@ import { PostsService } from 'src/app/services/posts.service';
 import { environment } from 'src/environments/environment';
 import { AvatarSmallComponent } from "../../../components/avatar-small/avatar-small.component";
 import { LoginService } from 'src/app/services/login.service';
-import { faTrash } from '@fortawesome/free-solid-svg-icons';
+import { faCheck, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { SimplifiedUser } from 'src/app/interfaces/simplified-user';
 
@@ -55,6 +55,7 @@ export class FollowsComponent implements OnInit, OnDestroy{
   displayedColumns = ['avatar', 'url', 'date', 'actions', 'removeFollower'];
   myId: string;
   deleteIcon = faTrash;
+  acceptIcon = faCheck;
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
 
@@ -114,6 +115,11 @@ export class FollowsComponent implements OnInit, OnDestroy{
 
   async deleteFollower(user: SimplifiedUser) {
     await this.followsService.deleteFollow(user.id)
+    this.ngOnInit();
+  }
+
+  async acceptFollower(user: SimplifiedUser) {
+    await this.followsService.approveFollow(user.id)
     this.ngOnInit();
   }
 
