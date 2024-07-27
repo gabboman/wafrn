@@ -233,6 +233,13 @@ export class PostFragmentComponent implements OnInit, OnDestroy {
   }
 
   async toggleEmojiReact(emojiReaction: EmojiReaction) {
+    if(this.fragment?.userId === this.userId) {
+      this.messages.add({
+        severity: 'error',
+        summary: `You can not emojireact to your own posts`,
+      });
+      return;
+    }
     const postId = this.fragment?.id;
     if (!postId) {
       return;

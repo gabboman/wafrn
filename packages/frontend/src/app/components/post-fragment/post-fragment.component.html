@@ -57,7 +57,7 @@
     @for (emoji of emojiCollection; track $index) {
       
     @if (avaiableEmojiNames.includes(emoji.name) || !emoji.img) {
-    <button [disabled]=" reactionLoading || fragment.userId == userId" [ngClass]="{
+    <button [disabled]=" reactionLoading" [ngClass]="{
       reacted: emojiReactionIncludesMe(emoji),
       blurry: fragment.content_warning && showCw
     }"
