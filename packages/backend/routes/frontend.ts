@@ -82,7 +82,7 @@ function frontend(app: Application) {
         header: req.header('accept')
       })
       if (
-        req.fediData?.valid || 1 == 1
+        req.fediData?.valid
       ) {
         await handlePostRequest(req, res)
       } else {
