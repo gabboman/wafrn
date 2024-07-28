@@ -90,7 +90,7 @@ async function postToJSONLD(postId: string) {
     })
   }
   for await (const tag of post.postTags) {
-    const externalTagName = tag.tagName.replaceAll(' ', '-').replaceAll('"', "'")
+    const externalTagName = tag.tagName.replaceAll('"', "'")
     const link = `${environment.frontendUrl}/dashboard/search/${encodeURIComponent(tag.tagName)}`
     tagsAndQuotes = `${tagsAndQuotes}  <a class="hashtag" data-tag="post" href="${link}" rel="tag ugc">#${ camelize(externalTagName)}</a>`
     fediTags.push({
