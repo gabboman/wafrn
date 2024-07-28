@@ -17,7 +17,7 @@ async function rejectremoteFollow(userId: string, remoteUserId: string){
     const apObj: activityPubObject = {
         '@context': 'https://www.w3.org/ns/activitystreams',
         actor: environment.frontendUrl + '/fediverse/blog/' + localUser.url,
-        id:  followToBeDestroyed.remoteFollowId,
+        id:  `${environment.frontendUrl}/fediverse/reject/${encodeURIComponent(followToBeDestroyed.remoteFollowId)}`,
         type: 'Reject',
         object: {
             actor: remoteUser.remoteId,
