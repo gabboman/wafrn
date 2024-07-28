@@ -92,11 +92,15 @@ async function postToJSONLD(postId: string) {
   for await (const tag of post.postTags) {
     const externalTagName = tag.tagName.replaceAll(' ', '-').replaceAll('"', "'")
     const link = `${environment.frontendUrl}/dashboard/search/${encodeURIComponent(tag.tagName)}`
-    tagsAndQuotes = `${tagsAndQuotes}  <a class="hashtag" data-tag="post" href="${link}" rel="tag ugc">#${externalTagName}</a>`
+    tagsAndQuotes = `${tagsAndQuotes}  <a class="hashtag" data-tag="post" href="${link}" rel="tag ugc">#${ camelize(externalTagName)}</a>`
     fediTags.push({
       type: 'Hashtag',
-      name: `#${externalTagName}`,
+      name: `#${camelize(externalTagName)}`,
       href: link
+    })
+    fediTags.push({
+      type: 'WafrnHashtag',
+      name: externalTagName,
     })
   }
   for await (const userId of mentions) {
@@ -233,6 +237,15 @@ function getToAndCC(
     to,
     cc
   }
+}
+
+
+// stolen I mean inspired by https://stackoverflow.com/questions/2970525/converting-a-string-with-spaces-into-camel-case
+function camelize(str: string): string {
+  return str.replace(/(?:^\w|[A-Z]|\b\w|\s+)/g, function(match, index) {
+    if (+match === 0) return ""; // or if (/\s+/.test(match)) for white spaces
+    return index === 0 ? match.toLowerCase() : match.toUpperCase();
+  });
 }
 
 export { postToJSONLD }
