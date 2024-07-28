@@ -76,11 +76,6 @@ function frontend(app: Application) {
     ['/fediverse/post/:id', '/fediverse/activity/post/:id'],
     getCheckFediverseSignatureFucnction(false),
     async (req: SignedRequest, res: Response) => {
-      logger.info({
-        url: req.url,
-        fediData: req.fediData,
-        header: req.header('accept')
-      })
       if (
         req.fediData?.valid
       ) {
