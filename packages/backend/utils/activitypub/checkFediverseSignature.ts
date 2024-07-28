@@ -73,10 +73,12 @@ function getCheckFediverseSignatureFucnction(force = false) {
           return;
         } else {
           res.set('Retry-After', '25')
-          logger.debug({
-            message: `Problem finding user for signature`,
-            body: req.method == 'POST' ? req.body : `GET petition`
-          })
+          if(req.body.type != 'Delete') {
+            logger.debug({
+              message: `Problem finding user for signature`,
+              body: req.method == 'POST' ? req.body : `GET petition`
+            })
+          }
           return res.sendStatus(429)
         }
       }
