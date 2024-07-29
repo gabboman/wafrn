@@ -132,8 +132,10 @@ function getCheckFediverseSignatureFucnction(force = false) {
 
     if (!success && force) {
       //logger.debug(`fail signature ${hostUrl}: ${remoteUserUrl}`)
-      // logger.debug(req.body)
-      return res.sendStatus(401)
+      res.sendStatus(401)
+      // we failed to get the remote user, we force an update
+      await getRemoteActor(remoteUserUrl, await adminUser, true)
+      return;
     } else {
       next()
     }
