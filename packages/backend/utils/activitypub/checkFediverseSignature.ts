@@ -50,7 +50,7 @@ function getCheckFediverseSignatureFucnction(force = false) {
         redisCache.set('server:' + hostUrl, bannedHostInCache ? bannedHostInCache : 'false', 'EX', 300)
       }
       if (bannedHostInCache === 'true') {
-        return res.sendStatus(401)
+        return res.sendStatus(403)
       }
       req.fediData = {
         fediHost: hostUrl,
