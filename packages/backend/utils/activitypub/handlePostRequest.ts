@@ -7,6 +7,8 @@ import { postToJSONLD } from './postToJSONLD'
 import { getRemoteActor } from './getRemoteActor'
 import { Queue } from 'bullmq'
 import { environment } from '../../environment'
+import { FederatedHost, Follows, User } from '../../db'
+import { Op } from 'sequelize'
 
 const sendPostQueue = new Queue('processRemoteView', {
   connection: environment.bullmqConnection,
@@ -57,12 +59,29 @@ async function handlePostRequest(req: SignedRequest, res: Response) {
             userId: federatedHost?.publicInbox ? '' : remoteActor.id
           })
       }
-      if (post.privacy === 1 || post.privacy === 10) {
+      if (post.privacy === 10) {
+        res.sendStatus(403)
+        return
+      }
+      if (post.privacy === 1) {
         const followerIds = await getFollowerRemoteIds(user.id)
         try {
-
             if(remoteActor){
-              if(!followerIds.includes(remoteActor.remoteId)) {
+              const followerServers = (await User.findAll({
+                include: [
+                  FederatedHost
+                ],
+                where: {
+                  id: {
+                    [Op.in]: (await Follows.findAll({
+                      where: {
+                        followedId: user.id
+                      }
+                    })).map((elem: any) => elem.followerId)
+                  }
+                }
+              })).map((elem: any) => elem.federatedHostId)
+              if(!(followerIds.includes(remoteActor.remoteId) || followerServers.includes(remoteActor.federatedHostId))) {
                 res.sendStatus(403);
                 return
               }
