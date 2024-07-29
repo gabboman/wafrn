@@ -54,36 +54,31 @@ export class LdSignature {
     }
   }
 
-  public async verifyRsaSignature2017(data: any, publicKey: string): Promise<boolean> {
-    const toBeSigned = await this.createVerifyData(data, data.signature)
-    const verifier = crypto.createVerify('sha256')
-    verifier.update(toBeSigned)
-    return verifier.verify(publicKey, data.signature.params.signature, 'base64')
-  }
+	public async verifyRsaSignature2017(data: any, publicKey: string): Promise<boolean> {
+		const toBeSigned = await this.createVerifyData(data, data.signature);
+		const verifier = crypto.createVerify('sha256');
+		verifier.update(toBeSigned);
+		return verifier.verify(publicKey, data.signature.signatureValue, 'base64');
+	}
 
-  public async createVerifyData(data: any, options: any) {
-    let res = ''
-    try {
-      const transformedOptions = {
-        ...options,
-        '@context': `${environment.frontendUrl}/contexts/identity-v1.jsonld`
-      }
-
-      //const canonizedOptions = await this.normalize(transformedOptions);
-      const canonizedOptions = JSON.stringify(transformedOptions)
-      const optionsHash = this.sha256(canonizedOptions)
-      const transformedData = { ...data }
-      transformedData['signature'] = undefined
-      const canonizedData = await this.normalize(transformedData)
-      const documentHash = this.sha256(canonizedData)
-      const verifyData = `${optionsHash}${documentHash}`
-      res = verifyData
-    } catch (error) {
-      logger.info(error)
-    }
-
-    return res
-  }
+  public async createVerifyData(data: any, options: any): Promise<string> {
+		const transformedOptions = {
+			...options,
+			'@context': `${environment.frontendUrl}/contexts/identity-v1.jsonld`,
+		};
+		delete transformedOptions['type'];
+		delete transformedOptions['id'];
+		delete transformedOptions['signatureValue'];
+		const canonizedOptions = await this.normalize(transformedOptions);
+		const optionsHash = this.sha256(canonizedOptions.toString());
+		const transformedData = { ...data };
+		delete transformedData['signature'];
+		const cannonidedData = await this.normalize(transformedData);
+		logger.debug(`cannonidedData: ${cannonidedData}`);
+		const documentHash = this.sha256(cannonidedData.toString());
+		const verifyData = `${optionsHash}${documentHash}`;
+		return verifyData;
+	}
 
   public async normalize(data: any) {
     return await jsonld.normalize(data, { documentLoader: this.getLoader(), safe: false })
