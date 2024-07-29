@@ -57,11 +57,10 @@ async function handlePostRequest(req: SignedRequest, res: Response) {
             userId: federatedHost?.publicInbox ? '' : remoteActor.id
           })
       }
-      if (post.privacy === 1) {
+      if (post.privacy === 1 || post.privacy === 10) {
         const followerIds = await getFollowerRemoteIds(user.id)
         try {
 
-          
             if(remoteActor){
               if(!followerIds.includes(remoteActor.remoteId)) {
                 res.sendStatus(403);

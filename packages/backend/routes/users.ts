@@ -658,13 +658,22 @@ export default function userRoutes(app: Application) {
       if (user) {
         let responseData
         if (!followers) {
-          //people who follow :url
           responseData = await user.getFollower({
+            where: {
+                "$follows.accepted$": {
+                  [Op.in]: req.jwtData?.userId === user.id ? [true, false] : [true]
+                }
+            },
             attributes: ['id', 'url', 'avatar', 'description']
           })
         } else {
           // who :url is following
           responseData = await user.getFollowed({
+            where: {
+              "$follows.accepted$": {
+                [Op.in]: req.jwtData?.userId === user.id ? [true, false] : [true]
+              }
+          },
             attributes: ['id', 'url', 'avatar', 'description']
           })
         }
