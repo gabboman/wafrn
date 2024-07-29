@@ -74,7 +74,7 @@ export class LdSignature {
     const transformedData = { ...data }
     delete transformedData['signature']
     const cannonidedData = await this.normalize(transformedData)
-    logger.debug(`cannonidedData: ${cannonidedData}`)
+    // logger.debug(`cannonidedData: ${cannonidedData}`)
     const documentHash = this.sha256(cannonidedData.toString())
     const verifyData = `${optionsHash}${documentHash}`
     return verifyData
