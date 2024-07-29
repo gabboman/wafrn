@@ -606,7 +606,11 @@ export default function userRoutes(app: Application) {
       })
       if(follow.remoteFollowId){
         await rejectremoteFollow(userId, forceUnfollowId)
-      } 
+      }
+      await redisCache.del('follows:local:' + forceUnfollowId )
+      await redisCache.del('follows:full:' + forceUnfollowId )
+      await redisCache.del('follows:local:' + userId )
+      await redisCache.del('follows:full:' + userId )
       await follow.destroy()
     }catch (error) {
       logger.debug({
@@ -621,20 +625,24 @@ export default function userRoutes(app: Application) {
 
   app.get('/api/user/approveFollow/:id', authenticateToken, async (req: AuthorizedRequest, res: Response) => {
     const userId = req.jwtData?.userId as string;
-    const forceUnfollowId = req.params?.id as string;
+    const approvedFollower = req.params?.id as string;
     let success = true;
     try {
       let follow = await Follows.findOne({
         where: {
-          followerId: forceUnfollowId,
+          followerId: approvedFollower,
           followedId: userId
         }
       })
       if(follow.remoteFollowId){
-        await acceptRemoteFollow(userId, forceUnfollowId)
+        await acceptRemoteFollow(userId, approvedFollower)
       } 
       follow.accepted = 1;
       await follow.save();
+      await redisCache.del('follows:local:' + approvedFollower )
+      await redisCache.del('follows:full:' + approvedFollower )
+      await redisCache.del('follows:local:' + userId )
+      await redisCache.del('follows:full:' + userId )
     }catch (error) {
       logger.debug({
         message: `Accept follow failed`,
