@@ -3,6 +3,9 @@
 User-agent: GPTBot
 Disallow: /
 
+User-Agent: meta-externalagent
+Disallow: /
+
 User-agent: *
 Disallow: /fediverse/
 Allow: /blog/

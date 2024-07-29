@@ -173,10 +173,10 @@
     *ngIf="veryLongPost || !showFull"
     color="accent"
     class="w-full mb-3 mt-2 w-full"
-    mat-flat-button
+    mat-stroked-button
     (mousedown)="expandPost()"
   >
-    Expand woot
+    Expand woot ({{originalPostContent.length}} posts)
   </button>
 
   <div class="flex pt-1">
