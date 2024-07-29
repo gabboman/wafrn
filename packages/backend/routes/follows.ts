@@ -82,29 +82,4 @@ export default function followsRoutes(app: Application) {
       success
     })
   })
-
-  // TODO: Remove this function because new route provides everything.
-  app.get('/api/getFollowedUsers', authenticateToken, async (req: AuthorizedRequest, res: Response) => {
-    const followedUsers = getFollowedsIds(req.jwtData?.userId as string)
-    const blockedUsers = getBlockedIds(req.jwtData?.userId as string)
-    const notAcceptedFollows = getNotYetAcceptedFollowedids(req.jwtData?.userId as string)
-    const options = getUserOptions(req.jwtData?.userId as string)
-    let user = User.findByPk(req.jwtData?.userId, {
-      attributes: ['banned']
-    })
-    const silencedPosts = getMutedPosts(req.jwtData?.userId as string)
-    Promise.all([user, followedUsers, blockedUsers, user, notAcceptedFollows, options, silencedPosts])
-    user = await user
-    if (!user || user.banned) {
-      res.sendStatus(401)
-    } else {
-      res.send({
-        followedUsers: await followedUsers,
-        blockedUsers: await blockedUsers,
-        notAcceptedFollows: await notAcceptedFollows,
-        options: await options,
-        silencedPosts: await silencedPosts
-      })
-    }
-  })
 }
