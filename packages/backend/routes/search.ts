@@ -41,7 +41,7 @@ export default function searchRoutes(app: Application) {
           {
             model: Post,
             required: true,
-            include: ['id', 'userId', 'privacy'],
+            attributes: ['id', 'userId', 'privacy'],
             where: {
               [Op.or]: [
                 {
