@@ -16,6 +16,7 @@ import checkIpBlocked from '../utils/checkIpBlocked'
 import { getAllLocalUserIds } from '../utils/cacheGetters/getAllLocalUserIds'
 import { getallBlockedServers } from '../utils/cacheGetters/getAllBlockedServers'
 import { getUnjointedPosts } from '../utils/baseQueryNew'
+import getFollowedsIds from '../utils/cacheGetters/getFollowedsIds'
 export default function searchRoutes(app: Application) {
   app.get('/api/v2/search/', optionalAuthentication, async (req: AuthorizedRequest, res: Response) => {
     // const success = false;
@@ -36,6 +37,28 @@ export default function searchRoutes(app: Application) {
         where: {
           tagToLower: searchTerm
         },
+        include: [
+          {
+            model: Post,
+            required: true,
+            include: ['id', 'userId', 'privacy'],
+            where: {
+              [Op.or]: [
+                {
+                  privacy: {[Op.in]: [0, 2]}
+                },
+                {
+                  userId: {
+                    [Op.in]: (await getFollowedsIds(posterId)).concat([posterId])
+                  },
+                  privacy: 1
+                }
+              ]
+              
+            }
+
+          }
+        ],
         attributes: ['postId'],
         order: [['createdAt', 'DESC']],
         limit: environment.postsPerPage,
