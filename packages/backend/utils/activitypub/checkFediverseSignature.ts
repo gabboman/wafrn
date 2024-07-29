@@ -27,7 +27,7 @@ function getCheckFediverseSignatureFucnction(force = false) {
     let hostUrl = req.header('user-agent')
       ? `petition without sighead ${req.header('user-agent')}`
       : 'somewhere not specified'
-      let remoteUserUrl = ''
+    let remoteUserUrl = ''
     try {
       const sigHead = httpSignature.parseRequest(req, {
         headers:
@@ -58,22 +58,27 @@ function getCheckFediverseSignatureFucnction(force = false) {
         valid: false
       }
       let remoteKey = await getKey(remoteUserUrl, await adminUser)
-      if(remoteKey.key) {
-        remoteKey = remoteKey.key;
+      if (remoteKey.key) {
+        remoteKey = remoteKey.key
       } else {
         // we check for deleted users
-        if(req.method === 'POST' && req.body.type == 'Delete' && req.body.actor == req.body.object && req.body.actor == remoteUserUrl) {
+        if (
+          req.method === 'POST' &&
+          req.body.type == 'Delete' &&
+          req.body.actor == req.body.object &&
+          req.body.actor == remoteUserUrl
+        ) {
           // well, this is a "delete this user". We should process this ASAP
           req.fediData = {
             fediHost: hostUrl,
             remoteUserUrl: remoteUserUrl,
             valid: true
           }
-          next();
-          return;
+          next()
+          return
         } else {
           res.set('Retry-After', '25')
-          if(req.body.type != 'Delete') {
+          if (req.body.type != 'Delete') {
             logger.debug({
               message: `Problem finding user for signature`,
               body: req.method == 'POST' ? req.body : `GET petition`
@@ -89,13 +94,13 @@ function getCheckFediverseSignatureFucnction(force = false) {
       if (req.method === 'POST') {
         // we check that the petition is done by who it says its done
         success = success && remoteUserUrl.toLowerCase() === req.body.actor.toLowerCase()
-        if(!success && req.body.signature && req.body.signature.type === 'RsaSignature2017') {
-          const signature = req.body.signature;
-          const remoteActor = await getRemoteActor(signature.creator.split('#')[0], adminUser);
+        if (!success && req.body.signature && req.body.signature.type === 'RsaSignature2017') {
+          const signature = req.body.signature
+          const remoteActor = await getRemoteActor(signature.creator.split('#')[0], adminUser)
           const jsonld = new LdSignature()
-          success = !!await jsonld.verifyRsaSignature2017(req.body, remoteActor.publicKey).catch((error) => {
+          success = !!(await jsonld.verifyRsaSignature2017(req.body, remoteActor.publicKey).catch((error) => {
             // logger.debug(`Problem with jsonld signature ${hostUrl}: ${remoteUserUrl}`)
-          })
+          }))
           /*await jsonld.compact(req.body).catch((error: any) => {
             success = false
             logger.debug({

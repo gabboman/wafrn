@@ -74,7 +74,7 @@ async function getRemoteActorIdProcessor(job: Job) {
           email: null,
           description: userPetition.summary,
           avatar: userPetition.icon?.url ? userPetition.icon.url : `${environment.mediaUrl}/uploads/default.webp`,
-          headerImage: '',//userPetition.image?.url ? userPetition.image.url : ``,
+          headerImage: '', //userPetition.image?.url ? userPetition.image.url : ``,
           password: 'NOT_A_WAFRN_USER_NOT_REAL_PASSWORD',
           publicKey: userPetition.publicKey?.publicKeyPem,
           remoteInbox: userPetition.inbox,

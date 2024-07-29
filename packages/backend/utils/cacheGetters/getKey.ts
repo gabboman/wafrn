@@ -19,12 +19,12 @@ const queue = new Queue('getRemoteActorId', {
   }
 })
 
-async function getKey(remoteUserUrl: string, adminUser: any): Promise<{key?: any}> {
+async function getKey(remoteUserUrl: string, adminUser: any): Promise<{ key?: any }> {
   const cachedKey = await redisCache.get('key:' + remoteUserUrl)
   let remoteKey = cachedKey //if petition from neew user we need to get the key first
-  if(!remoteKey) {
+  if (!remoteKey) {
     const userId = await getUserIdFromRemoteId(remoteUserUrl)
-    if(userId && userId !== '') {
+    if (userId && userId !== '') {
       return {
         key: (await User.findByPk(userId)).publicKey
       }
@@ -43,7 +43,7 @@ async function getKey(remoteUserUrl: string, adminUser: any): Promise<{key?: any
     // we set the key valid for 5 minutes
     redisCache.set('key:' + remoteUserUrl, remoteKey, 'EX', 300)
   }
-  return {key: remoteKey}
+  return { key: remoteKey }
 }
 
 export { getKey }

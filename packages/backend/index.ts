@@ -73,12 +73,12 @@ mediaRoutes(app)
 postsRoutes(app)
 searchRoutes(app)
 deletePost(app)
-if(environment.fediPort == environment.port) {
+if (environment.fediPort == environment.port) {
   app.use('/contexts', express.static('contexts'))
   activityPubRoutes(app)
   wellKnownRoutes(app)
 }
-if(environment.cachePort == environment.port) {
+if (environment.cachePort == environment.port) {
   cacheRoutes(app)
 }
 likeRoutes(app)

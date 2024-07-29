@@ -16,18 +16,18 @@ app.use(checkIpBlocked)
 app.use(overrideContentType)
 app.set('trust proxy', 1)
 app.use(
-    bodyParser.json({
-      limit: '50mb',
-      verify: (req: SignedRequest, res, buf) => {
-        req.rawBody = buf.toString()
-      }
-    })
-  )
+  bodyParser.json({
+    limit: '50mb',
+    verify: (req: SignedRequest, res, buf) => {
+      req.rawBody = buf.toString()
+    }
+  })
+)
 
 app.use('/contexts', express.static('contexts'))
 activityPubRoutes(app)
 wellKnownRoutes(app)
 
 app.listen(PORT, environment.listenIp, () => {
-    logger.info('Started fedi listener')
+  logger.info('Started fedi listener')
 })

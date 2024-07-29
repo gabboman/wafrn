@@ -52,13 +52,16 @@ export default function postsRoutes(app: Application) {
   app.get(
     '/api/v2/post/:id',
     optionalAuthentication,
-   
+
     navigationRateLimiter,
     async (req: AuthorizedRequest, res: Response) => {
       let success = false
       const userId = req.jwtData?.userId
       if (req.params?.id) {
-        const unjointedPost = await getUnjointedPosts([req.params.id], userId ? userId : '00000000-0000-0000-0000-000000000000')
+        const unjointedPost = await getUnjointedPosts(
+          [req.params.id],
+          userId ? userId : '00000000-0000-0000-0000-000000000000'
+        )
         const post = unjointedPost.posts[0]
         if (post) {
           const mentions = unjointedPost.mentions.map((elem: any) => elem.userMentioned)
@@ -78,7 +81,7 @@ export default function postsRoutes(app: Application) {
   app.get(
     '/api/v2/descendents/:id',
     optionalAuthentication,
-   
+
     async (req: AuthorizedRequest, res: Response) => {
       const userId = req.jwtData?.userId ? req.jwtData.userId : '00000000-0000-0000-0000-000000000000'
       if (req.params?.id) {
@@ -193,7 +196,7 @@ export default function postsRoutes(app: Application) {
 
   app.post(
     '/api/v2/createPost',
-   
+
     authenticateToken,
     createPostLimiter,
     async (req: AuthorizedRequest, res: Response) => {

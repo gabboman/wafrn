@@ -152,7 +152,7 @@ export default function notificationRoutes(app: Application) {
     const pendingFollows = Follows.count({
       where: {
         followedId: userId,
-        accepted: false,
+        accepted: false
       }
     })
     let reports = 0

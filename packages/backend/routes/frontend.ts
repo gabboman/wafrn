@@ -47,7 +47,6 @@ function frontend(app: Application) {
     )
   })
 
-
   app.get('/blog/:url/:somethingElse', async function (req, res) {
     res.send(getIndexSeo(defaultSeoData.title, defaultSeoData.description, defaultSeoData.img))
   })
@@ -76,9 +75,7 @@ function frontend(app: Application) {
     ['/fediverse/post/:id', '/fediverse/activity/post/:id'],
     getCheckFediverseSignatureFucnction(false),
     async (req: SignedRequest, res: Response) => {
-      if (
-        req.fediData?.valid
-      ) {
+      if (req.fediData?.valid) {
         await handlePostRequest(req, res)
       } else {
         const defaultSeoData = environment.defaultSEOData

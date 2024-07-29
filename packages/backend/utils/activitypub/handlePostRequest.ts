@@ -45,19 +45,19 @@ async function handlePostRequest(req: SignedRequest, res: Response) {
         return
       }
       const remoteActor = await getRemoteActor(fediData.remoteUserUrl, cachePost.data.user, false)
-      if(!remoteActor) {
-          logger.debug({
-            message: `remote actor not found`,
-            fedidata: fediData,
-          })
-          return res.sendStatus(500)
+      if (!remoteActor) {
+        logger.debug({
+          message: `remote actor not found`,
+          fedidata: fediData
+        })
+        return res.sendStatus(500)
       } else {
-          const federatedHost = await remoteActor.getFederatedHost();
-          await sendPostQueue.add('processPost', {
-            postId: post.id,
-            federatedHostId: ( federatedHost && federatedHost.publicInbox) ? federatedHost.id : '',
-            userId: federatedHost?.publicInbox ? '' : remoteActor.id
-          })
+        const federatedHost = await remoteActor.getFederatedHost()
+        await sendPostQueue.add('processPost', {
+          postId: post.id,
+          federatedHostId: federatedHost && federatedHost.publicInbox ? federatedHost.id : '',
+          userId: federatedHost?.publicInbox ? '' : remoteActor.id
+        })
       }
       if (post.privacy === 10) {
         res.sendStatus(403)
@@ -66,30 +66,33 @@ async function handlePostRequest(req: SignedRequest, res: Response) {
       if (post.privacy === 1) {
         const followerIds = await getFollowerRemoteIds(user.id)
         try {
-            if(remoteActor){
-              const followerServers = (await User.findAll({
-                include: [
-                  FederatedHost
-                ],
+          if (remoteActor) {
+            const followerServers = (
+              await User.findAll({
+                include: [FederatedHost],
                 where: {
                   id: {
-                    [Op.in]: (await Follows.findAll({
-                      where: {
-                        followedId: user.id
-                      }
-                    })).map((elem: any) => elem.followerId)
+                    [Op.in]: (
+                      await Follows.findAll({
+                        where: {
+                          followedId: user.id
+                        }
+                      })
+                    ).map((elem: any) => elem.followerId)
                   }
                 }
-              })).map((elem: any) => elem.federatedHostId)
-              if(!(followerIds.includes(remoteActor.remoteId) || followerServers.includes(remoteActor.federatedHostId))) {
-                res.sendStatus(403);
-                return
-              }
-            } else {
-              res.sendStatus(403);
+              })
+            ).map((elem: any) => elem.federatedHostId)
+            if (
+              !(followerIds.includes(remoteActor.remoteId) || followerServers.includes(remoteActor.federatedHostId))
+            ) {
+              res.sendStatus(403)
               return
             }
-          
+          } else {
+            res.sendStatus(403)
+            return
+          }
         } catch (error) {
           logger.warn({
             message: 'Error on post',

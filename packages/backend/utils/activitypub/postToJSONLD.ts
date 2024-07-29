@@ -17,7 +17,6 @@ async function postToJSONLD(postId: string) {
   const dbMentions = post.mentionPost
   let mentionedUsers: string[] = []
 
-
   if (dbMentions) {
     mentionedUsers = dbMentions.filter((elem: any) => elem.remoteInbox).map((elem: any) => elem.remoteId)
   }
@@ -51,7 +50,7 @@ async function postToJSONLD(postId: string) {
             model: Post,
             as: 'quoted',
             required: false
-          },
+          }
         ]
       })
       dbPost = tmpPost
@@ -92,7 +91,9 @@ async function postToJSONLD(postId: string) {
   for await (const tag of post.postTags) {
     const externalTagName = tag.tagName.replaceAll('"', "'")
     const link = `${environment.frontendUrl}/dashboard/search/${encodeURIComponent(tag.tagName)}`
-    tagsAndQuotes = `${tagsAndQuotes}  <a class="hashtag" data-tag="post" href="${link}" rel="tag ugc">#${ camelize(externalTagName)}</a>`
+    tagsAndQuotes = `${tagsAndQuotes}  <a class="hashtag" data-tag="post" href="${link}" rel="tag ugc">#${camelize(
+      externalTagName
+    )}</a>`
     fediTags.push({
       type: 'Hashtag',
       name: `#${camelize(externalTagName)}`,
@@ -100,7 +101,7 @@ async function postToJSONLD(postId: string) {
     })
     fediTags.push({
       type: 'WafrnHashtag',
-      name: externalTagName,
+      name: externalTagName
     })
   }
   for await (const userId of mentions) {
@@ -186,7 +187,13 @@ async function postToJSONLD(postId: string) {
     }
   })
   postAsJSONLD.object = newObject
-  if (post.content === '' && post.postTags.length === 0 && post.medias.length === 0 && post.quoted.length === 0 && post.content_warning == 0 ) {
+  if (
+    post.content === '' &&
+    post.postTags.length === 0 &&
+    post.medias.length === 0 &&
+    post.quoted.length === 0 &&
+    post.content_warning == 0
+  ) {
     postAsJSONLD = {
       '@context': 'https://www.w3.org/ns/activitystreams',
       id: `${environment.frontendUrl}/fediverse/post/${post.id}`,
@@ -239,13 +246,12 @@ function getToAndCC(
   }
 }
 
-
 // stolen I mean inspired by https://stackoverflow.com/questions/2970525/converting-a-string-with-spaces-into-camel-case
 function camelize(str: string): string {
-  return str.replace(/(?:^\w|[A-Z]|\b\w|\s+)/g, function(match, index) {
-    if (+match === 0) return ""; // or if (/\s+/.test(match)) for white spaces
-    return index === 0 ? match.toLowerCase() : match.toUpperCase();
-  });
+  return str.replace(/(?:^\w|[A-Z]|\b\w|\s+)/g, function (match, index) {
+    if (+match === 0) return '' // or if (/\s+/.test(match)) for white spaces
+    return index === 0 ? match.toLowerCase() : match.toUpperCase()
+  })
 }
 
 export { postToJSONLD }

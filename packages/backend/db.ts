@@ -274,7 +274,6 @@ const Follows = sequelize.define(
         unique: false,
         fields: ['followedId', 'accepted']
       }
-
     ]
   }
 )

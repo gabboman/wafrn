@@ -49,7 +49,7 @@ const forbiddenCharacters = [':', '@', '/', '<', '>', '"']
 export default function userRoutes(app: Application) {
   app.post(
     '/api/register',
-   
+
     createAccountLimiter,
     uploadHandler().single('avatar'),
     async (req, res) => {
@@ -186,7 +186,7 @@ export default function userRoutes(app: Application) {
         })
         if (req.body) {
           const avaiableEmojis = await getAvaiableEmojis()
-          let userEmojis: any[] = [];
+          let userEmojis: any[] = []
           if (req.body.manuallyAcceptsFollows) {
             user.manuallyAcceptsFollows = req.body.manuallyAcceptsFollows
           }
@@ -594,9 +594,9 @@ export default function userRoutes(app: Application) {
   })
 
   app.get('/api/user/deleteFollow/:id', authenticateToken, async (req: AuthorizedRequest, res: Response) => {
-    const userId = req.jwtData?.userId as string;
-    const forceUnfollowId = req.params?.id as string;
-    let success = true;
+    const userId = req.jwtData?.userId as string
+    const forceUnfollowId = req.params?.id as string
+    let success = true
     try {
       let follow = await Follows.findOne({
         where: {
@@ -604,29 +604,29 @@ export default function userRoutes(app: Application) {
           followedId: userId
         }
       })
-      if(follow.remoteFollowId){
+      if (follow.remoteFollowId) {
         await rejectremoteFollow(userId, forceUnfollowId)
       }
-      await redisCache.del('follows:local:' + forceUnfollowId )
-      await redisCache.del('follows:full:' + forceUnfollowId )
-      await redisCache.del('follows:local:' + userId )
-      await redisCache.del('follows:full:' + userId )
+      await redisCache.del('follows:local:' + forceUnfollowId)
+      await redisCache.del('follows:full:' + forceUnfollowId)
+      await redisCache.del('follows:local:' + userId)
+      await redisCache.del('follows:full:' + userId)
       await follow.destroy()
-    }catch (error) {
+    } catch (error) {
       logger.debug({
         message: `Remote force unfollow failed`,
         error: error
-      });
-      success = false;
-      res.status(500);
+      })
+      success = false
+      res.status(500)
     }
-    res.send({success: success})
+    res.send({ success: success })
   })
 
   app.get('/api/user/approveFollow/:id', authenticateToken, async (req: AuthorizedRequest, res: Response) => {
-    const userId = req.jwtData?.userId as string;
-    const approvedFollower = req.params?.id as string;
-    let success = true;
+    const userId = req.jwtData?.userId as string
+    const approvedFollower = req.params?.id as string
+    let success = true
     try {
       let follow = await Follows.findOne({
         where: {
@@ -634,24 +634,24 @@ export default function userRoutes(app: Application) {
           followedId: userId
         }
       })
-      if(follow.remoteFollowId){
+      if (follow.remoteFollowId) {
         await acceptRemoteFollow(userId, approvedFollower)
-      } 
-      follow.accepted = 1;
-      await follow.save();
-      await redisCache.del('follows:local:' + approvedFollower )
-      await redisCache.del('follows:full:' + approvedFollower )
-      await redisCache.del('follows:local:' + userId )
-      await redisCache.del('follows:full:' + userId )
-    }catch (error) {
+      }
+      follow.accepted = 1
+      await follow.save()
+      await redisCache.del('follows:local:' + approvedFollower)
+      await redisCache.del('follows:full:' + approvedFollower)
+      await redisCache.del('follows:local:' + userId)
+      await redisCache.del('follows:full:' + userId)
+    } catch (error) {
       logger.debug({
         message: `Accept follow failed`,
         error: error
-      });
-      success = false;
-      res.status(500);
+      })
+      success = false
+      res.status(500)
     }
-    res.send({success: success})
+    res.send({ success: success })
   })
 
   app.get('/api/user/:url/follows', authenticateToken, async (req: AuthorizedRequest, res: Response) => {
@@ -668,9 +668,9 @@ export default function userRoutes(app: Application) {
         if (!followers) {
           responseData = await user.getFollower({
             where: {
-                "$follows.accepted$": {
-                  [Op.in]: req.jwtData?.userId === user.id ? [true, false] : [true]
-                }
+              '$follows.accepted$': {
+                [Op.in]: req.jwtData?.userId === user.id ? [true, false] : [true]
+              }
             },
             attributes: ['id', 'url', 'avatar', 'description']
           })
@@ -678,10 +678,10 @@ export default function userRoutes(app: Application) {
           // who :url is following
           responseData = await user.getFollowed({
             where: {
-              "$follows.accepted$": {
+              '$follows.accepted$': {
                 [Op.in]: req.jwtData?.userId === user.id ? [true, false] : [true]
               }
-          },
+            },
             attributes: ['id', 'url', 'avatar', 'description']
           })
         }

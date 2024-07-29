@@ -45,7 +45,7 @@ export default function searchRoutes(app: Application) {
             where: {
               [Op.or]: [
                 {
-                  privacy: {[Op.in]: [0, 2]}
+                  privacy: { [Op.in]: [0, 2] }
                 },
                 {
                   userId: {
@@ -54,9 +54,7 @@ export default function searchRoutes(app: Application) {
                   privacy: 1
                 }
               ]
-              
             }
-
           }
         ],
         attributes: ['postId'],
