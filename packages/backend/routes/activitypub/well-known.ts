@@ -107,7 +107,7 @@ function wellKnownRoutes(app: Application) {
       version: '2.0',
       software: {
         name: 'wafrn',
-        version: '0.0.2'
+        version: '0.1.0'
       },
       protocols: ['activitypub'],
       services: {
