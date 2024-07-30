@@ -359,3 +359,10 @@ blockquote {
     $cardcolor 20px
    );
 }
+
+.center-text {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 0.25em;
+}
