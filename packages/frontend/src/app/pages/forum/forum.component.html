@@ -9,7 +9,7 @@
   <mat-card [id]="'post-' + content.id" class="p-3 m-2 mb-6 lg:mx-4 scalein wafrn-container">
     <app-post-header [fragment]="content" [simplified]="false"></app-post-header>
     <div (mousedown)="scrollTo(content.parentId)" *ngIf="content.parentId" class="w-full flex"  >In response to... </div>
-    <app-post-fragment [fragment]="content"></app-post-fragment>
+    <app-post-fragment [selfManageCw]="true" [fragment]="content"></app-post-fragment>
   </mat-card>
   } }
 </ng-container>

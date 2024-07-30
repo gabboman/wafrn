@@ -53,6 +53,7 @@ type EmojiReaction = {
 export class PostFragmentComponent implements OnInit, OnDestroy {
   @Input() fragment: ProcessedPost | undefined;
   @Input() showCw: boolean = true;
+  @Input() selfManageCw: boolean = false;
   @Output() dismissCw: EventEmitter<void> = new EventEmitter<void>();
   emojiCollection: EmojiReaction[] = [];
   likeSubscription;
@@ -290,5 +291,12 @@ export class PostFragmentComponent implements OnInit, OnDestroy {
 
   emojiReactionIncludesMe(emoji: EmojiReaction) {
     return emoji.users.some((usr) => usr.id === this.userId);
+  }
+
+  cwClick() {
+    this.dismissCw.emit();
+    if(this.selfManageCw) {
+      this.showCw = !this.showCw
+    }
   }
 }
