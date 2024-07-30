@@ -12,6 +12,7 @@ import { ProcessedPost } from 'src/app/interfaces/processed-post';
 import { ForumService } from 'src/app/services/forum.service';
 import { LoginService } from 'src/app/services/login.service';
 import { PostsService } from 'src/app/services/posts.service';
+import { PostHeaderComponent } from "../../components/post/post-header/post-header.component";
 
 @Component({
   selector: 'app-forum',
@@ -24,8 +25,9 @@ import { PostsService } from 'src/app/services/posts.service';
     MatCardModule,
     MatButtonModule,
     PostActionsComponent,
-    AvatarSmallComponent
-  ],
+    AvatarSmallComponent,
+    PostHeaderComponent
+],
   templateUrl: './forum.component.html',
   styleUrl: './forum.component.scss',
 })

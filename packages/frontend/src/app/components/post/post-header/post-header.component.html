@@ -1,0 +1,72 @@
+<ng-container *ngIf="fragment" >
+        <div
+        class="flex mb-1 gap-1 md:gap-3 align-items-center"
+      >
+      <div class="avatar">
+        <app-avatar-small [user]="fragment.user" ></app-avatar-small>
+      </div>
+        <div class="center-text flex-grow-1 flex-shrink-1 min-w-0">
+          
+          <div class="w-full overflow-hidden flex flex-column">
+            <a
+              class="max-w-full white-space-nowrap overflow-hidden text-overflow-ellipsis user-name flex"
+              [routerLink]="'/blog/' + fragment.user.url"
+              [innerHTML]="fragment.user.name"
+            ></a>
+            <span
+              class="font-small max-w-full white-space-nowrap overflow-hidden text-overflow-ellipsis user-url"
+              [innerText]="fragment.user.url"
+            ></span>
+          </div>
+        </div>
+        <app-post-actions *ngIf="!simplified" [content]="fragment"></app-post-actions>
+      </div>
+      <div *ngIf="!simplified" class="date-line mb-1 flex gap-2 align-items-center">
+        <span class="text-xs text-600">
+          {{ fragment.createdAt | date : "short" }}
+          <fa-icon
+            [icon]="
+              fragment.privacy === 0
+                ? worldIcon
+                : fragment.privacy === 1
+                ? userIcon
+                : fragment.privacy === 2
+                ? serverIcon
+                : fragment.privacy === 3
+                ? unlockIcon
+                : envelopeIcon
+            "
+          ></fa-icon>
+        </span>
+        <span
+          *ngIf="
+            fragment.updatedAt.getTime() - fragment.createdAt.getTime() > 60000
+          "
+          class="text-xs text-600"
+        >
+          <fa-icon [matTooltip]="fragment.updatedAt.toLocaleString()" [icon]="editedIcon"></fa-icon>
+        </span>
+        <button
+          mat-stroked-button
+          color="accent"
+          *ngIf="
+            !postService.notYetAcceptedFollowedUsersIds.includes(fragment.userId) &&
+            !postService.followedUserIds.includes(fragment.userId) &&
+            userLoggedIn
+          "
+          class="follow-button flex-shrink-0"
+          (mousedown)="followUser(fragment.userId)"
+        >
+          Follow
+        </button>
+        <button
+          mat-stroked-button
+          color="accent"
+          *ngIf="postService.notYetAcceptedFollowedUsersIds.includes(fragment.userId) && userLoggedIn"
+          class="follow-button flex-shrink-0"
+          (mousedown)="unfollowUser(fragment.userId)"
+        >
+          Awaiting aproval
+        </button>
+      </div>
+</ng-container>

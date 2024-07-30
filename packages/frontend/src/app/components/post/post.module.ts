@@ -12,6 +12,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { PostFragmentComponent } from '../post-fragment/post-fragment.component';
 import { PostActionsComponent } from '../post-actions/post-actions.component';
 import { AvatarSmallComponent } from '../avatar-small/avatar-small.component';
+import { PostHeaderComponent } from "./post-header/post-header.component";
 
 @NgModule({
   declarations: [PostComponent],
@@ -26,8 +27,9 @@ import { AvatarSmallComponent } from '../avatar-small/avatar-small.component';
     MatTooltipModule,
     PostFragmentComponent,
     PostActionsComponent,
-    AvatarSmallComponent
-  ],
+    AvatarSmallComponent,
+    PostHeaderComponent
+],
   exports: [PostComponent],
   providers: [ReportService],
 })

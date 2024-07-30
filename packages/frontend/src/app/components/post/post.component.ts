@@ -177,37 +177,7 @@ export class PostComponent implements OnInit, OnChanges, OnDestroy {
     }
   }
 
-  async followUser(id: string) {
-    const response = await this.postService.followUser(id);
-    if (response) {
-      this.messages.add({
-        severity: 'success',
-        summary: 'You now follow this user!',
-      });
-    } else {
-      this.messages.add({
-        severity: 'error',
-        summary:
-          'Something went wrong! Check your internet conectivity and try again',
-      });
-    }
-  }
 
-  async unfollowUser(id: string) {
-    const response = await this.postService.unfollowUser(id);
-    if (response) {
-      this.messages.add({
-        severity: 'success',
-        summary: 'You no longer follow this user!',
-      });
-    } else {
-      this.messages.add({
-        severity: 'error',
-        summary:
-          'Something went wrong! Check your internet conectivity and try again',
-      });
-    }
-  }
 
   launchReblog() {
     this.editorService.launchPostEditorEmitter.next({
