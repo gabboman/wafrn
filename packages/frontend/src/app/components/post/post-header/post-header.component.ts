@@ -10,6 +10,7 @@ import { PostActionsComponent } from '../../post-actions/post-actions.component'
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faShareNodes, faChevronDown, faHeart, faHeartBroken, faReply, faRepeat, faQuoteLeft, faArrowUpRightFromSquare, faTrash, faClose, faGlobe, faUnlock, faEnvelope, faServer, faUser, faPen } from '@fortawesome/free-solid-svg-icons';
+import { MatButtonModule } from '@angular/material/button';
 
 @Component({
   selector: 'app-post-header',
@@ -20,7 +21,8 @@ import { faShareNodes, faChevronDown, faHeart, faHeartBroken, faReply, faRepeat,
     AvatarSmallComponent,
     PostActionsComponent,
     MatTooltipModule,
-    FontAwesomeModule
+    FontAwesomeModule,
+    MatButtonModule
 
   ],
   templateUrl: './post-header.component.html',
