@@ -7,6 +7,8 @@
     "outDir": "./build",
     "esModuleInterop": true,
     "strict": true,
-    "typeRoots": ["./types"]
+    "typeRoots": ["./types"],
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true
   }
 }
