@@ -1,4 +1,4 @@
-import { Component, Inject, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, HostListener, Inject, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { EditorService } from 'src/app/services/editor.service';
 import { MediaService } from 'src/app/services/media.service';
 import { environment } from 'src/environments/environment';
@@ -391,6 +391,14 @@ export class PostEditorComponent implements OnInit, OnDestroy {
 
   postBeingSubmitted = false;
   async submitPost() {
+    if(!this.allDescriptionsFilled() ||
+    this.postBeingSubmitted ||
+    (this.postCreatorContent === this.initialContent &&
+      this.tags.length === 0 &&
+      this.uploadedMedias.length === 0)) {
+        this.messages.add({severity: 'error', summary: 'Write a post or do something'})
+      return;
+    }
     this.postBeingSubmitted = true;
     let tagsToSend = '';
     this.tags
@@ -620,5 +628,12 @@ export class PostEditorComponent implements OnInit, OnDestroy {
   getPrivacyIcon(){
     const res =  this.privacyOptions.find(elem => elem.level === this.privacy)?.icon as IconDefinition
     return res;
+  }
+
+  // Shortcut asked by herthog. Same as in mastodon
+  @HostListener('window:keydown.control.enter', ['$event'])
+  bigFont(event: KeyboardEvent) {
+    event.preventDefault();
+    this.submitPost()
   }
 }
