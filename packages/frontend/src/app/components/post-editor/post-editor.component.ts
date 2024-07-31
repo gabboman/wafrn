@@ -44,6 +44,7 @@ import { Emoji } from 'src/app/interfaces/emoji';
 import { QuestionPollQuestion } from 'src/app/interfaces/questionPoll';
 import { MatMenuModule } from '@angular/material/menu';
 import { AvatarSmallComponent } from '../avatar-small/avatar-small.component';
+import { PostHeaderComponent } from "../post/post-header/post-header.component";
 
 type Mention = {
   id: string;
@@ -78,8 +79,9 @@ type Mention = {
     MatCardModule,
     EmojiCollectionsComponent,
     MatMenuModule,
-    AvatarSmallComponent
-  ],
+    AvatarSmallComponent,
+    PostHeaderComponent,
+],
   providers: [EditorService],
 })
 export class PostEditorComponent implements OnInit, OnDestroy {
@@ -630,7 +632,7 @@ export class PostEditorComponent implements OnInit, OnDestroy {
     return res;
   }
 
-  // Shortcut asked by herthog. Same as in mastodon
+  // Shortcut asked by hertog. Same as in mastodon
   @HostListener('window:keydown.control.enter', ['$event'])
   bigFont(event: KeyboardEvent) {
     event.preventDefault();
