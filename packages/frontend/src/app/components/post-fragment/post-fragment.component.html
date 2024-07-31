@@ -35,18 +35,7 @@
   @for(quote of fragment.quotes; track $index) {
   <div *ngIf="quote" [ngClass]="{ blurry: fragment.content_warning && showCw }" class="quoted-post cursor-pointer mb-2">
     <div class="flex">
-      <div class="flex align-content-center user-avatar-container">
-        <app-avatar-small [user]="quote.user"></app-avatar-small>
-      </div>
-      <div class="w-full white-space-nowrap overflow-hidden text-overflow-ellipsis flex flex-column">
-        <div>
-          <a class="original-poster-name flex" [routerLink]="'/blog/' + quote.user.url"
-            [innerHTML]="quote?.user?.name"></a>
-        </div>
-        <div class="date-line mb-1 flex gap-2 align-items-center">
-          <span class="font-small original-poster-url" [innerText]="quote?.user?.url"></span>
-        </div>
-      </div>
+      <app-post-header [fragment]="quote" [simplified]="true" [disableLink]="true"></app-post-header>
     </div>
     <div class="cursor-pointer" [routerLink]="'/fediverse/post/' + quote.id">
       <app-post-fragment [fragment]="quote"></app-post-fragment>

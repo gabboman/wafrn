@@ -115,11 +115,14 @@ export class EditorService implements OnDestroy{
     await this.openDialogWithData({quote: quoteTo})
   }
 
-  private async openDialogWithData(data: any) {
+  public async openDialogWithData(data: any) {
+    const mobile = window.innerWidth <= 992;
     this.dialogService.open(await this.getEditorComponent(), {
       data: data,
-      width: 'min(960px, calc(100% - 30px))',
+      height: mobile ? '100vh' : 'min(600px, calc(100% - 30px))',
+      width: mobile ? '100vw' : 'min(960px, calc(100% - 30px))',
       maxWidth: '100%',
+      maxHeight: '100%',
     });
   }
 }

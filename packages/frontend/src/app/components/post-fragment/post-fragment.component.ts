@@ -23,6 +23,7 @@ import { MessageService } from 'src/app/services/message.service';
 import { Emoji } from 'src/app/interfaces/emoji';
 import { InjectHtmlModule } from 'src/app/directives/inject-html/inject-html.module';
 import { AvatarSmallComponent } from '../avatar-small/avatar-small.component';
+import { PostHeaderComponent } from "../post/post-header/post-header.component";
 
 type EmojiReaction = {
   id: string;
@@ -45,8 +46,9 @@ type EmojiReaction = {
     MatTooltipModule,
     EmojiReactComponent,
     InjectHtmlModule,
-    AvatarSmallComponent
-  ],
+    AvatarSmallComponent,
+    PostHeaderComponent
+],
   templateUrl: './post-fragment.component.html',
   styleUrl: './post-fragment.component.scss',
 })

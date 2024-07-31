@@ -32,6 +32,7 @@ export class PostHeaderComponent {
 
   @Input() fragment!: ProcessedPost;
   @Input() simplified: boolean = true;
+  @Input() disableLink: boolean = false;
   userLoggedIn = false;
 
     // icons

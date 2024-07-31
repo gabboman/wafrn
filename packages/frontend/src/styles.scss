@@ -366,3 +366,7 @@ blockquote {
   align-items: center;
   gap: 0.25em;
 }
+
+.mat-mdc-dialog-content {
+  max-height: unset !important;
+}

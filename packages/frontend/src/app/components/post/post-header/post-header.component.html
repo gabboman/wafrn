@@ -10,7 +10,7 @@
           <div class="w-full overflow-hidden flex flex-column">
             <a
               class="max-w-full white-space-nowrap overflow-hidden text-overflow-ellipsis user-name flex"
-              [routerLink]="'/blog/' + fragment.user.url"
+              [routerLink]="!disableLink ? '/blog/' + fragment.user.url: null"
               [innerHTML]="fragment.user.name"
             ></a>
             <span

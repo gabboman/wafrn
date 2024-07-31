@@ -1,12 +1,18 @@
 <mat-dialog-content style="padding: 12px">
+  <button
+              mat-mini-fab
+              class="delete-btn"
+              (mousedown)="closeEditor()"
+            >
+              <fa-icon size="lg" [icon]="closeIcon"></fa-icon>
+            </button>
   <h3 *ngIf="data?.post && !editing">In reply to:</h3>
   <div
     class="in-reply-to-preview quoted-post"
     *ngIf="data && data.post && !editing"
   >
     <div class="flex">
-      <app-avatar-small [user]="data.post.user" ></app-avatar-small>
-      <div [innerHtml]="data.post.user.name"></div>
+      <app-post-header [fragment]="data.post" [disableLink]="true"  ></app-post-header>
     </div>
     <app-post-fragment [fragment]="data.post"></app-post-fragment>
   </div>
@@ -15,6 +21,7 @@
   </h2>
 
   <quill-editor
+  style="height: 50%;"
     #quill
     class="w-full"
     [(ngModel)]="postCreatorContent"
@@ -292,7 +299,7 @@
 
   <button
     mat-flat-button
-    class="w-full mt-2"
+    class="w-full mt-2 publish-post-button"
     [disabled]="
       !allDescriptionsFilled() ||
       postBeingSubmitted ||

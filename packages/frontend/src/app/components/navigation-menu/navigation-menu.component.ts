@@ -168,15 +168,7 @@ export class NavigationMenuComponent implements OnInit, OnDestroy {
         icon: faPencil,
         command: async () => {
           this.hideMenu();
-          this.dialogService.open(
-            await this.editorService.getEditorComponent(),
-            {
-              //height: 'min(600px, calc(100% - 30px))',
-              width: 'min(960px, calc(100% - 30px))',
-              maxWidth: '100%',
-              maxHeight: '100%',
-            }
-          );
+          this.openEditor()
         },
         visible: this.jwtService.tokenValid(),
       },
@@ -499,6 +491,11 @@ export class NavigationMenuComponent implements OnInit, OnDestroy {
   @HostListener('window:resize', ['$event'])
   onResize() {
     this.mobile = window.innerWidth <= 992;
+    console.log(this.mobile)
+  }
+
+  async openEditor() {
+    this.editorService.openDialogWithData(undefined);
   }
 
   onCloseMenu() {
