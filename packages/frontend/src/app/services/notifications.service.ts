@@ -10,6 +10,7 @@ import { Quote, basicPost } from '../interfaces/unlinked-posts';
 import { UserNotifications } from '../interfaces/user-notifications';
 import { NotificationType } from '../enums/notification-type';
 import { ProcessedPost } from '../interfaces/processed-post';
+import { PostsService } from './posts.service';
 
 @Injectable({
   providedIn: 'root',
@@ -23,7 +24,11 @@ export class NotificationsService {
   quotesDate = new Date()
 
 
-  constructor(private http: HttpClient, private jwt: JwtService) { }
+  constructor(
+    private http: HttpClient,
+    private jwt: JwtService,
+    private postService: PostsService
+  ) { }
 
   async getUnseenNotifications(): Promise<{
     notifications: number;
@@ -112,7 +117,7 @@ export class NotificationsService {
     petitionData = petitionData.set('quotesDate', this.quotesDate.toString())
     petitionData = petitionData.set('page', page)
 
-    const tmp = await firstValueFrom(
+    let tmp = await firstValueFrom(
       this.http.get<{
         users: SimplifiedUser[],
         posts: basicPost[],
@@ -128,6 +133,14 @@ export class NotificationsService {
       })
     );
     if (tmp) {
+      // extra sanitizatin
+      const postsSanitized = tmp.posts.map(elem => {
+        const content = this.postService.getPostContentSanitized(elem.content)
+        let postSanitized = {... elem};
+        postSanitized.content = content;
+        return postSanitized
+      });
+      tmp.posts = postsSanitized;
       tmp.users = tmp.users.map(usr => {
         return {
           ...usr,
