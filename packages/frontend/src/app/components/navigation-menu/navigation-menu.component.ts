@@ -491,7 +491,6 @@ export class NavigationMenuComponent implements OnInit, OnDestroy {
   @HostListener('window:resize', ['$event'])
   onResize() {
     this.mobile = window.innerWidth <= 992;
-    console.log(this.mobile)
   }
 
   async openEditor() {
