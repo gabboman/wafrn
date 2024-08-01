@@ -13,6 +13,9 @@ import { ForumService } from 'src/app/services/forum.service';
 import { LoginService } from 'src/app/services/login.service';
 import { PostsService } from 'src/app/services/posts.service';
 import { PostHeaderComponent } from "../../components/post/post-header/post-header.component";
+import { PostComponent } from 'src/app/components/post/post.component';
+import { PostModule } from 'src/app/components/post/post.module';
+import { DashboardService } from 'src/app/services/dashboard.service';
 
 @Component({
   selector: 'app-forum',
@@ -26,14 +29,16 @@ import { PostHeaderComponent } from "../../components/post/post-header/post-head
     MatButtonModule,
     PostActionsComponent,
     AvatarSmallComponent,
-    PostHeaderComponent
+    PostHeaderComponent,
+    PostModule,
 ],
   templateUrl: './forum.component.html',
   styleUrl: './forum.component.scss',
 })
 export class ForumComponent implements OnDestroy {
   loading = true;
-  posts: ProcessedPost[] = [];
+  forumPosts: ProcessedPost[] = [];
+  post: ProcessedPost[] = [];
   subscription: Subscription;
   updateFollowsSubscription: Subscription;
   userLoggedIn = false;
@@ -44,7 +49,8 @@ export class ForumComponent implements OnDestroy {
     private forumService: ForumService,
     private route: ActivatedRoute,
     private loginService: LoginService,
-    private postService: PostsService
+    private postService: PostsService,
+    private dashboardService: DashboardService
   ) {
     this.followedUsers = this.postService.followedUserIds;
     this.notYetAcceptedFollows =
@@ -60,7 +66,9 @@ export class ForumComponent implements OnDestroy {
     }
     this.subscription = this.route.params.subscribe(async (data: any) => {
       this.loading = true;
-      this.posts = (await this.forumService.getForumThread(data.id));
+      this.forumPosts = (await this.forumService.getForumThread(data.id));
+      const tmpPost = await this.dashboardService.getPostV2(data ? data.id : '');
+      this.post = tmpPost ? tmpPost : [];
       this.loading = false;
     });
   }
