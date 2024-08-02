@@ -8,8 +8,6 @@ import { logger } from '../logger'
 
 // RsaSignature2017 based from https://github.com/transmute-industries/RsaSignature2017
 
-const contextCache: Map<string, any> = new Map()
-
 export class LdSignature {
   constructor() {}
 
@@ -58,7 +56,8 @@ export class LdSignature {
     const toBeSigned = await this.createVerifyData(data, data.signature)
     const verifier = crypto.createVerify('sha256')
     verifier.update(toBeSigned)
-    return verifier.verify(publicKey, data.signature.signatureValue, 'base64')
+    const result =  verifier.verify(publicKey, data.signature.signatureValue, 'base64')
+    return result;
   }
 
   public async createVerifyData(data: any, options: any): Promise<string> {
@@ -74,6 +73,7 @@ export class LdSignature {
     const transformedData = { ...data }
     delete transformedData['signature']
     const cannonidedData = await this.normalize(transformedData)
+    //const compact = await this.compact(cannonidedData)
     // logger.debug(`cannonidedData: ${cannonidedData}`)
     const documentHash = this.sha256(cannonidedData.toString())
     const verifyData = `${optionsHash}${documentHash}`
@@ -81,28 +81,11 @@ export class LdSignature {
   }
 
   public async normalize(data: any) {
-    return await jsonld.normalize(data, { documentLoader: this.getLoader(), safe: false })
+    // TODO improve this so we get some cache or something
+    const res =  await jsonld.normalize(data, {safe: false })
+    return res;
   }
 
-  private getLoader() {
-    return async (url: string): Promise<any> => {
-      if (contextCache.has(url)) {
-        return {
-          contextUrl: null,
-          document: contextCache.get(url),
-          documentUrl: url
-        }
-      } else {
-        const document = await jsonld.documentLoader(url)
-        contextCache.set(url, document)
-        return {
-          contextUrl: null,
-          document: document,
-          documentUrl: url
-        }
-      }
-    }
-  }
 
   public sha256(data: string): string {
     const hash = crypto.createHash('sha256')

@@ -99,16 +99,12 @@ function getCheckFediverseSignatureFucnction(force = false) {
           const remoteActor = await getRemoteActor(signature.creator.split('#')[0], adminUser)
           const jsonld = new LdSignature()
           success = !!(await jsonld.verifyRsaSignature2017(req.body, remoteActor.publicKey).catch((error) => {
-            // logger.debug(`Problem with jsonld signature ${hostUrl}: ${remoteUserUrl}`)
-          }))
-          /*await jsonld.compact(req.body).catch((error: any) => {
-            success = false
             logger.debug({
               message: `Problem with jsonld signature ${hostUrl}: ${remoteUserUrl}`,
               error: error
             })
-          })
-            */
+          }))
+          
         }
       }
 
