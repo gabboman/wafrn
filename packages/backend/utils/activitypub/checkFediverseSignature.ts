@@ -32,7 +32,7 @@ function getCheckFediverseSignatureFucnction(force = false) {
       const sigHead = httpSignature.parseRequest(req, {
         headers:
           req.method === 'GET' ? ['(request-target)', 'host', 'date'] : ['(request-target)', 'digest', 'host', 'date'],
-        clockSkew: 600,
+        clockSkew: 3600, // this one is for threads. They have been informed
         strict: true
       })
       remoteUserUrl = sigHead.keyId.split('#')[0]
