@@ -32,17 +32,7 @@
       <span class="opacity-0">direct link to the post</span>
     </a>
     <div *ngIf="notification.type !== notificationType.MENTION" class="flex mt-3 center-text overflow-hidden">
-      <app-avatar-small *ngIf="notification.fragment" [user]="notification.fragment.user" ></app-avatar-small>
-
-      <div class="w-full white-space-nowrap overflow-hidden text-overflow-ellipsis flex flex-column">
-        <div>
-          <a class="original-poster-name" [routerLink]="'/blog/' + notification.fragment?.user?.url"
-            [innerHTML]="notification.fragment?.user?.name"></a>
-        </div>
-        <div class="date-line mb-1 flex gap-2 align-items-center">
-          <span class="font-small original-poster-url" [innerText]="notification.fragment?.user?.url"></span>
-        </div>
-      </div>
+      <app-post-header [fragment]="notification.fragment" ></app-post-header>
     </div>
     <div class="cursor-pointer" [routerLink]="notification.url">
       <app-post-fragment [fragment]="notification.fragment"></app-post-fragment>

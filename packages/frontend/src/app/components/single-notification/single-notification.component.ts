@@ -8,13 +8,20 @@ import { environment } from 'src/environments/environment';
 import { PostFragmentComponent } from '../post-fragment/post-fragment.component';
 import { MatButton } from '@angular/material/button';
 import { AvatarSmallComponent } from "../avatar-small/avatar-small.component";
+import { PostHeaderComponent } from "../post/post-header/post-header.component";
 
 @Component({
   selector: 'app-single-notification',
   templateUrl: './single-notification.component.html',
   styleUrls: ['./single-notification.component.scss'],
   standalone: true,
-  imports: [CommonModule, RouterModule, MatCardModule, PostFragmentComponent, MatButton, AvatarSmallComponent],
+  imports: [
+    CommonModule,
+    RouterModule,
+    MatCardModule,
+    PostFragmentComponent,
+    MatButton,
+    PostHeaderComponent],
 })
 export class SingleNotificationComponent implements OnInit {
   emojiUrl: string = '';

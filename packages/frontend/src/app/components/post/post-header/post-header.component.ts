@@ -30,7 +30,7 @@ import { MatButtonModule } from '@angular/material/button';
 })
 export class PostHeaderComponent {
 
-  @Input() fragment!: ProcessedPost;
+  @Input() fragment: ProcessedPost | undefined;
   @Input() simplified: boolean = true;
   @Input() disableLink: boolean = false;
   userLoggedIn = false;
