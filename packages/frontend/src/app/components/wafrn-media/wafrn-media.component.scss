@@ -2,3 +2,20 @@ img, video {
   max-width: 100%;
   width: 100%;
 }
+
+.nsfw {
+  filter: grayscale(1) blur(500px) contrast(20%)
+}
+
+.cw-animation {
+  animation: slideIn 0.3s ease-in;
+}
+
+@keyframes slideIn {
+  from {
+    transform: translateX(-100%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}

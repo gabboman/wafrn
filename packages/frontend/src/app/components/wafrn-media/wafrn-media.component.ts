@@ -53,7 +53,7 @@ export class WafrnMediaComponent implements OnChanges {
         : environment.externalCacheurl +
           encodeURIComponent(environment.baseMediaUrl + this.data.url);
       this.nsfw =  this.data.NSFW && !this.disableNSFWFilter;
-      this.displayUrl = this.nsfw ? '/assets/img/nsfw_image.webp' : this.tmpUrl;
+      this.displayUrl = this.tmpUrl //this.nsfw ? '/assets/img/nsfw_image.webp' : this.tmpUrl;
       switch (this.extension) {
         case 'mp4': {
           this.mimeType = 'video/mp4';
@@ -104,17 +104,6 @@ export class WafrnMediaComponent implements OnChanges {
     this.nsfw = false;
     this.displayUrl = this.tmpUrl;
     this.viewLongImage = true;
-  }
-
-  imgLoaded() {
-    if (
-      !this.viewLongImage &&
-      this.wafrnMedia.offsetHeight / this.wafrnMedia.offsetWidth > 3
-    ) {
-      this.displayUrl = this.nsfw
-        ? '/assets/img/nsfw_image.webp'
-        : '/assets/img/long_image.jpg';
-    }
   }
 
   private getExtension() {

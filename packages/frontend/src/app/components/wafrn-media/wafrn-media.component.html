@@ -1,4 +1,5 @@
 <mat-card *ngIf="data" class="overflow-hidden mt-1">
+  <div *ngIf="nsfw">Click to display NSFW media</div>
   <img
     #wafrnMedia
     *ngIf="
@@ -12,7 +13,9 @@
     [alt]="data.description"
     role="none"
     loading="lazy"
-    (load)="imgLoaded()"
+    [ngClass]="{
+      'nsfw': nsfw
+    }"
   />
 
   <video *ngIf="!nsfw && mimeType.startsWith('video')" controls>

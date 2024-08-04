@@ -36,18 +36,6 @@
   margin-left: -2px;
 }
 
-.cw-animation {
-  animation: slideIn 0.3s ease-in;
-}
-
-@keyframes slideIn {
-  from {
-    transform: translateX(-100%);
-  }
-  to {
-    transform: translateX(0);
-  }
-}
 
 .in-reply-to-preview {
   max-height: 90px;
