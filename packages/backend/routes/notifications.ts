@@ -212,7 +212,7 @@ export default function notificationRoutes(app: Application) {
     const fullyMutedDoNotCountForMentions = superMutedIds.length ?  (
       await sequelize.query(
         isDatabaseMysql()
-          ? `SELECT postsId FROM postsancestors where ancestorId IN ("${superMutedIds.map(elem => "'" + elem + "'")}")`
+          ? `SELECT postsId FROM postsancestors where ancestorId IN ("${superMutedIds}")`
           : `SELECT "postsId" FROM "postsancestors" where "ancestorId" IN (${superMutedIds.map(elem => "'" + elem + "'")})`,
         {
           type: QueryTypes.SELECT
