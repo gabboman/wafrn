@@ -114,19 +114,20 @@ li {
   background-color: var(--mdc-filled-text-field-container-color);
 }
 
-.avatar {
-  max-height: 40px;
-  max-width: 40px;
-  margin-right: 4px;
+$avatar-length: 40px;
+.avatar-container {
+  display: flex;
+  height: $avatar-length;
+  width: $avatar-length;
+  justify-content: center;
+}
 
-  img {
-    border-radius: 8px;
-    margin: 0 auto;
-    display: block;
-    //width: auto;
-    max-height: 100%;
-    object-fit: cover;
-  }
+.avatar {
+  max-height: $avatar-length;
+  max-width: $avatar-length;
+  border-radius: 8px;
+  display: flex;
+  object-fit: cover;
 }
 
 .margin-auto {

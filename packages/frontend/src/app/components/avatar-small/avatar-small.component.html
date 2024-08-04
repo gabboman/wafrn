@@ -1,6 +1,6 @@
-<a [routerLink]="['/blog', user.url]">
+<a class="avatar-container" [routerLink]="['/blog', user.url]">
 <img
-class="avatar user-avatar"
+class="avatar"
 onerror="this.onerror=null;this.src='/api/uploads/default.webp'"
 *ngIf="avatar"
 [src]="avatar"
