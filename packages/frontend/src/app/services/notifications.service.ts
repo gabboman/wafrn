@@ -141,13 +141,7 @@ export class NotificationsService {
         return postSanitized
       });
       tmp.posts = postsSanitized;
-      tmp.users = tmp.users.map(usr => {
-        return {
-          ...usr,
-          avatar: usr.url.startsWith('@') ? environment.externalCacheurl + encodeURIComponent(usr.avatar) :
-            environment.externalCacheurl + encodeURIComponent(environment.baseMediaUrl + usr.avatar)
-        }
-      })
+      tmp.users = tmp.users
 
       tmp.posts = tmp.posts.map((post: any) => {
         const user = tmp.users.find(usr => usr.id === post.userId) as SimplifiedUser;
