@@ -225,7 +225,7 @@ export default function notificationRoutes(app: Application) {
       limit: limit ? environment.postsPerPage : Number.MAX_SAFE_INTEGER,
       where: {
         userId: userId,
-        id: {
+        postId: {
           [Op.notIn]: fullyMutedDoNotCountForMentions
         },
         createdAt: {
