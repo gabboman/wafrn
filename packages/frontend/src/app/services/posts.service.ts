@@ -529,9 +529,10 @@ export class PostsService {
     return response.success;
   }
 
-  async silencePost(postId: string): Promise<boolean> {
+  async silencePost(postId: string, superMute = false): Promise<boolean> {
     const payload = {
       postId: postId,
+      superMute: superMute.toString().toLowerCase()
     };
     const response = await firstValueFrom(
       this.http.post<{ success: boolean }>(

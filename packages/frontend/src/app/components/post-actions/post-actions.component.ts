@@ -164,8 +164,8 @@ export class PostActionsComponent implements OnChanges{
   deletePost() {
     this.deletePostService.openDeletePostDialog(this.content.id);
   }
-  async silencePost() {
-    if (await this.postService.silencePost(this.content.id)) {
+  async silencePost(superMute: boolean = false) {
+    if (await this.postService.silencePost(this.content.id, superMute)) {
       this.messages.add({
         severity: 'success',
         summary: 'You successfully silenced the notifications for this woot',

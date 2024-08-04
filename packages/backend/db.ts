@@ -361,7 +361,13 @@ const Post = sequelize.define(
     ]
   }
 )
-const SilencedPost = sequelize.define('silencedPost', {})
+const SilencedPost = sequelize.define('silencedPost', {
+  superMuted: {
+    type: Sequelize.BOOLEAN,
+    defaultValue: false,
+    allowNull: true
+  }
+})
 const PostTag = sequelize.define(
   'postTags',
   {

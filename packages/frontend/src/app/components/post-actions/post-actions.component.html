@@ -62,7 +62,10 @@
     <fa-icon class="mr-2" [icon]="editedIcon"></fa-icon>Edit woot
   </button>
   <button *ngIf="!postSilenced" (mousedown)="silencePost()" mat-menu-item>
-    <fa-icon class="mr-2" [icon]="silenceIcon"></fa-icon>Silence notifications 
+    <fa-icon class="mr-2" [icon]="silenceIcon"></fa-icon>Silence interactions 
+  </button>
+  <button *ngIf="!postSilenced" (mousedown)="silencePost(true)" mat-menu-item>
+    <fa-icon class="mr-2" [icon]="silenceIcon"></fa-icon>Silence notifications and replies
   </button>
   <button *ngIf="postSilenced" (mousedown)="unsilencePost()" mat-menu-item>
     <fa-icon class="mr-2" [icon]="unsilenceIcon"></fa-icon>Reactivate notifications
