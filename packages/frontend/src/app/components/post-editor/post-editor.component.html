@@ -271,8 +271,7 @@
           <fa-icon size="lg" [icon]="closeIcon"></fa-icon>
         </button>
         <div class="flex">
-          <img class="avatar" [src]="data.quote.user.avatar" alt="" />
-          <div [innerHtml]="data.quote.user.name"></div>
+          <app-post-header [fragment]="data.quote" ></app-post-header>
         </div>
         <app-post-fragment [fragment]="data.quote"></app-post-fragment>
       </div>
