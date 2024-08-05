@@ -27,7 +27,6 @@ export default function forumRoutes(app: Application) {
       attributes: ['id', 'hierarchyLevel']
     })
     if (postsToGet) {
-      if (postsToGet.hierarchyLevel === 1) {
         let postIds = (
           await sequelize.query(
             isDatabaseMysql()
@@ -46,24 +45,20 @@ export default function forumRoutes(app: Application) {
             privacy: {
               [Op.ne]: 10
             },
-            [Op.and]: [
+            [Op.or]: [
               {
-                [Op.or]: [
-                  {
-                    userId: userId
-                  },
-                  {
-                    privacy: 1,
-                    userId: {
-                      [Op.in]: await getFollowedsIds(userId, false)
-                    }
-                  },
-                  {
-                    privacy: {
-                      [Op.in]: [0, 2]
-                    }
-                  }
-                ]
+                userId: userId
+              },
+              {
+                privacy: 1,
+                userId: {
+                  [Op.in]: await getFollowedsIds(userId, false)
+                }
+              },
+              {
+                privacy: {
+                  [Op.in]: [0, 2]
+                }
               }
             ]
           }
@@ -134,14 +129,7 @@ export default function forumRoutes(app: Application) {
           quotes: quotes,
           quotedPosts: await quotedPosts
         })
-      } else {
-        const parent = await postsToGet.getAncestors({
-          where: {
-            hierarchyLevel: 1
-          }
-        })
-        res.redirect('/api/forum/' + parent[0].id)
-      }
+      
     } else {
       res.sendStatus(404)
     }
