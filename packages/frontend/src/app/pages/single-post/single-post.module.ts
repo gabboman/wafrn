@@ -12,11 +12,12 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { LoaderComponent } from 'src/app/components/loader/loader.component';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { AvatarSmallComponent } from 'src/app/components/avatar-small/avatar-small.component';
+import { ForumComponent } from '../forum/forum.component';
 
 const routes: Routes = [
   {
     path: ':id',
-    component: SinglePostComponent,
+    component: ForumComponent,
   },
 ];
 
