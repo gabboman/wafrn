@@ -118,7 +118,7 @@ export default function forumRoutes(app: Application) {
         await Promise.all([emojis, users, polls, medias, tags])
 
         res.send({
-          posts: await fullPostsToGet,
+          posts: (await fullPostsToGet).filter((elem: any) => elem.id !== postId ),
           emojiRelations: await emojis,
           mentions: mentions.postMentionRelation,
           users: await users,
