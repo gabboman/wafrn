@@ -57,7 +57,7 @@ export default function forumRoutes(app: Application) {
               },
               {
                 privacy: {
-                  [Op.in]: [0, 2]
+                  [Op.in]: [0, 2, 3]
                 }
               }
             ]
