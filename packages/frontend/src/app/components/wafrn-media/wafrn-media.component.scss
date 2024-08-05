@@ -4,18 +4,29 @@ img, video {
 }
 
 .nsfw {
-  filter: grayscale(1) blur(100px);
+  filter: grayscale(1) contrast(0%);
 }
 
-.cw-animation {
+.displayed-image {
   animation: slideIn 0.3s ease-in;
 }
 
 @keyframes slideIn {
   from {
-    transform: translateX(-100%);
+    filter: grayscale(1) contrast(0%);
   }
-  to {
-    transform: translateX(0);
-  }
+}
+
+.img-cw-text {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 69;
+  color: white
+}
+
+.img-container {
+  position: relative;
+  text-align: center;
 }

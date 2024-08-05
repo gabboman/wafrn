@@ -1,27 +1,36 @@
 <mat-card *ngIf="data" class="overflow-hidden mt-1">
-  <div *ngIf="nsfw">Click to display NSFW media</div>
-  <img
+  <div
+  (mousedown)="showPicture()"
+  (keyup)="showPicture()"
+  class="img-container"
+  >
+    <b class="img-cw-text" *ngIf="nsfw" >Click to dislay NWFW media</b>
+    <img
     #wafrnMedia
     *ngIf="
-      nsfw ||
-      !extensionsToHideImgTag.includes(extension) ||
+      extensionsToHideImgTag.includes(extension) ||
       mimeType === 'UNKNOWN'
     "
-    (mousedown)="showPicture()"
-    (keyup)="showPicture()"
     [src]="displayUrl"
     [alt]="data.description"
     role="none"
     loading="lazy"
     [ngClass]="{
-      'nsfw': nsfw
+      'nsfw': nsfw,
+      'displayed-image': !nsfw
     }"
   />
-
-  <video *ngIf="!nsfw && mimeType.startsWith('video')" controls>
+  <video
+  [ngClass]="{
+    'nsfw': nsfw,
+    'displayed-image': !nsfw
+  }"
+  *ngIf="mimeType.startsWith('video')"
+  controls
+  >
     <source [src]="displayUrl" [type]="mimeType" />
   </video>
-
+  </div>
   <div *ngIf="!nsfw && mimeType.startsWith('pdf')">
     <a [href]="displayUrl" target="_blank"
       >Click here to see the PDF file that is embeded in this post</a
