@@ -1,20 +1,27 @@
 <app-loader *ngIf="loading"></app-loader>
 <ng-container *ngIf="!loading">
   <div class="wafrn-container mx-1 md:mx-4 flex align-items-center">
-    <h3 class="flex-grow-1 m-0 mb-2 text-2xl ">Forum Style View</h3>
   </div>
   <app-post [post]="post" ></app-post>
+
+  <mat-card 
+    *ngIf="!post[post.length - 1].remotePostId.startsWith(localUrl) && userLoggedIn"
+    class="p-3 pb-2 mb-2 lg:mx-4 scalein wafrn-container flex-shrink-0">
+      <button  class="w-full" (mousedown)="loadRepliesFromFediverse()" color="primary" mat-stroked-button>
+       Fetch more external replies
+      </button>
+  </mat-card>
   @for (content of forumPosts; track $index; let index = $index) {
   
     @if(content.content !== '' || content.tags.length > 0 || content.quotes.length > 0 || content.questionPoll?.questionPollQuestions || (content.medias && content.medias.length
   > 0)) {
-  <mat-card [id]="'post-' + content.id" class="p-3 m-2 mb-6 lg:mx-4 scalein wafrn-container">
+  <mat-card [id]="'post-' + content.id" class="p-3 pb-2 mb-2 lg:mx-4 scalein wafrn-container flex-shrink-0">
     <app-post-header [fragment]="content" [simplified]="false"></app-post-header>
     <app-post-fragment [selfManageCw]="true" [fragment]="content"></app-post-fragment>
   </mat-card>
   }
   @else {
-    <mat-card class="p-3 m-2 mb-6 lg:mx-4 scalein wafrn-container">
+    <mat-card class="p-3 pb-2 mb-2 lg:mx-4 scalein wafrn-container flex-shrink-0">
       <div class="flex">
         <app-avatar-small class="mr-2" [user]="content.user"></app-avatar-small> {{content.user.url}} rewooted <a class="ml-1" [routerLink]="'/forum/' + content.parentId"> this post</a>
       </div>
@@ -22,3 +29,8 @@
   }
 }
 </ng-container>
+
+<button [routerLink]="'/dashboard'" mat-flat-button color="default" aria-label="Go back to the dashboard"
+  style="position: fixed; z-index: 500; top: 1em; right: 0.5em">
+  <fa-icon [icon]="homeIcon" />
+</button>

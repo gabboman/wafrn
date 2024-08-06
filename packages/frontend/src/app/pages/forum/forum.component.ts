@@ -16,6 +16,10 @@ import { PostHeaderComponent } from "../../components/post/post-header/post-head
 import { PostComponent } from 'src/app/components/post/post.component';
 import { PostModule } from 'src/app/components/post/post.module';
 import { DashboardService } from 'src/app/services/dashboard.service';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { faHome } from '@fortawesome/free-solid-svg-icons';
+import { MatPaginatorModule } from '@angular/material/paginator';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-forum',
@@ -31,6 +35,8 @@ import { DashboardService } from 'src/app/services/dashboard.service';
     AvatarSmallComponent,
     PostHeaderComponent,
     PostModule,
+    FontAwesomeModule,
+    MatPaginatorModule
 ],
   templateUrl: './forum.component.html',
   styleUrl: './forum.component.scss',
@@ -45,6 +51,10 @@ export class ForumComponent implements OnDestroy {
   myId = '';
   notYetAcceptedFollows: string[] = [];
   followedUsers: string[] = [];
+  localUrl = environment.frontUrl;
+
+
+  homeIcon = faHome;
   constructor(
     private forumService: ForumService,
     private route: ActivatedRoute,
@@ -87,5 +97,13 @@ export class ForumComponent implements OnDestroy {
       block: "start",
       inline: "nearest"
       });
+    }
+
+    async loadRepliesFromFediverse() {
+      this.loading = true;
+      await this.postService.loadRepliesFromFediverse(
+        this.post[this.post.length - 1].id
+      );
+      this.forumPosts = (await this.forumService.getForumThread(this.post[this.post.length - 1].id));
     }
 }

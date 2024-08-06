@@ -40,7 +40,7 @@ export default function forumRoutes(app: Application) {
         const fullPostsToGet = await Post.findAll({
           where: {
             id: {
-              [Op.in]: postIds.concat([postId])
+              [Op.in]: [... new Set(postIds.concat([postId]))]
             },
             privacy: {
               [Op.ne]: 10
@@ -57,7 +57,7 @@ export default function forumRoutes(app: Application) {
               },
               {
                 privacy: {
-                  [Op.in]: [0, 2, 3]
+                  [Op.in]: req.jwtData?.userId ? [0, 2, 3] : [0, 2]
                 }
               }
             ]
