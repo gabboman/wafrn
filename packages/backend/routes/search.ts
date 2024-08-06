@@ -1,6 +1,6 @@
 import { Application, Response } from 'express'
 import { Op, Sequelize } from 'sequelize'
-import { Post, PostTag, User } from '../db'
+import { Emoji, Post, PostTag, User, UserEmojiRelation } from '../db'
 import { sequelize } from '../db'
 
 import getStartScrollParam from '../utils/getStartScrollParam'
@@ -147,18 +147,29 @@ export default function searchRoutes(app: Application) {
     users = await users
 
     const foundUsers = [...remoteUsers, ...localUsers, ...users]
-    const foundUsersWithEmojis = await Promise.all(
-      foundUsers.map(async (u) => {
-        const emojis = await getUserEmojis(u.id)
-        return {
-          ...u,
-          emojis
+    const userIds = foundUsers.map((u: any) => u.id)
+    const userEmojiIds = await UserEmojiRelation.findAll({
+      attributes: ['emojiId', 'userId'],
+      where: {
+        userId: {
+          [Op.in]: userIds
         }
-      })
-    )
+      }
+    })
+    const emojiIds = userEmojiIds.map((e: any) => e.emojiId)
+    const emojis = await Emoji.findAll({
+      attributes: ['id', 'url', 'external', 'name'],
+      where: {
+        id: {
+          [Op.in]: emojiIds
+        }
+      }
+    })
 
     res.send({
-      foundUsers: foundUsersWithEmojis,
+      emojis,
+      userEmojiIds,
+      foundUsers,
       posts: posts
     })
   })
