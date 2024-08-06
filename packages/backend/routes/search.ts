@@ -1,6 +1,6 @@
 import { Application, Response } from 'express'
 import { Op, Sequelize } from 'sequelize'
-import { Post, PostTag, User } from '../db'
+import { Emoji, Post, PostTag, User, UserEmojiRelation } from '../db'
 import { sequelize } from '../db'
 
 import getStartScrollParam from '../utils/getStartScrollParam'
@@ -17,6 +17,7 @@ import { getAllLocalUserIds } from '../utils/cacheGetters/getAllLocalUserIds'
 import { getallBlockedServers } from '../utils/cacheGetters/getAllBlockedServers'
 import { getUnjointedPosts } from '../utils/baseQueryNew'
 import getFollowedsIds from '../utils/cacheGetters/getFollowedsIds'
+import { getUserEmojis } from '../utils/cacheGetters/getUserEmojis'
 export default function searchRoutes(app: Application) {
   app.get('/api/v2/search/', optionalAuthentication, async (req: AuthorizedRequest, res: Response) => {
     // const success = false;
@@ -145,8 +146,30 @@ export default function searchRoutes(app: Application) {
     localUsers = await localUsers
     users = await users
 
+    const foundUsers = [...remoteUsers, ...localUsers, ...users]
+    const userIds = foundUsers.map((u: any) => u.id)
+    const userEmojiIds = await UserEmojiRelation.findAll({
+      attributes: ['emojiId', 'userId'],
+      where: {
+        userId: {
+          [Op.in]: userIds
+        }
+      }
+    })
+    const emojiIds = userEmojiIds.map((e: any) => e.emojiId)
+    const emojis = await Emoji.findAll({
+      attributes: ['id', 'url', 'external', 'name'],
+      where: {
+        id: {
+          [Op.in]: emojiIds
+        }
+      }
+    })
+
     res.send({
-      foundUsers: remoteUsers.concat(localUsers).concat(users),
+      emojis,
+      userEmojiIds,
+      foundUsers,
       posts: posts
     })
   })
