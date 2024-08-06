@@ -19,7 +19,7 @@ export class ForumService {
     processed = processed.filter(
       (post) => !this.postService.postContainsBlockedOrMuted(post, false)
     );
-    let result = processed.length ? processed.map(elem => elem[elem.length - 1]).concat([processed[0][0]]) : []
+    let result = processed.length ? processed.map(elem => elem[elem.length - 1]) : []
     result = result.sort((a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime() )
     return result;
   }
