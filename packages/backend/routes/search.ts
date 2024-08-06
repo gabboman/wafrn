@@ -17,6 +17,7 @@ import { getAllLocalUserIds } from '../utils/cacheGetters/getAllLocalUserIds'
 import { getallBlockedServers } from '../utils/cacheGetters/getAllBlockedServers'
 import { getUnjointedPosts } from '../utils/baseQueryNew'
 import getFollowedsIds from '../utils/cacheGetters/getFollowedsIds'
+import { getUserEmojis } from '../utils/cacheGetters/getUserEmojis'
 export default function searchRoutes(app: Application) {
   app.get('/api/v2/search/', optionalAuthentication, async (req: AuthorizedRequest, res: Response) => {
     // const success = false;
@@ -145,8 +146,19 @@ export default function searchRoutes(app: Application) {
     localUsers = await localUsers
     users = await users
 
+    const foundUsers = [...remoteUsers, ...localUsers, ...users]
+    const foundUsersWithEmojis = await Promise.all(
+      foundUsers.map(async (u) => {
+        const emojis = await getUserEmojis(u.id)
+        return {
+          ...u,
+          emojis
+        }
+      })
+    )
+
     res.send({
-      foundUsers: remoteUsers.concat(localUsers).concat(users),
+      foundUsers: foundUsersWithEmojis,
       posts: posts
     })
   })
