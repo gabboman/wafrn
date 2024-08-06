@@ -18,7 +18,7 @@ import { PostModule } from 'src/app/components/post/post.module';
 import { DashboardService } from 'src/app/services/dashboard.service';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faHome } from '@fortawesome/free-solid-svg-icons';
-import { MatPaginatorModule } from '@angular/material/paginator';
+import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
 import { environment } from 'src/environments/environment';
 
 @Component({
@@ -53,6 +53,10 @@ export class ForumComponent implements OnDestroy {
   followedUsers: string[] = [];
   localUrl = environment.frontUrl;
 
+  // local pagination
+  currentPage = 0;
+  itemsPerPage = 10;
+  
 
   homeIcon = faHome;
   constructor(
@@ -92,8 +96,8 @@ export class ForumComponent implements OnDestroy {
   unfollowUser(id: string) { }
 
   scrollTo(id: string) {
-    document.getElementById('post-' + id)?.scrollIntoView({
-      behavior: "smooth",
+    document.getElementById(id)?.scrollIntoView({
+      behavior: "instant",
       block: "start",
       inline: "nearest"
       });
@@ -105,5 +109,13 @@ export class ForumComponent implements OnDestroy {
         this.post[this.post.length - 1].id
       );
       this.forumPosts = (await this.forumService.getForumThread(this.post[this.post.length - 1].id));
+      this.itemsPerPage = 10;
+      this.currentPage = 0
+    }
+
+    changePage(event: PageEvent) {
+      this.scrollTo('scroll-here-on-page-change')
+      this.itemsPerPage = event.pageSize;
+      this.currentPage = event.pageIndex;
     }
 }
