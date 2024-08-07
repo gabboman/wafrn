@@ -24,7 +24,7 @@ export class AvatarSmallComponent implements OnInit {
       this.user.url.startsWith('@') ?
       this.user.avatar :
       environment.baseMediaUrl + this.user.avatar
-    )
+    ) + '&avatar=true'
   }
 
 
