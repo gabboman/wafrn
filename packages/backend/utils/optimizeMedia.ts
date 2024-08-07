@@ -7,11 +7,10 @@ const gm = require('gm')
 export default function optimizeMedia(inputPath: string): string {
   const fileAndExtension = inputPath.split('.')
   const originalExtension = fileAndExtension[1].toLowerCase()
-  fileAndExtension[1] = 'webp'
+  fileAndExtension[1] = 'avif'
   let outputPath = fileAndExtension.join('.')
   switch (originalExtension) {
     case 'pdf':
-    case 'webp':
       break
     case 'gif':
       // eslint-disable-next-line no-unused-vars
@@ -38,6 +37,7 @@ export default function optimizeMedia(inputPath: string): string {
     case 'm4a':
     case 'mov':
     case 'mkv':
+    case 'av1':
       fileAndExtension[1] = 'mp4'
       outputPath = fileAndExtension.join('.')
       // eslint-disable-next-line no-unused-vars
