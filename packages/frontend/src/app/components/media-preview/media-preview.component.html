@@ -8,7 +8,7 @@
 >
   <img
     alt="loading"
-    *ngIf="media.url.endsWith('webp')"
+    *ngIf="!media.url.endsWith('mp4')"
     style="max-height: 25vh; max-width: 100%"
     [src]="elemUrl"
     (error)="imageLoadFailed($event)"
