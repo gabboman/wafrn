@@ -29,8 +29,8 @@ export default function optimizeMedia(inputPath: string): string {
       outputPath = fileAndExtension.join('.')
       // eslint-disable-next-line no-unused-vars
       new FfmpegCommand(inputPath)
-        //.videoCodec('vp9')
-        .audioCodec('aac')
+        .videoCodec('vp9')
+        .audioCodec('opus')
         .save(outputPath)
         .on('end', () => {
           try {
