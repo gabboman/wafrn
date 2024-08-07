@@ -10,12 +10,13 @@ export default function optimizeMedia(inputPath: string): string {
   fileAndExtension[1] = 'avif'
   let outputPath = fileAndExtension.join('.')
   switch (originalExtension) {
+    case 'webm':
+      fileAndExtension[1] = 'webm'
+    // eslint-disable-next-line no-fallthrough
     case 'pdf':
       break
-    case 'mp4':
-      fileAndExtension[0] = `${fileAndExtension[0]}_processed`
     // eslint-disable-next-line no-fallthrough
-    case 'webm':
+    case 'mp4':
     case 'ogg':
     case 'aac':
     case 'mp3':
