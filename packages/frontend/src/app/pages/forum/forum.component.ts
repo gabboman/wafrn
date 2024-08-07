@@ -55,7 +55,7 @@ export class ForumComponent implements OnDestroy {
 
   // local pagination
   currentPage = 0;
-  itemsPerPage = 10;
+  itemsPerPage = 50;
   
 
   homeIcon = faHome;
@@ -109,8 +109,9 @@ export class ForumComponent implements OnDestroy {
         this.post[this.post.length - 1].id
       );
       this.forumPosts = (await this.forumService.getForumThread(this.post[this.post.length - 1].id));
-      this.itemsPerPage = 10;
-      this.currentPage = 0
+      this.itemsPerPage = 50;
+      this.currentPage = 0;
+      this.loading = false;
     }
 
     changePage(event: PageEvent) {
