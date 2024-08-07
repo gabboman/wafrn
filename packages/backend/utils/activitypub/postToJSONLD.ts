@@ -25,34 +25,18 @@ async function postToJSONLD(postId: string) {
   const conversationString = `${environment.frontendUrl}/fediverse/conversation/${post.id}`
 
   if (post.parentId) {
-    let dbPost = post.parent
+    let dbPost = (await getPostAndUserFromPostId(post.parentId)).data
     while (
       dbPost &&
       dbPost.content === '' &&
       dbPost.hierarchyLevel !== 0 &&
       dbPost.postTags.length == 0 &&
       dbPost.medias.length == 0 &&
-      dbPost.quoted.length == 0 &&
-      dbPost.content_warning == 0
+      dbPost.quoted.length == 0 && // fix this this is still dirty
+      dbPost.content_warning.length == 0
     ) {
       // TODO optimize this
-      const tmpPost = await Post.findByPk(dbPost.parentId, {
-        include: [
-          {
-            model: Media,
-            required: false
-          },
-          {
-            model: PostTag,
-            required: false
-          },
-          {
-            model: Post,
-            as: 'quoted',
-            required: false
-          }
-        ]
-      })
+      const tmpPost = (await getPostAndUserFromPostId(post.parentId)).data
       dbPost = tmpPost
     }
     parentPostString = dbPost?.remotePostId
