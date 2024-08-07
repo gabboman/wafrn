@@ -78,6 +78,9 @@ export default function postsRoutes(app: Application) {
     }
   )
 
+  /**
+ * @deprecated We recomend instead using the forum endpoint. This method will not recive maintenance
+ */
   app.get(
     '/api/v2/descendents/:id',
     optionalAuthentication,
@@ -116,7 +119,9 @@ export default function postsRoutes(app: Application) {
                     }
                   },
                   {
-                    privacy: 0
+                    privacy: {
+                      [Op.in]: [0, 2, 3]
+                    }
                   }
                 ]
               }
