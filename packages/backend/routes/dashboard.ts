@@ -72,7 +72,10 @@ export default function dashboardRoutes(app: Application) {
         }
         case 0: {
           whereObject = {
-            privacy: 0
+            privacy: 0,
+            content: {
+              [Op.ne]: ''
+            }
           }
           break
         }
