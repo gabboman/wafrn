@@ -8,7 +8,7 @@
     <img
     #wafrnMedia
     *ngIf="
-      extensionsToHideImgTag.includes(extension) ||
+      (!extensionsToHideImgTag.includes(extension)) ||
       mimeType === 'UNKNOWN'
     "
     [src]="displayUrl"

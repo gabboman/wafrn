@@ -12,20 +12,6 @@ export default function optimizeMedia(inputPath: string): string {
   switch (originalExtension) {
     case 'pdf':
       break
-    /*case 'gif':
-      // eslint-disable-next-line no-unused-vars
-      new FfmpegCommand(inputPath)
-        .addOption('-loop', '0')
-        .save(outputPath)
-        .on('end', () => {
-          try {
-            fs.unlinkSync(inputPath, () => {})
-          } catch (exc) {
-            logger.warn(exc)
-          }
-        })
-      break
-    */
     case 'mp4':
       fileAndExtension[0] = `${fileAndExtension[0]}_processed`
     // eslint-disable-next-line no-fallthrough
@@ -39,11 +25,11 @@ export default function optimizeMedia(inputPath: string): string {
     case 'mov':
     case 'mkv':
     case 'av1':
-      fileAndExtension[1] = 'mp4'
+      fileAndExtension[1] = 'webm'
       outputPath = fileAndExtension.join('.')
       // eslint-disable-next-line no-unused-vars
       new FfmpegCommand(inputPath)
-        .videoCodec('libx264')
+        //.videoCodec('vp9')
         .audioCodec('aac')
         .save(outputPath)
         .on('end', () => {
