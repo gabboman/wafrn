@@ -12,7 +12,7 @@ export default function optimizeMedia(inputPath: string): string {
   switch (originalExtension) {
     case 'pdf':
       break
-    case 'gif':
+    /*case 'gif':
       // eslint-disable-next-line no-unused-vars
       new FfmpegCommand(inputPath)
         .addOption('-loop', '0')
@@ -25,6 +25,7 @@ export default function optimizeMedia(inputPath: string): string {
           }
         })
       break
+    */
     case 'mp4':
       fileAndExtension[0] = `${fileAndExtension[0]}_processed`
     // eslint-disable-next-line no-fallthrough
