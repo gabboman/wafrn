@@ -33,7 +33,6 @@
       "updateMode": "prefetch",
       "resources": {
         "files": [
-          "/assets/**",
           "/*.(svg|cur|jpg|jpeg|png|apng|webp|avif|gif|otf|ttf|woff|woff2)"
         ]
       }
@@ -45,7 +44,7 @@
       "urls": ["https://api.wafrn.net/**"],
       "cacheConfig": {
         "strategy": "freshness",
-        "maxSize": 10,
+        "maxSize": 1,
         "maxAge": "1s",
         "timeout": "3000s"
       }
@@ -63,7 +62,7 @@
       ],
       "cacheConfig": {
         "strategy": "performance",
-        "maxSize": 500,
+        "maxSize": 850,
         "maxAge": "3d",
         "timeout": "30s"
       }
