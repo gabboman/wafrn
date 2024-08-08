@@ -10,11 +10,11 @@ export default function optimizeMedia(inputPath: string): string {
   fileAndExtension[1] = 'avif'
   let outputPath = fileAndExtension.join('.')
   switch (originalExtension) {
-    case 'webm':
-      fileAndExtension[1] = 'webm'
-    // eslint-disable-next-line no-fallthrough
     case 'pdf':
       break
+    // eslint-disable-next-line no-fallthrough
+    case 'webm':
+      fileAndExtension[0] = fileAndExtension[0] + '_processed'
     // eslint-disable-next-line no-fallthrough
     case 'mp4':
     case 'ogg':
@@ -26,12 +26,12 @@ export default function optimizeMedia(inputPath: string): string {
     case 'mov':
     case 'mkv':
     case 'av1':
-      fileAndExtension[1] = 'webm'
+      fileAndExtension[1] = 'mp4'
       outputPath = fileAndExtension.join('.')
       // eslint-disable-next-line no-unused-vars
       new FfmpegCommand(inputPath)
-        //.videoCodec('vp9')
-        .audioCodec('opus')
+        .videoCodec('x264')
+        .audioCodec('aac')
         .save(outputPath)
         .on('end', () => {
           try {
