@@ -3,18 +3,20 @@ import { User, Mutes } from '../db'
 import { authenticateToken } from '../utils/authenticateToken'
 import { logger } from '../utils/logger'
 import AuthorizedRequest from '../interfaces/authorizedRequest'
+import { redisCache } from '../utils/redis'
 
 export default function muteRoutes(app: Application) {
   app.post('/api/mute', authenticateToken, async (req: AuthorizedRequest, res: Response) => {
     let success = false
     try {
-      const posterId = req.jwtData?.userId
+      const posterId = req.jwtData?.userId as string
       const userMuter = await User.findByPk(posterId)
       if (req.body?.userId && req.body.userId != req.jwtData?.userId) {
         const userToBeMuted = await User.findByPk(req.body.userId)
         if (userToBeMuted) {
           userToBeMuted.addMuter(userMuter)
         }
+        await redisCache.del('mutedUsers:' + posterId)
         success = true
       }
     } catch (error) {
@@ -33,6 +35,8 @@ export default function muteRoutes(app: Application) {
       const userUnmuted = await User.findByPk(req.body.userId)
       userUnmuted.removeMuter(posterId)
       success = true
+      await redisCache.del('mutedUsers:' + posterId)
+
     }
     res.send({
       success
