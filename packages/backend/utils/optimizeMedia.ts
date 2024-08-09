@@ -6,11 +6,12 @@ const sharp = require("sharp");
 const fs = require('fs')
 const FfmpegCommand = require('fluent-ffmpeg')
 const gm = require('gm')
-export default async function optimizeMedia(inputPath: string): Promise<string> {
-  const fileAndExtension = inputPath.split('.')
+export default async function optimizeMedia(inputPath: string, options? : {outPath?: string, maxSize?: number, keep?: boolean}): Promise<string> {
+  const fileAndExtension = options?.outPath ? [options.outPath, ''] : inputPath.split('.')
   const originalExtension = fileAndExtension[1].toLowerCase()
   fileAndExtension[1] = 'avif'
   let outputPath = fileAndExtension.join('.')
+  const doNotDelete = options?.keep ? options.keep : false;
   switch (originalExtension) {
     case 'pdf':
       break
@@ -51,10 +52,17 @@ export default async function optimizeMedia(inputPath: string): Promise<string> 
         fileAndExtension[1] = 'webp'
         outputPath = fileAndExtension.join('.')
       }
-      await sharp(inputPath, { animated: true })
+
+      let conversion = await sharp(inputPath, { animated: true })
         .rotate()
-        .toFile(outputPath)
+        //.toFile(outputPath)
+        if(options?.maxSize) {
+          await conversion.resize(options.maxSize, options.maxSize)
+        }
+        await conversion.toFile(outputPath)
+      if(!doNotDelete) {
         fs.unlinkSync(inputPath)
+      }
   }
   return outputPath
 }
