@@ -5,6 +5,8 @@ img, video {
 
 .nsfw {
   filter: grayscale(1) contrast(0%);
+  background-color: grey;
+
 }
 
 .displayed-image {
@@ -14,6 +16,7 @@ img, video {
 @keyframes slideIn {
   from {
     filter: grayscale(1) contrast(0%);
+    background-color: grey;
   }
 }
 
