@@ -21,13 +21,13 @@ async function start() {
   const users = await User.findAll()
   for (const media of medias) {
     if (media.url.indexOf('//') === -1) {
-      const newUrl = optimizeMedia(`uploads${media.url}`)
+      const newUrl = await optimizeMedia(`uploads${media.url}`)
       media.url = newUrl.slice(7)
       await media.save()
     }
   }
   for (const user of users) {
-    const newAvatar = optimizeMedia(`uploads${user.avatar}`)
+    const newAvatar = await optimizeMedia(`uploads${user.avatar}`)
     user.avatar = newAvatar.slice(7)
     await user.save()
   }

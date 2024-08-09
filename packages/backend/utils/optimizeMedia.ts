@@ -1,10 +1,12 @@
 import { logger } from './logger'
 
+const sharp = require("sharp");
+
 /* eslint-disable max-len */
 const fs = require('fs')
 const FfmpegCommand = require('fluent-ffmpeg')
 const gm = require('gm')
-export default function optimizeMedia(inputPath: string): string {
+export default async function optimizeMedia(inputPath: string): Promise<string> {
   const fileAndExtension = inputPath.split('.')
   const originalExtension = fileAndExtension[1].toLowerCase()
   fileAndExtension[1] = 'avif'
@@ -44,23 +46,15 @@ export default function optimizeMedia(inputPath: string): string {
         })
       break
     default:
-      gm(inputPath)
-        .autoOrient()
-        .quality(90)
-        .noProfile()
-        .write(outputPath, (err: any) => {
-          if (!err) {
-            try {
-              fs.unlinkSync(inputPath, () => {
-                logger.trace('media converted')
-              })
-            } catch (exc) {
-              logger.warn(exc)
-            }
-          } else {
-            logger.info(err)
-          }
-        })
+      const metadata = await sharp(inputPath).metadata();
+      if(metadata.delay) {
+        fileAndExtension[1] = 'webp'
+        outputPath = fileAndExtension.join('.')
+      }
+      await sharp(inputPath, { animated: true })
+        .rotate()
+        .toFile(outputPath)
+        fs.unlinkSync(inputPath)
   }
   return outputPath
 }
