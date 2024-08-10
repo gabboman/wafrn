@@ -600,6 +600,29 @@ const PostHostView = sequelize.define('postHostView', {})
 
 const RemoteUserPostView = sequelize.define('remoteUserPostView', {})
 
+
+
+const Ask = sequelize.define('asks', {
+  question: Sequelize.TEXT,
+  apObject: Sequelize.TEXT,
+  creationIp: Sequelize.STRING,
+
+})
+
+Post.hasOne(Ask)
+Ask.belongsTo(Post)
+User.hasMany(Ask, {
+  as: 'userAsker',
+  foreignKey: 'userAsked'
+})
+User.hasMany(Ask, {
+  as: 'userAsked',
+  foreignKey: 'userAsker'
+})
+
+
+
+
 Post.hasOne(QuestionPoll)
 QuestionPoll.belongsTo(Post)
 QuestionPoll.hasMany(QuestionPollQuestion, { onDelete: 'cascade' })
@@ -871,5 +894,6 @@ export {
   PostMediaRelations,
   Quotes,
   PostHostView,
-  RemoteUserPostView
+  RemoteUserPostView,
+  Ask
 }

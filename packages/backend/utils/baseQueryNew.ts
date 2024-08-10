@@ -1,5 +1,6 @@
 import { Op } from 'sequelize'
 import {
+  Ask,
   Emoji,
   EmojiReaction,
   Media,
@@ -178,7 +179,18 @@ async function getUnjointedPosts(postIdsInput: string[], posterId: string) {
       }
     }
   })
-  userIds = userIds.concat(quotedPosts.map((q: any) => q.userId))
+  const asks = await Ask.findAll({
+    attributes: [
+      'question', 'apObject', 'createdAt', 'updatedAt', 'postId', 'userAsked', 'userAsker'
+    ],
+    where: {
+      postId: {
+        [Op.in]: postIds
+      }
+    }
+  })
+  
+  userIds = userIds.concat(quotedPosts.map((q: any) => q.userId)).concat(asks.map((elem: any) => elem.userAsked )).concat(asks.map((elem: any) => elem.userAsker ))
   const emojis = getEmojis({
     userIds,
     postIds
@@ -260,7 +272,8 @@ async function getUnjointedPosts(postIdsInput: string[], posterId: string) {
     tags: tagsFiltered,
     likes: likes,
     quotes: quotesFiltered,
-    quotedPosts: (await quotedPosts).map((elem: any) => filterPost(elem, postIdsToFullySend))
+    quotedPosts: (await quotedPosts).map((elem: any) => filterPost(elem, postIdsToFullySend)),
+    asks: asks
   }
 }
 
