@@ -5,6 +5,7 @@
         {
             "Emoji": "toot:Emoji",
             "Hashtag": "as:Hashtag",
+            "WafrnHashtag":"as:WafrnHashtag",
             "PropertyValue": "schema:PropertyValue",
             "atomUri": "ostatus:atomUri",
             "conversation": {
