@@ -77,15 +77,24 @@ function getCheckFediverseSignatureFucnction(force = false) {
           next()
           return
         } else {
-          res.set('Retry-After', '25')
-          if (req.body.type != 'Delete') {
-            logger.debug({
-              message: `Problem finding user for signature`,
-              url: req.url,
-              body: req.method == 'POST' ? req.body : `GET petition`,
-            })
+          // ok you cornered me. forced to fetch the remote actor
+          const tmpUser = await getRemoteActor(remoteUserUrl, adminUser)
+          remoteKey = await getKey(remoteUserUrl, await adminUser)
+          if(remoteKey) {
+            remoteKey = remoteKey.key
           }
-          return res.sendStatus(429)
+          if(!tmpUser || !remoteKey) {
+            res.set('Retry-After', '25')
+            if (req.body.type != 'Delete') {
+              logger.debug({
+                message: `Problem finding user for signature`,
+                url: req.url,
+                body: req.method == 'POST' ? req.body : `GET petition`,
+              })
+            }
+            return res.sendStatus(429)
+          }
+
         }
       }
       success =
