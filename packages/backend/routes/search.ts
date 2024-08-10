@@ -19,7 +19,7 @@ import { getUnjointedPosts } from '../utils/baseQueryNew'
 import getFollowedsIds from '../utils/cacheGetters/getFollowedsIds'
 import { getUserEmojis } from '../utils/cacheGetters/getUserEmojis'
 export default function searchRoutes(app: Application) {
-  app.get('/api/v2/search/', optionalAuthentication, async (req: AuthorizedRequest, res: Response) => {
+  app.get('/api/v2/search/', authenticateToken, async (req: AuthorizedRequest, res: Response) => {
     // const success = false;
     // eslint-disable-next-line max-len
     const searchTerm: string = (req.query.term || '').toString().toLowerCase().trim()
