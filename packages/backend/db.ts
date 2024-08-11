@@ -233,13 +233,22 @@ const UserOptions = sequelize.define(
       allowNull: false,
       primaryKey: true
     },
-    optionValue: Sequelize.TEXT
+    optionValue: Sequelize.TEXT,
+    public: {
+      type: Sequelize.BOOLEAN,
+      allowNull: true,
+      defaultValue: false
+    }
   },
   {
     indexes: [
       {
         unique: true,
         fields: ['userId', 'optionName']
+      },
+      {
+        unique: false,
+        fields: ['userId']
       }
     ]
   }
