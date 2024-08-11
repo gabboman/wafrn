@@ -82,7 +82,7 @@ export default function searchRoutes(app: Application) {
             }
           ]
         },
-        attributes: ['url', 'avatar', 'id', 'remoteId', 'description']
+        attributes: ['name', 'url', 'avatar', 'id', 'remoteId', 'description']
       })
       users = User.findAll({
         limit: environment.postsPerPage,
@@ -102,7 +102,7 @@ export default function searchRoutes(app: Application) {
             }
           ]
         },
-        attributes: ['url', 'avatar', 'id', 'remoteId', 'description']
+        attributes: ['name', 'url', 'avatar', 'id', 'remoteId', 'description']
       })
       promises.push(users)
       promises.push(localUsers)
