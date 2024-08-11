@@ -84,7 +84,6 @@ function getCheckFediverseSignatureFucnction(force = false) {
             remoteKey = remoteKey.key
           }
           if(!tmpUser || !remoteKey) {
-            res.set('Retry-After', '25')
             if (req.body.type != 'Delete') {
               logger.debug({
                 message: `Problem finding user for signature`,
@@ -92,7 +91,10 @@ function getCheckFediverseSignatureFucnction(force = false) {
                 body: req.method == 'POST' ? req.body : `GET petition`,
               })
             }
-            return res.sendStatus(429)
+            if(force){
+              res.set('Retry-After', '25')
+              return res.sendStatus(429)
+            }
           }
 
         }
