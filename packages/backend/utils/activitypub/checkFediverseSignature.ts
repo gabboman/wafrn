@@ -127,6 +127,7 @@ function getCheckFediverseSignatureFucnction(force = false) {
       }
     } catch (error: any) {
       req.fediData = { fediHost: hostUrl, valid: false }
+      await getRemoteActor(remoteUserUrl, await adminUser, true)
       if (force) {
         success = false
         logger.debug({
