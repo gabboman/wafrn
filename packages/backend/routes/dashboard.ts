@@ -53,7 +53,7 @@ export default function dashboardRoutes(app: Application) {
               },
               {
                 privacy: {
-                  [Op.in]: [0, 2, 3]
+                  [Op.in]: req.jwtData?.userId ? [0, 2, 3] : [0] // only display public if not logged in
                 },
                 userId: {
                   [Op.in]: await nonFollowedUsers
