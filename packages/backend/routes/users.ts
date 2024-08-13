@@ -467,6 +467,7 @@ export default function userRoutes(app: Application) {
           'id',
           'url',
           'name',
+          'createdAt',
           'description',
           'remoteId',
           'avatar',
