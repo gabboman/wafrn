@@ -9,6 +9,7 @@ import {
   PostMentionsUserRelation,
   User,
   UserLikesPostRelations,
+  UserOptions,
   sequelize
 } from '../../db'
 import { environment } from '../../environment'
@@ -19,6 +20,7 @@ import { processUserEmojis } from '../activitypub/processUserEmojis'
 import { fediverseTag } from '../../interfaces/fediverse/tags'
 import { logger } from '../logger'
 import { redisCache } from '../redis'
+import { Op } from 'sequelize'
 
 // This function will return userid after processing it.
 async function getRemoteActorIdProcessor(job: Job) {
@@ -230,6 +232,25 @@ async function getRemoteActorIdProcessor(job: Job) {
           } else {
             userRes = await User.create(userData)
           }
+        }
+        if(userRes && userRes.id && userRes.url != environment.deletedUser && userPetition && userPetition.attachment && userPetition.attachment.length) {
+          await UserOptions.destroy({
+            where: {
+              userId: userRes.id,
+              optionName: {
+                [Op.like]: 'fediverse.public.attachment.%'
+              }
+            }
+          })
+          const properties = userPetition.attachment.filter((elem: any) => elem.type === "PropertyValue")
+          await UserOptions.bulkCreate(properties.map((property: any) => {
+            return {
+              userId: userRes.id,
+              optionName: `fediverse.public.attachment.${property.name}`,
+              optionValue: property.value,
+              public: true
+            }
+          }))
         }
         res = userRes?.id ? userRes.id : await getDeletedUser()
         try {
