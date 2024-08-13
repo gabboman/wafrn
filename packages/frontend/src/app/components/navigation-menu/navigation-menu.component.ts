@@ -67,6 +67,7 @@ export class NavigationMenuComponent implements OnInit, OnDestroy {
   loginSubscription: Subscription;
   scrollSubscription: Subscription;
   hamburguerIcon = faBars;
+  pencilIcon = faPencil;
   constructor(
     private editorService: EditorService,
     private router: Router,
