@@ -238,19 +238,17 @@ async function getRemoteActorIdProcessor(job: Job) {
             where: {
               userId: userRes.id,
               optionName: {
-                [Op.like]: 'fediverse.public.attachment.%'
+                [Op.like]: 'fediverse.public.attachment'
               }
             }
           })
           const properties = userPetition.attachment.filter((elem: any) => elem.type === "PropertyValue")
-          await UserOptions.bulkCreate(properties.map((property: any) => {
-            return {
-              userId: userRes.id,
-              optionName: `fediverse.public.attachment.${property.name}`,
-              optionValue: property.value,
-              public: true
-            }
-          }))
+          await UserOptions.create({
+            userId: userRes.id,
+            optionName: `fediverse.public.attachment`,
+            optionValue: JSON.stringify(properties),
+            public: true
+          })
         }
         res = userRes?.id ? userRes.id : await getDeletedUser()
         try {
