@@ -157,6 +157,10 @@ export default function postsRoutes(app: Application) {
           urlToLower: (id as string).toLowerCase()
         }
       })
+      if(blog.url.startsWith('@') && !req.jwtData?.userId) {
+        // require auth to see external user blog
+        return res.sendStatus(403)
+      }
       const blogId = blog?.id
       if (blogId) {
         const privacyArray = [0, 2, 3]

@@ -96,7 +96,7 @@ function activityPubRoutes(app: Application) {
               ? {
                   icon: {
                     type: 'Image',
-                    mediaType: 'image/webp',
+                    mediaType: 'image/avif',
                     url: environment.mediaUrl + user.avatar
                   }
                 }
@@ -105,7 +105,7 @@ function activityPubRoutes(app: Application) {
               ? {
                   image: {
                     type: 'Image',
-                    mediaType: 'image/webp',
+                    mediaType: 'image/avif',
                     url: environment.mediaUrl + user.headerImage
                   }
                 }
@@ -149,13 +149,24 @@ function activityPubRoutes(app: Application) {
             return
           }
           const followedUsers = await getFollowedRemoteIds(user.id)
-          const response = {
-            '@context': 'https://www.w3.org/ns/activitystreams',
-            id: `${environment.frontendUrl}/fediverse/blog/${user.url.toLowerCase()}/following`,
-            type: 'OrderedCollection',
-            totalItems: followedUsers.length,
-            partOf: `${environment.frontendUrl}/fediverse/blog/${user.url.toLowerCase()}/following`,
-            orderedItems: followedUsers
+          let response: any;
+          if(req.params?.page) {
+            response = {
+              '@context': 'https://www.w3.org/ns/activitystreams',
+              id: `${environment.frontendUrl}/fediverse/blog/${user.url.toLowerCase()}/following?page=${req.params.page}`,
+              type: 'OrderedCollectionPage',
+              partOf: `${environment.frontendUrl}/fediverse/blog/${user.url.toLowerCase()}/following`,
+              orderedItems: followedUsers
+            }
+          } else {
+            response = {
+              '@context': 'https://www.w3.org/ns/activitystreams',
+              id: `${environment.frontendUrl}/fediverse/blog/${user.url.toLowerCase()}/following`,
+              type: 'OrderedCollection',
+              totalItems: followedUsers.length,
+              partOf: `${environment.frontendUrl}/fediverse/blog/${user.url.toLowerCase()}/following`,
+              first: `${environment.frontendUrl}/fediverse/blog/${user.url.toLowerCase()}/following?page=1`
+            }
           }
           res.set({
             'content-type': 'application/activity+json'
@@ -188,15 +199,24 @@ function activityPubRoutes(app: Application) {
             return
           }
           const followers = await getFollowerRemoteIds(user.id)
-
           const followersNumber = followers.length
-          let response: any = {
-            '@context': 'https://www.w3.org/ns/activitystreams',
-            id: `${environment.frontendUrl}/fediverse/blog/${user.url.toLowerCase()}/followers`,
-            type: 'OrderedCollectionPage',
-            totalItems: followersNumber,
-            orderedItems: followers,
-            first: `${environment.frontendUrl}/fediverse/blog/${user.url.toLowerCase()}/followers?page=1`
+          let response;
+          if(req.query?.page) {
+            response = {
+                '@context': 'https://www.w3.org/ns/activitystreams',
+                id: `${environment.frontendUrl}/fediverse/blog/${user.url.toLowerCase()}/followers?page=${req.params.page}`,
+                type: 'OrderedCollectionPage',
+                orderedItems: followers,
+                totalItems: followersNumber,
+            }
+          } else {
+            response = {
+              '@context': 'https://www.w3.org/ns/activitystreams',
+              id: `${environment.frontendUrl}/fediverse/blog/${user.url.toLowerCase()}/followers`,
+              type: 'OrderedCollection',
+              totalItems: followersNumber,
+              first: `${environment.frontendUrl}/fediverse/blog/${user.url.toLowerCase()}/followers?page=1`
+            }
           }
           res.set({
             'content-type': 'application/activity+json'

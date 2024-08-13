@@ -44,20 +44,6 @@ async function getPetitionSigned(user: any, target: string): Promise<any> {
       Signature: header
     }
     const axiosResponse = await axios.get(url.href, { headers: headers })
-    /*
-    const contentType = axiosResponse.headers['Content-Type']?.toString().toLowerCase()
-    if (
-      !contentType ||
-      !(
-        contentType.includes('application/jrd+json') ||
-        contentType.includes('application/activity+json') ||
-        contentType.includes('application/ld+json')
-      )
-    ) {
-      logger.debug(`url ${target}, Invalid content type: ${contentType}`)
-      throw new Error(`Invalid content type: ${contentType}`)
-    }
-    */
     if (axiosResponse?.headers['content-type']?.includes('text/html')) {
       logger.trace('Petition returned HTML. throwing exception')
       throw new Error('Invalid content type')

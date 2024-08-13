@@ -300,6 +300,7 @@ export class NavigationMenuComponent implements OnInit, OnDestroy {
         label: 'Search',
         title: 'Search',
         icon: faSearch,
+        visible: this.jwtService.tokenValid(),
         command: () => {
           this.hideMenu();
         },

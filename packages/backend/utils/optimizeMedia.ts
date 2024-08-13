@@ -15,11 +15,9 @@ export default async function optimizeMedia(inputPath: string, options? : {outPa
   switch (originalExtension) {
     case 'pdf':
       break
-    // eslint-disable-next-line no-fallthrough
-    case 'webm':
-      fileAndExtension[0] = fileAndExtension[0] + '_processed'
-    // eslint-disable-next-line no-fallthrough
     case 'mp4':
+      fileAndExtension[0] = fileAndExtension[0] + '_processed'
+    case 'webm':
     case 'ogg':
     case 'aac':
     case 'mp3':
@@ -33,7 +31,7 @@ export default async function optimizeMedia(inputPath: string, options? : {outPa
       outputPath = fileAndExtension.join('.')
       // eslint-disable-next-line no-unused-vars
       new FfmpegCommand(inputPath)
-        .videoCodec('x264')
+        .videoCodec('libx264')
         .audioCodec('aac')
         .save(outputPath)
         .on('end', () => {
