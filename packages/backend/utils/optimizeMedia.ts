@@ -31,7 +31,7 @@ export default async function optimizeMedia(inputPath: string, options? : {outPa
       outputPath = fileAndExtension.join('.')
       // eslint-disable-next-line no-unused-vars
       new FfmpegCommand(inputPath)
-        .videoCodec('x264')
+        .videoCodec('libx264')
         .audioCodec('aac')
         .save(outputPath)
         .on('end', () => {
