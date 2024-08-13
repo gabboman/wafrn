@@ -145,7 +145,7 @@ async function postToJSONLD(postId: string) {
           const extension = media.url.split('.')[media.url.split('.').length - 1].toLowerCase()
           return {
             type: 'Document',
-            mediaType: extension === 'mp4' ? 'video/mp4' : 'image/webp',
+            mediaType: extension === 'mp4' ? 'video/mp4' : 'image/avif',
             url: environment.mediaUrl + media.url,
             sensitive: media.NSFW ? true : false,
             name: media.description
