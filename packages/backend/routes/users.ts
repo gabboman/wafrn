@@ -512,6 +512,12 @@ export default function userRoutes(app: Application) {
               accepted: true
             }
           })
+      const publicOptions = UserOptions.findAll({
+        where: {
+          userId: blog.id,
+          public: true
+        }
+      })
       let muted = false
       let blocked = false
       let serverBlocked = false || blog?.federatedHost?.blocked
@@ -534,7 +540,7 @@ export default function userRoutes(app: Application) {
             blockedServerId: blog.federatedHostId
           }
         })
-        await Promise.all([mutedQuery, blockedQuery, serverBlockedQuery, followed, followers])
+        await Promise.all([mutedQuery, blockedQuery, serverBlockedQuery, followed, followers, publicOptions])
         muted = (await mutedQuery) === 1
         blocked = (await blockedQuery) === 1
         serverBlocked = serverBlocked || (await serverBlockedQuery) === 1
@@ -546,7 +552,7 @@ export default function userRoutes(app: Application) {
       followers = await followers
       success = blog
       if (success) {
-        res.send({ ...blog.dataValues, muted, blocked, serverBlocked, followed, followers })
+        res.send({ ...blog.dataValues, muted, blocked, serverBlocked, followed, followers, publicOptions: await publicOptions })
       }
     }
 
