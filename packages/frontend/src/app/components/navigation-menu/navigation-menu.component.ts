@@ -71,7 +71,7 @@ export class NavigationMenuComponent implements OnInit, OnDestroy {
   constructor(
     private editorService: EditorService,
     private router: Router,
-    private jwtService: JwtService,
+    public jwtService: JwtService,
     private loginService: LoginService,
     private notificationsService: NotificationsService,
     private cdr: ChangeDetectorRef,
