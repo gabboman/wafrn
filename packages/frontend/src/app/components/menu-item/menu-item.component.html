@@ -5,7 +5,7 @@
     class="menu-item-icon" *ngIf="item.icon">
     <fa-icon [icon]="item.icon"></fa-icon>
   </span>
-  <span class="ml-3 mr-1">{{ item.label }}</span>
+  <span class="ml-3 mr-1 menu-item-content">{{ item.label }}</span>
   <span class="menu-item-icon">
     <fa-icon size="xs" [icon]="expanded ? chevronUp : chevronDown"></fa-icon>
   </span>
@@ -24,7 +24,7 @@
       class="menu-item-icon" *ngIf="item.icon">
       <fa-icon [icon]="item.icon"></fa-icon>
     </span>
-    <span class="ml-3">{{ item.label }}</span>
+    <span class="ml-3 menu-item-content">{{ item.label }}</span>
   </div>
 </a>
 }
