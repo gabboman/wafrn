@@ -16,10 +16,10 @@ import { LdSignature } from './rsa2017'
 const adminUser = environment.forceSync
   ? null
   : User.findOne({
-      where: {
-        url: environment.adminUser
-      }
-    })
+    where: {
+      url: environment.adminUser
+    }
+  })
 
 function getCheckFediverseSignatureFucnction(force = false) {
   return async function checkFediverseSignature(req: SignedRequest, res: Response, next: NextFunction) {
@@ -63,16 +63,23 @@ function getCheckFediverseSignatureFucnction(force = false) {
       } else {
         // we check for deleted users
         if (
-          req.method === 'POST' &&
-          req.body.type == 'Delete' &&
-          req.body.actor == req.body.object &&
-          req.body.actor == remoteUserUrl
+          !force || (
+            req.method === 'POST' &&
+            req.body.type == 'Delete' &&
+            req.body.actor == req.body.object &&
+            req.body.actor == remoteUserUrl
+          )
         ) {
           // well, this is a "delete this user". We should process this ASAP
           req.fediData = {
             fediHost: hostUrl,
             remoteUserUrl: remoteUserUrl,
-            valid: true
+            valid: !force || (
+              req.method === 'POST' &&
+              req.body.type == 'Delete' &&
+              req.body.actor == req.body.object &&
+              req.body.actor == remoteUserUrl
+            )
           }
           next()
           return
@@ -80,10 +87,10 @@ function getCheckFediverseSignatureFucnction(force = false) {
           // ok you cornered me. forced to fetch the remote actor
           const tmpUser = await getRemoteActor(remoteUserUrl, adminUser)
           remoteKey = await getKey(remoteUserUrl, await adminUser)
-          if(remoteKey) {
+          if (remoteKey) {
             remoteKey = remoteKey.key
           }
-          if(!tmpUser || !remoteKey) {
+          if (!tmpUser || !remoteKey) {
             if (req.body.type != 'Delete') {
               logger.debug({
                 message: `Problem finding user for signature`,
@@ -91,7 +98,7 @@ function getCheckFediverseSignatureFucnction(force = false) {
                 body: req.method == 'POST' ? req.body : `GET petition`,
               })
             }
-            if(force){
+            if (force) {
               res.set('Retry-After', '25')
               return res.sendStatus(429)
             }
@@ -116,7 +123,7 @@ function getCheckFediverseSignatureFucnction(force = false) {
               error: error
             })
           }))
-          
+
         }
       }
 
