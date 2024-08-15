@@ -109,12 +109,12 @@ export class NotificationsService {
       this.quotesDate = new Date()
     }
     let petitionData: HttpParams = new HttpParams();
-    petitionData = petitionData.set('likesDate', this.likesDate.toString())
-    petitionData = petitionData.set('followsDate', this.followsDate.toString())
-    petitionData = petitionData.set('reblogsDate', this.reblogsDate.toString())
-    petitionData = petitionData.set('mentionsDate', this.mentionsDate.toString())
-    petitionData = petitionData.set('emojiReactionDate', this.emojiReactionDate.toString())
-    petitionData = petitionData.set('quotesDate', this.quotesDate.toString())
+    petitionData = petitionData.set('likesDate', this.likesDate.getTime())
+    petitionData = petitionData.set('followsDate', this.followsDate.getTime())
+    petitionData = petitionData.set('reblogsDate', this.reblogsDate.getTime())
+    petitionData = petitionData.set('mentionsDate', this.mentionsDate.getTime())
+    petitionData = petitionData.set('emojiReactionDate', this.emojiReactionDate.getTime())
+    petitionData = petitionData.set('quotesDate', this.quotesDate.getTime())
     petitionData = petitionData.set('page', page)
 
     let tmp = await firstValueFrom(
@@ -136,7 +136,7 @@ export class NotificationsService {
       // extra sanitizatin
       const postsSanitized = tmp.posts.map(elem => {
         const content = this.postService.getPostContentSanitized(elem.content)
-        let postSanitized = {... elem};
+        let postSanitized = { ...elem };
         postSanitized.content = content;
         return postSanitized
       });

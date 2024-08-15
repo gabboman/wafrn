@@ -35,14 +35,14 @@ export default function notificationRoutes(app: Application) {
       }
     })
     // MULTIPLE DATES ON SAME ENDPOINT SO
-    const likesDate = req.query?.likesDate ? new Date(req.query.likesDate as string) : new Date()
-    const followsDate = req.query?.followsDate ? new Date(req.query.followsDate as string) : new Date()
-    const reblogsDate = req.query?.reblogsDate ? new Date(req.query.reblogsDate as string) : new Date()
-    const mentionsDate = req.query?.mentionsDate ? new Date(req.query.mentionsDate as string) : new Date()
+    const likesDate = req.query?.likesDate ? new Date(parseInt(req.query.likesDate as string)) : new Date()
+    const followsDate = req.query?.followsDate ? new Date(parseInt(req.query.followsDate as string)) : new Date()
+    const reblogsDate = req.query?.reblogsDate ? new Date(parseInt(req.query.reblogsDate as string)) : new Date()
+    const mentionsDate = req.query?.mentionsDate ? new Date(parseInt(req.query.mentionsDate as string)) : new Date()
     const emojiReactionDate = req.query?.emojiReactionDate
-      ? new Date(req.query.emojiReactionDate as string)
+      ? new Date(parseInt(req.query.emojiReactionDate as string))
       : new Date()
-    const quotesDate = req.query?.quotesDate ? new Date(req.query.quotesDate as string) : new Date()
+    const quotesDate = req.query?.quotesDate ? new Date(parseInt(req.query.quotesDate as string)) : new Date()
 
     const newQuotes = await Quotes.findAll(await getQuotedPostsQuery(userId, quotesDate, Op.lt, true))
 
@@ -209,7 +209,7 @@ export default function notificationRoutes(app: Application) {
     limit?: boolean
   ): Promise<any[]> {
     const superMutedIds = await getMutedPosts(userId, true);
-    const fullyMutedDoNotCountForMentions = superMutedIds.length ?  (
+    const fullyMutedDoNotCountForMentions = superMutedIds.length ? (
       await sequelize.query(
         isDatabaseMysql()
           ? `SELECT postsId FROM postsancestors where ancestorId IN ("${superMutedIds}")`
