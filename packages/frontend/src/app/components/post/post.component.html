@@ -60,7 +60,7 @@
           "
           size="lg"
           (mousedown)="quotePost(finalPost)"
-          class="cursor-pointer"
+          class="cursor-pointer quote-icon"
           [icon]="quoteIcon"
           matTooltip="Quote woot"
         ></fa-icon>
@@ -68,7 +68,7 @@
         <fa-icon
           size="lg"
           (mousedown)="deletePost(post[post.length - 1].id)"
-          class="cursor-pointer"
+          class="cursor-pointer delete-rewoot-icon"
           [icon]="closeIcon"
           matTooltip="Delete rewoot"
         ></fa-icon>
@@ -77,7 +77,7 @@
           size="lg"
           *ngIf="finalPost.privacy !== 10 && finalPost.privacy !== 1"
           (click)="quickReblog(finalPost)"
-          class="cursor-pointer"
+          class="cursor-pointer rewoot-icon"
           [icon]="quickReblogIcon"
           matTooltip="Quick rewoot"
         ></fa-icon>
@@ -86,7 +86,7 @@
         <fa-icon
           size="lg"
           (mousedown)="replyPost(finalPost)"
-          class="cursor-pointer"
+          class="cursor-pointer reply-icon"
           [icon]="reblogIcon"
           matTooltip="Reply woot"
         ></fa-icon>
@@ -96,7 +96,7 @@
         <fa-icon
           size="lg"
           (mousedown)="unlikePost(finalPost)"
-          class="cursor-pointer"
+          class="cursor-pointer unlike-icon"
           [icon]="clearHeartIcon"
           matTooltip="Remove like"
         ></fa-icon>
@@ -104,7 +104,7 @@
         <fa-icon
           size="lg"
           (mousedown)="likePost(finalPost)"
-          class="cursor-pointer"
+          class="cursor-pointer like-icon"
           [icon]="solidHeartIcon"
           matTooltip="Like woot"
         ></fa-icon>
@@ -120,7 +120,7 @@
         <fa-icon
           size="lg"
           (mousedown)="deletePost(finalPost.id)"
-          class="cursor-pointer"
+          class="cursor-pointer delete-woot-icon"
           [icon]="deleteIcon"
           matTooltip="Delete woot"
         ></fa-icon>
