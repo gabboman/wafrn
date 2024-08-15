@@ -1,15 +1,6 @@
 version: '3'
 services:
   db:
-    image: mysql:8
-    restart: always
-    environment:
-      MYSQL_ROOT_PASSWORD: root
-    volumes:
-      - dbdata:/var/lib/mysql
-    ports:
-      - 3306:3306
-  db2:
     image: postgres
     restart: always
     environment:
@@ -31,5 +22,4 @@ services:
       - '6379:6379'
 
 volumes:
-  dbdata:
   dbpg:
