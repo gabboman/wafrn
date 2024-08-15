@@ -151,7 +151,7 @@ const User = sequelize.define(
     },
     disableEmailNotifications: {
       type: Sequelize.BOOLEAN,
-      defaultValue: 0
+      defaultValue: false
     }
   },
   {
