@@ -19,7 +19,7 @@
     "@types/bcrypt": "^5.0.0",
     "@types/express": "^4.17.13",
     "@types/jsonwebtoken": "^8.5.8",
-    "axios": "^1.7.3",
+    "axios": "^1.7.4",
     "bcrypt": "^5.0.0",
     "body-parser": "^1.20.2",
     "bullmq": "^5.8.4",
