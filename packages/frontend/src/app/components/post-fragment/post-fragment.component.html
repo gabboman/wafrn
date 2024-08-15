@@ -35,7 +35,7 @@
   @for(quote of fragment.quotes; track $index) {
   <div *ngIf="quote" [ngClass]="{ blurry: fragment.content_warning && showCw }" class="quoted-post cursor-pointer mb-2">
     <div class="flex">
-      <app-post-header [fragment]="quote" [simplified]="true" [disableLink]="true"></app-post-header>
+      <app-post-header class="w-full" [fragment]="quote" [simplified]="true" [disableLink]="true"></app-post-header>
     </div>
     <div class="cursor-pointer" [routerLink]="'/fediverse/post/' + quote.id">
       <app-post-fragment [fragment]="quote"></app-post-fragment>
