@@ -47,6 +47,9 @@ export class PostsService {
     type: 'react',
   });
 
+  public rewootedPosts: string[] = [];
+
+
   keyboardEmojis: Emoji[] = emojis.map(emoji => {
     return {
       id: emoji.char,
@@ -257,6 +260,7 @@ export class PostsService {
 
   processSinglePost(unlinked: unlinkedPosts): ProcessedPost {
     const elem = unlinked.posts[0];
+    this.rewootedPosts = this.rewootedPosts.concat(unlinked.rewootIds)
     const user = unlinked.users.find((usr) => usr.id === elem.userId);
     const userEmojis = unlinked.emojiRelations.userEmojiRelation.filter(
       (elem) => elem.userId === user?.id
@@ -334,7 +338,7 @@ export class PostsService {
         ? elem.remotePostId
         : `${environment.frontUrl}/post/${elem.id}`,
       medias: medias.sort((a, b) => a.order - b.order),
-      questionPoll: polls.length > 0 ?{...polls[0], endDate: new Date(polls[0].endDate)} : undefined,
+      questionPoll: polls.length > 0 ? { ...polls[0], endDate: new Date(polls[0].endDate) } : undefined,
       mentionPost: mentionedUsers as SimplifiedUser[],
       quotes: unlinked.quotes
         .filter((quote) => quote.quoterPostId === elem.id)
@@ -550,12 +554,12 @@ export class PostsService {
       votes: votes,
     };
     try {
-      const response = await firstValueFrom(this.http.post<{success: boolean, message?: string}>(`${environment.baseUrl}/v2/pollVote/${pollId}`, payload))
+      const response = await firstValueFrom(this.http.post<{ success: boolean, message?: string }>(`${environment.baseUrl}/v2/pollVote/${pollId}`, payload))
       res = response.success
-      this.messageService.add({severity: res ? 'success' :'error', summary: response.message ? response.message : res ? 'You voted succesfuly. It can take some time to display' : 'Something went wrong'})
+      this.messageService.add({ severity: res ? 'success' : 'error', summary: response.message ? response.message : res ? 'You voted succesfuly. It can take some time to display' : 'Something went wrong' })
     } catch (error) {
       console.error(error)
-      this.messageService.add({severity: 'error', summary: 'Something went wrong'})
+      this.messageService.add({ severity: 'error', summary: 'Something went wrong' })
     }
     return res;
   }
@@ -568,13 +572,13 @@ export class PostsService {
       }">`;
   }
 
-  postContainsBlockedOrMuted(post: ProcessedPost[], isDashboard: boolean ) {
+  postContainsBlockedOrMuted(post: ProcessedPost[], isDashboard: boolean) {
     let res = false;
     post.forEach((fragment) => {
       if (this.blockedUserIds.includes(fragment.userId)) {
         res = true;
       }
-      if(isDashboard && this.mutedUsers.includes(fragment.userId)) {
+      if (isDashboard && this.mutedUsers.includes(fragment.userId)) {
         res = true;
       }
     });

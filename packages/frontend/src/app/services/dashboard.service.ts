@@ -47,6 +47,7 @@ export class DashboardService {
     result = result.filter(
       (post) => !this.postService.postContainsBlockedOrMuted(post, true)
     );
+    this.postService.rewootedPosts = this.postService.rewootedPosts.concat(dashboardPetition.rewootIds)
     this.scrollEventEmitter.emit('scrollingtime');
     return result;
   }
@@ -122,7 +123,7 @@ export class DashboardService {
           )
         ) - 1
       );
-      if(result.length === 0){
+      if (result.length === 0) {
         this.startScrollDate = new Date(0);
       }
       result = result.filter(
@@ -143,7 +144,7 @@ export class DashboardService {
     petitionData = petitionData.append('id', url);
     const res: any = await firstValueFrom(this.http.get(`${environment.baseUrl}/user`, { params: petitionData }));
     if (res.id) {
-      if(res.emojis && !ignoreEmojis) {
+      if (res.emojis && !ignoreEmojis) {
         res.emojis.forEach((emoji: Emoji) => {
           res.name = res.name.replaceAll(emoji.name, this.postService.emojiToHtml(emoji))
           res.description = res.description.replaceAll(emoji.name, this.postService.emojiToHtml(emoji))
