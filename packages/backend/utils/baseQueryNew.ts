@@ -261,8 +261,7 @@ async function getUnjointedPosts(postIdsInput: string[], posterId: string) {
     }
   }
 
-  const validRewootIds = rewootIds.filter((id: string) => !invalidRewoots.includes(id))
-  const finalRewootIds = rewootedPosts.filter((r: any) => validRewootIds.includes(r.id)).map((r: any) => r.parentId)
+  const finalRewootIds = rewootedPosts.filter((r: any) => !invalidRewoots.includes(r.id)).map((r: any) => r.parentId)
 
   const postsMentioningUser: string[] = mentions.postMentionRelation
     .filter((mention: any) => mention.userMentioned === posterId)
