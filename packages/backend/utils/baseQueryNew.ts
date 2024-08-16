@@ -180,17 +180,30 @@ async function getUnjointedPosts(postIdsInput: string[], posterId: string) {
     }
   })
   const asks = await Ask.findAll({
-    attributes: [
-      'question', 'apObject', 'createdAt', 'updatedAt', 'postId', 'userAsked', 'userAsker'
-    ],
+    attributes: ['question', 'apObject', 'createdAt', 'updatedAt', 'postId', 'userAsked', 'userAsker'],
     where: {
       postId: {
         [Op.in]: postIds
       }
     }
   })
-  
-  userIds = userIds.concat(quotedPosts.map((q: any) => q.userId)).concat(asks.map((elem: any) => elem.userAsked )).concat(asks.map((elem: any) => elem.userAsker ))
+
+  const rewootedPosts = await Post.findAll({
+    attributes: ['id'],
+    where: {
+      content: '',
+      userId: posterId,
+      parentId: {
+        [Op.in]: postIds
+      }
+    }
+  })
+  const rewootedPostsIds = rewootedPosts.map((r: any) => r.id)
+
+  userIds = userIds
+    .concat(quotedPosts.map((q: any) => q.userId))
+    .concat(asks.map((elem: any) => elem.userAsked))
+    .concat(asks.map((elem: any) => elem.userAsker))
   const emojis = getEmojis({
     userIds,
     postIds
@@ -219,8 +232,10 @@ async function getUnjointedPosts(postIdsInput: string[], posterId: string) {
       }
     ]
   })
-  let medias = getMedias(postIds)
-  let tags = getTags(postIds)
+
+  let medias = getMedias([...postIds, ...rewootedPostsIds])
+  let tags = getTags([...postIds, ...rewootedPostsIds])
+
   const likes = await getLikes(postIds)
   userIds = userIds.concat(likes.map((like: any) => like.userId))
   const users = User.findAll({
@@ -236,6 +251,17 @@ async function getUnjointedPosts(postIdsInput: string[], posterId: string) {
   const usersFollowedByPoster = await getFollowedsIds(posterId)
   const tagsAwaited = await tags
   const mediasAwaited = await medias
+
+  const invalidRewoots = [] as string[]
+  for (const id of rewootedPostsIds) {
+    const hasMedia = mediasAwaited.some((media: any) => media.posts[0].id === id)
+    const hasTags = tagsAwaited.some((tag: any) => tag.postId === id)
+    if (hasMedia || hasTags) {
+      invalidRewoots.push(id)
+    }
+  }
+  const rewootIds = rewootedPostsIds.filter((id: string) => !invalidRewoots.includes(id))
+
   const postsMentioningUser: string[] = mentions.postMentionRelation
     .filter((mention: any) => mention.userMentioned === posterId)
     .map((mention: any) => mention.post)
@@ -263,6 +289,7 @@ async function getUnjointedPosts(postIdsInput: string[], posterId: string) {
   const tagsFiltered = (await tags).filter((tag: any) => postIdsToFullySend.includes(tag.postId))
   const quotesFiltered = quotes.filter((quote: any) => postIdsToFullySend.includes(quote.quoterPostId))
   return {
+    rewootIds,
     posts: postsToSend,
     emojiRelations: await emojis,
     mentions: mentions.postMentionRelation,
