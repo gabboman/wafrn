@@ -189,7 +189,7 @@ async function getUnjointedPosts(postIdsInput: string[], posterId: string) {
   })
 
   const rewootedPosts = await Post.findAll({
-    attributes: ['parentId'],
+    attributes: ['id', 'parentId'],
     where: {
       content: '',
       userId: posterId,
@@ -198,7 +198,7 @@ async function getUnjointedPosts(postIdsInput: string[], posterId: string) {
       }
     }
   })
-  const rewootedPostsIds = rewootedPosts.map((r: any) => r.parentId)
+  let rewootIds = rewootedPosts.map((r: any) => r.postId)
 
   userIds = userIds
     .concat(quotedPosts.map((q: any) => q.userId))
@@ -253,14 +253,16 @@ async function getUnjointedPosts(postIdsInput: string[], posterId: string) {
   const mediasAwaited = await medias
 
   const invalidRewoots = [] as string[]
-  for (const id of rewootedPostsIds) {
+  for (const id of rewootIds) {
     const hasMedia = mediasAwaited.some((media: any) => media.posts[0].id === id)
     const hasTags = tagsAwaited.some((tag: any) => tag.postId === id)
     if (hasMedia || hasTags) {
       invalidRewoots.push(id)
     }
   }
-  const rewootIds = rewootedPostsIds.filter((id: string) => !invalidRewoots.includes(id))
+
+  rewootIds = rewootIds.filter((id: string) => !invalidRewoots.includes(id))
+  const rewootedPostIds = rewootedPosts.filter((elem: { id: string, parentId: string }) => rewootIds.includes(elem.id)).map((elem: { id: string, parentId: string }) => elem.parentId)
 
   const postsMentioningUser: string[] = mentions.postMentionRelation
     .filter((mention: any) => mention.userMentioned === posterId)
@@ -289,7 +291,7 @@ async function getUnjointedPosts(postIdsInput: string[], posterId: string) {
   const tagsFiltered = (await tags).filter((tag: any) => postIdsToFullySend.includes(tag.postId))
   const quotesFiltered = quotes.filter((quote: any) => postIdsToFullySend.includes(quote.quoterPostId))
   return {
-    rewootIds,
+    rewootIds: rewootedPostIds,
     posts: postsToSend,
     emojiRelations: await emojis,
     mentions: mentions.postMentionRelation,
