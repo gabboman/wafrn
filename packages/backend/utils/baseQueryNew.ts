@@ -189,7 +189,7 @@ async function getUnjointedPosts(postIdsInput: string[], posterId: string) {
   })
 
   const rewootedPosts = await Post.findAll({
-    attributes: ['id'],
+    attributes: ['parentId'],
     where: {
       content: '',
       userId: posterId,
@@ -198,7 +198,7 @@ async function getUnjointedPosts(postIdsInput: string[], posterId: string) {
       }
     }
   })
-  const rewootedPostsIds = rewootedPosts.map((r: any) => r.id)
+  const rewootedPostsIds = rewootedPosts.map((r: any) => r.parentId)
 
   userIds = userIds
     .concat(quotedPosts.map((q: any) => q.userId))
@@ -233,8 +233,8 @@ async function getUnjointedPosts(postIdsInput: string[], posterId: string) {
     ]
   })
 
-  let medias = getMedias([...postIds, ...rewootedPostsIds])
-  let tags = getTags([...postIds, ...rewootedPostsIds])
+  let medias = getMedias(postIds)
+  let tags = getTags(postIds)
 
   const likes = await getLikes(postIds)
   userIds = userIds.concat(likes.map((like: any) => like.userId))
