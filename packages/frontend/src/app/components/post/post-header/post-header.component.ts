@@ -33,30 +33,31 @@ export class PostHeaderComponent {
   @Input() fragment: ProcessedPost | undefined;
   @Input() simplified: boolean = true;
   @Input() disableLink: boolean = false;
+  @Input() headerText: string = '';
   userLoggedIn = false;
 
-    // icons
-    shareIcon = faShareNodes;
-    expandDownIcon = faChevronDown;
-    solidHeartIcon = faHeart;
-    clearHeartIcon = faHeartBroken;
-    reblogIcon = faReply;
-    quickReblogIcon = faRepeat;
-    quoteIcon = faQuoteLeft;
-    shareExternalIcon = faArrowUpRightFromSquare;
-    deleteIcon = faTrash;
-    closeIcon = faClose;
-    worldIcon = faGlobe;
-    unlockIcon = faUnlock;
-    envelopeIcon = faEnvelope;
-    serverIcon = faServer;
-    userIcon = faUser;
-    editedIcon = faPen;
+  // icons
+  shareIcon = faShareNodes;
+  expandDownIcon = faChevronDown;
+  solidHeartIcon = faHeart;
+  clearHeartIcon = faHeartBroken;
+  reblogIcon = faReply;
+  quickReblogIcon = faRepeat;
+  quoteIcon = faQuoteLeft;
+  shareExternalIcon = faArrowUpRightFromSquare;
+  deleteIcon = faTrash;
+  closeIcon = faClose;
+  worldIcon = faGlobe;
+  unlockIcon = faUnlock;
+  envelopeIcon = faEnvelope;
+  serverIcon = faServer;
+  userIcon = faUser;
+  editedIcon = faPen;
   constructor(
     public postService: PostsService,
     private messages: MessageService,
     private loginService: LoginService
-  ){
+  ) {
 
     this.userLoggedIn = loginService.checkUserLoggedIn()
   }
