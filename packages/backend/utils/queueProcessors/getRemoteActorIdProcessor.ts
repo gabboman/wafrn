@@ -233,7 +233,14 @@ async function getRemoteActorIdProcessor(job: Job) {
             userRes = await User.create(userData)
           }
         }
-        if(userRes && userRes.id && userRes.url != environment.deletedUser && userPetition && userPetition.attachment && userPetition.attachment.length) {
+        if (
+          userRes &&
+          userRes.id &&
+          userRes.url != environment.deletedUser &&
+          userPetition &&
+          userPetition.attachment &&
+          userPetition.attachment.length
+        ) {
           await UserOptions.destroy({
             where: {
               userId: userRes.id,
@@ -242,7 +249,7 @@ async function getRemoteActorIdProcessor(job: Job) {
               }
             }
           })
-          const properties = userPetition.attachment.filter((elem: any) => elem.type === "PropertyValue")
+          const properties = userPetition.attachment.filter((elem: any) => elem.type === 'PropertyValue')
           await UserOptions.create({
             userId: userRes.id,
             optionName: `fediverse.public.attachment`,

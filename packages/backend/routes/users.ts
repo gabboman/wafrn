@@ -552,7 +552,15 @@ export default function userRoutes(app: Application) {
       followers = await followers
       success = blog
       if (success) {
-        res.send({ ...blog.dataValues, muted, blocked, serverBlocked, followed, followers, publicOptions: await publicOptions })
+        res.send({
+          ...blog.dataValues,
+          muted,
+          blocked,
+          serverBlocked,
+          followed,
+          followers,
+          publicOptions: await publicOptions
+        })
       }
     }
 

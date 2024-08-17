@@ -609,13 +609,10 @@ const PostHostView = sequelize.define('postHostView', {})
 
 const RemoteUserPostView = sequelize.define('remoteUserPostView', {})
 
-
-
 const Ask = sequelize.define('asks', {
   question: Sequelize.TEXT,
   apObject: Sequelize.TEXT,
-  creationIp: Sequelize.STRING,
-
+  creationIp: Sequelize.STRING
 })
 
 Post.hasOne(Ask)
@@ -628,9 +625,6 @@ User.hasMany(Ask, {
   as: 'userAsked',
   foreignKey: 'userAsker'
 })
-
-
-
 
 Post.hasOne(QuestionPoll)
 QuestionPoll.belongsTo(Post)

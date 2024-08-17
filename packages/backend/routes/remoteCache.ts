@@ -19,25 +19,28 @@ export default function cacheRoutes(app: Application) {
         linkExtension = linkExtension.split('?')[0].substring(0, 4)
         // calckey images have no extension
         const mediaLinkHash = crypto.createHash('sha256').update(mediaLink).digest('hex')
-        const avatarFileName = 'cache/avatars/' + mediaLinkHash + '.avif';
+        const avatarFileName = 'cache/avatars/' + mediaLinkHash + '.avif'
         const localFileName = linkExtension ? `cache/${mediaLinkHash}.${linkExtension}` : `cache/${mediaLinkHash}`
         if (fs.existsSync(localFileName)) {
-          if(req.query.avatar) {
-            if(fs.existsSync(avatarFileName)) {
+          if (req.query.avatar) {
+            if (fs.existsSync(avatarFileName)) {
               res.set('Cache-control', 'public, max-age=3600')
-            // We have the image! we just serve it
-            res.sendFile(avatarFileName, { root: '.' })
+              // We have the image! we just serve it
+              res.sendFile(avatarFileName, { root: '.' })
             } else {
-              let fileToSend = await optimizeMedia(localFileName, {outPath: `cache/avatars/${mediaLinkHash}`, maxSize: 96, keep: true})
+              let fileToSend = await optimizeMedia(localFileName, {
+                outPath: `cache/avatars/${mediaLinkHash}`,
+                maxSize: 96,
+                keep: true
+              })
               res.sendFile(fileToSend, { root: '.' })
             }
           } else {
-          // we set some cache
-          res.set('Cache-control', 'public, max-age=3600')
-          // We have the image! we just serve it
-          res.sendFile(localFileName, { root: '.' })
+            // we set some cache
+            res.set('Cache-control', 'public, max-age=3600')
+            // We have the image! we just serve it
+            res.sendFile(localFileName, { root: '.' })
           }
-
         } else {
           const remoteResponse = await axios.get(mediaLink, { responseType: 'stream' })
           const path = `${localFileName}`
@@ -46,8 +49,12 @@ export default function cacheRoutes(app: Application) {
             // we set some cache
             res.set('Cache-control', 'public, max-age=3600')
             filePath.close()
-            if(req.query.avatar) {
-              let fileToSend = await optimizeMedia(localFileName, {outPath: `cache/avatars/${mediaLinkHash}`, maxSize: 96, keep: true})
+            if (req.query.avatar) {
+              let fileToSend = await optimizeMedia(localFileName, {
+                outPath: `cache/avatars/${mediaLinkHash}`,
+                maxSize: 96,
+                keep: true
+              })
               res.sendFile(fileToSend, { root: '.' })
             } else {
               res.sendFile(localFileName, { root: '.' })
