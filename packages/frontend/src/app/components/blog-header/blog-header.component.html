@@ -59,7 +59,7 @@
   <div class="flex justify-content-center flex-wrap mt-3 mb-2">
     <div style="word-wrap: anywhere" [innerHtml]="blogDetails.description"></div>
   </div>
-  <table *ngIf="fediAttachment" class="w-full">
+  <table *ngIf="fediAttachment" class="w-full overflow-hidden">
     <tr *ngFor="let fediAt of fediAttachment">
       <th [innerHTML]="fediAt.name"></th>
       <th [innerHTML]="fediAt.value"></th>
