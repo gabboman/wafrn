@@ -79,8 +79,8 @@ export default function postsRoutes(app: Application) {
   )
 
   /**
- * @deprecated We recomend instead using the forum endpoint. This method will not recive maintenance
- */
+   * @deprecated We recomend instead using the forum endpoint. This method will not recive maintenance
+   */
   app.get(
     '/api/v2/descendents/:id',
     optionalAuthentication,
@@ -157,7 +157,13 @@ export default function postsRoutes(app: Application) {
           urlToLower: (id as string).toLowerCase()
         }
       })
-      if(blog.url.startsWith('@') && !req.jwtData?.userId) {
+
+      if (!blog) {
+        res.sendStatus(404)
+        return
+      }
+
+      if (blog.url.startsWith('@') && !req.jwtData?.userId) {
         // require auth to see external user blog
         return res.sendStatus(403)
       }
