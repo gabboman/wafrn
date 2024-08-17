@@ -2,11 +2,13 @@
   <div class="flex mb-1 gap-2 align-items-center">
     <app-avatar-small [user]="fragment.user"></app-avatar-small>
     <div class="center-text flex-grow-1 flex-shrink-1 min-w-0">
-
       <div class="w-full overflow-hidden flex flex-column">
-        <a class="max-w-full white-space-nowrap overflow-hidden text-overflow-ellipsis user-name flex"
-          [routerLink]="!disableLink ? '/blog/' + fragment.user.url: null"
-          [innerHTML]="fragment.user.name + ' ' + headerText"></a>
+        <div class="max-w-full white-space-nowrap overflow-hidden text-overflow-ellipsis user-name flex">
+          <a class="mr-1" [routerLink]="!disableLink ? '/blog/' + fragment.user.url: null"
+            [innerHTML]="fragment.user.name">
+          </a>
+          {{headerText}}
+        </div>
         <span class="font-small max-w-full white-space-nowrap overflow-hidden text-overflow-ellipsis user-url"
           [innerText]="fragment.user.url"></span>
       </div>
