@@ -8,6 +8,7 @@ import { MessageService } from './message.service';
 import { firstValueFrom } from 'rxjs';
 import { unlinkedPosts } from '../interfaces/unlinked-posts';
 import { Emoji } from '../interfaces/emoji';
+import { BlogDetails } from '../interfaces/blogDetails';
 
 @Injectable({
   providedIn: 'root',
@@ -47,6 +48,7 @@ export class DashboardService {
     result = result.filter(
       (post) => !this.postService.postContainsBlockedOrMuted(post, true)
     );
+    this.postService.rewootedPosts = this.postService.rewootedPosts.concat(dashboardPetition.rewootIds)
     this.scrollEventEmitter.emit('scrollingtime');
     return result;
   }
@@ -122,7 +124,7 @@ export class DashboardService {
           )
         ) - 1
       );
-      if(result.length === 0){
+      if (result.length === 0) {
         this.startScrollDate = new Date(0);
       }
       result = result.filter(
@@ -141,21 +143,15 @@ export class DashboardService {
   async getBlogDetails(url: string, ignoreEmojis = false) {
     let petitionData: HttpParams = new HttpParams();
     petitionData = petitionData.append('id', url);
-    const res: any = await firstValueFrom(this.http.get(`${environment.baseUrl}/user`, { params: petitionData }));
-    if (res.id) {
-      if(res.emojis && !ignoreEmojis) {
-        res.emojis.forEach((emoji: Emoji) => {
-          res.name = res.name.replaceAll(emoji.name, this.postService.emojiToHtml(emoji))
-          res.description = res.description.replaceAll(emoji.name, this.postService.emojiToHtml(emoji))
-
-        })
-      }
-      return { ...res, success: true };
-    } else {
-      return {
-        success: false,
-      };
+    const res: BlogDetails = await firstValueFrom(this.http.get<BlogDetails>(`${environment.baseUrl}/user`, { params: petitionData }));
+    if (res.emojis && !ignoreEmojis) {
+      res.emojis.forEach((emoji: Emoji) => {
+        res.name = res.name.replaceAll(emoji.name, this.postService.emojiToHtml(emoji))
+        res.description = res.description.replaceAll(emoji.name, this.postService.emojiToHtml(emoji))
+      })
     }
+    return res;
+
   }
 
   async getPostV2(id: string): Promise<ProcessedPost[]> {

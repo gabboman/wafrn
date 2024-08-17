@@ -38,11 +38,11 @@ import { SimplifiedUser } from 'src/app/interfaces/simplified-user';
     RouterModule,
     AvatarSmallComponent,
     FontAwesomeModule
-],
+  ],
   templateUrl: './follows.component.html',
   styleUrl: './follows.component.scss'
 })
-export class FollowsComponent implements OnInit, OnDestroy{
+export class FollowsComponent implements OnInit, OnDestroy {
   navigationSubscription: Subscription
   followsSubscription: Subscription;
   loading = true;
@@ -71,7 +71,7 @@ export class FollowsComponent implements OnInit, OnDestroy{
     private followsService: FollowsService
   ) {
     this.myId = loginService.getLoggedUserUUID()
-    this.followsSubscription = this.postService.updateFollowers.subscribe(()=> {
+    this.followsSubscription = this.postService.updateFollowers.subscribe(() => {
       this.followedUsers = this.postService.followedUserIds;
       this.notYetAcceptedFollows = this.postService.notYetAcceptedFollowedUsersIds;
     })
@@ -81,23 +81,23 @@ export class FollowsComponent implements OnInit, OnDestroy{
         this.loading = true;
         this.ngOnInit();
       });
-    }
+  }
 
   async ngOnInit(): Promise<void> {
     this.dataSource = new MatTableDataSource<followsResponse, MatPaginator>([]);
     this.blogUrl = this.activatedRoute.snapshot.paramMap.get('url') as string;
     this.following = !!this.activatedRoute.snapshot.routeConfig?.path?.toLowerCase()?.endsWith('following')
     const blogPromise = this.dashboardService
-    .getBlogDetails(this.blogUrl)
-    .catch(() => {
-      this.found = false;
-      this.loading = false;
-    });
+      .getBlogDetails(this.blogUrl)
+      .catch(() => {
+        this.found = false;
+        this.loading = false;
+      });
     let followsPromise = this.followsService.getFollowers(this.blogUrl, this.following)
     await Promise.all([blogPromise, followsPromise]);
     const blogResponse = await blogPromise;
     const followsResponse = await followsPromise;
-    if(blogResponse && blogResponse.success !== false){
+    if (blogResponse) {
       this.blogDetails = blogResponse;
       this.dataSource.data = followsResponse
       this.loading = false;

@@ -5,6 +5,7 @@ import {
   UntypedFormGroup,
   Validators,
 } from '@angular/forms';
+import { BlogDetails } from 'src/app/interfaces/blogDetails';
 import { Emoji } from 'src/app/interfaces/emoji';
 import { DashboardService } from 'src/app/services/dashboard.service';
 import { JwtService } from 'src/app/services/jwt.service';
@@ -27,12 +28,18 @@ export class EditProfileComponent implements OnInit {
     { level: 2, name: 'This instance only' },
     { level: 3, name: 'Unlisted' },
   ];
+  askOptions = [
+    { level: 1, name: 'Allow anon asks' },
+    { level: 2, name: 'Only allow asks from identified users' },
+    { level: 3, name: 'Disable asks' },
+  ];
   editProfileForm = new UntypedFormGroup({
     avatar: new UntypedFormControl('', []),
     name: new FormControl('', Validators.required),
     disableNSFWFilter: new UntypedFormControl(false, []),
     disableGifsByDefault: new UntypedFormControl(false, []),
     defaultPostEditorPrivacy: new UntypedFormControl(false, []),
+    asksLevel: new UntypedFormControl(1, []),
     description: new FormControl('', Validators.required),
     federateWithThreads: new FormControl(false),
     disableForceAltText: new FormControl(false),
@@ -55,7 +62,7 @@ export class EditProfileComponent implements OnInit {
     this.dashboardService
       .getBlogDetails(this.jwtService.getTokenData()['url'], true)
       .then(async (blogDetails) => {
-        blogDetails['avatar'] = undefined;
+        blogDetails['avatar'] = '';
         this.editProfileForm.patchValue(blogDetails);
         this.editProfileForm.controls['disableNSFWFilter'].patchValue(
           this.mediaService.checkNSFWFilterDisabled
@@ -74,6 +81,9 @@ export class EditProfileComponent implements OnInit {
         this.editProfileForm.controls['disableForceAltText'].patchValue(
           disableForceAltText === 'true'
         );
+        const publicOptions = blogDetails.publicOptions;
+        const askLevel = publicOptions.find((elem) => elem.optionName == "wafrn.public.asks")
+        this.editProfileForm.controls['asksLevel'].patchValue(askLevel ? parseInt(askLevel.optionValue) : 2)
         this.loading = false;
       });
   }

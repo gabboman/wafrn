@@ -56,8 +56,8 @@ export class LdSignature {
     const toBeSigned = await this.createVerifyData(data, data.signature)
     const verifier = crypto.createVerify('sha256')
     verifier.update(toBeSigned)
-    const result =  verifier.verify(publicKey, data.signature.signatureValue, 'base64')
-    return result;
+    const result = verifier.verify(publicKey, data.signature.signatureValue, 'base64')
+    return result
   }
 
   public async createVerifyData(data: any, options: any): Promise<string> {
@@ -82,10 +82,9 @@ export class LdSignature {
 
   public async normalize(data: any) {
     // TODO improve this so we get some cache or something
-    const res =  await jsonld.normalize(data, {safe: false })
-    return res;
+    const res = await jsonld.normalize(data, { safe: false })
+    return res
   }
-
 
   public sha256(data: string): string {
     const hash = crypto.createHash('sha256')

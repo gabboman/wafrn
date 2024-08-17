@@ -1,48 +1,31 @@
-<mat-card
-  [id]="'post-element-' + finalPost.id"
-  class="p-3 m-2 mb-6 lg:mx-4 scalein wafrn-container"
->
-  <div
-    [ngClass]="{
+<mat-card [id]="'post-element-' + finalPost.id" class="p-3 m-2 mb-6 lg:mx-4 scalein wafrn-container">
+  <div [ngClass]="{
       'shortened-post': veryLongPost || !showFull
-    }"
-  >
+    }">
     <div *ngIf="post.length > 1" class="center-text overflow-hidden">
-      <app-post-header class="w-full" [fragment]="originalPostContent[this.originalPostContent.length - 1]"></app-post-header>
+      <app-post-header class="w-full" [headerText]="headerText"
+        [fragment]="originalPostContent[this.originalPostContent.length - 1]"></app-post-header>
     </div>
     @for (content of post; track $index; let index = $index) {
-    <hr
-      *ngIf="
+    <hr *ngIf="
         (post.length > 1 && (content.content !== '' || content.tags.length)) ||
         (post.length > 1 && index === 0)
-      "
-    />
-    <div
-      *ngIf="
+      " />
+    <div *ngIf="
         content.content !== '' ||
         (content.medias && content.medias.length > 0) ||
         index === 0 ||
         content.tags.length > 0 || content.quotes.length > 0 || content.questionPoll
-      "
-      id="fragment"
-    >
-      <app-post-header class="w-full" [fragment]="content" [simplified]="false" ></app-post-header>
-      <app-post-fragment
-        (dismissCw)="dismissContentWarning()"
-        [showCw]="showCw"
-        [fragment]="content"
-      ></app-post-fragment>
+      " id="fragment">
+      <app-post-header class="w-full" [fragment]="content" [simplified]="false"></app-post-header>
+      <app-post-fragment (dismissCw)="dismissContentWarning()" [showCw]="showCw"
+        [fragment]="content"></app-post-fragment>
     </div>
     }
   </div>
   <hr />
-  <button
-    *ngIf="veryLongPost || !showFull"
-    color="accent"
-    class="w-full mb-3 mt-2 w-full"
-    mat-stroked-button
-    (mousedown)="expandPost()"
-  >
+  <button *ngIf="veryLongPost || !showFull" color="accent" class="w-full mb-3 mt-2 w-full" mat-stroked-button
+    (mousedown)="expandPost()">
     Expand woot ({{originalPostContent.length}} posts)
   </button>
 
@@ -52,78 +35,40 @@
     </div>
     <div *ngIf="userLoggedIn" class="flex flex-shrink-0">
       <div class="flex gap-4 px-1" *ngIf="!loadingAction">
-        <fa-icon
-          *ngIf="
+        <fa-icon *ngIf="
             finalPost.privacy !== 10 &&
             finalPost.privacy !== 1 &&
             finalPost.privacy !== 2
-          "
-          size="lg"
-          (mousedown)="quotePost(finalPost)"
-          class="cursor-pointer quote-icon"
-          [icon]="quoteIcon"
-          matTooltip="Quote woot"
-        ></fa-icon>
+          " size="lg" (mousedown)="quotePost(finalPost)" class="cursor-pointer quote-icon" [icon]="quoteIcon"
+          matTooltip="Quote woot"></fa-icon>
         @if (isEmptyReblog() && post[post.length - 1].userId === myId) {
-        <fa-icon
-          size="lg"
-          (mousedown)="deletePost(post[post.length - 1].id)"
-          class="cursor-pointer delete-rewoot-icon"
-          [icon]="closeIcon"
-          matTooltip="Delete rewoot"
-        ></fa-icon>
+        <fa-icon size="lg" (mousedown)="deletePost(post[post.length - 1].id)" class="cursor-pointer delete-rewoot-icon"
+          [icon]="closeIcon" matTooltip="Delete rewoot"></fa-icon>
         } @else {
-        <fa-icon
-          size="lg"
-          *ngIf="finalPost.privacy !== 10 && finalPost.privacy !== 1"
-          (click)="quickReblog(finalPost)"
-          class="cursor-pointer rewoot-icon"
-          [icon]="quickReblogIcon"
-          matTooltip="Quick rewoot"
-        ></fa-icon>
+        <div matTooltip="Quick rewoot" *ngIf="finalPost.privacy !== 10 && finalPost.privacy !== 1"
+          class="fa-stack cursor-pointer rewoot-icon" (click)="quickReblog(finalPost)">
+          <fa-icon size="lg" [icon]="quickReblogIcon" class="fa-stack-1x"></fa-icon>
+          <fa-icon *ngIf="postService.rewootedPosts.includes(finalPost.id)" class="fa-stack-1x" size="lg"
+            [icon]="checkIcon"></fa-icon>
+        </div>
+
         }
 
-        <fa-icon
-          size="lg"
-          (mousedown)="replyPost(finalPost)"
-          class="cursor-pointer reply-icon"
-          [icon]="reblogIcon"
-          matTooltip="Reply woot"
-        ></fa-icon>
+        <fa-icon size="lg" (mousedown)="replyPost(finalPost)" class="cursor-pointer reply-icon" [icon]="reblogIcon"
+          matTooltip="Reply woot"></fa-icon>
 
         @if(finalPost.userId !== myId ) {
         @if(finalPost.userLikesPostRelations.includes(myId)) {
-        <fa-icon
-          size="lg"
-          (mousedown)="unlikePost(finalPost)"
-          class="cursor-pointer unlike-icon"
-          [icon]="clearHeartIcon"
-          matTooltip="Remove like"
-        ></fa-icon>
+        <fa-icon size="lg" (mousedown)="unlikePost(finalPost)" class="cursor-pointer unlike-icon"
+          [icon]="clearHeartIcon" matTooltip="Remove like"></fa-icon>
         } @else {
-        <fa-icon
-          size="lg"
-          (mousedown)="likePost(finalPost)"
-          class="cursor-pointer like-icon"
-          [icon]="solidHeartIcon"
-          matTooltip="Like woot"
-        ></fa-icon>
+        <fa-icon size="lg" (mousedown)="likePost(finalPost)" class="cursor-pointer like-icon" [icon]="solidHeartIcon"
+          matTooltip="Like woot"></fa-icon>
         } } @else {
-        <fa-icon
-          size="lg"
-          *ngIf="finalPost.privacy === 2"
-          (mousedown)="editPost(finalPost)"
-          class="cursor-pointer"
-          [icon]="editedIcon"
-          matTooltip="Edit woot"
-        ></fa-icon>
-        <fa-icon
-          size="lg"
-          (mousedown)="deletePost(finalPost.id)"
-          class="cursor-pointer delete-woot-icon"
-          [icon]="deleteIcon"
-          matTooltip="Delete woot"
-        ></fa-icon>
+        <fa-icon size="lg" *ngIf="finalPost.privacy === 2" (mousedown)="editPost(finalPost)" class="cursor-pointer"
+          [icon]="editedIcon" matTooltip="Edit woot"></fa-icon>
+        <fa-icon size="lg" (mousedown)="deletePost(finalPost.id)" class="cursor-pointer delete-woot-icon"
+          [icon]="deleteIcon" matTooltip="Delete woot"></fa-icon>
         }
       </div>
     </div>

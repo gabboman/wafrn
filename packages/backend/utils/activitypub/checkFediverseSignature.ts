@@ -16,10 +16,10 @@ import { LdSignature } from './rsa2017'
 const adminUser = environment.forceSync
   ? null
   : User.findOne({
-    where: {
-      url: environment.adminUser
-    }
-  })
+      where: {
+        url: environment.adminUser
+      }
+    })
 
 function getCheckFediverseSignatureFucnction(force = false) {
   return async function checkFediverseSignature(req: SignedRequest, res: Response, next: NextFunction) {
@@ -63,23 +63,22 @@ function getCheckFediverseSignatureFucnction(force = false) {
       } else {
         // we check for deleted users
         if (
-          !force || (
-            req.method === 'POST' &&
+          !force ||
+          (req.method === 'POST' &&
             req.body.type == 'Delete' &&
             req.body.actor == req.body.object &&
-            req.body.actor == remoteUserUrl
-          )
+            req.body.actor == remoteUserUrl)
         ) {
           // well, this is a "delete this user". We should process this ASAP
           req.fediData = {
             fediHost: hostUrl,
             remoteUserUrl: remoteUserUrl,
-            valid: !force || (
-              req.method === 'POST' &&
-              req.body.type == 'Delete' &&
-              req.body.actor == req.body.object &&
-              req.body.actor == remoteUserUrl
-            )
+            valid:
+              !force ||
+              (req.method === 'POST' &&
+                req.body.type == 'Delete' &&
+                req.body.actor == req.body.object &&
+                req.body.actor == remoteUserUrl)
           }
           next()
           return
@@ -95,7 +94,7 @@ function getCheckFediverseSignatureFucnction(force = false) {
               logger.debug({
                 message: `Problem finding user for signature`,
                 url: req.url,
-                body: req.method == 'POST' ? req.body : `GET petition`,
+                body: req.method == 'POST' ? req.body : `GET petition`
               })
             }
             if (force) {
@@ -103,7 +102,6 @@ function getCheckFediverseSignatureFucnction(force = false) {
               return res.sendStatus(429)
             }
           }
-
         }
       }
       success =
@@ -123,7 +121,6 @@ function getCheckFediverseSignatureFucnction(force = false) {
               error: error
             })
           }))
-
         }
       }
 
@@ -151,7 +148,7 @@ function getCheckFediverseSignatureFucnction(force = false) {
       res.sendStatus(401)
       // we failed to get the remote user, we force an update
       await getRemoteActor(remoteUserUrl, await adminUser, true)
-      return;
+      return
     } else {
       next()
     }

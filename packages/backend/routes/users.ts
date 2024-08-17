@@ -115,9 +115,8 @@ export default function userRoutes(app: Application) {
               : `Welcome to ${environment.instanceUrl}!`
             const mailBody = environment.reviewRegistrations
               ? `Hello ${req.body.url}, at this moment we are manually reviewing registrations. You will recive an email from us once it's accepted`
-              : `<h1>Welcome to ${environment.instanceUrl}</h1> To activate your account <a href="${
-                  environment.instanceUrl
-                }/activate/${encodeURIComponent(req.body.email.toLowerCase())}/${activationCode}">click here!</a>`
+              : `<h1>Welcome to ${environment.instanceUrl}</h1> To activate your account <a href="${environment.instanceUrl
+              }/activate/${encodeURIComponent(req.body.email.toLowerCase())}/${activationCode}">click here!</a>`
             const emailSent = environment.disableRequireSendEmail
               ? true
               : sendActivationEmail(req.body.email.toLowerCase(), activationCode, mailHeader, mailBody)
@@ -196,7 +195,28 @@ export default function userRoutes(app: Application) {
               avaiableEmojis?.filter((emoji: any) => req.body.description.includes(emoji.name))
             )
           }
-
+          // TODO find a better way of doing this than manualy doing stuff
+          if (req.body.asksLevel) {
+            const askLevelKey = 'wafrn.public.asks'
+            const askLevel = req.body.asksLevel
+            const askLevelOption = await UserOptions.findOne({
+              where: {
+                userId: posterId,
+                optionName: askLevelKey
+              }
+            })
+            if (askLevelOption) {
+              askLevelOption.optionValue = askLevel
+              askLevelOption.save()
+            } else {
+              await UserOptions.create({
+                userId: posterId,
+                optionName: askLevelKey,
+                public: true,
+                optionValue: askLevel
+              })
+            }
+          }
           if (req.body.federateWithThreads) {
             const federateWithThreadsKey = 'wafrn.federateWithThreads'
             const federateWithThreads = req.body.federateWithThreads
@@ -499,19 +519,19 @@ export default function userRoutes(app: Application) {
       let followed = blog.url.startsWith('@')
         ? blog.followingCount
         : Follows.count({
-            where: {
-              followerId: blog.id,
-              accepted: true
-            }
-          })
+          where: {
+            followerId: blog.id,
+            accepted: true
+          }
+        })
       let followers = blog.url.startsWith('@')
         ? blog.followerCount
         : Follows.count({
-            where: {
-              followedId: blog.id,
-              accepted: true
-            }
-          })
+          where: {
+            followedId: blog.id,
+            accepted: true
+          }
+        })
       const publicOptions = UserOptions.findAll({
         where: {
           userId: blog.id,
@@ -552,7 +572,15 @@ export default function userRoutes(app: Application) {
       followers = await followers
       success = blog
       if (success) {
-        res.send({ ...blog.dataValues, muted, blocked, serverBlocked, followed, followers, publicOptions: await publicOptions })
+        res.send({
+          ...blog.dataValues,
+          muted,
+          blocked,
+          serverBlocked,
+          followed,
+          followers,
+          publicOptions: await publicOptions
+        })
       }
     }
 

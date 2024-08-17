@@ -12,7 +12,8 @@ export interface unlinkedPosts {
   likes: Like[];
   lastPostDate: Date;
   quotes: Quote[];
-  quotedPosts: basicPost[]
+  quotedPosts: basicPost[];
+  rewootIds: string[];
 }
 
 export interface basicPost {

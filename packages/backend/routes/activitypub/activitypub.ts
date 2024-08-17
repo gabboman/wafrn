@@ -149,11 +149,13 @@ function activityPubRoutes(app: Application) {
             return
           }
           const followedUsers = await getFollowedRemoteIds(user.id)
-          let response: any;
-          if(req.params?.page) {
+          let response: any
+          if (req.params?.page) {
             response = {
               '@context': 'https://www.w3.org/ns/activitystreams',
-              id: `${environment.frontendUrl}/fediverse/blog/${user.url.toLowerCase()}/following?page=${req.params.page}`,
+              id: `${environment.frontendUrl}/fediverse/blog/${user.url.toLowerCase()}/following?page=${
+                req.params.page
+              }`,
               type: 'OrderedCollectionPage',
               partOf: `${environment.frontendUrl}/fediverse/blog/${user.url.toLowerCase()}/following`,
               orderedItems: followedUsers
@@ -200,14 +202,16 @@ function activityPubRoutes(app: Application) {
           }
           const followers = await getFollowerRemoteIds(user.id)
           const followersNumber = followers.length
-          let response;
-          if(req.query?.page) {
+          let response
+          if (req.query?.page) {
             response = {
-                '@context': 'https://www.w3.org/ns/activitystreams',
-                id: `${environment.frontendUrl}/fediverse/blog/${user.url.toLowerCase()}/followers?page=${req.params.page}`,
-                type: 'OrderedCollectionPage',
-                orderedItems: followers,
-                totalItems: followersNumber,
+              '@context': 'https://www.w3.org/ns/activitystreams',
+              id: `${environment.frontendUrl}/fediverse/blog/${user.url.toLowerCase()}/followers?page=${
+                req.params.page
+              }`,
+              type: 'OrderedCollectionPage',
+              orderedItems: followers,
+              totalItems: followersNumber
             }
           } else {
             response = {

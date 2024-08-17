@@ -36,7 +36,6 @@ export default function muteRoutes(app: Application) {
       userUnmuted.removeMuter(posterId)
       success = true
       await redisCache.del('mutedUsers:' + posterId)
-
     }
     res.send({
       success

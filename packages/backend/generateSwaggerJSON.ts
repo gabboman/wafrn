@@ -39,8 +39,7 @@ const files = [
   './routes/remoteCache.ts',
   './routes/silencePost.ts',
   './routes/status.ts',
-  './routes/frontend.ts',
-  
+  './routes/frontend.ts'
 ]
 
 swaggerAutogen({ openapi: '3.0.0' })('./swagger.json', files, config)

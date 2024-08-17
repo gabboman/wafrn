@@ -32,6 +32,7 @@ import {
   faReply,
   faRepeat,
   faQuoteLeft,
+  faCheck,
 } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
@@ -50,7 +51,7 @@ export class PostComponent implements OnInit, OnChanges, OnDestroy {
   followedUsers: string[] = [];
   notYetAcceptedFollows: string[] = [];
   notes: string = '---';
-  quickReblogPanelVisible = false;
+  headerText: string = '';
   quickReblogBeingDone = false;
   quickReblogDoneSuccessfully = false;
   reblogging = false;
@@ -79,6 +80,7 @@ export class PostComponent implements OnInit, OnChanges, OnDestroy {
   serverIcon = faServer;
   userIcon = faUser;
   editedIcon = faPen;
+  checkIcon = faCheck;
 
   // subscriptions
   updateFollowersSubscription;
@@ -91,7 +93,7 @@ export class PostComponent implements OnInit, OnChanges, OnDestroy {
   showCw = true;
 
   constructor(
-    private postService: PostsService,
+    public postService: PostsService,
     private loginService: LoginService,
     private messages: MessageService,
     private editor: EditorService,
@@ -109,11 +111,11 @@ export class PostComponent implements OnInit, OnChanges, OnDestroy {
     });
 
     this.updateLikesSubscription = this.postService.postLiked.subscribe(likeEvent => {
-      if(this.post && likeEvent.id === this.post[this.post.length -1].id) {
-        if(likeEvent.like) {
-          this.originalPostContent[this.originalPostContent.length -1 ].userLikesPostRelations = [this.loginService.getLoggedUserUUID()]
+      if (this.post && likeEvent.id === this.post[this.post.length - 1].id) {
+        if (likeEvent.like) {
+          this.originalPostContent[this.originalPostContent.length - 1].userLikesPostRelations = [this.loginService.getLoggedUserUUID()]
         } else {
-          this.originalPostContent[this.originalPostContent.length -1 ].userLikesPostRelations = []
+          this.originalPostContent[this.originalPostContent.length - 1].userLikesPostRelations = []
         }
       }
     })
@@ -134,6 +136,7 @@ export class PostComponent implements OnInit, OnChanges, OnDestroy {
       if (this.originalPostContent.length === this.post.length) {
         this.showFull = true;
       }
+
     }
     setTimeout(() => {
       const postHtmlId = 'post-element-' + this.finalPost.id;
@@ -147,10 +150,14 @@ export class PostComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   isEmptyReblog() {
+    const finalOne = this.post[this.post.length - 1]
     return (
       this.post &&
-      this.post[this.post.length - 1].content == '' &&
-      this.post[this.post.length - 1].tags.length == 0
+      finalOne.content == '' &&
+      finalOne.tags.length == 0 &&
+      finalOne.quotes.length == 0 &&
+      !finalOne.questionPoll &&
+      finalOne.medias?.length == 0
     );
   }
 
@@ -165,6 +172,7 @@ export class PostComponent implements OnInit, OnChanges, OnDestroy {
         ? this.post[this.post.length - 2]
         : this.post[this.post.length - 1];
     this.finalPost = postToEvaluate;
+    this.headerText = this.isEmptyReblog() ? "rewooted" : "replied"
 
     this.showLikeFinalPost = postToEvaluate.userLikesPostRelations.includes(
       this.myId
@@ -238,6 +246,10 @@ export class PostComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   async deletePost(id: string) {
+    this.deletePostService.openDeletePostDialog(id);
+  }
+
+  async deleteRewoot(id: string) {
     this.deletePostService.openDeletePostDialog(id);
   }
 

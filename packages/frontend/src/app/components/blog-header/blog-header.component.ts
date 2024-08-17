@@ -6,6 +6,7 @@ import { MatMenuModule } from '@angular/material/menu';
 import { RouterModule } from '@angular/router';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faChevronDown, faServer, faUser, faUserSlash, faVolumeMute, faVolumeUp } from '@fortawesome/free-solid-svg-icons';
+import { BlogDetails } from 'src/app/interfaces/blogDetails';
 import { BlocksService } from 'src/app/services/blocks.service';
 import { LoginService } from 'src/app/services/login.service';
 import { MessageService } from 'src/app/services/message.service';
@@ -21,20 +22,20 @@ import { environment } from 'src/environments/environment';
     FontAwesomeModule,
     MatMenuModule,
     MatButtonModule,
-    RouterModule
+    RouterModule,
   ],
   templateUrl: './blog-header.component.html',
   styleUrl: './blog-header.component.scss'
 })
 export class BlogHeaderComponent implements OnChanges, OnDestroy {
-  @Input() blogDetails: any;
+  @Input() blogDetails!: BlogDetails;
   avatarUrl = '';
   headerUrl = '';
   userLoggedIn = false;
   updateFollowersSubscription;
   followedUsers: string[] = [];;
   notYetAcceptedFollows: string[] = [];;
- 
+  fediAttachment: { name: string, value: string }[] = []
   expandDownIcon = faChevronDown;
   muteUserIcon = faVolumeMute;
   unmuteUserIcon = faVolumeUp;
@@ -44,13 +45,13 @@ export class BlogHeaderComponent implements OnChanges, OnDestroy {
 
 
 
-  constructor (
+  constructor(
     private loginService: LoginService,
     private postService: PostsService,
     private messages: MessageService,
     public blockService: BlocksService,
 
-  ){
+  ) {
     this.userLoggedIn = loginService.checkUserLoggedIn();
     this.updateFollowersSubscription = this.postService.updateFollowers.subscribe(() => {
       this.followedUsers = this.postService.followedUserIds;
@@ -59,21 +60,25 @@ export class BlogHeaderComponent implements OnChanges, OnDestroy {
     });
   }
   ngOnChanges(changes: SimpleChanges): void {
-    if(this.blogDetails){
+    if (this.blogDetails) {
       this.avatarUrl = this.blogDetails.url.startsWith('@')
         ? environment.externalCacheurl +
-          encodeURIComponent(this.blogDetails.avatar)
+        encodeURIComponent(this.blogDetails.avatar)
         : environment.externalCacheurl +
-          encodeURIComponent(
-            environment.baseMediaUrl + this.blogDetails.avatar
-          );
+        encodeURIComponent(
+          environment.baseMediaUrl + this.blogDetails.avatar
+        );
       this.headerUrl = this.blogDetails.url.startsWith('@')
         ? environment.externalCacheurl +
-          encodeURIComponent(this.blogDetails.headerImage)
+        encodeURIComponent(this.blogDetails.headerImage)
         : environment.externalCacheurl +
-          encodeURIComponent(
-            environment.baseMediaUrl + this.blogDetails.headerImage
-          );
+        encodeURIComponent(
+          environment.baseMediaUrl + this.blogDetails.headerImage
+        );
+      const fediAttachment = this.blogDetails.publicOptions.find(elem => elem.optionName == "fediverse.public.attachment")
+      if (fediAttachment) {
+        this.fediAttachment = JSON.parse(fediAttachment.optionValue)
+      }
     }
   }
 

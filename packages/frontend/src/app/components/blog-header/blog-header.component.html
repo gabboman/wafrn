@@ -1,111 +1,87 @@
 <mat-card class="wafrn-container p-3 lg:mx-4 mb-6">
-    <div class="flex justify-content-center mb-2">
-      <img
-        loading="lazy"
-        style="max-width: 100%; max-height: 15vh"
-        [src]="avatarUrl"
-        alt="user avatar"
-        class="border-round-md"
-      />
-    </div>
-    <div class="flex justify-content-center flex-wrap">
-      <div
-        [innerHtml]="blogDetails.name"
-        class="text-xl font-medium line-height-3"
-      ></div>
-    </div>
-    <div class="flex justify-content-center flex-wrap mb-2">
-      <div [innerText]="blogDetails.url" class="text-600 line-height-3"></div>
-    </div>
-    @if (userLoggedIn) {
-    <div *ngIf="userLoggedIn" class="flex gap-0 flex-nowrap w-min mx-auto">
-      <button
-        mat-stroked-button
-        [color]="
+  <div class="flex justify-content-center mb-2">
+    <img loading="lazy" style="max-width: 100%; max-height: 15vh" [src]="avatarUrl" alt="user avatar"
+      class="border-round-md" />
+  </div>
+  <div class="flex justify-content-center flex-wrap">
+    <div [innerHtml]="blogDetails.name" class="text-xl font-medium line-height-3"></div>
+  </div>
+  <div class="flex justify-content-center flex-wrap mb-2">
+    <div [innerText]="blogDetails.url" class="text-600 line-height-3"></div>
+  </div>
+  @if (userLoggedIn) {
+  <div *ngIf="userLoggedIn" class="flex gap-0 flex-nowrap w-min mx-auto">
+    <button mat-stroked-button [color]="
           followedUsers.indexOf(blogDetails.id) === -1 ? 'primary' : 'warn'
-        "
-        class="split-button-left"
-        (mousedown)="
+        " class="split-button-left" (mousedown)="
           followedUsers.indexOf(blogDetails.id) === -1
             ? followUser(blogDetails.id)
             : unfollowUser(blogDetails.id)
-        "
-      >
-        {{ followedUsers.indexOf(blogDetails.id) === -1 ? "Follow" : "Unfollow" }}
-      </button>
-      <button
-        [matMenuTriggerFor]="menu"
-        mat-stroked-button
-        [color]="
+        ">
+      {{ followedUsers.indexOf(blogDetails.id) === -1 ? "Follow" : "Unfollow" }}
+    </button>
+    <button [matMenuTriggerFor]="menu" mat-stroked-button [color]="
           followedUsers.indexOf(blogDetails.id) === -1 ? 'primary' : 'warn'
-        "
-        class="split-button-right"
-      >
-        <fa-icon [icon]="expandDownIcon"></fa-icon>
-      </button>
+        " class="split-button-right">
+      <fa-icon [icon]="expandDownIcon"></fa-icon>
+    </button>
+  </div>
+
+  <mat-menu #menu="matMenu" xPosition="before">
+    @if(!blogDetails.muted){
+    <button mat-menu-item (mousedown)="blockService.muteUser(this.blogDetails.id)">
+      <fa-icon class="mr-2" [icon]="muteUserIcon"></fa-icon>Mute user
+    </button>
+    } @else {
+    <button (mousedown)="blockService.unmuteUser(this.blogDetails.id)" mat-menu-item>
+      <fa-icon class="mr-2" [icon]="unmuteUserIcon"></fa-icon>Unmute user
+    </button>
+    } @if(!blogDetails.blocked) {
+    <button mat-menu-item (mousedown)="blockService.blockUser(this.blogDetails.id)">
+      <fa-icon class="mr-2" [icon]="blockUserIcon"></fa-icon>Block user
+    </button>
+    } @else {
+    <button mat-menu-item (mousedown)="blockService.unblockUser(this.blogDetails.id)">
+      <fa-icon class="mr-2" [icon]="userIcon"></fa-icon>Unblock user
+    </button>
+    } @if(blogDetails.url.startsWith('@')) { @if( !blogDetails.serverBlocked) {
+    <button mat-menu-item (mousedown)="blockService.blockServer(this.blogDetails.id)">
+      <fa-icon class="mr-2" [icon]="unblockServerIcon"></fa-icon>Block server
+    </button>
+    } @else {
+    <button *ngIf="blogDetails.federatedHost" mat-menu-item
+      (mousedown)="blockService.unblockServer(this.blogDetails.federatedHost.id)">
+      <fa-icon class="mr-2" [icon]="unblockServerIcon"></fa-icon>Unblock server
+    </button>
+    } }
+  </mat-menu>
+  }
+  <div class="flex justify-content-center flex-wrap mt-3 mb-2">
+    <div style="word-wrap: anywhere" [innerHtml]="blogDetails.description"></div>
+  </div>
+  <table *ngIf="fediAttachment" class="w-full">
+    <tr *ngFor="let fediAt of fediAttachment">
+      <th [innerHTML]="fediAt.name"></th>
+      <th [innerHTML]="fediAt.value"></th>
+    </tr>
+
+  </table>
+  <div *ngIf="!blogDetails.url.startsWith('@') || (blogDetails.followers && blogDetails.followed)"
+    class="follow-counts">
+    <div [routerLink]="['/blog', blogDetails.url ,'following']">
+      <p>Following</p>
+      <p class="big text-center">{{ blogDetails.followed }}</p>
     </div>
-  
-    <mat-menu #menu="matMenu" xPosition="before">
-      @if(!blogDetails.muted){
-      <button mat-menu-item (mousedown)="blockService.muteUser(this.blogDetails.id)">
-        <fa-icon class="mr-2" [icon]="muteUserIcon"></fa-icon>Mute user
-      </button>
-      } @else {
-      <button
-        (mousedown)="blockService.unmuteUser(this.blogDetails.id)"
-        mat-menu-item
-      >
-        <fa-icon class="mr-2" [icon]="unmuteUserIcon"></fa-icon>Unmute user
-      </button>
-      } @if(!blogDetails.blocked) {
-      <button mat-menu-item (mousedown)="blockService.blockUser(this.blogDetails.id)">
-        <fa-icon class="mr-2" [icon]="blockUserIcon"></fa-icon>Block user
-      </button>
-      } @else {
-      <button
-        mat-menu-item
-        (mousedown)="blockService.unblockUser(this.blogDetails.id)"
-      >
-        <fa-icon class="mr-2" [icon]="userIcon"></fa-icon>Unblock user
-      </button>
-      } @if(blogDetails.url.startsWith('@')) { @if( !blogDetails.serverBlocked) {
-      <button
-        mat-menu-item
-        (mousedown)="blockService.blockServer(this.blogDetails.id)"
-      >
-        <fa-icon class="mr-2" [icon]="unblockServerIcon"></fa-icon>Block server
-      </button>
-      } @else {
-      <button
-        mat-menu-item
-        (mousedown)="blockService.unblockServer(this.blogDetails.federatedHost.id)"
-      >
-        <fa-icon class="mr-2" [icon]="unblockServerIcon"></fa-icon>Unblock server
-      </button>
-      } }
-    </mat-menu>
-    }
-    <div class="flex justify-content-center flex-wrap mt-3 mb-2">
-      <div
-        style="word-wrap: anywhere"
-        [innerHtml]="blogDetails.description"
-      ></div>
+    <div [routerLink]="['/blog', blogDetails.url ,'followers']">
+      <p>Followed</p>
+      <p class="big text-center">{{ blogDetails.followers }}</p>
     </div>
-    <div *ngIf="!blogDetails.url.startsWith('@') || (blogDetails.followers && blogDetails.followed)" class="follow-counts">
-      <div [routerLink]="['/blog', blogDetails.url ,'following']">
-        <p>Following</p>
-        <p class="big text-center">{{ blogDetails.followed }}</p>
-      </div>
-      <div [routerLink]="['/blog', blogDetails.url ,'followers']">
-        <p>Followed</p>
-        <p class="big text-center">{{ blogDetails.followers }}</p>
-      </div>
-    </div>
-    <div class="mt-6 text-600 text-sm" *ngIf="blogDetails.url.startsWith('@')">
-      <strong>Attention!</strong>
-      This is an external user, and the profile might not be complete.
-      <br />
-      To check this user's complete profile in their instance
-      <a [href]="blogDetails.remoteId" target="_blank"> click here</a>.
-    </div>
-  </mat-card>
+  </div>
+  <div class="mt-6 text-600 text-sm" *ngIf="blogDetails.url.startsWith('@')">
+    <strong>Attention!</strong>
+    This is an external user, and the profile might not be complete.
+    <br />
+    To check this user's complete profile in their instance
+    <a [href]="blogDetails.remoteId" target="_blank"> click here</a>.
+  </div>
+</mat-card>
