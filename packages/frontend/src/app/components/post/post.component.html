@@ -45,8 +45,13 @@
         <fa-icon size="lg" (mousedown)="deletePost(post[post.length - 1].id)" class="cursor-pointer delete-rewoot-icon"
           [icon]="closeIcon" matTooltip="Delete rewoot"></fa-icon>
         } @else {
-        <fa-icon size="lg" *ngIf="finalPost.privacy !== 10 && finalPost.privacy !== 1" (click)="quickReblog(finalPost)"
-          class="cursor-pointer rewoot-icon" [icon]="quickReblogIcon" matTooltip="Quick rewoot"></fa-icon>
+        <div matTooltip="Quick rewoot" *ngIf="finalPost.privacy !== 10 && finalPost.privacy !== 1"
+          class="fa-stack cursor-pointer rewoot-icon" (click)="quickReblog(finalPost)">
+          <fa-icon size="lg" [icon]="quickReblogIcon" class="fa-stack-1x"></fa-icon>
+          <fa-icon *ngIf="postService.rewootedPosts.includes(finalPost.id)" class="fa-stack-1x" size="lg"
+            [icon]="checkIcon"></fa-icon>
+        </div>
+
         }
 
         <fa-icon size="lg" (mousedown)="replyPost(finalPost)" class="cursor-pointer reply-icon" [icon]="reblogIcon"

@@ -32,6 +32,7 @@ import {
   faReply,
   faRepeat,
   faQuoteLeft,
+  faCheck,
 } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
@@ -79,6 +80,7 @@ export class PostComponent implements OnInit, OnChanges, OnDestroy {
   serverIcon = faServer;
   userIcon = faUser;
   editedIcon = faPen;
+  checkIcon = faCheck;
 
   // subscriptions
   updateFollowersSubscription;
@@ -244,6 +246,10 @@ export class PostComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   async deletePost(id: string) {
+    this.deletePostService.openDeletePostDialog(id);
+  }
+
+  async deleteRewoot(id: string) {
     this.deletePostService.openDeletePostDialog(id);
   }
 
