@@ -59,6 +59,13 @@
   <div class="flex justify-content-center flex-wrap mt-3 mb-2">
     <div style="word-wrap: anywhere" [innerHtml]="blogDetails.description"></div>
   </div>
+  <table *ngIf="fediAttachment" class="w-full">
+    <tr *ngFor="let fediAt of fediAttachment">
+      <th [innerHTML]="fediAt.name"></th>
+      <th [innerHTML]="fediAt.value"></th>
+    </tr>
+
+  </table>
   <div *ngIf="!blogDetails.url.startsWith('@') || (blogDetails.followers && blogDetails.followed)"
     class="follow-counts">
     <div [routerLink]="['/blog', blogDetails.url ,'following']">

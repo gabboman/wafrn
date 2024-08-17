@@ -22,7 +22,7 @@ import { environment } from 'src/environments/environment';
     FontAwesomeModule,
     MatMenuModule,
     MatButtonModule,
-    RouterModule
+    RouterModule,
   ],
   templateUrl: './blog-header.component.html',
   styleUrl: './blog-header.component.scss'
@@ -35,7 +35,7 @@ export class BlogHeaderComponent implements OnChanges, OnDestroy {
   updateFollowersSubscription;
   followedUsers: string[] = [];;
   notYetAcceptedFollows: string[] = [];;
-
+  fediAttachment: { name: string, value: string }[] = []
   expandDownIcon = faChevronDown;
   muteUserIcon = faVolumeMute;
   unmuteUserIcon = faVolumeUp;
@@ -75,6 +75,10 @@ export class BlogHeaderComponent implements OnChanges, OnDestroy {
         encodeURIComponent(
           environment.baseMediaUrl + this.blogDetails.headerImage
         );
+      const fediAttachment = this.blogDetails.publicOptions.find(elem => elem.optionName == "fediverse.public.attachment")
+      if (fediAttachment) {
+        this.fediAttachment = JSON.parse(fediAttachment.optionValue)
+      }
     }
   }
 
