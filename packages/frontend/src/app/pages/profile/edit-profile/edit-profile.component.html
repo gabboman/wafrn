@@ -38,6 +38,15 @@
             }
           </mat-select>
         </mat-form-field>
+        <!-- Hidden until feature is fully done -->
+        <mat-form-field *ngIf="false" class="w-full">
+          <mat-label>Asks</mat-label>
+          <mat-select [required]="true" formControlName="asksLevel">
+            @for(option of askOptions; track $index) {
+            <mat-option [value]="option.level">{{ option.name }}</mat-option>
+            }
+          </mat-select>
+        </mat-form-field>
         <div class="w-full">
           <mat-checkbox formControlName="manuallyAcceptsFollows"></mat-checkbox>
           <mat-label>Manualy accept follows</mat-label>
@@ -57,10 +66,10 @@
         </div>
         <div class="flex align-items-center justify-content-between mb-6">
           <p>Threads is a platform created by meta (formerly facebook). We understand
-          both the fact that you might want to federate with them, and also that you
-          may not. Hence why, unlike in other places, this kind of decisions are for
-          you to make. By default meta will not see you, unless you mark this option
-          in your profile.</p>
+            both the fact that you might want to federate with them, and also that you
+            may not. Hence why, unlike in other places, this kind of decisions are for
+            you to make. By default meta will not see you, unless you mark this option
+            in your profile.</p>
         </div>
       </mat-expansion-panel>
       <mat-expansion-panel hideToggle>
