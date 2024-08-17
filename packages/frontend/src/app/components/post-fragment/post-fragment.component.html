@@ -5,68 +5,69 @@
     </div>
     <button mat-button color="primary" (mousedown)="cwClick()" class="w-full mt-3">
       @if(!showCw){
-        Hide again
+      Hide again
       }
       @else {
-        I understand this and I want to see this woot
+      I understand this and I want to see this woot
 
       }
-      
+
     </button>
   </div>
-  <div [ngClass]="{ 'post-danger': fragment.content_warning && showCw, 'mt-4': fragment.content_warning}" >
-  <div *ngIf="fragment.content !== '' || fragment.tags?.length"
-    class="fragment-content wafrn-text-default overflow-hidden"
-    [ngClass]="{ blurry: fragment.content_warning && showCw }" [injectHTML]="fragment.content"></div>
-  <div *ngIf="fragment.questionPoll" [ngClass]="{ blurry: fragment.content_warning && showCw }">
-    <app-poll [poll]="fragment.questionPoll"></app-poll>
-  </div>
-  <div *ngFor="let media of fragment.medias" [ngClass]="{ blurry: fragment.content_warning && showCw }">
-    <app-wafrn-media [data]="media"></app-wafrn-media>
-  </div>
-  <div id="fragment-tags" class="flex flex-wrap gap-2 mt-4" *ngIf="fragment.tags && fragment.tags.length"
-    [ngClass]="{ blurry: fragment.content_warning && showCw }">
-    @for(tag of fragment.tags; track $index) {
-    <a class="tag" [routerLink]="'/dashboard/search/' + tag.tagName">
-      #{{ tag.tagName }}
-    </a>
+  <div [ngClass]="{ 'post-danger': fragment.content_warning && showCw, 'mt-4': fragment.content_warning}">
+    <div *ngIf="fragment.content !== '' || fragment.tags?.length"
+      class="fragment-content wafrn-text-default overflow-hidden"
+      [ngClass]="{ blurry: fragment.content_warning && showCw }" [injectHTML]="fragment.content"></div>
+    <div *ngIf="fragment.questionPoll" [ngClass]="{ blurry: fragment.content_warning && showCw }">
+      <app-poll [poll]="fragment.questionPoll"></app-poll>
+    </div>
+    <div *ngFor="let media of fragment.medias" [ngClass]="{ blurry: fragment.content_warning && showCw }">
+      <app-wafrn-media [data]="media"></app-wafrn-media>
+    </div>
+    <div id="fragment-tags" class="flex flex-wrap gap-2 mt-4" *ngIf="fragment.tags && fragment.tags.length"
+      [ngClass]="{ blurry: fragment.content_warning && showCw }">
+      @for(tag of fragment.tags; track $index) {
+      <a class="tag" [routerLink]="'/dashboard/search/' + tag.tagName">
+        #{{ tag.tagName }}
+      </a>
+      }
+    </div>
+    @for(quote of fragment.quotes; track $index) {
+    <div *ngIf="quote" [ngClass]="{ blurry: fragment.content_warning && showCw }"
+      class="quoted-post cursor-pointer mb-2">
+      <div class="flex">
+        <app-post-header class="w-full" [fragment]="quote" [simplified]="true" [disableLink]="true"></app-post-header>
+      </div>
+      <div class="cursor-pointer" [routerLink]="'/fediverse/post/' + quote.id">
+        <app-post-fragment [fragment]="quote"></app-post-fragment>
+      </div>
+    </div>
     }
-  </div>
-  @for(quote of fragment.quotes; track $index) {
-  <div *ngIf="quote" [ngClass]="{ blurry: fragment.content_warning && showCw }" class="quoted-post cursor-pointer mb-2">
-    <div class="flex">
-      <app-post-header class="w-full" [fragment]="quote" [simplified]="true" [disableLink]="true"></app-post-header>
-    </div>
-    <div class="cursor-pointer" [routerLink]="'/fediverse/post/' + quote.id">
-      <app-post-fragment [fragment]="quote"></app-post-fragment>
-    </div>
-  </div>
-  }
-  <section class="mt-2" id="emoji-reactions">
-    @for (emoji of emojiCollection; track $index) {
-      
-    @if (avaiableEmojiNames.includes(emoji.name) || !emoji.img) {
-    <button [disabled]=" reactionLoading" [ngClass]="{
+    <section class="mt-2" id="emoji-reactions">
+      @for (emoji of emojiCollection; track $index) {
+
+      @if (avaiableEmojiNames.includes(emoji.name) || !emoji.img) {
+      <!--TODO fix this! The function gettooltipusers gets called on every event
+      wich slows down the app when tehre are too many emojis
+      solution: rework the emojis part so its processed only on load with all data there
+      -->
+      <button [disabled]=" reactionLoading" [ngClass]="{
       reacted: emojiReactionIncludesMe(emoji),
       blurry: fragment.content_warning && showCw
-    }"
-    (mousedown)="toggleEmojiReact(emoji)"
-    mat-stroked-button
-    matTooltipTouchGestures="on"
-    [matTooltip]="
+    }" (mousedown)="toggleEmojiReact(emoji)" mat-stroked-button matTooltipTouchGestures="on" [matTooltip]="
       (isLike(emoji) ? 'Liked' : emoji.content) +
       ' by ' +
       getTooltipUsers(emoji.users)
     ">
-  @if (emoji.img) {
-  <img class="post-emoji" [src]="emoji.img" [alt]="emoji.content" />
-  } @else {
-  <span> {{ emoji.content }}</span>
-  } @if (emoji.users.length !== 1) {
-  <span> {{ emoji.users.length }}</span>
-  }
-</button>
-    } @else {
+        @if (emoji.img) {
+        <img class="post-emoji" [src]="emoji.img" [alt]="emoji.content" />
+        } @else {
+        <span> {{ emoji.content }}</span>
+        } @if (emoji.users.length !== 1) {
+        <span> {{ emoji.users.length }}</span>
+        }
+      </button>
+      } @else {
       <span [ngClass]="{
         blurry: fragment.content_warning && showCw
       }" class="p-3" [matTooltip]="
@@ -82,11 +83,11 @@
         <span> {{ emoji.users.length }}</span>
         }
       </span>
-    }
+      }
 
-    }
-    <app-emoji-react [ngClass]="{ blurry: fragment.content_warning && showCw }"
-      *ngIf="!(userId === '' || userId === fragment.userId)" [postId]="fragment.id"></app-emoji-react>
-  </section>
-</div>
+      }
+      <app-emoji-react [ngClass]="{ blurry: fragment.content_warning && showCw }"
+        *ngIf="!(userId === '' || userId === fragment.userId)" [postId]="fragment.id"></app-emoji-react>
+    </section>
+  </div>
 </ng-container>
