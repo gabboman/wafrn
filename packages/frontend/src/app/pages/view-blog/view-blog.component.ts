@@ -28,6 +28,7 @@ import { ThemeService } from 'src/app/services/theme.service';
 import { environment } from 'src/environments/environment';
 import { MatDialog } from '@angular/material/dialog';
 import { AcceptThemeComponent } from 'src/app/components/accept-theme/accept-theme.component';
+import { BlogDetails } from 'src/app/interfaces/blogDetails';
 @Component({
   selector: 'app-view-blog',
   templateUrl: './view-blog.component.html',
@@ -43,7 +44,7 @@ export class ViewBlogComponent implements OnInit, OnDestroy {
   blogUrl: string = '';
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  blogDetails: any;
+  blogDetails!: BlogDetails;
   userLoggedIn = false;
   avatarUrl = '';
   navigationSubscription!: Subscription;
@@ -51,7 +52,7 @@ export class ViewBlogComponent implements OnInit, OnDestroy {
   viewedPostsIds: string[] = [];
   intersectionObserverForLoadPosts!: IntersectionObserver;
 
-  
+
   shareExternalIcon = faArrowUpRightFromSquare;
   solidHeartIcon = faHeart;
   clearHeartIcon = faHeartBroken;
@@ -110,7 +111,7 @@ export class ViewBlogComponent implements OnInit, OnDestroy {
         this.found = false;
         this.loading = false;
       });
-    if (blogResponse && blogResponse.success !== false) {
+    if (blogResponse) {
       this.blogDetails = blogResponse;
 
       this.loadPosts(this.currentPage).then(() => {
@@ -125,11 +126,11 @@ export class ViewBlogComponent implements OnInit, OnDestroy {
       });
       this.avatarUrl = this.blogDetails.url.startsWith('@')
         ? environment.externalCacheurl +
-          encodeURIComponent(this.blogDetails.avatar)
+        encodeURIComponent(this.blogDetails.avatar)
         : environment.externalCacheurl +
-          encodeURIComponent(
-            environment.baseMediaUrl + this.blogDetails.avatar
-          );
+        encodeURIComponent(
+          environment.baseMediaUrl + this.blogDetails.avatar
+        );
       this.titleService.setTitle(`${this.blogDetails.url}'s blog`);
       this.metaTagService.addTags([
         {

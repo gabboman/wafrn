@@ -5,6 +5,7 @@ import {
   UntypedFormGroup,
   Validators,
 } from '@angular/forms';
+import { BlogDetails } from 'src/app/interfaces/blogDetails';
 import { Emoji } from 'src/app/interfaces/emoji';
 import { DashboardService } from 'src/app/services/dashboard.service';
 import { JwtService } from 'src/app/services/jwt.service';
@@ -61,7 +62,7 @@ export class EditProfileComponent implements OnInit {
     this.dashboardService
       .getBlogDetails(this.jwtService.getTokenData()['url'], true)
       .then(async (blogDetails) => {
-        blogDetails['avatar'] = undefined;
+        blogDetails['avatar'] = '';
         this.editProfileForm.patchValue(blogDetails);
         this.editProfileForm.controls['disableNSFWFilter'].patchValue(
           this.mediaService.checkNSFWFilterDisabled
@@ -81,7 +82,7 @@ export class EditProfileComponent implements OnInit {
           disableForceAltText === 'true'
         );
         const publicOptions = blogDetails.publicOptions;
-        const askLevel = publicOptions.find((elem: any) => elem.optionName == "wafrn.public.asks")
+        const askLevel = publicOptions.find((elem) => elem.optionName == "wafrn.public.asks")
         this.editProfileForm.controls['asksLevel'].patchValue(askLevel ? parseInt(askLevel.optionValue) : 2)
         this.loading = false;
       });
