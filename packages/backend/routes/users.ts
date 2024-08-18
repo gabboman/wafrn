@@ -1,6 +1,7 @@
 import { Application, Response } from 'express'
 import { Op, Sequelize } from 'sequelize'
 import {
+  Ask,
   Blocks,
   Emoji,
   EmojiCollection,
@@ -689,7 +690,7 @@ export default function userRoutes(app: Application) {
     res.send({ success: success })
   })
 
-  app.get('/api/user/:url/follows', authenticateToken, async (req: AuthorizedRequest, res: Response) => {
+  app.get('/api/user/:url/follows', createAccountLimiter, authenticateToken, async (req: AuthorizedRequest, res: Response) => {
     const url = req.params?.url as string
     const followers = req.query?.followers === 'true'
     if (url) {
@@ -726,6 +727,48 @@ export default function userRoutes(app: Application) {
       }
     } else {
       res.sendStatus(404)
+    }
+  })
+
+  app.post('/api/user/:url/ask', optionalAuthentication, async (req: AuthorizedRequest, res: Response) => {
+    const url = req.params?.url as string
+    const userRecivingAsk = await User.findOne({
+      where: {
+        urlToLower: url.toLowerCase()
+      }
+    })
+    const userAskLevelDBOption = UserOptions.findOne({
+      where: {
+        userId: userRecivingAsk.id,
+        optionName: 'wafrn.public.asks'
+      }
+    })
+    const userAskLevel = userAskLevelDBOption ? parseInt(userAskLevelDBOption.optionValue) : 2
+    // 
+    if ((!req.jwtData?.userId && userAskLevel === 1) || (req.jwtData?.userId && [1, 2].includes(userAskLevel))) {
+      // user can recive an ask from this endpoint
+      const userAsking = req.jwtData?.userId ? await User.findByPk(req.jwtData.userId) : await User.findOne({ where: { url: environment.deletedUser } })
+      if (userAsking.id === userRecivingAsk.id) {
+        return res.send({
+          success: false
+        })
+      }
+      const ask = await Ask.create({
+        question: req.body.question,
+        apObject: null,
+        creationIp: getIp(req),
+        answered: false,
+        userAsked: userRecivingAsk.id,
+        userAsker: userAsking.id
+      })
+      res.send({
+        success: true
+      })
+    } else {
+      // user can not recive an ask here so we say nope.avi
+      res.send({
+        success: false
+      })
     }
   })
 }

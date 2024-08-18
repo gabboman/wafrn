@@ -21,8 +21,8 @@ const sequelize = new Sequelize(environment.databaseConnectionString, {
     connectTimeout: 10000
   },
   pool: {
-    max: 6,
-    min: 2,
+    max: 10,
+    min: 3,
     acquire: 30000,
     idle: 5000
   },
@@ -612,7 +612,9 @@ const RemoteUserPostView = sequelize.define('remoteUserPostView', {})
 const Ask = sequelize.define('asks', {
   question: Sequelize.TEXT,
   apObject: Sequelize.TEXT,
-  creationIp: Sequelize.STRING
+  creationIp: Sequelize.STRING,
+  answered: Sequelize.BOOLEAN,
+
 })
 
 Post.hasOne(Ask)

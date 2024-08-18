@@ -42,6 +42,7 @@ export class BlogHeaderComponent implements OnChanges, OnDestroy {
   userIcon = faUser;
   blockUserIcon = faUserSlash;
   unblockServerIcon = faServer;
+  allowAsk = false;
 
 
 
@@ -75,10 +76,17 @@ export class BlogHeaderComponent implements OnChanges, OnDestroy {
         encodeURIComponent(
           environment.baseMediaUrl + this.blogDetails.headerImage
         );
+      const askLevelOption = this.blogDetails.publicOptions.find(elem => elem.optionName == "wafrn.public.asks")
+      let askLevel = askLevelOption ? parseInt(askLevelOption.optionValue) : 2;
+      if (this.blogDetails.url.startsWith('@')) {
+        askLevel = 3
+      }
+      this.allowAsk = this.loginService.checkUserLoggedIn() ? [1, 2].includes(askLevel) : askLevel == 1;
       const fediAttachment = this.blogDetails.publicOptions.find(elem => elem.optionName == "fediverse.public.attachment")
       if (fediAttachment) {
         this.fediAttachment = JSON.parse(fediAttachment.optionValue)
       }
+
     }
   }
 

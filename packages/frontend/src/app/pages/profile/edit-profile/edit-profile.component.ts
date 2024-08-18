@@ -39,7 +39,7 @@ export class EditProfileComponent implements OnInit {
     disableNSFWFilter: new UntypedFormControl(false, []),
     disableGifsByDefault: new UntypedFormControl(false, []),
     defaultPostEditorPrivacy: new UntypedFormControl(false, []),
-    asksLevel: new UntypedFormControl(1, []),
+    asksLevel: new UntypedFormControl(2, []),
     description: new FormControl('', Validators.required),
     federateWithThreads: new FormControl(false),
     disableForceAltText: new FormControl(false),
