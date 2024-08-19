@@ -737,7 +737,7 @@ export default function userRoutes(app: Application) {
         urlToLower: url.toLowerCase()
       }
     })
-    const userAskLevelDBOption = UserOptions.findOne({
+    const userAskLevelDBOption = await UserOptions.findOne({
       where: {
         userId: userRecivingAsk.id,
         optionName: 'wafrn.public.asks'

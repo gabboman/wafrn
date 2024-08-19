@@ -2,6 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component, Input, OnChanges, OnDestroy, SimpleChanges } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
+import { MatDialog } from '@angular/material/dialog';
 import { MatMenuModule } from '@angular/material/menu';
 import { RouterModule } from '@angular/router';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
@@ -12,6 +13,7 @@ import { LoginService } from 'src/app/services/login.service';
 import { MessageService } from 'src/app/services/message.service';
 import { PostsService } from 'src/app/services/posts.service';
 import { environment } from 'src/environments/environment';
+import { AskDialogContentComponent } from '../ask-dialog-content/ask-dialog-content.component';
 
 @Component({
   selector: 'app-blog-header',
@@ -51,6 +53,7 @@ export class BlogHeaderComponent implements OnChanges, OnDestroy {
     private postService: PostsService,
     private messages: MessageService,
     public blockService: BlocksService,
+    public dialogService: MatDialog
 
   ) {
     this.userLoggedIn = loginService.checkUserLoggedIn();
@@ -82,6 +85,8 @@ export class BlogHeaderComponent implements OnChanges, OnDestroy {
         askLevel = 3
       }
       this.allowAsk = this.loginService.checkUserLoggedIn() ? [1, 2].includes(askLevel) : askLevel == 1;
+      this.allowAsk = this.allowAsk && this.loginService.getLoggedUserUUID() != this.blogDetails.id;
+      this.allowAsk = true;
       const fediAttachment = this.blogDetails.publicOptions.find(elem => elem.optionName == "fediverse.public.attachment")
       if (fediAttachment) {
         this.fediAttachment = JSON.parse(fediAttachment.optionValue)
@@ -125,5 +130,20 @@ export class BlogHeaderComponent implements OnChanges, OnDestroy {
           'Something went wrong! Check your internet conectivity and try again',
       });
     }
+  }
+
+  async getAskDialogComponent(): Promise<typeof AskDialogContentComponent> {
+    const { AskDialogContentComponent } = await import(
+      '../ask-dialog-content/ask-dialog-content.component'
+    );
+    return AskDialogContentComponent;
+  }
+
+
+  async openAskDialog() {
+    this.dialogService.open(await this.getAskDialogComponent(), {
+      data: { details: this.blogDetails },
+      width: '100%',
+    });
   }
 }

@@ -1,0 +1,8 @@
+<p></p>
+<form [formGroup]="askForm" (ngSubmit)="onSubmit()">
+    <mat-form-field class="w-full">
+        <mat-label>What is your question</mat-label>
+        <textarea trolName="ask" type="textarea" matInput></textarea>
+    </mat-form-field>
+    <button mat-flat-button class="w-full" type="submit">Ask</button>
+</form>
