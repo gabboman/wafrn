@@ -69,6 +69,9 @@ export default function postsRoutes(app: Application) {
             res.send(unjointedPost)
             success = true
           }
+        } else {
+          res.sendStatus(404)
+          return
         }
       }
 
