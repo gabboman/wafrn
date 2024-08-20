@@ -19,7 +19,7 @@ export class WafrnAuthInterceptor implements HttpInterceptor {
     }
     return next.handle(authReq).pipe(
       catchError((error: HttpErrorResponse) => {
-        if(error.status === 403 || error.status === 401) {
+        if (error.status === 401) {
           localStorage.clear();
           this.router.navigate(['/']);
         }
