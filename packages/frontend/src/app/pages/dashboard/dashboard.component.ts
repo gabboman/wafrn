@@ -8,6 +8,7 @@ import { Title, Meta } from '@angular/platform-browser';
 import { ThemeService } from 'src/app/services/theme.service';
 import { MessageService } from 'src/app/services/message.service';
 import { faArrowsRotate } from '@fortawesome/free-solid-svg-icons';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-dashboard',
@@ -22,10 +23,10 @@ export class DashboardComponent implements OnInit, OnDestroy {
   viewedPostsIds: string[] = [];
   currentPage = 0;
   level = 1;
-  timestamp = new Date().getTime()
+  timestamp = new Date().getTime();
   title = '';
   reloadIcon = faArrowsRotate;
-  updateFollowersSubscription;
+  updateFollowersSubscription?: Subscription;
 
   constructor(
     private dashboardService: DashboardService,
@@ -49,20 +50,9 @@ export class DashboardComponent implements OnInit, OnDestroy {
         content: 'Explore the posts in wafrn and if it looks cool join us!',
       },
     ]);
-    this.updateFollowersSubscription = this.postService.updateFollowers.subscribe(() => {
-      if (this.postService.followedUserIds.length === 1 && this.level === 1) {
-        // if the user follows NO ONE we take them to the explore page!
-        this.messages.add({
-          severity: 'info',
-          summary:
-            "You aren't following anyone, so we took you to the explore page",
-        });
-        this.router.navigate(['/dashboard/exploreLocal']);
-      }
-    });
   }
   ngOnDestroy(): void {
-    this.updateFollowersSubscription.unsubscribe();
+    this.updateFollowersSubscription?.unsubscribe();
   }
 
   ngOnInit(): void {
@@ -84,7 +74,20 @@ export class DashboardComponent implements OnInit, OnDestroy {
       this.level = 25;
       this.title = 'My silenced posts';
     }
-    
+
+    this.updateFollowersSubscription =
+      this.postService.updateFollowers.subscribe(() => {
+        if (this.postService.followedUserIds.length === 1 && this.level === 1) {
+          // if the user follows NO ONE we take them to the explore page!
+          this.messages.add({
+            severity: 'info',
+            summary:
+              "You aren't following anyone, so we took you to the explore page",
+          });
+          this.router.navigate(['/dashboard/exploreLocal']);
+        }
+      });
+
     this.loadPosts(this.currentPage).then(() => {
       setTimeout(() => {
         this.themeService.setMyTheme();
@@ -112,7 +115,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
     this.currentPage = 0;
     this.viewedPostsNumber = 0;
     this.viewedPostsIds = [];
-    this.timestamp = new Date().getTime()
+    this.timestamp = new Date().getTime();
     this.loadPosts(this.currentPage);
     window.scrollTo(0, 0);
   }
