@@ -218,11 +218,7 @@ async function getRemoteActorIdProcessor(job: Job) {
               userRes.update(userData)
               await userRes.save()
             } else {
-              logger.debug({
-                message: 'user is null',
-                id: res,
-                url: actorUrl
-              })
+              redisCache.del('userRemoteId:' + actorUrl.toLocaleLowerCase())
             }
           }
         } else {

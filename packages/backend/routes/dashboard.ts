@@ -29,7 +29,7 @@ export default function dashboardRoutes(app: Application) {
 
       // level: 0 explore 1 dashboard 2 localExplore 10 dms
       if (level !== 2 && posterId === '00000000-0000-0000-0000-000000000000') {
-        res.sendStatus(403)
+        res.sendStatus(401)
         return
       }
 

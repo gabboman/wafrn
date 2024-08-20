@@ -2,18 +2,14 @@
 
 $font-family: sans-serif;
 // Define a dark theme
-$dark-theme: mat.define-theme((
-  color: (
-    theme-type: dark,
-    primary: mat.$violet-palette,
-  ),
-  typography: (
-    brand-family:  $font-family,
-    plain-family:  $font-family,
-    
-    bold-weight: 900,
-  )
-));
+$dark-theme: mat.define-theme((color: (theme-type: dark,
+        primary: mat.$violet-palette,
+      ),
+      typography: (brand-family: $font-family,
+        plain-family: $font-family,
+
+        bold-weight: 900,
+      )));
 
 $bgcolor: #151116;
 $cardcolor: #2a323d;
@@ -30,14 +26,14 @@ html {
 }
 
 @include mat.color-variants-backwards-compatibility($dark-theme);
-@include mat.typography-hierarchy($dark-theme);  // typography styles could be included too
+@include mat.typography-hierarchy($dark-theme); // typography styles could be included too
 
 .mat-drawer-content {
   background-color: $bgcolor
 }
 
 
-$wafrn-blue: rgb(56, 254, 241);
+$wafrn-blue: #D6CA98;
 // $wafrn-dark: rgb(18, 95, 90);
 $editor-buttons: #ffffffde;
 
@@ -90,7 +86,7 @@ a:visited,
   border-color: #999;
 }
 
-.ql-snow > .ql-editor {
+.ql-snow>.ql-editor {
   color: white;
   font-size: 1.25em !important;
   border-radius: 0 0 5px 5px;
@@ -105,7 +101,7 @@ li {
   margin-left: 1.5em;
 }
 
-.ql-snow > .ql-editor.ql-blank::before {
+.ql-snow>.ql-editor.ql-blank::before {
   color: white;
   opacity: 0.5;
 }
@@ -115,6 +111,7 @@ li {
 }
 
 $avatar-length: 40px;
+
 .avatar-container {
   display: flex;
   height: $avatar-length;
@@ -149,7 +146,7 @@ $avatar-length: 40px;
   user-select: unset;
 }
 
-.mention > span {
+.mention>span {
   margin: 0;
 }
 
@@ -326,7 +323,7 @@ blockquote {
 // not mobile only styles
 @media (min-width: 992px) {
   .input-height-btn {
-    height: 56px!important;
+    height: 56px !important;
   }
 }
 
@@ -345,19 +342,21 @@ blockquote {
 }
 
 
-.mat-mdc-card, table, mat-paginator, .ql-mention-list-container, .mat-mdc-menu-panel {
+.mat-mdc-card,
+table,
+mat-paginator,
+.ql-mention-list-container,
+.mat-mdc-menu-panel {
   background-color: $cardcolor !important;
 }
 
 
 .post-danger {
-  background: repeating-linear-gradient(
-    45deg,
-    $bgcolor,
-    $bgcolor 10px,
-    $cardcolor 10px,
-    $cardcolor 20px
-   );
+  background: repeating-linear-gradient(45deg,
+      $bgcolor,
+      $bgcolor 10px,
+      $cardcolor 10px,
+      $cardcolor 20px);
 }
 
 .center-text {
