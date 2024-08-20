@@ -55,28 +55,33 @@ export default function postsRoutes(app: Application) {
 
     navigationRateLimiter,
     async (req: AuthorizedRequest, res: Response) => {
-      let success = false
-      const userId = req.jwtData?.userId
-      if (req.params?.id) {
+      try {
+        const userId = req.jwtData?.userId
+        const postId = req.params?.id
+        if (!postId) {
+          return res.status(400).send({ success: false, errorMessage: 'No post id received' })
+        }
+
         const unjointedPost = await getUnjointedPosts(
-          [req.params.id],
+          [postId],
           userId ? userId : '00000000-0000-0000-0000-000000000000'
         )
         const post = unjointedPost.posts[0]
-        if (post) {
-          const mentions = unjointedPost.mentions.map((elem: any) => elem.userMentioned)
-          if (post.userId === userId || mentions.includes(userId) || post.privacy !== 10) {
-            res.send(unjointedPost)
-            success = true
-          }
-        } else {
-          res.sendStatus(404)
-          return
+        if (!post) {
+          return res.status(404).send({ success: false, errorMessage: 'Post not found' })
         }
-      }
 
-      if (!success) {
-        res.send({ success: false })
+        const mentions = unjointedPost.mentions.map((elem: any) => elem.userMentioned)
+        const userCanSeePost = post.userId === userId || mentions.includes(userId) || post.privacy !== 10
+
+        if (!userCanSeePost) {
+          return res.status(403).send({ success: false, errorMessage: 'You are not authorized to read this post' })
+        }
+
+        return res.send(unjointedPost)
+      } catch (err) {
+        logger.error(err)
+        return res.status(500).send({ success: false, errorMessage: 'Internal server error' })
       }
     }
   )
