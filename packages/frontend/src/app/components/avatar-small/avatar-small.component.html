@@ -1,11 +1,4 @@
 <a class="avatar-container" [routerLink]="['/blog', user.url]">
-<img
-class="avatar"
-onerror="this.onerror=null;this.src='/api/uploads/default.webp'"
-*ngIf="avatar"
-[src]="avatar"
-[alt]="user.url + '\'s avatar'"
-crossorigin="anonymous"
-loading="lazy"
->
+    <img class="avatar" onerror="this.onerror=null;this.src='/assets/img/default.webp'" *ngIf="avatar" [src]="avatar"
+        [alt]="user.url + '\'s avatar'" crossorigin="anonymous" loading="lazy">
 </a>
