@@ -72,7 +72,7 @@ export default function userRoutes(app: Application) {
             }
           })
           if (!emailExists) {
-            let avatarURL = '/uploads/default.webp'
+            let avatarURL = '' // Empty user avatar in case of error let frontend do stuff
             if (req.file != null) {
               avatarURL = `/${await optimizeMedia(req.file.path)}`
             }
