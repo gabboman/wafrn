@@ -163,4 +163,30 @@ export class DashboardService {
 
     return result[0];
   }
+
+  async getMyAsks(): Promise<{
+    userAsker: string,
+    question: string,
+    apObject: string,
+    user: SimplifiedUser
+  }[]> {
+    const petition = await firstValueFrom(
+      this.http.get<{
+        users: SimplifiedUser[],
+        asks: {
+          userAsker: string,
+          question: string,
+          apObject: string
+        }[]
+      }>(`${this.baseUrl}/user/myAsks`)
+    );
+
+    return petition.asks.map(ask => {
+      return {
+        ...ask,
+        user: petition.users.find(usr => usr.id == ask.userAsker) as SimplifiedUser
+      }
+    })
+
+  }
 }
