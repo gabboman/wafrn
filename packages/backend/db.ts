@@ -614,7 +614,13 @@ const Ask = sequelize.define('asks', {
   apObject: Sequelize.TEXT,
   creationIp: Sequelize.STRING,
   answered: Sequelize.BOOLEAN,
-
+}, {
+  indexes: [
+    {
+      fields: ['answered'],
+      unique: false
+    }
+  ]
 })
 
 Post.hasOne(Ask)
