@@ -32,9 +32,11 @@ export class BlogService {
   }
 
   async askuser(userUrl: string, ask: string) {
-    let body = new FormData();
-    body.append('ask', ask)
-    const res = await firstValueFrom(this.http.post(environment.baseUrl + `/user/${userUrl}/ask`, body))
+    const res = await firstValueFrom(this.http.post(environment.baseUrl + `/user/${userUrl}/ask`,
+      {
+        question: ask
+      }
+    ))
     return res;
   }
 }

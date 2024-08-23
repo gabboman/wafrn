@@ -39,8 +39,7 @@ export class AskDialogContentComponent {
 
 
   async onSubmit() {
-    let response = await this.blogService.askuser(this.data.details.url, this.askForm.value.content as string)
-    console.log(response)
+    await this.blogService.askuser(this.data.details.url, this.askForm.value.content as string)
   }
 
 }
