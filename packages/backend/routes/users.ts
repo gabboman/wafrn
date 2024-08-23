@@ -730,6 +730,31 @@ export default function userRoutes(app: Application) {
     }
   })
 
+  app.get('/api/user/myAsks', authenticateToken, async (req: AuthorizedRequest, res: Response) => {
+    const userId = req.jwtData?.userId as string;
+    const asks = await Ask.findAll({
+      attributes: ['userAsker', 'question', 'apObject'],
+      where: {
+        userAsker: userId,
+        answered: false,
+      }
+    });
+    const users = await User.findAll({
+      attributes: ['url', 'avatar', 'name', 'id', 'description'],
+      where: {
+        id: {
+          [Op.in]: asks.map((ask: any) => ask.userAsker)
+        }
+      }
+    });
+    res.send({
+      asks: asks,
+      users: users
+    })
+
+  })
+
+
   app.post('/api/user/:url/ask', optionalAuthentication, async (req: AuthorizedRequest, res: Response) => {
     const url = req.params?.url as string
     const userRecivingAsk = await User.findOne({
@@ -748,7 +773,7 @@ export default function userRoutes(app: Application) {
     if ((!req.jwtData?.userId && userAskLevel === 1) || (req.jwtData?.userId && [1, 2].includes(userAskLevel))) {
       // user can recive an ask from this endpoint
       const userAsking = req.jwtData?.userId ? await User.findByPk(req.jwtData.userId) : await User.findOne({ where: { url: environment.deletedUser } })
-      if (userAsking.id === userRecivingAsk.id) {
+      if (false && userAsking.id === userRecivingAsk.id) {
         return res.send({
           success: false
         })
