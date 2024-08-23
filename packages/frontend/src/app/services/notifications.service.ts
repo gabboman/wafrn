@@ -35,17 +35,20 @@ export class NotificationsService {
     reports: number;
     usersAwaitingAproval: number;
     followsAwaitingAproval: number;
+    asks: number;
   }> {
     let res: {
       notifications: number;
       reports: number;
       usersAwaitingAproval: number;
       followsAwaitingAproval: number;
+      asks: number;
     } = {
       notifications: 0,
       reports: 0,
       followsAwaitingAproval: 0,
       usersAwaitingAproval: 0,
+      asks: 0
     };
     try {
       const lastTimeCheckedString = localStorage.getItem(
@@ -65,6 +68,7 @@ export class NotificationsService {
           reports: number;
           usersAwaitingAproval: number;
           followsAwaitingAproval: number;
+          asks: number;
         }>(`${environment.baseUrl}/v2/notificationsCount`, {
           params: petitionData,
         })
