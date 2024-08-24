@@ -9,6 +9,7 @@ import { firstValueFrom } from 'rxjs';
 import { unlinkedPosts } from '../interfaces/unlinked-posts';
 import { Emoji } from '../interfaces/emoji';
 import { BlogDetails } from '../interfaces/blogDetails';
+import { Ask } from '../interfaces/ask';
 
 @Injectable({
   providedIn: 'root',
@@ -164,12 +165,7 @@ export class DashboardService {
     return result[0];
   }
 
-  async getMyAsks(): Promise<{
-    userAsker: string,
-    question: string,
-    apObject: string,
-    user: SimplifiedUser
-  }[]> {
+  async getMyAsks(): Promise<Ask[]> {
     const petition = await firstValueFrom(
       this.http.get<{
         users: SimplifiedUser[],

@@ -1,0 +1,10 @@
+<div class="flex flex-column border-1 border-round-sm" *ngIf="ask">
+    <div class="flex align-items-center">
+        <app-avatar-small [user]="ask.user" class="mr-2"></app-avatar-small> {{ask.user.url}} asked:
+
+    </div>
+    <p class="flex">
+        {{ask.question}}
+
+    </p>
+</div>

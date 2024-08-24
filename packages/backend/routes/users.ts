@@ -773,7 +773,7 @@ export default function userRoutes(app: Application) {
     if ((!req.jwtData?.userId && userAskLevel === 1) || (req.jwtData?.userId && [1, 2].includes(userAskLevel))) {
       // user can recive an ask from this endpoint
       const userAsking = req.jwtData?.userId ? await User.findByPk(req.jwtData.userId) : await User.findOne({ where: { url: environment.deletedUser } })
-      if (false && userAsking.id === userRecivingAsk.id) {
+      if (userAsking.id === userRecivingAsk.id) {
         return res.send({
           success: false
         })

@@ -52,7 +52,11 @@ import { MyServerBlocksComponent } from './my-server-blocks/my-server-blocks.com
             (m) => m.ImportFollowersModule
           ),
       },
+      {
+        path: 'myAsks',
+        loadComponent: () => import('../ask-list/ask-list.component').then(c => c.AskListComponent)
+      }
     ]),
   ],
 })
-export class ProfileModule {}
+export class ProfileModule { }
