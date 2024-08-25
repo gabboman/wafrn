@@ -215,6 +215,14 @@ export class NavigationMenuComponent implements OnInit, OnDestroy {
         ],
       },
       {
+        label: 'Unanswered Asks',
+        title: 'Unanswered Asks',
+        badge: this.awaitingAsks,
+        command: () => this.hideMenu(),
+        routerLink: '/profile/myAsks',
+        icon: faQuestion
+      },
+      {
         label: 'Private messages',
         icon: faEnvelope,
         title: 'Private messages are here!',
@@ -313,7 +321,7 @@ export class NavigationMenuComponent implements OnInit, OnDestroy {
         title: 'Your blog, your profile, blocks, and other stuff',
         visible: this.jwtService.tokenValid(),
         icon: faCog,
-        badge: this.followsAwaitingAproval + this.awaitingAsks,
+        badge: this.followsAwaitingAproval,
         items: [
           {
             label: 'Awaiting follows',
@@ -322,14 +330,6 @@ export class NavigationMenuComponent implements OnInit, OnDestroy {
             icon: faUser,
             command: () => this.hideMenu(),
             routerLink: '/blog/' + this.jwtService.getTokenData().url + '/followers'
-          },
-          {
-            label: 'Unanswered Asks',
-            title: 'Unanswered Asks',
-            badge: this.awaitingAsks,
-            command: () => this.hideMenu(),
-            routerLink: '/profile/myAsks',
-            icon: faQuestion
           },
           {
             label: 'Edit profile',
