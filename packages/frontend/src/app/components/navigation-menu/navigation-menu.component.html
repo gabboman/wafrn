@@ -16,22 +16,25 @@
   <mat-drawer-content>
     <button style="position: fixed; z-index: 500; top: 1em; left: 0.5em" mat-flat-button color="primary"
       *ngIf="!menuVisible" [hidden]="!mobile" type="button" class="show-sidebar-menu-button" (mousedown)="showMenu()"
-      [matBadge]="notifications + adminNotifications + usersAwaitingAproval + followsAwaitingAproval" [matBadgeHidden]="
-        notifications + adminNotifications + usersAwaitingAproval + followsAwaitingAproval === 0
+      [matBadge]="notifications + adminNotifications + usersAwaitingAproval + followsAwaitingAproval + awaitingAsks"
+      [matBadgeHidden]="
+        notifications + adminNotifications + usersAwaitingAproval + followsAwaitingAproval + awaitingAsks === 0
       " matBadgePosition="below">
       <fa-icon [icon]="hamburguerIcon"></fa-icon>
     </button>
     <button style="position: fixed; z-index: 500; bottom: 1em; right: 0.5em" mat-flat-button color="primary"
-    [hidden]="!mobile || !jwtService.tokenValid()" type="button" class="show-sidebar-menu-button" (mousedown)="this.hideMenu(); this.openEditor()">
-    <fa-icon [icon]="pencilIcon"></fa-icon>
-  </button>
+      [hidden]="!mobile || !jwtService.tokenValid()" type="button" class="show-sidebar-menu-button"
+      (mousedown)="this.hideMenu(); this.openEditor()">
+      <fa-icon [icon]="pencilIcon"></fa-icon>
+    </button>
     <div class="pt-7">
       <div *ngIf="maintenanceMode">
         <h1>ATTENTION FORNITE GAMERS</h1>
         <h2>We are in maintenance mode</h2>
         <h3>Expect a few hours of downtime</h3>
         <h4>We are making wafrn worse</h4>
-        <h5>You can come <a href="https://discord.gg/wyrfTUJewg">to this chatroom</a> and read the details and stuff</h5>
+        <h5>You can come <a href="https://discord.gg/wyrfTUJewg">to this chatroom</a> and read the details and stuff
+        </h5>
         <h6>But it will be just a few hours</h6>
       </div>
       <router-outlet></router-outlet>
