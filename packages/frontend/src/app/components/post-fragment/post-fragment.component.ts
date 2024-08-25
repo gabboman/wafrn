@@ -24,6 +24,7 @@ import { Emoji } from 'src/app/interfaces/emoji';
 import { InjectHtmlModule } from 'src/app/directives/inject-html/inject-html.module';
 import { AvatarSmallComponent } from '../avatar-small/avatar-small.component';
 import { PostHeaderComponent } from "../post/post-header/post-header.component";
+import { SingleAskComponent } from '../single-ask/single-ask.component';
 
 type EmojiReaction = {
   id: string;
@@ -47,8 +48,9 @@ type EmojiReaction = {
     EmojiReactComponent,
     InjectHtmlModule,
     AvatarSmallComponent,
-    PostHeaderComponent
-],
+    PostHeaderComponent,
+    SingleAskComponent
+  ],
   templateUrl: './post-fragment.component.html',
   styleUrl: './post-fragment.component.scss',
 })
@@ -236,7 +238,7 @@ export class PostFragmentComponent implements OnInit, OnDestroy {
   }
 
   async toggleEmojiReact(emojiReaction: EmojiReaction) {
-    if(this.fragment?.userId === this.userId) {
+    if (this.fragment?.userId === this.userId) {
       this.messages.add({
         severity: 'error',
         summary: `You can not emojireact to your own posts`,
@@ -297,7 +299,7 @@ export class PostFragmentComponent implements OnInit, OnDestroy {
 
   cwClick() {
     this.dismissCw.emit();
-    if(this.selfManageCw) {
+    if (this.selfManageCw) {
       this.showCw = !this.showCw
     }
   }

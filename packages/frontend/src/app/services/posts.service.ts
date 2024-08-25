@@ -350,6 +350,10 @@ export class PostsService {
         ),
     };
     newPost.content = this.getPostHtml(newPost);
+    if (unlinked.asks) {
+      const ask = unlinked.asks.find(ask => ask.postId === newPost.id)
+      newPost.ask = ask
+    }
     return newPost;
   }
 

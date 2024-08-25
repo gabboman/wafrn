@@ -172,7 +172,8 @@ export class DashboardService {
         asks: {
           userAsker: string,
           question: string,
-          apObject: string
+          apObject: string,
+          id: string,
         }[]
       }>(`${this.baseUrl}/user/myAsks`)
     );
@@ -180,7 +181,7 @@ export class DashboardService {
     return petition.asks.map(ask => {
       return {
         ...ask,
-        user: petition.users.find(usr => usr.id == ask.userAsker) as SimplifiedUser
+        user: petition.users.find(usr => usr.id == ask.userAsker)
       }
     })
 

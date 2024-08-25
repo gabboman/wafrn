@@ -10,7 +10,8 @@ import {
   User,
   Follows,
   UserLikesPostRelations,
-  Media
+  Media,
+  Ask
 } from '../db'
 import { authenticateToken } from '../utils/authenticateToken'
 
@@ -138,13 +139,13 @@ export default function postsRoutes(app: Application) {
         })
         const users = posts?.descendents?.length
           ? await User.findAll({
-              attributes: ['url', 'avatar', 'name', 'id'],
-              where: {
-                id: {
-                  [Op.in]: posts?.descendents.map((elem: any) => elem.userId)
-                }
+            attributes: ['url', 'avatar', 'name', 'id'],
+            where: {
+              id: {
+                [Op.in]: posts?.descendents.map((elem: any) => elem.userId)
               }
-            })
+            }
+          })
           : []
         res.send({
           posts: posts?.descendents?.length ? posts.descendents : [],
@@ -311,8 +312,8 @@ export default function postsRoutes(app: Application) {
         const content_warning = req.body.content_warning
           ? req.body.content_warning.trim()
           : posterUser?.NSFW
-          ? 'This user has been marked as NSFW and the post has been labeled automatically as NSFW'
-          : ''
+            ? 'This user has been marked as NSFW and the post has been labeled automatically as NSFW'
+            : ''
         const mentionsToAdd: string[] = []
         let mediaToAdd: any[] = []
         const avaiableEmojis = await getAvaiableEmojis()
@@ -460,6 +461,21 @@ export default function postsRoutes(app: Application) {
         }
         if (postToBeQuoted) {
           post.addQuoted(postToBeQuoted)
+        }
+        const askId = req.body.ask;
+        if (askId) {
+          const ask = await Ask.findOne({
+            where: {
+              id: parseInt(askId),
+              userAsked: posterId
+            }
+          })
+          if (ask) {
+            ask.answered = true;
+            ask.postId = post.id;
+            await ask.save()
+
+          }
         }
         post.setMedias(mediaToAdd.map((media: any) => media.id))
         post.setMentionPost(mentionsToAdd)
