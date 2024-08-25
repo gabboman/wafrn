@@ -38,8 +38,7 @@
             }
           </mat-select>
         </mat-form-field>
-        <!-- Hidden until feature is fully done -->
-        <mat-form-field *ngIf="false" class="w-full">
+        <mat-form-field class="w-full">
           <mat-label>Asks</mat-label>
           <mat-select [required]="true" formControlName="asksLevel">
             @for(option of askOptions; track $index) {
