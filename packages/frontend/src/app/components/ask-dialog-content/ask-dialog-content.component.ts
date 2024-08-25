@@ -7,6 +7,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInput } from '@angular/material/input';
 import { BlogDetails } from 'src/app/interfaces/blogDetails';
 import { BlogService } from 'src/app/services/blog.service';
+import { LoginService } from 'src/app/services/login.service';
 import { MessageService } from 'src/app/services/message.service';
 
 @Component({
@@ -25,6 +26,9 @@ import { MessageService } from 'src/app/services/message.service';
 })
 export class AskDialogContentComponent {
 
+  loggedIn: boolean;
+
+
   constructor(
     private dialogRef: MatDialogRef<AskDialogContentComponent>,
     private messages: MessageService,
@@ -32,9 +36,12 @@ export class AskDialogContentComponent {
     public data: {
       details: BlogDetails
     },
-    private blogService: BlogService
+    private blogService: BlogService,
+    private loginService: LoginService
 
-  ) { }
+  ) {
+    this.loggedIn = loginService.checkUserLoggedIn()
+  }
 
   askForm = new FormGroup({
     content: new FormControl('', Validators.required)

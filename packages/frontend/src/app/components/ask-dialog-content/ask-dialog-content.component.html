@@ -1,4 +1,4 @@
-<p></p>
+<p *ngIf="loggedIn">Attention! You are logged in. This question is not anonymous</p>
 <form [formGroup]="askForm" (ngSubmit)="onSubmit()">
     <mat-form-field class="w-full">
         <mat-label>What is your question</mat-label>
