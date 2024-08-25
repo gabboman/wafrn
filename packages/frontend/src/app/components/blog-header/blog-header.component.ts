@@ -86,7 +86,6 @@ export class BlogHeaderComponent implements OnChanges, OnDestroy {
       }
       this.allowAsk = this.loginService.checkUserLoggedIn() ? [1, 2].includes(askLevel) : askLevel == 1;
       this.allowAsk = this.allowAsk && this.loginService.getLoggedUserUUID() != this.blogDetails.id;
-      this.allowAsk = true;
       const fediAttachment = this.blogDetails.publicOptions.find(elem => elem.optionName == "fediverse.public.attachment")
       if (fediAttachment) {
         this.fediAttachment = JSON.parse(fediAttachment.optionValue)
