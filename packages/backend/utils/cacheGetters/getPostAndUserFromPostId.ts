@@ -1,5 +1,5 @@
 import { Op } from 'sequelize'
-import { Emoji, Media, Post, PostTag, User } from '../../db'
+import { Ask, Emoji, Media, Post, PostTag, User } from '../../db'
 import { redisCache } from '../redis'
 
 async function getPostAndUserFromPostId(postId: string): Promise<{ found: boolean; data?: any }> {
@@ -8,6 +8,9 @@ async function getPostAndUserFromPostId(postId: string): Promise<{ found: boolea
   if (!cacheResult) {
     const dbQuery = await Post.findOne({
       include: [
+        {
+          model: Ask
+        },
         {
           model: User,
           as: 'user',
@@ -60,6 +63,10 @@ async function getPostAndUserFromPostId(postId: string): Promise<{ found: boolea
     })
     if (dbQuery) {
       res = { found: true, data: dbQuery.dataValues }
+      if (res.data.ask) {
+        const userAsker = await User.findByPk(res.data.ask.userAsker)
+        res.data.ask.asker = userAsker
+      }
     } else {
       res = { found: false }
     }

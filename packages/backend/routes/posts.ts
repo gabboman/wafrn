@@ -473,6 +473,9 @@ export default function postsRoutes(app: Application) {
           if (ask) {
             ask.answered = true;
             ask.postId = post.id;
+            if (ask.userAsker && !mentionsToAdd.includes(ask.userAsker)) {
+              mentionsToAdd.push(ask.userAsker)
+            }
             await ask.save()
 
           }

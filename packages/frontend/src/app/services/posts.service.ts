@@ -352,6 +352,10 @@ export class PostsService {
     newPost.content = this.getPostHtml(newPost);
     if (unlinked.asks) {
       const ask = unlinked.asks.find(ask => ask.postId === newPost.id)
+      if (ask) {
+        const user = unlinked.users.find(usr => usr.id === ask.userAsker)
+        ask.user = user;
+      }
       newPost.ask = ask
     }
     return newPost;
