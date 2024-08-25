@@ -1,6 +1,7 @@
 import { Application, Response } from 'express'
 import { Op, Sequelize } from 'sequelize'
 import {
+  Ask,
   Blocks,
   Emoji,
   EmojiCollection,
@@ -689,7 +690,7 @@ export default function userRoutes(app: Application) {
     res.send({ success: success })
   })
 
-  app.get('/api/user/:url/follows', authenticateToken, async (req: AuthorizedRequest, res: Response) => {
+  app.get('/api/user/:url/follows', createAccountLimiter, authenticateToken, async (req: AuthorizedRequest, res: Response) => {
     const url = req.params?.url as string
     const followers = req.query?.followers === 'true'
     if (url) {
@@ -727,5 +728,88 @@ export default function userRoutes(app: Application) {
     } else {
       res.sendStatus(404)
     }
+  })
+
+  app.get('/api/user/myAsks', authenticateToken, async (req: AuthorizedRequest, res: Response) => {
+    const userId = req.jwtData?.userId as string;
+    const asks = await Ask.findAll({
+      attributes: ['userAsker', 'question', 'apObject', 'id'],
+      where: {
+        userAsked: userId,
+        answered: false,
+      }
+    });
+    const users = await User.findAll({
+      attributes: ['url', 'avatar', 'name', 'id', 'description'],
+      where: {
+        id: {
+          [Op.in]: asks.map((ask: any) => ask.userAsker)
+        }
+      }
+    });
+    res.send({
+      asks: asks,
+      users: users
+    })
+
+  })
+
+
+  app.post('/api/user/:url/ask', optionalAuthentication, async (req: AuthorizedRequest, res: Response) => {
+    const url = req.params?.url as string
+    const userRecivingAsk = await User.findOne({
+      where: {
+        urlToLower: url.toLowerCase()
+      }
+    })
+    const userAskLevelDBOption = await UserOptions.findOne({
+      where: {
+        userId: userRecivingAsk.id,
+        optionName: 'wafrn.public.asks'
+      }
+    })
+    const userAskLevel = userAskLevelDBOption ? parseInt(userAskLevelDBOption.optionValue) : 2
+    // 
+    if ((!req.jwtData?.userId && userAskLevel === 1) || (req.jwtData?.userId && [1, 2].includes(userAskLevel))) {
+      // user can recive an ask from this endpoint
+      const userAsking = req.jwtData?.userId;
+      if (userAsking === userRecivingAsk.id) {
+        return res.send({
+          success: false
+        })
+      }
+      const ask = await Ask.create({
+        question: req.body.question,
+        apObject: null,
+        creationIp: getIp(req),
+        answered: false,
+        userAsked: userRecivingAsk.id,
+        userAsker: userAsking
+      })
+      res.send({
+        success: true
+      })
+    } else {
+      // user can not recive an ask here so we say nope.avi
+      res.send({
+        success: false
+      })
+    }
+  })
+
+  app.post('/api/user/ignoreAsk', authenticateToken, async (req: AuthorizedRequest, res: Response) => {
+    const askToIgnore = await Ask.findOne({
+      where: {
+        userAsked: req.jwtData?.userId as string,
+        id: req.body.id
+      }
+    })
+    res.send({
+      success: askToIgnore ? true : false
+    })
+    if (askToIgnore) {
+      await askToIgnore.destroy()
+    }
+
   })
 }

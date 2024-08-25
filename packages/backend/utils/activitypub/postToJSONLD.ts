@@ -12,6 +12,8 @@ async function postToJSONLD(postId: string) {
   const cacheData = await getPostAndUserFromPostId(postId)
   const post = cacheData.data
   const localUser = post.user
+  const userAsker = post.ask.asker
+  const ask = post.ask
 
   const stringMyFollowers = `${environment.frontendUrl}/fediverse/blog/${localUser.url.toLowerCase()}/followers`
   const dbMentions = post.mentionPost
@@ -50,6 +52,9 @@ async function postToJSONLD(postId: string) {
 
   // we remove the wafrnmedia from the post for the outside world, as they get this on the attachments
   processedContent = processedContent.replaceAll(wafrnMediaRegex, '')
+  if (ask) {
+    processedContent = `<p>${userAsker ? userAsker.url : 'Anonymous'} asked ${ask.question}</p> ${processedContent} <p>To properly see this ask, <a href="${environment.frontendUrl + '/fediverse/post/' + post.id}">view the post in the original instance</a></p>`
+  }
   const mentions: string[] = post.mentionPost.map((elem: any) => elem.id)
   const fediMentions: fediverseTag[] = []
   const fediTags: fediverseTag[] = []
@@ -109,6 +114,14 @@ async function postToJSONLD(postId: string) {
   })
 
   const emojis = post.emojis
+
+  if (ask) {
+    fediTags.push({
+      type: 'AskQuestion',
+      name: ask.question,
+      actor: userAsker ? (userAsker.remoteId ? userAsker.remoteId : (environment.frontendUrl + '/fediverse/blog/' + userAsker.url)) : 'anonymous'
+    })
+  }
 
   const usersToSend = getToAndCC(post.privacy, mentionedUsers, stringMyFollowers)
   const actorUrl = `${environment.frontendUrl}/fediverse/blog/${localUser.url.toLowerCase()}`
@@ -188,8 +201,8 @@ async function postToJSONLD(postId: string) {
         post.privacy / 1 === 10
           ? mentionedUsers
           : post.privacy / 1 === 0
-          ? ['https://www.w3.org/ns/activitystreams#Public']
-          : [stringMyFollowers],
+            ? ['https://www.w3.org/ns/activitystreams#Public']
+            : [stringMyFollowers],
       cc: [`${environment.frontendUrl}/fediverse/blog/${localUser.url.toLowerCase()}`, stringMyFollowers],
       object: parentPostString
     }
@@ -221,7 +234,7 @@ function getToAndCC(
       break
     }
     default: {
-      ;(to = mentionedUsers), (cc = [])
+      ; (to = mentionedUsers), (cc = [])
     }
   }
   return {

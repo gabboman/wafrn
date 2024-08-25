@@ -45,6 +45,8 @@ import { QuestionPollQuestion } from 'src/app/interfaces/questionPoll';
 import { MatMenuModule } from '@angular/material/menu';
 import { AvatarSmallComponent } from '../avatar-small/avatar-small.component';
 import { PostHeaderComponent } from "../post/post-header/post-header.component";
+import { Ask } from 'src/app/interfaces/ask';
+import { SingleAskComponent } from '../single-ask/single-ask.component';
 
 type Mention = {
   id: string;
@@ -81,7 +83,8 @@ type Mention = {
     MatMenuModule,
     AvatarSmallComponent,
     PostHeaderComponent,
-],
+    SingleAskComponent
+  ],
   providers: [EditorService],
 })
 export class PostEditorComponent implements OnInit, OnDestroy {
@@ -225,6 +228,7 @@ export class PostEditorComponent implements OnInit, OnDestroy {
     private dialogRef: MatDialogRef<PostEditorComponent>,
     @Inject(MAT_DIALOG_DATA)
     public data: {
+      ask?: Ask,
       post?: ProcessedPost;
       edit?: boolean;
       quote?: ProcessedPost;
@@ -393,12 +397,12 @@ export class PostEditorComponent implements OnInit, OnDestroy {
 
   postBeingSubmitted = false;
   async submitPost() {
-    if(!this.allDescriptionsFilled() ||
-    this.postBeingSubmitted ||
-    (this.postCreatorContent === this.initialContent &&
-      this.tags.length === 0 &&
-      this.uploadedMedias.length === 0)) {
-        this.messages.add({severity: 'error', summary: 'Write a post or do something'})
+    if (!this.allDescriptionsFilled() ||
+      this.postBeingSubmitted ||
+      (this.postCreatorContent === this.initialContent &&
+        this.tags.length === 0 &&
+        this.uploadedMedias.length === 0)) {
+      this.messages.add({ severity: 'error', summary: 'Write a post or do something' })
       return;
     }
     this.postBeingSubmitted = true;
@@ -414,7 +418,7 @@ export class PostEditorComponent implements OnInit, OnDestroy {
     let res = undefined;
     const content = this.postCreatorContent ? this.postCreatorContent : ''
     // if a post includes only tags, we reblog it and then we also create the post with tags. Thanks shadowjonathan
-    if(this.uploadedMedias.length === 0 && content.length === 0 && tagsToSend.length > 0 && this.idPostToReblog && ! this.data?.quote?.id) {
+    if (this.uploadedMedias.length === 0 && content.length === 0 && tagsToSend.length > 0 && this.idPostToReblog && !this.data?.quote?.id) {
       await this.editorService.createPost({
         content: '',
         idPostToReblog: this.idPostToReblog,
@@ -433,6 +437,7 @@ export class PostEditorComponent implements OnInit, OnDestroy {
       contentWarning: this.contentWarning,
       idPostToEdit: this.editing ? this.idPostToReblog : undefined,
       idPosToQuote: this.data?.quote?.id,
+      ask: this.data?.ask
     });
     // its a great time to check notifications isnt it?
     this.dashboardService.scrollEventEmitter.emit('post');
@@ -627,8 +632,8 @@ export class PostEditorComponent implements OnInit, OnDestroy {
     });
   }
 
-  getPrivacyIcon(){
-    const res =  this.privacyOptions.find(elem => elem.level === this.privacy)?.icon as IconDefinition
+  getPrivacyIcon() {
+    const res = this.privacyOptions.find(elem => elem.level === this.privacy)?.icon as IconDefinition
     return res;
   }
 

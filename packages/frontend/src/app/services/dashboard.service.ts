@@ -9,6 +9,7 @@ import { firstValueFrom } from 'rxjs';
 import { unlinkedPosts } from '../interfaces/unlinked-posts';
 import { Emoji } from '../interfaces/emoji';
 import { BlogDetails } from '../interfaces/blogDetails';
+import { Ask } from '../interfaces/ask';
 
 @Injectable({
   providedIn: 'root',
@@ -162,5 +163,27 @@ export class DashboardService {
     const result = this.postService.processPostNew(petition);
 
     return result[0];
+  }
+
+  async getMyAsks(): Promise<Ask[]> {
+    const petition = await firstValueFrom(
+      this.http.get<{
+        users: SimplifiedUser[],
+        asks: {
+          userAsker: string,
+          question: string,
+          apObject: string,
+          id: string,
+        }[]
+      }>(`${this.baseUrl}/user/myAsks`)
+    );
+
+    return petition.asks.map(ask => {
+      return {
+        ...ask,
+        user: petition.users.find(usr => usr.id == ask.userAsker)
+      }
+    })
+
   }
 }

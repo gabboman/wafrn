@@ -1,3 +1,4 @@
+import { Ask } from './ask';
 import { Emoji } from './emoji';
 import { SimplifiedUser } from './simplified-user';
 
@@ -14,6 +15,7 @@ export interface unlinkedPosts {
   quotes: Quote[];
   quotedPosts: basicPost[];
   rewootIds: string[];
+  asks?: Ask[]
 }
 
 export interface basicPost {

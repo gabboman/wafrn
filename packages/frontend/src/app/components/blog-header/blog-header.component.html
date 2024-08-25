@@ -66,6 +66,10 @@
     </tr>
 
   </table>
+  <div class="flex justify-content-center flex-wrap">
+    <button *ngIf="allowAsk" mat-stroked-button [innerHTML]="'Ask ' +blogDetails.name + ' something'"
+      (mousedown)="openAskDialog()"></button>
+  </div>
   <div *ngIf="!blogDetails.url.startsWith('@') || (blogDetails.followers && blogDetails.followed)"
     class="follow-counts">
     <div [routerLink]="['/blog', blogDetails.url ,'following']">

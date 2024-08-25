@@ -6,17 +6,18 @@ import { WafrnMedia } from '../interfaces/wafrn-media';
 import { Action, EditorLauncherData } from '../interfaces/editor-launcher-data';
 import { MatDialog } from '@angular/material/dialog';
 import { ProcessedPost } from '../interfaces/processed-post';
+import { Ask } from '../interfaces/ask';
 
 @Injectable({
   providedIn: 'any',
 })
-export class EditorService implements OnDestroy{
+export class EditorService implements OnDestroy {
   base_url = environment.baseUrl;
   public launchPostEditorEmitter: BehaviorSubject<EditorLauncherData> =
     new BehaviorSubject<EditorLauncherData>({
       action: Action.None,
     });
-  
+
   editorSubscription: Subscription;
   constructor(private http: HttpClient, private dialogService: MatDialog) {
     this.editorSubscription = this.launchPostEditorEmitter.subscribe((data) => {
@@ -40,6 +41,7 @@ export class EditorService implements OnDestroy{
     contentWarning?: string;
     idPostToEdit?: string;
     idPosToQuote?: string;
+    ask?: Ask
   }): Promise<boolean> {
     const content = options.content;
     const media = options.media;
@@ -57,7 +59,8 @@ export class EditorService implements OnDestroy{
         privacy: privacy,
         content_warning: contentWarning ? contentWarning : '',
         idPostToEdit: options.idPostToEdit,
-        postToQuote: options.idPosToQuote
+        postToQuote: options.idPosToQuote,
+        ask: options.ask?.id
       };
       const petitionResponse: any = await this.http
         .post(`${this.base_url}/v2/createPost`, formdata)
@@ -108,11 +111,15 @@ export class EditorService implements OnDestroy{
   }
 
   public async replyPost(post: ProcessedPost, edit = false) {
-    await this.openDialogWithData({post: post, edit: edit})
+    await this.openDialogWithData({ post: post, edit: edit })
   }
 
   public async quotePost(quoteTo: ProcessedPost,) {
-    await this.openDialogWithData({quote: quoteTo})
+    await this.openDialogWithData({ quote: quoteTo })
+  }
+
+  public async replyAsk(ask: Ask,) {
+    await this.openDialogWithData({ ask: ask })
   }
 
   public async openDialogWithData(data: any) {

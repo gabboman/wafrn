@@ -59,6 +59,7 @@ export class NavigationMenuComponent implements OnInit, OnDestroy {
   adminNotifications = 0;
   usersAwaitingAproval = 0;
   followsAwaitingAproval = 0;
+  awaitingAsks = 0;
   privateMessagesNotifications = '';
   mobile = false;
   logo = environment.logo;
@@ -212,6 +213,15 @@ export class NavigationMenuComponent implements OnInit, OnDestroy {
             },
           },
         ],
+      },
+      {
+        label: 'Unanswered Asks',
+        title: 'Unanswered Asks',
+        badge: this.awaitingAsks,
+        visible: this.jwtService.tokenValid(),
+        command: () => this.hideMenu(),
+        routerLink: '/profile/myAsks',
+        icon: faQuestion
       },
       {
         label: 'Private messages',
@@ -484,6 +494,7 @@ export class NavigationMenuComponent implements OnInit, OnDestroy {
         this.adminNotifications = response.reports;
         this.usersAwaitingAproval = response.usersAwaitingAproval;
         this.followsAwaitingAproval = response.followsAwaitingAproval
+        this.awaitingAsks = response.asks;
       }
       this.drawMenu();
       this.cdr.detectChanges();

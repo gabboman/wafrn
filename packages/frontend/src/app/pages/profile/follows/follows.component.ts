@@ -13,7 +13,7 @@ import { BlogHeaderComponent } from 'src/app/components/blog-header/blog-header.
 import { LoaderComponent } from 'src/app/components/loader/loader.component';
 import { followsResponse } from 'src/app/interfaces/follows-response';
 import { DashboardService } from 'src/app/services/dashboard.service';
-import { FollowsService } from 'src/app/services/follows.service';
+import { BlogService } from 'src/app/services/blog.service';
 import { PostsService } from 'src/app/services/posts.service';
 import { environment } from 'src/environments/environment';
 import { AvatarSmallComponent } from "../../../components/avatar-small/avatar-small.component";
@@ -68,7 +68,7 @@ export class FollowsComponent implements OnInit, OnDestroy {
     private router: Router,
     public postService: PostsService,
     private dashboardService: DashboardService,
-    private followsService: FollowsService
+    private blogService: BlogService
   ) {
     this.myId = loginService.getLoggedUserUUID()
     this.followsSubscription = this.postService.updateFollowers.subscribe(() => {
@@ -93,7 +93,7 @@ export class FollowsComponent implements OnInit, OnDestroy {
         this.found = false;
         this.loading = false;
       });
-    let followsPromise = this.followsService.getFollowers(this.blogUrl, this.following)
+    let followsPromise = this.blogService.getFollowers(this.blogUrl, this.following)
     await Promise.all([blogPromise, followsPromise]);
     const blogResponse = await blogPromise;
     const followsResponse = await followsPromise;
@@ -114,12 +114,12 @@ export class FollowsComponent implements OnInit, OnDestroy {
   }
 
   async deleteFollower(user: SimplifiedUser) {
-    await this.followsService.deleteFollow(user.id)
+    await this.blogService.deleteFollow(user.id)
     this.ngOnInit();
   }
 
   async acceptFollower(user: SimplifiedUser) {
-    await this.followsService.approveFollow(user.id)
+    await this.blogService.approveFollow(user.id)
     this.ngOnInit();
   }
 

@@ -6,6 +6,7 @@ import { Emoji } from './emoji';
 import { RawPost } from './raw-post';
 import { QuestionPoll } from './questionPoll';
 import { PostEmojiReaction } from './unlinked-posts';
+import { Ask } from './ask';
 
 export interface ProcessedPost {
   id: string;
@@ -27,5 +28,6 @@ export interface ProcessedPost {
   questionPoll?: QuestionPoll;
   emojiReactions: PostEmojiReaction[];
   quotes: ProcessedPost[];
-  parentId?: string
+  parentId?: string,
+  ask?: Ask
 }

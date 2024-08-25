@@ -22,7 +22,6 @@ export class SinglePostComponent implements OnDestroy {
   post: ProcessedPost[] = [];
   loading = true;
   blogUrl: string = '';
-  blogDetails: any;
   mediaUrl = environment.baseMediaUrl;
   cacheUrl = environment.externalCacheurl;
   localUrl = environment.frontUrl;

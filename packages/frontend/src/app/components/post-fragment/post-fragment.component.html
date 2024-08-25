@@ -1,4 +1,7 @@
 <ng-container *ngIf="fragment">
+  @if(fragment.ask){
+  <app-single-ask [ask]="fragment.ask"></app-single-ask>
+  }
   <div id="fragment-content-warning" *ngIf="fragment.content_warning">
     <div class="fragment-content">
       {{ fragment.content_warning }}
