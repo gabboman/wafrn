@@ -53,7 +53,7 @@ async function postToJSONLD(postId: string) {
   // we remove the wafrnmedia from the post for the outside world, as they get this on the attachments
   processedContent = processedContent.replaceAll(wafrnMediaRegex, '')
   if (ask) {
-    processedContent = `<p>${userAsker ? userAsker.url : 'Anonymous'} asked ${ask.question}</p> ${processedContent} <p>To properly see this ask, <a href="${environment.frontendUrl + '/fediverse/post/' + post.id}">view the post in the original instance</a></p>`
+    processedContent = `<p>${userAsker ? (userAsker.url.startsWith('@') ? userAsker.url : ('@' + userAsker.url + '@' + environment.instanceUrl)) : 'Anonymous'} asked </p> <blockquote>${ask.question}</blockquote> ${processedContent} <p>To properly see this ask, <a href="${environment.frontendUrl + '/fediverse/post/' + post.id}">check the post in the original instance</a></p>`
   }
   const mentions: string[] = post.mentionPost.map((elem: any) => elem.id)
   const fediMentions: fediverseTag[] = []
