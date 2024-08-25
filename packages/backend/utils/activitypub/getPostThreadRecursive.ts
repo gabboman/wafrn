@@ -9,7 +9,8 @@ import {
   ServerBlock,
   PostTag,
   User,
-  sequelize
+  sequelize,
+  Ask
 } from '../../db'
 import { environment } from '../../environment'
 import { logger } from '../logger'
@@ -18,14 +19,15 @@ import { getPetitionSigned } from './getPetitionSigned'
 import { fediverseTag } from '../../interfaces/fediverse/tags'
 import { loadPoll } from './loadPollFromPost'
 import { getApObjectPrivacy } from './getPrivacy'
+import * as DOMPurify from 'isomorphic-dompurify'
 
 const deletedUser = environment.forceSync
   ? undefined
   : User.findOne({
-      where: {
-        url: environment.deletedUser
-      }
-    })
+    where: {
+      url: environment.deletedUser
+    }
+  })
 
 async function getPostThreadRecursive(
   user: any,
@@ -132,8 +134,8 @@ async function getPostThreadRecursive(
         content_warning: postPetition.summary
           ? postPetition.summary
           : remoteUser.NSFW
-          ? 'User is marked as NSFW by this instance staff. Possible NSFW without tagging'
-          : '',
+            ? 'User is marked as NSFW by this instance staff. Possible NSFW without tagging'
+            : '',
         createdAt: new Date(postPetition.published),
         updatedAt: new Date(),
         userId: remoteUserServerBaned || remoteUser.banned ? (await deletedUser).id : remoteUser.id,
@@ -239,6 +241,23 @@ async function getPostThreadRecursive(
       }
       await processMentions(newPost, mentionedUsersIds)
       await loadPoll(remotePostObject, newPost, user)
+      if (newPost.privacy === 10) {
+        const postCleanContent = DOMPurify.sanitize(newPost.content, { ALLOWED_TAGS: [] }).trim()
+        const mentions = await newPost.getMentionPost();
+        if (postCleanContent.startsWith('!ask') && mentions.length === 1) {
+          let askContent = postCleanContent.split(`!ask @${mentions[0].url}`)[1];
+          if (askContent.startsWith(environment.instanceUrl)) {
+            askContent = askContent.split(environment.instanceUrl)[1]
+          }
+          await Ask.create({
+            question: askContent,
+            userAsker: newPost.userId,
+            userAsked: mentions[0].id,
+            answered: false,
+            apObject: JSON.stringify(postPetition)
+          })
+        }
+      }
       return newPost
     } catch (error) {
       logger.trace({
