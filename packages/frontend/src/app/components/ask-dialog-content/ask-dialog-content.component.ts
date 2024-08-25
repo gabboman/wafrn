@@ -44,7 +44,7 @@ export class AskDialogContentComponent {
   }
 
   askForm = new FormGroup({
-    content: new FormControl('', Validators.required)
+    content: new FormControl('', [Validators.required, Validators.minLength(1)])
   })
 
 
