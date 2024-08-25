@@ -69,6 +69,7 @@
   <div class="flex justify-content-center flex-wrap">
     <button *ngIf="allowAsk" mat-stroked-button [innerHTML]="'Ask ' +blogDetails.name + ' something'"
       (mousedown)="openAskDialog()"></button>
+
   </div>
   <div *ngIf="!blogDetails.url.startsWith('@') || (blogDetails.followers && blogDetails.followed)"
     class="follow-counts">
@@ -88,4 +89,8 @@
     To check this user's complete profile in their instance
     <a [href]="blogDetails.remoteId" target="_blank"> click here</a>.
   </div>
+  <div *ngIf="allowRemoteAsk" class="justify-content-center">You can send this user a non anonymous ask from your fedi
+    instance with the following
+    structure: " !ask &#64;{{blogDetails.url}} YOUR QUESTION HERE". The medias and emojis you attach will be ignored,
+    and you can only send one mention on the post. If it goes wrong, the user will recive it as a regular dm</div>
 </mat-card>
