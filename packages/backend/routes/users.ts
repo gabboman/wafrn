@@ -773,7 +773,7 @@ export default function userRoutes(app: Application) {
     if ((!req.jwtData?.userId && userAskLevel === 1) || (req.jwtData?.userId && [1, 2].includes(userAskLevel))) {
       // user can recive an ask from this endpoint
       const userAsking = req.jwtData?.userId;
-      if (false && userAsking === userRecivingAsk.id) {
+      if (userAsking === userRecivingAsk.id) {
         return res.send({
           success: false
         })
@@ -795,5 +795,21 @@ export default function userRoutes(app: Application) {
         success: false
       })
     }
+  })
+
+  app.post('/api/user/ignoreAsk', authenticateToken, async (req: AuthorizedRequest, res: Response) => {
+    const askToIgnore = await Ask.findOne({
+      where: {
+        userAsked: req.jwtData?.userId as string,
+        id: req.body.id
+      }
+    })
+    res.send({
+      success: askToIgnore ? true : false
+    })
+    if (askToIgnore) {
+      await askToIgnore.destroy()
+    }
+
   })
 }

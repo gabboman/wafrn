@@ -4,6 +4,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { SingleAskComponent } from 'src/app/components/single-ask/single-ask.component';
 import { Ask } from 'src/app/interfaces/ask';
+import { BlogService } from 'src/app/services/blog.service';
 import { DashboardService } from 'src/app/services/dashboard.service';
 import { EditorService } from 'src/app/services/editor.service';
 
@@ -26,7 +27,8 @@ export class AskListComponent {
 
   constructor(
     private dashboard: DashboardService,
-    private editor: EditorService
+    private editor: EditorService,
+    private blogService: BlogService
   ) {
     this.dashboard.getMyAsks().then(
       asks => {
@@ -36,8 +38,9 @@ export class AskListComponent {
     )
   }
 
-  ignoreAsk(ask: Ask) {
-    console.log('ignore')
+  async ignoreAsk(ask: Ask) {
+    await this.blogService.ignoreAsk(ask)
+    window.location.reload()
   }
 
   replyAsk(ask: Ask) {

@@ -218,6 +218,7 @@ export class NavigationMenuComponent implements OnInit, OnDestroy {
         label: 'Unanswered Asks',
         title: 'Unanswered Asks',
         badge: this.awaitingAsks,
+        visible: this.jwtService.tokenValid(),
         command: () => this.hideMenu(),
         routerLink: '/profile/myAsks',
         icon: faQuestion

@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { followsResponse } from '../interfaces/follows-response';
+import { Ask } from '../interfaces/ask';
 
 @Injectable({
   providedIn: 'root'
@@ -35,6 +36,15 @@ export class BlogService {
     const res = await firstValueFrom(this.http.post(environment.baseUrl + `/user/${userUrl}/ask`,
       {
         question: ask
+      }
+    ))
+    return res;
+  }
+
+  async ignoreAsk(ask: Ask) {
+    const res = await firstValueFrom(this.http.post(environment.baseUrl + `/user/ignoreAsk`,
+      {
+        id: ask.id
       }
     ))
     return res;
