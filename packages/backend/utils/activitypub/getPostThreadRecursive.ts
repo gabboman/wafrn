@@ -246,8 +246,8 @@ async function getPostThreadRecursive(
         const mentions = await newPost.getMentionPost();
         if (postCleanContent.startsWith('!ask') && mentions.length === 1) {
           let askContent = postCleanContent.split(`!ask @${mentions[0].url}`)[1];
-          if (askContent.startsWith(environment.instanceUrl)) {
-            askContent = askContent.split(environment.instanceUrl)[1]
+          if (askContent.startsWith('@' + environment.instanceUrl)) {
+            askContent = askContent.split('@' + environment.instanceUrl)[1]
           }
           await Ask.create({
             question: askContent,
