@@ -92,5 +92,6 @@
   <div *ngIf="allowRemoteAsk" class="justify-content-center">You can send this user a non anonymous ask from your fedi
     instance with the following
     structure: " !ask &#64;{{blogDetails.url}} YOUR QUESTION HERE". The medias and emojis you attach will be ignored,
-    and you can only send one mention on the post. If it goes wrong, the user will recive it as a regular dm</div>
+    and you can only send one mention on the post. If it goes wrong, the user will recive it as a regular dm. Also, the
+    content of the dm will be published as the AP object to verify the ask as genuine</div>
 </mat-card>
