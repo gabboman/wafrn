@@ -12,7 +12,7 @@ async function postToJSONLD(postId: string) {
   const cacheData = await getPostAndUserFromPostId(postId)
   const post = cacheData.data
   const localUser = post.user
-  const userAsker = post.ask.asker
+  const userAsker = post.ask?.asker
   const ask = post.ask
 
   const stringMyFollowers = `${environment.frontendUrl}/fediverse/blog/${localUser.url.toLowerCase()}/followers`
