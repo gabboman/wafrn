@@ -449,6 +449,9 @@ export class PostEditorComponent implements OnInit, OnDestroy {
       this.postCreatorContent = '';
       this.uploadedMedias = [];
       this.tags = '';
+      if (this.data?.ask) {
+        window.location.reload();
+      }
       this.dialogRef.close();
     } else {
       this.messages.add({
