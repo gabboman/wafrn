@@ -690,7 +690,7 @@ export default function userRoutes(app: Application) {
     res.send({ success: success })
   })
 
-  app.get('/api/user/:url/follows', createAccountLimiter, authenticateToken, async (req: AuthorizedRequest, res: Response) => {
+  app.get('/api/user/:url/follows', authenticateToken, async (req: AuthorizedRequest, res: Response) => {
     const url = req.params?.url as string
     const followers = req.query?.followers === 'true'
     if (url) {
