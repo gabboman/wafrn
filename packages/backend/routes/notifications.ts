@@ -116,7 +116,7 @@ export default function notificationRoutes(app: Application) {
       }
     })
 
-    const emojis = await Emoji.findAll({
+    const emojis = Emoji.findAll({
       where: {
         id: {
           [Op.in]: (await newEmojiReactions)
@@ -126,7 +126,16 @@ export default function notificationRoutes(app: Application) {
       }
     })
 
+    const asks = Ask.findAll({
+      where: {
+        postId: {
+          [Op.in]: postIds
+        }
+      }
+    })
+
     res.send({
+      asks: await asks,
       emojiReactions: await newEmojiReactions,
       emojis: await emojis,
       users: await users,
@@ -221,17 +230,17 @@ export default function notificationRoutes(app: Application) {
     const superMutedIds = await getMutedPosts(userId, true)
     const fullyMutedDoNotCountForMentions = superMutedIds.length
       ? (
-        await sequelize.query(
-          isDatabaseMysql()
-            ? `SELECT postsId FROM postsancestors where ancestorId IN ("${superMutedIds}")`
-            : `SELECT "postsId" FROM "postsancestors" where "ancestorId" IN (${superMutedIds.map(
-              (elem) => "'" + elem + "'"
-            )})`,
-          {
-            type: QueryTypes.SELECT
-          }
-        )
-      ).map((elem: any) => elem.postsId)
+          await sequelize.query(
+            isDatabaseMysql()
+              ? `SELECT postsId FROM postsancestors where ancestorId IN ("${superMutedIds}")`
+              : `SELECT "postsId" FROM "postsancestors" where "ancestorId" IN (${superMutedIds.map(
+                  (elem) => "'" + elem + "'"
+                )})`,
+            {
+              type: QueryTypes.SELECT
+            }
+          )
+        ).map((elem: any) => elem.postsId)
       : []
     return await PostMentionsUserRelation.findAll({
       order: [['createdAt', 'DESC']],
