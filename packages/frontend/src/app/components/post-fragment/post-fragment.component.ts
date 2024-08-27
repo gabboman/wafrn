@@ -3,6 +3,7 @@ import {
   Component,
   EventEmitter,
   Input,
+  OnChanges,
   OnDestroy,
   OnInit,
   Output,
@@ -33,6 +34,8 @@ type EmojiReaction = {
   external: boolean;
   name: string;
   users: SimplifiedUser[];
+  tooltip: string;
+  includesMe: boolean;
 };
 
 @Component({
@@ -54,7 +57,7 @@ type EmojiReaction = {
   templateUrl: './post-fragment.component.html',
   styleUrl: './post-fragment.component.scss',
 })
-export class PostFragmentComponent implements OnInit, OnDestroy {
+export class PostFragmentComponent implements OnChanges, OnDestroy {
   @Input() fragment: ProcessedPost | undefined;
   @Input() showCw: boolean = true;
   @Input() selfManageCw: boolean = false;
@@ -100,14 +103,17 @@ export class PostFragmentComponent implements OnInit, OnDestroy {
     this.folowsSubscription.unsubscribe();
   }
 
-  ngOnInit(): void {
+  ngOnChanges(): void {
+    this.initializeEmojis();
+  }
+
+  initializeEmojis() {
     // using a "map" here for O(1) get operations
     const emojiReactions = {} as Record<string, EmojiReaction>;
     if (!this.fragment?.emojiReactions) {
       this.emojiCollection = [];
       return;
     }
-
     this.fragment.emojiReactions.forEach((reaction) => {
       const hasReaction = !!emojiReactions[reaction.content];
       if (!hasReaction) {
@@ -124,7 +130,9 @@ export class PostFragmentComponent implements OnInit, OnDestroy {
           external: reaction.emoji?.external == true,
           name: reaction.content,
           img: image ? `${environment.externalCacheurl}${image}` : undefined,
-          users: [], // this will be filled below
+          users: [], // this will be filled below,
+          tooltip: '',
+          includesMe: false,
         };
       }
 
@@ -138,6 +146,12 @@ export class PostFragmentComponent implements OnInit, OnDestroy {
     this.emojiCollection = Object.values(emojiReactions).sort(
       (a, b) => b.users.length - a.users.length
     );
+    for (let emoji of this.emojiCollection) {
+      emoji.tooltip = (this.isLike(emoji) ? 'Liked' : emoji.content) +
+        ' by ' +
+        this.getTooltipUsers(emoji.users);
+      emoji.includesMe = this.emojiReactionIncludesMe(emoji)
+    }
   }
 
   getTooltipUsers(users: SimplifiedUser[]): string {
@@ -158,6 +172,8 @@ export class PostFragmentComponent implements OnInit, OnDestroy {
           img: undefined,
           name: '❤️',
           users: [],
+          tooltip: '',
+          includesMe: false
         };
         this.emojiCollection.push(likesCollection);
       }
@@ -194,30 +210,20 @@ export class PostFragmentComponent implements OnInit, OnDestroy {
   }) {
     const collection = this.emojiCollection.find((e) => e.id === emoji.id);
     if (type === 'react') {
-      if (!collection) {
-        this.emojiCollection.push({
-          id: emoji.id,
-          content: emoji.name,
-          img: emoji.url,
-          external: emoji.external,
-          name: emoji.name,
-          users: [
-            {
-              url: this.jwtService.getTokenData()['url'],
-              name: this.jwtService.getTokenData()['url'],
-              id: this.loginService.getLoggedUserUUID(),
-              avatar: '',
-            },
-          ],
-        });
-      } else {
-        collection.users.push({
+      this.fragment?.emojiReactions.push({
+        emojiId: emoji.id,
+        emoji: emoji,
+        userId: this.loginService.getLoggedUserUUID(),
+        postId: this.fragment.id,
+        content: emoji.name,
+        user: {
           url: this.jwtService.getTokenData()['url'],
           name: this.jwtService.getTokenData()['url'],
           id: this.loginService.getLoggedUserUUID(),
           avatar: '',
-        });
-      }
+        }
+      })
+      console.log(this.fragment?.emojiReactions)
     } else {
       if (collection) {
         if (collection.users.length === 1) {
@@ -231,6 +237,8 @@ export class PostFragmentComponent implements OnInit, OnDestroy {
         }
       }
     }
+    this.ngOnChanges()
+
   }
 
   isLike(emojiReaction: EmojiReaction) {

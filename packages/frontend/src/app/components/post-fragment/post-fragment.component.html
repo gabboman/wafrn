@@ -55,13 +55,10 @@
       solution: rework the emojis part so its processed only on load with all data there
       -->
       <button [disabled]=" reactionLoading" [ngClass]="{
-      reacted: emojiReactionIncludesMe(emoji),
+      reacted: emoji.includesMe,
       blurry: fragment.content_warning && showCw
-    }" (mousedown)="toggleEmojiReact(emoji)" mat-stroked-button matTooltipTouchGestures="on" [matTooltip]="
-      (isLike(emoji) ? 'Liked' : emoji.content) +
-      ' by ' +
-      getTooltipUsers(emoji.users)
-    ">
+    }" (mousedown)="toggleEmojiReact(emoji)" mat-stroked-button matTooltipTouchGestures="on"
+        [matTooltip]="emoji.tooltip">
         @if (emoji.img) {
         <img class="post-emoji" [src]="emoji.img" [alt]="emoji.content" />
         } @else {
@@ -73,11 +70,7 @@
       } @else {
       <span [ngClass]="{
         blurry: fragment.content_warning && showCw
-      }" class="p-3" [matTooltip]="
-      (isLike(emoji) ? 'Liked' : emoji.content) +
-      ' by ' +
-      getTooltipUsers(emoji.users)
-    ">
+      }" class="p-3" [matTooltip]="emoji.tooltip ">
         @if (emoji.img) {
         <img class="post-emoji" [src]="emoji.img" [alt]="emoji.content" />
         } @else {
