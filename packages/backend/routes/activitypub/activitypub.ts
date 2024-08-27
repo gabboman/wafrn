@@ -280,7 +280,7 @@ function activityPubRoutes(app: Application) {
       const urlToSearch = req.params?.url ? req.params.url : environment.adminUser
       const url = urlToSearch.toLowerCase()
       const user = await getLocalUserByUrl(url)
-      if (user.url !== environment.adminUser && !(await checkuserAllowsThreads(req, user))) {
+      if (user && user.url !== environment.adminUser && !(await checkuserAllowsThreads(req, user))) {
         res.sendStatus(403)
         return
       }
