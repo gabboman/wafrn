@@ -5,6 +5,7 @@ import { logger } from './utils/logger'
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const { Sequelize } = require('sequelize')
 import { Model, InferAttributes, InferCreationAttributes, DataTypes } from 'sequelize'
+import { redisCache } from './utils/redis'
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 require('sequelize-hierarchy-fork')(Sequelize)
@@ -822,6 +823,11 @@ sequelize
   .then(async () => {
     if (environment.forceSync) {
       logger.info('CLEANING DATA. Creating admin and deleted user')
+
+      // clear all keys stored in redis cache before cleaning the database
+      // this wont affect the bull queues because they are stored in a different redis database
+      await redisCache.flushdb()
+
       const { publicKey, privateKey } = generateKeyPairSync('rsa', {
         modulusLength: 4096,
         publicKeyEncoding: {

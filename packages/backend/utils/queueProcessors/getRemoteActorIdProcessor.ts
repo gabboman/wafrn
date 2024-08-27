@@ -34,7 +34,7 @@ async function getRemoteActorIdProcessor(job: Job) {
     res = await getDeletedUser()
     url = undefined
     logger.debug({
-      message: 'Invalid url',
+      message: `Invalid url ${actorUrl}`,
       url: actorUrl,
       stack: new Error().stack
     })
