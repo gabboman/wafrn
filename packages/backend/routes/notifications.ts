@@ -126,7 +126,8 @@ export default function notificationRoutes(app: Application) {
       }
     })
 
-    const asks = Ask.findAll({
+    const asks = await Ask.findAll({
+      attributes: ['question', 'apObject', 'createdAt', 'updatedAt', 'postId', 'userAsked', 'userAsker'],
       where: {
         postId: {
           [Op.in]: postIds
