@@ -4,6 +4,7 @@ import fs from 'fs'
 import axios from 'axios'
 import { logger } from '../utils/logger'
 import optimizeMedia from '../utils/optimizeMedia'
+import { environment } from '../environment'
 const gm = require('gm')
 
 export default function cacheRoutes(app: Application) {
@@ -42,7 +43,7 @@ export default function cacheRoutes(app: Application) {
             res.sendFile(localFileName, { root: '.' })
           }
         } else {
-          const remoteResponse = await axios.get(mediaLink, { responseType: 'stream' })
+          const remoteResponse = await axios.get(mediaLink, { responseType: 'stream', headers: { "User-Agent": environment.instanceUrl } })
           const path = `${localFileName}`
           const filePath = fs.createWriteStream(path)
           filePath.on('finish', async () => {
