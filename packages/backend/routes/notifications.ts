@@ -83,12 +83,7 @@ export default function notificationRoutes(app: Application) {
       .concat((await reblogs).map((reblog: any) => reblog.id))
       .concat((await newQuotes).map((quote: any) => quote.quoterPostId))
       .concat((await newQuotes).map((quote: any) => quote.quotedPostId))
-    let userIds = (await reblogs)
-      .map((rb: any) => rb.userId)
-      .concat((await newEmojiReactions).map((react: any) => react.userId))
-      .concat((await follows).map((elem: any) => elem.followerId))
-      .concat((await likes).map((like: any) => like.userId))
-      .concat([userId])
+
     const medias = getMedias(postIds)
     const posts = await Post.findAll({
       where: {
@@ -97,7 +92,25 @@ export default function notificationRoutes(app: Application) {
         }
       }
     })
-    userIds = userIds.concat(posts.map((post: any) => post.userId))
+
+    const asks = await Ask.findAll({
+      attributes: ['question', 'apObject', 'createdAt', 'updatedAt', 'postId', 'userAsked', 'userAsker'],
+      where: {
+        postId: {
+          [Op.in]: postIds
+        }
+      }
+    })
+
+    const userIds = (await reblogs)
+      .map((rb: any) => rb.userId)
+      .concat((await newEmojiReactions).map((react: any) => react.userId))
+      .concat((await follows).map((elem: any) => elem.followerId))
+      .concat((await likes).map((like: any) => like.userId))
+      .concat([userId])
+      .concat(posts.map((post: any) => post.userId))
+      .concat(asks.map((ask: any) => ask.userAsker))
+
     const users = User.findAll({
       attributes: ['name', 'url', 'avatar', 'id'],
       where: {
@@ -126,17 +139,8 @@ export default function notificationRoutes(app: Application) {
       }
     })
 
-    const asks = await Ask.findAll({
-      attributes: ['question', 'apObject', 'createdAt', 'updatedAt', 'postId', 'userAsked', 'userAsker'],
-      where: {
-        postId: {
-          [Op.in]: postIds
-        }
-      }
-    })
-
     res.send({
-      asks: await asks,
+      asks,
       emojiReactions: await newEmojiReactions,
       emojis: await emojis,
       users: await users,
