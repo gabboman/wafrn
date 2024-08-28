@@ -1,21 +1,29 @@
+import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
+import { FormsModule } from '@angular/forms';
+import { MatButtonModule } from '@angular/material/button';
+import { MatCardModule } from '@angular/material/card';
+import { MatInputModule } from '@angular/material/input';
 import { Router } from '@angular/router';
 import { MessageService } from 'src/app/services/message.service';
 import { ThemeService } from 'src/app/services/theme.service';
 
 @Component({
   selector: 'app-css-editor',
+  standalone: true,
+  imports: [
+    CommonModule,
+    MatCardModule,
+    FormsModule,
+    MatInputModule,
+    MatButtonModule
+  ],
   templateUrl: './css-editor.component.html',
-  styleUrls: ['./css-editor.component.scss'],
+  styleUrl: './css-editor.component.scss'
 })
 export class CssEditorComponent {
   ready = false;
   myCSS = '';
-  modules = {
-    // some day we will get it
-    syntax: false,
-    toolbar: [],
-  };
   constructor(
     private themeService: ThemeService,
     private messages: MessageService,

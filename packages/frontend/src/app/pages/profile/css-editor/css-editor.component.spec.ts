@@ -6,10 +6,12 @@ describe('CssEditorComponent', () => {
   let component: CssEditorComponent;
   let fixture: ComponentFixture<CssEditorComponent>;
 
-  beforeEach(() => {
-    TestBed.configureTestingModule({
-      declarations: [CssEditorComponent]
-    });
+  beforeEach(async () => {
+    await TestBed.configureTestingModule({
+      imports: [CssEditorComponent]
+    })
+    .compileComponents();
+
     fixture = TestBed.createComponent(CssEditorComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();

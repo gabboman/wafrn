@@ -1,27 +1,12 @@
 <mat-card class="p-3 mb-6 lg:mx-4 scalein wafrn-container">
-  <h2>You can see a base template and some advices <a href="https://github.com/gabboman/wafrn/blob/main/THEMING.md" target="_blank">in this guide</a></h2>
-  <quill-editor
-    format="text"
-    *ngIf="ready"
-    #quill
-    [(ngModel)]="myCSS"
-    class="w-full"
-    [modules]="modules"
-  >
-    <div
-      quill-editor-toolbar
-      style="border-top-left-radius: 5px; border-top-right-radius: 5px"
-    >
-      Edit your css
-    </div>
-  </quill-editor>
-  <button
-    mat-flat-button
-    color="primary"
-    *ngIf="ready"
-    (mousedown)="submit()"
-    class="w-full"
-  >
-    Update your theme
-  </button>
+    <h2>You can see a base template and some advices <a href="https://github.com/gabboman/wafrn/blob/main/THEMING.md"
+            target="_blank">in this guide</a></h2>
+    <mat-form-field class="w-full">
+        <mat-label>Edit your Css theme</mat-label>
+        <textarea style="min-height: 50vh;" matInput placeholder="Write down your own css..."
+            [(ngModel)]="myCSS"> </textarea>
+    </mat-form-field>
+    <button mat-flat-button color="primary" *ngIf="ready" (mousedown)="submit()" class="w-full">
+        Update your theme
+    </button>
 </mat-card>

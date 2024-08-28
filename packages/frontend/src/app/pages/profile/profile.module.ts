@@ -18,9 +18,9 @@ import { MyServerBlocksComponent } from './my-server-blocks/my-server-blocks.com
       },
       {
         path: 'css',
-        loadChildren: () =>
-          import('./css-editor/css-editor.module').then(
-            (m) => m.CssEditorModule
+        loadComponent: () =>
+          import('./css-editor/css-editor.component').then(
+            (m) => m.CssEditorComponent
           ),
       },
       {
