@@ -756,6 +756,18 @@ export default function userRoutes(app: Application) {
 
 
   app.post('/api/user/:url/ask', optionalAuthentication, async (req: AuthorizedRequest, res: Response) => {
+    const lastHourAsks = await Ask.count({
+      where: {
+        creationIp: getIp(req),
+        createdAt: {
+          [Op.gt]: new Date().setHours(new Date().getHours() - 1)
+        }
+      }
+    })
+    // a bit dirty of a way but yeah limit asks if user is not logged in. if user is logged in we can ban them later
+    if (lastHourAsks >= 5 && !req.jwtData?.userId) {
+      return res.sendStatus(429);
+    }
     const url = req.params?.url as string
     const userRecivingAsk = await User.findOne({
       where: {

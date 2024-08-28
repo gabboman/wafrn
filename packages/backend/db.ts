@@ -620,6 +620,14 @@ const Ask = sequelize.define('asks', {
     {
       fields: ['answered'],
       unique: false
+    },
+    {
+      fields: ['creationIp'],
+      unique: false
+    },
+    {
+      fields: ['createdAt'],
+      unique: false
     }
   ]
 })
