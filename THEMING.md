@@ -20,7 +20,7 @@ Here is a theming template you can use to customize the appearance of your profi
 
 It is not complete, nor perfect, but the most important elements are there, have fun playing with it :)
 
-Watch out for when you copy the css into wafrn, it changes the double-space indentations to single spaces, you may have to correct that manually for it to work.
+Watch out for when you copy the CSS into wafrn, it changes the double-space indentations to single spaces, you may have to correct that manually for it to work.
 
 Feel free to leave any improvement as a PR, or any issue in the issues section
 
