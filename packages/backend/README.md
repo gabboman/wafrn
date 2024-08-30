@@ -26,7 +26,7 @@ Ok let's get started, this is what you will need
 
 ### The domains
 
-The frontend domain is the domain that people will use to find you on Fedi. In the prod instance, it's app.wafrn.net. Then referring to the media URL, we have media.wafrn.net, and finally for cache we have cache.wafrn.net
+The frontend domain is the domain that people will use to find you on Fedi. In the prod instance, it's [app.wafrn.net](https://app.wafrn.net). Then referring to the media URL, we have [media.wafrn.net](https://media.wafrn.net), and finally for cache we have [cache.wafrn.net](https://cache.wafrn.net)
 
 ## First steps: update and install stuff
 
