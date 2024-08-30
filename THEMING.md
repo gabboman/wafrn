@@ -4,7 +4,7 @@
 
 Add this to detect rickrolls
 
-````
+```css
 a[href *= "dQw4w9WgXcQ"]::before {
     content: "this is a rickroll → ";
     color: red;
@@ -24,7 +24,7 @@ Watch out for when you copy the css into wafrn, it changes the double-space inde
 
 Feel free to leave any improvement as a PR, or any issue in the issues section
 
-```
+```css
 /* VARIABLES */
 
 :root {
@@ -959,4 +959,3 @@ transition: var(--color-trans);
 
 }
 ```
-````
