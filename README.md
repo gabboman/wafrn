@@ -1,3 +1,7 @@
+<div align="center">
+  <img src="https://app.wafrn.net/assets/logo.png" alt="Wafrn logo" width="350"/>
+</div>
+
 # WAFRN
 
 Wafrn is an open source social network that connects with the Fediverse. The frontend is Tumblr-inspired. The "main" wafrn server is [app.wafrn.net](https://app.wafrn.net), but you can host your own if you're unhappy with my moderation style or simply and more probable, you would like to host your own stuff.
@@ -21,7 +25,8 @@ You will also need a way of sending emails to the people registering. An SMTP se
 First, point the domain to your Debian VPS. Once that is done, we download the installer and execute it, as root.
 The installer will install all required packages, create the user and clone the repo and configure Apache.
 
-DO NOT PRESS ENTER BLINDLY DURING THE INSTALL PROCESS, as it will ask some stuff and my bash-fu is not that good
+> [!WARNING]
+> **DO NOT PRESS ENTER BLINDLY DURING THE INSTALL PROCESS**, as it will ask some stuff and my bash-fu is not that good
 
 Remember, run this as root!
 
@@ -45,7 +50,6 @@ In this file, we edit the line `forceSync` and we set it to true to force it to 
 cd wafrn
 nano packages/backend/environment.ts
 #forceSync: false -> forceSync: true
-
 ```
 
 There is also an option called `adminPassword`. You can edit it too and set the admin password. In this state, it should be a random password.
@@ -78,7 +82,8 @@ This last command asks you to run something as root. Do it, so when the server r
 
 You're ready!
 
-Remember, remove the admin password from the environment.ts in the backend package!
+> [!WARNING]
+> Remember, remove the admin password from the environment.ts in the backend package!
 
 ## Update wafrn
 

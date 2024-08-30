@@ -2,7 +2,7 @@
 
 This project is the frontend of [wafrn](https://app.wafrn.net), the social network that respects you.
 
-This is made with angular. Have fun doing stuff ;D
+This is made with [Angular](https://angular.io/). Have fun doing stuff ;D
 
 ## Installation
 
