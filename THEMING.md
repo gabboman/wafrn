@@ -1,6 +1,6 @@
 # Theme template for WAFRN
 
-### Small rickroll detector
+## Small rickroll detector
 
 Add this to detect rickrolls
 

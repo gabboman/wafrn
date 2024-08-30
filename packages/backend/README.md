@@ -4,7 +4,7 @@ Wafrn is an opensource social network that connects with the fediverse. The fron
 
 - [WAFRN backend - Node.js REST API](#wafrn-backend---nodejs-rest-api)
   - [What will you need](#what-will-you-need)
-      - [The domains](#the-domains)
+    - [The domains](#the-domains)
   - [First steps: update and install stuff](#first-steps-update-and-install-stuff)
   - [Create a database](#create-a-database)
   - [Create a user for wafrn and prepare node for the user](#create-a-user-for-wafrn-and-prepare-node-for-the-user)
@@ -24,7 +24,7 @@ Ok let's get started, this is what you will need
 - A domain for the frontend, a subdomain for the media, and another subdomain for the cache.
 - We will install mysql/mariadb, redis, apache and certbot. Feel free to skip what you know, but take a look to the apache config file, it's important
 
-#### The domains
+### The domains
 
 The frontend domain is the domain that people will use to find you in the fedi. In the prod instance, its app.wafrn.net. Then refering to the media url, we have media.wafrn.net, and finally for cache we have cache.wafrn.net
 
