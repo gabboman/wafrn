@@ -2,13 +2,13 @@
 
 This project is the frontend of [wafrn](https://app.wafrn.net), the social network that respects you.
 
-This is made with angular. Have fun doing stuff ;D
+This is made with [Angular](https://angular.io/). Have fun doing stuff ;D
 
 ## Installation
 
 ### Prerequisites
 
-This project uses npm. You can check that npm is installed in the terminal by running:
+This project uses NPM. You can check that NPM is installed in the terminal by running:
 
 ```bash
 npm -v
@@ -18,7 +18,7 @@ npm -v
 
 First, [fork the repo](https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/working-with-forks/fork-a-repo).
 
-Once the prerequisites are installed and you are working off the fork, [clone the repository](https://help.github.com/en/github/creating-cloning-and-archiving-repositories/cloning-a-repository)
+Once the prerequisites are installed, and you are working off the fork, [clone the repository](https://help.github.com/en/github/creating-cloning-and-archiving-repositories/cloning-a-repository)
 to your local machine.
 
 This can be done from the command line:
