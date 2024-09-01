@@ -69,6 +69,7 @@ export class NavigationMenuComponent implements OnInit, OnDestroy {
   scrollSubscription: Subscription;
   hamburguerIcon = faBars;
   pencilIcon = faPencil;
+  currentRoute = '';
   constructor(
     private editorService: EditorService,
     private router: Router,
@@ -80,7 +81,8 @@ export class NavigationMenuComponent implements OnInit, OnDestroy {
     private dashboardService: DashboardService,
     private dialogService: MatDialog
   ) {
-    this.router.routeReuseStrategy.shouldReuseRoute = () => false
+    this.router.routeReuseStrategy.shouldReuseRoute = () => false;
+    
     this.loginSubscription = this.loginSubscription = this.loginService.loginEventEmitter.subscribe(
       () => {
         this.drawMenu();
@@ -91,6 +93,7 @@ export class NavigationMenuComponent implements OnInit, OnDestroy {
     }
     this.navigationSubscription = this.router.events.subscribe((ev) => {
       if (ev instanceof NavigationEnd) {
+        this.currentRoute = ev.url;
         this.updateNotifications(ev.url);
       }
     });
