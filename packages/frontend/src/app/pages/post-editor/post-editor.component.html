@@ -16,7 +16,50 @@
       <h2>Replying ask</h2>
       <app-single-ask [ask]="data.ask"></app-single-ask>
     </ng-container>
-  
+    <div class="below-editor-toolbar">
+      <div class="flex justify-content-end my-2">
+        <button mat-button [matMenuTriggerFor]="menu" aria-label="Edit privacy of post" class="input-height-btn">
+          <fa-icon size="lg" [icon]="getPrivacyIcon()"></fa-icon>
+        </button>
+      </div>
+      <div class="flex justify-content-end my-2">
+        <button aria-label="Enable the quote setter" mat-button (mousedown)="quoteOpen = !quoteOpen"
+          class="input-height-btn">
+          <fa-icon size="lg" [icon]="quoteIcon"></fa-icon>
+        </button>
+      </div>
+      <div class="flex justify-content-end my-2" *ngIf="uploadedMedias.length < 4 && pollQuestions.length === 0">
+        <app-file-upload (fileUpload)="uploadImage($event)"></app-file-upload>
+      </div>
+      <div class="flex justify-content-end my-2">
+        <button class="input-height-btn" mat-button (mousedown)="showContentWarning = !showContentWarning">
+          CW
+        </button>
+      </div>
+      <div class="flex justify-content-end my-2 flex-grow-1 w-full-mobile">
+        @if (showContentWarning || contentWarning) {
+        <mat-form-field class="w-full" appearance="outline" subscriptSizing="dynamic">
+          <mat-label>Content warning</mat-label>
+          <input [(ngModel)]="contentWarning" matNativeControl />
+        </mat-form-field>
+        }
+      </div>
+    </div>
+    @if (quoteOpen && !data?.quote) {
+      <mat-card class="p-2 my-4" *ngIf="!quoteLoading">
+        <mat-form-field class="w-full">
+          <mat-label>
+            Paste the URL of a post to quote it. Can be the external url or the
+            wafrn url
+          </mat-label>
+          <input [(ngModel)]="urlPostToQuote" placeholder="Just paste the post url" matNativeControl />
+        </mat-form-field>
+        <button (mousedown)="loadQuote()" mat-stroked-button color="primary" class="w-full"
+          [disabled]="urlPostToQuote === ''">
+          Add post as quote
+        </button>
+      </mat-card>
+      }
     <quill-editor style="height: 50%;" #quill class="w-full" [(ngModel)]="postCreatorContent" [modules]="modules"
       [customOptions]="customOptions">
       <div quill-editor-toolbar class="post-editor-toolbar">
@@ -55,35 +98,7 @@
       once you woot. Please use the upload tool on the top bar of the editor
     </button>
   
-    <div class="below-editor-toolbar">
-      <div class="flex justify-content-end my-2">
-        <button mat-button [matMenuTriggerFor]="menu" aria-label="Edit privacy of post" class="input-height-btn">
-          <fa-icon size="lg" [icon]="getPrivacyIcon()"></fa-icon>
-        </button>
-      </div>
-      <div class="flex justify-content-end my-2">
-        <button aria-label="Enable the quote setter" mat-button (mousedown)="quoteOpen = !quoteOpen"
-          class="input-height-btn">
-          <fa-icon size="lg" [icon]="quoteIcon"></fa-icon>
-        </button>
-      </div>
-      <div class="flex justify-content-end my-2" *ngIf="uploadedMedias.length < 4 && pollQuestions.length === 0">
-        <app-file-upload (fileUpload)="uploadImage($event)"></app-file-upload>
-      </div>
-      <div class="flex justify-content-end my-2">
-        <button class="input-height-btn" mat-button (mousedown)="showContentWarning = !showContentWarning">
-          CW
-        </button>
-      </div>
-      <div class="flex justify-content-end my-2 flex-grow-1 w-full-mobile">
-        @if (showContentWarning || contentWarning) {
-        <mat-form-field class="w-full" appearance="outline" subscriptSizing="dynamic">
-          <mat-label>Content warning</mat-label>
-          <input [(ngModel)]="contentWarning" matNativeControl />
-        </mat-form-field>
-        }
-      </div>
-    </div>
+
   
     <section id="privacy-messages">
       <p *ngIf="privacy === 10" class="my-2">
@@ -135,21 +150,7 @@
     <section id="quote">
       <div *ngIf="!data?.quote">
         <mat-spinner *ngIf="quoteLoading" class="my-4" color="accent" diameter="42"></mat-spinner>
-        @if (quoteOpen) {
-        <mat-card class="p-2 my-4" *ngIf="!quoteLoading">
-          <mat-form-field class="w-full">
-            <mat-label>
-              Paste the URL of a post to quote it. Can be the external url or the
-              wafrn url
-            </mat-label>
-            <input [(ngModel)]="urlPostToQuote" placeholder="Just paste the post url" matNativeControl />
-          </mat-form-field>
-          <button (mousedown)="loadQuote()" mat-stroked-button color="primary" class="w-full"
-            [disabled]="urlPostToQuote === ''">
-            Add post as quote
-          </button>
-        </mat-card>
-        }
+
       </div>
       <div *ngIf="data && data.quote" class="my-4">
         <p class="mb-1">QUOTING:</p>
