@@ -3,6 +3,7 @@ import { PreloadAllModules, RouterModule, Routes } from '@angular/router';
 import { NavigationMenuComponent } from './components/navigation-menu/navigation-menu.component';
 import { NavigationMenuModule } from './components/navigation-menu/navigation-menu.module';
 import { isAdminGuard } from './guards/is-admin.guard';
+import { loginRequiredGuard } from './guards/login-required.guard';
 
 const routes: Routes = [
   {
@@ -96,14 +97,15 @@ const routes: Routes = [
         canActivate: [isAdminGuard],
       },
       {
-        path: 'forum/:id',
-        loadComponent: () =>
-          import('./pages/forum/forum.component').then((m) => m.ForumComponent),
-      },
-      {
         path: 'doom',
         loadChildren: () =>
           import('./pages/doom/doom.module').then((m) => m.DoomModule),
+      },
+      {
+        path: 'editor',
+        canActivate: [loginRequiredGuard],
+        loadComponent: () =>
+          import('./pages/post-editor/post-editor.component').then((m) => m.PostEditorComponent),
       },
       {
         path: '**',

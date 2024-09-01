@@ -11,15 +11,12 @@ import { DashboardService } from 'src/app/services/dashboard.service';
 import { MessageService } from 'src/app/services/message.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { MatDialogContent, MatDialogRef } from '@angular/material/dialog';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { ProcessedPost } from 'src/app/interfaces/processed-post';
 import { MatButtonModule } from '@angular/material/button';
 import { MatSelectModule } from '@angular/material/select';
 import { MatInputModule } from '@angular/material/input';
 import { MatCheckboxModule } from '@angular/material/checkbox';
-import { FileUploadComponent } from '../file-upload/file-upload.component';
-import { MediaPreviewComponent } from '../media-preview/media-preview.component';
 import { LoginService } from 'src/app/services/login.service';
 import { MatExpansionModule } from '@angular/material/expansion';
 import {
@@ -33,20 +30,24 @@ import {
   faUser,
 } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { PostFragmentComponent } from '../post-fragment/post-fragment.component';
 import { PostsService } from 'src/app/services/posts.service';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatCardModule } from '@angular/material/card';
-import { EmojiCollectionsComponent } from '../emoji-collections/emoji-collections.component';
 import { Subscription } from 'rxjs';
 import { EmojiCollection } from 'src/app/interfaces/emoji-collection';
 import { Emoji } from 'src/app/interfaces/emoji';
 import { QuestionPollQuestion } from 'src/app/interfaces/questionPoll';
 import { MatMenuModule } from '@angular/material/menu';
-import { AvatarSmallComponent } from '../avatar-small/avatar-small.component';
-import { PostHeaderComponent } from "../post/post-header/post-header.component";
 import { Ask } from 'src/app/interfaces/ask';
-import { SingleAskComponent } from '../single-ask/single-ask.component';
+import { AvatarSmallComponent } from 'src/app/components/avatar-small/avatar-small.component';
+import { EmojiCollectionsComponent } from 'src/app/components/emoji-collections/emoji-collections.component';
+import { FileUploadComponent } from 'src/app/components/file-upload/file-upload.component';
+import { MediaPreviewComponent } from 'src/app/components/media-preview/media-preview.component';
+import { PostFragmentComponent } from 'src/app/components/post-fragment/post-fragment.component';
+import { PostHeaderComponent } from 'src/app/components/post/post-header/post-header.component';
+import { SingleAskComponent } from 'src/app/components/single-ask/single-ask.component';
+import { EditorData } from 'src/app/interfaces/editor-data';
+import { Router } from '@angular/router';
 
 type Mention = {
   id: string;
@@ -64,11 +65,11 @@ type Mention = {
   standalone: true,
   imports: [
     CommonModule,
+    MatCardModule,
     QuillModule,
     FormsModule,
     ReactiveFormsModule,
     MediaPreviewComponent,
-    MatDialogContent,
     MatButtonModule,
     MatSelectModule,
     MatInputModule,
@@ -99,6 +100,8 @@ export class PostEditorComponent implements OnInit, OnDestroy {
   closeIcon = faClose;
   quoteIcon = faQuoteLeft;
   quoteOpen = false;
+  data: EditorData | undefined
+
 
   showContentWarning = false;
   displayMarqueeButton = false;
@@ -221,20 +224,13 @@ export class PostEditorComponent implements OnInit, OnDestroy {
   constructor(
     private editorService: EditorService,
     private messages: MessageService,
-    private mediaService: MediaService,
+    private router: Router,
     private jwtService: JwtService,
     private dashboardService: DashboardService,
     private postService: PostsService,
-    private dialogRef: MatDialogRef<PostEditorComponent>,
-    @Inject(MAT_DIALOG_DATA)
-    public data: {
-      ask?: Ask,
-      post?: ProcessedPost;
-      edit?: boolean;
-      quote?: ProcessedPost;
-    },
     private loginService: LoginService
   ) {
+    this.data = EditorService.editorData;
     this.privacy = this.loginService.getUserDefaultPostPrivacyLevel();
     this.subscription = this.postService.updateFollowers.subscribe(() => {
       this.emojiCollections = this.postService.emojiCollections;
@@ -249,7 +245,7 @@ export class PostEditorComponent implements OnInit, OnDestroy {
     if (post) {
       this.contentWarning = post.content_warning;
 
-      if (this.data.edit) {
+      if (this.data?.edit) {
         if (post.content) {
           content = post.content;
         }
@@ -452,7 +448,7 @@ export class PostEditorComponent implements OnInit, OnDestroy {
       if (this.data?.ask) {
         window.location.reload();
       }
-      this.dialogRef.close();
+      this.closeEditor();
     } else {
       this.messages.add({
         severity: 'warn',
@@ -464,7 +460,11 @@ export class PostEditorComponent implements OnInit, OnDestroy {
   }
 
   closeEditor() {
-    this.dialogRef.close();
+    if(!this.data) {
+      this.router.navigate(['/'])
+    } else {
+      this.router.navigate([this.data.path])
+    }
   }
 
   imgSelected(ev: InputEvent) {
@@ -608,7 +608,11 @@ export class PostEditorComponent implements OnInit, OnDestroy {
           if (this.data) {
             this.data.quote = postToAdd;
           } else {
-            this.data = { quote: postToAdd };
+            this.data = {
+              scrollDate: new Date(),
+              path: '/',
+              quote: postToAdd
+            };
           }
         }
       } else {

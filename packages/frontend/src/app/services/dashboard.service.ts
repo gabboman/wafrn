@@ -18,7 +18,7 @@ export class DashboardService {
   public scrollEventEmitter: EventEmitter<string> = new EventEmitter();
   // TODO improve this. will require some changes for stuff but basically
   // its faster to say "gimme page 0 startdate this" than "gime page 2 startdate this"
-  startScrollDate: Date = new Date();
+  public startScrollDate: Date = new Date();
   baseUrl: string;
 
   constructor(
@@ -36,6 +36,7 @@ export class DashboardService {
     this.postService.loadFollowers();
     let result: ProcessedPost[][] = [];
     let petitionData: HttpParams = new HttpParams();
+    this.startScrollDate = date;
     petitionData = petitionData.set('page', '0');
     petitionData = petitionData.set('level', level);
     petitionData = petitionData.set('startScroll', date.getTime().toString());

@@ -7,6 +7,9 @@ import { Action, EditorLauncherData } from '../interfaces/editor-launcher-data';
 import { MatDialog } from '@angular/material/dialog';
 import { ProcessedPost } from '../interfaces/processed-post';
 import { Ask } from '../interfaces/ask';
+import { DashboardService } from './dashboard.service';
+import { Router } from '@angular/router';
+import { EditorData } from '../interfaces/editor-data';
 
 @Injectable({
   providedIn: 'any',
@@ -19,7 +22,13 @@ export class EditorService implements OnDestroy {
     });
 
   editorSubscription: Subscription;
-  constructor(private http: HttpClient, private dialogService: MatDialog) {
+  // TODO do something about this when angular 19, I dont like this too much
+  public static editorData: EditorData | undefined
+  constructor(
+    private http: HttpClient,
+    private dashboardService: DashboardService,
+    private router: Router
+  ) {
     this.editorSubscription = this.launchPostEditorEmitter.subscribe((data) => {
       if (data.action !== Action.None) {
         this.launchPostEditorEmitter.next({
@@ -103,13 +112,6 @@ export class EditorService implements OnDestroy {
       .toPromise();
   }
 
-  async getEditorComponent(): Promise<typeof PostEditorComponent> {
-    const { PostEditorComponent } = await import(
-      '../components/post-editor/post-editor.component'
-    );
-    return PostEditorComponent;
-  }
-
   public async replyPost(post: ProcessedPost, edit = false) {
     await this.openDialogWithData({ post: post, edit: edit })
   }
@@ -123,13 +125,11 @@ export class EditorService implements OnDestroy {
   }
 
   public async openDialogWithData(data: any) {
-    const mobile = window.innerWidth <= 992;
-    this.dialogService.open(await this.getEditorComponent(), {
-      data: data,
-      height: mobile ? '100vh' : 'min(600px, calc(100% - 30px))',
-      width: mobile ? '100vw' : 'min(960px, calc(100% - 30px))',
-      maxWidth: '100%',
-      maxHeight: '100%',
-    });
+    EditorService.editorData = {
+      ...data,
+      scrollDate: this.dashboardService.startScrollDate,
+      path: window.location.pathname
+    }
+    this.router.navigate(['/editor'])
   }
 }

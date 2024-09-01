@@ -1,0 +1,79 @@
+.taglist {
+    margin-top: -8px;
+    margin-bottom: 8px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+  }
+  
+  
+  .grid {
+    margin: 0;
+  }
+  
+  .grid > div {
+    border: 1px solid #999;
+    border-radius: 8px;
+  }
+  
+  .below-editor-toolbar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    justify-content: flex-start;
+    gap: 8px;
+    margin-top: 8px;
+  }
+  
+  .cw-wrapper {
+    flex-grow: 5;
+    display: flex;
+  }
+  
+  .cw-wrapper mat-button-toggle {
+    flex-shrink: 0;
+    margin: 3px 0;
+    margin-left: -2px;
+  }
+  
+  
+  .in-reply-to-preview {
+    max-height: 90px;
+    overflow: hidden;
+  }
+  
+  p {
+    margin: 0;
+  }
+  
+  app-media-preview {
+    display: block;
+    margin-bottom: 8px;
+  
+    & + mat-form-field {
+      margin-bottom: -12px;
+    }
+  }
+  
+  .delete-btn {
+    position: absolute;
+    top: -8px;
+    right: -8px;
+  }
+  
+  .quote-container {
+    position: relative;
+  }
+  
+  
+  .post-editor-toolbar {
+    border-bottom: none;
+          border-top-left-radius: 5px;
+          border-top-right-radius: 5px;
+  }
+  
+  .publish-post-button {
+    position: absolute;
+    bottom: 2em;
+    left: 0px;
+  }
