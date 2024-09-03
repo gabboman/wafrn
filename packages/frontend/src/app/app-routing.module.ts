@@ -108,6 +108,11 @@ const routes: Routes = [
           import('./pages/post-editor/post-editor.component').then((m) => m.PostEditorComponent),
       },
       {
+        path: 'aac4alex',
+        loadComponent: () =>
+          import('./pages/aac-for-alex/aac-for-alex.component').then((m) => m.AacForAlexComponent),
+      },
+      {
         path: '**',
         loadChildren: () =>
           import('./pages/pagenotfound/pagenotfound.module').then(
