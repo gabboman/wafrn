@@ -9,7 +9,6 @@ import { ThemeService } from 'src/app/services/theme.service';
 import { MessageService } from 'src/app/services/message.service';
 import { faArrowsRotate } from '@fortawesome/free-solid-svg-icons';
 import { Subscription } from 'rxjs';
-import { EditorService } from 'src/app/services/editor.service';
 
 @Component({
   selector: 'app-dashboard',
@@ -132,11 +131,13 @@ export class DashboardComponent implements OnInit, OnDestroy {
   async loadPosts(page: number) {
     this.loadingPosts = true;
     let scrollDate = new Date(this.timestamp);
+    /*
+    // diable this part of ignoring the start date when closing post editor
     if(page === 0 && EditorService.editorData) {
       scrollDate = EditorService.editorData.scrollDate;
-      console.log(scrollDate)
       EditorService.editorData = undefined;
     }
+    */
     if (page !== 0) {
       const lastPostBlock = this.posts[this.posts.length - 1];
       scrollDate = new Date(lastPostBlock[lastPostBlock.length - 1].createdAt);
