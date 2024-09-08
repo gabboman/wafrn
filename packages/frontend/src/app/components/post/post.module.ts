@@ -13,6 +13,7 @@ import { PostFragmentComponent } from '../post-fragment/post-fragment.component'
 import { PostActionsComponent } from '../post-actions/post-actions.component';
 import { AvatarSmallComponent } from '../avatar-small/avatar-small.component';
 import { PostHeaderComponent } from "./post-header/post-header.component";
+import { BottomReplyBarComponent } from "../bottom-reply-bar/bottom-reply-bar.component";
 
 @NgModule({
   declarations: [PostComponent],
@@ -28,7 +29,8 @@ import { PostHeaderComponent } from "./post-header/post-header.component";
     PostFragmentComponent,
     PostActionsComponent,
     AvatarSmallComponent,
-    PostHeaderComponent
+    PostHeaderComponent,
+    BottomReplyBarComponent
 ],
   exports: [PostComponent],
   providers: [ReportService],

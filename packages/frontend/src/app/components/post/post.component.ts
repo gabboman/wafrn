@@ -95,10 +95,6 @@ export class PostComponent implements OnInit, OnChanges, OnDestroy {
   constructor(
     public postService: PostsService,
     private loginService: LoginService,
-    private messages: MessageService,
-    private editor: EditorService,
-    private editorService: EditorService,
-    private deletePostService: DeletePostService
   ) {
     this.userLoggedIn = loginService.checkUserLoggedIn();
     if (this.userLoggedIn) {
@@ -187,72 +183,6 @@ export class PostComponent implements OnInit, OnChanges, OnDestroy {
 
 
 
-  launchReblog() {
-    this.editorService.launchPostEditorEmitter.next({
-      post: this.finalPost,
-      action: Action.Response,
-    });
-  }
-
-  async quickReblog(postToBeReblogged: ProcessedPost) {
-    this.loadingAction = true;
-    if (postToBeReblogged?.privacy !== 10) {
-      const response = await this.editor.createPost({
-        content: '',
-        idPostToReblog: postToBeReblogged.id,
-        privacy: 0,
-        media: [],
-      });
-      if (response) {
-        this.messages.add({
-          severity: 'success',
-          summary: 'You reblogged the woot succesfully',
-        });
-      } else {
-        this.messages.add({
-          severity: 'error',
-          summary:
-            'Something went wrong! Check your internet conectivity and try again',
-        });
-      }
-    } else {
-      this.messages.add({
-        severity: 'warn',
-        summary:
-          'Sorry, this woot is not rebloggeable as requested by the user',
-      });
-    }
-    this.loadingAction = false;
-  }
-
-  shareOriginalPost(url: string) {
-    navigator.clipboard.writeText(url);
-    this.messages.add({
-      severity: 'success',
-      summary: 'The external url has been copied!',
-    });
-  }
-
-  async replyPost(post: ProcessedPost) {
-    await this.editorService.replyPost(post);
-  }
-
-  async quotePost(post: ProcessedPost) {
-    await this.editorService.quotePost(post);
-  }
-
-  async editPost(post: ProcessedPost) {
-    await this.editorService.replyPost(post, true);
-  }
-
-  async deletePost(id: string) {
-    this.deletePostService.openDeletePostDialog(id);
-  }
-
-  async deleteRewoot(id: string) {
-    this.deletePostService.openDeletePostDialog(id);
-  }
-
   expandPost() {
     this.post = this.originalPostContent;
     this.veryLongPost = false;
@@ -261,42 +191,5 @@ export class PostComponent implements OnInit, OnChanges, OnDestroy {
 
   dismissContentWarning() {
     this.showCw = !this.showCw;
-  }
-
-  async likePost(postToLike: ProcessedPost) {
-    this.loadingAction = true;
-    if (await this.postService.likePost(postToLike.id)) {
-      postToLike.userLikesPostRelations.push(this.myId);
-      this.ngOnChanges();
-      this.messages.add({
-        severity: 'success',
-        summary: 'You successfully liked this woot',
-      });
-    } else {
-      this.messages.add({
-        severity: 'error',
-        summary: 'Something went wrong. Please try again',
-      });
-    }
-    this.loadingAction = false;
-  }
-
-  async unlikePost(postToUnlike: ProcessedPost) {
-    this.loadingAction = true;
-    if (await this.postService.unlikePost(postToUnlike.id)) {
-      postToUnlike.userLikesPostRelations =
-        postToUnlike.userLikesPostRelations.filter((elem) => elem != this.myId);
-      this.ngOnChanges();
-      this.messages.add({
-        severity: 'success',
-        summary: 'You no longer like this woot',
-      });
-    } else {
-      this.messages.add({
-        severity: 'error',
-        summary: 'Something went wrong. Please try again',
-      });
-    }
-    this.loadingAction = false;
   }
 }

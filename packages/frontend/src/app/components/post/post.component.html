@@ -29,48 +29,5 @@
     Expand woot ({{originalPostContent.length}} posts)
   </button>
 
-  <div class="flex pt-1">
-    <div class="flex flex-grow-1">
-      <a [routerLink]="'/fediverse/post/' + finalPost.id"> Notes: {{ notes }} </a>
-    </div>
-    <div *ngIf="userLoggedIn" class="flex flex-shrink-0">
-      <div class="flex gap-4 px-1" *ngIf="!loadingAction">
-        <fa-icon *ngIf="
-            finalPost.privacy !== 10 &&
-            finalPost.privacy !== 1 &&
-            finalPost.privacy !== 2
-          " size="lg" (mousedown)="quotePost(finalPost)" class="cursor-pointer quote-icon" [icon]="quoteIcon"
-          matTooltip="Quote woot"></fa-icon>
-        @if (isEmptyReblog() && post[post.length - 1].userId === myId) {
-        <fa-icon size="lg" (mousedown)="deletePost(post[post.length - 1].id)" class="cursor-pointer delete-rewoot-icon"
-          [icon]="closeIcon" matTooltip="Delete rewoot"></fa-icon>
-        } @else {
-        <div matTooltip="Quick rewoot" *ngIf="finalPost.privacy !== 10 && finalPost.privacy !== 1"
-          class="fa-stack cursor-pointer rewoot-icon" (click)="quickReblog(finalPost)">
-          <fa-icon size="lg" [icon]="quickReblogIcon" class="fa-stack-1x"></fa-icon>
-          <fa-icon *ngIf="postService.rewootedPosts.includes(finalPost.id)" class="fa-stack-1x" size="lg"
-            [icon]="checkIcon"></fa-icon>
-        </div>
-
-        }
-
-        <fa-icon size="lg" (mousedown)="replyPost(finalPost)" class="cursor-pointer reply-icon" [icon]="reblogIcon"
-          matTooltip="Reply woot"></fa-icon>
-
-        @if(finalPost.userId !== myId ) {
-        @if(finalPost.userLikesPostRelations.includes(myId)) {
-        <fa-icon size="lg" (mousedown)="unlikePost(finalPost)" class="cursor-pointer unlike-icon"
-          [icon]="clearHeartIcon" matTooltip="Remove like"></fa-icon>
-        } @else {
-        <fa-icon size="lg" (mousedown)="likePost(finalPost)" class="cursor-pointer like-icon" [icon]="solidHeartIcon"
-          matTooltip="Like woot"></fa-icon>
-        } } @else {
-        <fa-icon size="lg" *ngIf="finalPost.privacy === 2" (mousedown)="editPost(finalPost)" class="cursor-pointer"
-          [icon]="editedIcon" matTooltip="Edit woot"></fa-icon>
-        <fa-icon size="lg" (mousedown)="deletePost(finalPost.id)" class="cursor-pointer delete-woot-icon"
-          [icon]="deleteIcon" matTooltip="Delete woot"></fa-icon>
-        }
-      </div>
-    </div>
-  </div>
+  <app-bottom-reply-bar [fragment]="finalPost" [notes]="notes" ></app-bottom-reply-bar>
 </mat-card>

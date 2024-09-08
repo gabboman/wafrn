@@ -20,6 +20,7 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faHome } from '@fortawesome/free-solid-svg-icons';
 import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
 import { environment } from 'src/environments/environment';
+import { BottomReplyBarComponent } from "../../components/bottom-reply-bar/bottom-reply-bar.component";
 
 @Component({
   selector: 'app-forum',
@@ -36,7 +37,8 @@ import { environment } from 'src/environments/environment';
     PostHeaderComponent,
     PostModule,
     FontAwesomeModule,
-    MatPaginatorModule
+    MatPaginatorModule,
+    BottomReplyBarComponent
 ],
   templateUrl: './forum.component.html',
   styleUrl: './forum.component.scss',
