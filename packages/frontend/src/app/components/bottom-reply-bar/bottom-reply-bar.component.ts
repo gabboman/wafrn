@@ -148,6 +148,7 @@ export class BottomReplyBarComponent implements OnChanges {
           media: [],
         });
         if (response) {
+          this.myRewootsIncludePost = true;
           this.messages.add({
             severity: 'success',
             summary: 'You reblogged the woot succesfully',
