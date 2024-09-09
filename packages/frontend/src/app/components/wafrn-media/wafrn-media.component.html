@@ -2,7 +2,7 @@
   <div
   (mousedown)="showPicture()"
   (keyup)="showPicture()"
-  class="img-container"
+  class="img-container media-description bg-black-alpha-10"
   >
     <b class="img-cw-text" *ngIf="nsfw" >This contains sensitive content. Click to display</b>
     <img
@@ -31,7 +31,6 @@
   >
     <source [src]="displayUrl" [type]="mimeType" />
   </video>
-  </div>
   <div *ngIf="!nsfw && mimeType.startsWith('pdf')">
     <a [href]="displayUrl" target="_blank"
       >Click here to see the PDF file that is embeded in this post</a
@@ -42,7 +41,9 @@
   </audio>
   <div
     *ngIf="data.description"
-    class="media-description bg-black-alpha-10 px-2 py-1"
+    class="px-2 "
     [innerText]="data.description"
   ></div>
+</div>
+
 </mat-card>
