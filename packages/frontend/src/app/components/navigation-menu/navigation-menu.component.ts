@@ -437,8 +437,8 @@ export class NavigationMenuComponent implements OnInit, OnDestroy {
         divider: true,
       },
       {
-        label: 'Privacy policy',
-        title: 'Privacy policy',
+        label: 'Privacy policy & rules',
+        title: 'Privacy policy & rules',
         icon: faEyeSlash,
         routerLink: '/privacy',
         command: () => {
