@@ -60,7 +60,106 @@
             </button>
           </mat-card>
           }
-
+          <mat-form-field class="w-full">
+            <textarea [(ngModel)]="postCreatorContent" class="w-full" style="min-height: 30vh;" matNativeControl></textarea>
+          </mat-form-field>
+          <section id="privacy-messages">
+            <p *ngIf="privacy === 10" class="my-2">
+              Attention! ADMINS both of your instance and the target instance can read
+              the DMs
+            </p>
+            <p *ngIf="privacy === 3" class="my-2">
+              Unlisted posts (quiet public in mastodon) are posts that opt out of search, that including hashtag
+              search in other instances. This is not recomended for art posts
+              or anything you want to be discoverable
+            </p>
+          </section>
+          <section *ngIf="false && uploadedMedias.length === 0" class="mt-3" id="pollControls">
+            <button class="w-full" mat-button (mousedown)="quoteOpen = true" mat-flat-button>
+              add poll
+            </button>
+          </section>
+        
+          <section id="uploaded-media">
+            <div class="grid">
+              <ng-container *ngFor="let media of uploadedMedias; let i = index">
+                <div class="col-12 md:col-6 my-2 relative">
+                  <app-media-preview [media]="media"></app-media-preview>
+                  <mat-form-field class="w-full">
+                    <mat-label>Image Description</mat-label>
+                    <input placeholder="Description. Please FILL THIS" [(ngModel)]="media.description" type="text"
+                      matNativeControl required class="w-full" />
+                  </mat-form-field>
+                  <div>
+                    <mat-checkbox [(ngModel)]="media.NSFW" class="w-full">NSFW</mat-checkbox>
+                    <button mat-mini-fab class="delete-btn" (mousedown)="deleteImage(i)">
+                      <fa-icon size="lg" [icon]="closeIcon"></fa-icon>
+                    </button>
+                  </div>
+                </div>
+              </ng-container>
+            </div>
+            <p class="my-2" *ngIf="uploadedMedias.length >= 4">
+              Due some fediverse limitations, we can only have 4 medias per woot. Adding
+              more would break how the woot is seen in other places. Sorry for the
+              inconvenience
+            </p>
+            <p class="my-2" *ngIf="!allDescriptionsFilled()">
+              Please fill the media descriptions. If you want to disable this check,
+              there is an option in the profile that you can disable.
+            </p>
+          </section>
+        
+          <section id="quote">
+            <div *ngIf="!data?.quote">
+              <mat-spinner *ngIf="quoteLoading" class="my-4" color="accent" diameter="42"></mat-spinner>
+      
+            </div>
+            <div *ngIf="data && data.quote" class="my-4">
+              <p class="mb-1">QUOTING:</p>
+              <div class="quoted-post">
+                <button mat-mini-fab class="delete-btn" color="warn" (mousedown)="data ? (data.quote = undefined) : null">
+                  <fa-icon size="lg" [icon]="closeIcon"></fa-icon>
+                </button>
+                <div class="flex">
+                  <app-post-header [fragment]="data.quote"></app-post-header>
+                </div>
+                <app-post-fragment [fragment]="data.quote"></app-post-fragment>
+              </div>
+            </div>
+          </section>
+          <div class="w-full">
+        
+            <section id="tags" class="mt-2 w-full flex-row">
+              <mat-form-field class="w-full">
+                <mat-label>Tags</mat-label>
+                <input [(ngModel)]="tags" placeholder="Separated by commas" matNativeControl />
+              </mat-form-field>
+              <div class="taglist">
+                @for(tag of tags.split(','); track $index) {
+                <span *ngIf="tag && tag !== '' && tag.trim() !== ''" class="tag">
+                  #{{ tag.trim() }}
+                </span>
+                }
+              </div>
+            </section>
+        
+            <button mat-flat-button class="w-full mt-2 flex-row" [disabled]="
+              !allDescriptionsFilled() ||
+              postBeingSubmitted ||
+              (postCreatorContent === initialContent &&
+                tags.length === 0 &&
+                uploadedMedias.length === 0)
+            " (mousedown)="submitPost()">
+              {{
+              editing
+              ? "Save woot"
+              : idPostToReblog
+              ? "Publish reply to woot"
+              : "Publish woot"
+              }}
+            </button>
+          </div>  
           <mat-menu #menu="matMenu">
             @for (option of privacyOptions; track $index) {
             <button (mousedown)="this.privacy = option.level" mat-menu-item>

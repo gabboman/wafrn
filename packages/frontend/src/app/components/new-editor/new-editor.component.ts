@@ -20,6 +20,9 @@ import { WafrnMedia } from 'src/app/interfaces/wafrn-media';
 import { MessageService } from 'src/app/services/message.service';
 import { ProcessedPost } from 'src/app/interfaces/processed-post';
 import { DashboardService } from 'src/app/services/dashboard.service';
+import { MediaPreviewComponent } from '../media-preview/media-preview.component';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { EditorService } from 'src/app/services/editor.service';
 
 @Component({
   selector: 'app-new-editor',
@@ -38,6 +41,8 @@ import { DashboardService } from 'src/app/services/dashboard.service';
     SingleAskComponent,
     MatMenuModule,
     FileUploadComponent,
+    MediaPreviewComponent,
+    MatProgressSpinnerModule
 
   ],
   templateUrl: './new-editor.component.html',
@@ -51,8 +56,6 @@ export class NewEditorComponent {
     { level: 3, name: 'Unlisted', icon: faUnlock },
     { level: 10, name: 'Direct Message', icon: faEnvelope },
   ];
-  closeIcon = faClose;
-  quoteIcon = faQuoteLeft;
   quoteOpen = false;
   data: EditorData | undefined;
   editing = false;
@@ -74,11 +77,18 @@ export class NewEditorComponent {
   privacy: number = 0;
   urlPostToQuote: string = '';
   quoteLoading = false;
+  postBeingSubmitted = false;
+
+
+  closeIcon = faClose;
+  quoteIcon = faQuoteLeft;
+
 
   constructor(
     private router: Router,
     private messages: MessageService,
-    private dashboardService: DashboardService
+    private dashboardService: DashboardService,
+    private editorService: EditorService
   ) {
 
   }
@@ -91,6 +101,11 @@ export class NewEditorComponent {
     const res = this.privacyOptions.find(elem => elem.level === this.privacy)?.icon as IconDefinition
     return res;
   }
+
+  get idPostToReblog() {
+    return this.data?.post?.id;
+  }
+
 
   async uploadImage(media: WafrnMedia) {
     try {
@@ -187,6 +202,83 @@ export class NewEditorComponent {
     this.quoteLoading = false;
   }
 
+  allDescriptionsFilled(): boolean {
+    const disableCheck = localStorage.getItem('disableForceAltText') === 'true';
+    return disableCheck || this.uploadedMedias.every((med) => med.description);
+  }
+
+  deleteImage(index: number) {
+    // TODO we should look how to clean the disk at some point. A call to delete the media would be nice
+    this.uploadedMedias.splice(index, 1);
+  }
+
+  async submitPost() {
+    if (!this.allDescriptionsFilled() ||
+      this.postBeingSubmitted ||
+      (this.postCreatorContent === this.initialContent &&
+        this.tags.length === 0 &&
+        this.uploadedMedias.length === 0)) {
+      this.messages.add({ severity: 'error', summary: 'Write a post or do something' })
+      return;
+    }
+    this.postBeingSubmitted = true;
+    let tagsToSend = '';
+    this.tags
+      .split(',')
+      .map((elem) => elem.trim())
+      .filter((t) => t !== '')
+      .forEach((elem) => {
+        tagsToSend = `${tagsToSend}${elem.trim()},`;
+      });
+    tagsToSend = tagsToSend.slice(0, -1);
+    let res = undefined;
+    const content = this.postCreatorContent ? this.postCreatorContent : ''
+    // if a post includes only tags, we reblog it and then we also create the post with tags. Thanks shadowjonathan
+    if (this.uploadedMedias.length === 0 && content.length === 0 && tagsToSend.length > 0 && this.idPostToReblog && !this.data?.quote?.id) {
+      await this.editorService.createPost({
+        content: '',
+        idPostToReblog: this.idPostToReblog,
+        privacy: 0,
+        media: [],
+      });
+      // wait 500 miliseconds
+      await new Promise((resolve) => setTimeout(resolve, 500))
+    }
+    res = await this.editorService.createPost({
+      version: 'v3',
+      content: content,
+      media: this.uploadedMedias,
+      privacy: this.privacy,
+      tags: tagsToSend,
+      idPostToReblog: this.editing ? undefined : this.idPostToReblog,
+      contentWarning: this.contentWarning,
+      idPostToEdit: this.editing ? this.idPostToReblog : undefined,
+      idPosToQuote: this.data?.quote?.id,
+      ask: this.data?.ask
+    });
+    // its a great time to check notifications isnt it?
+    this.dashboardService.scrollEventEmitter.emit('post');
+    if (res) {
+      this.messages.add({
+        severity: 'success',
+        summary: 'Your woot has been published!',
+      });
+      this.postCreatorContent = '';
+      this.uploadedMedias = [];
+      this.tags = '';
+      if (this.data?.ask) {
+        window.location.reload();
+      }
+      this.closeEditor();
+    } else {
+      this.messages.add({
+        severity: 'warn',
+        summary:
+          'Something went wrong and your woot was not published. Check your internet connection and try again',
+      });
+    }
+    this.postBeingSubmitted = false;
+  }
 
   closeEditor() {
     if(!this.data) {
