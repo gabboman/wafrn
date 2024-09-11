@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, OnDestroy } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
@@ -23,6 +23,11 @@ import { DashboardService } from 'src/app/services/dashboard.service';
 import { MediaPreviewComponent } from '../media-preview/media-preview.component';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { EditorService } from 'src/app/services/editor.service';
+import { LoginService } from 'src/app/services/login.service';
+import { PostsService } from 'src/app/services/posts.service';
+import { EmojiCollection } from 'src/app/interfaces/emoji-collection';
+import { Subscription } from 'rxjs';
+import { JwtService } from 'src/app/services/jwt.service';
 
 @Component({
   selector: 'app-new-editor',
@@ -48,7 +53,7 @@ import { EditorService } from 'src/app/services/editor.service';
   templateUrl: './new-editor.component.html',
   styleUrl: './new-editor.component.scss'
 })
-export class NewEditorComponent {
+export class NewEditorComponent implements OnDestroy {
   privacyOptions = [
     { level: 0, name: 'Public', icon: faGlobe },
     { level: 1, name: 'Followers only', icon: faUser },
@@ -67,6 +72,8 @@ export class NewEditorComponent {
   pollQuestions: QuestionPollQuestion[] = []
   disableImageUploadButton = false;
   uploadedMedias: WafrnMedia[] = [];
+  emojiCollections: EmojiCollection[] = [];
+
 
 
   showContentWarning = false;
@@ -82,15 +89,34 @@ export class NewEditorComponent {
 
   closeIcon = faClose;
   quoteIcon = faQuoteLeft;
+  emojiSubscription: Subscription
 
 
   constructor(
     private router: Router,
     private messages: MessageService,
     private dashboardService: DashboardService,
-    private editorService: EditorService
+    private editorService: EditorService,
+    private loginService: LoginService,
+    private postService: PostsService,
+    private jwtService: JwtService
   ) {
+      this.data = EditorService.editorData;
+      this.privacy = this.loginService.getUserDefaultPostPrivacyLevel();
+      this.emojiSubscription = this.postService.updateFollowers.subscribe(() => {
+        this.emojiCollections = this.postService.emojiCollections;
+      });
+      this.postCreatorContent = "";
+      const currentUserId = this.jwtService.getTokenData().userId;
+      if(this.data?.post?.mentionPost && this.data.post.mentionPost.length > 0){
+        this.data.post.mentionPost.filter(elem => elem.id != currentUserId).forEach(mentionedUser => {
+          this.postCreatorContent = this.postCreatorContent + mentionedUser.url + " "
+        });
+      }
 
+  }
+  ngOnDestroy(): void {
+    this.emojiSubscription.unsubscribe()
   }
 
   get privacyOption() {
