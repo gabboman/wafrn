@@ -255,6 +255,22 @@ export default function userRoutes(app: Application) {
               optionValue: req.body.disableForceAltText
             })
           }
+          let forceOldEditor = await UserOptions.findOne({
+            where: {
+              userId: posterId,
+              optionName: 'wafrn.forceOldEditor'
+            }
+          })
+          if (forceOldEditor) {
+            forceOldEditor.optionValue = req.body.forceOldEditor
+            await forceOldEditor.save()
+          } else {
+            forceOldEditor = UserOptions.create({
+              userId: posterId,
+              optionName: 'wafrn.forceOldEditor',
+              optionValue: req.body.forceOldEditor
+            })
+          }
           if (req.body.forceClassicLogo !== undefined && req.body.forceClassicLogo !== null) {
             const forceClassicKey = 'wafrn.forceClassicLogo'
             const forceClassicNewValue = req.body.forceClassicLogo === 'true'

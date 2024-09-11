@@ -108,6 +108,12 @@ const routes: Routes = [
           import('./components/new-editor/new-editor.component').then((m) => m.NewEditorComponent),
       },
       {
+        path: 'old-editor',
+        canActivate: [loginRequiredGuard],
+        loadComponent: () =>
+          import('./pages/post-editor/post-editor.component').then((m) => m.PostEditorComponent),
+      },
+      {
         path: 'aac4alex',
         loadComponent: () =>
           import('./pages/aac-for-alex/aac-for-alex.component').then((m) => m.AacForAlexComponent),

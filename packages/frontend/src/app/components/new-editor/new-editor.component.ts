@@ -99,8 +99,11 @@ export class NewEditorComponent implements OnDestroy {
     private editorService: EditorService,
     private loginService: LoginService,
     private postService: PostsService,
-    private jwtService: JwtService
+    private jwtService: JwtService,
   ) {
+      if(localStorage.getItem('forceOldEditor') === 'true') {
+        router.navigate(['/old-editor'])
+      }
       this.data = EditorService.editorData;
       this.privacy = this.loginService.getUserDefaultPostPrivacyLevel();
       this.emojiSubscription = this.postService.updateFollowers.subscribe(() => {
