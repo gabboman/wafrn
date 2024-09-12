@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnDestroy } from '@angular/core';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { Component, ElementRef, OnDestroy, ViewChild, ViewChildren } from '@angular/core';
+import { FormControl, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -14,7 +14,7 @@ import { PostFragmentComponent } from '../post-fragment/post-fragment.component'
 import { environment } from 'src/environments/environment';
 import { QuestionPollQuestion } from 'src/app/interfaces/questionPoll';
 import { SingleAskComponent } from '../single-ask/single-ask.component';
-import { MatMenuModule } from '@angular/material/menu';
+import { MatMenuModule, MatMenuTrigger } from '@angular/material/menu';
 import { FileUploadComponent } from '../file-upload/file-upload.component';
 import { WafrnMedia } from 'src/app/interfaces/wafrn-media';
 import { MessageService } from 'src/app/services/message.service';
@@ -26,7 +26,7 @@ import { EditorService } from 'src/app/services/editor.service';
 import { LoginService } from 'src/app/services/login.service';
 import { PostsService } from 'src/app/services/posts.service';
 import { EmojiCollection } from 'src/app/interfaces/emoji-collection';
-import { Subscription } from 'rxjs';
+import { debounce, debounceTime, Subscription } from 'rxjs';
 import { JwtService } from 'src/app/services/jwt.service';
 
 @Component({
@@ -73,12 +73,16 @@ export class NewEditorComponent implements OnDestroy {
   disableImageUploadButton = false;
   uploadedMedias: WafrnMedia[] = [];
   emojiCollections: EmojiCollection[] = [];
+  @ViewChild('sugestionsMenu') sugestionsMenu!: MatMenuTrigger
+  sugestions: {img: string, text: string}[] = []
 
 
 
   showContentWarning = false;
   displayMarqueeButton = false;
-  postCreatorContent: string = '';
+  postCreatorForm = new FormGroup({
+    content: new FormControl('')
+  })
   initialContent = '';
   tags: string = '';
   privacy: number = 0;
@@ -109,15 +113,42 @@ export class NewEditorComponent implements OnDestroy {
       this.emojiSubscription = this.postService.updateFollowers.subscribe(() => {
         this.emojiCollections = this.postService.emojiCollections;
       });
-      this.postCreatorContent = "";
+      let postCreatorContent = "";
       const currentUserId = this.jwtService.getTokenData().userId;
       if(this.data?.post?.mentionPost && this.data.post.mentionPost.length > 0){
         this.data.post.mentionPost.filter(elem => elem.id != currentUserId).forEach(mentionedUser => {
-          this.postCreatorContent = this.postCreatorContent + mentionedUser.url + " "
+          postCreatorContent = postCreatorContent + mentionedUser.url + " "
         });
       }
+      this.postCreatorForm.controls['content'].patchValue(postCreatorContent)
+      this.postCreatorForm.controls['content'].valueChanges.pipe(debounceTime(250)).subscribe((changes) => {
+        let postCreatorHTMLElement = document.getElementById('postCreatorContent') as HTMLTextAreaElement
+        // we only call the event if user is writing to avoid TOOMFOLERY
+        if(postCreatorHTMLElement.selectionStart === postCreatorHTMLElement.selectionEnd) {
+          this.updateMentionsSugestions(postCreatorHTMLElement.selectionStart)
+        }
+      
+      })
 
   }
+
+  updateMentionsSugestions(cursorPosition: number) {
+    // OK THIS IS DIRTY but its easier this way. the other way i would had to make a regex that matched for null OR space
+    const textToMatch = ' ' + this.postCreatorForm.value.content?.slice(cursorPosition -25, cursorPosition) as string
+    let match = textToMatch.match(/ @[A-Z0-9a-z_.@-]*$/i)
+    if(match && match.length > 0) {
+      // we fill the users
+    } else {
+      // we match for emojireacts now
+      let match = textToMatch.match(/ :[A-Z0-9a-z_.-]*$/i)
+      if(match && match.length > 0) {
+        // matches with emoji string! lets autocomplete that!
+      }
+    }
+    console.log(this.sugestionsMenu)
+    this.sugestionsMenu.openMenu
+  }
+
   ngOnDestroy(): void {
     this.emojiSubscription.unsubscribe()
   }
@@ -244,7 +275,7 @@ export class NewEditorComponent implements OnDestroy {
   async submitPost() {
     if (!this.allDescriptionsFilled() ||
       this.postBeingSubmitted ||
-      (this.postCreatorContent === this.initialContent &&
+      (this.postCreatorForm.value.content === this.initialContent &&
         this.tags.length === 0 &&
         this.uploadedMedias.length === 0)) {
       this.messages.add({ severity: 'error', summary: 'Write a post or do something' })
@@ -261,7 +292,7 @@ export class NewEditorComponent implements OnDestroy {
       });
     tagsToSend = tagsToSend.slice(0, -1);
     let res = undefined;
-    const content = this.postCreatorContent ? this.postCreatorContent : ''
+    const content = this.postCreatorForm.value.content ? this.postCreatorForm.value.content : ''
     // if a post includes only tags, we reblog it and then we also create the post with tags. Thanks shadowjonathan
     if (this.uploadedMedias.length === 0 && content.length === 0 && tagsToSend.length > 0 && this.idPostToReblog && !this.data?.quote?.id) {
       await this.editorService.createPost({
@@ -292,7 +323,7 @@ export class NewEditorComponent implements OnDestroy {
         severity: 'success',
         summary: 'Your woot has been published!',
       });
-      this.postCreatorContent = '';
+      this.postCreatorForm.value.content = '';
       this.uploadedMedias = [];
       this.tags = '';
       if (this.data?.ask) {

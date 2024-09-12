@@ -60,9 +60,19 @@
             </button>
           </mat-card>
           }
-          <mat-form-field class="w-full">
-            <textarea [(ngModel)]="postCreatorContent" class="w-full" style="min-height: 30vh;" matNativeControl></textarea>
-          </mat-form-field>
+          <form [formGroup]="postCreatorForm">
+            <mat-form-field class="w-full">
+              <div 
+              id ="mentionsMenuPosition"
+              [matMenuTriggerFor]="sugestionsMenu"
+              ></div>
+              <textarea
+              id="postCreatorContent"
+              formControlName="content"
+              class="w-full" style="min-height: 30vh;"
+              matNativeControl></textarea>
+            </mat-form-field>
+          </form>
           <section id="privacy-messages">
             <p *ngIf="privacy === 10" class="my-2">
               Attention! ADMINS both of your instance and the target instance can read
@@ -147,7 +157,7 @@
             <button mat-flat-button class="w-full mt-2 flex-row" [disabled]="
               !allDescriptionsFilled() ||
               postBeingSubmitted ||
-              (postCreatorContent === initialContent &&
+              (postCreatorForm.value.content === initialContent &&
                 tags.length === 0 &&
                 uploadedMedias.length === 0)
             " (mousedown)="submitPost()">
@@ -169,3 +179,9 @@
             }
           </mat-menu>
         </mat-card>
+
+
+        <mat-menu #sugestionsMenu="matMenu">
+          <button mat-menu-item>Item 1</button>
+          <button mat-menu-item>Item 2</button>
+        </mat-menu>
