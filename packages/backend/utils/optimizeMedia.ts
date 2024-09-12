@@ -8,11 +8,11 @@ const FfmpegCommand = require('fluent-ffmpeg')
 const gm = require('gm')
 export default async function optimizeMedia(
   inputPath: string,
-  options?: { outPath?: string; maxSize?: number; keep?: boolean }
+  options?: { outPath?: string; maxSize?: number; keep?: boolean, forceImageExtension?: string }
 ): Promise<string> {
   const fileAndExtension = options?.outPath ? [options.outPath, ''] : inputPath.split('.')
   const originalExtension = fileAndExtension[1].toLowerCase()
-  fileAndExtension[1] = 'avif'
+  fileAndExtension[1] =  options?.forceImageExtension ? options.forceImageExtension : 'avif'
   let outputPath = fileAndExtension.join('.')
   const doNotDelete = options?.keep ? options.keep : false
   switch (originalExtension) {
