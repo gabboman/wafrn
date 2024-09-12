@@ -23,6 +23,9 @@ async function start() {
     where: {
       url: {
         [Op.notLike]: '@%'
+      },
+      avatar: {
+        [Op.like]: '%avif'
       }
     }
   })
@@ -34,10 +37,14 @@ async function start() {
       await media.save()
     }
   }*/
-  for await (const user of users) {
-    const newAvatar = await optimizeMedia(`uploads${user.avatar}`, {forceImageExtension: 'webp'})
-    user.avatar = newAvatar.slice(7)
-    await user.save()
+  for await (const user of users.filter((usr: any) => usr.avatar)) {
+    try {
+      const newAvatar = await optimizeMedia(`uploads${user.avatar}`, {forceImageExtension: 'webp'})
+      user.avatar = newAvatar.slice(7)
+      await user.save()
+    } catch (error) {
+      logger.warn(error)
+    }
   }
 }
 
@@ -45,6 +52,6 @@ start()
   .then(() => {
     logger.info('all good')
   })
-  .catch(() => {
-    logger.warn('oh no')
+  .catch((error) => {
+    logger.warn(error)
   })
