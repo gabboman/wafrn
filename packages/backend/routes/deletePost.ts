@@ -3,6 +3,7 @@ import {
   FederatedHost,
   Post,
   PostHostView,
+  PostMediaRelations,
   PostMentionsUserRelation,
   PostTag,
   RemoteUserPostView,
@@ -146,6 +147,138 @@ export default function deletePost(app: Application) {
         }
         await redisCache.del('postAndUser:' + id)
         await deletePostCommon(id)
+        success = true
+      }
+    } catch (error) {
+      logger.error(error)
+      success = false
+    }
+
+    res.send(success)
+  })
+
+  app.delete('/api/deleteRewoots',authenticateToken, async (req: AuthorizedRequest, res: Response) => {
+    let success = false
+    try {
+      const id = req.query.id as string
+      const posterId = req.jwtData?.userId
+      const user = await User.findByPk(posterId)
+      if (id) {
+        let postsToDeleteUnfiltered = await Post.findAll({
+          where: {
+            parentId: id,
+            content: '',
+            userId: posterId
+          }
+        })
+        const unfilteredPostIds: string[] = postsToDeleteUnfiltered.map((elem: any) => elem.id)
+        const tags = await PostTag.findAll({
+          where: {
+            postId: {
+              [Op.in]: unfilteredPostIds
+            }
+          }
+        })
+        const medias = await PostMediaRelations.findAll({
+          where: {
+            postId: {
+              [Op.in]: unfilteredPostIds
+            }
+          }
+        })
+
+        const postsThatAreNotReblogs = tags.map((tag: any) => tag.postId).concat(medias.map((media: any) => media.postId))
+        const reblogsToDelete = unfilteredPostIds.filter(elem => !postsThatAreNotReblogs.includes(elem))
+
+        if (!reblogsToDelete) {
+          return res.send(true)
+         
+        }
+        const objectsToSend: activityPubObject[] = reblogsToDelete.map(elem => {
+          return {
+            '@context': [`${environment.frontendUrl}/contexts/litepub-0.1.jsonld`],
+            actor: `${environment.frontendUrl}/fediverse/blog/${user.url.toLowerCase()}`,
+            to: ['https://www.w3.org/ns/activitystreams#Public'],
+            id: `${environment.frontendUrl}/fediverse/post/${elem}#delete`,
+            object: {
+              atomUri: `${environment.frontendUrl}/fediverse/post/${elem}`,
+              id: `${environment.frontendUrl}/fediverse/post/${elem}`,
+              type: 'Tombstone'
+            },
+            type: 'Delete'
+          }
+        })
+
+        let serversToSendThePost
+        let usersToSendThePost
+        // if the post is previous to the new functionality of storing who has seen the post, send to everyone
+        // or NUKE has been requested
+          const serverViews = await PostHostView.findAll({
+            where: {
+              postId: {
+                [Op.in]: reblogsToDelete
+              }
+            }
+          })
+          const userViews = await RemoteUserPostView.findAll({
+            where: {
+              postId: {
+                [Op.in]: reblogsToDelete
+              }
+            }
+          })
+
+          serversToSendThePost = FederatedHost.findAll({
+            where: {
+              id: {
+                [Op.in]: serverViews.map((view: any) => view.federatedHostId)
+              }
+            }
+          })
+          usersToSendThePost = User.findAll({
+            where: {
+              id: {
+                [Op.in]: userViews.map((view: any) => view.userId)
+              }
+            }
+          })
+        
+
+        await Promise.all([serversToSendThePost, usersToSendThePost])
+        serversToSendThePost = await serversToSendThePost
+        usersToSendThePost = await usersToSendThePost
+        let inboxes: string[] = []
+        inboxes = inboxes
+          .concat(serversToSendThePost.map((elem: any) => elem.publicInbox))
+          .concat(usersToSendThePost.map((usr: any) => usr.remoteInbox))
+       
+        for await (const objectToSend of objectsToSend) {
+          const ldSignature = new LdSignature()
+          const bodySignature = await ldSignature.signRsaSignature2017(
+            objectToSend,
+            user.privateKey,
+            `${environment.frontendUrl}/fediverse/blog/${user.url.toLocaleLowerCase()}`,
+            environment.instanceUrl,
+            new Date()
+          )
+          for await (const inboxChunk of _.chunk(inboxes, 1)) {
+            await deletePostQueue.add('sencChunk', {
+              objectToSend: { ...objectToSend, signature: bodySignature.signature },
+              petitionBy: user,
+              inboxList: inboxChunk
+            })
+          }
+        }
+        reblogsToDelete.forEach(async (elem) => {
+          await redisCache.del('postAndUser:' + elem)
+        } )
+        await Post.destroy({
+          where: {
+            id: {
+              [Op.in]: reblogsToDelete
+            }
+          }
+        })
         success = true
       }
     } catch (error) {

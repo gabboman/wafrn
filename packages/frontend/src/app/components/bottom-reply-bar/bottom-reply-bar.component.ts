@@ -3,6 +3,7 @@ import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faShareNodes, faChevronDown, faHeart, faHeartBroken, faReply, faRepeat, faQuoteLeft, faArrowUpRightFromSquare, faTrash, faClose, faGlobe, faUnlock, faEnvelope, faServer, faUser, faPen, faCheck } from '@fortawesome/free-solid-svg-icons';
+import { firstValueFrom, Observable } from 'rxjs';
 import { ProcessedPost } from 'src/app/interfaces/processed-post';
 import { DeletePostService } from 'src/app/services/delete-post.service';
 import { EditorService } from 'src/app/services/editor.service';
@@ -99,8 +100,13 @@ export class BottomReplyBarComponent implements OnChanges {
       this.deletePostService.openDeletePostDialog(id);
     }
   
-    async deleteRewoot(id: string) {
-      this.deletePostService.openDeletePostDialog(id);
+    async deleteRewoots(id: string) {
+      this.loadingAction = true;
+      const success = await firstValueFrom(this.deletePostService.deleteRewoots(id));
+      if(success){
+        this.myRewootsIncludePost = false;
+      }
+      this.loadingAction = false;
     }
 
     async likePost(postToLike: ProcessedPost) {
@@ -171,3 +177,4 @@ export class BottomReplyBarComponent implements OnChanges {
     }
 
 }
+

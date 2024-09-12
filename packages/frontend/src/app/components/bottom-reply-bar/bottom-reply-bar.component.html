@@ -10,9 +10,9 @@
             fragment.privacy !== 2
           " size="lg" (mousedown)="quotePost(fragment)" class="cursor-pointer quote-icon" [icon]="quoteIcon"
           matTooltip="Quote woot"></fa-icon>
-        @if (isEmptyReblog && fragment.userId === myId) {
-        <fa-icon size="lg" (mousedown)="deletePost(fragment.id)" class="cursor-pointer delete-rewoot-icon"
-          [icon]="closeIcon" matTooltip="Delete rewoot"></fa-icon>
+        @if (myRewootsIncludePost) {
+        <fa-icon size="lg" (mousedown)="deleteRewoots(fragment.id)" class="cursor-pointer delete-rewoot-icon"
+          [icon]="closeIcon" matTooltip="Delete rewoots"></fa-icon>
         } @else {
         <div matTooltip="Quick rewoot" *ngIf="fragment.privacy !== 10 && fragment.privacy !== 1"
           class="fa-stack cursor-pointer rewoot-icon" (click)="quickReblog(fragment)">
