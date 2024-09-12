@@ -1,10 +1,11 @@
-<mat-card *ngIf="data" class="overflow-hidden mt-1">
+<mat-card *ngIf="data" class="overflow-hidden mt-1"  >
+      <b class="img-cw-text" *ngIf="nsfw" >This contains sensitive content. Click to display</b>
+
   <div
   (mousedown)="showPicture()"
   (keyup)="showPicture()"
   class="img-container media-description bg-black-alpha-10"
   >
-    <b class="img-cw-text" *ngIf="nsfw" >This contains sensitive content. Click to display</b>
     <img
     #wafrnMedia
     *ngIf="
