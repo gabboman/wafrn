@@ -5,7 +5,6 @@ const sharp = require('sharp')
 /* eslint-disable max-len */
 const fs = require('fs')
 const FfmpegCommand = require('fluent-ffmpeg')
-const gm = require('gm')
 export default async function optimizeMedia(
   inputPath: string,
   options?: { outPath?: string; maxSize?: number; keep?: boolean, forceImageExtension?: string }
