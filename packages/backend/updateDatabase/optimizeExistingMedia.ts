@@ -1,8 +1,9 @@
-import sequelize from './db'
-import { Media, User } from './db'
-import optimizeMedia from './utils/optimizeMedia'
-import { environment } from './environment'
+
+import { sequelize, User } from '../db'
+import { environment } from '../environment'
 import { logger } from '../utils/logger'
+import { Op } from 'sequelize'
+import optimizeMedia from '../utils/optimizeMedia'
 
 sequelize
   .sync({
@@ -17,17 +18,24 @@ sequelize
   })
 
 async function start() {
-  const medias = await Media.findAll()
-  const users = await User.findAll()
+  //const medias = await Media.findAll()
+  const users = await User.findAll({
+    where: {
+      url: {
+        [Op.notLike]: '@%'
+      }
+    }
+  })
+  /*
   for (const media of medias) {
     if (media.url.indexOf('//') === -1) {
       const newUrl = await optimizeMedia(`uploads${media.url}`)
       media.url = newUrl.slice(7)
       await media.save()
     }
-  }
-  for (const user of users) {
-    const newAvatar = await optimizeMedia(`uploads${user.avatar}`)
+  }*/
+  for await (const user of users) {
+    const newAvatar = await optimizeMedia(`uploads${user.avatar}`, {forceImageExtension: 'webp'})
     user.avatar = newAvatar.slice(7)
     await user.save()
   }
