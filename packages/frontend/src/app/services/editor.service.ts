@@ -75,6 +75,10 @@ export class EditorService implements OnDestroy {
         .post(`${this.base_url}/v2/createPost`, formdata)
         .toPromise();
       success = petitionResponse.id;
+      if(success){
+        // HACK wait 0.3 seconds so post is fully processed?
+        await new Promise((resolve) => setTimeout(resolve, 300))
+      }
     } catch (exception) {
       console.log(exception);
     }
