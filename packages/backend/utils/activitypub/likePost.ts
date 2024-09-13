@@ -114,7 +114,7 @@ async function likePostRemote(like: any, dislike = false) {
     let inboxes: string[] = []
     inboxes = inboxes.concat(serversToSendThePost.map((elem: any) => elem.publicInbox))
     inboxes = inboxes.concat(usersToSendThePost.map((elem: any) => (elem.remoteInbox ? elem.remoteInbox : '')))
-    for await (const inboxChunk of _.chunk(inboxes, 10)) {
+    for await (const inboxChunk of inboxes) {
       await sendPostQueue.add(
         'sencChunk',
         {
@@ -123,7 +123,8 @@ async function likePostRemote(like: any, dislike = false) {
           inboxList: inboxChunk
         },
         {
-          priority: 2097152
+          priority: 2097152,
+          delay: 500
         }
       )
     }
@@ -225,7 +226,7 @@ async function emojiReactRemote(react: any, undo = false) {
     let inboxes: string[] = []
     inboxes = inboxes.concat(serversToSendThePost.map((elem: any) => elem.publicInbox))
     inboxes = inboxes.concat(usersToSendThePost.map((elem: any) => (elem.remoteInbox ? elem.remoteInbox : '')))
-    for await (const inboxChunk of _.chunk(inboxes, 10)) {
+    for await (const inboxChunk of inboxes) {
       await sendPostQueue.add(
         'sencChunk',
         {

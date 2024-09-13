@@ -5,14 +5,13 @@ const sharp = require('sharp')
 /* eslint-disable max-len */
 const fs = require('fs')
 const FfmpegCommand = require('fluent-ffmpeg')
-const gm = require('gm')
 export default async function optimizeMedia(
   inputPath: string,
-  options?: { outPath?: string; maxSize?: number; keep?: boolean }
+  options?: { outPath?: string; maxSize?: number; keep?: boolean, forceImageExtension?: string }
 ): Promise<string> {
   const fileAndExtension = options?.outPath ? [options.outPath, ''] : inputPath.split('.')
   const originalExtension = fileAndExtension[1].toLowerCase()
-  fileAndExtension[1] = 'avif'
+  fileAndExtension[1] =  options?.forceImageExtension ? options.forceImageExtension : 'avif'
   let outputPath = fileAndExtension.join('.')
   const doNotDelete = options?.keep ? options.keep : false
   switch (originalExtension) {
@@ -49,6 +48,9 @@ export default async function optimizeMedia(
       break
     default:
       const metadata = await sharp(inputPath).metadata()
+      if(!options?.outPath) {
+        fileAndExtension[0] = fileAndExtension[0] + '_processed'
+      }
       if (metadata.delay) {
         fileAndExtension[1] = 'webp'
         outputPath = fileAndExtension.join('.')

@@ -82,7 +82,7 @@ async function voteInPoll(userId: string, pollId: number) {
       to: vote.questionPoll.post.user.remoteId,
       type: 'Create'
     }
-    const inboxes = [vote.questionPoll.post.user.remoteInbox]
+    const inboxes = vote.questionPoll.post.user.remoteInbox
     const sendVoteJob = await sendPostQueue.add(
       'sencChunk',
       {
@@ -91,7 +91,8 @@ async function voteInPoll(userId: string, pollId: number) {
         inboxList: inboxes
       },
       {
-        priority: 2097152
+        priority: 2097152,
+        delay: 2500
       }
     )
     sendVoteJob.waitUntilFinished(queueEvents).then(async () => {

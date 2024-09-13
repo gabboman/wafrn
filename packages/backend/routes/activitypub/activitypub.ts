@@ -96,7 +96,7 @@ function activityPubRoutes(app: Application) {
               ? {
                   icon: {
                     type: 'Image',
-                    mediaType: 'image/avif',
+                    mediaType: 'image/webp',
                     url: environment.mediaUrl + user.avatar
                   }
                 }
@@ -105,7 +105,7 @@ function activityPubRoutes(app: Application) {
               ? {
                   image: {
                     type: 'Image',
-                    mediaType: 'image/avif',
+                    mediaType: 'image/webp',
                     url: environment.mediaUrl + user.headerImage
                   }
                 }

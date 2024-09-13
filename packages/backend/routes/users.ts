@@ -75,7 +75,7 @@ export default function userRoutes(app: Application) {
           if (!emailExists) {
             let avatarURL = '' // Empty user avatar in case of error let frontend do stuff
             if (req.file != null) {
-              avatarURL = `/${await optimizeMedia(req.file.path)}`
+              avatarURL = `/${await optimizeMedia(req.file.path, {forceImageExtension: 'webp'})}`
             }
             if (environment.removeFolderNameFromFileUploads) {
               avatarURL = avatarURL.slice('/uploads/'.length - 1)
@@ -319,7 +319,7 @@ export default function userRoutes(app: Application) {
           }
 
           if (req.file != null) {
-            let avatarURL = `/${await optimizeMedia(req.file.path)}`
+            let avatarURL = `/${await optimizeMedia(req.file.path, {forceImageExtension: 'webp'})}`
             if (environment.removeFolderNameFromFileUploads) {
               avatarURL = avatarURL.slice('/uploads/'.length - 1)
               user.avatar = avatarURL
@@ -446,7 +446,7 @@ export default function userRoutes(app: Application) {
       if (req.body?.email && req.body.password) {
         const userWithEmail = await User.findOne({
           where: {
-            email: req.body.email.toLowerCase(),
+            email: req.body.email.toLowerCase().trim(),
             banned: {
               [Op.ne]: true
             }

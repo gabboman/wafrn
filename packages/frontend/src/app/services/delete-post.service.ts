@@ -19,7 +19,14 @@ export class DeletePostService {
       params: petitionData,
     });
   }
-
+  // you send the id of a post and you delete all the rewoots of that post that you made
+  public deleteRewoots(id: string): Observable<boolean> {
+    let petitionData: HttpParams = new HttpParams();
+    petitionData = petitionData.set('id', id);
+    return this.http.delete<boolean>(`${environment.baseUrl}/deleteRewoots`, {
+      params: petitionData,
+    });
+  }
   async getDeletePostComponent(): Promise<typeof DeletePostComponent> {
     const { DeletePostComponent } = await import(
       '../components/delete-post/delete-post.component'
