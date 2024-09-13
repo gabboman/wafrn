@@ -65,4 +65,23 @@ const workerProcessRemotePostView = new Worker(
   }
 )
 
+const workers = [
+  workerInbox,
+  workerDeletePost,
+  workerGetUser,
+  workerPrepareSendPost,
+  workerProcessRemotePostView,
+  workerSendPostChunk,
+  workerProcessRemotePostView
+]
+
+workers.forEach(worker => {
+  worker.on('error', err => {
+    logger.warn({
+      message: `worker ${worker.name} failed`,
+      error: err
+    })
+  })
+})
+
 export { workerInbox, workerSendPostChunk, workerPrepareSendPost, workerGetUser, workerDeletePost }
