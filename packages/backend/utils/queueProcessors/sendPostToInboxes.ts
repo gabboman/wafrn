@@ -9,7 +9,8 @@ async function sendPostToInboxes(job: Job) {
   const promisesArray = inboxes.map((remoteInbox) => postPetitionSigned(objectToSend, localUser, remoteInbox))
 
   try {
-    const tmp = await Promise.allSettled(promisesArray)
+    //at some point we should remove the array thing but at the same time yeah
+    const tmp = await Promise.all(promisesArray)
   } catch (error) {
     logger.debug(error)
   }
