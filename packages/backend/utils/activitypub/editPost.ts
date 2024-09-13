@@ -166,7 +166,7 @@ async function federatePostHasBeenEdited(postToEdit: any) {
     environment.instanceUrl,
     new Date()
   )
-  for await (const inboxChunk of _.chunk(urlsToSendPost, 50)) {
+  for await (const inboxChunk of urlsToSendPost) {
     await sendPostQueue.add(
       'sencChunk',
       {
@@ -175,7 +175,8 @@ async function federatePostHasBeenEdited(postToEdit: any) {
         inboxList: inboxChunk
       },
       {
-        priority: 500
+        priority: 500,
+        delay: 2500
       }
     )
   }

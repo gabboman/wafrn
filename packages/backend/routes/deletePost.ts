@@ -261,7 +261,7 @@ export default function deletePost(app: Application) {
             environment.instanceUrl,
             new Date()
           )
-          for await (const inboxChunk of _.chunk(inboxes, 1)) {
+          for await (const inboxChunk of inboxes) {
             await deletePostQueue.add('sencChunk', {
               objectToSend: { ...objectToSend, signature: bodySignature.signature },
               petitionBy: user,
