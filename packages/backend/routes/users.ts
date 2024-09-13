@@ -430,7 +430,7 @@ export default function userRoutes(app: Application) {
       if (req.body?.email && req.body.password) {
         const userWithEmail = await User.findOne({
           where: {
-            email: req.body.email.toLowerCase(),
+            email: req.body.email.toLowerCase().trim(),
             banned: {
               [Op.ne]: true
             }
