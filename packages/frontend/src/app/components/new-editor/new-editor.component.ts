@@ -75,6 +75,10 @@ export class NewEditorComponent implements OnDestroy {
   emojiCollections: EmojiCollection[] = [];
   @ViewChild('sugestionsMenu') sugestionsMenu!: MatMenuTrigger
   sugestions: {img: string, text: string}[] = []
+  cursorPosition = {
+    x: 0,
+    y: 0
+  }
 
 
 
@@ -121,7 +125,7 @@ export class NewEditorComponent implements OnDestroy {
         });
       }
       this.postCreatorForm.controls['content'].patchValue(postCreatorContent)
-      this.postCreatorForm.controls['content'].valueChanges.pipe(debounceTime(250)).subscribe((changes) => {
+      this.postCreatorForm.controls['content'].valueChanges.pipe(debounceTime(300)).subscribe((changes) => {
         let postCreatorHTMLElement = document.getElementById('postCreatorContent') as HTMLTextAreaElement
         // we only call the event if user is writing to avoid TOOMFOLERY
         if(postCreatorHTMLElement.selectionStart === postCreatorHTMLElement.selectionEnd) {
@@ -137,9 +141,7 @@ export class NewEditorComponent implements OnDestroy {
     const contextMenuParent = document.getElementById('cursorTrigger') as HTMLElement
     const internalPosition = this.getCaretPosition(textarea)
     const rect = textarea.getBoundingClientRect();
-    const cursorScreenPosition = {x: internalPosition.x, y: internalPosition.y}
-    console.log(cursorScreenPosition)
-    contextMenuParent.style.right = cursorScreenPosition.x.toString()
+    this.cursorPosition = {x: internalPosition.x + rect.x, y: internalPosition.y + rect.y}
     // OK THIS IS DIRTY but its easier this way. the other way i would had to make a regex that matched for null OR space
     const textToMatch = ' ' + this.postCreatorForm.value.content?.slice(cursorPosition -25, cursorPosition) as string
     let match = textToMatch.match(/ @[A-Z0-9a-z_.@-]*$/i)
