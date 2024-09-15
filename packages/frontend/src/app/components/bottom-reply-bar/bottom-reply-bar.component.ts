@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
+import { MatTooltipModule } from '@angular/material/tooltip';
 import { RouterModule } from '@angular/router';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faShareNodes, faChevronDown, faHeart, faHeartBroken, faReply, faRepeat, faQuoteLeft, faArrowUpRightFromSquare, faTrash, faClose, faGlobe, faUnlock, faEnvelope, faServer, faUser, faPen, faCheck } from '@fortawesome/free-solid-svg-icons';
@@ -18,6 +19,7 @@ import { PostsService } from 'src/app/services/posts.service';
     CommonModule,
     RouterModule,
     FontAwesomeModule,
+    MatTooltipModule
   ],
   templateUrl: './bottom-reply-bar.component.html',
   styleUrl: './bottom-reply-bar.component.scss'
