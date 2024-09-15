@@ -133,6 +133,13 @@ export class NewEditorComponent implements OnDestroy {
   }
 
   updateMentionsSugestions(cursorPosition: number) {
+    const textarea = document.getElementById("postCreatorContent") as HTMLTextAreaElement;
+    const contextMenuParent = document.getElementById('cursorTrigger') as HTMLElement
+    const internalPosition = this.getCaretPosition(textarea)
+    const rect = textarea.getBoundingClientRect();
+    const cursorScreenPosition = {x: internalPosition.x, y: internalPosition.y}
+    console.log(cursorScreenPosition)
+    contextMenuParent.style.right = cursorScreenPosition.x.toString()
     // OK THIS IS DIRTY but its easier this way. the other way i would had to make a regex that matched for null OR space
     const textToMatch = ' ' + this.postCreatorForm.value.content?.slice(cursorPosition -25, cursorPosition) as string
     let match = textToMatch.match(/ @[A-Z0-9a-z_.@-]*$/i)
@@ -145,7 +152,6 @@ export class NewEditorComponent implements OnDestroy {
         // matches with emoji string! lets autocomplete that!
       }
     }
-    console.log(this.sugestionsMenu)
     this.sugestionsMenu.openMenu
   }
 
@@ -347,5 +353,66 @@ export class NewEditorComponent implements OnDestroy {
       this.router.navigate([this.data.path])
     }
   }
+
+
+  // things for calculating position
+  // THANK YOU https://codepen.io/audinue/pen/EogPqQ
+  
+  createCopy(textArea: HTMLTextAreaElement) {
+    var copy = document.createElement('div');
+    copy.textContent = textArea.value;
+    var style = getComputedStyle(textArea);
+    [
+     'fontFamily',
+     'fontSize',
+     'fontWeight',
+     'wordWrap', 
+     'whiteSpace',
+     'borderLeftWidth',
+     'borderTopWidth',
+     'borderRightWidth',
+     'borderBottomWidth',
+    ].forEach(function(key: any) {
+      copy.style[key] = style[key];
+    });
+    copy.style.overflow = 'auto';
+    copy.style.width = textArea.offsetWidth + 'px';
+    copy.style.height = textArea.offsetHeight + 'px';
+    copy.style.position = 'absolute';
+    copy.style.left = textArea.offsetLeft + 'px';
+    copy.style.top = textArea.offsetTop + 'px';
+    document.body.appendChild(copy);
+    return copy;
+  }
+
+  getCaretPosition(textArea: HTMLTextAreaElement) {
+    let start = textArea.selectionStart;
+    let end = textArea.selectionEnd;
+    let copy = this.createCopy(textArea);
+    let range = document.createRange();
+    let firstChild = copy.firstChild
+    let res = {
+      x: 0,
+      y: 0
+    }
+    if(firstChild) {
+      range.setStart(firstChild, start);
+      range.setEnd(firstChild, end);
+      let selection = document.getSelection() as Selection;
+      selection.removeAllRanges();
+      selection.addRange(range);
+      var rect = range.getBoundingClientRect();
+      document.body.removeChild(copy);
+      textArea.selectionStart = start;
+      textArea.selectionEnd = end;
+      textArea.focus();
+      res = {
+        x: rect.left - textArea.scrollLeft,
+        y: rect.top - textArea.scrollTop
+      };
+    }
+    return res;    
+  }
+  
 
 }
