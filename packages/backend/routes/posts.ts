@@ -665,11 +665,11 @@ export default function postsRoutes(app: Application) {
             where: {
               urlToLower: {
                 [Op.in]: mentionsInPost.map(elem => {
-                  let res = elem.trim().toLowerCase();
-                  if(res.match(new RegExp("@", "g"))?.length == 1) {
-                    res = res.split('@')[0]
+                  let urlToSearch = elem.trim().toLowerCase();
+                  if(urlToSearch.match(new RegExp("@", "g"))?.length == 1) {
+                    urlToSearch = urlToSearch.split('@')[1]
                   }
-                  return res;
+                  return urlToSearch;
                 })
               }
             }
@@ -681,13 +681,7 @@ export default function postsRoutes(app: Application) {
             (elem) => elem.optionName === 'wafrn.federateWithThreads' && elem.optionValue === 'true'
           )
           if (userFederatesWithThreads.length === 0) {
-            mentionedUsers = await User.findAll({
-              where: {
-                id: {
-                  [Op.in]: mentionsToAdd
-                }
-              }
-            })
+            mentionedUsers = dbFoundMentions
             if (mentionedUsers.some((usr: any) => usr.urlToLower.endsWith('threads.net'))) {
               success = false
               res.status(500)
@@ -733,15 +727,20 @@ export default function postsRoutes(app: Application) {
           
           if (mentionedUsers && mentionedUsers.length > 0) {
             for(let userMentioned of mentionedUsers){
-              const url = userMentioned.url.startsWith('@')
-                      ? userMentioned.url.split('@')[1]
-                      : `@${userMentioned.url}`
-                    const remoteId = userMentioned.url.startsWith('@')
+              const url = userMentioned.url.trim().startsWith('@')
+                      ? userMentioned.url.split('@')[1].trim()
+                      : `${userMentioned.url.trim()}`
+              const remoteId = userMentioned.url.startsWith('@')
                       ? userMentioned.remoteId
                       : `${environment.frontendUrl}/fediverse/blog/${userMentioned.url}`
-                    const remoteUrl = userMentioned.remoteMentionUrl ? userMentioned.remoteMentionUrl : remoteId
-                    content = content.replaceAll( userMentioned.url.startsWith('@') ? userMentioned.urlToLower : `@${userMentioned.urlToLower}`, `<span class="h-card" translate="no"><a href="${remoteUrl}" class="u-url mention">@<span>${url}</span></a></span>` )
-
+              const remoteUrl = userMentioned.remoteMentionUrl ? userMentioned.remoteMentionUrl : remoteId
+              const stringToReplace = userMentioned.url.startsWith('@') ? userMentioned.urlToLower : `@${userMentioned.urlToLower}`
+              const targetString = `<span class="h-card" translate="no"><a href="${remoteUrl}" class="u-url mention">@<span>${url}</span></a></span>`
+              logger.debug({
+                stringToReplace, targetString, content
+              })
+              content = content.replaceAll( stringToReplace
+              , targetString )
             }
           }
         }

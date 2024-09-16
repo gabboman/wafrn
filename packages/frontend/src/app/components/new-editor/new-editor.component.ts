@@ -128,7 +128,7 @@ export class NewEditorComponent implements OnDestroy {
       if(this.data?.post?.mentionPost && this.data.post.mentionPost.length > 0){
         this.data.post.mentionPost.filter(elem => elem.id != currentUserId).forEach(mentionedUser => {
           const mentionText = mentionedUser.url.startsWith('@') ? mentionedUser.url : ('@' + mentionedUser.url)
-          postCreatorContent = postCreatorContent + mentionedUser.url + " "
+          postCreatorContent = postCreatorContent + mentionText + " "
         });
       }
       if(this.data?.post) {
@@ -209,7 +209,7 @@ export class NewEditorComponent implements OnDestroy {
   }) {
     let initialPart = ' ' + this.postCreatorForm.value.content?.slice(0, this.cursorTextPosition) as string;
     const userUrl = user.text.startsWith('@') ? user.text : ('@' + user.text)
-    initialPart = initialPart.replace(/ [@:][A-Z0-9a-z_.@-]*$/i, userUrl)
+    initialPart = initialPart.replace(/ [@:][A-Z0-9a-z_.@-]*$/i, ' ' + userUrl )
     let finalPart = this.postCreatorForm.value.content?.slice(this.cursorTextPosition) as string;
     this.postCreatorForm.controls['content'].patchValue(initialPart.trim() + ' ' + finalPart.trim())
     this.sugestions = []
