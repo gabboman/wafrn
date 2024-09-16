@@ -26,8 +26,9 @@ import { EditorService } from 'src/app/services/editor.service';
 import { LoginService } from 'src/app/services/login.service';
 import { PostsService } from 'src/app/services/posts.service';
 import { EmojiCollection } from 'src/app/interfaces/emoji-collection';
-import { debounce, debounceTime, Subscription } from 'rxjs';
+import { from, debounceTime, Subscription } from 'rxjs';
 import { JwtService } from 'src/app/services/jwt.service';
+import { AvatarSmallComponent } from '../avatar-small/avatar-small.component';
 
 @Component({
   selector: 'app-new-editor',
@@ -48,6 +49,7 @@ import { JwtService } from 'src/app/services/jwt.service';
     FileUploadComponent,
     MediaPreviewComponent,
     MatProgressSpinnerModule,
+    AvatarSmallComponent,
   ],
   templateUrl: './new-editor.component.html',
   styleUrl: './new-editor.component.scss'
@@ -73,11 +75,14 @@ export class NewEditorComponent implements OnDestroy {
   uploadedMedias: WafrnMedia[] = [];
   emojiCollections: EmojiCollection[] = [];
   @ViewChild('suggestionsMenu') sugestionsMenu!: MatMenuTrigger
-  sugestions: {img: string, text: string}[] = []
+  sugestions: {img: string, text: string}[] = [
+  ]
   cursorPosition = {
     x: 0,
     y: 0
   }
+
+  cursorTextPosition = 0
 
 
 
@@ -97,6 +102,8 @@ export class NewEditorComponent implements OnDestroy {
   closeIcon = faClose;
   quoteIcon = faQuoteLeft;
   emojiSubscription: Subscription
+  editorUpdatedSubscription: Subscription
+  httpMentionPetitionSubscription: Subscription | undefined;
 
 
   constructor(
@@ -124,11 +131,12 @@ export class NewEditorComponent implements OnDestroy {
         });
       }
       this.postCreatorForm.controls['content'].patchValue(postCreatorContent)
-      this.postCreatorForm.controls['content'].valueChanges.pipe(debounceTime(300)).subscribe((changes) => {
+      this.editorUpdatedSubscription = this.postCreatorForm.controls['content'].valueChanges.pipe(debounceTime(300)).subscribe((changes) => {
         let postCreatorHTMLElement = document.getElementById('postCreatorContent') as HTMLTextAreaElement
         // we only call the event if user is writing to avoid TOOMFOLERY
         if(postCreatorHTMLElement.selectionStart === postCreatorHTMLElement.selectionEnd) {
           this.updateMentionsSugestions(postCreatorHTMLElement.selectionStart)
+          this.cursorTextPosition = postCreatorHTMLElement.selectionStart
         }
       
       })
@@ -145,28 +153,64 @@ export class NewEditorComponent implements OnDestroy {
     // 250 being the max width of the suggestions menu and 350 being the max height
     this.cursorPosition = {
       x: Math.min(internalPosition.x + rect.x, screenWidth - 275),
-      y: Math.min(Math.max(48, internalPosition.y + rect.y), screenHeight - 325)
+      y: Math.min(Math.max(48, internalPosition.y + rect.y), Math.max(screenHeight - 325, screenHeight - 64 * this.sugestions.length))
     }
   }
 
   updateMentionsSugestions(cursorPosition: number) {
+    this.httpMentionPetitionSubscription?.unsubscribe();
+    this.sugestions = []
     this.updateMentionsPanelPosition()
-    // OK THIS IS DIRTY but its easier this way. the other way i would had to make a regex that matched for null OR space
     const textToMatch = ' ' + this.postCreatorForm.value.content?.slice(cursorPosition -25, cursorPosition) as string
-    let match = textToMatch.match(/ @[A-Z0-9a-z_.@-]*$/i)
-    if(match && match.length > 0) {
-      // we fill the users
-    } else {
-      // we match for emojireacts now
-      let match = textToMatch.match(/ :[A-Z0-9a-z_.-]*$/i)
-      if(match && match.length > 0) {
-        // matches with emoji string! lets autocomplete that!
+    const matches = textToMatch.match(/ [@:][A-Z0-9a-z_.@-]*$/)
+    if(matches && matches.length > 0) {
+      const match = matches[0].trim()
+      if(match.startsWith('@')) {
+        this.httpMentionPetitionSubscription = from(this.editorService.searchUser(match.toLowerCase())).subscribe(((res: any) => {
+          this.sugestions = res.users.map((elem: any) => {
+            return {
+              img: elem.avatar,
+              text: elem.url
+            }
+          } )
+          this.httpMentionPetitionSubscription?.unsubscribe()
+        }))
+
+      } else {
+        this.emojiCollections
+            .map((elem) => {
+              const emojis = elem.emojis.filter((emoji) =>
+                emoji.id == emoji.name && emoji.name.toLowerCase().includes(match.toLowerCase())
+              );
+              return emojis.map(
+                (emoji) =>
+                ({
+                  text: emoji.id,
+                  url: emoji.url
+                })
+              );
+            })
+            .flat()
+            .slice(0, 10);
       }
     }
   }
 
+  insertMention(user: {
+    img: string, 
+    text: string
+  }) {
+    let initialPart = ' ' + this.postCreatorForm.value.content?.slice(0, this.cursorTextPosition) as string;
+    initialPart = initialPart.replace(/ [@:][A-Z0-9a-z_.@-]*$/i, user.text)
+    let finalPart = this.postCreatorForm.value.content?.slice(this.cursorTextPosition) as string;
+    this.postCreatorForm.controls['content'].patchValue(initialPart.trim() + ' ' + finalPart.trim())
+    this.sugestions = []
+  }
+
   ngOnDestroy(): void {
-    this.emojiSubscription.unsubscribe()
+    this.emojiSubscription.unsubscribe();
+    this.editorUpdatedSubscription.unsubscribe();
+    this.httpMentionPetitionSubscription?.unsubscribe();
   }
 
   get privacyOption() {

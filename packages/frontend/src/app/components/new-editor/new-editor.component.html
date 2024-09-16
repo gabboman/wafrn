@@ -1,10 +1,18 @@
 <div
 #suggestionsMenu
-style="height: 300px;width: 250px;background-color: red; position: fixed; z-index: 999;"
+class="suggestionsMenu"
+[hidden]="sugestions.length === 0"
 [style.left.px]="cursorPosition.x"
 [style.top.px]="cursorPosition.y"
 
-></div>
+>
+    <div (click)="insertMention(user)" *ngFor="let user of sugestions" class="flex align-items-center"> <app-avatar-small [user]="{
+      avatar: user.img,
+      url: user.text,
+      name: user.text,
+      id: ''
+    }"></app-avatar-small> {{user.text}}</div>
+</div>
 <mat-card class="p-3 m-2 mb-6 lg:mx-4 scalein wafrn-container" >
     <button mat-mini-fab class="delete-btn" (mousedown)="closeEditor()">
           <fa-icon size="lg" [icon]="closeIcon"></fa-icon>

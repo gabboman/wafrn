@@ -77,3 +77,14 @@
     bottom: 2em;
     left: 0px;
   }
+  
+  .suggestionsMenu {
+    max-height: 300px;
+    max-width: 250px;
+    position: fixed;
+    z-index: 999;
+    overflow-x: hidden;
+    overflow-y: scroll;
+    background-color: #1d1b1e;
+    ;
+  }
