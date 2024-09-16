@@ -166,7 +166,7 @@ export class NewEditorComponent implements OnDestroy {
     if(matches && matches.length > 0) {
       const match = matches[0].trim()
       if(match.startsWith('@')) {
-        this.httpMentionPetitionSubscription = from(this.editorService.searchUser(match.toLowerCase())).subscribe(((res: any) => {
+        this.httpMentionPetitionSubscription = from(this.editorService.searchUser(match.toLowerCase().slice(1))).subscribe(((res: any) => {
           this.sugestions = res.users.map((elem: any) => {
             return {
               img: elem.avatar,
