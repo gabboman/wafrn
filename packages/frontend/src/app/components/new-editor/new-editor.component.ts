@@ -130,6 +130,11 @@ export class NewEditorComponent implements OnDestroy {
           postCreatorContent = postCreatorContent + mentionedUser.url + " "
         });
       }
+      if(this.data?.post) {
+        if(this.data.post.user.id != currentUserId ) {
+          postCreatorContent = postCreatorContent + this.data.post.user.url + " "
+        }
+      }
       this.postCreatorForm.controls['content'].patchValue(postCreatorContent)
       this.editorUpdatedSubscription = this.postCreatorForm.controls['content'].valueChanges.pipe(debounceTime(300)).subscribe((changes) => {
         let postCreatorHTMLElement = document.getElementById('postCreatorContent') as HTMLTextAreaElement
