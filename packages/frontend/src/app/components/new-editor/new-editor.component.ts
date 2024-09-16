@@ -127,12 +127,14 @@ export class NewEditorComponent implements OnDestroy {
       const currentUserId = this.jwtService.getTokenData().userId;
       if(this.data?.post?.mentionPost && this.data.post.mentionPost.length > 0){
         this.data.post.mentionPost.filter(elem => elem.id != currentUserId).forEach(mentionedUser => {
+          const mentionText = mentionedUser.url.startsWith('@') ? mentionedUser.url : ('@' + mentionedUser.url)
           postCreatorContent = postCreatorContent + mentionedUser.url + " "
         });
       }
       if(this.data?.post) {
         if(this.data.post.user.id != currentUserId ) {
-          postCreatorContent = postCreatorContent + this.data.post.user.url + " "
+          const mentionText = this.data.post.user.url.startsWith('@') ? this.data.post.user.url : ('@' + this.data.post.user.url)
+          postCreatorContent = postCreatorContent + mentionText + " "
         }
       }
       this.postCreatorForm.controls['content'].patchValue(postCreatorContent)
