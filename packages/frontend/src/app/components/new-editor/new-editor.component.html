@@ -1,6 +1,6 @@
 <div
-id="cursorTrigger"
-style="height: 4px;width: 4px;background-color: red; position: fixed; z-index: 999;"
+#suggestionsMenu
+style="height: 300px;width: 250px;background-color: red; position: fixed; z-index: 999;"
 [style.left.px]="cursorPosition.x"
 [style.top.px]="cursorPosition.y"
 
@@ -69,10 +69,6 @@ style="height: 4px;width: 4px;background-color: red; position: fixed; z-index: 9
           }
           <form [formGroup]="postCreatorForm">
             <mat-form-field class="w-full">
-              <div 
-              id ="mentionsMenuPosition"
-              [matMenuTriggerFor]="sugestionsMenu"
-              ></div>
               <textarea
               id="postCreatorContent"
               formControlName="content"
@@ -186,9 +182,3 @@ style="height: 4px;width: 4px;background-color: red; position: fixed; z-index: 9
             }
           </mat-menu>
         </mat-card>
-
-
-        <mat-menu #sugestionsMenu="matMenu">
-          <button mat-menu-item>Item 1</button>
-          <button mat-menu-item>Item 2</button>
-        </mat-menu>

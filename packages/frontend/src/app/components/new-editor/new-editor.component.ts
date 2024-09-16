@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, ElementRef, OnDestroy, ViewChild, ViewChildren } from '@angular/core';
+import { Component, ElementRef, HostListener, OnDestroy, ViewChild, ViewChildren } from '@angular/core';
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
@@ -47,8 +47,7 @@ import { JwtService } from 'src/app/services/jwt.service';
     MatMenuModule,
     FileUploadComponent,
     MediaPreviewComponent,
-    MatProgressSpinnerModule
-
+    MatProgressSpinnerModule,
   ],
   templateUrl: './new-editor.component.html',
   styleUrl: './new-editor.component.scss'
@@ -73,7 +72,7 @@ export class NewEditorComponent implements OnDestroy {
   disableImageUploadButton = false;
   uploadedMedias: WafrnMedia[] = [];
   emojiCollections: EmojiCollection[] = [];
-  @ViewChild('sugestionsMenu') sugestionsMenu!: MatMenuTrigger
+  @ViewChild('suggestionsMenu') sugestionsMenu!: MatMenuTrigger
   sugestions: {img: string, text: string}[] = []
   cursorPosition = {
     x: 0,
@@ -136,12 +135,23 @@ export class NewEditorComponent implements OnDestroy {
 
   }
 
-  updateMentionsSugestions(cursorPosition: number) {
+  @HostListener('window:scroll')
+  updateMentionsPanelPosition() {
+    const screenWidth = window.innerWidth
+    const screenHeight = window.innerHeight
     const textarea = document.getElementById("postCreatorContent") as HTMLTextAreaElement;
-    const contextMenuParent = document.getElementById('cursorTrigger') as HTMLElement
+    const contextMenuParent = document.getElementById('suggestionsMenu') as HTMLElement
     const internalPosition = this.getCaretPosition(textarea)
     const rect = textarea.getBoundingClientRect();
-    this.cursorPosition = {x: internalPosition.x + rect.x, y: internalPosition.y + rect.y}
+    // 250 being the max width of the suggestions menu and 350 being the max height
+    this.cursorPosition = {
+      x: Math.min(internalPosition.x + rect.x, screenWidth - 250),
+      y: Math.min(Math.max(0, internalPosition.y + rect.y), screenHeight - 300)
+    }
+  }
+
+  updateMentionsSugestions(cursorPosition: number) {
+    this.updateMentionsPanelPosition()
     // OK THIS IS DIRTY but its easier this way. the other way i would had to make a regex that matched for null OR space
     const textToMatch = ' ' + this.postCreatorForm.value.content?.slice(cursorPosition -25, cursorPosition) as string
     let match = textToMatch.match(/ @[A-Z0-9a-z_.@-]*$/i)
@@ -154,7 +164,6 @@ export class NewEditorComponent implements OnDestroy {
         // matches with emoji string! lets autocomplete that!
       }
     }
-    this.sugestionsMenu.openMenu
   }
 
   ngOnDestroy(): void {
