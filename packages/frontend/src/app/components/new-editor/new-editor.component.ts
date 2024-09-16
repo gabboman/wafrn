@@ -140,13 +140,12 @@ export class NewEditorComponent implements OnDestroy {
     const screenWidth = window.innerWidth
     const screenHeight = window.innerHeight
     const textarea = document.getElementById("postCreatorContent") as HTMLTextAreaElement;
-    const contextMenuParent = document.getElementById('suggestionsMenu') as HTMLElement
     const internalPosition = this.getCaretPosition(textarea)
     const rect = textarea.getBoundingClientRect();
     // 250 being the max width of the suggestions menu and 350 being the max height
     this.cursorPosition = {
-      x: Math.min(internalPosition.x + rect.x, screenWidth - 250),
-      y: Math.min(Math.max(48, internalPosition.y + rect.y), screenHeight - 300)
+      x: Math.min(internalPosition.x + rect.x, screenWidth - 275),
+      y: Math.min(Math.max(48, internalPosition.y + rect.y), screenHeight - 325)
     }
   }
 
