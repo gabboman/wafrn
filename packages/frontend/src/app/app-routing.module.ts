@@ -105,6 +105,12 @@ const routes: Routes = [
         path: 'editor',
         canActivate: [loginRequiredGuard],
         loadComponent: () =>
+          import('./components/new-editor/new-editor.component').then((m) => m.NewEditorComponent),
+      },
+      {
+        path: 'old-editor',
+        canActivate: [loginRequiredGuard],
+        loadComponent: () =>
           import('./pages/post-editor/post-editor.component').then((m) => m.PostEditorComponent),
       },
       {

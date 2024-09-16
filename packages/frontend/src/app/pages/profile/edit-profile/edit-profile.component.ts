@@ -45,6 +45,7 @@ export class EditProfileComponent implements OnInit {
     disableForceAltText: new FormControl(false),
     forceClassicLogo: new FormControl(false),
     manuallyAcceptsFollows: new FormControl(false),
+    forceOldEditor: new FormControl(false),
   });
 
   constructor(
@@ -81,6 +82,8 @@ export class EditProfileComponent implements OnInit {
         this.editProfileForm.controls['disableForceAltText'].patchValue(
           disableForceAltText === 'true'
         );
+        const forceOldEditor = localStorage.getItem('forceOldEditor') === 'true'
+        this.editProfileForm.controls['forceOldEditor'].patchValue(forceOldEditor);
         const publicOptions = blogDetails.publicOptions;
         const askLevel = publicOptions.find((elem) => elem.optionName == "wafrn.public.asks")
         this.editProfileForm.controls['asksLevel'].patchValue(askLevel ? parseInt(askLevel.optionValue) : 2)
