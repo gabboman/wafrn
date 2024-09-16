@@ -146,7 +146,7 @@ export class NewEditorComponent implements OnDestroy {
     // 250 being the max width of the suggestions menu and 350 being the max height
     this.cursorPosition = {
       x: Math.min(internalPosition.x + rect.x, screenWidth - 250),
-      y: Math.min(Math.max(0, internalPosition.y + rect.y), screenHeight - 300)
+      y: Math.min(Math.max(48, internalPosition.y + rect.y), screenHeight - 300)
     }
   }
 
