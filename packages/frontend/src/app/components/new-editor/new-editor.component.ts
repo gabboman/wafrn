@@ -176,7 +176,7 @@ export class NewEditorComponent implements OnDestroy {
         }))
 
       } else {
-        this.emojiCollections
+        this.sugestions = this.emojiCollections
           .map((elem) => {
             const emojis = elem.emojis.filter((emoji) =>
               emoji.id == emoji.name && emoji.name.toLowerCase().includes(match.toLowerCase())
@@ -185,12 +185,12 @@ export class NewEditorComponent implements OnDestroy {
               (emoji) =>
               ({
                 text: emoji.id,
-                url: emoji.url
+                img: emoji.url
               })
             );
           })
           .flat()
-          .slice(0, 10);
+          .slice(0, 25);
       }
     }
   }
@@ -469,12 +469,10 @@ export class NewEditorComponent implements OnDestroy {
   }
 
   editorFocusedOut() {
-    console.log('blur')
     this.editorUpdatedSubscription?.unsubscribe();
     this.httpMentionPetitionSubscription?.unsubscribe();
   }
   editorFocusedIn() {
-    console.log('focus')
     this.editorUpdatedSubscription = this.postCreatorForm.controls['content'].valueChanges.pipe(debounceTime(300)).subscribe((changes) => this.editorUpdateProcess())
 
 
