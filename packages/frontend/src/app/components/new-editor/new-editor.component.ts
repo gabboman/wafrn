@@ -200,7 +200,7 @@ export class NewEditorComponent implements OnDestroy {
     text: string
   }) {
     let initialPart = ' ' + this.postCreatorForm.value.content?.slice(0, this.cursorTextPosition) as string;
-    const userUrl = user.text.startsWith('@') ? user.text : ('@' + user.text)
+    const userUrl = user.text.startsWith(':') ? user.text : (user.text.startsWith('@') ? user.text : ('@' + user.text))
     initialPart = initialPart.replace(/ [@:][A-Z0-9a-z_.@-]*$/i, ' ' + userUrl)
     let finalPart = this.postCreatorForm.value.content?.slice(this.cursorTextPosition) as string;
     this.postCreatorForm.controls['content'].patchValue(initialPart.trim() + ' ' + finalPart.trim())
