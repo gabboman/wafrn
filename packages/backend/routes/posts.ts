@@ -721,7 +721,6 @@ export default function postsRoutes(app: Application) {
             })
             return null
           }
-          logger.debug({ pre_list: dbFoundMentions })
           if (dbFoundMentions && dbFoundMentions.length > 0) {
             for (let userMentioned of dbFoundMentions) {
               const url = userMentioned.url.trim().startsWith('@')
@@ -733,9 +732,6 @@ export default function postsRoutes(app: Application) {
               const remoteUrl = userMentioned.remoteMentionUrl ? userMentioned.remoteMentionUrl : remoteId
               const stringToReplace = userMentioned.url.startsWith('@') ? userMentioned.urlToLower : `@${userMentioned.urlToLower}`
               const targetString = `<span class="h-card" translate="no"><a href="${remoteUrl}" class="u-url mention">@<span>${url}</span></a></span>`
-              logger.debug({
-                stringToReplace, targetString, content
-              })
               content = content.replaceAll(stringToReplace
                 , targetString)
             }
