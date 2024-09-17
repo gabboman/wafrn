@@ -75,7 +75,7 @@ export class NewEditorComponent implements OnDestroy {
   uploadedMedias: WafrnMedia[] = [];
   emojiCollections: EmojiCollection[] = [];
   @ViewChild('suggestionsMenu') sugestionsMenu!: MatMenuTrigger
-  sugestions: {img: string, text: string}[] = [
+  sugestions: { img: string, text: string }[] = [
   ]
   cursorPosition = {
     x: 0,
@@ -102,7 +102,7 @@ export class NewEditorComponent implements OnDestroy {
   closeIcon = faClose;
   quoteIcon = faQuoteLeft;
   emojiSubscription: Subscription
-  editorUpdatedSubscription: Subscription
+  editorUpdatedSubscription: Subscription | undefined
   httpMentionPetitionSubscription: Subscription | undefined;
 
 
@@ -115,39 +115,29 @@ export class NewEditorComponent implements OnDestroy {
     private postService: PostsService,
     private jwtService: JwtService,
   ) {
-      if(localStorage.getItem('forceOldEditor') === 'true') {
-        router.navigate(['/old-editor'])
-      }
-      this.data = EditorService.editorData;
-      this.privacy = this.loginService.getUserDefaultPostPrivacyLevel();
-      this.emojiSubscription = this.postService.updateFollowers.subscribe(() => {
-        this.emojiCollections = this.postService.emojiCollections;
+    if (localStorage.getItem('forceOldEditor') === 'true') {
+      router.navigate(['/old-editor'])
+    }
+    this.data = EditorService.editorData;
+    this.privacy = this.loginService.getUserDefaultPostPrivacyLevel();
+    this.emojiSubscription = this.postService.updateFollowers.subscribe(() => {
+      this.emojiCollections = this.postService.emojiCollections;
+    });
+    let postCreatorContent = "";
+    const currentUserId = this.jwtService.getTokenData().userId;
+    if (this.data?.post?.mentionPost && this.data.post.mentionPost.length > 0) {
+      this.data.post.mentionPost.filter(elem => elem.id != currentUserId).forEach(mentionedUser => {
+        const mentionText = mentionedUser.url.startsWith('@') ? mentionedUser.url : ('@' + mentionedUser.url)
+        postCreatorContent = postCreatorContent + mentionText + " "
       });
-      let postCreatorContent = "";
-      const currentUserId = this.jwtService.getTokenData().userId;
-      if(this.data?.post?.mentionPost && this.data.post.mentionPost.length > 0){
-        this.data.post.mentionPost.filter(elem => elem.id != currentUserId).forEach(mentionedUser => {
-          const mentionText = mentionedUser.url.startsWith('@') ? mentionedUser.url : ('@' + mentionedUser.url)
-          postCreatorContent = postCreatorContent + mentionText + " "
-        });
+    }
+    if (this.data?.post) {
+      if (this.data.post.user.id != currentUserId) {
+        const mentionText = this.data.post.user.url.startsWith('@') ? this.data.post.user.url : ('@' + this.data.post.user.url)
+        postCreatorContent = postCreatorContent + mentionText + " "
       }
-      if(this.data?.post) {
-        if(this.data.post.user.id != currentUserId ) {
-          const mentionText = this.data.post.user.url.startsWith('@') ? this.data.post.user.url : ('@' + this.data.post.user.url)
-          postCreatorContent = postCreatorContent + mentionText + " "
-        }
-      }
-      this.postCreatorForm.controls['content'].patchValue(postCreatorContent)
-      this.editorUpdatedSubscription = this.postCreatorForm.controls['content'].valueChanges.pipe(debounceTime(300)).subscribe((changes) => {
-        let postCreatorHTMLElement = document.getElementById('postCreatorContent') as HTMLTextAreaElement
-        // we only call the event if user is writing to avoid TOOMFOLERY
-        if(postCreatorHTMLElement.selectionStart === postCreatorHTMLElement.selectionEnd) {
-          this.updateMentionsSugestions(postCreatorHTMLElement.selectionStart)
-          this.cursorTextPosition = postCreatorHTMLElement.selectionStart
-        }
-      
-      })
-
+    }
+    this.postCreatorForm.controls['content'].patchValue(postCreatorContent)
   }
 
   @HostListener('window:scroll')
@@ -168,48 +158,48 @@ export class NewEditorComponent implements OnDestroy {
     this.httpMentionPetitionSubscription?.unsubscribe();
     this.sugestions = []
     this.updateMentionsPanelPosition()
-    const textToMatch = ' ' + this.postCreatorForm.value.content?.slice(cursorPosition -25, cursorPosition) as string
+    const textToMatch = ' ' + this.postCreatorForm.value.content?.slice(cursorPosition - 25, cursorPosition) as string
     const matches = textToMatch.match(/ [@:][A-Z0-9a-z_.@-]*$/)
-    if(matches && matches.length > 0) {
+    if (matches && matches.length > 0) {
       const match = matches[0].trim()
-      if(match.startsWith('@')) {
+      if (match.startsWith('@')) {
         this.httpMentionPetitionSubscription = from(this.editorService.searchUser(match.toLowerCase().slice(1))).subscribe(((res: any) => {
           this.sugestions = res.users.map((elem: any) => {
             return {
               img: elem.avatar,
               text: elem.url
             }
-          } )
+          })
           this.httpMentionPetitionSubscription?.unsubscribe()
         }))
 
       } else {
         this.emojiCollections
-            .map((elem) => {
-              const emojis = elem.emojis.filter((emoji) =>
-                emoji.id == emoji.name && emoji.name.toLowerCase().includes(match.toLowerCase())
-              );
-              return emojis.map(
-                (emoji) =>
-                ({
-                  text: emoji.id,
-                  url: emoji.url
-                })
-              );
-            })
-            .flat()
-            .slice(0, 10);
+          .map((elem) => {
+            const emojis = elem.emojis.filter((emoji) =>
+              emoji.id == emoji.name && emoji.name.toLowerCase().includes(match.toLowerCase())
+            );
+            return emojis.map(
+              (emoji) =>
+              ({
+                text: emoji.id,
+                url: emoji.url
+              })
+            );
+          })
+          .flat()
+          .slice(0, 10);
       }
     }
   }
 
   insertMention(user: {
-    img: string, 
+    img: string,
     text: string
   }) {
     let initialPart = ' ' + this.postCreatorForm.value.content?.slice(0, this.cursorTextPosition) as string;
     const userUrl = user.text.startsWith('@') ? user.text : ('@' + user.text)
-    initialPart = initialPart.replace(/ [@:][A-Z0-9a-z_.@-]*$/i, ' ' + userUrl )
+    initialPart = initialPart.replace(/ [@:][A-Z0-9a-z_.@-]*$/i, ' ' + userUrl)
     let finalPart = this.postCreatorForm.value.content?.slice(this.cursorTextPosition) as string;
     this.postCreatorForm.controls['content'].patchValue(initialPart.trim() + ' ' + finalPart.trim())
     this.sugestions = []
@@ -217,7 +207,7 @@ export class NewEditorComponent implements OnDestroy {
 
   ngOnDestroy(): void {
     this.emojiSubscription.unsubscribe();
-    this.editorUpdatedSubscription.unsubscribe();
+    this.editorUpdatedSubscription?.unsubscribe();
     this.httpMentionPetitionSubscription?.unsubscribe();
   }
 
@@ -409,7 +399,7 @@ export class NewEditorComponent implements OnDestroy {
   }
 
   closeEditor() {
-    if(!this.data) {
+    if (!this.data) {
       this.router.navigate(['/'])
     } else {
       this.router.navigate([this.data.path])
@@ -419,22 +409,22 @@ export class NewEditorComponent implements OnDestroy {
 
   // things for calculating position
   // THANK YOU https://codepen.io/audinue/pen/EogPqQ
-  
+
   createCopy(textArea: HTMLTextAreaElement) {
     var copy = document.createElement('div');
     copy.textContent = textArea.value;
     var style = getComputedStyle(textArea);
     [
-     'fontFamily',
-     'fontSize',
-     'fontWeight',
-     'wordWrap', 
-     'whiteSpace',
-     'borderLeftWidth',
-     'borderTopWidth',
-     'borderRightWidth',
-     'borderBottomWidth',
-    ].forEach(function(key: any) {
+      'fontFamily',
+      'fontSize',
+      'fontWeight',
+      'wordWrap',
+      'whiteSpace',
+      'borderLeftWidth',
+      'borderTopWidth',
+      'borderRightWidth',
+      'borderBottomWidth',
+    ].forEach(function (key: any) {
       copy.style[key] = style[key];
     });
     copy.style.overflow = 'auto';
@@ -457,7 +447,7 @@ export class NewEditorComponent implements OnDestroy {
       x: 0,
       y: 0
     }
-    if(firstChild) {
+    if (firstChild) {
       range.setStart(firstChild, start);
       range.setEnd(firstChild, end);
       let selection = document.getSelection() as Selection;
@@ -473,8 +463,29 @@ export class NewEditorComponent implements OnDestroy {
         y: rect.top - textArea.scrollTop
       };
     }
-    return res;    
+    return res;
   }
-  
+
+  editorFocusedOut() {
+    console.log('blur')
+    this.editorUpdatedSubscription?.unsubscribe();
+    this.httpMentionPetitionSubscription?.unsubscribe();
+  }
+  editorFocusedIn() {
+    console.log('focus')
+    this.editorUpdatedSubscription = this.postCreatorForm.controls['content'].valueChanges.pipe(debounceTime(300)).subscribe((changes) => this.editorUpdateProcess())
+
+
+  }
+
+  editorUpdateProcess() {
+    let postCreatorHTMLElement = document.getElementById('postCreatorContent') as HTMLTextAreaElement
+    // we only call the event if user is writing to avoid TOOMFOLERY
+    if (postCreatorHTMLElement.selectionStart === postCreatorHTMLElement.selectionEnd) {
+      this.updateMentionsSugestions(postCreatorHTMLElement.selectionStart)
+      this.cursorTextPosition = postCreatorHTMLElement.selectionStart
+    }
+  }
+
 
 }
