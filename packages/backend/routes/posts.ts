@@ -529,7 +529,6 @@ export default function postsRoutes(app: Application) {
   )
   app.post(
     '/api/v3/createPost',
-
     authenticateToken,
     createPostLimiter,
     async (req: AuthorizedRequest, res: Response) => {
@@ -537,7 +536,6 @@ export default function postsRoutes(app: Application) {
       const posterId = req.jwtData?.userId ? req.jwtData.userId : environment.deletedUser
       const posterUser = await User.findByPk(posterId)
       const postToBeQuoted = await Post.findByPk(req.body.postToQuote)
-      let mentionedUsers: any[] = []
       try {
         const parent = await Post.findByPk(req.body.parent, {
           include: [
@@ -621,7 +619,7 @@ export default function postsRoutes(app: Application) {
         let content = req.body.content ? req.body.content.trim() : ''
         content = " " + content
         const urlRegex = /(https?:\/\/[^\s]+)/g;
-        content = content.replaceAll(urlRegex, (url: string ) => `<a target="_blank" href="${url}">${url}</a>` )
+        content = content.replaceAll(urlRegex, (url: string) => `<a target="_blank" href="${url}">${url}</a>`)
         content = content.replaceAll('\n', '<br>');
         const content_warning = req.body.content_warning
           ? req.body.content_warning.trim()
@@ -634,8 +632,6 @@ export default function postsRoutes(app: Application) {
         // we parse the content and we search emojis:
         const emojisToAdd = avaiableEmojis?.filter((emoji: any) => req.body.content.includes(emoji.name))
 
-        // post content as html
-        const parsedAsHTML = cheerio.load(content)
         if (req.body.medias && req.body.medias.length) {
           mediaToAdd = req.body.medias
           // "not important" we update the media order
@@ -660,13 +656,13 @@ export default function postsRoutes(app: Application) {
         }
         const mentionsInPost: string[] = content.match(/ @[A-Z0-9a-z_.@-]*/ig)
         if (mentionsInPost && mentionsInPost.length > 0) {
-          content = content.replaceAll(/ @[A-Z0-9a-z_.@-]*/ig, (userUrl: string) => userUrl.toLowerCase() )
+          content = content.replaceAll(/ @[A-Z0-9a-z_.@-]*/ig, (userUrl: string) => userUrl.toLowerCase())
           const dbFoundMentions = await User.findAll({
             where: {
               urlToLower: {
                 [Op.in]: mentionsInPost.map(elem => {
                   let urlToSearch = elem.trim().toLowerCase();
-                  if(urlToSearch.match(new RegExp("@", "g"))?.length == 1) {
+                  if (urlToSearch.match(new RegExp("@", "g"))?.length == 1) {
                     urlToSearch = urlToSearch.split('@')[1]
                   }
                   return urlToSearch;
@@ -674,15 +670,15 @@ export default function postsRoutes(app: Application) {
               }
             }
           })
-          mentionsToAdd = dbFoundMentions.map((usr: any) => usr.id )
+          mentionsToAdd = dbFoundMentions.map((usr: any) => usr.id)
           // we check if user federates with threads and if not we check they are not mentioning anyone from threads
           const options = await getUserOptions(posterId)
           const userFederatesWithThreads = options.filter(
             (elem) => elem.optionName === 'wafrn.federateWithThreads' && elem.optionValue === 'true'
           )
           if (userFederatesWithThreads.length === 0) {
-            mentionedUsers = dbFoundMentions
-            if (mentionedUsers.some((usr: any) => usr.urlToLower.endsWith('threads.net'))) {
+
+            if (dbFoundMentions.some((usr: any) => usr.urlToLower.endsWith('threads.net'))) {
               success = false
               res.status(500)
               res.send({
@@ -706,6 +702,7 @@ export default function postsRoutes(app: Application) {
               ]
             }
           })
+          // TODO fix this
           const blocksServers = 0 /*await ServerBlock.count({
           where: {
             userBlockerId: posterId,
@@ -724,23 +721,23 @@ export default function postsRoutes(app: Application) {
             })
             return null
           }
-          
-          if (mentionedUsers && mentionedUsers.length > 0) {
-            for(let userMentioned of mentionedUsers){
+          logger.debug({ pre_list: dbFoundMentions })
+          if (dbFoundMentions && dbFoundMentions.length > 0) {
+            for (let userMentioned of dbFoundMentions) {
               const url = userMentioned.url.trim().startsWith('@')
-                      ? userMentioned.url.split('@')[1].trim()
-                      : `${userMentioned.url.trim()}`
+                ? userMentioned.url.split('@')[1].trim()
+                : `${userMentioned.url.trim()}`
               const remoteId = userMentioned.url.startsWith('@')
-                      ? userMentioned.remoteId
-                      : `${environment.frontendUrl}/fediverse/blog/${userMentioned.url}`
+                ? userMentioned.remoteId
+                : `${environment.frontendUrl}/fediverse/blog/${userMentioned.url}`
               const remoteUrl = userMentioned.remoteMentionUrl ? userMentioned.remoteMentionUrl : remoteId
               const stringToReplace = userMentioned.url.startsWith('@') ? userMentioned.urlToLower : `@${userMentioned.urlToLower}`
               const targetString = `<span class="h-card" translate="no"><a href="${remoteUrl}" class="u-url mention">@<span>${url}</span></a></span>`
               logger.debug({
                 stringToReplace, targetString, content
               })
-              content = content.replaceAll( stringToReplace
-              , targetString )
+              content = content.replaceAll(stringToReplace
+                , targetString)
             }
           }
         }
