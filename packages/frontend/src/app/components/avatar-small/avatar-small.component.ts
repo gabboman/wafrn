@@ -16,14 +16,15 @@ import { environment } from 'src/environments/environment';
 })
 export class AvatarSmallComponent implements OnInit {
   @Input() user!: SimplifiedUser;
+  @Input() disabled = false;
   avatar: string = ''
 
 
   ngOnInit(): void {
     this.avatar = environment.externalCacheurl + encodeURIComponent(
       this.user.url.startsWith('@') ?
-      this.user.avatar :
-      environment.baseMediaUrl + this.user.avatar
+        this.user.avatar :
+        environment.baseMediaUrl + this.user.avatar
     ) + '&avatar=true'
   }
 

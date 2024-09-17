@@ -1,7 +1,7 @@
 <div #suggestionsMenu class="suggestionsMenu" [hidden]="sugestions.length === 0" [style.left.px]="cursorPosition.x"
   [style.top.px]="cursorPosition.y">
   <div (click)="insertMention(user)" *ngFor="let user of sugestions" class="flex align-items-center"> <app-avatar-small
-      [user]="{
+      [disabled]="true" [user]="{
       avatar: user.img,
       url: user.text,
       name: user.text,
