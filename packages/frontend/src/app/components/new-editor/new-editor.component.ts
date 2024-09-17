@@ -29,6 +29,7 @@ import { EmojiCollection } from 'src/app/interfaces/emoji-collection';
 import { from, debounceTime, Subscription } from 'rxjs';
 import { JwtService } from 'src/app/services/jwt.service';
 import { AvatarSmallComponent } from '../avatar-small/avatar-small.component';
+import { MatCheckboxModule } from '@angular/material/checkbox';
 
 @Component({
   selector: 'app-new-editor',
@@ -50,6 +51,7 @@ import { AvatarSmallComponent } from '../avatar-small/avatar-small.component';
     MediaPreviewComponent,
     MatProgressSpinnerModule,
     AvatarSmallComponent,
+    MatCheckboxModule
   ],
   templateUrl: './new-editor.component.html',
   styleUrl: './new-editor.component.scss'
