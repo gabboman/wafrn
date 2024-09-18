@@ -473,6 +473,8 @@ export class NewEditorComponent implements OnDestroy {
   editorFocusedOut() {
     this.editorUpdatedSubscription?.unsubscribe();
     this.httpMentionPetitionSubscription?.unsubscribe();
+    this.editorUpdatedSubscription = undefined;
+    this.httpMentionPetitionSubscription = undefined;
   }
   editorFocusedIn() {
     this.editorUpdatedSubscription = this.postCreatorForm.controls['content'].valueChanges.pipe(debounceTime(300)).subscribe((changes) => this.editorUpdateProcess())
