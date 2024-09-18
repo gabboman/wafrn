@@ -497,7 +497,8 @@ const Media = sequelize.define('medias', {
     defaultValue: false,
     type: Sequelize.BOOLEAN,
     allowNull: false
-  }
+  },
+  type: Sequelize.STRING
 })
 
 const PostReport = sequelize.define('postReports', {

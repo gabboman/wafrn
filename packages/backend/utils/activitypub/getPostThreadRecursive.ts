@@ -118,7 +118,8 @@ async function getPostThreadRecursive(
               description: remoteFile.name,
               ipUpload: 'IMAGE_FROM_OTHER_FEDIVERSE_INSTANCE',
               order: postPetition.attachment.indexOf(remoteFile), // could be non consecutive but its ok
-              external: true
+              external: true,
+              type: remoteFile.mediaType ? remoteFile.mediaType : ''
             })
             medias.push(wafrnMedia)
           } else {
