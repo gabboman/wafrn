@@ -12,16 +12,22 @@
   @if (userLoggedIn) {
   <div *ngIf="userLoggedIn" class="flex gap-0 flex-nowrap w-min mx-auto">
     <button mat-stroked-button [color]="
-          followedUsers.indexOf(blogDetails.id) === -1 ? 'primary' : 'warn'
-        " class="split-button-left" (mousedown)="
-          followedUsers.indexOf(blogDetails.id) === -1
+          postService.followedUserIds.indexOf(blogDetails.id) === -1 ? 'primary' : 'warn'
+        " *ngIf="!postService.notYetAcceptedFollowedUsersIds.includes(blogDetails.id)" class="split-button-left"
+      (mousedown)="
+            postService.followedUserIds.indexOf(blogDetails.id) === -1
             ? followUser(blogDetails.id)
             : unfollowUser(blogDetails.id)
         ">
-      {{ followedUsers.indexOf(blogDetails.id) === -1 ? "Follow" : "Unfollow" }}
+      {{ postService.followedUserIds.indexOf(blogDetails.id) === -1 ? "Follow" : "Unfollow" }}
+    </button>
+    <button mat-stroked-button color="accent"
+      *ngIf="postService.notYetAcceptedFollowedUsersIds.includes(blogDetails.id) && userLoggedIn"
+      class="split-button-left" (mousedown)="unfollowUser(blogDetails.id)">
+      Awaiting aproval
     </button>
     <button [matMenuTriggerFor]="menu" mat-stroked-button [color]="
-          followedUsers.indexOf(blogDetails.id) === -1 ? 'primary' : 'warn'
+          postService.followedUserIds.indexOf(blogDetails.id) === -1 ? 'primary' : 'warn'
         " class="split-button-right">
       <fa-icon [icon]="expandDownIcon"></fa-icon>
     </button>

@@ -34,9 +34,6 @@ export class BlogHeaderComponent implements OnChanges, OnDestroy {
   avatarUrl = '';
   headerUrl = '';
   userLoggedIn = false;
-  updateFollowersSubscription;
-  followedUsers: string[] = [];;
-  notYetAcceptedFollows: string[] = [];;
   fediAttachment: { name: string, value: string }[] = []
   expandDownIcon = faChevronDown;
   muteUserIcon = faVolumeMute;
@@ -51,18 +48,13 @@ export class BlogHeaderComponent implements OnChanges, OnDestroy {
 
   constructor(
     private loginService: LoginService,
-    private postService: PostsService,
+    public postService: PostsService,
     private messages: MessageService,
     public blockService: BlocksService,
     public dialogService: MatDialog
 
   ) {
     this.userLoggedIn = loginService.checkUserLoggedIn();
-    this.updateFollowersSubscription = this.postService.updateFollowers.subscribe(() => {
-      this.followedUsers = this.postService.followedUserIds;
-      this.notYetAcceptedFollows =
-        this.postService.notYetAcceptedFollowedUsersIds;
-    });
   }
   ngOnChanges(changes: SimpleChanges): void {
     if (this.blogDetails) {
@@ -98,7 +90,6 @@ export class BlogHeaderComponent implements OnChanges, OnDestroy {
 
 
   ngOnDestroy(): void {
-    this.updateFollowersSubscription.unsubscribe();
   }
 
   async unfollowUser(id: string) {

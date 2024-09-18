@@ -1,50 +1,27 @@
-<mat-card *ngIf="data" class="overflow-hidden mt-1"  >
-      <b class="img-cw-text" *ngIf="nsfw" >This contains sensitive content. Click to display</b>
+<mat-card *ngIf="data" class="overflow-hidden mt-1" (click)="showPicture()">
+  <b class="img-cw-text" *ngIf="nsfw">This contains sensitive content. Click to display</b>
 
-  <div
-  (mousedown)="showPicture()"
-  (keyup)="showPicture()"
-  class="img-container media-description bg-black-alpha-10"
-  >
-    <img
-    #wafrnMedia
-    *ngIf="
+  <div (keyup)="showPicture()" class="img-container media-description bg-black-alpha-10">
+    <img #wafrnMedia *ngIf="
       (!extensionsToHideImgTag.includes(extension)) ||
       mimeType === 'UNKNOWN'
-    "
-    [src]="displayUrl"
-    [alt]="data.description"
-    role="none"
-    loading="lazy"
-    [ngClass]="{
+    " [src]="displayUrl" [alt]="data.description" role="none" loading="lazy" [ngClass]="{
       'nsfw': nsfw,
       'displayed-image': !nsfw
-    }"
-  />
-  <video
-  preload="metadata"
-  [ngClass]="{
+    }" />
+    <video (play)="showPicture()" preload="metadata" [ngClass]="{
     'nsfw': nsfw,
     'displayed-image': !nsfw
-  }"
-  *ngIf="mimeType.startsWith('video')"
-  controls
-  >
-    <source [src]="displayUrl" [type]="mimeType" />
-  </video>
-  <div *ngIf="!nsfw && mimeType.startsWith('pdf')">
-    <a [href]="displayUrl" target="_blank"
-      >Click here to see the PDF file that is embeded in this post</a
-    >
+  }" *ngIf="mimeType.startsWith('video')" controls>
+      <source [src]="displayUrl" [type]="mimeType" />
+    </video>
+    <div *ngIf="!nsfw && mimeType.startsWith('pdf')">
+      <a [href]="displayUrl" target="_blank">Click here to see the PDF file that is embeded in this post</a>
+    </div>
+    <audio *ngIf="!nsfw && mimeType.startsWith('audio')" controls>
+      <source [src]="displayUrl" [type]="mimeType" />
+    </audio>
+    <div *ngIf="data.description" class="px-2 " [innerText]="data.description"></div>
   </div>
-  <audio *ngIf="!nsfw && mimeType.startsWith('audio')" controls>
-    <source [src]="displayUrl" [type]="mimeType" />
-  </audio>
-  <div
-    *ngIf="data.description"
-    class="px-2 "
-    [innerText]="data.description"
-  ></div>
-</div>
 
 </mat-card>
