@@ -5,4 +5,5 @@ export interface WafrnMedia {
   url: string;
   external: boolean;
   order: number;
+  type?: string;
 }

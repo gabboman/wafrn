@@ -51,51 +51,57 @@ export class WafrnMediaComponent implements OnChanges {
       this.tmpUrl = this.data.external
         ? environment.externalCacheurl + encodeURIComponent(this.data.url)
         : environment.externalCacheurl +
-          encodeURIComponent(environment.baseMediaUrl + this.data.url);
-      this.nsfw =  this.data.NSFW && !this.disableNSFWFilter;
+        encodeURIComponent(environment.baseMediaUrl + this.data.url);
+      this.nsfw = this.data.NSFW && !this.disableNSFWFilter;
       this.displayUrl = this.tmpUrl //this.nsfw ? '/assets/img/nsfw_image.webp' : this.tmpUrl;
-      switch (this.extension) {
-        case 'mp4': {
-          this.mimeType = 'video/mp4';
-          break;
-        }
-        case 'webm': {
-          this.mimeType = 'video/webm';
-          break;
-        }
-        case 'mp3': {
-          this.mimeType = 'audio/mpeg';
-          break;
-        }
-        case 'wav': {
-          this.mimeType = 'audio/wav';
-          break;
-        }
-        case 'ogg':
-        case 'oga': {
-          this.mimeType = 'audio/ogg';
-          break;
-        }
-        case 'opus': {
-          this.mimeType = 'audio/opus';
-          break;
-        }
-        case 'aac': {
-          this.mimeType = 'audio/aac';
-          break;
-        }
-        case 'm4a': {
-          this.mimeType = 'audio/mp4';
-          break;
-        }
-        case 'pdf': {
-          this.mimeType = 'pdf';
-          break;
-        }
-        default: {
-          this.mimeType = 'UNKNOWN';
+      if (this.data.type) {
+        this.mimeType = this.data.type
+      } else {
+        switch (this.extension) {
+          case 'mp4': {
+            this.mimeType = 'video/mp4';
+            break;
+          }
+          case 'webm': {
+            this.mimeType = 'video/webm';
+            break;
+          }
+          case 'mp3': {
+            this.mimeType = 'audio/mpeg';
+            break;
+          }
+          case 'wav': {
+            this.mimeType = 'audio/wav';
+            break;
+          }
+          case 'ogg':
+          case 'oga': {
+            this.mimeType = 'audio/ogg';
+            break;
+          }
+          case 'opus': {
+            this.mimeType = 'audio/opus';
+            break;
+          }
+          case 'aac': {
+            this.mimeType = 'audio/aac';
+            break;
+          }
+          case 'm4a': {
+            this.mimeType = 'audio/mp4';
+            break;
+          }
+          case 'pdf': {
+            this.mimeType = 'pdf';
+            break;
+          }
+          default: {
+            this.mimeType = 'UNKNOWN';
+          }
         }
       }
+
+
     }
     this.cdr.markForCheck();
   }
