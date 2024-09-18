@@ -82,7 +82,6 @@ export class NavigationMenuComponent implements OnInit, OnDestroy {
     private dialogService: MatDialog
   ) {
     this.router.routeReuseStrategy.shouldReuseRoute = () => false;
-    
     this.loginSubscription = this.loginSubscription = this.loginService.loginEventEmitter.subscribe(
       () => {
         this.drawMenu();
@@ -92,6 +91,7 @@ export class NavigationMenuComponent implements OnInit, OnDestroy {
       this.logo = '/assets/classicLogo.png'
     }
     this.navigationSubscription = this.router.events.subscribe((ev) => {
+      scroll(0, 0)
       if (ev instanceof NavigationEnd) {
         this.currentRoute = ev.url;
         this.updateNotifications(ev.url);

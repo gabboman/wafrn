@@ -144,15 +144,17 @@ export class NewEditorComponent implements OnDestroy {
 
   @HostListener('window:scroll')
   updateMentionsPanelPosition() {
-    const screenWidth = window.innerWidth
-    const screenHeight = window.innerHeight
-    const textarea = document.getElementById("postCreatorContent") as HTMLTextAreaElement;
-    const internalPosition = this.getCaretPosition(textarea)
-    const rect = textarea.getBoundingClientRect();
-    // 250 being the max width of the suggestions menu and 350 being the max height
-    this.cursorPosition = {
-      x: Math.min(internalPosition.x + rect.x, screenWidth - 275),
-      y: Math.min(Math.max(48, internalPosition.y + rect.y), Math.max(screenHeight - 325, screenHeight - 64 * this.sugestions.length))
+    if (this.editorUpdatedSubscription) {
+      const screenWidth = window.innerWidth
+      const screenHeight = window.innerHeight
+      const textarea = document.getElementById("postCreatorContent") as HTMLTextAreaElement;
+      const internalPosition = this.getCaretPosition(textarea)
+      const rect = textarea.getBoundingClientRect();
+      // 250 being the max width of the suggestions menu and 350 being the max height
+      this.cursorPosition = {
+        x: Math.min(internalPosition.x + rect.x, screenWidth - 275),
+        y: Math.min(Math.max(48, internalPosition.y + rect.y), Math.max(screenHeight - 325, screenHeight - 64 * this.sugestions.length))
+      }
     }
   }
 
@@ -160,7 +162,7 @@ export class NewEditorComponent implements OnDestroy {
     this.httpMentionPetitionSubscription?.unsubscribe();
     this.sugestions = []
     this.updateMentionsPanelPosition()
-    const textToMatch = ' ' + this.postCreatorForm.value.content?.slice(cursorPosition - 25, cursorPosition) as string
+    const textToMatch = ' ' + this.postCreatorForm.value.content?.slice(cursorPosition - 25, cursorPosition).replaceAll('\n', ' ') as string
     const matches = textToMatch.match(/ [@:][A-Z0-9a-z_.@-]*$/)
     if (matches && matches.length > 0) {
       const match = matches[0].trim()
