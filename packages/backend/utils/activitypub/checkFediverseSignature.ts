@@ -16,10 +16,10 @@ import { LdSignature } from './rsa2017'
 const adminUser = environment.forceSync
   ? null
   : User.findOne({
-      where: {
-        url: environment.adminUser
-      }
-    })
+    where: {
+      url: environment.adminUser
+    }
+  })
 
 function getCheckFediverseSignatureFucnction(force = false) {
   return async function checkFediverseSignature(req: SignedRequest, res: Response, next: NextFunction) {
@@ -36,6 +36,9 @@ function getCheckFediverseSignatureFucnction(force = false) {
         strict: true
       })
       remoteUserUrl = sigHead.keyId.split('#')[0]
+      if (sigHead.keyId.endsWith('/main-key')) {
+        remoteUserUrl = sigHead.keyId.split('/main-key')[0]
+      }
       hostUrl = new URL(remoteUserUrl).host
       let bannedHostInCache = await redisCache.get('server:' + hostUrl)
       if (bannedHostInCache === null || bannedHostInCache === undefined) {

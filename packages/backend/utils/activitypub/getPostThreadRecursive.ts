@@ -84,7 +84,11 @@ async function getPostThreadRecursive(
         }
       }
       const remoteUser = await getRemoteActor(postPetition.attributedTo, user)
-      const remoteUserServerBaned = remoteUser.federatedHostId
+      const remoteUserServerBaned = (await FederatedHost.findByPk(remoteUser.federatedHostId)).blocked
+      // HACK: some implementations (GTS IM LOOKING AT YOU) may send a single element instead of an array
+      // I should had used a funciton instead of this dirty thing, BUT you see, its late. Im eepy
+      // also this code is CRITICAL. A failure here is a big problem. So this hack it is
+      postPetition.tag = postPetition.tag.type ? [postPetition.tag] : postPetition.tag
         ? (await FederatedHost.findByPk(remoteUser.federatedHostId)).blocked
         : false
       const medias: any[] = []
