@@ -122,6 +122,10 @@ export class NewEditorComponent implements OnDestroy {
     }
     this.data = EditorService.editorData;
     this.privacy = this.loginService.getUserDefaultPostPrivacyLevel();
+    if (this.data?.post) {
+      this.contentWarning = this.data.post.content_warning
+      this.privacy = Math.max(this.data.post.privacy, this.privacy)
+    }
     this.emojiSubscription = this.postService.updateFollowers.subscribe(() => {
       this.emojiCollections = this.postService.emojiCollections;
     });
