@@ -618,7 +618,7 @@ export default function postsRoutes(app: Application) {
 
         let content = req.body.content ? req.body.content.trim() : ''
         content = " " + content + " "
-        const urlRegex = / (https?:\/\/[^\s]+) /g;
+        const urlRegex = /(https?:\/\/[^\s]+)/g;
         content = content.replaceAll(urlRegex, (url: string) => `<a target="_blank" href="${url}">${url}</a>`)
         content = content.replaceAll('\n', '<br>');
         const content_warning = req.body.content_warning
