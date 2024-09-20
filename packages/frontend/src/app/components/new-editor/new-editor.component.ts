@@ -167,7 +167,7 @@ export class NewEditorComponent implements OnDestroy {
     this.sugestions = []
     this.updateMentionsPanelPosition()
     const textToMatch = ' ' + this.postCreatorForm.value.content?.slice(cursorPosition - 25, cursorPosition).replaceAll('\n', ' ') as string
-    const matches = textToMatch.match(/ [@:][A-Z0-9a-z_.@-]*$/)
+    const matches = textToMatch.match(/@\w+@?[\w-\.]*$/)
     if (matches && matches.length > 0) {
       const match = matches[0].trim()
       if (match.startsWith('@')) {
