@@ -28,7 +28,7 @@
     "cors": "^2.8.5",
     "csv-parse": "^5.4.0",
     "dompurify": "^3.1.0",
-    "express": "^4.19.2",
+    "express": "^4.20.0",
     "express-rate-limit": "^6.7.0",
     "fluent-ffmpeg": "^2.1.2",
     "fs-extra": "^11.2.0",
