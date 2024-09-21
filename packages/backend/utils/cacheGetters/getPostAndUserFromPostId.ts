@@ -1,5 +1,5 @@
 import { Op } from 'sequelize'
-import { Ask, Emoji, Media, Post, PostTag, User } from '../../db'
+import { Ask, Emoji, EmojiReaction, Media, Post, PostTag, User, UserLikesPostRelations } from '../../db'
 import { redisCache } from '../redis'
 
 async function getPostAndUserFromPostId(postId: string): Promise<{ found: boolean; data?: any }> {
@@ -62,11 +62,32 @@ async function getPostAndUserFromPostId(postId: string): Promise<{ found: boolea
       }
     })
     if (dbQuery) {
+      let likes = UserLikesPostRelations.findAll({
+        where: {
+          postId: postId
+        }
+      })
+      let shares = Post.findAll({
+        where: {
+          parentId: postId,
+          content: ''
+        }
+      })
+      let reacts = EmojiReaction.findAll({
+        where: {
+          postId: postId
+        }
+      })
+      Promise.all([likes, shares, reacts])
+
       res = { found: true, data: dbQuery.dataValues }
       if (res.data.ask) {
         const userAsker = await User.findByPk(res.data.ask.userAsker)
         res.data.ask.asker = userAsker
       }
+      res.data.shares = await shares;
+      res.data.likes = await likes;
+      res.data.reacts = await reacts;
     } else {
       res = { found: false }
     }
