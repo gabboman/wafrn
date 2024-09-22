@@ -43,7 +43,10 @@ export default function cacheRoutes(app: Application) {
             res.sendFile(localFileName, { root: '.' })
           }
         } else {
-          const remoteResponse = await axios.get(mediaLink, { responseType: 'stream', headers: { "User-Agent": environment.instanceUrl } })
+          const remoteResponse = await axios.get(mediaLink, {
+            responseType: 'stream',
+            headers: { 'User-Agent': environment.instanceUrl }
+          })
           const path = `${localFileName}`
           const filePath = fs.createWriteStream(path)
           filePath.on('finish', async () => {

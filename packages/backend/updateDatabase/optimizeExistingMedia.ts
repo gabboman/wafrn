@@ -1,4 +1,3 @@
-
 import { sequelize, User } from '../db'
 import { environment } from '../environment'
 import { logger } from '../utils/logger'
@@ -39,7 +38,7 @@ async function start() {
   }*/
   for await (const user of users.filter((usr: any) => usr.avatar)) {
     try {
-      const newAvatar = await optimizeMedia(`uploads${user.avatar}`, {forceImageExtension: 'webp'})
+      const newAvatar = await optimizeMedia(`uploads${user.avatar}`, { forceImageExtension: 'webp' })
       user.avatar = newAvatar.slice(7)
       await user.save()
     } catch (error) {

@@ -117,11 +117,11 @@ async function prepareSendRemotePostWorker(job: Job) {
         }
       })
     )
-  userViews = userViews.filter((elem: any, index: number) => userViews.indexOf(userViews.find((fnd: any) => fnd.userId == elem.userId)) == index)
-
-  await RemoteUserPostView.bulkCreate(
-    userViews
+  userViews = userViews.filter(
+    (elem: any, index: number) => userViews.indexOf(userViews.find((fnd: any) => fnd.userId == elem.userId)) == index
   )
+
+  await RemoteUserPostView.bulkCreate(userViews)
 
   const objectToSend = await postToJSONLD(post.id)
   const ldSignature = new LdSignature()

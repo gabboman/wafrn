@@ -24,10 +24,10 @@ import * as DOMPurify from 'isomorphic-dompurify'
 const deletedUser = environment.forceSync
   ? undefined
   : User.findOne({
-    where: {
-      url: environment.deletedUser
-    }
-  })
+      where: {
+        url: environment.deletedUser
+      }
+    })
 
 async function getPostThreadRecursive(
   user: any,
@@ -84,12 +84,13 @@ async function getPostThreadRecursive(
         }
       }
       const remoteUser = await getRemoteActor(postPetition.attributedTo, user)
-      const remoteUserServerBaned = (await FederatedHost.findByPk(remoteUser.federatedHostId)).blocked ? (await FederatedHost.findByPk(remoteUser.federatedHostId)).blocked
+      const remoteUserServerBaned = (await FederatedHost.findByPk(remoteUser.federatedHostId)).blocked
+        ? (await FederatedHost.findByPk(remoteUser.federatedHostId)).blocked
         : false
       // HACK: some implementations (GTS IM LOOKING AT YOU) may send a single element instead of an array
       // I should had used a funciton instead of this dirty thing, BUT you see, its late. Im eepy
       // also this code is CRITICAL. A failure here is a big problem. So this hack it is
-      postPetition.tag = !Array.isArray(postPetition.tag) ? [postPetition.tag].filter(elem => elem) : postPetition.tag
+      postPetition.tag = !Array.isArray(postPetition.tag) ? [postPetition.tag].filter((elem) => elem) : postPetition.tag
       const medias: any[] = []
       const fediTags: fediverseTag[] = [
         ...new Set<fediverseTag>(
@@ -138,8 +139,8 @@ async function getPostThreadRecursive(
         content_warning: postPetition.summary
           ? postPetition.summary
           : remoteUser.NSFW
-            ? 'User is marked as NSFW by this instance staff. Possible NSFW without tagging'
-            : '',
+          ? 'User is marked as NSFW by this instance staff. Possible NSFW without tagging'
+          : '',
         createdAt: new Date(postPetition.published),
         updatedAt: new Date(),
         userId: remoteUserServerBaned || remoteUser.banned ? (await deletedUser).id : remoteUser.id,
@@ -247,9 +248,9 @@ async function getPostThreadRecursive(
       await loadPoll(remotePostObject, newPost, user)
       if (newPost.privacy === 10) {
         const postCleanContent = DOMPurify.sanitize(newPost.content, { ALLOWED_TAGS: [] }).trim()
-        const mentions = await newPost.getMentionPost();
+        const mentions = await newPost.getMentionPost()
         if (postCleanContent.startsWith('!ask') && mentions.length === 1) {
-          let askContent = postCleanContent.split(`!ask @${mentions[0].url}`)[1];
+          let askContent = postCleanContent.split(`!ask @${mentions[0].url}`)[1]
           if (askContent.startsWith('@' + environment.instanceUrl)) {
             askContent = askContent.split('@' + environment.instanceUrl)[1]
           }

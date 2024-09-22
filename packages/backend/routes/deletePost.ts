@@ -157,7 +157,7 @@ export default function deletePost(app: Application) {
     res.send(success)
   })
 
-  app.delete('/api/deleteRewoots',authenticateToken, async (req: AuthorizedRequest, res: Response) => {
+  app.delete('/api/deleteRewoots', authenticateToken, async (req: AuthorizedRequest, res: Response) => {
     let success = false
     try {
       const id = req.query.id as string
@@ -187,14 +187,15 @@ export default function deletePost(app: Application) {
           }
         })
 
-        const postsThatAreNotReblogs = tags.map((tag: any) => tag.postId).concat(medias.map((media: any) => media.postId))
-        const reblogsToDelete = unfilteredPostIds.filter(elem => !postsThatAreNotReblogs.includes(elem))
+        const postsThatAreNotReblogs = tags
+          .map((tag: any) => tag.postId)
+          .concat(medias.map((media: any) => media.postId))
+        const reblogsToDelete = unfilteredPostIds.filter((elem) => !postsThatAreNotReblogs.includes(elem))
 
         if (!reblogsToDelete) {
           return res.send(true)
-         
         }
-        const objectsToSend: activityPubObject[] = reblogsToDelete.map(elem => {
+        const objectsToSend: activityPubObject[] = reblogsToDelete.map((elem) => {
           return {
             '@context': [`${environment.frontendUrl}/contexts/litepub-0.1.jsonld`],
             actor: `${environment.frontendUrl}/fediverse/blog/${user.url.toLowerCase()}`,
@@ -213,36 +214,35 @@ export default function deletePost(app: Application) {
         let usersToSendThePost
         // if the post is previous to the new functionality of storing who has seen the post, send to everyone
         // or NUKE has been requested
-          const serverViews = await PostHostView.findAll({
-            where: {
-              postId: {
-                [Op.in]: reblogsToDelete
-              }
+        const serverViews = await PostHostView.findAll({
+          where: {
+            postId: {
+              [Op.in]: reblogsToDelete
             }
-          })
-          const userViews = await RemoteUserPostView.findAll({
-            where: {
-              postId: {
-                [Op.in]: reblogsToDelete
-              }
+          }
+        })
+        const userViews = await RemoteUserPostView.findAll({
+          where: {
+            postId: {
+              [Op.in]: reblogsToDelete
             }
-          })
+          }
+        })
 
-          serversToSendThePost = FederatedHost.findAll({
-            where: {
-              id: {
-                [Op.in]: serverViews.map((view: any) => view.federatedHostId)
-              }
+        serversToSendThePost = FederatedHost.findAll({
+          where: {
+            id: {
+              [Op.in]: serverViews.map((view: any) => view.federatedHostId)
             }
-          })
-          usersToSendThePost = User.findAll({
-            where: {
-              id: {
-                [Op.in]: userViews.map((view: any) => view.userId)
-              }
+          }
+        })
+        usersToSendThePost = User.findAll({
+          where: {
+            id: {
+              [Op.in]: userViews.map((view: any) => view.userId)
             }
-          })
-        
+          }
+        })
 
         await Promise.all([serversToSendThePost, usersToSendThePost])
         serversToSendThePost = await serversToSendThePost
@@ -251,7 +251,7 @@ export default function deletePost(app: Application) {
         inboxes = inboxes
           .concat(serversToSendThePost.map((elem: any) => elem.publicInbox))
           .concat(usersToSendThePost.map((usr: any) => usr.remoteInbox))
-       
+
         for await (const objectToSend of objectsToSend) {
           const ldSignature = new LdSignature()
           const bodySignature = await ldSignature.signRsaSignature2017(
@@ -271,7 +271,7 @@ export default function deletePost(app: Application) {
         }
         reblogsToDelete.forEach(async (elem) => {
           await redisCache.del('postAndUser:' + elem)
-        } )
+        })
         await Post.destroy({
           where: {
             id: {

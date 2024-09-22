@@ -75,8 +75,8 @@ const workers = [
   workerProcessRemotePostView
 ]
 
-workers.forEach(worker => {
-  worker.on('error', err => {
+workers.forEach((worker) => {
+  worker.on('error', (err) => {
     logger.warn({
       message: `worker ${worker.name} failed`,
       error: err

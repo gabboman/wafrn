@@ -17,12 +17,12 @@ async function loadPoll(apObj: any, internalPostObject: any, user: any) {
     })
     // sometimes polls dont have expiration date. We set one accordingly
     let endDate = new Date(new Date().setFullYear(new Date().getFullYear() + 70)) // This way the remaining time will be 69 years and a few months on every update of non finish date polls hehe
-    if(apObj.closed || apObj.endTime) {
-      endDate =  new Date(apObj.closed ? apObj.closed : apObj.endTime);
+    if (apObj.closed || apObj.endTime) {
+      endDate = new Date(apObj.closed ? apObj.closed : apObj.endTime)
     }
     // we check the poll and if it does not exists we create it
-    if(existingPoll) {
-      existingPoll.endDate = endDate;
+    if (existingPoll) {
+      existingPoll.endDate = endDate
       await existingPoll.save()
     }
     const poll = existingPoll

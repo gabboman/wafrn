@@ -16,10 +16,10 @@ import { LdSignature } from './rsa2017'
 const adminUser = environment.forceSync
   ? null
   : User.findOne({
-    where: {
-      url: environment.adminUser
-    }
-  })
+      where: {
+        url: environment.adminUser
+      }
+    })
 
 function getCheckFediverseSignatureFucnction(force = false) {
   return async function checkFediverseSignature(req: SignedRequest, res: Response, next: NextFunction) {

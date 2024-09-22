@@ -85,9 +85,9 @@ async function getPostAndUserFromPostId(postId: string): Promise<{ found: boolea
         const userAsker = await User.findByPk(res.data.ask.userAsker)
         res.data.ask.asker = userAsker
       }
-      res.data.shares = await shares;
-      res.data.likes = await likes;
-      res.data.reacts = await reacts;
+      res.data.shares = await shares
+      res.data.likes = await likes
+      res.data.reacts = await reacts
     } else {
       res = { found: false }
     }

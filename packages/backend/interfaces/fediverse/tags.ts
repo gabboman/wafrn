@@ -3,8 +3,8 @@ export interface fediverseTag {
   name?: string
   type: string
   rel?: string
-  id?: string,
-  actor?: string,
+  id?: string
+  actor?: string
   updated?: Date
   icon?: {
     mediaType: string

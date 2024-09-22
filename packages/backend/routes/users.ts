@@ -75,7 +75,7 @@ export default function userRoutes(app: Application) {
           if (!emailExists) {
             let avatarURL = '' // Empty user avatar in case of error let frontend do stuff
             if (req.file != null) {
-              avatarURL = `/${await optimizeMedia(req.file.path, {forceImageExtension: 'webp'})}`
+              avatarURL = `/${await optimizeMedia(req.file.path, { forceImageExtension: 'webp' })}`
             }
             if (environment.removeFolderNameFromFileUploads) {
               avatarURL = avatarURL.slice('/uploads/'.length - 1)
@@ -116,8 +116,9 @@ export default function userRoutes(app: Application) {
               : `Welcome to ${environment.instanceUrl}!`
             const mailBody = environment.reviewRegistrations
               ? `Hello ${req.body.url}, at this moment we are manually reviewing registrations. You will recive an email from us once it's accepted`
-              : `<h1>Welcome to ${environment.instanceUrl}</h1> To activate your account <a href="${environment.instanceUrl
-              }/activate/${encodeURIComponent(req.body.email.toLowerCase())}/${activationCode}">click here!</a>`
+              : `<h1>Welcome to ${environment.instanceUrl}</h1> To activate your account <a href="${
+                  environment.instanceUrl
+                }/activate/${encodeURIComponent(req.body.email.toLowerCase())}/${activationCode}">click here!</a>`
             const emailSent = environment.disableRequireSendEmail
               ? true
               : sendActivationEmail(req.body.email.toLowerCase(), activationCode, mailHeader, mailBody)
@@ -319,7 +320,7 @@ export default function userRoutes(app: Application) {
           }
 
           if (req.file != null) {
-            let avatarURL = `/${await optimizeMedia(req.file.path, {forceImageExtension: 'webp'})}`
+            let avatarURL = `/${await optimizeMedia(req.file.path, { forceImageExtension: 'webp' })}`
             if (environment.removeFolderNameFromFileUploads) {
               avatarURL = avatarURL.slice('/uploads/'.length - 1)
               user.avatar = avatarURL
@@ -536,19 +537,19 @@ export default function userRoutes(app: Application) {
       let followed = blog.url.startsWith('@')
         ? blog.followingCount
         : Follows.count({
-          where: {
-            followerId: blog.id,
-            accepted: true
-          }
-        })
+            where: {
+              followerId: blog.id,
+              accepted: true
+            }
+          })
       let followers = blog.url.startsWith('@')
         ? blog.followerCount
         : Follows.count({
-          where: {
-            followedId: blog.id,
-            accepted: true
-          }
-        })
+            where: {
+              followedId: blog.id,
+              accepted: true
+            }
+          })
       const publicOptions = UserOptions.findAll({
         where: {
           userId: blog.id,
@@ -747,14 +748,14 @@ export default function userRoutes(app: Application) {
   })
 
   app.get('/api/user/myAsks', authenticateToken, async (req: AuthorizedRequest, res: Response) => {
-    const userId = req.jwtData?.userId as string;
+    const userId = req.jwtData?.userId as string
     const asks = await Ask.findAll({
       attributes: ['userAsker', 'question', 'apObject', 'id'],
       where: {
         userAsked: userId,
-        answered: false,
+        answered: false
       }
-    });
+    })
     const users = await User.findAll({
       attributes: ['url', 'avatar', 'name', 'id', 'description'],
       where: {
@@ -762,14 +763,12 @@ export default function userRoutes(app: Application) {
           [Op.in]: asks.map((ask: any) => ask.userAsker)
         }
       }
-    });
+    })
     res.send({
       asks: asks,
       users: users
     })
-
   })
-
 
   app.post('/api/user/:url/ask', optionalAuthentication, async (req: AuthorizedRequest, res: Response) => {
     const lastHourAsks = await Ask.count({
@@ -782,7 +781,7 @@ export default function userRoutes(app: Application) {
     })
     // a bit dirty of a way but yeah limit asks if user is not logged in. if user is logged in we can ban them later
     if (lastHourAsks >= 5 && !req.jwtData?.userId) {
-      return res.sendStatus(429);
+      return res.sendStatus(429)
     }
     const url = req.params?.url as string
     const userRecivingAsk = await User.findOne({
@@ -797,10 +796,10 @@ export default function userRoutes(app: Application) {
       }
     })
     const userAskLevel = userAskLevelDBOption ? parseInt(userAskLevelDBOption.optionValue) : 2
-    // 
+    //
     if ((!req.jwtData?.userId && userAskLevel === 1) || (req.jwtData?.userId && [1, 2].includes(userAskLevel))) {
       // user can recive an ask from this endpoint
-      const userAsking = req.jwtData?.userId;
+      const userAsking = req.jwtData?.userId
       if (userAsking === userRecivingAsk.id) {
         return res.send({
           success: false
@@ -838,6 +837,5 @@ export default function userRoutes(app: Application) {
     if (askToIgnore) {
       await askToIgnore.destroy()
     }
-
   })
 }

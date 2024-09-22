@@ -139,13 +139,13 @@ export default function postsRoutes(app: Application) {
         })
         const users = posts?.descendents?.length
           ? await User.findAll({
-            attributes: ['url', 'avatar', 'name', 'id'],
-            where: {
-              id: {
-                [Op.in]: posts?.descendents.map((elem: any) => elem.userId)
+              attributes: ['url', 'avatar', 'name', 'id'],
+              where: {
+                id: {
+                  [Op.in]: posts?.descendents.map((elem: any) => elem.userId)
+                }
               }
-            }
-          })
+            })
           : []
         res.send({
           posts: posts?.descendents?.length ? posts.descendents : [],
@@ -312,8 +312,8 @@ export default function postsRoutes(app: Application) {
         const content_warning = req.body.content_warning
           ? req.body.content_warning.trim()
           : posterUser?.NSFW
-            ? 'This user has been marked as NSFW and the post has been labeled automatically as NSFW'
-            : ''
+          ? 'This user has been marked as NSFW and the post has been labeled automatically as NSFW'
+          : ''
         const mentionsToAdd: string[] = []
         let mediaToAdd: any[] = []
         const avaiableEmojis = await getAvaiableEmojis()
@@ -462,7 +462,7 @@ export default function postsRoutes(app: Application) {
         if (postToBeQuoted) {
           post.addQuoted(postToBeQuoted)
         }
-        const askId = req.body.ask;
+        const askId = req.body.ask
         if (askId) {
           const ask = await Ask.findOne({
             where: {
@@ -471,13 +471,12 @@ export default function postsRoutes(app: Application) {
             }
           })
           if (ask) {
-            ask.answered = true;
-            ask.postId = post.id;
+            ask.answered = true
+            ask.postId = post.id
             if (ask.userAsker && !mentionsToAdd.includes(ask.userAsker)) {
               mentionsToAdd.push(ask.userAsker)
             }
             await ask.save()
-
           }
         }
         post.setMedias(mediaToAdd.map((media: any) => media.id))
@@ -617,15 +616,15 @@ export default function postsRoutes(app: Application) {
         }
 
         let content = req.body.content ? req.body.content.trim() : ''
-        content = " " + content + " "
-        const urlRegex = /(https?:\/\/[^\s]+)/g;
+        content = ' ' + content + ' '
+        const urlRegex = /(https?:\/\/[^\s]+)/g
         content = content.replaceAll(urlRegex, (url: string) => `<a target="_blank" href="${url}">${url}</a>`)
-        content = content.replaceAll('\n', '<br>');
+        content = content.replaceAll('\n', '<br>')
         const content_warning = req.body.content_warning
           ? req.body.content_warning.trim()
           : posterUser?.NSFW
-            ? 'This user has been marked as NSFW and the post has been labeled automatically as NSFW'
-            : ''
+          ? 'This user has been marked as NSFW and the post has been labeled automatically as NSFW'
+          : ''
         let mentionsToAdd: string[] = []
         let mediaToAdd: any[] = []
         const avaiableEmojis = await getAvaiableEmojis()
@@ -654,18 +653,18 @@ export default function postsRoutes(app: Application) {
             })
           })
         }
-        const mentionsInPost: string[] = content.match(/@\w+@?[\w-\.]*/ig)
+        const mentionsInPost: string[] = content.match(/@\w+@?[\w-\.]*/gi)
         if (mentionsInPost && mentionsInPost.length > 0) {
-          content = content.replaceAll(/@\w+@?[\w-\.]*/ig, (userUrl: string) => userUrl.toLowerCase())
+          content = content.replaceAll(/@\w+@?[\w-\.]*/gi, (userUrl: string) => userUrl.toLowerCase())
           const dbFoundMentions = await User.findAll({
             where: {
               urlToLower: {
-                [Op.in]: mentionsInPost.map(elem => {
-                  let urlToSearch = elem.trim().toLowerCase();
-                  if (urlToSearch.match(new RegExp("@", "g"))?.length == 1) {
+                [Op.in]: mentionsInPost.map((elem) => {
+                  let urlToSearch = elem.trim().toLowerCase()
+                  if (urlToSearch.match(new RegExp('@', 'g'))?.length == 1) {
                     urlToSearch = urlToSearch.split('@')[1]
                   }
-                  return urlToSearch;
+                  return urlToSearch
                 })
               }
             }
@@ -677,7 +676,6 @@ export default function postsRoutes(app: Application) {
             (elem) => elem.optionName === 'wafrn.federateWithThreads' && elem.optionValue === 'true'
           )
           if (userFederatesWithThreads.length === 0) {
-
             if (dbFoundMentions.some((usr: any) => usr.urlToLower.endsWith('threads.net'))) {
               success = false
               res.status(500)
@@ -730,10 +728,11 @@ export default function postsRoutes(app: Application) {
                 ? userMentioned.remoteId
                 : `${environment.frontendUrl}/fediverse/blog/${userMentioned.url}`
               const remoteUrl = userMentioned.remoteMentionUrl ? userMentioned.remoteMentionUrl : remoteId
-              const stringToReplace = userMentioned.url.startsWith('@') ? userMentioned.urlToLower : `@${userMentioned.urlToLower}`
+              const stringToReplace = userMentioned.url.startsWith('@')
+                ? userMentioned.urlToLower
+                : `@${userMentioned.urlToLower}`
               const targetString = `<span class="h-card" translate="no"><a href="${remoteUrl}" class="u-url mention">@<span>${url}</span></a></span>`
-              content = content.replaceAll(stringToReplace
-                , targetString)
+              content = content.replaceAll(stringToReplace, targetString)
             }
           }
         }
@@ -760,7 +759,7 @@ export default function postsRoutes(app: Application) {
         if (postToBeQuoted) {
           post.addQuoted(postToBeQuoted)
         }
-        const askId = req.body.ask;
+        const askId = req.body.ask
         if (askId) {
           const ask = await Ask.findOne({
             where: {
@@ -769,13 +768,12 @@ export default function postsRoutes(app: Application) {
             }
           })
           if (ask) {
-            ask.answered = true;
-            ask.postId = post.id;
+            ask.answered = true
+            ask.postId = post.id
             if (ask.userAsker && !mentionsToAdd.includes(ask.userAsker)) {
               mentionsToAdd.push(ask.userAsker)
             }
             await ask.save()
-
           }
         }
         post.setMedias(mediaToAdd.map((media: any) => media.id))

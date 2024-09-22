@@ -611,27 +611,31 @@ const PostHostView = sequelize.define('postHostView', {})
 
 const RemoteUserPostView = sequelize.define('remoteUserPostView', {})
 
-const Ask = sequelize.define('asks', {
-  question: Sequelize.TEXT,
-  apObject: Sequelize.TEXT,
-  creationIp: Sequelize.STRING,
-  answered: Sequelize.BOOLEAN,
-}, {
-  indexes: [
-    {
-      fields: ['answered'],
-      unique: false
-    },
-    {
-      fields: ['creationIp'],
-      unique: false
-    },
-    {
-      fields: ['createdAt'],
-      unique: false
-    }
-  ]
-})
+const Ask = sequelize.define(
+  'asks',
+  {
+    question: Sequelize.TEXT,
+    apObject: Sequelize.TEXT,
+    creationIp: Sequelize.STRING,
+    answered: Sequelize.BOOLEAN
+  },
+  {
+    indexes: [
+      {
+        fields: ['answered'],
+        unique: false
+      },
+      {
+        fields: ['creationIp'],
+        unique: false
+      },
+      {
+        fields: ['createdAt'],
+        unique: false
+      }
+    ]
+  }
+)
 
 Post.hasOne(Ask)
 Ask.belongsTo(Post)
