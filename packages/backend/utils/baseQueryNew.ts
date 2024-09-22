@@ -33,18 +33,7 @@ async function getQuotes(
 
 async function getMedias(postIds: string[]) {
   return await Media.findAll({
-    attributes: ['id', 'NSFW', 'description', 'url', 'external', 'order', 'type'],
-    include: [
-      {
-        model: Post,
-        attributes: ['id'],
-        where: {
-          id: {
-            [Op.in]: postIds
-          }
-        }
-      }
-    ]
+    attributes: ['id', 'NSFW', 'description', 'url', 'external', 'order', 'type', 'postId'],
   })
 }
 async function getMentionedUserIds(
@@ -283,9 +272,8 @@ async function getUnjointedPosts(postIdsInput: string[], posterId: string) {
   })
   const postIdsToFullySend: string[] = postsToFullySend.map((post: any) => post.id)
   const postsToSend = (await postWithNotes).map((post: any) => filterPost(post, postIdsToFullySend))
-
   const mediasToSend = (await medias).filter((elem: any) => {
-    return postIdsToFullySend.includes(elem.posts[0].id)
+    return postIdsToFullySend.includes(elem.postId)
   })
   const tagsFiltered = (await tags).filter((tag: any) => postIdsToFullySend.includes(tag.postId))
   const quotesFiltered = quotes.filter((quote: any) => postIdsToFullySend.includes(quote.quoterPostId))

@@ -8,7 +8,6 @@ import {
   Media,
   Post,
   PostEmojiRelations,
-  PostMediaRelations,
   PostMentionsUserRelation,
   PostReport,
   Quotes,
@@ -235,17 +234,17 @@ export default function notificationRoutes(app: Application) {
     const superMutedIds = await getMutedPosts(userId, true)
     const fullyMutedDoNotCountForMentions = superMutedIds.length
       ? (
-          await sequelize.query(
-            isDatabaseMysql()
-              ? `SELECT postsId FROM postsancestors where ancestorId IN ("${superMutedIds}")`
-              : `SELECT "postsId" FROM "postsancestors" where "ancestorId" IN (${superMutedIds.map(
-                  (elem) => "'" + elem + "'"
-                )})`,
-            {
-              type: QueryTypes.SELECT
-            }
-          )
-        ).map((elem: any) => elem.postsId)
+        await sequelize.query(
+          isDatabaseMysql()
+            ? `SELECT postsId FROM postsancestors where ancestorId IN ("${superMutedIds}")`
+            : `SELECT "postsId" FROM "postsancestors" where "ancestorId" IN (${superMutedIds.map(
+              (elem) => "'" + elem + "'"
+            )})`,
+          {
+            type: QueryTypes.SELECT
+          }
+        )
+      ).map((elem: any) => elem.postsId)
       : []
     return await PostMentionsUserRelation.findAll({
       order: [['createdAt', 'DESC']],

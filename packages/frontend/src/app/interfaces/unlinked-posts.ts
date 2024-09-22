@@ -80,13 +80,6 @@ interface Media {
   description: string;
   url: string;
   external: boolean;
-  posts: Array<{
-    postMediaRelations: postMediaRelations;
-  }>;
-}
-
-interface postMediaRelations {
-  mediaId: string;
   postId: string;
 }
 

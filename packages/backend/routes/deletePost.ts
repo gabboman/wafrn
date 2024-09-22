@@ -1,9 +1,9 @@
 import { Application, Response } from 'express'
 import {
   FederatedHost,
+  Media,
   Post,
   PostHostView,
-  PostMediaRelations,
   PostMentionsUserRelation,
   PostTag,
   RemoteUserPostView,
@@ -179,7 +179,7 @@ export default function deletePost(app: Application) {
             }
           }
         })
-        const medias = await PostMediaRelations.findAll({
+        const medias = await Media.findAll({
           where: {
             postId: {
               [Op.in]: unfilteredPostIds

@@ -517,7 +517,6 @@ const UserEmojiRelation = sequelize.define('userEmojiRelations', {})
 
 const PostEmojiRelations = sequelize.define('postEmojiRelations', {})
 
-const PostMediaRelations = sequelize.define('postMediaRelations', {})
 
 const PostMentionsUserRelation = sequelize.define(
   'postMentionsUserRelations',
@@ -786,12 +785,8 @@ Post.belongsTo(User, {
 })
 Post.isHierarchy()
 Media.belongsTo(User)
-Media.belongsToMany(Post, {
-  through: PostMediaRelations
-})
-Post.belongsToMany(Media, {
-  through: PostMediaRelations
-})
+Media.belongsTo(Post)
+Post.hasMany(Media)
 
 // mentions
 User.belongsToMany(Post, {
@@ -921,7 +916,6 @@ export {
   EmojiReaction,
   UserEmojiRelation,
   PostEmojiRelations,
-  PostMediaRelations,
   Quotes,
   PostHostView,
   RemoteUserPostView,

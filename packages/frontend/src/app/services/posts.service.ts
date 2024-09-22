@@ -267,9 +267,7 @@ export class PostsService {
     );
     const polls = unlinked.polls.filter((poll) => poll.postId === elem.id);
     const medias = unlinked.medias.filter((media) => {
-      return media.posts.some(
-        (thing) => thing.postMediaRelations.postId === elem.id
-      );
+      return media.postId === elem.id
     });
     if (userEmojis && userEmojis.length && user?.name) {
       userEmojis.forEach((usrEmoji) => {
