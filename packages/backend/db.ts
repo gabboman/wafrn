@@ -478,7 +478,7 @@ const EmojiCollection = sequelize.define('emojiCollections', {
   }
 })
 
-const Media = sequelize.define('medias_copy', {
+const Media = sequelize.define('medias', {
   mediaOrder: {
     type: Sequelize.INTEGER,
     defaultValue: 0
