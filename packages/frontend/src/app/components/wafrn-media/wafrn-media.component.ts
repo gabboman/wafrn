@@ -54,8 +54,8 @@ export class WafrnMediaComponent implements OnChanges {
         encodeURIComponent(environment.baseMediaUrl + this.data.url);
       this.nsfw = this.data.NSFW && !this.disableNSFWFilter;
       this.displayUrl = this.tmpUrl //this.nsfw ? '/assets/img/nsfw_image.webp' : this.tmpUrl;
-      if (this.data.type) {
-        this.mimeType = this.data.type
+      if (this.data.mediaType) {
+        this.mimeType = this.data.mediaType
       } else {
         switch (this.extension) {
           case 'mp4': {

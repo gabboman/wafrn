@@ -33,7 +33,7 @@ async function getQuotes(
 
 async function getMedias(postIds: string[]) {
   return await Media.findAll({
-    attributes: ['id', 'NSFW', 'description', 'url', 'external', 'order', 'type', 'postId'],
+    attributes: ['id', 'NSFW', 'description', 'url', 'external', 'mediaOrder', 'mediaType', 'postId'],
   })
 }
 async function getMentionedUserIds(

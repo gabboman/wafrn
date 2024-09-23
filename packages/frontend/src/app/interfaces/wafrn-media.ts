@@ -4,6 +4,6 @@ export interface WafrnMedia {
   description: string;
   url: string;
   external: boolean;
-  order: number;
-  type?: string;
+  mediaOrder: number;
+  mediaType?: string;
 }

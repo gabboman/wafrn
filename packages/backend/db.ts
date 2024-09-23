@@ -478,14 +478,8 @@ const EmojiCollection = sequelize.define('emojiCollections', {
   }
 })
 
-const Media = sequelize.define('medias', {
-  id: {
-    type: Sequelize.UUID,
-    defaultValue: Sequelize.UUIDV4,
-    allowNull: false,
-    primaryKey: true
-  },
-  order: {
+const Media = sequelize.define('medias_copy', {
+  mediaOrder: {
     type: Sequelize.INTEGER,
     defaultValue: 0
   },
@@ -498,7 +492,7 @@ const Media = sequelize.define('medias', {
     type: Sequelize.BOOLEAN,
     allowNull: false
   },
-  type: Sequelize.STRING
+  mediaType: Sequelize.STRING
 })
 
 const PostReport = sequelize.define('postReports', {

@@ -335,7 +335,7 @@ export class PostsService {
       remotePostId: elem.remotePostId
         ? elem.remotePostId
         : `${environment.frontUrl}/post/${elem.id}`,
-      medias: medias.sort((a, b) => a.order - b.order),
+      medias: medias.sort((a, b) => a.mediaOrder - b.mediaOrder),
       questionPoll: polls.length > 0 ? { ...polls[0], endDate: new Date(polls[0].endDate) } : undefined,
       mentionPost: mentionedUsers as SimplifiedUser[],
       quotes: unlinked.quotes

@@ -24,10 +24,10 @@ import * as DOMPurify from 'isomorphic-dompurify'
 const deletedUser = environment.forceSync
   ? undefined
   : User.findOne({
-      where: {
-        url: environment.deletedUser
-      }
-    })
+    where: {
+      url: environment.deletedUser
+    }
+  })
 
 async function getPostThreadRecursive(
   user: any,
@@ -121,9 +121,9 @@ async function getPostThreadRecursive(
               userId: remoteUserServerBaned || remoteUser.banned ? (await deletedUser).id : remoteUser.id,
               description: remoteFile.name,
               ipUpload: 'IMAGE_FROM_OTHER_FEDIVERSE_INSTANCE',
-              order: postPetition.attachment.indexOf(remoteFile), // could be non consecutive but its ok
+              mediaOrder: postPetition.attachment.indexOf(remoteFile), // could be non consecutive but its ok
               external: true,
-              type: remoteFile.mediaType ? remoteFile.mediaType : ''
+              mediaType: remoteFile.mediaType ? remoteFile.mediaType : ''
             })
             medias.push(wafrnMedia)
           } else {
@@ -139,8 +139,8 @@ async function getPostThreadRecursive(
         content_warning: postPetition.summary
           ? postPetition.summary
           : remoteUser.NSFW
-          ? 'User is marked as NSFW by this instance staff. Possible NSFW without tagging'
-          : '',
+            ? 'User is marked as NSFW by this instance staff. Possible NSFW without tagging'
+            : '',
         createdAt: new Date(postPetition.published),
         updatedAt: new Date(),
         userId: remoteUserServerBaned || remoteUser.banned ? (await deletedUser).id : remoteUser.id,

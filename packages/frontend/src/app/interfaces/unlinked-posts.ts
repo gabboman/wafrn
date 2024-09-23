@@ -74,13 +74,14 @@ interface Mention {
 }
 
 interface Media {
+  mediaOrder: any;
   id: string;
-  order: number;
   NSFW: boolean;
   description: string;
   url: string;
   external: boolean;
   postId: string;
+  mediaType: string
 }
 
 interface Tag {
