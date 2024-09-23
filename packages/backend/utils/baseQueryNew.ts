@@ -243,7 +243,7 @@ async function getUnjointedPosts(postIdsInput: string[], posterId: string) {
 
   const invalidRewoots = [] as string[]
   for (const id of rewootIds) {
-    const hasMedia = mediasAwaited.some((media: any) => media.posts[0].id === id)
+    const hasMedia = mediasAwaited.some((media: any) => media.postId === id)
     const hasTags = tagsAwaited.some((tag: any) => tag.postId === id)
     if (hasMedia || hasTags) {
       invalidRewoots.push(id)
@@ -264,7 +264,7 @@ async function getUnjointedPosts(postIdsInput: string[], posterId: string) {
     const isReblog =
       post.content === '' &&
       !tagsAwaited.some((tag: any) => tag.postId === post.id) &&
-      !mediasAwaited.some((media: any) => media.posts[0].id === post.id)
+      !mediasAwaited.some((media: any) => media.postId === post.id)
     const validPrivacy = [0, 2, 3].includes(post.privacy)
     const userFollowsPoster = usersFollowedByPoster.includes(post.userId) && post.privacy === 1
     const userIsMentioned = postsMentioningUser.includes(post.id)
