@@ -37,6 +37,16 @@ import { getAvaiableEmojis } from '../utils/getAvaiableEmojis'
 import { redisCache } from '../utils/redis'
 import { getUserOptions } from '../utils/cacheGetters/getUserOptions'
 
+const showdown = require('showdown');
+const markdownConverter = new showdown.Converter({
+  simplifiedAutoLink: true,
+  literalMidWordUnderscores: true,
+  strikethrough: true,
+  simpleLineBreaks: true,
+  openLinksInNewWindow: true,
+  emoji: true,
+});
+
 const prepareSendPostQueue = new Queue('prepareSendPost', {
   connection: environment.bullmqConnection,
   defaultJobOptions: {
@@ -616,10 +626,7 @@ export default function postsRoutes(app: Application) {
         }
 
         let content = req.body.content ? req.body.content.trim() : ''
-        content = ' ' + content + ' '
-        const urlRegex = /(https?:\/\/[^\s]+)/g
-        content = content.replaceAll(urlRegex, (url: string) => ` <a target="_blank" href="${url}">${url}</a> `)
-        content = content.replaceAll('\n', '<br>')
+        content = markdownConverter.makeHtml(content)
         const content_warning = req.body.content_warning
           ? req.body.content_warning.trim()
           : posterUser?.NSFW
