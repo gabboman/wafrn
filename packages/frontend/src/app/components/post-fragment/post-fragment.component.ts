@@ -70,6 +70,7 @@ export class PostFragmentComponent implements OnChanges, OnDestroy {
   avaiableEmojiNames: string[] = []
 
   reactionLoading = false;
+  sanitizedContent = ""
 
   constructor(
     private postService: PostsService,
@@ -104,7 +105,12 @@ export class PostFragmentComponent implements OnChanges, OnDestroy {
   }
 
   ngOnChanges(): void {
+    this.initializeContent()
     this.initializeEmojis();
+  }
+
+  initializeContent() {
+    this.sanitizedContent = this.postService.getPostHtml(this.fragment as ProcessedPost)
   }
 
   initializeEmojis() {

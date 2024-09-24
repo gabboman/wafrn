@@ -347,7 +347,6 @@ export class PostsService {
             ) as ProcessedPost
         ),
     };
-    newPost.content = this.getPostHtml(newPost);
     if (unlinked.asks) {
       const ask = unlinked.asks.find(ask => ask.postId === newPost.id)
       if (ask) {

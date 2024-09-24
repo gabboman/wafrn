@@ -137,21 +137,12 @@ export class NotificationsService {
       })
     );
     if (tmp) {
-      // extra sanitizatin
-      const postsSanitized = tmp.posts.map(elem => {
-        const content = this.postService.getPostContentSanitized(elem.content)
-        let postSanitized = { ...elem };
-        postSanitized.content = content;
-        return postSanitized
-      });
-      tmp.posts = postsSanitized;
-      tmp.users = tmp.users
-
       tmp.posts = tmp.posts.map((post: any) => {
         const user = tmp.users.find(usr => usr.id === post.userId) as SimplifiedUser;
         post.user = user;
         const medias = tmp.medias.filter(med => med.postId === post.id)
         post.medias = medias;
+        post.emojis = [] // TODO fix this later
         return post;
       })
       tmp.posts = tmp.posts.map((post: any) => {
