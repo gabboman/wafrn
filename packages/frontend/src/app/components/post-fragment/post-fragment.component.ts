@@ -125,9 +125,7 @@ export class PostFragmentComponent implements OnChanges, OnDestroy {
       if (!hasReaction) {
         let image = '';
         if (reaction.emoji?.url) {
-          image = reaction.emoji.external
-            ? reaction.emoji.url
-            : `${environment.baseMediaUrl}${reaction.emoji.url}`;
+          image = encodeURIComponent(reaction.emoji.url)
         }
         // create the basic structure to augment later
         emojiReactions[reaction.content] = {
@@ -135,7 +133,7 @@ export class PostFragmentComponent implements OnChanges, OnDestroy {
           content: reaction.content,
           external: reaction.emoji?.external == true,
           name: reaction.content,
-          img: image ? `${environment.externalCacheurl}${image}` : undefined,
+          img: image ? `${environment.externalCacheurl}${image}&avatar=true` : undefined,
           users: [], // this will be filled below,
           tooltip: '',
           includesMe: false,
