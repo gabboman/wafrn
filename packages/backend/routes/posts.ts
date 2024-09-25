@@ -660,7 +660,7 @@ export default function postsRoutes(app: Application) {
             })
           })
         }
-        const mentionsInPost: string[] = content.match(/@\w+@?[\w-\.]*/gi)
+        const mentionsInPost: string[] = content.match(/@[\w-\.]+@?[\w-\.]*/gi)
         if (mentionsInPost && mentionsInPost.length > 0) {
           content = content.replaceAll(/@\w+@?[\w-\.]*/gi, (userUrl: string) => userUrl.toLowerCase())
           const dbFoundMentions = await User.findAll({
