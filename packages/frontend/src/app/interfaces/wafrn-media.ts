@@ -6,4 +6,7 @@ export interface WafrnMedia {
   external: boolean;
   mediaOrder: number;
   mediaType?: string;
+  height?: number;
+  width?: number;
+  blurhash?: string;
 }
