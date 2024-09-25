@@ -492,7 +492,16 @@ const Media = sequelize.define('medias', {
     type: Sequelize.BOOLEAN,
     allowNull: false
   },
-  mediaType: Sequelize.STRING
+  mediaType: Sequelize.STRING,
+  width: {
+    type: Sequelize.INTEGER,
+    defaultValue: 0
+  },
+  height: {
+    type: Sequelize.INTEGER,
+    defaultValue: 0
+  },
+  blurhash: Sequelize.STRING
 })
 
 const PostReport = sequelize.define('postReports', {

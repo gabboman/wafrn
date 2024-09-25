@@ -33,7 +33,7 @@ async function getQuotes(
 
 async function getMedias(postIds: string[]) {
   return await Media.findAll({
-    attributes: ['id', 'NSFW', 'description', 'url', 'external', 'mediaOrder', 'mediaType', 'postId'],
+    attributes: ['id', 'NSFW', 'description', 'url', 'external', 'mediaOrder', 'mediaType', 'postId', 'blurhash', 'width', 'height'],
     where: {
       postId: {
         [Op.in]: postIds
