@@ -4,8 +4,9 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
+    "dev": "ng serve --configuration=development",
     "build": "ng build",
-    "watch": "ng build --watch --configuration development",
+    "watch": "ng build --watch --configuration=development",
     "test": "ng test",
     "vercel-build": "ng build  --configuration=vercel",
     "lint": "ng lint"
