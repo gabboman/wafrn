@@ -166,8 +166,8 @@ export class NewEditorComponent implements OnDestroy {
     this.httpMentionPetitionSubscription?.unsubscribe();
     this.sugestions = []
     this.updateMentionsPanelPosition()
-    const textToMatch = ' ' + this.postCreatorForm.value.content?.slice(cursorPosition - 25, cursorPosition).replaceAll('\n', ' ') as string
-    const matches = textToMatch.match(/[@:]\w+@?[\w-\.]*$/)
+    const textToMatch = ' ' + this.postCreatorForm.value.content?.slice(cursorPosition - 250, cursorPosition).replaceAll('\n', ' ') as string
+    const matches = textToMatch.match(/ [@:][\w-\.]+@?[\w-\.]*$/)
     if (matches && matches.length > 0) {
       const match = matches[0].trim()
       if (match.startsWith('@')) {
