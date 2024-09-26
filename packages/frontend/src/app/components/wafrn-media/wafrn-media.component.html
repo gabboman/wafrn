@@ -2,9 +2,11 @@
   <b class="img-cw-text" *ngIf="nsfw">This contains sensitive content. Click to display</b>
 
   <div (keyup)="showPicture()" class="img-container media-description bg-black-alpha-10">
+    <canvas #canvas [width]="data.width ? data.width : 250" [height]="data.height ? data.height : 250"
+      [style.borderRadius]="12" [style.width]="data.width" [style.height]="data.height"></canvas>
     <img #wafrnMedia *ngIf="
-      (!extensionsToHideImgTag.includes(extension)) ||
-      mimeType === 'UNKNOWN'
+      ((!extensionsToHideImgTag.includes(extension)) ||
+      mimeType === 'UNKNOWN') && !mimeType.startsWith('video')
     " [src]="displayUrl" [alt]="data.description" role="none" loading="lazy" [ngClass]="{
       'nsfw': nsfw,
       'displayed-image': !nsfw
