@@ -125,7 +125,7 @@ export class PostFragmentComponent implements OnChanges, OnDestroy {
       if (!hasReaction) {
         let image = '';
         if (reaction.emoji?.url) {
-          image = encodeURIComponent(reaction.emoji.url)
+          image = encodeURIComponent(reaction.emoji.external ? reaction.emoji.url : (environment.baseMediaUrl + reaction.emoji.url))
         }
         // create the basic structure to augment later
         emojiReactions[reaction.content] = {
