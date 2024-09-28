@@ -1,8 +1,8 @@
 import { Emoji, EmojiReaction, UserLikesPostRelations } from '../../../db.js'
-import { activityPubObject } from '../../../interfaces/fediverse/activityPubObject'
+import { activityPubObject } from '../../../interfaces/fediverse/activityPubObject.js'
 import { logger } from '../../logger.js'
-import { getPostThreadRecursive } from '../getPostThreadRecursive'
-import { signAndAccept } from '../signAndAccept'
+import { getPostThreadRecursive } from '../getPostThreadRecursive.js'
+import { signAndAccept } from '../signAndAccept.js'
 
 async function LikeActivity(body: activityPubObject, remoteUser: any, user: any) {
   const apObject: activityPubObject = body

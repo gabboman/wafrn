@@ -2,19 +2,19 @@ import { generateKeyPairSync } from 'crypto'
 import bcrypt from 'bcrypt'
 import { environment } from './environment.js'
 import { logger } from './utils/logger.js'
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const { Sequelize } = require('sequelize')
+import { Sequelize } from 'sequelize'
 import { Model, InferAttributes, InferCreationAttributes, DataTypes } from 'sequelize'
 import { redisCache } from './utils/redis.js'
 
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-require('sequelize-hierarchy-fork')(Sequelize)
+// @ts-ignore sequelize-hierarchy-fork has no types
+import sequelizeHierarchyFork from 'sequelize-hierarchy-fork'
+sequelizeHierarchyFork(Sequelize)
 
 const sequelize = new Sequelize(environment.databaseConnectionString, {
-  logging: (sql: any, time: number) => {
+  logging: (sql: any, time?: number) => {
     if (environment.logSQLQueries) {
       logger.trace({ duration: time, query: sql })
-    } else if (time > 2500) {
+    } else if (time && time > 2500) {
       logger.warn({ duration: time, query: sql })
     }
   },
@@ -519,7 +519,6 @@ const UserReport = sequelize.define('userReports', {
 const UserEmojiRelation = sequelize.define('userEmojiRelations', {})
 
 const PostEmojiRelations = sequelize.define('postEmojiRelations', {})
-
 
 const PostMentionsUserRelation = sequelize.define(
   'postMentionsUserRelations',

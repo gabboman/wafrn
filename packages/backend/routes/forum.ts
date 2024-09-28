@@ -1,5 +1,5 @@
-import optionalAuthentication from '../utils/optionalAuthentication'
-import checkIpBlocked from '../utils/checkIpBlocked'
+import optionalAuthentication from '../utils/optionalAuthentication.js'
+import checkIpBlocked from '../utils/checkIpBlocked.js'
 import AuthorizedRequest from '../interfaces/authorizedRequest.js'
 import { Application, Request, Response } from 'express'
 import { Post, QuestionPoll, QuestionPollAnswer, QuestionPollQuestion, User, sequelize } from '../db.js'
@@ -12,9 +12,9 @@ import {
   getQuotes,
   getTags,
   getUnjointedPosts
-} from '../utils/baseQueryNew'
+} from '../utils/baseQueryNew.js'
 import getFollowedsIds from '../utils/cacheGetters/getFollowedsIds.js'
-import { isDatabaseMysql } from '../utils/isDatabaseMysql'
+import { isDatabaseMysql } from '../utils/isDatabaseMysql.js'
 
 export default function forumRoutes(app: Application) {
   app.get('/api/forum/:id', optionalAuthentication, async (req: AuthorizedRequest, res: Response) => {

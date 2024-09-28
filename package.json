@@ -8,8 +8,8 @@
     "full:upgrade": "git pull && pm2 restart all && npm run frontend:deploy",
     "backend:prettier-format": "cd packages/backend && prettier --config .prettierrc '**/*.ts' --write",
     "backend:develop": "cd packages/backend && nodemon index.ts",
-    "backend:worker": "cd packages/backend && ts-node utils/workers.ts",
-    "backend:serve": "cd packages/backend && ts-node index.ts",
+    "backend:worker": "cd packages/backend && tsx utils/workers.ts",
+    "backend:serve": "cd packages/backend && tsx index.ts",
     "frontend:serve": "cd packages/frontend && ng serve",
     "frontend:develop": "cd packages/frontend && ng serve --configuration development",
     "frontend:build": "cd packages/frontend && ng build",
@@ -33,5 +33,8 @@
   ],
   "devDependencies": {
     "typescript": "^5.4.5"
+  },
+  "dependencies": {
+    "tsx": "^4.19.1"
   }
 }

@@ -1,7 +1,7 @@
 import { Op } from 'sequelize'
 import { User } from '../../db.js'
 import { wait } from '../wait.js'
-import sendActivationEmail from '../sendActivationEmail'
+import sendActivationEmail from '../sendActivationEmail.js'
 
 async function sendMail() {
   const users = await User.findAll({

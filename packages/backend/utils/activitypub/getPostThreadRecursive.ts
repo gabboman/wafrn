@@ -14,20 +14,20 @@ import {
 } from '../../db.js'
 import { environment } from '../../environment.js'
 import { logger } from '../logger.js'
-import { getRemoteActor } from './getRemoteActor'
-import { getPetitionSigned } from './getPetitionSigned'
+import { getRemoteActor } from './getRemoteActor.js'
+import { getPetitionSigned } from './getPetitionSigned.js'
 import { fediverseTag } from '../../interfaces/fediverse/tags.js'
-import { loadPoll } from './loadPollFromPost'
-import { getApObjectPrivacy } from './getPrivacy'
+import { loadPoll } from './loadPollFromPost.js'
+import { getApObjectPrivacy } from './getPrivacy.js'
 import * as DOMPurify from 'isomorphic-dompurify'
 
 const deletedUser = environment.forceSync
   ? undefined
   : User.findOne({
-    where: {
-      url: environment.deletedUser
-    }
-  })
+      where: {
+        url: environment.deletedUser
+      }
+    })
 
 async function getPostThreadRecursive(
   user: any,
@@ -126,7 +126,7 @@ async function getPostThreadRecursive(
               mediaType: remoteFile.mediaType ? remoteFile.mediaType : '',
               blurhash: remoteFile.blurhash ? remoteFile.blurhash : null,
               height: remoteFile.height ? remoteFile.height : null,
-              width: remoteFile.width ? remoteFile.width : null,
+              width: remoteFile.width ? remoteFile.width : null
             })
             medias.push(wafrnMedia)
           } else {
@@ -142,8 +142,8 @@ async function getPostThreadRecursive(
         content_warning: postPetition.summary
           ? postPetition.summary
           : remoteUser.NSFW
-            ? 'User is marked as NSFW by this instance staff. Possible NSFW without tagging'
-            : '',
+          ? 'User is marked as NSFW by this instance staff. Possible NSFW without tagging'
+          : '',
         createdAt: new Date(postPetition.published),
         updatedAt: new Date(),
         userId: remoteUserServerBaned || remoteUser.banned ? (await deletedUser).id : remoteUser.id,

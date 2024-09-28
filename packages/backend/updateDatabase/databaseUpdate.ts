@@ -1,14 +1,16 @@
-import { environment } from '../environment.js'
-import { logger } from '../utils/logger.js'
+import { environment } from "../environment.js";
+import { logger } from "../utils/logger.js";
 
-const { Sequelize } = require('sequelize') // sequelize plugins
-require('sequelize-hierarchy-fork')(Sequelize)
+import { Sequelize } from "sequelize"; // sequelize plugins
+// @ts-ignore sequelize-hierarchy-fork has no types
+import sequelizeHierarchyFork from "sequelize-hierarchy-fork";
+sequelizeHierarchyFork(Sequelize);
 
 const sequelize = new Sequelize(environment.databaseConnectionString, {
-  logging: !environment.prod
-})
+  logging: !environment.prod,
+});
 
-const queryInterface = sequelize.getQueryInterface()
+const queryInterface = sequelize.getQueryInterface();
 
 async function dbUpdate() {
   // Add new table
@@ -44,12 +46,12 @@ async function dbUpdate() {
   */
   // add column
 
-  await queryInterface.addColumn('users', 'banned', {
+  await queryInterface.addColumn("users", "banned", {
     type: Sequelize.BOOLEAN,
     allowNull: false,
     defaultValue: false,
-    unique: false
-  })
+    unique: false,
+  });
 }
 
 /*
@@ -61,8 +63,8 @@ async function dbUpdate() {
 
 dbUpdate()
   .then(() => {
-    logger.info('done')
+    logger.info("done");
   })
   .catch((error) => {
-    logger.info(error)
-  })
+    logger.info(error);
+  });

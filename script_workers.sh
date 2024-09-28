@@ -2,5 +2,5 @@
 #NODE_OPTIONS=--max-old-space-size=8192
 while :
 do
-	ts-node packages/backend/utils/workers.ts
+	./node_modules/.bin/tsx packages/backend/utils/workers.ts
 done

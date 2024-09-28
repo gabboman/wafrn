@@ -1,7 +1,7 @@
 import { Op } from 'sequelize'
 import { Follows } from '../../db.js'
-import { getAllLocalUserIds } from '../cacheGetters/getAllLocalUserIds'
-import { acceptRemoteFollow } from '../activitypub/acceptRemoteFollow'
+import { getAllLocalUserIds } from '../cacheGetters/getAllLocalUserIds.js'
+import { acceptRemoteFollow } from '../activitypub/acceptRemoteFollow.js'
 
 async function fix() {
   const localUsers = await getAllLocalUserIds()

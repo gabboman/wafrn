@@ -1,11 +1,11 @@
 /* eslint-disable max-len */
 import { Application, Response } from 'express'
 import { Media } from '../db.js'
-import uploadHandler from '../utils/uploads'
-import { authenticateToken } from '../utils/authenticateToken'
+import uploadHandler from '../utils/uploads.js'
+import { authenticateToken } from '../utils/authenticateToken.js'
 
 import getIp from '../utils/getIP.js'
-import optimizeMedia from '../utils/optimizeMedia'
+import optimizeMedia from '../utils/optimizeMedia.js'
 import { environment } from '../environment.js'
 import { logger } from '../utils/logger.js'
 import AuthorizedRequest from '../interfaces/authorizedRequest.js'

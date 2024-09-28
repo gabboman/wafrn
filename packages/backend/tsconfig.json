@@ -1,20 +1,17 @@
 {
   "compilerOptions": {
     "target": "ESNext",
-    "lib": [
-      "ESNext"
-    ],
+    "lib": ["ESNext"],
     "module": "NodeNext",
     "rootDir": "./",
     "outDir": "./build",
     "esModuleInterop": true,
     "strict": true,
-    "typeRoots": [
-      "./types"
-    ],
+    "typeRoots": ["./types"],
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
     "isolatedModules": true,
-    "moduleResolution": "Node16",
+    "moduleResolution": "NodeNext",
+    "skipLibCheck": true
   }
 }

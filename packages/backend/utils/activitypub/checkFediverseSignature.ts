@@ -3,23 +3,23 @@ import { FederatedHost, User, sequelize } from '../../db.js'
 import { environment } from '../../environment.js'
 import { logger } from '../logger.js'
 import crypto from 'crypto'
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const httpSignature = require('@peertube/http-signature')
+// @ts-ignore @peertube/http-signature doesn't have types
+import httpSignature from '@peertube/http-signature'
 import Redis from 'ioredis'
 import { Op } from 'sequelize'
 import { createHash } from 'node:crypto'
 import { redisCache } from '../redis.js'
-import { getKey } from '../cacheGetters/getKey'
+import { getKey } from '../cacheGetters/getKey.js'
 import { SignedRequest } from '../../interfaces/fediverse/signedRequest.js'
-import { getRemoteActor } from './getRemoteActor'
+import { getRemoteActor } from './getRemoteActor.js'
 import { LdSignature } from './rsa2017.js'
 const adminUser = environment.forceSync
   ? null
   : User.findOne({
-    where: {
-      url: environment.adminUser
-    }
-  })
+      where: {
+        url: environment.adminUser
+      }
+    })
 
 function getCheckFediverseSignatureFucnction(force = false) {
   return async function checkFediverseSignature(req: SignedRequest, res: Response, next: NextFunction) {

@@ -1,7 +1,7 @@
 import { environment } from '../environment.js'
+import { pino } from 'pino'
 
-const pino = require('pino')
-const transport = pino.transport(environment.pinoTransportOptions)
+const transport = pino.transport(environment.pinoTransportOptions as any)
 
 export const logger = pino(
   {

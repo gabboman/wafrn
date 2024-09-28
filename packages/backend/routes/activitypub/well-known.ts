@@ -6,8 +6,8 @@ import { environment } from '../../environment.js'
 import { getAllLocalUserIds } from '../../utils/cacheGetters/getAllLocalUserIds.js'
 import { return404 } from '../../utils/return404.js'
 
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const Cacher = require('cacher')
+// @ts-ignore cacher has no types
+import Cacher from 'cacher'
 const cacher = new Cacher()
 
 function wellKnownRoutes(app: Application) {

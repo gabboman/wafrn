@@ -1,4 +1,4 @@
-import { activityPubObject } from '../../interfaces/fediverse/activityPubObject'
+import { activityPubObject } from '../../interfaces/fediverse/activityPubObject.js'
 
 function getApObjectPrivacy(apObject: activityPubObject, remoteUser: any): number {
   let privacy = 10

@@ -10,12 +10,12 @@ import {
   User,
   UserLikesPostRelations
 } from '../db.js'
-import { authenticateToken } from '../utils/authenticateToken'
+import { authenticateToken } from '../utils/authenticateToken.js'
 import { Op, Sequelize } from 'sequelize'
 import { logger } from '../utils/logger.js'
 import { Queue } from 'bullmq'
 import { environment } from '../environment.js'
-import { activityPubObject } from '../interfaces/fediverse/activityPubObject'
+import { activityPubObject } from '../interfaces/fediverse/activityPubObject.js'
 import _ from 'underscore'
 import AuthorizedRequest from '../interfaces/authorizedRequest.js'
 import { LdSignature } from '../utils/activitypub/rsa2017.js'

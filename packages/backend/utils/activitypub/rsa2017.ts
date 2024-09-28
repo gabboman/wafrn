@@ -1,5 +1,5 @@
 import * as crypto from 'node:crypto'
-const jsonld = require('jsonld')
+import jsonld from 'jsonld'
 import axios from 'axios'
 import { environment } from '../../environment.js'
 import { logger } from '../logger.js'

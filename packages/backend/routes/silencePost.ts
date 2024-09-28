@@ -1,8 +1,8 @@
 import { Application, Response } from 'express'
-import { authenticateToken } from '../utils/authenticateToken'
+import { authenticateToken } from '../utils/authenticateToken.js'
 import AuthorizedRequest from '../interfaces/authorizedRequest.js'
-import { getMutedPosts } from '../utils/cacheGetters/getMutedPosts'
-import { getUnjointedPosts } from '../utils/baseQueryNew'
+import { getMutedPosts } from '../utils/cacheGetters/getMutedPosts.js'
+import { getUnjointedPosts } from '../utils/baseQueryNew.js'
 import { Post, SilencedPost } from '../db.js'
 import { redisCache } from '../utils/redis.js'
 

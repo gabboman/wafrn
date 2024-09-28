@@ -1,9 +1,9 @@
 import { Post } from '../../../db.js'
-import { activityPubObject } from '../../../interfaces/fediverse/activityPubObject'
+import { activityPubObject } from '../../../interfaces/fediverse/activityPubObject.js'
 import { logger } from '../../logger.js'
-import { getPostThreadRecursive } from '../getPostThreadRecursive'
-import { getRemoteActor } from '../getRemoteActor'
-import { signAndAccept } from '../signAndAccept'
+import { getPostThreadRecursive } from '../getPostThreadRecursive.js'
+import { getRemoteActor } from '../getRemoteActor.js'
+import { signAndAccept } from '../signAndAccept.js'
 
 async function UpdateActivity(body: activityPubObject, remoteUser: any, user: any) {
   const apObject: activityPubObject = body.object.id ? body.object : body

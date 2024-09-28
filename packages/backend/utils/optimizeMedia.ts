@@ -1,10 +1,11 @@
 import { logger } from './logger.js'
 
-const sharp = require('sharp')
+import sharp from 'sharp'
 
 /* eslint-disable max-len */
-const fs = require('fs')
-const FfmpegCommand = require('fluent-ffmpeg')
+import fs from 'fs'
+// @ts-ignore no types for fluent-ffmpeg
+import FfmpegCommand from 'fluent-ffmpeg'
 export default async function optimizeMedia(
   inputPath: string,
   options?: { outPath?: string; maxSize?: number; keep?: boolean; forceImageExtension?: string }
@@ -38,9 +39,8 @@ export default async function optimizeMedia(
         .save(outputPath)
         .on('end', () => {
           try {
-            fs.unlinkSync(inputPath, () => {
-              logger.trace('media converted')
-            })
+            fs.unlinkSync(inputPath)
+            logger.trace('media converted')
           } catch (exc) {
             logger.warn(exc)
           }

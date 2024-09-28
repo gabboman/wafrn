@@ -1,9 +1,9 @@
 import { Application, Response } from 'express'
 import AuthorizedRequest from '../interfaces/authorizedRequest.js'
-import { authenticateToken } from '../utils/authenticateToken'
+import { authenticateToken } from '../utils/authenticateToken.js'
 import { Post, QuestionPoll, QuestionPollAnswer, QuestionPollQuestion, User } from '../db.js'
 import { Op } from 'sequelize'
-import { voteInPoll } from '../utils/activitypub/votePollRemote'
+import { voteInPoll } from '../utils/activitypub/votePollRemote.js'
 export default function pollRoutes(app: Application) {
   app.post('/api/v2/pollVote/:poll', authenticateToken, async (req: AuthorizedRequest, res: Response) => {
     const posterId = req.jwtData?.userId ? req.jwtData?.userId : ''

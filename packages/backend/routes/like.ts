@@ -1,9 +1,9 @@
 import { Application, Response } from 'express'
-import { authenticateToken } from '../utils/authenticateToken'
+import { authenticateToken } from '../utils/authenticateToken.js'
 
 import { Post, User, UserLikesPostRelations } from '../db.js'
 import { logger } from '../utils/logger.js'
-import { likePostRemote } from '../utils/activitypub/likePost'
+import { likePostRemote } from '../utils/activitypub/likePost.js'
 import AuthorizedRequest from '../interfaces/authorizedRequest.js'
 import { getUserOptions } from '../utils/cacheGetters/getUserOptions.js'
 

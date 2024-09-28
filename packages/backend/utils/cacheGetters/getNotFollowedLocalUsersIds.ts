@@ -1,6 +1,6 @@
 import { Op } from 'sequelize'
 import getFollowedsIds from './getFollowedsIds.js'
-import getBlockedIds from './getBlockedIds'
+import getBlockedIds from './getBlockedIds.js'
 import { User } from '../../db.js'
 
 export default async function getNonFollowedLocalUsersIds(userId: string): Promise<string[]> {

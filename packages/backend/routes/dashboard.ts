@@ -3,19 +3,19 @@
 // the MONSTER QUERY we are using now doesnt scale well on threads with lots of users
 
 import { Application, Response } from 'express'
-import { authenticateToken } from '../utils/authenticateToken'
-import optionalAuthentication from '../utils/optionalAuthentication'
+import { authenticateToken } from '../utils/authenticateToken.js'
+import optionalAuthentication from '../utils/optionalAuthentication.js'
 import AuthorizedRequest from '../interfaces/authorizedRequest.js'
 import { Post, PostMentionsUserRelation } from '../db.js'
 import { Op } from 'sequelize'
-import getStartScrollParam from '../utils/getStartScrollParam'
+import getStartScrollParam from '../utils/getStartScrollParam.js'
 import { environment } from '../environment.js'
 import getFollowedsIds from '../utils/cacheGetters/getFollowedsIds.js'
-import getNonFollowedLocalUsersIds from '../utils/cacheGetters/getNotFollowedLocalUsersIds'
+import getNonFollowedLocalUsersIds from '../utils/cacheGetters/getNotFollowedLocalUsersIds.js'
 import getBlockedIds from '../utils/cacheGetters/getBlockedIds.js'
-import { getUnjointedPosts } from '../utils/baseQueryNew'
-import { getMutedPosts } from '../utils/cacheGetters/getMutedPosts'
-import { navigationRateLimiter } from '../utils/rateLimiters'
+import { getUnjointedPosts } from '../utils/baseQueryNew.js'
+import { getMutedPosts } from '../utils/cacheGetters/getMutedPosts.js'
+import { navigationRateLimiter } from '../utils/rateLimiters.js'
 
 export default function dashboardRoutes(app: Application) {
   app.get(

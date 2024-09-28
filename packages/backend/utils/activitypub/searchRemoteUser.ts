@@ -1,7 +1,7 @@
 import { FederatedHost } from '../../db.js'
 import { logger } from '../logger.js'
-import { getPetitionSigned } from './getPetitionSigned'
-import { getRemoteActor } from './getRemoteActor'
+import { getPetitionSigned } from './getPetitionSigned.js'
+import { getRemoteActor } from './getRemoteActor.js'
 
 async function searchRemoteUser(searchTerm: string, user: any) {
   const usernameAndDomain = searchTerm.split('@')

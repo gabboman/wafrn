@@ -1,8 +1,8 @@
 import { Follows } from '../../../db.js'
-import { activityPubObject } from '../../../interfaces/fediverse/activityPubObject'
-import { acceptRemoteFollow } from '../acceptRemoteFollow'
-import { getRemoteActor } from '../getRemoteActor'
-import { signAndAccept } from '../signAndAccept'
+import { activityPubObject } from '../../../interfaces/fediverse/activityPubObject.js'
+import { acceptRemoteFollow } from '../acceptRemoteFollow.js'
+import { getRemoteActor } from '../getRemoteActor.js'
+import { signAndAccept } from '../signAndAccept.js'
 
 async function FollowActivity(body: activityPubObject, remoteUser: any, user: any) {
   const apObject: activityPubObject = body

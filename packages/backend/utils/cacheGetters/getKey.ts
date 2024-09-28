@@ -2,7 +2,7 @@ import { Queue } from 'bullmq'
 import { User } from '../../db.js'
 import { getRemoteActor } from '../activitypub/getRemoteActor.js'
 import { redisCache } from '../redis.js'
-import { getUserIdFromRemoteId } from './getUserIdFromRemoteId'
+import { getUserIdFromRemoteId } from './getUserIdFromRemoteId.js'
 import { environment } from '../../environment.js'
 import { logger } from '../logger.js'
 

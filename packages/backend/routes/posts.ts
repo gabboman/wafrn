@@ -13,39 +13,39 @@ import {
   Media,
   Ask
 } from '../db.js'
-import { authenticateToken } from '../utils/authenticateToken'
+import { authenticateToken } from '../utils/authenticateToken.js'
 
 import { sequelize } from '../db.js'
 
-import getStartScrollParam from '../utils/getStartScrollParam'
+import getStartScrollParam from '../utils/getStartScrollParam.js'
 import getPosstGroupDetails from '../utils/getPostGroupDetails.js'
 import { logger } from '../utils/logger.js'
-import { createPostLimiter, navigationRateLimiter } from '../utils/rateLimiters'
+import { createPostLimiter, navigationRateLimiter } from '../utils/rateLimiters.js'
 import { environment } from '../environment.js'
 import { Queue } from 'bullmq'
 import AuthorizedRequest from '../interfaces/authorizedRequest.js'
-import optionalAuthentication from '../utils/optionalAuthentication'
+import optionalAuthentication from '../utils/optionalAuthentication.js'
 import { getPetitionSigned } from '../utils/activitypub/getPetitionSigned.js'
-import { getPostThreadRecursive } from '../utils/activitypub/getPostThreadRecursive'
+import { getPostThreadRecursive } from '../utils/activitypub/getPostThreadRecursive.js'
 import * as htmlparser2 from 'htmlparser2'
-import checkIpBlocked from '../utils/checkIpBlocked'
-import { getUnjointedPosts } from '../utils/baseQueryNew'
-const cheerio = require('cheerio')
+import checkIpBlocked from '../utils/checkIpBlocked.js'
+import { getUnjointedPosts } from '../utils/baseQueryNew.js'
+import * as cheerio from 'cheerio'
 import getFollowedsIds from '../utils/cacheGetters/getFollowedsIds.js'
-import { federatePostHasBeenEdited } from '../utils/activitypub/editPost'
-import { getAvaiableEmojis } from '../utils/getAvaiableEmojis'
+import { federatePostHasBeenEdited } from '../utils/activitypub/editPost.js'
+import { getAvaiableEmojis } from '../utils/getAvaiableEmojis.js'
 import { redisCache } from '../utils/redis.js'
 import { getUserOptions } from '../utils/cacheGetters/getUserOptions.js'
 
-const showdown = require('showdown');
+import showdown from 'showdown'
 const markdownConverter = new showdown.Converter({
   simplifiedAutoLink: true,
   literalMidWordUnderscores: true,
   strikethrough: true,
   simpleLineBreaks: true,
   openLinksInNewWindow: true,
-  emoji: true,
-});
+  emoji: true
+})
 
 const prepareSendPostQueue = new Queue('prepareSendPost', {
   connection: environment.bullmqConnection,
@@ -149,13 +149,13 @@ export default function postsRoutes(app: Application) {
         })
         const users = posts?.descendents?.length
           ? await User.findAll({
-            attributes: ['url', 'avatar', 'name', 'id'],
-            where: {
-              id: {
-                [Op.in]: posts?.descendents.map((elem: any) => elem.userId)
+              attributes: ['url', 'avatar', 'name', 'id'],
+              where: {
+                id: {
+                  [Op.in]: posts?.descendents.map((elem: any) => elem.userId)
+                }
               }
-            }
-          })
+            })
           : []
         res.send({
           posts: posts?.descendents?.length ? posts.descendents : [],
@@ -322,8 +322,8 @@ export default function postsRoutes(app: Application) {
         const content_warning = req.body.content_warning
           ? req.body.content_warning.trim()
           : posterUser?.NSFW
-            ? 'This user has been marked as NSFW and the post has been labeled automatically as NSFW'
-            : ''
+          ? 'This user has been marked as NSFW and the post has been labeled automatically as NSFW'
+          : ''
         const mentionsToAdd: string[] = []
         let mediaToAdd: any[] = []
         const avaiableEmojis = await getAvaiableEmojis()
@@ -630,8 +630,8 @@ export default function postsRoutes(app: Application) {
         const content_warning = req.body.content_warning
           ? req.body.content_warning.trim()
           : posterUser?.NSFW
-            ? 'This user has been marked as NSFW and the post has been labeled automatically as NSFW'
-            : ''
+          ? 'This user has been marked as NSFW and the post has been labeled automatically as NSFW'
+          : ''
         let mentionsToAdd: string[] = []
         let mediaToAdd: any[] = []
         const avaiableEmojis = await getAvaiableEmojis()

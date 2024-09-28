@@ -1,6 +1,6 @@
 import { Application, Response } from 'express'
 import { User, Mutes, FederatedHost, ServerBlock } from '../db.js'
-import { authenticateToken } from '../utils/authenticateToken'
+import { authenticateToken } from '../utils/authenticateToken.js'
 import { logger } from '../utils/logger.js'
 import AuthorizedRequest from '../interfaces/authorizedRequest.js'
 import { redisCache } from '../utils/redis.js'

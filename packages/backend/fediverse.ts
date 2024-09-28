@@ -1,13 +1,13 @@
 import express, { Response } from 'express'
 import cors from 'cors'
-import { activityPubRoutes } from './routes/activitypub/activitypub'
-import { wellKnownRoutes } from './routes/activitypub/well-known'
+import { activityPubRoutes } from './routes/activitypub/activitypub.js'
+import { wellKnownRoutes } from './routes/activitypub/well-known.js'
 import { environment } from './environment.js'
-import overrideContentType from './utils/overrideContentType'
+import overrideContentType from './utils/overrideContentType.js'
 import { logger } from './utils/logger.js'
 import bodyParser from 'body-parser'
 import { SignedRequest } from './interfaces/fediverse/signedRequest.js'
-import checkIpBlocked from './utils/checkIpBlocked'
+import checkIpBlocked from './utils/checkIpBlocked.js'
 
 const PORT = environment.fediPort
 const app = express()

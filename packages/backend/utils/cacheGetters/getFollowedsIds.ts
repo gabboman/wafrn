@@ -1,6 +1,6 @@
 import { Op } from 'sequelize'
 import { Blocks, Follows, User } from '../../db.js'
-import getBlockedIds from './getBlockedIds'
+import getBlockedIds from './getBlockedIds.js'
 import { redisCache } from '../redis.js'
 
 export default async function getFollowedsIds(userId: string, local = false): Promise<string[]> {

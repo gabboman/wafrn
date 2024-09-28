@@ -1,14 +1,13 @@
 import { Application, Response } from 'express'
 import AuthorizedRequest from '../interfaces/authorizedRequest.js'
-import { authenticateToken } from '../utils/authenticateToken'
-import uploadHandler from '../utils/uploads'
+import { authenticateToken } from '../utils/authenticateToken.js'
+import uploadHandler from '../utils/uploads.js'
 import fs from 'fs/promises'
-import parse from 'csv-parse'
 import { environment } from '../environment.js'
 import { Follows, User, sequelize } from '../db.js'
 import { Op } from 'sequelize'
-import { searchRemoteUser } from '../utils/activitypub/searchRemoteUser'
-import { follow } from '../utils/follow'
+import { searchRemoteUser } from '../utils/activitypub/searchRemoteUser.js'
+import { follow } from '../utils/follow.js'
 export default function listRoutes(app: Application) {
   // Recomended users to follow
   app.post(

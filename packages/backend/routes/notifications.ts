@@ -16,14 +16,14 @@ import {
   UserEmojiRelation,
   UserLikesPostRelations
 } from '../db.js'
-import { authenticateToken } from '../utils/authenticateToken'
+import { authenticateToken } from '../utils/authenticateToken.js'
 
 import { environment } from '../environment.js'
 import AuthorizedRequest from '../interfaces/authorizedRequest.js'
-import { getMutedPosts } from '../utils/cacheGetters/getMutedPosts'
+import { getMutedPosts } from '../utils/cacheGetters/getMutedPosts.js'
 import getBlockedIds from '../utils/cacheGetters/getBlockedIds.js'
-import { getMedias } from '../utils/baseQueryNew'
-import { isDatabaseMysql } from '../utils/isDatabaseMysql'
+import { getMedias } from '../utils/baseQueryNew.js'
+import { isDatabaseMysql } from '../utils/isDatabaseMysql.js'
 
 export default function notificationRoutes(app: Application) {
   app.get('/api/v2/notificationsScroll', authenticateToken, async (req: AuthorizedRequest, res: Response) => {
@@ -234,17 +234,17 @@ export default function notificationRoutes(app: Application) {
     const superMutedIds = await getMutedPosts(userId, true)
     const fullyMutedDoNotCountForMentions = superMutedIds.length
       ? (
-        await sequelize.query(
-          isDatabaseMysql()
-            ? `SELECT postsId FROM postsancestors where ancestorId IN ("${superMutedIds}")`
-            : `SELECT "postsId" FROM "postsancestors" where "ancestorId" IN (${superMutedIds.map(
-              (elem) => "'" + elem + "'"
-            )})`,
-          {
-            type: QueryTypes.SELECT
-          }
-        )
-      ).map((elem: any) => elem.postsId)
+          await sequelize.query(
+            isDatabaseMysql()
+              ? `SELECT postsId FROM postsancestors where ancestorId IN ("${superMutedIds}")`
+              : `SELECT "postsId" FROM "postsancestors" where "ancestorId" IN (${superMutedIds.map(
+                  (elem) => "'" + elem + "'"
+                )})`,
+            {
+              type: QueryTypes.SELECT
+            }
+          )
+        ).map((elem: any) => elem.postsId)
       : []
     return await PostMentionsUserRelation.findAll({
       order: [['createdAt', 'DESC']],

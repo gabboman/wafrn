@@ -1,5 +1,5 @@
 import { Application, Response } from 'express'
-import { adminToken, authenticateToken } from '../utils/authenticateToken'
+import { adminToken, authenticateToken } from '../utils/authenticateToken.js'
 import AuthorizedRequest from '../interfaces/authorizedRequest.js'
 import { Queue } from 'bullmq'
 import { environment } from '../environment.js'

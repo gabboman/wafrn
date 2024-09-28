@@ -1,8 +1,8 @@
 import { Follows } from '../../../db.js'
-import { activityPubObject } from '../../../interfaces/fediverse/activityPubObject'
+import { activityPubObject } from '../../../interfaces/fediverse/activityPubObject.js'
 import { redisCache } from '../../redis.js'
-import { getRemoteActor } from '../getRemoteActor'
-import { signAndAccept } from '../signAndAccept'
+import { getRemoteActor } from '../getRemoteActor.js'
+import { signAndAccept } from '../signAndAccept.js'
 
 async function RejectActivity(body: activityPubObject, remoteUser: any, user: any) {
   const apObject: activityPubObject = body

@@ -3,9 +3,8 @@ import crypto from 'crypto'
 import fs from 'fs'
 import axios from 'axios'
 import { logger } from '../utils/logger.js'
-import optimizeMedia from '../utils/optimizeMedia'
+import optimizeMedia from '../utils/optimizeMedia.js'
 import { environment } from '../environment.js'
-const gm = require('gm')
 
 export default function cacheRoutes(app: Application) {
   app.get('/api/cache', async (req: Request, res: Response) => {
