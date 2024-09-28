@@ -1,6 +1,6 @@
-import { Blocks } from '../../../db'
+import { Blocks } from '../../../db.js'
 import { activityPubObject } from '../../../interfaces/fediverse/activityPubObject'
-import { redisCache } from '../../redis'
+import { redisCache } from '../../redis.js'
 import { getPostThreadRecursive } from '../getPostThreadRecursive'
 import { getRemoteActor } from '../getRemoteActor'
 import { signAndAccept } from '../signAndAccept'

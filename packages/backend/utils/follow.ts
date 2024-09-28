@@ -1,9 +1,9 @@
 import { Op } from 'sequelize'
-import { Blocks, Follows, User } from '../db'
-import { logger } from './logger'
+import { Blocks, Follows, User } from '../db.js'
+import { logger } from './logger.js'
 import { Response } from 'express'
-import { remoteFollow } from './activitypub/remoteFollow'
-import { redisCache } from './redis'
+import { remoteFollow } from './activitypub/remoteFollow.js'
+import { redisCache } from './redis.js'
 
 async function follow(followerId: string, followedId: string, petition?: Response): Promise<boolean> {
   let res = false

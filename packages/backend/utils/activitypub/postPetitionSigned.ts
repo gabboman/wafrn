@@ -1,8 +1,8 @@
 import { createHash, createSign } from 'node:crypto'
-import { environment } from '../../environment'
-import { logger } from '../logger'
-import { removeUser } from './removeUser'
-import { User } from '../../db'
+import { environment } from '../../environment.js'
+import { logger } from '../logger.js'
+import { removeUser } from './removeUser.js'
+import { User } from '../../db.js'
 import axios from 'axios'
 
 async function postPetitionSigned(message: object, user: any, target: string): Promise<any> {
@@ -21,15 +21,13 @@ async function postPetitionSigned(message: object, user: any, target: string): P
     const digest = createHash('sha256').update(JSON.stringify(message)).digest('base64')
     const signer = createSign('sha256')
     const sendDate = new Date()
-    const stringToSign = `(request-target): post ${url.pathname}\nhost: ${
-      url.host
-    }\ndate: ${sendDate.toUTCString()}\nalgorithm: rsa-sha256\ndigest: SHA-256=${digest}`
+    const stringToSign = `(request-target): post ${url.pathname}\nhost: ${url.host
+      }\ndate: ${sendDate.toUTCString()}\nalgorithm: rsa-sha256\ndigest: SHA-256=${digest}`
     signer.update(stringToSign)
     signer.end()
     const signature = signer.sign(user.privateKey).toString('base64')
-    const header = `keyId="${
-      environment.frontendUrl
-    }/fediverse/blog/${user.url.toLocaleLowerCase()}#main-key",algorithm="rsa-sha256",headers="(request-target) host date algorithm digest",signature="${signature}"`
+    const header = `keyId="${environment.frontendUrl
+      }/fediverse/blog/${user.url.toLocaleLowerCase()}#main-key",algorithm="rsa-sha256",headers="(request-target) host date algorithm digest",signature="${signature}"`
     const headers = {
       'Content-Type': 'application/activity+json',
       'User-Agent': environment.instanceUrl,

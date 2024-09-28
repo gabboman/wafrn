@@ -1,20 +1,20 @@
 import { Application, Request, Response } from 'express'
-import { User, Follows, Post, Media, UserLikesPostRelations, Emoji, UserEmojiRelation } from '../../db'
-import { getCheckFediverseSignatureFucnction } from '../../utils/activitypub/checkFediverseSignature'
-import { environment } from '../../environment'
-import { return404 } from '../../utils/return404'
+import { User, Follows, Post, Media, UserLikesPostRelations, Emoji, UserEmojiRelation } from '../../db.js'
+import { getCheckFediverseSignatureFucnction } from '../../utils/activitypub/checkFediverseSignature.js'
+import { environment } from '../../environment.js'
+import { return404 } from '../../utils/return404.js'
 import { Queue } from 'bullmq'
-import { getLocalUserId } from '../../utils/cacheGetters/getLocalUserId'
-import { SignedRequest } from '../../interfaces/fediverse/signedRequest'
-import { emojiToAPTag } from '../../utils/activitypub/emojiToAPTag'
-import { getPostReplies } from '../../utils/activitypub/getPostReplies'
-import { redisCache } from '../../utils/redis'
-import { getUserEmojis } from '../../utils/cacheGetters/getUserEmojis'
-import { getFollowedRemoteIds } from '../../utils/cacheGetters/getFollowedRemoteIds'
-import { getFollowerRemoteIds } from '../../utils/cacheGetters/getFollowerRemoteIds'
-import { checkuserAllowsThreads } from '../../utils/checkUserAllowsThreads'
-import { handlePostRequest } from '../../utils/activitypub/handlePostRequest'
-import { getPostSEOCache, getIndexSeo } from '../frontend'
+import { getLocalUserId } from '../../utils/cacheGetters/getLocalUserId.js'
+import { SignedRequest } from '../../interfaces/fediverse/signedRequest.js'
+import { emojiToAPTag } from '../../utils/activitypub/emojiToAPTag.js'
+import { getPostReplies } from '../../utils/activitypub/getPostReplies.js'
+import { redisCache } from '../../utils/redis.js'
+import { getUserEmojis } from '../../utils/cacheGetters/getUserEmojis.js'
+import { getFollowedRemoteIds } from '../../utils/cacheGetters/getFollowedRemoteIds.js'
+import { getFollowerRemoteIds } from '../../utils/cacheGetters/getFollowerRemoteIds.js'
+import { checkuserAllowsThreads } from '../../utils/checkUserAllowsThreads.js'
+import { handlePostRequest } from '../../utils/activitypub/handlePostRequest.js'
+import { getPostSEOCache, getIndexSeo } from '../frontend.js'
 
 // we get the user from the memory cache. if does not exist we try to find it
 async function getLocalUserByUrl(url: string): Promise<any> {
@@ -94,21 +94,21 @@ function activityPubRoutes(app: Application) {
             },
             ...(user.avatar
               ? {
-                  icon: {
-                    type: 'Image',
-                    mediaType: 'image/webp',
-                    url: environment.mediaUrl + user.avatar
-                  }
+                icon: {
+                  type: 'Image',
+                  mediaType: 'image/webp',
+                  url: environment.mediaUrl + user.avatar
                 }
+              }
               : undefined),
             ...(user.headerImage
               ? {
-                  image: {
-                    type: 'Image',
-                    mediaType: 'image/webp',
-                    url: environment.mediaUrl + user.headerImage
-                  }
+                image: {
+                  type: 'Image',
+                  mediaType: 'image/webp',
+                  url: environment.mediaUrl + user.headerImage
                 }
+              }
               : undefined),
             publicKey: {
               id: `${environment.frontendUrl}/fediverse/blog/${user.url.toLowerCase()}#main-key`,
@@ -162,14 +162,12 @@ function activityPubRoutes(app: Application) {
               orderedItems: itemsToSend
             }
             if (page > 1) {
-              response['prev'] = `${environment.frontendUrl}/fediverse/blog/${user.url.toLowerCase()}/following?page=${
-                page - 1
-              }`
+              response['prev'] = `${environment.frontendUrl}/fediverse/blog/${user.url.toLowerCase()}/following?page=${page - 1
+                }`
             }
             if (followedUsers.length > pageSize * page) {
-              response['next'] = `${environment.frontendUrl}/fediverse/blog/${user.url.toLowerCase()}/following?page=${
-                page + 1
-              }`
+              response['next'] = `${environment.frontendUrl}/fediverse/blog/${user.url.toLowerCase()}/following?page=${page + 1
+                }`
             }
           } else {
             response = {
@@ -220,22 +218,19 @@ function activityPubRoutes(app: Application) {
             const itemsToSend = followers.slice((page - 1) * pageSize, page * pageSize)
             response = {
               '@context': 'https://www.w3.org/ns/activitystreams',
-              id: `${environment.frontendUrl}/fediverse/blog/${user.url.toLowerCase()}/followers?page=${
-                req.query.page
-              }`,
+              id: `${environment.frontendUrl}/fediverse/blog/${user.url.toLowerCase()}/followers?page=${req.query.page
+                }`,
               type: 'OrderedCollectionPage',
               orderedItems: itemsToSend,
               totalItems: followersNumber
             }
             if (page > 1) {
-              response['prev'] = `${environment.frontendUrl}/fediverse/blog/${user.url.toLowerCase()}/followers?page=${
-                page - 1
-              }`
+              response['prev'] = `${environment.frontendUrl}/fediverse/blog/${user.url.toLowerCase()}/followers?page=${page - 1
+                }`
             }
             if (followers.length > pageSize * page) {
-              response['next'] = `${environment.frontendUrl}/fediverse/blog/${user.url.toLowerCase()}/followers?page=${
-                page + 1
-              }`
+              response['next'] = `${environment.frontendUrl}/fediverse/blog/${user.url.toLowerCase()}/followers?page=${page + 1
+                }`
             }
           } else {
             response = {

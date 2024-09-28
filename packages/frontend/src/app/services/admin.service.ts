@@ -10,7 +10,7 @@ import { statsReply } from '../interfaces/statsReply';
   providedIn: 'root',
 })
 export class AdminService {
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) { }
 
   async getServers(): Promise<server[]> {
     const response = await firstValueFrom(

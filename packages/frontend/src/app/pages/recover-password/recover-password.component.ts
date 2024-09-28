@@ -26,7 +26,7 @@ export class RecoverPasswordComponent {
   constructor(
     private loginService: LoginService,
     private messageService: MessageService
-  ) {}
+  ) { }
 
   async onSubmit() {
     this.loading = true;

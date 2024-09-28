@@ -1,6 +1,6 @@
 import { Op } from 'sequelize'
-import { User } from '../../db'
-import { wait } from '../wait'
+import { User } from '../../db.js'
+import { wait } from '../wait.js'
 import sendActivationEmail from '../sendActivationEmail'
 
 async function sendMail() {

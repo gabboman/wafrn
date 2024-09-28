@@ -16,7 +16,7 @@ export class ReportService {
   constructor(
     private http: HttpClient, //private messages: MessageService
     private dialogService: MatDialog
-  ) {}
+  ) { }
 
   async reportPost(
     post: ProcessedPost[],

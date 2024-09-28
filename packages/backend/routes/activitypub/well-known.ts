@@ -1,9 +1,11 @@
 import { Application, Request, Response } from 'express'
-import { Post, User, sequelize } from '../../db'
-import { environment } from '../../environment'
-import { return404 } from '../../utils/return404'
 import { Op } from 'sequelize'
-import { getAllLocalUserIds } from '../../utils/cacheGetters/getAllLocalUserIds'
+import sequelize from 'sequelize/lib/sequelize'
+import { User, Post } from '../../db.js'
+import { environment } from '../../environment.js'
+import { getAllLocalUserIds } from '../../utils/cacheGetters/getAllLocalUserIds.js'
+import { return404 } from '../../utils/return404.js'
+
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const Cacher = require('cacher')
 const cacher = new Cacher()

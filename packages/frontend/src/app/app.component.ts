@@ -15,7 +15,7 @@ export class AppComponent implements OnInit {
     private swUpdate: SwUpdate,
     private injector: Injector,
     private loginService: LoginService
-  ) {}
+  ) { }
 
   ngOnInit() {
     // unregister serviceworkers

@@ -1,12 +1,12 @@
 import { Application, Response } from 'express'
 import { adminToken, authenticateToken } from '../utils/authenticateToken'
-import { Blocks, FederatedHost, Post, PostReport, ServerBlock, User, sequelize } from '../db'
-import AuthorizedRequest from '../interfaces/authorizedRequest'
+import { Blocks, FederatedHost, Post, PostReport, ServerBlock, User, sequelize } from '../db.js'
+import AuthorizedRequest from '../interfaces/authorizedRequest.js'
 import { server } from '../interfaces/server'
 import { Op } from 'sequelize'
-import { redisCache } from '../utils/redis'
+import { redisCache } from '../utils/redis.js'
 import sendActivationEmail from '../utils/sendActivationEmail'
-import { environment } from '../environment'
+import { environment } from '../environment.js'
 
 export default function adminRoutes(app: Application) {
   app.get('/api/admin/server-list', authenticateToken, adminToken, async (req: AuthorizedRequest, res: Response) => {

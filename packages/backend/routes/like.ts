@@ -1,11 +1,11 @@
 import { Application, Response } from 'express'
 import { authenticateToken } from '../utils/authenticateToken'
 
-import { Post, User, UserLikesPostRelations } from '../db'
-import { logger } from '../utils/logger'
+import { Post, User, UserLikesPostRelations } from '../db.js'
+import { logger } from '../utils/logger.js'
 import { likePostRemote } from '../utils/activitypub/likePost'
-import AuthorizedRequest from '../interfaces/authorizedRequest'
-import { getUserOptions } from '../utils/cacheGetters/getUserOptions'
+import AuthorizedRequest from '../interfaces/authorizedRequest.js'
+import { getUserOptions } from '../utils/cacheGetters/getUserOptions.js'
 
 export default function likeRoutes(app: Application) {
   app.post('/api/like', authenticateToken, async (req: AuthorizedRequest, res: Response) => {

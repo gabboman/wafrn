@@ -1,11 +1,12 @@
 import { Job, MetricsTime, Worker } from 'bullmq'
-import { environment } from '../environment'
-import { inboxWorker } from './queueProcessors/inbox'
-import { prepareSendRemotePostWorker } from './queueProcessors/prepareSendRemotePost'
-import { sendPostToInboxes } from './queueProcessors/sendPostToInboxes'
-import { getRemoteActorIdProcessor } from './queueProcessors/getRemoteActorIdProcessor'
-import { logger } from './logger'
-import { processRemotePostView } from './queueProcessors/processRemotePostView'
+import { environment } from '../environment.js'
+import { inboxWorker } from './queueProcessors/inbox.js'
+import { prepareSendRemotePostWorker } from './queueProcessors/prepareSendRemotePost.js'
+import { sendPostToInboxes } from './queueProcessors/sendPostToInboxes.js'
+import { getRemoteActorIdProcessor } from './queueProcessors/getRemoteActorIdProcessor.js'
+import { logger } from './logger.js'
+import { processRemotePostView } from './queueProcessors/processRemotePostView.js'
+import { processRemoteMedia } from './queueProcessors/remoteMediaProcessor.js'
 
 logger.info('starting workers')
 const workerInbox = new Worker('inbox', (job: Job) => inboxWorker(job), {
@@ -65,6 +66,19 @@ const workerProcessRemotePostView = new Worker(
   }
 )
 
+const workerProcessRemoteMediaData = new Worker(
+  'processRemoteMediaData',
+  async (job: Job) => await processRemoteMedia(job),
+  {
+    connection: environment.bullmqConnection,
+    metrics: {
+      maxDataPoints: MetricsTime.ONE_WEEK * 2
+    },
+    concurrency: environment.workers.low,
+    lockDuration: 120000
+  }
+)
+
 const workers = [
   workerInbox,
   workerDeletePost,
@@ -72,7 +86,8 @@ const workers = [
   workerPrepareSendPost,
   workerProcessRemotePostView,
   workerSendPostChunk,
-  workerProcessRemotePostView
+  workerProcessRemotePostView,
+  workerProcessRemoteMediaData
 ]
 
 workers.forEach((worker) => {

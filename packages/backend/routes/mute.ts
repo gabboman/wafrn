@@ -1,9 +1,9 @@
 import { Application, Response } from 'express'
-import { User, Mutes } from '../db'
-import { authenticateToken } from '../utils/authenticateToken'
-import { logger } from '../utils/logger'
-import AuthorizedRequest from '../interfaces/authorizedRequest'
-import { redisCache } from '../utils/redis'
+import { User, Mutes } from '../db.js'
+import { authenticateToken } from '../utils/authenticateToken.js'
+import { logger } from '../utils/logger.js'
+import AuthorizedRequest from '../interfaces/authorizedRequest.js'
+import { redisCache } from '../utils/redis.js'
 
 export default function muteRoutes(app: Application) {
   app.post('/api/mute', authenticateToken, async (req: AuthorizedRequest, res: Response) => {

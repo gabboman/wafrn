@@ -1,42 +1,46 @@
 import express, { Response } from 'express'
 import cors from 'cors'
 import bodyParser from 'body-parser'
-import userRoutes from './routes/users'
-import notificationRoutes from './routes/notifications'
-import followsRoutes from './routes/follows'
-import blockRoutes from './routes/blocks'
-import mediaRoutes from './routes/media'
-import postsRoutes from './routes/posts'
-import searchRoutes from './routes/search'
-import deletePost from './routes/deletePost'
-import overrideContentType from './utils/overrideContentType'
-import { environment } from './environment'
-import { frontend } from './routes/frontend'
-import { activityPubRoutes } from './routes/activitypub/activitypub'
-import { wellKnownRoutes } from './routes/activitypub/well-known'
-import cacheRoutes from './routes/remoteCache'
-import likeRoutes from './routes/like'
-import adminRoutes from './routes/admin'
+import { environment } from './environment.example.js'
+import { logger } from './utils/logger.js'
+
+
+import { workerInbox, workerPrepareSendPost, workerGetUser, workerSendPostChunk } from './utils/workers.js'
+
+import { SignedRequest } from './interfaces/fediverse/signedRequest.js'
+import { activityPubRoutes } from './routes/activitypub/activitypub.js'
+import { wellKnownRoutes } from './routes/activitypub/well-known.js'
+import adminRoutes from './routes/admin.js'
+import blockRoutes from './routes/blocks.js'
+import blockUserServerRoutes from './routes/blockUserServer.js'
+import dashboardRoutes from './routes/dashboard.js'
+import deletePost from './routes/deletePost.js'
+import emojiReactRoutes from './routes/emojiReact.js'
+import emojiRoutes from './routes/emojis.js'
+import followsRoutes from './routes/follows.js'
+import forumRoutes from './routes/forum.js'
+import { frontend } from './routes/frontend.js'
+import likeRoutes from './routes/like.js'
+import listRoutes from './routes/lists.js'
+import mediaRoutes from './routes/media.js'
+import muteRoutes from './routes/mute.js'
+import notificationRoutes from './routes/notifications.js'
+import pollRoutes from './routes/polls.js'
+import postsRoutes from './routes/posts.js'
+import cacheRoutes from './routes/remoteCache.js'
+import searchRoutes from './routes/search.js'
+import silencePostRoutes from './routes/silencePost.js'
+import statusRoutes from './routes/status.js'
+import userRoutes from './routes/users.js'
+import checkIpBlocked from './utils/checkIpBlocked.js'
+import overrideContentType from './utils/overrideContentType.js'
 import swagger from 'swagger-ui-express'
-import muteRoutes from './routes/mute'
-import blockUserServerRoutes from './routes/blockUserServer'
-import { workerInbox, workerSendPostChunk, workerPrepareSendPost, workerGetUser } from './utils/workers'
-import { logger } from './utils/logger'
-import listRoutes from './routes/lists'
-import statusRoutes from './routes/status'
-import dashboardRoutes from './routes/dashboard'
-import forumRoutes from './routes/forum'
-import { SignedRequest } from './interfaces/fediverse/signedRequest'
-import silencePostRoutes from './routes/silencePost'
-import emojiRoutes from './routes/emojis'
-import emojiReactRoutes from './routes/emojiReact'
-import pollRoutes from './routes/polls'
-import checkIpBlocked from './utils/checkIpBlocked'
 
 const swaggerJSON = require('./swagger.json')
 // rest of the code remains same
 const app = express()
 const PORT = environment.port
+
 
 app.use(overrideContentType)
 app.use(checkIpBlocked)
@@ -51,6 +55,8 @@ app.use(
 app.use(cors())
 app.set('trust proxy', 1)
 
+
+
 app.use('/api/apidocs', swagger.serve, swagger.setup(swaggerJSON))
 
 app.get('/api/', (req, res) =>
@@ -64,6 +70,7 @@ app.get('/api/', (req, res) =>
 
 // serve static images
 app.use('/api/uploads', express.static('uploads'))
+
 
 userRoutes(app)
 followsRoutes(app)

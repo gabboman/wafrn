@@ -1,8 +1,8 @@
 import { object } from 'underscore'
-import { Follows, User } from '../../db'
-import { environment } from '../../environment'
+import { Follows, User } from '../../db.js'
+import { environment } from '../../environment.js'
 import { activityPubObject } from '../../interfaces/fediverse/activityPubObject'
-import { postPetitionSigned } from './postPetitionSigned'
+import { postPetitionSigned } from './postPetitionSigned.js'
 
 async function rejectremoteFollow(userId: string, remoteUserId: string) {
   const localUser = await User.findByPk(userId)

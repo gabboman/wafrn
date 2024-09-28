@@ -1,10 +1,10 @@
 import { Queue } from 'bullmq'
-import { User } from '../../db'
-import { getRemoteActor } from '../activitypub/getRemoteActor'
-import { redisCache } from '../redis'
+import { User } from '../../db.js'
+import { getRemoteActor } from '../activitypub/getRemoteActor.js'
+import { redisCache } from '../redis.js'
 import { getUserIdFromRemoteId } from './getUserIdFromRemoteId'
-import { environment } from '../../environment'
-import { logger } from '../logger'
+import { environment } from '../../environment.js'
+import { logger } from '../logger.js'
 
 const queue = new Queue('getRemoteActorId', {
   connection: environment.bullmqConnection,

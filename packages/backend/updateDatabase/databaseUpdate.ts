@@ -1,5 +1,5 @@
-import { environment } from '../environment'
-import { logger } from '../utils/logger'
+import { environment } from '../environment.js'
+import { logger } from '../utils/logger.js'
 
 const { Sequelize } = require('sequelize') // sequelize plugins
 require('sequelize-hierarchy-fork')(Sequelize)

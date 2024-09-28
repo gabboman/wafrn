@@ -1,5 +1,5 @@
-import { Emoji, EmojiCollection } from '../../db'
-import { redisCache } from '../redis'
+import { Emoji, EmojiCollection } from '../../db.js'
+import { redisCache } from '../redis.js'
 
 async function getAvaiableEmojisCache(): Promise<Array<string>> {
   let res: string[] = []

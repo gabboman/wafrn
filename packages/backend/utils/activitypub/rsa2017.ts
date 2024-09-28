@@ -1,15 +1,15 @@
 import * as crypto from 'node:crypto'
 const jsonld = require('jsonld')
 import axios from 'axios'
-import { environment } from '../../environment'
-import { logger } from '../logger'
+import { environment } from '../../environment.js'
+import { logger } from '../logger.js'
 
 //import { httpAgent, httpsAgent } from "@/misc/fetch.js";
 
 // RsaSignature2017 based from https://github.com/transmute-industries/RsaSignature2017
 
 export class LdSignature {
-  constructor() {}
+  constructor() { }
 
   public async signRsaSignature2017(
     data: any,

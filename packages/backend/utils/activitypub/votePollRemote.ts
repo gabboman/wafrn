@@ -8,15 +8,15 @@ import {
   QuestionPollQuestion,
   User,
   sequelize
-} from '../../db'
-import { environment } from '../../environment'
+} from '../../db.js'
+import { environment } from '../../environment.js'
 import { activityPubObject } from '../../interfaces/fediverse/activityPubObject'
-import { postPetitionSigned } from './postPetitionSigned'
-import { logger } from '../logger'
+import { postPetitionSigned } from './postPetitionSigned.js'
+import { logger } from '../logger.js'
 import { Queue, QueueEvents } from 'bullmq'
 import _ from 'underscore'
 import { emojiToAPTag } from './emojiToAPTag'
-import { wait } from '../wait'
+import { wait } from '../wait.js'
 import { loadPoll } from './loadPollFromPost'
 import { getPostThreadRecursive } from './getPostThreadRecursive'
 

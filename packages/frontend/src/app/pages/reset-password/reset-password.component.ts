@@ -18,7 +18,7 @@ export class ResetPasswordComponent {
   constructor(
     private loginService: LoginService,
     private activeRoute: ActivatedRoute
-  ) {}
+  ) { }
 
   async resetPassword() {
     this.loading = true;

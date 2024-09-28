@@ -1,5 +1,5 @@
-import { Mutes } from '../../db'
-import { redisCache } from '../redis'
+import { Mutes } from '../../db.js'
+import { redisCache } from '../redis.js'
 
 async function getMutedUsers(userId: string): Promise<Array<string>> {
   let res: string[] = []

@@ -1,13 +1,13 @@
 import { Op, Sequelize } from 'sequelize'
-import { logger } from '../logger'
-import { postPetitionSigned } from '../activitypub/postPetitionSigned'
-import { postToJSONLD } from '../activitypub/postToJSONLD'
-import { LdSignature } from '../activitypub/rsa2017'
-import { FederatedHost, Post, User, PostHostView, RemoteUserPostView, sequelize } from '../../db'
-import { environment } from '../../environment'
+import { logger } from '../logger.js'
+import { postPetitionSigned } from '../activitypub/postPetitionSigned.js'
+import { postToJSONLD } from '../activitypub/postToJSONLD.js'
+import { LdSignature } from '../activitypub/rsa2017.js'
+import { FederatedHost, Post, User, PostHostView, RemoteUserPostView, sequelize } from '../../db.js'
+import { environment } from '../../environment.js'
 import { Job, Queue } from 'bullmq'
 import _ from 'underscore'
-import { wait } from '../wait'
+import { wait } from '../wait.js'
 
 const sendPostQueue = new Queue('sendPostToInboxes', {
   connection: environment.bullmqConnection,

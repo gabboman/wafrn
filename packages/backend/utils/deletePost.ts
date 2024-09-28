@@ -1,5 +1,5 @@
 import { Op } from 'sequelize'
-import { Post, PostMentionsUserRelation, PostTag, Quotes, UserLikesPostRelations } from '../db'
+import { Post, PostMentionsUserRelation, PostTag, Quotes, UserLikesPostRelations } from '../db.js'
 
 async function deletePostCommon(id: string) {
   const postToDelete = await Post.findByPk(id)

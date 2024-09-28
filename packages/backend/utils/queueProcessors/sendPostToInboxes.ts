@@ -1,6 +1,6 @@
 import { Job } from 'bullmq'
-import { logger } from '../logger'
-import { postPetitionSigned } from '../activitypub/postPetitionSigned'
+import { logger } from '../logger.js'
+import { postPetitionSigned } from '../activitypub/postPetitionSigned.js'
 
 async function sendPostToInboxes(job: Job) {
   const inbox: string = job.data.inboxList

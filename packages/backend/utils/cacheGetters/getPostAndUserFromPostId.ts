@@ -1,6 +1,6 @@
 import { Op } from 'sequelize'
-import { Ask, Emoji, EmojiReaction, Media, Post, PostTag, User, UserLikesPostRelations } from '../../db'
-import { redisCache } from '../redis'
+import { Ask, Emoji, EmojiReaction, Media, Post, PostTag, User, UserLikesPostRelations } from '../../db.js'
+import { redisCache } from '../redis.js'
 
 async function getPostAndUserFromPostId(postId: string): Promise<{ found: boolean; data?: any }> {
   const cacheResult = await redisCache.get('postAndUser:' + postId)

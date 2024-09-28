@@ -1,8 +1,8 @@
-import { Blocks, EmojiReaction, Follows, Post, UserLikesPostRelations } from '../../../db'
+import { Blocks, EmojiReaction, Follows, Post, UserLikesPostRelations } from '../../../db.js'
 import { activityPubObject } from '../../../interfaces/fediverse/activityPubObject'
-import { deletePostCommon } from '../../deletePost'
-import { logger } from '../../logger'
-import { redisCache } from '../../redis'
+import { deletePostCommon } from '../../deletePost.js'
+import { logger } from '../../logger.js'
+import { redisCache } from '../../redis.js'
 import { getPostThreadRecursive } from '../getPostThreadRecursive'
 import { signAndAccept } from '../signAndAccept'
 

@@ -9,6 +9,7 @@ import { WafrnMedia } from 'src/app/interfaces/wafrn-media';
 import { MediaService } from 'src/app/services/media.service';
 import { MessageService } from 'src/app/services/message.service';
 import { environment } from 'src/environments/environment';
+import { decode } from 'blurhash';
 
 @Component({
   selector: 'app-wafrn-media',

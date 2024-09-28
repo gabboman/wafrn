@@ -1,6 +1,6 @@
-import { User, sequelize } from '../../db'
-import { environment } from '../../environment'
-import { redisCache } from '../redis'
+import { User, sequelize } from '../../db.js'
+import { environment } from '../../environment.js'
+import { redisCache } from '../redis.js'
 
 async function getLocalUserId(url: string): Promise<string> {
   let res = ''
@@ -23,12 +23,12 @@ async function getLocalUserId(url: string): Promise<string> {
   return res != ''
     ? res
     : (
-        await User.findOne({
-          where: {
-            urlToLower: environment.deletedUser.toLowerCase()
-          }
-        })
-      ).id
+      await User.findOne({
+        where: {
+          urlToLower: environment.deletedUser.toLowerCase()
+        }
+      })
+    ).id
 }
 
 export { getLocalUserId }

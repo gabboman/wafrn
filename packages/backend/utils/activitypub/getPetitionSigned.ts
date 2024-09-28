@@ -1,9 +1,9 @@
 import { createHash, createSign } from 'node:crypto'
-import { environment } from '../../environment'
+import { environment } from '../../environment.js'
 import axios from 'axios'
-import { logger } from '../logger'
-import { User } from '../../db'
-import { removeUser } from './removeUser'
+import { logger } from '../logger.js'
+import { User } from '../../db.js'
+import { removeUser } from './removeUser.js'
 import { Op } from 'sequelize'
 
 async function getPetitionSigned(user: any, target: string): Promise<any> {
@@ -21,18 +21,16 @@ async function getPetitionSigned(user: any, target: string): Promise<any> {
       headers: ['(request-target)', 'host', 'date', 'accept']
     }
     const sendDate = new Date()
-    const stringToSign = `(request-target): get ${url.pathname}\nhost: ${
-      url.host
-    }\ndate: ${sendDate.toUTCString()}\naccept: ${acceptedFormats}`
+    const stringToSign = `(request-target): get ${url.pathname}\nhost: ${url.host
+      }\ndate: ${sendDate.toUTCString()}\naccept: ${acceptedFormats}`
 
     const digest = createHash('sha256').update(stringToSign).digest('base64')
     const signer = createSign('sha256')
     signer.update(stringToSign)
     signer.end()
     const signature = signer.sign(user.privateKey).toString('base64')
-    const header = `keyId="${
-      environment.frontendUrl
-    }/fediverse/blog/${user.url.toLocaleLowerCase()}#main-key",algorithm="rsa-sha256",headers="(request-target) host date accept",signature="${signature}"`
+    const header = `keyId="${environment.frontendUrl
+      }/fediverse/blog/${user.url.toLocaleLowerCase()}#main-key",algorithm="rsa-sha256",headers="(request-target) host date accept",signature="${signature}"`
     const headers = {
       'Content-Type': 'application/activity+json',
       'User-Agent': environment.instanceUrl,

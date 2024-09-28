@@ -12,32 +12,32 @@ import {
   User,
   UserEmojiRelation,
   UserOptions
-} from '../db'
+} from '../db.js'
 import { authenticateToken } from '../utils/authenticateToken'
 
-import generateRandomString from '../utils/generateRandomString'
-import getIp from '../utils/getIP'
+import generateRandomString from '../utils/generateRandomString.js'
+import getIp from '../utils/getIP.js'
 import sendActivationEmail from '../utils/sendActivationEmail'
 import validateEmail from '../utils/validateEmail'
 import bcrypt from 'bcrypt'
 import jwt from 'jsonwebtoken'
-import { sequelize } from '../db'
+import { sequelize } from '../db.js'
 
 import optimizeMedia from '../utils/optimizeMedia'
 import uploadHandler from '../utils/uploads'
 import { generateKeyPairSync } from 'crypto'
-import { environment } from '../environment'
-import { logger } from '../utils/logger'
+import { environment } from '../environment.js'
+import { logger } from '../utils/logger.js'
 import { createAccountLimiter, loginRateLimiter } from '../utils/rateLimiters'
 import fs from 'fs/promises'
-import AuthorizedRequest from '../interfaces/authorizedRequest'
+import AuthorizedRequest from '../interfaces/authorizedRequest.js'
 import optionalAuthentication from '../utils/optionalAuthentication'
 import checkIpBlocked from '../utils/checkIpBlocked'
-import { redisCache } from '../utils/redis'
-import getFollowedsIds from '../utils/cacheGetters/getFollowedsIds'
-import getBlockedIds from '../utils/cacheGetters/getBlockedIds'
+import { redisCache } from '../utils/redis.js'
+import getFollowedsIds from '../utils/cacheGetters/getFollowedsIds.js'
+import getBlockedIds from '../utils/cacheGetters/getBlockedIds.js'
 import { getNotYetAcceptedFollowedids } from '../utils/cacheGetters/getNotYetAcceptedFollowedIds'
-import { getUserOptions } from '../utils/cacheGetters/getUserOptions'
+import { getUserOptions } from '../utils/cacheGetters/getUserOptions.js'
 import { getMutedPosts } from '../utils/cacheGetters/getMutedPosts'
 import { getAvaiableEmojis } from '../utils/getAvaiableEmojis'
 import { getMutedUsers } from '../utils/cacheGetters/getMutedUsers'
@@ -116,9 +116,8 @@ export default function userRoutes(app: Application) {
               : `Welcome to ${environment.instanceUrl}!`
             const mailBody = environment.reviewRegistrations
               ? `Hello ${req.body.url}, at this moment we are manually reviewing registrations. You will recive an email from us once it's accepted`
-              : `<h1>Welcome to ${environment.instanceUrl}</h1> To activate your account <a href="${
-                  environment.instanceUrl
-                }/activate/${encodeURIComponent(req.body.email.toLowerCase())}/${activationCode}">click here!</a>`
+              : `<h1>Welcome to ${environment.instanceUrl}</h1> To activate your account <a href="${environment.instanceUrl
+              }/activate/${encodeURIComponent(req.body.email.toLowerCase())}/${activationCode}">click here!</a>`
             const emailSent = environment.disableRequireSendEmail
               ? true
               : sendActivationEmail(req.body.email.toLowerCase(), activationCode, mailHeader, mailBody)
@@ -537,19 +536,19 @@ export default function userRoutes(app: Application) {
       let followed = blog.url.startsWith('@')
         ? blog.followingCount
         : Follows.count({
-            where: {
-              followerId: blog.id,
-              accepted: true
-            }
-          })
+          where: {
+            followerId: blog.id,
+            accepted: true
+          }
+        })
       let followers = blog.url.startsWith('@')
         ? blog.followerCount
         : Follows.count({
-            where: {
-              followedId: blog.id,
-              accepted: true
-            }
-          })
+          where: {
+            followedId: blog.id,
+            accepted: true
+          }
+        })
       const publicOptions = UserOptions.findAll({
         where: {
           userId: blog.id,

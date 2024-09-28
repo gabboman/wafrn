@@ -1,4 +1,4 @@
-import { Follows } from '../../../db'
+import { Follows } from '../../../db.js'
 import { activityPubObject } from '../../../interfaces/fediverse/activityPubObject'
 import { acceptRemoteFollow } from '../acceptRemoteFollow'
 import { getRemoteActor } from '../getRemoteActor'

@@ -1,9 +1,9 @@
 import { Application, Response } from 'express'
-import { User, Mutes, FederatedHost, ServerBlock } from '../db'
+import { User, Mutes, FederatedHost, ServerBlock } from '../db.js'
 import { authenticateToken } from '../utils/authenticateToken'
-import { logger } from '../utils/logger'
-import AuthorizedRequest from '../interfaces/authorizedRequest'
-import { redisCache } from '../utils/redis'
+import { logger } from '../utils/logger.js'
+import AuthorizedRequest from '../interfaces/authorizedRequest.js'
+import { redisCache } from '../utils/redis.js'
 
 export default function blockUserServerRoutes(app: Application) {
   app.post('/api/blockUserServer', authenticateToken, async (req: AuthorizedRequest, res: Response) => {

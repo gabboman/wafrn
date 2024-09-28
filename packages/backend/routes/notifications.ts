@@ -15,13 +15,13 @@ import {
   User,
   UserEmojiRelation,
   UserLikesPostRelations
-} from '../db'
+} from '../db.js'
 import { authenticateToken } from '../utils/authenticateToken'
 
-import { environment } from '../environment'
-import AuthorizedRequest from '../interfaces/authorizedRequest'
+import { environment } from '../environment.js'
+import AuthorizedRequest from '../interfaces/authorizedRequest.js'
 import { getMutedPosts } from '../utils/cacheGetters/getMutedPosts'
-import getBlockedIds from '../utils/cacheGetters/getBlockedIds'
+import getBlockedIds from '../utils/cacheGetters/getBlockedIds.js'
 import { getMedias } from '../utils/baseQueryNew'
 import { isDatabaseMysql } from '../utils/isDatabaseMysql'
 

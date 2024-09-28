@@ -60,7 +60,7 @@ export function app(): express.Express {
 
   // non ssr routes
   server.get('*', (req, res) => {
-  //server.get(['/dashboard/', '/dashboard/explore', '/dashboard/exploreLocal', '/', '/register', '/recoverPassword'], (req, res) => {
+    //server.get(['/dashboard/', '/dashboard/explore', '/dashboard/exploreLocal', '/', '/register', '/recoverPassword'], (req, res) => {
     res.sendFile(`${distFolder}/index.html`);
   });
 
@@ -73,21 +73,21 @@ export function app(): express.Express {
       next();
     }
   },
-  (req, res) => {
-    // if it has not been cached, we render it and we add it to cache
-    res.render(
+    (req, res) => {
+      // if it has not been cached, we render it and we add it to cache
+      res.render(
         indexHtml,
         {
-            req,
-            providers: [{ provide: APP_BASE_HREF, useValue: req.baseUrl }],
+          req,
+          providers: [{ provide: APP_BASE_HREF, useValue: req.baseUrl }],
         },
         (err: Error, html: string) => {
-            // Cache the rendered `html` for this request url to use for subsequent requests. No time limit on cache
-            cache.put(req.url, html);
-            res.send(html);
+          // Cache the rendered `html` for this request url to use for subsequent requests. No time limit on cache
+          cache.put(req.url, html);
+          res.send(html);
         },
-    );
-},
+      );
+    },
   );
 
   return server;

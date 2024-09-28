@@ -1,12 +1,12 @@
 import { Op } from 'sequelize'
-import { Media, Post, PostTag, User } from '../../db'
-import { environment } from '../../environment'
-import { fediverseTag } from '../../interfaces/fediverse/tags'
+import { Media, Post, PostTag, User } from '../../db.js'
+import { environment } from '../../environment.js'
+import { fediverseTag } from '../../interfaces/fediverse/tags.js'
 import { activityPubObject } from '../../interfaces/fediverse/activityPubObject'
 import { emojiToAPTag } from './emojiToAPTag'
 import { getPostReplies } from './getPostReplies'
 import { getPostAndUserFromPostId } from '../cacheGetters/getPostAndUserFromPostId'
-import { logger } from '../logger'
+import { logger } from '../logger.js'
 
 async function postToJSONLD(postId: string) {
   const cacheData = await getPostAndUserFromPostId(postId)

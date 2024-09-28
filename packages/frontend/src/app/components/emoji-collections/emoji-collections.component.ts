@@ -62,7 +62,7 @@ export class EmojiCollectionsComponent implements OnDestroy {
   }
 
   getEmojiCollectionFiltered(collection: EmojiCollection, query: string): Emoji[] {
-    return collection.emojis.filter(elem => elem.name.toLowerCase().includes(query.toLowerCase())).slice(0,50)
+    return collection.emojis.filter(elem => elem.name.toLowerCase().includes(query.toLowerCase())).slice(0, 50)
 
   }
 }

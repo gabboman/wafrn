@@ -1,5 +1,5 @@
-import { SignedRequest } from '../interfaces/fediverse/signedRequest'
-import { getUserOptions } from './cacheGetters/getUserOptions'
+import { SignedRequest } from '../interfaces/fediverse/signedRequest.js'
+import { getUserOptions } from './cacheGetters/getUserOptions.js'
 
 async function checkuserAllowsThreads(req: SignedRequest, user: any) {
   if (req.fediData && req.fediData.fediHost && req.fediData.fediHost.includes('threads.net')) {

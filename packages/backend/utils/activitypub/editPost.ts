@@ -1,8 +1,8 @@
 import { Op } from 'sequelize'
-import { FederatedHost, User } from '../../db'
-import { environment } from '../../environment'
-import { postToJSONLD } from './postToJSONLD'
-import { LdSignature } from './rsa2017'
+import { FederatedHost, User } from '../../db.js'
+import { environment } from '../../environment.js'
+import { postToJSONLD } from './postToJSONLD.js'
+import { LdSignature } from './rsa2017.js'
 import _ from 'underscore'
 import { Queue } from 'bullmq'
 
@@ -111,29 +111,29 @@ async function federatePostHasBeenEdited(postToEdit: any) {
     postToEdit.privacy === 10
       ? []
       : FederatedHost.findAll({
-          where: {
-            publicInbox: { [Op.ne]: null },
-            blocked: false
-          }
-        })
+        where: {
+          publicInbox: { [Op.ne]: null },
+          blocked: false
+        }
+      })
   let usersToSendThePost =
     postToEdit.privacy === 10
       ? []
       : FederatedHost.findAll({
-          where: {
-            publicInbox: { [Op.eq]: null },
-            blocked: false
-          },
-          include: [
-            {
-              model: User,
-              attributes: ['remoteInbox'],
-              where: {
-                banned: false
-              }
+        where: {
+          publicInbox: { [Op.eq]: null },
+          blocked: false
+        },
+        include: [
+          {
+            model: User,
+            attributes: ['remoteInbox'],
+            where: {
+              banned: false
             }
-          ]
-        })
+          }
+        ]
+      })
   let mentionedUsers = User.findAll({
     attributes: ['remoteInbox'],
     where: {

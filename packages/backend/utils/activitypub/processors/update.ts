@@ -1,6 +1,6 @@
-import { Post } from '../../../db'
+import { Post } from '../../../db.js'
 import { activityPubObject } from '../../../interfaces/fediverse/activityPubObject'
-import { logger } from '../../logger'
+import { logger } from '../../logger.js'
 import { getPostThreadRecursive } from '../getPostThreadRecursive'
 import { getRemoteActor } from '../getRemoteActor'
 import { signAndAccept } from '../signAndAccept'

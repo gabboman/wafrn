@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from 'express'
-import { environment } from '../environment'
-import getIp from './getIP'
+import { environment } from '../environment.js'
+import getIp from './getIP.js'
 
 export default function checkIpBlocked(req: Request, res: Response, next: NextFunction) {
   const petitionIp = getIp(req)

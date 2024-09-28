@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from 'express'
-import { logger } from './logger'
+import { logger } from './logger.js'
 
 export default function overrideContentType(req: Request, res: Response, next: NextFunction) {
   const UrlPath = req.path

@@ -36,7 +36,7 @@ import { UtilsService } from 'src/app/services/utils.service';
   templateUrl: './post-actions.component.html',
   styleUrl: './post-actions.component.scss',
 })
-export class PostActionsComponent implements OnChanges{
+export class PostActionsComponent implements OnChanges {
   @Input() content!: ProcessedPost;
   userLoggedIn = false;
   myId: string = 'user-00000000-0000-0000-0000-000000000000 ';

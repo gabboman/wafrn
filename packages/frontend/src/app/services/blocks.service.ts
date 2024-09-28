@@ -10,7 +10,7 @@ export class BlocksService {
   baseMediaUrl = environment.baseMediaUrl;
   baseCacheUrl = environment.externalCacheurl;
 
-  constructor(private http: HttpClient, private messages: MessageService) {}
+  constructor(private http: HttpClient, private messages: MessageService) { }
 
   async blockUser(id: string): Promise<boolean> {
     let success = false;
@@ -43,8 +43,8 @@ export class BlocksService {
         avatar: userBlocked[key].url.startsWith('@')
           ? this.baseCacheUrl + encodeURIComponent(userBlocked[key].avatar)
           : this.baseCacheUrl +
-            encodeURIComponent(this.baseMediaUrl + userBlocked[key].avatar),
-        url: userBlocked[key].url ,
+          encodeURIComponent(this.baseMediaUrl + userBlocked[key].avatar),
+        url: userBlocked[key].url,
         reason: userBlocked.reason,
         id: userBlocked[key].id,
       };

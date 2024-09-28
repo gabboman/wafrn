@@ -1,17 +1,17 @@
 import { Job, Queue, QueueEvents } from 'bullmq'
-import { User } from '../../db'
-import { environment } from '../../environment'
+import { User } from '../../db.js'
+import { environment } from '../../environment.js'
 
-import { logger } from '../logger'
-import { getUserIdFromRemoteId } from '../cacheGetters/getUserIdFromRemoteId'
+import { logger } from '../logger.js'
+import { getUserIdFromRemoteId } from '../cacheGetters/getUserIdFromRemoteId.js'
 
 const deletedUser = environment.forceSync
   ? undefined
   : User.findOne({
-      where: {
-        url: environment.deletedUser
-      }
-    })
+    where: {
+      url: environment.deletedUser
+    }
+  })
 const queue = new Queue('getRemoteActorId', {
   connection: environment.bullmqConnection,
   defaultJobOptions: {

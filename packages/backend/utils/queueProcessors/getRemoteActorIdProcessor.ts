@@ -11,15 +11,15 @@ import {
   UserLikesPostRelations,
   UserOptions,
   sequelize
-} from '../../db'
-import { environment } from '../../environment'
-import { getUserIdFromRemoteId } from '../cacheGetters/getUserIdFromRemoteId'
-import { getFederatedHostIdFromUrl } from '../cacheGetters/getHostIdFromUrl'
-import { getPetitionSigned } from '../activitypub/getPetitionSigned'
-import { processUserEmojis } from '../activitypub/processUserEmojis'
-import { fediverseTag } from '../../interfaces/fediverse/tags'
-import { logger } from '../logger'
-import { redisCache } from '../redis'
+} from '../../db.js'
+import { environment } from '../../environment.js'
+import { getUserIdFromRemoteId } from '../cacheGetters/getUserIdFromRemoteId.js'
+import { getFederatedHostIdFromUrl } from '../cacheGetters/getHostIdFromUrl.js'
+import { getPetitionSigned } from '../activitypub/getPetitionSigned.js'
+import { processUserEmojis } from '../activitypub/processUserEmojis.js'
+import { fediverseTag } from '../../interfaces/fediverse/tags.js'
+import { logger } from '../logger.js'
+import { redisCache } from '../redis.js'
 import { Op } from 'sequelize'
 
 // This function will return userid after processing it.

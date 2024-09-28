@@ -1,8 +1,8 @@
-import { sequelize, User } from '../db'
-import { environment } from '../environment'
-import { logger } from '../utils/logger'
+import { sequelize, User } from '../db.js'
+import { environment } from '../environment.js'
+import { logger } from '../utils/logger.js'
 import { Op } from 'sequelize'
-import optimizeMedia from '../utils/optimizeMedia'
+import optimizeMedia from '../utils/optimizeMedia.js'
 
 sequelize
   .sync({

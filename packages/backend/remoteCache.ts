@@ -1,7 +1,7 @@
 import express, { Response } from 'express'
 import cors from 'cors'
-import { environment } from './environment'
-import { logger } from './utils/logger'
+import { environment } from './environment.js'
+import { logger } from './utils/logger.js'
 import cacheRoutes from './routes/remoteCache'
 import checkIpBlocked from './utils/checkIpBlocked'
 

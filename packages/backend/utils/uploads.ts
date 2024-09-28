@@ -1,6 +1,6 @@
 import multer from 'multer'
-import generateRandomString from './generateRandomString'
-import { environment } from '../environment'
+import generateRandomString from './generateRandomString.js'
+import { environment } from '../environment.js'
 
 const imageStorage = multer.diskStorage({
   // Destination to store image

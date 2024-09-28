@@ -1,9 +1,9 @@
-import { Blocks, Post } from '../../../db'
+import { Blocks, Post } from '../../../db.js'
 import { activityPubObject } from '../../../interfaces/fediverse/activityPubObject'
-import { deletePostCommon } from '../../deletePost'
-import { logger } from '../../logger'
-import { redisCache } from '../../redis'
-import { removeUser } from '../removeUser'
+import { deletePostCommon } from '../../deletePost.js'
+import { logger } from '../../logger.js'
+import { redisCache } from '../../redis.js'
+import { removeUser } from '../removeUser.js'
 import { signAndAccept } from '../signAndAccept'
 
 async function DeleteActivity(body: activityPubObject, remoteUser: any, user: any) {

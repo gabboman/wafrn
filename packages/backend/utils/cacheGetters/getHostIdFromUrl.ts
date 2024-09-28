@@ -1,5 +1,5 @@
-import { FederatedHost, sequelize } from '../../db'
-import { redisCache } from '../redis'
+import { FederatedHost, sequelize } from '../../db.js'
+import { redisCache } from '../redis.js'
 
 async function getFederatedHostIdFromUrl(hostname: string): Promise<string> {
   let res = ''

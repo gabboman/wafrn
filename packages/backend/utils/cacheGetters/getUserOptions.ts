@@ -1,5 +1,5 @@
-import { UserOptions } from '../../db'
-import { redisCache } from '../redis'
+import { UserOptions } from '../../db.js'
+import { redisCache } from '../redis.js'
 
 async function getUserOptions(userId: string): Promise<Array<{ optionName: string; optionValue: string }>> {
   const cacheReply = await redisCache.get('userOptions:' + userId)

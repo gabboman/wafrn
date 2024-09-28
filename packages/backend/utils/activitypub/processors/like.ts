@@ -1,6 +1,6 @@
-import { Emoji, EmojiReaction, UserLikesPostRelations } from '../../../db'
+import { Emoji, EmojiReaction, UserLikesPostRelations } from '../../../db.js'
 import { activityPubObject } from '../../../interfaces/fediverse/activityPubObject'
-import { logger } from '../../logger'
+import { logger } from '../../logger.js'
 import { getPostThreadRecursive } from '../getPostThreadRecursive'
 import { signAndAccept } from '../signAndAccept'
 
@@ -18,22 +18,22 @@ async function LikeActivity(body: activityPubObject, remoteUser: any, user: any)
       const reaction = existingReaction
         ? existingReaction
         : await EmojiReaction.create({
-            remoteId: apObject.id,
-            content: apObject.content,
-            userId: remoteUser.id,
-            postId: postToBeLiked.id
-          })
+          remoteId: apObject.id,
+          content: apObject.content,
+          userId: remoteUser.id,
+          postId: postToBeLiked.id
+        })
       if (apObject.tag) {
         const emojiRemote = apObject.tag[0]
         const existingEmoji = await Emoji.findByPk(emojiRemote.id)
         const emojiToAdd = existingEmoji
           ? existingEmoji
           : await Emoji.create({
-              id: emojiRemote.id,
-              name: emojiRemote.name,
-              url: emojiRemote.icon?.url,
-              external: true
-            })
+            id: emojiRemote.id,
+            name: emojiRemote.name,
+            url: emojiRemote.icon?.url,
+            external: true
+          })
         reaction.emojiId = emojiToAdd.id
         await reaction.save()
       }

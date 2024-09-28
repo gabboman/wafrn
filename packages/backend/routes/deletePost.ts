@@ -9,18 +9,18 @@ import {
   RemoteUserPostView,
   User,
   UserLikesPostRelations
-} from '../db'
+} from '../db.js'
 import { authenticateToken } from '../utils/authenticateToken'
 import { Op, Sequelize } from 'sequelize'
-import { logger } from '../utils/logger'
+import { logger } from '../utils/logger.js'
 import { Queue } from 'bullmq'
-import { environment } from '../environment'
+import { environment } from '../environment.js'
 import { activityPubObject } from '../interfaces/fediverse/activityPubObject'
 import _ from 'underscore'
-import AuthorizedRequest from '../interfaces/authorizedRequest'
-import { LdSignature } from '../utils/activitypub/rsa2017'
-import { deletePostCommon } from '../utils/deletePost'
-import { redisCache } from '../utils/redis'
+import AuthorizedRequest from '../interfaces/authorizedRequest.js'
+import { LdSignature } from '../utils/activitypub/rsa2017.js'
+import { deletePostCommon } from '../utils/deletePost.js'
+import { redisCache } from '../utils/redis.js'
 
 const deletePostQueue = new Queue('deletePostQueue', {
   connection: environment.bullmqConnection,
@@ -36,7 +36,7 @@ const deletePostQueue = new Queue('deletePostQueue', {
 })
 
 export default function deletePost(app: Application) {
-  app.delete('/api/deletePost', authenticateToken, async (req: AuthorizedRequest, res: Response) => {
+  app.delete('/api/deletePost.js', authenticateToken, async (req: AuthorizedRequest, res: Response) => {
     let success = false
     try {
       const id = req.query.id as string

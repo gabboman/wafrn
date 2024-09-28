@@ -1,4 +1,4 @@
-import { Emoji, EmojiReaction } from '../../../db'
+import { Emoji, EmojiReaction } from '../../../db.js'
 import { activityPubObject } from '../../../interfaces/fediverse/activityPubObject'
 import { getPostThreadRecursive } from '../getPostThreadRecursive'
 import { signAndAccept } from '../signAndAccept'
@@ -13,11 +13,11 @@ async function EmojiReactActivity(body: activityPubObject, remoteUser: any, user
     emojiToAdd = existingEmoji
       ? existingEmoji
       : await Emoji.create({
-          id: emojiRemote.id,
-          name: emojiRemote.name,
-          url: emojiRemote.icon?.url,
-          external: true
-        })
+        id: emojiRemote.id,
+        name: emojiRemote.name,
+        url: emojiRemote.icon?.url,
+        external: true
+      })
   }
   if (postToReact && apObject.content) {
     const existing = await EmojiReaction.findOne({

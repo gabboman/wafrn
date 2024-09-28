@@ -1,14 +1,28 @@
 /* eslint-disable max-len */
 import { Application, Response } from 'express'
-import { Media } from '../db'
+import { Media } from '../db.js'
 import uploadHandler from '../utils/uploads'
 import { authenticateToken } from '../utils/authenticateToken'
 
-import getIp from '../utils/getIP'
+import getIp from '../utils/getIP.js'
 import optimizeMedia from '../utils/optimizeMedia'
-import { environment } from '../environment'
-import { logger } from '../utils/logger'
-import AuthorizedRequest from '../interfaces/authorizedRequest'
+import { environment } from '../environment.js'
+import { logger } from '../utils/logger.js'
+import AuthorizedRequest from '../interfaces/authorizedRequest.js'
+import { Queue } from 'bullmq'
+
+const updateMediaDataQueue = new Queue('processRemoteMediaData', {
+  connection: environment.bullmqConnection,
+  defaultJobOptions: {
+    removeOnComplete: true,
+    attempts: 3,
+    backoff: {
+      type: 'exponential',
+      delay: 1000
+    },
+    removeOnFail: 25000
+  }
+})
 
 export default function mediaRoutes(app: Application) {
   app.post(
@@ -48,6 +62,15 @@ export default function mediaRoutes(app: Application) {
         }
 
         result = await Promise.all(picturesPromise)
+        const medias = await Promise.all(picturesPromise)
+        await updateMediaDataQueue.addBulk(
+          medias.map((media: any) => {
+            return {
+              name: `getMediaData${media.id}`,
+              data: { mediaId: media.id }
+            }
+          })
+        )
       }
 
       res.send(result)

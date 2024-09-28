@@ -1,11 +1,11 @@
 import { generateKeyPairSync } from 'crypto'
 import bcrypt from 'bcrypt'
-import { environment } from './environment'
-import { logger } from './utils/logger'
+import { environment } from './environment.js'
+import { logger } from './utils/logger.js'
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const { Sequelize } = require('sequelize')
 import { Model, InferAttributes, InferCreationAttributes, DataTypes } from 'sequelize'
-import { redisCache } from './utils/redis'
+import { redisCache } from './utils/redis.js'
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 require('sequelize-hierarchy-fork')(Sequelize)

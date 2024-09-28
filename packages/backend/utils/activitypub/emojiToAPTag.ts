@@ -1,5 +1,5 @@
-import { environment } from '../../environment'
-import { fediverseTag } from '../../interfaces/fediverse/tags'
+import { environment } from '../../environment.js'
+import { fediverseTag } from '../../interfaces/fediverse/tags.js'
 
 function emojiToAPTag(emoji: any): fediverseTag {
   return {

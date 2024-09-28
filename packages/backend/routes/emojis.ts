@@ -1,14 +1,14 @@
 import { Application, Response } from 'express'
 import { adminToken, authenticateToken } from '../utils/authenticateToken'
-import AuthorizedRequest from '../interfaces/authorizedRequest'
+import AuthorizedRequest from '../interfaces/authorizedRequest.js'
 import uploadHandler from '../utils/uploads'
 import multer from 'multer'
 import * as fs from 'fs-extra'
 import { Extract } from 'unzip-stream'
-import { Emoji, EmojiCollection } from '../db'
-import { logger } from '../utils/logger'
-import { wait } from '../utils/wait'
-import { redisCache } from '../utils/redis'
+import { Emoji, EmojiCollection } from '../db.js'
+import { logger } from '../utils/logger.js'
+import { wait } from '../utils/wait.js'
+import { redisCache } from '../utils/redis.js'
 const emojiStorage = multer.diskStorage({
   destination: '/tmp/',
   filename: (req, file, cb) => {

@@ -1,6 +1,6 @@
-import { environment } from '../../environment'
+import { environment } from '../../environment.js'
 import { activityPubObject } from '../../interfaces/fediverse/activityPubObject'
-import { postPetitionSigned } from './postPetitionSigned'
+import { postPetitionSigned } from './postPetitionSigned.js'
 
 async function signAndAccept(req: any, remoteUser: any, user: any) {
   const acceptMessage: activityPubObject = {

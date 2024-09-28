@@ -7,10 +7,10 @@ import {
   QuestionPollAnswer,
   User,
   UserEmojiRelation
-} from '../../db'
-import { environment } from '../../environment'
-import { logger } from '../logger'
-import { redisCache } from '../redis'
+} from '../../db.js'
+import { environment } from '../../environment.js'
+import { logger } from '../logger.js'
+import { redisCache } from '../redis.js'
 
 async function removeUser(userId: string) {
   let deleted = false

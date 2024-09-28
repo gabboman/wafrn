@@ -1,25 +1,25 @@
 import { Request, Response, NextFunction } from 'express'
-import { FederatedHost, User, sequelize } from '../../db'
-import { environment } from '../../environment'
-import { logger } from '../logger'
+import { FederatedHost, User, sequelize } from '../../db.js'
+import { environment } from '../../environment.js'
+import { logger } from '../logger.js'
 import crypto from 'crypto'
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const httpSignature = require('@peertube/http-signature')
 import Redis from 'ioredis'
 import { Op } from 'sequelize'
 import { createHash } from 'node:crypto'
-import { redisCache } from '../redis'
+import { redisCache } from '../redis.js'
 import { getKey } from '../cacheGetters/getKey'
-import { SignedRequest } from '../../interfaces/fediverse/signedRequest'
+import { SignedRequest } from '../../interfaces/fediverse/signedRequest.js'
 import { getRemoteActor } from './getRemoteActor'
-import { LdSignature } from './rsa2017'
+import { LdSignature } from './rsa2017.js'
 const adminUser = environment.forceSync
   ? null
   : User.findOne({
-      where: {
-        url: environment.adminUser
-      }
-    })
+    where: {
+      url: environment.adminUser
+    }
+  })
 
 function getCheckFediverseSignatureFucnction(force = false) {
   return async function checkFediverseSignature(req: SignedRequest, res: Response, next: NextFunction) {

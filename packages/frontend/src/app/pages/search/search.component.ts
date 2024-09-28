@@ -58,11 +58,11 @@ export class SearchComponent implements OnInit, OnDestroy {
       .subscribe(() => {
         this.ngOnInit();
       });
-      this.updateFollowersSubscription = this.postService.updateFollowers.subscribe(() => {
-        this.followedUsers = this.postService.followedUserIds;
-        this.notYetAcceptedFollows =
-          this.postService.notYetAcceptedFollowedUsersIds;
-      });
+    this.updateFollowersSubscription = this.postService.updateFollowers.subscribe(() => {
+      this.followedUsers = this.postService.followedUserIds;
+      this.notYetAcceptedFollows =
+        this.postService.notYetAcceptedFollowedUsersIds;
+    });
   }
   ngOnDestroy(): void {
     this.navigationSubscription.unsubscribe();

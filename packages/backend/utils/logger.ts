@@ -1,4 +1,4 @@
-import { environment } from '../environment'
+import { environment } from '../environment.js'
 
 const pino = require('pino')
 const transport = pino.transport(environment.pinoTransportOptions)

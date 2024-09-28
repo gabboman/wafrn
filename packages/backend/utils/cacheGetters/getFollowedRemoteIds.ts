@@ -1,8 +1,8 @@
 import { Op } from 'sequelize'
-import { Follows, User } from '../../db'
-import { redisCache } from '../redis'
-import getFollowedsIds from './getFollowedsIds'
-import { environment } from '../../environment'
+import { Follows, User } from '../../db.js'
+import { redisCache } from '../redis.js'
+import getFollowedsIds from './getFollowedsIds.js'
+import { environment } from '../../environment.js'
 
 async function getFollowedRemoteIds(id: string) {
   const cacheResult = await redisCache.get('remoteFollowed:' + id)

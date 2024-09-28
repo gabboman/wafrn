@@ -1,7 +1,7 @@
 import { Application, Response } from 'express'
-import AuthorizedRequest from '../interfaces/authorizedRequest'
+import AuthorizedRequest from '../interfaces/authorizedRequest.js'
 import { authenticateToken } from '../utils/authenticateToken'
-import { Post, QuestionPoll, QuestionPollAnswer, QuestionPollQuestion, User } from '../db'
+import { Post, QuestionPoll, QuestionPollAnswer, QuestionPollQuestion, User } from '../db.js'
 import { Op } from 'sequelize'
 import { voteInPoll } from '../utils/activitypub/votePollRemote'
 export default function pollRoutes(app: Application) {

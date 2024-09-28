@@ -2,9 +2,9 @@ import express, { Application, Express, Request, Response } from 'express'
 import crypto from 'crypto'
 import fs from 'fs'
 import axios from 'axios'
-import { logger } from '../utils/logger'
+import { logger } from '../utils/logger.js'
 import optimizeMedia from '../utils/optimizeMedia'
-import { environment } from '../environment'
+import { environment } from '../environment.js'
 const gm = require('gm')
 
 export default function cacheRoutes(app: Application) {

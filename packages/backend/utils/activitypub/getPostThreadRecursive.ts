@@ -11,12 +11,12 @@ import {
   User,
   sequelize,
   Ask
-} from '../../db'
-import { environment } from '../../environment'
-import { logger } from '../logger'
+} from '../../db.js'
+import { environment } from '../../environment.js'
+import { logger } from '../logger.js'
 import { getRemoteActor } from './getRemoteActor'
 import { getPetitionSigned } from './getPetitionSigned'
-import { fediverseTag } from '../../interfaces/fediverse/tags'
+import { fediverseTag } from '../../interfaces/fediverse/tags.js'
 import { loadPoll } from './loadPollFromPost'
 import { getApObjectPrivacy } from './getPrivacy'
 import * as DOMPurify from 'isomorphic-dompurify'

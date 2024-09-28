@@ -11,6 +11,7 @@
     "backend:worker": "cd packages/backend && ts-node utils/workers.ts",
     "backend:serve": "cd packages/backend && ts-node index.ts",
     "frontend:serve": "cd packages/frontend && ng serve",
+    "frontend:develop": "cd packages/frontend && ng serve --configuration development",
     "frontend:build": "cd packages/frontend && ng build",
     "frontend:deploy": "cd packages/frontend && ng build && rm -rf ../../frontend && mv dist/wafrn/browser ../../frontend",
     "vercel-build": "cd packages/frontend && ng build  --configuration=vercel",

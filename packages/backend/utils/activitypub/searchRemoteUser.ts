@@ -1,5 +1,5 @@
-import { FederatedHost } from '../../db'
-import { logger } from '../logger'
+import { FederatedHost } from '../../db.js'
+import { logger } from '../logger.js'
 import { getPetitionSigned } from './getPetitionSigned'
 import { getRemoteActor } from './getRemoteActor'
 

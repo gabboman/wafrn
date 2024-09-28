@@ -29,9 +29,9 @@ export class LoginComponent implements OnInit {
     private loginService: LoginService,
     private messages: MessageService,
     private router: Router
-  ) {}
+  ) { }
 
-  ngOnInit(): void {}
+  ngOnInit(): void { }
 
   async onSubmit() {
     this.loading = true;

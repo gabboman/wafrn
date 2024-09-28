@@ -1,6 +1,6 @@
 import axios from 'axios'
-import { environment } from '../environment'
-import { FederatedHost, User, sequelize } from '../db'
+import { environment } from '../environment.js'
+import { FederatedHost, User, sequelize } from '../db.js'
 //const { csv } = require("csv-parse");
 
 async function blockHosts() {
@@ -8,10 +8,10 @@ async function blockHosts() {
   const deletedUser = environment.forceSync
     ? undefined
     : await User.findOne({
-        where: {
-          url: environment.deletedUser
-        }
-      })
+      where: {
+        url: environment.deletedUser
+      }
+    })
   const remoteData = await axios.get(environment.blocklistUrl)
   console.log('remote data obtained')
   const hostLines: string[] = remoteData.data.split('\n')

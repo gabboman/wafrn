@@ -1,6 +1,6 @@
 import { Op } from 'sequelize'
-import { Emoji, UserEmojiRelation } from '../../db'
-import { redisCache } from '../redis'
+import { Emoji, UserEmojiRelation } from '../../db.js'
+import { redisCache } from '../redis.js'
 
 async function getUserEmojis(id: string) {
   let cacheResult = await redisCache.get('userEmojis:' + id)

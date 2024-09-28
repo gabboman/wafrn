@@ -1,13 +1,13 @@
-import { SignedRequest } from '../../interfaces/fediverse/signedRequest'
+import { SignedRequest } from '../../interfaces/fediverse/signedRequest.js'
 import { Response } from 'express'
 import { getPostAndUserFromPostId } from '../cacheGetters/getPostAndUserFromPostId'
 import { getFollowerRemoteIds } from '../cacheGetters/getFollowerRemoteIds'
-import { logger } from '../logger'
-import { postToJSONLD } from './postToJSONLD'
+import { logger } from '../logger.js'
+import { postToJSONLD } from './postToJSONLD.js'
 import { getRemoteActor } from './getRemoteActor'
 import { Queue } from 'bullmq'
-import { environment } from '../../environment'
-import { FederatedHost, Follows, User } from '../../db'
+import { environment } from '../../environment.js'
+import { FederatedHost, Follows, User } from '../../db.js'
 import { Op } from 'sequelize'
 
 const sendPostQueue = new Queue('processRemoteView', {

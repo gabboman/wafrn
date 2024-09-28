@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from 'express'
 import jwt from 'jsonwebtoken'
-import { environment } from '../environment'
-import AuthorizedRequest from '../interfaces/authorizedRequest'
+import { environment } from '../environment.js'
+import AuthorizedRequest from '../interfaces/authorizedRequest.js'
 
 function authenticateToken(req: Request, res: Response, next: NextFunction) {
   const authHeader = req.headers.authorization
@@ -13,7 +13,7 @@ function authenticateToken(req: Request, res: Response, next: NextFunction) {
     if (err) {
       return res.sendStatus(401)
     }
-    ;(req as AuthorizedRequest).jwtData = jwtData
+    ; (req as AuthorizedRequest).jwtData = jwtData
     next()
   })
 }

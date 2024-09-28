@@ -460,7 +460,7 @@ export class PostEditorComponent implements OnInit, OnDestroy {
   }
 
   closeEditor() {
-    if(!this.data) {
+    if (!this.data) {
       this.router.navigate(['/'])
     } else {
       this.router.navigate([this.data.path])

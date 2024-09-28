@@ -23,7 +23,7 @@ import { PostHeaderComponent } from "../post/post-header/post-header.component";
     MatButton,
     PostHeaderComponent,
     AvatarSmallComponent
-],
+  ],
 })
 export class SingleNotificationComponent implements OnInit {
   emojiUrl: string = '';

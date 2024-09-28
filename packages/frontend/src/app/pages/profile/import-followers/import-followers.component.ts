@@ -21,9 +21,9 @@ export class ImportFollowersComponent {
     foundUsers: FollowListElem[];
     notFoundUsers: string[];
   } = {
-    foundUsers: [],
-    notFoundUsers: [],
-  };
+      foundUsers: [],
+      notFoundUsers: [],
+    };
 
   responseResults: {
     success?: boolean;
@@ -32,17 +32,17 @@ export class ImportFollowersComponent {
     errors: string[];
     errorMessage?: string;
   } = {
-    success: undefined,
-    newFollows: 0,
-    alreadyFollowing: 0,
-    errors: [],
-  };
+      success: undefined,
+      newFollows: 0,
+      alreadyFollowing: 0,
+      errors: [],
+    };
 
   constructor(
     private http: HttpClient,
     private postService: PostsService,
     private messages: MessageService
-  ) {}
+  ) { }
   async onFileSelected(event: Event) {
     this.uploading = true;
     const el = event.target as HTMLInputElement;

@@ -1,8 +1,8 @@
 import optionalAuthentication from '../utils/optionalAuthentication'
 import checkIpBlocked from '../utils/checkIpBlocked'
-import AuthorizedRequest from '../interfaces/authorizedRequest'
+import AuthorizedRequest from '../interfaces/authorizedRequest.js'
 import { Application, Request, Response } from 'express'
-import { Post, QuestionPoll, QuestionPollAnswer, QuestionPollQuestion, User, sequelize } from '../db'
+import { Post, QuestionPoll, QuestionPollAnswer, QuestionPollQuestion, User, sequelize } from '../db.js'
 import { Op, QueryTypes } from 'sequelize'
 import {
   getEmojis,
@@ -13,7 +13,7 @@ import {
   getTags,
   getUnjointedPosts
 } from '../utils/baseQueryNew'
-import getFollowedsIds from '../utils/cacheGetters/getFollowedsIds'
+import getFollowedsIds from '../utils/cacheGetters/getFollowedsIds.js'
 import { isDatabaseMysql } from '../utils/isDatabaseMysql'
 
 export default function forumRoutes(app: Application) {

@@ -1,7 +1,7 @@
-import { Follows } from '../../../db'
-import { environment } from '../../../environment'
+import { Follows } from '../../../db.js'
+import { environment } from '../../../environment.js'
 import { activityPubObject } from '../../../interfaces/fediverse/activityPubObject'
-import { redisCache } from '../../redis'
+import { redisCache } from '../../redis.js'
 import { signAndAccept } from '../signAndAccept'
 
 async function AcceptActivity(body: activityPubObject, remoteUser: any, user: any) {

@@ -1,22 +1,22 @@
 import { Application, Response } from 'express'
 import { Op, Sequelize } from 'sequelize'
-import { Emoji, Post, PostTag, User, UserEmojiRelation } from '../db'
-import { sequelize } from '../db'
+import { Emoji, Post, PostTag, User, UserEmojiRelation } from '../db.js'
+import { sequelize } from '../db.js'
 
 import getStartScrollParam from '../utils/getStartScrollParam'
-import getPosstGroupDetails from '../utils/getPostGroupDetails'
+import getPosstGroupDetails from '../utils/getPostGroupDetails.js'
 import optionalAuthentication from '../utils/optionalAuthentication'
 import { authenticateToken } from '../utils/authenticateToken'
 
 import { searchRemoteUser } from '../utils/activitypub/searchRemoteUser'
-import AuthorizedRequest from '../interfaces/authorizedRequest'
-import { environment } from '../environment'
+import AuthorizedRequest from '../interfaces/authorizedRequest.js'
+import { environment } from '../environment.js'
 import { getPostThreadRecursive } from '../utils/activitypub/getPostThreadRecursive'
 import checkIpBlocked from '../utils/checkIpBlocked'
 import { getAllLocalUserIds } from '../utils/cacheGetters/getAllLocalUserIds'
 import { getallBlockedServers } from '../utils/cacheGetters/getAllBlockedServers'
 import { getUnjointedPosts } from '../utils/baseQueryNew'
-import getFollowedsIds from '../utils/cacheGetters/getFollowedsIds'
+import getFollowedsIds from '../utils/cacheGetters/getFollowedsIds.js'
 import { getUserEmojis } from '../utils/cacheGetters/getUserEmojis'
 export default function searchRoutes(app: Application) {
   app.get('/api/v2/search/', authenticateToken, async (req: AuthorizedRequest, res: Response) => {

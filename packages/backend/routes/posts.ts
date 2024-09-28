@@ -12,30 +12,30 @@ import {
   UserLikesPostRelations,
   Media,
   Ask
-} from '../db'
+} from '../db.js'
 import { authenticateToken } from '../utils/authenticateToken'
 
-import { sequelize } from '../db'
+import { sequelize } from '../db.js'
 
 import getStartScrollParam from '../utils/getStartScrollParam'
-import getPosstGroupDetails from '../utils/getPostGroupDetails'
-import { logger } from '../utils/logger'
+import getPosstGroupDetails from '../utils/getPostGroupDetails.js'
+import { logger } from '../utils/logger.js'
 import { createPostLimiter, navigationRateLimiter } from '../utils/rateLimiters'
-import { environment } from '../environment'
+import { environment } from '../environment.js'
 import { Queue } from 'bullmq'
-import AuthorizedRequest from '../interfaces/authorizedRequest'
+import AuthorizedRequest from '../interfaces/authorizedRequest.js'
 import optionalAuthentication from '../utils/optionalAuthentication'
-import { getPetitionSigned } from '../utils/activitypub/getPetitionSigned'
+import { getPetitionSigned } from '../utils/activitypub/getPetitionSigned.js'
 import { getPostThreadRecursive } from '../utils/activitypub/getPostThreadRecursive'
 import * as htmlparser2 from 'htmlparser2'
 import checkIpBlocked from '../utils/checkIpBlocked'
 import { getUnjointedPosts } from '../utils/baseQueryNew'
 const cheerio = require('cheerio')
-import getFollowedsIds from '../utils/cacheGetters/getFollowedsIds'
+import getFollowedsIds from '../utils/cacheGetters/getFollowedsIds.js'
 import { federatePostHasBeenEdited } from '../utils/activitypub/editPost'
 import { getAvaiableEmojis } from '../utils/getAvaiableEmojis'
-import { redisCache } from '../utils/redis'
-import { getUserOptions } from '../utils/cacheGetters/getUserOptions'
+import { redisCache } from '../utils/redis.js'
+import { getUserOptions } from '../utils/cacheGetters/getUserOptions.js'
 
 const showdown = require('showdown');
 const markdownConverter = new showdown.Converter({

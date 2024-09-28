@@ -1,6 +1,6 @@
 import { Op } from 'sequelize'
-import { Post } from '../../db'
-import { environment } from '../../environment'
+import { Post } from '../../db.js'
+import { environment } from '../../environment.js'
 
 async function getPostReplies(postId: string) {
   // TODO: cache this. Also make it so if the post has no text but medias or tags also apears on the list

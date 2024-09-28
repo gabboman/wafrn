@@ -1,5 +1,5 @@
-import { FederatedHost } from '../../db'
-import { redisCache } from '../redis'
+import { FederatedHost } from '../../db.js'
+import { redisCache } from '../redis.js'
 
 async function getallBlockedServers(): Promise<string[]> {
   let res: string[] = []

@@ -15,9 +15,9 @@ import {
   User,
   UserEmojiRelation,
   UserLikesPostRelations
-} from '../db'
-import getPosstGroupDetails from './getPostGroupDetails'
-import getFollowedsIds from './cacheGetters/getFollowedsIds'
+} from '../db.js'
+import getPosstGroupDetails from './getPostGroupDetails.js'
+import getFollowedsIds from './cacheGetters/getFollowedsIds.js'
 
 async function getQuotes(
   postIds: string[]

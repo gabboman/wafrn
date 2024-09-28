@@ -1,8 +1,8 @@
 import { Application, Response } from 'express'
 import { adminToken, authenticateToken } from '../utils/authenticateToken'
-import AuthorizedRequest from '../interfaces/authorizedRequest'
+import AuthorizedRequest from '../interfaces/authorizedRequest.js'
 import { Queue } from 'bullmq'
-import { environment } from '../environment'
+import { environment } from '../environment.js'
 
 export default function statusRoutes(app: Application) {
   app.get('/api/status/workerStats', authenticateToken, adminToken, async (req: AuthorizedRequest, res: Response) => {

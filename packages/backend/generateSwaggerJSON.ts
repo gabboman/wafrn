@@ -1,5 +1,5 @@
 import swaggerAutogen from 'swagger-autogen'
-import { environment } from './environment'
+import { environment } from './environment.js'
 
 const config = {
   info: {
