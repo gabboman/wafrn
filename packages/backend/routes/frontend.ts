@@ -3,7 +3,7 @@ import { environment } from '../environment.js'
 import { Op } from 'sequelize'
 import { Media, Post, User, sequelize } from '../db.js'
 import fs from 'fs'
-import * as DOMPurify from 'isomorphic-dompurify'
+import dompurify from 'isomorphic-dompurify'
 import { redisCache } from '../utils/redis.js'
 import { logger } from '../utils/logger.js'
 import { getCheckFediverseSignatureFucnction } from '../utils/activitypub/checkFediverseSignature.js'
@@ -99,7 +99,7 @@ function frontend(app: Application) {
 }
 
 function sanitizeStringForSEO(unsanitized: string): string {
-  return DOMPurify.sanitize(unsanitized, { ALLOWED_TAGS: [] }).replaceAll('"', "'")
+  return dompurify.sanitize(unsanitized, { ALLOWED_TAGS: [] }).replaceAll('"', "'")
 }
 
 async function getPostSEOCache(id: string): Promise<{ title: string; description: string; img: string }> {
@@ -200,11 +200,10 @@ function getIndexSeo(title: string, description: string, image?: string) {
     <meta property="description" content="${sanitizedDescription}">
     <meta property="og:description" content="${sanitizedDescription}">
     <meta name="twitter:description" content="${sanitizedDescription}">
-    ${
-      imgUrl
-        ? `<meta property="og:image" content="${imgUrl}">
+    ${imgUrl
+      ? `<meta property="og:image" content="${imgUrl}">
     <meta name="twitter:image" content="${imgUrl}">`
-        : ''
+      : ''
     }
     <meta property="og:site_name" content="${environment.instanceUrl}">
     <meta name="twitter:site" content="${environment.instanceUrl}">
