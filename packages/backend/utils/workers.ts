@@ -1,87 +1,124 @@
-import { Job, MetricsTime, Worker } from 'bullmq'
-import { environment } from '../environment'
-import { inboxWorker } from './queueProcessors/inbox'
-import { prepareSendRemotePostWorker } from './queueProcessors/prepareSendRemotePost'
-import { sendPostToInboxes } from './queueProcessors/sendPostToInboxes'
-import { getRemoteActorIdProcessor } from './queueProcessors/getRemoteActorIdProcessor'
-import { logger } from './logger'
-import { processRemotePostView } from './queueProcessors/processRemotePostView'
+import { type Job, MetricsTime, Worker } from "bullmq";
+import { environment } from "../environment.js";
+import { logger } from "./logger.js";
+import { getRemoteActorIdProcessor } from "./queueProcessors/getRemoteActorIdProcessor.js";
+import { inboxWorker } from "./queueProcessors/inbox.js";
+import { prepareSendRemotePostWorker } from "./queueProcessors/prepareSendRemotePost.js";
+import { processRemotePostView } from "./queueProcessors/processRemotePostView.js";
+import { processRemoteMedia } from "./queueProcessors/remoteMediaProcessor.js";
+import { sendPostToInboxes } from "./queueProcessors/sendPostToInboxes.js";
 
-logger.info('starting workers')
-const workerInbox = new Worker('inbox', (job: Job) => inboxWorker(job), {
-  connection: environment.bullmqConnection,
-  metrics: {
-    maxDataPoints: MetricsTime.ONE_WEEK * 2
-  },
-  concurrency: environment.workers.low
-})
+logger.info("starting workers");
+const workerInbox = new Worker("inbox", (job: Job) => inboxWorker(job), {
+	connection: environment.bullmqConnection,
+	metrics: {
+		maxDataPoints: MetricsTime.ONE_WEEK * 2,
+	},
+	concurrency: environment.workers.low,
+});
 
-const workerPrepareSendPost = new Worker('prepareSendPost', (job: Job) => prepareSendRemotePostWorker(job), {
-  connection: environment.bullmqConnection,
-  metrics: {
-    maxDataPoints: MetricsTime.ONE_WEEK * 2
-  },
-  concurrency: environment.workers.high,
-  lockDuration: 60000
-})
+const workerPrepareSendPost = new Worker(
+	"prepareSendPost",
+	(job: Job) => prepareSendRemotePostWorker(job),
+	{
+		connection: environment.bullmqConnection,
+		metrics: {
+			maxDataPoints: MetricsTime.ONE_WEEK * 2,
+		},
+		concurrency: environment.workers.high,
+		lockDuration: 60000,
+	},
+);
 
-const workerSendPostChunk = new Worker('sendPostToInboxes', (job: Job) => sendPostToInboxes(job), {
-  connection: environment.bullmqConnection,
-  metrics: {
-    maxDataPoints: MetricsTime.ONE_WEEK * 2
-  },
-  concurrency: environment.workers.high,
-  lockDuration: 120000
-})
+const workerSendPostChunk = new Worker(
+	"sendPostToInboxes",
+	(job: Job) => sendPostToInboxes(job),
+	{
+		connection: environment.bullmqConnection,
+		metrics: {
+			maxDataPoints: MetricsTime.ONE_WEEK * 2,
+		},
+		concurrency: environment.workers.high,
+		lockDuration: 120000,
+	},
+);
 
-const workerDeletePost = new Worker('deletePostQueue', (job: Job) => sendPostToInboxes(job), {
-  connection: environment.bullmqConnection,
-  metrics: {
-    maxDataPoints: MetricsTime.ONE_WEEK * 2
-  },
-  concurrency: environment.workers.high,
-  lockDuration: 120000
-})
+const workerDeletePost = new Worker(
+	"deletePostQueue",
+	(job: Job) => sendPostToInboxes(job),
+	{
+		connection: environment.bullmqConnection,
+		metrics: {
+			maxDataPoints: MetricsTime.ONE_WEEK * 2,
+		},
+		concurrency: environment.workers.high,
+		lockDuration: 120000,
+	},
+);
 
-const workerGetUser = new Worker('getRemoteActorId', async (job: Job) => await getRemoteActorIdProcessor(job), {
-  connection: environment.bullmqConnection,
-  metrics: {
-    maxDataPoints: MetricsTime.ONE_WEEK * 2
-  },
-  concurrency: environment.workers.high,
-  lockDuration: 120000
-})
+const workerGetUser = new Worker(
+	"getRemoteActorId",
+	async (job: Job) => await getRemoteActorIdProcessor(job),
+	{
+		connection: environment.bullmqConnection,
+		metrics: {
+			maxDataPoints: MetricsTime.ONE_WEEK * 2,
+		},
+		concurrency: environment.workers.high,
+		lockDuration: 120000,
+	},
+);
 
 const workerProcessRemotePostView = new Worker(
-  'processRemoteView',
-  async (job: Job) => await processRemotePostView(job),
-  {
-    connection: environment.bullmqConnection,
-    metrics: {
-      maxDataPoints: MetricsTime.ONE_WEEK * 2
-    },
-    concurrency: environment.workers.low,
-    lockDuration: 120000
-  }
-)
+	"processRemoteView",
+	async (job: Job) => await processRemotePostView(job),
+	{
+		connection: environment.bullmqConnection,
+		metrics: {
+			maxDataPoints: MetricsTime.ONE_WEEK * 2,
+		},
+		concurrency: environment.workers.low,
+		lockDuration: 120000,
+	},
+);
+
+const workerProcessRemoteMediaData = new Worker(
+	"processRemoteMediaData",
+	async (job: Job) => await processRemoteMedia(job),
+	{
+		connection: environment.bullmqConnection,
+		metrics: {
+			maxDataPoints: MetricsTime.ONE_WEEK * 2,
+		},
+		concurrency: environment.workers.low,
+		lockDuration: 120000,
+	},
+);
 
 const workers = [
-  workerInbox,
-  workerDeletePost,
-  workerGetUser,
-  workerPrepareSendPost,
-  workerProcessRemotePostView,
-  workerSendPostChunk,
-  workerProcessRemotePostView
-]
+	workerInbox,
+	workerDeletePost,
+	workerGetUser,
+	workerPrepareSendPost,
+	workerProcessRemotePostView,
+	workerSendPostChunk,
+	workerProcessRemotePostView,
+	workerProcessRemoteMediaData,
+];
 
 workers.forEach((worker) => {
-  worker.on('error', (err) => {
-    logger.warn({
-      message: `worker ${worker.name} failed`,
-      error: err
-    })
-  })
-})
+	worker.on("error", (err) => {
+		logger.warn({
+			message: `worker ${worker.name} failed`,
+			error: err,
+		});
+	});
+});
 
-export { workerInbox, workerSendPostChunk, workerPrepareSendPost, workerGetUser, workerDeletePost }
+export {
+	workerInbox,
+	workerSendPostChunk,
+	workerPrepareSendPost,
+	workerGetUser,
+	workerDeletePost,
+};

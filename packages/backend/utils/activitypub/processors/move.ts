@@ -1,13 +1,17 @@
-import { activityPubObject } from '../../../interfaces/fediverse/activityPubObject'
-import { logger } from '../../logger'
+import type { activityPubObject } from "../../../interfaces/fediverse/activityPubObject.js";
+import { logger } from "../../logger.js";
 
-async function MoveActivity(body: activityPubObject, remoteUser: any, user: any) {
-  // WIP move
-  // TODO get list of users who where following old account
-  // then make them follow the new one, sending petition
-  const apObject: activityPubObject = body
-  logger.warn({ message: 'moving user being ignored', object: apObject })
-  /*
+async function MoveActivity(
+	body: activityPubObject,
+	_remoteUser: any,
+	_user: any,
+) {
+	// WIP move
+	// TODO get list of users who where following old account
+	// then make them follow the new one, sending petition
+	const apObject: activityPubObject = body;
+	logger.warn({ message: "moving user being ignored", object: apObject });
+	/*
           const newUser = await getRemoteActor(req.body.object, user)
           const followsToMove = await Follows.findAll({
             where: {
@@ -38,4 +42,4 @@ async function MoveActivity(body: activityPubObject, remoteUser: any, user: any)
           await signAndAccept(req, remoteUser, user)*/
 }
 
-export { MoveActivity }
+export { MoveActivity };

@@ -1,12 +1,12 @@
-import { environment } from '../environment'
+import { pino } from "pino";
+import { environment } from "../environment.js";
 
-const pino = require('pino')
-const transport = pino.transport(environment.pinoTransportOptions)
+const transport = pino.transport(environment.pinoTransportOptions as any);
 
 export const logger = pino(
-  {
-    level: environment.logLevel,
-    timestamp: pino.stdTimeFunctions.isoTime
-  },
-  transport
-)
+	{
+		level: environment.logLevel,
+		timestamp: pino.stdTimeFunctions.isoTime,
+	},
+	transport,
+);

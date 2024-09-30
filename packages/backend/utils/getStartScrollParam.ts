@@ -1,7 +1,7 @@
-import { Request } from 'express'
+import type { Request } from "express";
 
 export default function getStartScrollParam(req: Request) {
-  // read the date in ms from the url search params
-  const dateMS = Number(req.query.startScroll)
-  return new Date(dateMS || Date.now())
+	// read the date in ms from the url search params
+	const dateMs = Number(req.query.startScroll);
+	return new Date(dateMs || Date.now());
 }

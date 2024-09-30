@@ -1,5 +1,5 @@
-import { environment } from '../environment'
-import Redis from 'ioredis'
-const redisCache = new Redis(environment.redisioConnection)
+import { Redis } from "ioredis";
+import { environment } from "../environment.js";
+const redisCache = new Redis(environment.redisioConnection);
 
-export { redisCache }
+export { redisCache };

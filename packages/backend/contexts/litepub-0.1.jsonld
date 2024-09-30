@@ -2,10 +2,10 @@
     "@context": [
         "https://www.w3.org/ns/activitystreams",
         "https://w3id.org/security/v1",
+        "https://purl.archive.org/socialweb/webfinger",
         {
             "Emoji": "toot:Emoji",
             "Hashtag": "as:Hashtag",
-            "WafrnHashtag":"as:WafrnHashtag",
             "PropertyValue": "schema:PropertyValue",
             "atomUri": "ostatus:atomUri",
             "conversation": {
@@ -18,7 +18,6 @@
             "ostatus": "http://ostatus.org#",
             "schema": "http://schema.org#",
             "toot": "http://joinmastodon.org/ns#",
-            "misskey": "https://misskey-hub.net/ns#",
             "fedibird": "http://fedibird.com/ns#",
             "value": "schema:value",
             "sensitive": "as:sensitive",
@@ -43,10 +42,9 @@
             },
             "vcard": "http://www.w3.org/2006/vcard/ns#",
             "formerRepresentations": "litepub:formerRepresentations",
-            "contentMap": {
-                "@id": "as:content",
-                "@container": "@language"
-            }
+            "sm": "http://smithereen.software/ns#",
+            "nonAnonymous": "sm:nonAnonymous"
         }
     ]
 }
+

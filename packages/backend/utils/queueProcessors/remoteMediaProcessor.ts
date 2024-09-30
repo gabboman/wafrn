@@ -1,38 +1,58 @@
-import { Job } from "bullmq";
-import { Media } from "../../db";
+import crypto from "node:crypto";
+import fs from "node:fs/promises";
 import axios from "axios";
-import { environment } from "../../environment";
-import crypto from 'crypto'
-import fs from 'fs/promises'
-
+import type { Job } from "bullmq";
+import mime from "mime";
+import { Media } from "../../db.js";
+import { environment } from "../../environment.js";
+import {fileTypeFromFile} from 'file-type';
+import sharp from "sharp";
 
 async function processRemoteMedia(job: Job) {
-    const media = await Media.findByPk(job.data.mediaId)
-    let fileLocation = ''
-    if (media.external) {
-        fileLocation = `uploads/${media.url}`
-    } else {
-        // we fetch the media
-        const petition = await axios.get(environment.externalCacheurl + encodeURIComponent(media.url))
-        // the local file url is....
-        const mediaLinkHash = crypto.createHash('sha256').update(media.url).digest('hex')
-        const mediaLinkArray = media.url.split('.')
-        let linkExtension = mediaLinkArray[mediaLinkArray.length - 1].toLowerCase().replaceAll('/', '_')
-        if (linkExtension.includes('/')) {
-            linkExtension = ''
-        }
-        linkExtension = linkExtension.split('?')[0].substring(0, 4)
-        fileLocation = linkExtension ? `cache/${mediaLinkHash}.${linkExtension}` : `cache/${mediaLinkHash}`
-    }
+	const media = await Media.findByPk(job.data.mediaId);
+	let fileLocation = "";
+	if (media.external) {
+		// TODO this code uses parts from the cacher. Could be better done? absolutely. Will do once it breaks
+		// we fetch the media
+		const _petition = await axios.get(
+			environment.externalCacheurl + encodeURIComponent(media.url),
+		);
+		// the local file url is....
+		const mediaLinkHash = crypto
+			.createHash("sha256")
+			.update(media.url)
+			.digest("hex");
+		const mediaLinkArray = media.url.split(".");
+		let linkExtension = mediaLinkArray[mediaLinkArray.length - 1]
+			.toLowerCase()
+			.replaceAll("/", "_");
+		if (linkExtension.includes("/")) {
+			linkExtension = "";
+		}
+		linkExtension = linkExtension.split("?")[0].substring(0, 4);
+		fileLocation = linkExtension
+			? `cache/${mediaLinkHash}.${linkExtension}`
+			: `cache/${mediaLinkHash}`;
+	} else {
+		fileLocation = `uploads${media.url}`;
+	}
+	const fileType = await fileTypeFromFile(fileLocation)
 
+	if(fileType?.mime) {
+		media.mediaType = fileType?.mime
+		if(fileType.mime.startsWith('image')){
+			const metadata = await sharp(fileLocation).metadata();
+			media.height = metadata.height;
+			media.width = metadata.width;
+			media.updatedAt = new Date();
+		}
+		await media.save()
+	}
 
-
-    if (media.external) {
-        // we delete the cache thing
-        await fs.unlink(fileLocation)
-
-    }
+	if (media.external) {
+		// we delete the cached file because we dont want all the files to fill our disk
+		await fs.unlink(fileLocation);
+	}
 }
 
-
-export { processRemoteMedia }
+export { processRemoteMedia };
