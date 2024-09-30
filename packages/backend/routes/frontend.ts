@@ -8,7 +8,6 @@ import { getCheckFediverseSignatureFucnction } from "../utils/activitypub/checkF
 import { handlePostRequest } from "../utils/activitypub/handlePostRequest.js";
 import { redisCache } from "../utils/redis.js";
 import dompurify from 'isomorphic-dompurify'
-
 const cacheOptions = {
 	etag: false,
 	maxAge: "1",
@@ -285,11 +284,10 @@ function getIndexSeo(title: string, description: string, image?: string) {
     <meta property="description" content="${sanitizedDescription}">
     <meta property="og:description" content="${sanitizedDescription}">
     <meta name="twitter:description" content="${sanitizedDescription}">
-    ${
-			imgUrl
-				? `<meta property="og:image" content="${imgUrl}">
+    ${imgUrl
+			? `<meta property="og:image" content="${imgUrl}">
     <meta name="twitter:image" content="${imgUrl}">`
-				: ""
+			: ""
 		}
     <meta property="og:site_name" content="${environment.instanceUrl}">
     <meta name="twitter:site" content="${environment.instanceUrl}">
