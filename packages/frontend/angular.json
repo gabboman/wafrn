@@ -35,7 +35,8 @@
             "allowedCommonJsDependencies": [
               "dompurify",
               "quill",
-              "quill-delta"
+              "quill-delta",
+              "isomorphic-dompurify"
             ],
             "assets": [
               "src/favicon.ico",

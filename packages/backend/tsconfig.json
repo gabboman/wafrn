@@ -1,17 +1,17 @@
 {
-	"compilerOptions": {
-		"target": "ESNext",
-		"lib": ["ESNext"],
-		"module": "NodeNext",
-		"rootDir": "./",
-		"outDir": "./build",
-		"esModuleInterop": true,
-		"strict": true,
-		"typeRoots": ["./types"],
-		"experimentalDecorators": true,
-		"emitDecoratorMetadata": true,
-		"isolatedModules": true,
-		"moduleResolution": "NodeNext",
-		"skipLibCheck": true
-	}
+  "compilerOptions": {
+    "target": "ESNext",
+    "lib": ["ESNext"],
+    "module": "NodeNext",
+    "rootDir": "./",
+    "outDir": "./build",
+    "esModuleInterop": true,
+    "strict": true,
+    "typeRoots": ["./types"],
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+    "isolatedModules": true,
+    "moduleResolution": "NodeNext",
+    "skipLibCheck": true
+  }
 }

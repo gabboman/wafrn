@@ -1,46 +1,45 @@
-import { Queue } from "bullmq";
-import { Op } from "sequelize";
-import { FederatedHost, User } from "../../db.js";
-import { environment } from "../../environment.js";
-import { postToJSONLD } from "./postToJSONLD.js";
-import { LdSignature } from "./rsa2017.js";
+import { Op } from 'sequelize'
+import { FederatedHost, User } from '../../db.js'
+import { environment } from '../../environment.js'
+import { postToJSONLD } from './postToJSONLD.js'
+import { LdSignature } from './rsa2017.js'
+import _ from 'underscore'
+import { Queue } from 'bullmq'
 
-const sendPostQueue = new Queue("sendPostToInboxes", {
-	connection: environment.bullmqConnection,
-	defaultJobOptions: {
-		removeOnComplete: true,
-		attempts: 3,
-		backoff: {
-			type: "exponential",
-			delay: 1000,
-		},
-		removeOnFail: 25000,
-	},
-});
+const sendPostQueue = new Queue('sendPostToInboxes', {
+  connection: environment.bullmqConnection,
+  defaultJobOptions: {
+    removeOnComplete: true,
+    attempts: 3,
+    backoff: {
+      type: 'exponential',
+      delay: 1000
+    },
+    removeOnFail: 25000
+  }
+})
 async function federatePostHasBeenEdited(postToEdit: any) {
-	return;
-	const user = await User.findByPk(postToEdit.userId);
+  return
+  const user = await User.findByPk(postToEdit.userId)
 
-	const postAsJsonld = await postToJSONLD(postToEdit.id);
-	const objectToSend = {
-		"@context": [`${environment.frontendUrl}/contexts/litepub-0.1.jsonld`],
-		actor: `${environment.frontendUrl}/fediverse/blog/${user.url.toLowerCase()}`,
-		to: postAsJsonld.to,
-		cc: postAsJsonld.cc,
-		published: new Date().toString(),
-		id: `${environment.frontendUrl}/fediverse/post/${postToEdit.id}/update/${Date.now()}`,
-		object: {
-			actor: postAsJsonld.actor,
-			attachment: [],
-			attributedTo: "https://akkoma.dev.wafrn.net/users/gabboman",
-			cc: ["https://akkoma.dev.wafrn.net/users/gabboman/followers"],
-			content: "testingtttggg",
-			contentMap: { en: "testingtttggg" },
-			context:
-				"https://akkoma.dev.wafrn.net/contexts/4bccba1e-11c4-4570-93f1-d505ac917b30",
-			conversation:
-				"https://akkoma.dev.wafrn.net/contexts/4bccba1e-11c4-4570-93f1-d505ac917b30",
-			/*"formerRepresentations": {
+  const postAsJSONLD = await postToJSONLD(postToEdit.id)
+  const objectToSend = {
+    '@context': [`${environment.frontendUrl}/contexts/litepub-0.1.jsonld`],
+    actor: `${environment.frontendUrl}/fediverse/blog/${user.url.toLowerCase()}`,
+    to: postAsJSONLD.to,
+    cc: postAsJSONLD.cc,
+    published: new Date().toString(),
+    id: `${environment.frontendUrl}/fediverse/post/${postToEdit.id}/update/${new Date().getTime()}`,
+    object: {
+      actor: postAsJSONLD.actor,
+      attachment: [],
+      attributedTo: 'https://akkoma.dev.wafrn.net/users/gabboman',
+      cc: ['https://akkoma.dev.wafrn.net/users/gabboman/followers'],
+      content: 'testingtttggg',
+      contentMap: { en: 'testingtttggg' },
+      context: 'https://akkoma.dev.wafrn.net/contexts/4bccba1e-11c4-4570-93f1-d505ac917b30',
+      conversation: 'https://akkoma.dev.wafrn.net/contexts/4bccba1e-11c4-4570-93f1-d505ac917b30',
+      /*"formerRepresentations": {
         "orderedItems": [
           {
             "actor": "https://akkoma.dev.wafrn.net/users/gabboman",
@@ -96,95 +95,91 @@ async function federatePostHasBeenEdited(postToEdit: any) {
         "totalItems": 3,
         "type": "OrderedCollection"
       },*/
-			id: "https://akkoma.dev.wafrn.net/objects/f8455914-579e-4a34-b74b-efa8e7d579fe",
-			published: "2024-02-25T23:31:05.550628Z",
-			source: { content: "testingtttggg", mediaType: "text/plain" },
-			summary: "",
-			tag: [],
-			to: ["https://www.w3.org/ns/activitystreams#Public"],
-			type: "Note",
-			updated: "2024-02-26T19:25:25.066768Z",
-		},
-		type: "Update",
-	};
+      id: 'https://akkoma.dev.wafrn.net/objects/f8455914-579e-4a34-b74b-efa8e7d579fe',
+      published: '2024-02-25T23:31:05.550628Z',
+      source: { content: 'testingtttggg', mediaType: 'text/plain' },
+      summary: '',
+      tag: [],
+      to: ['https://www.w3.org/ns/activitystreams#Public'],
+      type: 'Note',
+      updated: '2024-02-26T19:25:25.066768Z'
+    },
+    type: 'Update'
+  }
 
-	let serversToSendThePost =
-		postToEdit.privacy === 10
-			? []
-			: FederatedHost.findAll({
-					where: {
-						publicInbox: { [Op.ne]: null },
-						blocked: false,
-					},
-				});
-	let usersToSendThePost =
-		postToEdit.privacy === 10
-			? []
-			: FederatedHost.findAll({
-					where: {
-						publicInbox: { [Op.eq]: null },
-						blocked: false,
-					},
-					include: [
-						{
-							model: User,
-							attributes: ["remoteInbox"],
-							where: {
-								banned: false,
-							},
-						},
-					],
-				});
-	let mentionedUsers = User.findAll({
-		attributes: ["remoteInbox"],
-		where: {
-			federatedHostId: { [Op.ne]: null },
-			id: {
-				[Op.in]: (await postToEdit.getMentionPost()).map((usr: any) => usr.id),
-			},
-		},
-	});
-	await Promise.all([serversToSendThePost, usersToSendThePost, mentionedUsers]);
-	serversToSendThePost = await serversToSendThePost;
-	usersToSendThePost = await usersToSendThePost;
-	mentionedUsers = await mentionedUsers;
-	let urlsToSendPost = [];
-	if (mentionedUsers) {
-		urlsToSendPost = mentionedUsers.map((mention: any) => mention.remoteInbox);
-	}
-	if (serversToSendThePost) {
-		urlsToSendPost = urlsToSendPost.concat(
-			serversToSendThePost.map((server: any) => server.publicInbox),
-		);
-	}
-	if (usersToSendThePost) {
-		urlsToSendPost = urlsToSendPost.concat(
-			usersToSendThePost.map((usr: any) => usr.remoteInbox),
-		);
-	}
+  let serversToSendThePost =
+    postToEdit.privacy === 10
+      ? []
+      : FederatedHost.findAll({
+        where: {
+          publicInbox: { [Op.ne]: null },
+          blocked: false
+        }
+      })
+  let usersToSendThePost =
+    postToEdit.privacy === 10
+      ? []
+      : FederatedHost.findAll({
+        where: {
+          publicInbox: { [Op.eq]: null },
+          blocked: false
+        },
+        include: [
+          {
+            model: User,
+            attributes: ['remoteInbox'],
+            where: {
+              banned: false
+            }
+          }
+        ]
+      })
+  let mentionedUsers = User.findAll({
+    attributes: ['remoteInbox'],
+    where: {
+      federatedHostId: { [Op.ne]: null },
+      id: {
+        [Op.in]: (await postToEdit.getMentionPost()).map((usr: any) => usr.id)
+      }
+    }
+  })
+  await Promise.all([serversToSendThePost, usersToSendThePost, mentionedUsers])
+  serversToSendThePost = await serversToSendThePost
+  usersToSendThePost = await usersToSendThePost
+  mentionedUsers = await mentionedUsers
+  let urlsToSendPost = []
+  if (mentionedUsers) {
+    urlsToSendPost = mentionedUsers.map((mention: any) => mention.remoteInbox)
+  }
+  if (serversToSendThePost) {
+    urlsToSendPost = urlsToSendPost.concat(serversToSendThePost.map((server: any) => server.publicInbox))
+  }
+  if (usersToSendThePost) {
+    urlsToSendPost = urlsToSendPost.concat(usersToSendThePost.map((usr: any) => usr.remoteInbox))
+  }
 
-	const ldSignature = new LdSignature();
-	const bodySignature = await ldSignature.signRsaSignature2017(
-		objectToSend,
-		user.privateKey,
-		`${environment.frontendUrl}/fediverse/blog/${user.url.toLocaleLowerCase()}`,
-		environment.instanceUrl,
-		new Date(),
-	);
-	for await (const inboxChunk of urlsToSendPost) {
-		await sendPostQueue.add(
-			"sencChunk",
-			{
-				objectToSend: { ...objectToSend, signature: bodySignature.signature },
-				petitionBy: user.dataValues,
-				inboxList: inboxChunk,
-			},
-			{
-				priority: 500,
-				delay: 2500,
-			},
-		);
-	}
+  const ldSignature = new LdSignature()
+  const bodySignature = await ldSignature.signRsaSignature2017(
+    objectToSend,
+    user.privateKey,
+    `${environment.frontendUrl}/fediverse/blog/${user.url.toLocaleLowerCase()}`,
+    environment.instanceUrl,
+    new Date()
+  )
+  for await (const inboxChunk of urlsToSendPost) {
+    await sendPostQueue.add(
+      'sencChunk',
+      {
+        objectToSend: { ...objectToSend, signature: bodySignature.signature },
+        petitionBy: user.dataValues,
+        inboxList: inboxChunk
+      },
+      {
+        priority: 500,
+        delay: 2500
+      }
+    )
+  }
 }
 
-export { federatePostHasBeenEdited };
+export { federatePostHasBeenEdited }

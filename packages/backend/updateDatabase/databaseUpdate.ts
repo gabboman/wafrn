@@ -7,14 +7,14 @@ import sequelizeHierarchyFork from "sequelize-hierarchy-fork";
 sequelizeHierarchyFork(Sequelize);
 
 const sequelize = new Sequelize(environment.databaseConnectionString, {
-	logging: !environment.prod,
+  logging: !environment.prod,
 });
 
 const queryInterface = sequelize.getQueryInterface();
 
 async function dbUpdate() {
-	// Add new table
-	/*
+  // Add new table
+  /*
   await queryInterface.createTable('userLikesPostRelations', {
     userId: {
       type: Sequelize.UUID,
@@ -44,14 +44,14 @@ async function dbUpdate() {
     updatedAt: Sequelize.DATE
   })
   */
-	// add column
+  // add column
 
-	await queryInterface.addColumn("users", "banned", {
-		type: Sequelize.BOOLEAN,
-		allowNull: false,
-		defaultValue: false,
-		unique: false,
-	});
+  await queryInterface.addColumn("users", "banned", {
+    type: Sequelize.BOOLEAN,
+    allowNull: false,
+    defaultValue: false,
+    unique: false,
+  });
 }
 
 /*
@@ -62,9 +62,9 @@ async function dbUpdate() {
 */
 
 dbUpdate()
-	.then(() => {
-		logger.info("done");
-	})
-	.catch((error) => {
-		logger.info(error);
-	});
+  .then(() => {
+    logger.info("done");
+  })
+  .catch((error) => {
+    logger.info(error);
+  });

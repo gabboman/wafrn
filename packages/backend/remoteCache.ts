@@ -1,19 +1,19 @@
-import cors from "cors";
-import express from "express";
-import { environment } from "./environment.js";
-import cacheRoutes from "./routes/remoteCache.js";
-import checkIpBlocked from "./utils/checkIpBlocked.js";
-import { logger } from "./utils/logger.js";
+import express, { Response } from 'express'
+import cors from 'cors'
+import { environment } from './environment.js'
+import { logger } from './utils/logger.js'
+import cacheRoutes from './routes/remoteCache.js'
+import checkIpBlocked from './utils/checkIpBlocked.js'
 
-const PORT = environment.cachePort;
+const PORT = environment.cachePort
 
-const app = express();
-app.use(checkIpBlocked);
-app.use(cors());
-app.set("trust proxy", 1);
+const app = express()
+app.use(checkIpBlocked)
+app.use(cors())
+app.set('trust proxy', 1)
 
-cacheRoutes(app);
+cacheRoutes(app)
 
 app.listen(PORT, environment.listenIp, () => {
-	logger.info("Started fedi listener");
-});
+  logger.info('Started fedi listener')
+})

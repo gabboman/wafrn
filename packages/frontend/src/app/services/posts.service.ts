@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { ProcessedPost } from '../interfaces/processed-post';
 import { RawPost } from '../interfaces/raw-post';
 import { MediaService } from './media.service';
-import { sanitize } from 'dompurify';
+import * as dompurify from 'isomorphic-dompurify'
 import { HttpClient } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
 import { BehaviorSubject, firstValueFrom } from 'rxjs';
@@ -360,7 +360,7 @@ export class PostsService {
 
   getPostHtml(post: ProcessedPost): string {
     const content = post.content;
-    let sanitized = sanitize(content, {
+    let sanitized = dompurify.sanitize(content, {
       ALLOWED_TAGS: [
         'b',
         'i',
@@ -432,7 +432,7 @@ export class PostsService {
       }
       const linkAsUrl: URL = this.getURL(link.href);
       if (mentionedHosts.includes(linkAsUrl.hostname)) {
-        const sanitizedContent = sanitize(link.innerHTML, {
+        const sanitizedContent = dompurify.sanitize(link.innerHTML, {
           ALLOWED_TAGS: [],
         });
         if (
@@ -467,7 +467,7 @@ export class PostsService {
   }
 
   getPostContentSanitized(content: string): string {
-    return sanitize(content);
+    return dompurify.sanitize(content);
   }
 
   async loadRepliesFromFediverse(id: string) {

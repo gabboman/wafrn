@@ -1,2311 +1,2311 @@
 {
-	"openapi": "3.0.0",
-	"info": {
-		"version": "0.1.0",
-		"title": "WAFRN Backend",
-		"description": "API routes for wafrn social network"
-	},
-	"paths": {
-		"/api/": {
-			"get": {
-				"description": "",
-				"responses": {
-					"200": {
-						"description": "OK"
-					}
-				}
-			}
-		},
-		"/api/block": {
-			"post": {
-				"description": "",
-				"parameters": [
-					{
-						"name": "authorization",
-						"in": "header",
-						"schema": {
-							"type": "string"
-						}
-					}
-				],
-				"responses": {
-					"200": {
-						"description": "OK"
-					},
-					"401": {
-						"description": "Unauthorized"
-					}
-				},
-				"requestBody": {
-					"content": {
-						"application/json": {
-							"schema": {
-								"type": "object",
-								"properties": {
-									"userId": {
-										"example": "any"
-									}
-								}
-							}
-						}
-					}
-				}
-			}
-		},
-		"/api/unblock": {
-			"post": {
-				"description": "",
-				"parameters": [
-					{
-						"name": "authorization",
-						"in": "header",
-						"schema": {
-							"type": "string"
-						}
-					}
-				],
-				"responses": {
-					"200": {
-						"description": "OK"
-					},
-					"401": {
-						"description": "Unauthorized"
-					}
-				},
-				"requestBody": {
-					"content": {
-						"application/json": {
-							"schema": {
-								"type": "object",
-								"properties": {
-									"userId": {
-										"example": "any"
-									}
-								}
-							}
-						}
-					}
-				}
-			}
-		},
-		"/api/myBlocks": {
-			"get": {
-				"description": "",
-				"parameters": [
-					{
-						"name": "authorization",
-						"in": "header",
-						"schema": {
-							"type": "string"
-						}
-					}
-				],
-				"responses": {
-					"200": {
-						"description": "OK"
-					},
-					"401": {
-						"description": "Unauthorized"
-					}
-				}
-			}
-		},
-		"/api/unblock-user": {
-			"post": {
-				"description": "",
-				"parameters": [
-					{
-						"name": "id",
-						"in": "query",
-						"schema": {
-							"type": "string"
-						}
-					},
-					{
-						"name": "authorization",
-						"in": "header",
-						"schema": {
-							"type": "string"
-						}
-					}
-				],
-				"responses": {
-					"200": {
-						"description": "OK"
-					},
-					"401": {
-						"description": "Unauthorized"
-					}
-				}
-			}
-		},
-		"/api/follow": {
-			"post": {
-				"description": "",
-				"parameters": [
-					{
-						"name": "authorization",
-						"in": "header",
-						"schema": {
-							"type": "string"
-						}
-					}
-				],
-				"responses": {
-					"200": {
-						"description": "OK"
-					},
-					"401": {
-						"description": "Unauthorized"
-					},
-					"500": {
-						"description": "Internal Server Error"
-					}
-				},
-				"requestBody": {
-					"content": {
-						"application/json": {
-							"schema": {
-								"type": "object",
-								"properties": {
-									"userId": {
-										"example": "any"
-									}
-								}
-							}
-						}
-					}
-				}
-			}
-		},
-		"/api/unfollow": {
-			"post": {
-				"description": "",
-				"parameters": [
-					{
-						"name": "authorization",
-						"in": "header",
-						"schema": {
-							"type": "string"
-						}
-					}
-				],
-				"responses": {
-					"200": {
-						"description": "OK"
-					},
-					"401": {
-						"description": "Unauthorized"
-					}
-				},
-				"requestBody": {
-					"content": {
-						"application/json": {
-							"schema": {
-								"type": "object",
-								"properties": {
-									"userId": {
-										"example": "any"
-									}
-								}
-							}
-						}
-					}
-				}
-			}
-		},
-		"/api/uploadMedia": {
-			"post": {
-				"description": "",
-				"parameters": [
-					{
-						"name": "authorization",
-						"in": "header",
-						"schema": {
-							"type": "string"
-						}
-					}
-				],
-				"responses": {
-					"200": {
-						"description": "OK"
-					},
-					"401": {
-						"description": "Unauthorized"
-					}
-				},
-				"requestBody": {
-					"content": {
-						"application/json": {
-							"schema": {
-								"type": "object",
-								"properties": {
-									"nsfw": {
-										"example": "any"
-									},
-									"description": {
-										"example": "any"
-									}
-								}
-							}
-						}
-					}
-				}
-			}
-		},
-		"/api/updateMedia": {
-			"get": {
-				"description": "",
-				"parameters": [
-					{
-						"name": "id",
-						"in": "query",
-						"schema": {
-							"type": "string"
-						}
-					},
-					{
-						"name": "NSFW",
-						"in": "query",
-						"schema": {
-							"type": "string"
-						}
-					},
-					{
-						"name": "description",
-						"in": "query",
-						"schema": {
-							"type": "string"
-						}
-					},
-					{
-						"name": "authorization",
-						"in": "header",
-						"schema": {
-							"type": "string"
-						}
-					}
-				],
-				"responses": {
-					"200": {
-						"description": "OK"
-					},
-					"401": {
-						"description": "Unauthorized"
-					}
-				}
-			}
-		},
-		"/api/v2/notificationsScroll": {
-			"get": {
-				"description": "",
-				"parameters": [
-					{
-						"name": "req",
-						"in": "query",
-						"schema": {
-							"type": "string"
-						}
-					},
-					{
-						"name": "authorization",
-						"in": "header",
-						"schema": {
-							"type": "string"
-						}
-					}
-				],
-				"responses": {
-					"200": {
-						"description": "OK"
-					},
-					"401": {
-						"description": "Unauthorized"
-					}
-				}
-			}
-		},
-		"/api/v2/notificationsCount": {
-			"get": {
-				"description": "",
-				"parameters": [
-					{
-						"name": "authorization",
-						"in": "header",
-						"schema": {
-							"type": "string"
-						}
-					}
-				],
-				"responses": {
-					"200": {
-						"description": "OK"
-					},
-					"401": {
-						"description": "Unauthorized"
-					}
-				}
-			}
-		},
-		"/api/v2/post/{id}": {
-			"get": {
-				"description": "",
-				"parameters": [
-					{
-						"name": "id",
-						"in": "path",
-						"required": true,
-						"schema": {
-							"type": "string"
-						}
-					}
-				],
-				"responses": {
-					"200": {
-						"description": "OK"
-					},
-					"400": {
-						"description": "Bad Request"
-					},
-					"403": {
-						"description": "Forbidden"
-					},
-					"404": {
-						"description": "Not Found"
-					},
-					"500": {
-						"description": "Internal Server Error"
-					}
-				}
-			}
-		},
-		"/api/v2/descendents/{id}": {
-			"get": {
-				"description": "",
-				"parameters": [
-					{
-						"name": "id",
-						"in": "path",
-						"required": true,
-						"schema": {
-							"type": "string"
-						}
-					}
-				],
-				"responses": {
-					"200": {
-						"description": "OK"
-					},
-					"404": {
-						"description": "Not Found"
-					}
-				}
-			}
-		},
-		"/api/v2/blog": {
-			"get": {
-				"description": "",
-				"parameters": [
-					{
-						"name": "id",
-						"in": "query",
-						"schema": {
-							"type": "string"
-						}
-					}
-				],
-				"responses": {
-					"200": {
-						"description": "OK"
-					},
-					"403": {
-						"description": "Forbidden"
-					},
-					"404": {
-						"description": "Not Found"
-					}
-				}
-			}
-		},
-		"/api/v2/createPost": {
-			"post": {
-				"description": "",
-				"parameters": [
-					{
-						"name": "authorization",
-						"in": "header",
-						"schema": {
-							"type": "string"
-						}
-					}
-				],
-				"responses": {
-					"200": {
-						"description": "OK"
-					},
-					"401": {
-						"description": "Unauthorized"
-					},
-					"500": {
-						"description": "Internal Server Error"
-					}
-				},
-				"requestBody": {
-					"content": {
-						"application/json": {
-							"schema": {
-								"type": "object",
-								"properties": {
-									"postToQuote": {
-										"example": "any"
-									},
-									"parent": {
-										"example": "any"
-									},
-									"privacy": {
-										"example": "any"
-									},
-									"content": {
-										"example": "any"
-									},
-									"content_warning": {
-										"example": "any"
-									},
-									"medias": {
-										"example": "any"
-									},
-									"idPostToEdit": {
-										"example": "any"
-									},
-									"ask": {
-										"example": "any"
-									},
-									"tags": {
-										"example": "any"
-									}
-								}
-							}
-						}
-					}
-				}
-			}
-		},
-		"/api/v3/createPost": {
-			"post": {
-				"description": "",
-				"parameters": [
-					{
-						"name": "authorization",
-						"in": "header",
-						"schema": {
-							"type": "string"
-						}
-					}
-				],
-				"responses": {
-					"200": {
-						"description": "OK"
-					},
-					"401": {
-						"description": "Unauthorized"
-					},
-					"500": {
-						"description": "Internal Server Error"
-					}
-				},
-				"requestBody": {
-					"content": {
-						"application/json": {
-							"schema": {
-								"type": "object",
-								"properties": {
-									"postToQuote": {
-										"example": "any"
-									},
-									"parent": {
-										"example": "any"
-									},
-									"privacy": {
-										"example": "any"
-									},
-									"content": {
-										"example": "any"
-									}
-								}
-							}
-						}
-					}
-				}
-			}
-		},
-		"/api/reportPost": {
-			"post": {
-				"description": "",
-				"parameters": [
-					{
-						"name": "authorization",
-						"in": "header",
-						"schema": {
-							"type": "string"
-						}
-					}
-				],
-				"responses": {
-					"200": {
-						"description": "OK"
-					},
-					"401": {
-						"description": "Unauthorized"
-					}
-				},
-				"requestBody": {
-					"content": {
-						"application/json": {
-							"schema": {
-								"type": "object",
-								"properties": {
-									"severity": {
-										"example": "any"
-									},
-									"description": {
-										"example": "any"
-									},
-									"postId": {
-										"example": "any"
-									}
-								}
-							}
-						}
-					}
-				}
-			}
-		},
-		"/api/loadRemoteResponses": {
-			"get": {
-				"description": "",
-				"parameters": [
-					{
-						"name": "id",
-						"in": "query",
-						"schema": {
-							"type": "string"
-						}
-					},
-					{
-						"name": "authorization",
-						"in": "header",
-						"schema": {
-							"type": "string"
-						}
-					}
-				],
-				"responses": {
-					"200": {
-						"description": "OK"
-					},
-					"401": {
-						"description": "Unauthorized"
-					}
-				}
-			}
-		},
-		"/api/v2/search/": {
-			"get": {
-				"description": "",
-				"parameters": [
-					{
-						"name": "term",
-						"in": "query",
-						"schema": {
-							"type": "string"
-						}
-					},
-					{
-						"name": "authorization",
-						"in": "header",
-						"schema": {
-							"type": "string"
-						}
-					}
-				],
-				"responses": {
-					"200": {
-						"description": "OK"
-					},
-					"401": {
-						"description": "Unauthorized"
-					}
-				}
-			}
-		},
-		"/api/userSearch/{term}": {
-			"get": {
-				"description": "",
-				"parameters": [
-					{
-						"name": "term",
-						"in": "path",
-						"required": true,
-						"schema": {
-							"type": "string"
-						}
-					},
-					{
-						"name": "authorization",
-						"in": "header",
-						"schema": {
-							"type": "string"
-						}
-					}
-				],
-				"responses": {
-					"200": {
-						"description": "OK"
-					},
-					"401": {
-						"description": "Unauthorized"
-					}
-				}
-			}
-		},
-		"/api/register": {
-			"post": {
-				"description": "",
-				"responses": {
-					"200": {
-						"description": "OK"
-					}
-				},
-				"requestBody": {
-					"content": {
-						"application/json": {
-							"schema": {
-								"type": "object",
-								"properties": {
-									"url": {
-										"example": "any"
-									},
-									"email": {
-										"example": "any"
-									},
-									"description": {
-										"example": "any"
-									},
-									"name": {
-										"example": "any"
-									},
-									"nsfw": {
-										"example": "any"
-									},
-									"password": {
-										"example": "any"
-									},
-									"birthDate": {
-										"example": "any"
-									}
-								}
-							}
-						}
-					}
-				}
-			}
-		},
-		"/api/updateCSS": {
-			"post": {
-				"description": "",
-				"parameters": [
-					{
-						"name": "authorization",
-						"in": "header",
-						"schema": {
-							"type": "string"
-						}
-					}
-				],
-				"responses": {
-					"200": {
-						"description": "OK"
-					},
-					"401": {
-						"description": "Unauthorized"
-					},
-					"500": {
-						"description": "Internal Server Error"
-					}
-				},
-				"requestBody": {
-					"content": {
-						"application/json": {
-							"schema": {
-								"type": "object",
-								"properties": {
-									"css": {
-										"example": "any"
-									}
-								}
-							}
-						}
-					}
-				}
-			}
-		},
-		"/api/editProfile": {
-			"post": {
-				"description": "",
-				"parameters": [
-					{
-						"name": "authorization",
-						"in": "header",
-						"schema": {
-							"type": "string"
-						}
-					}
-				],
-				"responses": {
-					"200": {
-						"description": "OK"
-					},
-					"401": {
-						"description": "Unauthorized"
-					}
-				},
-				"requestBody": {
-					"content": {
-						"application/json": {
-							"schema": {
-								"type": "object",
-								"properties": {
-									"manuallyAcceptsFollows": {
-										"example": "any"
-									},
-									"description": {
-										"example": "any"
-									},
-									"asksLevel": {
-										"example": "any"
-									},
-									"federateWithThreads": {
-										"example": "any"
-									},
-									"disableForceAltText": {
-										"example": "any"
-									},
-									"forceOldEditor": {
-										"example": "any"
-									},
-									"forceClassicLogo": {
-										"example": "any"
-									},
-									"defaultPostEditorPrivacy": {
-										"example": "any"
-									},
-									"name": {
-										"example": "any"
-									}
-								}
-							}
-						}
-					}
-				}
-			}
-		},
-		"/api/forgotPassword": {
-			"post": {
-				"description": "",
-				"responses": {
-					"200": {
-						"description": "OK"
-					}
-				},
-				"requestBody": {
-					"content": {
-						"application/json": {
-							"schema": {
-								"type": "object",
-								"properties": {
-									"email": {
-										"example": "any"
-									}
-								}
-							}
-						}
-					}
-				}
-			}
-		},
-		"/api/activateUser": {
-			"post": {
-				"description": "",
-				"responses": {
-					"200": {
-						"description": "OK"
-					}
-				},
-				"requestBody": {
-					"content": {
-						"application/json": {
-							"schema": {
-								"type": "object",
-								"properties": {
-									"email": {
-										"example": "any"
-									},
-									"code": {
-										"example": "any"
-									}
-								}
-							}
-						}
-					}
-				}
-			}
-		},
-		"/api/resetPassword": {
-			"post": {
-				"description": "",
-				"responses": {
-					"200": {
-						"description": "OK"
-					}
-				},
-				"requestBody": {
-					"content": {
-						"application/json": {
-							"schema": {
-								"type": "object",
-								"properties": {
-									"code": {
-										"example": "any"
-									},
-									"password": {
-										"example": "any"
-									},
-									"email": {
-										"example": "any"
-									}
-								}
-							}
-						}
-					}
-				}
-			}
-		},
-		"/api/login": {
-			"post": {
-				"description": "",
-				"responses": {
-					"200": {
-						"description": "OK"
-					}
-				},
-				"requestBody": {
-					"content": {
-						"application/json": {
-							"schema": {
-								"type": "object",
-								"properties": {
-									"password": {
-										"example": "any"
-									},
-									"email": {
-										"example": "any"
-									}
-								}
-							}
-						}
-					}
-				}
-			}
-		},
-		"/api/user": {
-			"get": {
-				"description": "",
-				"parameters": [
-					{
-						"name": "id",
-						"in": "query",
-						"schema": {
-							"type": "string"
-						}
-					}
-				],
-				"responses": {
-					"200": {
-						"description": "OK"
-					},
-					"404": {
-						"description": "Not Found"
-					}
-				}
-			}
-		},
-		"/api/my-ui-options": {
-			"get": {
-				"description": "",
-				"parameters": [
-					{
-						"name": "authorization",
-						"in": "header",
-						"schema": {
-							"type": "string"
-						}
-					}
-				],
-				"responses": {
-					"200": {
-						"description": "OK"
-					},
-					"401": {
-						"description": "Unauthorized"
-					}
-				}
-			}
-		},
-		"/api/user/deleteFollow/{id}": {
-			"get": {
-				"description": "",
-				"parameters": [
-					{
-						"name": "id",
-						"in": "path",
-						"required": true,
-						"schema": {
-							"type": "string"
-						}
-					},
-					{
-						"name": "authorization",
-						"in": "header",
-						"schema": {
-							"type": "string"
-						}
-					}
-				],
-				"responses": {
-					"200": {
-						"description": "OK"
-					},
-					"401": {
-						"description": "Unauthorized"
-					},
-					"500": {
-						"description": "Internal Server Error"
-					}
-				}
-			}
-		},
-		"/api/user/approveFollow/{id}": {
-			"get": {
-				"description": "",
-				"parameters": [
-					{
-						"name": "id",
-						"in": "path",
-						"required": true,
-						"schema": {
-							"type": "string"
-						}
-					},
-					{
-						"name": "authorization",
-						"in": "header",
-						"schema": {
-							"type": "string"
-						}
-					}
-				],
-				"responses": {
-					"200": {
-						"description": "OK"
-					},
-					"401": {
-						"description": "Unauthorized"
-					},
-					"500": {
-						"description": "Internal Server Error"
-					}
-				}
-			}
-		},
-		"/api/user/{url}/follows": {
-			"get": {
-				"description": "",
-				"parameters": [
-					{
-						"name": "url",
-						"in": "path",
-						"required": true,
-						"schema": {
-							"type": "string"
-						}
-					},
-					{
-						"name": "authorization",
-						"in": "header",
-						"schema": {
-							"type": "string"
-						}
-					}
-				],
-				"responses": {
-					"200": {
-						"description": "OK"
-					},
-					"401": {
-						"description": "Unauthorized"
-					},
-					"404": {
-						"description": "Not Found"
-					}
-				}
-			}
-		},
-		"/api/user/myAsks": {
-			"get": {
-				"description": "",
-				"parameters": [
-					{
-						"name": "authorization",
-						"in": "header",
-						"schema": {
-							"type": "string"
-						}
-					}
-				],
-				"responses": {
-					"200": {
-						"description": "OK"
-					},
-					"401": {
-						"description": "Unauthorized"
-					}
-				}
-			}
-		},
-		"/api/user/{url}/ask": {
-			"post": {
-				"description": "",
-				"parameters": [
-					{
-						"name": "url",
-						"in": "path",
-						"required": true,
-						"schema": {
-							"type": "string"
-						}
-					}
-				],
-				"responses": {
-					"200": {
-						"description": "OK"
-					},
-					"429": {
-						"description": "Too Many Requests"
-					}
-				},
-				"requestBody": {
-					"content": {
-						"application/json": {
-							"schema": {
-								"type": "object",
-								"properties": {
-									"question": {
-										"example": "any"
-									}
-								}
-							}
-						}
-					}
-				}
-			}
-		},
-		"/api/user/ignoreAsk": {
-			"post": {
-				"description": "",
-				"parameters": [
-					{
-						"name": "authorization",
-						"in": "header",
-						"schema": {
-							"type": "string"
-						}
-					}
-				],
-				"responses": {
-					"200": {
-						"description": "OK"
-					},
-					"401": {
-						"description": "Unauthorized"
-					}
-				},
-				"requestBody": {
-					"content": {
-						"application/json": {
-							"schema": {
-								"type": "object",
-								"properties": {
-									"id": {
-										"example": "any"
-									}
-								}
-							}
-						}
-					}
-				}
-			}
-		},
-		"/api/admin/server-list": {
-			"get": {
-				"description": "",
-				"parameters": [
-					{
-						"name": "authorization",
-						"in": "header",
-						"schema": {
-							"type": "string"
-						}
-					}
-				],
-				"responses": {
-					"200": {
-						"description": "OK"
-					},
-					"401": {
-						"description": "Unauthorized"
-					}
-				}
-			}
-		},
-		"/api/admin/server-update": {
-			"post": {
-				"description": "",
-				"parameters": [
-					{
-						"name": "authorization",
-						"in": "header",
-						"schema": {
-							"type": "string"
-						}
-					}
-				],
-				"responses": {
-					"200": {
-						"description": "OK"
-					},
-					"401": {
-						"description": "Unauthorized"
-					}
-				}
-			}
-		},
-		"/api/admin/userBlockList": {
-			"get": {
-				"description": "",
-				"parameters": [
-					{
-						"name": "authorization",
-						"in": "header",
-						"schema": {
-							"type": "string"
-						}
-					}
-				],
-				"responses": {
-					"200": {
-						"description": "OK"
-					},
-					"401": {
-						"description": "Unauthorized"
-					}
-				}
-			}
-		},
-		"/api/admin/reportCount": {
-			"get": {
-				"description": "",
-				"parameters": [
-					{
-						"name": "authorization",
-						"in": "header",
-						"schema": {
-							"type": "string"
-						}
-					}
-				],
-				"responses": {
-					"200": {
-						"description": "OK"
-					},
-					"401": {
-						"description": "Unauthorized"
-					}
-				}
-			}
-		},
-		"/api/admin/reportList": {
-			"get": {
-				"description": "",
-				"parameters": [
-					{
-						"name": "authorization",
-						"in": "header",
-						"schema": {
-							"type": "string"
-						}
-					}
-				],
-				"responses": {
-					"200": {
-						"description": "OK"
-					},
-					"401": {
-						"description": "Unauthorized"
-					}
-				}
-			}
-		},
-		"/api/admin/closeReport": {
-			"post": {
-				"description": "",
-				"parameters": [
-					{
-						"name": "authorization",
-						"in": "header",
-						"schema": {
-							"type": "string"
-						}
-					}
-				],
-				"responses": {
-					"200": {
-						"description": "OK"
-					},
-					"401": {
-						"description": "Unauthorized"
-					}
-				},
-				"requestBody": {
-					"content": {
-						"application/json": {
-							"schema": {
-								"type": "object",
-								"properties": {
-									"id": {
-										"example": "any"
-									}
-								}
-							}
-						}
-					}
-				}
-			}
-		},
-		"/api/admin/banUser": {
-			"post": {
-				"description": "",
-				"parameters": [
-					{
-						"name": "authorization",
-						"in": "header",
-						"schema": {
-							"type": "string"
-						}
-					}
-				],
-				"responses": {
-					"200": {
-						"description": "OK"
-					},
-					"401": {
-						"description": "Unauthorized"
-					}
-				},
-				"requestBody": {
-					"content": {
-						"application/json": {
-							"schema": {
-								"type": "object",
-								"properties": {
-									"id": {
-										"example": "any"
-									}
-								}
-							}
-						}
-					}
-				}
-			}
-		},
-		"/api/admin/ignoreReport": {
-			"post": {
-				"description": "",
-				"parameters": [
-					{
-						"name": "authorization",
-						"in": "header",
-						"schema": {
-							"type": "string"
-						}
-					}
-				],
-				"responses": {
-					"200": {
-						"description": "OK"
-					},
-					"401": {
-						"description": "Unauthorized"
-					}
-				},
-				"requestBody": {
-					"content": {
-						"application/json": {
-							"schema": {
-								"type": "object",
-								"properties": {
-									"id": {
-										"example": "any"
-									}
-								}
-							}
-						}
-					}
-				}
-			}
-		},
-		"/api/admin/getBannedUsers": {
-			"get": {
-				"description": "",
-				"parameters": [
-					{
-						"name": "authorization",
-						"in": "header",
-						"schema": {
-							"type": "string"
-						}
-					}
-				],
-				"responses": {
-					"200": {
-						"description": "OK"
-					},
-					"401": {
-						"description": "Unauthorized"
-					}
-				}
-			}
-		},
-		"/api/admin/unbanUser": {
-			"post": {
-				"description": "",
-				"parameters": [
-					{
-						"name": "authorization",
-						"in": "header",
-						"schema": {
-							"type": "string"
-						}
-					}
-				],
-				"responses": {
-					"200": {
-						"description": "OK"
-					},
-					"401": {
-						"description": "Unauthorized"
-					}
-				},
-				"requestBody": {
-					"content": {
-						"application/json": {
-							"schema": {
-								"type": "object",
-								"properties": {
-									"id": {
-										"example": "any"
-									}
-								}
-							}
-						}
-					}
-				}
-			}
-		},
-		"/api/admin/getPendingApprovalUsers": {
-			"get": {
-				"description": "",
-				"parameters": [
-					{
-						"name": "authorization",
-						"in": "header",
-						"schema": {
-							"type": "string"
-						}
-					}
-				],
-				"responses": {
-					"200": {
-						"description": "OK"
-					},
-					"401": {
-						"description": "Unauthorized"
-					}
-				}
-			}
-		},
-		"/api/admin/activateUser": {
-			"post": {
-				"description": "",
-				"parameters": [
-					{
-						"name": "authorization",
-						"in": "header",
-						"schema": {
-							"type": "string"
-						}
-					}
-				],
-				"responses": {
-					"200": {
-						"description": "OK"
-					},
-					"401": {
-						"description": "Unauthorized"
-					}
-				},
-				"requestBody": {
-					"content": {
-						"application/json": {
-							"schema": {
-								"type": "object",
-								"properties": {
-									"id": {
-										"example": "any"
-									}
-								}
-							}
-						}
-					}
-				}
-			}
-		},
-		"/api/admin/notActivateAndSendEmail": {
-			"post": {
-				"description": "",
-				"parameters": [
-					{
-						"name": "authorization",
-						"in": "header",
-						"schema": {
-							"type": "string"
-						}
-					}
-				],
-				"responses": {
-					"200": {
-						"description": "OK"
-					},
-					"401": {
-						"description": "Unauthorized"
-					}
-				},
-				"requestBody": {
-					"content": {
-						"application/json": {
-							"schema": {
-								"type": "object",
-								"properties": {
-									"id": {
-										"example": "any"
-									}
-								}
-							}
-						}
-					}
-				}
-			}
-		},
-		"/api/blockUserServer": {
-			"post": {
-				"description": "",
-				"parameters": [
-					{
-						"name": "authorization",
-						"in": "header",
-						"schema": {
-							"type": "string"
-						}
-					}
-				],
-				"responses": {
-					"200": {
-						"description": "OK"
-					},
-					"401": {
-						"description": "Unauthorized"
-					}
-				},
-				"requestBody": {
-					"content": {
-						"application/json": {
-							"schema": {
-								"type": "object",
-								"properties": {
-									"userId": {
-										"example": "any"
-									}
-								}
-							}
-						}
-					}
-				}
-			}
-		},
-		"/api/unblockUserServer": {
-			"post": {
-				"description": "",
-				"parameters": [
-					{
-						"name": "authorization",
-						"in": "header",
-						"schema": {
-							"type": "string"
-						}
-					}
-				],
-				"responses": {
-					"200": {
-						"description": "OK"
-					},
-					"401": {
-						"description": "Unauthorized"
-					}
-				},
-				"requestBody": {
-					"content": {
-						"application/json": {
-							"schema": {
-								"type": "object",
-								"properties": {
-									"userId": {
-										"example": "any"
-									}
-								}
-							}
-						}
-					}
-				}
-			}
-		},
-		"/api/myServerBlocks": {
-			"get": {
-				"description": "",
-				"parameters": [
-					{
-						"name": "authorization",
-						"in": "header",
-						"schema": {
-							"type": "string"
-						}
-					}
-				],
-				"responses": {
-					"200": {
-						"description": "OK"
-					},
-					"401": {
-						"description": "Unauthorized"
-					}
-				}
-			}
-		},
-		"/api/unblockServer": {
-			"post": {
-				"description": "",
-				"parameters": [
-					{
-						"name": "id",
-						"in": "query",
-						"schema": {
-							"type": "string"
-						}
-					},
-					{
-						"name": "authorization",
-						"in": "header",
-						"schema": {
-							"type": "string"
-						}
-					}
-				],
-				"responses": {
-					"200": {
-						"description": "OK"
-					},
-					"401": {
-						"description": "Unauthorized"
-					}
-				}
-			}
-		},
-		"/api/v2/dashboard": {
-			"get": {
-				"description": "",
-				"parameters": [
-					{
-						"name": "level",
-						"in": "query",
-						"schema": {
-							"type": "string"
-						}
-					}
-				],
-				"responses": {
-					"200": {
-						"description": "OK"
-					},
-					"401": {
-						"description": "Unauthorized"
-					}
-				}
-			}
-		},
-		"/api/like": {
-			"post": {
-				"description": "",
-				"parameters": [
-					{
-						"name": "authorization",
-						"in": "header",
-						"schema": {
-							"type": "string"
-						}
-					}
-				],
-				"responses": {
-					"200": {
-						"description": "OK"
-					},
-					"401": {
-						"description": "Unauthorized"
-					},
-					"500": {
-						"description": "Internal Server Error"
-					}
-				},
-				"requestBody": {
-					"content": {
-						"application/json": {
-							"schema": {
-								"type": "object",
-								"properties": {
-									"postId": {
-										"example": "any"
-									}
-								}
-							}
-						}
-					}
-				}
-			}
-		},
-		"/api/unlike": {
-			"post": {
-				"description": "",
-				"parameters": [
-					{
-						"name": "authorization",
-						"in": "header",
-						"schema": {
-							"type": "string"
-						}
-					}
-				],
-				"responses": {
-					"200": {
-						"description": "OK"
-					},
-					"401": {
-						"description": "Unauthorized"
-					}
-				},
-				"requestBody": {
-					"content": {
-						"application/json": {
-							"schema": {
-								"type": "object",
-								"properties": {
-									"postId": {
-										"example": "any"
-									}
-								}
-							}
-						}
-					}
-				}
-			}
-		},
-		"/api/mute": {
-			"post": {
-				"description": "",
-				"parameters": [
-					{
-						"name": "authorization",
-						"in": "header",
-						"schema": {
-							"type": "string"
-						}
-					}
-				],
-				"responses": {
-					"200": {
-						"description": "OK"
-					},
-					"401": {
-						"description": "Unauthorized"
-					}
-				},
-				"requestBody": {
-					"content": {
-						"application/json": {
-							"schema": {
-								"type": "object",
-								"properties": {
-									"userId": {
-										"example": "any"
-									}
-								}
-							}
-						}
-					}
-				}
-			}
-		},
-		"/api/unmute": {
-			"post": {
-				"description": "",
-				"parameters": [
-					{
-						"name": "authorization",
-						"in": "header",
-						"schema": {
-							"type": "string"
-						}
-					}
-				],
-				"responses": {
-					"200": {
-						"description": "OK"
-					},
-					"401": {
-						"description": "Unauthorized"
-					}
-				},
-				"requestBody": {
-					"content": {
-						"application/json": {
-							"schema": {
-								"type": "object",
-								"properties": {
-									"userId": {
-										"example": "any"
-									}
-								}
-							}
-						}
-					}
-				}
-			}
-		},
-		"/api/myMutes": {
-			"get": {
-				"description": "",
-				"parameters": [
-					{
-						"name": "authorization",
-						"in": "header",
-						"schema": {
-							"type": "string"
-						}
-					}
-				],
-				"responses": {
-					"200": {
-						"description": "OK"
-					},
-					"401": {
-						"description": "Unauthorized"
-					}
-				}
-			}
-		},
-		"/api/unmute-user": {
-			"post": {
-				"description": "",
-				"parameters": [
-					{
-						"name": "id",
-						"in": "query",
-						"schema": {
-							"type": "string"
-						}
-					},
-					{
-						"name": "authorization",
-						"in": "header",
-						"schema": {
-							"type": "string"
-						}
-					}
-				],
-				"responses": {
-					"200": {
-						"description": "OK"
-					},
-					"401": {
-						"description": "Unauthorized"
-					}
-				}
-			}
-		},
-		"/api/deletePost": {
-			"delete": {
-				"description": "",
-				"parameters": [
-					{
-						"name": "id",
-						"in": "query",
-						"schema": {
-							"type": "string"
-						}
-					},
-					{
-						"name": "authorization",
-						"in": "header",
-						"schema": {
-							"type": "string"
-						}
-					}
-				],
-				"responses": {
-					"200": {
-						"description": "OK"
-					},
-					"401": {
-						"description": "Unauthorized"
-					},
-					"500": {
-						"description": "Internal Server Error"
-					}
-				}
-			}
-		},
-		"/api/deleteRewoots": {
-			"delete": {
-				"description": "",
-				"parameters": [
-					{
-						"name": "id",
-						"in": "query",
-						"schema": {
-							"type": "string"
-						}
-					},
-					{
-						"name": "authorization",
-						"in": "header",
-						"schema": {
-							"type": "string"
-						}
-					}
-				],
-				"responses": {
-					"200": {
-						"description": "OK"
-					},
-					"401": {
-						"description": "Unauthorized"
-					}
-				}
-			}
-		},
-		"/api/emojiReact": {
-			"post": {
-				"description": "",
-				"parameters": [
-					{
-						"name": "authorization",
-						"in": "header",
-						"schema": {
-							"type": "string"
-						}
-					}
-				],
-				"responses": {
-					"200": {
-						"description": "OK"
-					},
-					"401": {
-						"description": "Unauthorized"
-					},
-					"500": {
-						"description": "Internal Server Error"
-					}
-				},
-				"requestBody": {
-					"content": {
-						"application/json": {
-							"schema": {
-								"type": "object",
-								"properties": {
-									"postId": {
-										"example": "any"
-									},
-									"emojiName": {
-										"example": "any"
-									},
-									"undo": {
-										"example": "any"
-									}
-								}
-							}
-						}
-					}
-				}
-			}
-		},
-		"/api/admin/addEmoji": {
-			"post": {
-				"description": "",
-				"parameters": [
-					{
-						"name": "authorization",
-						"in": "header",
-						"schema": {
-							"type": "string"
-						}
-					}
-				],
-				"responses": {
-					"200": {
-						"description": "OK"
-					},
-					"401": {
-						"description": "Unauthorized"
-					}
-				}
-			}
-		},
-		"/api/forum/{id}": {
-			"get": {
-				"description": "",
-				"parameters": [
-					{
-						"name": "id",
-						"in": "path",
-						"required": true,
-						"schema": {
-							"type": "string"
-						}
-					}
-				],
-				"responses": {
-					"200": {
-						"description": "OK"
-					},
-					"404": {
-						"description": "Not Found"
-					}
-				}
-			}
-		},
-		"/api/cache": {
-			"get": {
-				"description": "",
-				"parameters": [
-					{
-						"name": "media",
-						"in": "query",
-						"schema": {
-							"type": "string"
-						}
-					},
-					{
-						"name": "avatar",
-						"in": "query",
-						"schema": {
-							"type": "string"
-						}
-					}
-				],
-				"responses": {
-					"200": {
-						"description": "OK"
-					},
-					"404": {
-						"description": "Not Found"
-					}
-				}
-			}
-		},
-		"/api/v2/unsilencePost": {
-			"post": {
-				"description": "",
-				"parameters": [
-					{
-						"name": "authorization",
-						"in": "header",
-						"schema": {
-							"type": "string"
-						}
-					}
-				],
-				"responses": {
-					"200": {
-						"description": "OK"
-					},
-					"401": {
-						"description": "Unauthorized"
-					}
-				},
-				"requestBody": {
-					"content": {
-						"application/json": {
-							"schema": {
-								"type": "object",
-								"properties": {
-									"postId": {
-										"example": "any"
-									}
-								}
-							}
-						}
-					}
-				}
-			}
-		},
-		"/api/v2/silencePost": {
-			"post": {
-				"description": "",
-				"parameters": [
-					{
-						"name": "authorization",
-						"in": "header",
-						"schema": {
-							"type": "string"
-						}
-					}
-				],
-				"responses": {
-					"200": {
-						"description": "OK"
-					},
-					"401": {
-						"description": "Unauthorized"
-					}
-				},
-				"requestBody": {
-					"content": {
-						"application/json": {
-							"schema": {
-								"type": "object",
-								"properties": {
-									"postId": {
-										"example": "any"
-									},
-									"superMute": {
-										"example": "any"
-									}
-								}
-							}
-						}
-					}
-				}
-			}
-		},
-		"/api/status/workerStats": {
-			"get": {
-				"description": "",
-				"parameters": [
-					{
-						"name": "authorization",
-						"in": "header",
-						"schema": {
-							"type": "string"
-						}
-					}
-				],
-				"responses": {
-					"200": {
-						"description": "OK"
-					},
-					"401": {
-						"description": "Unauthorized"
-					}
-				}
-			}
-		},
-		"[/": {
-			"get": {
-				"description": "",
-				"responses": {
-					"200": {
-						"description": "OK"
-					}
-				}
-			}
-		},
-		"/post/{id}": {
-			"get": {
-				"description": "",
-				"parameters": [
-					{
-						"name": "id",
-						"in": "path",
-						"required": true,
-						"schema": {
-							"type": "string"
-						}
-					},
-					{
-						"name": "digest",
-						"in": "header",
-						"schema": {
-							"type": "string"
-						}
-					},
-					{
-						"name": "user-agent",
-						"in": "header",
-						"schema": {
-							"type": "string"
-						}
-					}
-				],
-				"responses": {
-					"200": {
-						"description": "OK"
-					},
-					"401": {
-						"description": "Unauthorized"
-					},
-					"403": {
-						"description": "Forbidden"
-					},
-					"429": {
-						"description": "Too Many Requests"
-					}
-				}
-			}
-		},
-		"/blog/{url}/{somethingElse}": {
-			"get": {
-				"description": "",
-				"parameters": [
-					{
-						"name": "url",
-						"in": "path",
-						"required": true,
-						"schema": {
-							"type": "string"
-						}
-					},
-					{
-						"name": "somethingElse",
-						"in": "path",
-						"required": true,
-						"schema": {
-							"type": "string"
-						}
-					}
-				],
-				"responses": {
-					"200": {
-						"description": "OK"
-					}
-				}
-			}
-		},
-		"/blog/{url}": {
-			"get": {
-				"description": "",
-				"parameters": [
-					{
-						"name": "url",
-						"in": "path",
-						"required": true,
-						"schema": {
-							"type": "string"
-						}
-					}
-				],
-				"responses": {
-					"200": {
-						"description": "OK"
-					}
-				}
-			}
-		},
-		"[/fediverse/post/{id}": {
-			"get": {
-				"description": "",
-				"parameters": [
-					{
-						"name": "id",
-						"in": "path",
-						"required": true,
-						"schema": {
-							"type": "string"
-						}
-					},
-					{
-						"name": "digest",
-						"in": "header",
-						"schema": {
-							"type": "string"
-						}
-					},
-					{
-						"name": "user-agent",
-						"in": "header",
-						"schema": {
-							"type": "string"
-						}
-					}
-				],
-				"responses": {
-					"200": {
-						"description": "OK"
-					},
-					"401": {
-						"description": "Unauthorized"
-					},
-					"403": {
-						"description": "Forbidden"
-					},
-					"404": {
-						"description": "Not Found"
-					},
-					"410": {
-						"description": "Gone"
-					},
-					"429": {
-						"description": "Too Many Requests"
-					},
-					"500": {
-						"description": "Internal Server Error"
-					}
-				}
-			}
-		}
-	},
-	"components": {
-		"securitySchemes": {
-			"bearerAuth": {
-				"type": "http",
-				"scheme": "bearer",
-				"bearerFormat": "JWT"
-			}
-		}
-	}
+  "openapi": "3.0.0",
+  "info": {
+    "version": "0.1.0",
+    "title": "WAFRN Backend",
+    "description": "API routes for wafrn social network"
+  },
+  "paths": {
+    "/api/": {
+      "get": {
+        "description": "",
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/block": {
+      "post": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "authorization",
+            "in": "header",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        },
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "userId": {
+                    "example": "any"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/unblock": {
+      "post": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "authorization",
+            "in": "header",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        },
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "userId": {
+                    "example": "any"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/myBlocks": {
+      "get": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "authorization",
+            "in": "header",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      }
+    },
+    "/api/unblock-user": {
+      "post": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      }
+    },
+    "/api/follow": {
+      "post": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "authorization",
+            "in": "header",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        },
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "userId": {
+                    "example": "any"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/unfollow": {
+      "post": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "authorization",
+            "in": "header",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        },
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "userId": {
+                    "example": "any"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/uploadMedia": {
+      "post": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "authorization",
+            "in": "header",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        },
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "nsfw": {
+                    "example": "any"
+                  },
+                  "description": {
+                    "example": "any"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/updateMedia": {
+      "get": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "NSFW",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "description",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      }
+    },
+    "/api/v2/notificationsScroll": {
+      "get": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "req",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      }
+    },
+    "/api/v2/notificationsCount": {
+      "get": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "authorization",
+            "in": "header",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      }
+    },
+    "/api/v2/post/{id}": {
+      "get": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/api/v2/descendents/{id}": {
+      "get": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        }
+      }
+    },
+    "/api/v2/blog": {
+      "get": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        }
+      }
+    },
+    "/api/v2/createPost": {
+      "post": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "authorization",
+            "in": "header",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        },
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "postToQuote": {
+                    "example": "any"
+                  },
+                  "parent": {
+                    "example": "any"
+                  },
+                  "privacy": {
+                    "example": "any"
+                  },
+                  "content": {
+                    "example": "any"
+                  },
+                  "content_warning": {
+                    "example": "any"
+                  },
+                  "medias": {
+                    "example": "any"
+                  },
+                  "idPostToEdit": {
+                    "example": "any"
+                  },
+                  "ask": {
+                    "example": "any"
+                  },
+                  "tags": {
+                    "example": "any"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v3/createPost": {
+      "post": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "authorization",
+            "in": "header",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        },
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "postToQuote": {
+                    "example": "any"
+                  },
+                  "parent": {
+                    "example": "any"
+                  },
+                  "privacy": {
+                    "example": "any"
+                  },
+                  "content": {
+                    "example": "any"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/reportPost": {
+      "post": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "authorization",
+            "in": "header",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        },
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "severity": {
+                    "example": "any"
+                  },
+                  "description": {
+                    "example": "any"
+                  },
+                  "postId": {
+                    "example": "any"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/loadRemoteResponses": {
+      "get": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      }
+    },
+    "/api/v2/search/": {
+      "get": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "term",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      }
+    },
+    "/api/userSearch/{term}": {
+      "get": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "term",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      }
+    },
+    "/api/register": {
+      "post": {
+        "description": "",
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "url": {
+                    "example": "any"
+                  },
+                  "email": {
+                    "example": "any"
+                  },
+                  "description": {
+                    "example": "any"
+                  },
+                  "name": {
+                    "example": "any"
+                  },
+                  "nsfw": {
+                    "example": "any"
+                  },
+                  "password": {
+                    "example": "any"
+                  },
+                  "birthDate": {
+                    "example": "any"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/updateCSS": {
+      "post": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "authorization",
+            "in": "header",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        },
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "css": {
+                    "example": "any"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/editProfile": {
+      "post": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "authorization",
+            "in": "header",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        },
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "manuallyAcceptsFollows": {
+                    "example": "any"
+                  },
+                  "description": {
+                    "example": "any"
+                  },
+                  "asksLevel": {
+                    "example": "any"
+                  },
+                  "federateWithThreads": {
+                    "example": "any"
+                  },
+                  "disableForceAltText": {
+                    "example": "any"
+                  },
+                  "forceOldEditor": {
+                    "example": "any"
+                  },
+                  "forceClassicLogo": {
+                    "example": "any"
+                  },
+                  "defaultPostEditorPrivacy": {
+                    "example": "any"
+                  },
+                  "name": {
+                    "example": "any"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/forgotPassword": {
+      "post": {
+        "description": "",
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "email": {
+                    "example": "any"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/activateUser": {
+      "post": {
+        "description": "",
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "email": {
+                    "example": "any"
+                  },
+                  "code": {
+                    "example": "any"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/resetPassword": {
+      "post": {
+        "description": "",
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "code": {
+                    "example": "any"
+                  },
+                  "password": {
+                    "example": "any"
+                  },
+                  "email": {
+                    "example": "any"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/login": {
+      "post": {
+        "description": "",
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "password": {
+                    "example": "any"
+                  },
+                  "email": {
+                    "example": "any"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/user": {
+      "get": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        }
+      }
+    },
+    "/api/my-ui-options": {
+      "get": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "authorization",
+            "in": "header",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      }
+    },
+    "/api/user/deleteFollow/{id}": {
+      "get": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/api/user/approveFollow/{id}": {
+      "get": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/api/user/{url}/follows": {
+      "get": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "url",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        }
+      }
+    },
+    "/api/user/myAsks": {
+      "get": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "authorization",
+            "in": "header",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      }
+    },
+    "/api/user/{url}/ask": {
+      "post": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "url",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "429": {
+            "description": "Too Many Requests"
+          }
+        },
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "question": {
+                    "example": "any"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/user/ignoreAsk": {
+      "post": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "authorization",
+            "in": "header",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        },
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "example": "any"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/admin/server-list": {
+      "get": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "authorization",
+            "in": "header",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      }
+    },
+    "/api/admin/server-update": {
+      "post": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "authorization",
+            "in": "header",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      }
+    },
+    "/api/admin/userBlockList": {
+      "get": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "authorization",
+            "in": "header",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      }
+    },
+    "/api/admin/reportCount": {
+      "get": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "authorization",
+            "in": "header",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      }
+    },
+    "/api/admin/reportList": {
+      "get": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "authorization",
+            "in": "header",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      }
+    },
+    "/api/admin/closeReport": {
+      "post": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "authorization",
+            "in": "header",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        },
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "example": "any"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/admin/banUser": {
+      "post": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "authorization",
+            "in": "header",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        },
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "example": "any"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/admin/ignoreReport": {
+      "post": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "authorization",
+            "in": "header",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        },
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "example": "any"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/admin/getBannedUsers": {
+      "get": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "authorization",
+            "in": "header",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      }
+    },
+    "/api/admin/unbanUser": {
+      "post": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "authorization",
+            "in": "header",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        },
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "example": "any"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/admin/getPendingApprovalUsers": {
+      "get": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "authorization",
+            "in": "header",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      }
+    },
+    "/api/admin/activateUser": {
+      "post": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "authorization",
+            "in": "header",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        },
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "example": "any"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/admin/notActivateAndSendEmail": {
+      "post": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "authorization",
+            "in": "header",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        },
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "example": "any"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/blockUserServer": {
+      "post": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "authorization",
+            "in": "header",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        },
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "userId": {
+                    "example": "any"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/unblockUserServer": {
+      "post": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "authorization",
+            "in": "header",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        },
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "userId": {
+                    "example": "any"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/myServerBlocks": {
+      "get": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "authorization",
+            "in": "header",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      }
+    },
+    "/api/unblockServer": {
+      "post": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      }
+    },
+    "/api/v2/dashboard": {
+      "get": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "level",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      }
+    },
+    "/api/like": {
+      "post": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "authorization",
+            "in": "header",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        },
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "postId": {
+                    "example": "any"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/unlike": {
+      "post": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "authorization",
+            "in": "header",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        },
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "postId": {
+                    "example": "any"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/mute": {
+      "post": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "authorization",
+            "in": "header",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        },
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "userId": {
+                    "example": "any"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/unmute": {
+      "post": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "authorization",
+            "in": "header",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        },
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "userId": {
+                    "example": "any"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/myMutes": {
+      "get": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "authorization",
+            "in": "header",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      }
+    },
+    "/api/unmute-user": {
+      "post": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      }
+    },
+    "/api/deletePost": {
+      "delete": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/api/deleteRewoots": {
+      "delete": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      }
+    },
+    "/api/emojiReact": {
+      "post": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "authorization",
+            "in": "header",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        },
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "postId": {
+                    "example": "any"
+                  },
+                  "emojiName": {
+                    "example": "any"
+                  },
+                  "undo": {
+                    "example": "any"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/admin/addEmoji": {
+      "post": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "authorization",
+            "in": "header",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      }
+    },
+    "/api/forum/{id}": {
+      "get": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        }
+      }
+    },
+    "/api/cache": {
+      "get": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "media",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "avatar",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        }
+      }
+    },
+    "/api/v2/unsilencePost": {
+      "post": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "authorization",
+            "in": "header",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        },
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "postId": {
+                    "example": "any"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v2/silencePost": {
+      "post": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "authorization",
+            "in": "header",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        },
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "postId": {
+                    "example": "any"
+                  },
+                  "superMute": {
+                    "example": "any"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/status/workerStats": {
+      "get": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "authorization",
+            "in": "header",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      }
+    },
+    "[/": {
+      "get": {
+        "description": "",
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/post/{id}": {
+      "get": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "digest",
+            "in": "header",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "user-agent",
+            "in": "header",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "429": {
+            "description": "Too Many Requests"
+          }
+        }
+      }
+    },
+    "/blog/{url}/{somethingElse}": {
+      "get": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "url",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "somethingElse",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/blog/{url}": {
+      "get": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "url",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "[/fediverse/post/{id}": {
+      "get": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "digest",
+            "in": "header",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "user-agent",
+            "in": "header",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "410": {
+            "description": "Gone"
+          },
+          "429": {
+            "description": "Too Many Requests"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    }
+  }
 }

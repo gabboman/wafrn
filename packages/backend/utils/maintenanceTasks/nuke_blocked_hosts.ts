@@ -1,24 +1,27 @@
-import { Op } from "sequelize";
-import { FederatedHost, User } from "../../db.js";
-import { removeUser } from "../activitypub/removeUser.js";
+import { Op } from 'sequelize'
+import { FederatedHost, User } from '../../db.js'
+import { removeUser } from '../activitypub/removeUser.js'
 
 async function nukeUsersFromBlockedHosts() {
-	const blockedHosts = await FederatedHost.findAll({
-		where: {
-			blocked: true,
-		},
-	});
+  const blockedHosts = await FederatedHost.findAll({
+    where: {
+      blocked: true
+    }
+  })
 
-	const usersToDelete = await User.findAll({
-		where: {
-			federatedHostId: {
-				[Op.in]: blockedHosts.map((elem: any) => elem.id),
-			},
-		},
-	});
-	for await (const user of usersToDelete) {
-		await removeUser(user.id);
-	}
+  const usersToDelete = await User.findAll({
+    where: {
+      federatedHostId: {
+        [Op.in]: blockedHosts.map((elem: any) => elem.id)
+      }
+    }
+  })
+  for await (const user of usersToDelete) {
+    console.log(`Nuking ${user.url}`)
+    await removeUser(user.id)
+  }
 }
 
-nukeUsersFromBlockedHosts().then(() => {});
+nukeUsersFromBlockedHosts().then(() => {
+  console.log('nuked')
+})
