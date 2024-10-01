@@ -10,7 +10,7 @@
   <div class="flex justify-content-center flex-wrap mb-2">
     <div [innerText]="blogDetails.url" class="text-600 line-height-3"></div>
   </div>
-  @if (userLoggedIn) {
+  @if (userLoggedIn && !isMe) {
   <div *ngIf="userLoggedIn" class="flex gap-0 flex-nowrap w-min mx-auto">
     <button mat-stroked-button [color]="
           postService.followedUserIds.indexOf(blogDetails.id) === -1 ? 'primary' : 'warn'
