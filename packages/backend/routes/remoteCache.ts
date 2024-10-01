@@ -74,6 +74,7 @@ export default function cacheRoutes(app: Application) {
         url: req.query?.media,
         error: error
       })
+      res.sendStatus(500)
     }
   })
 }
