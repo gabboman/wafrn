@@ -7,7 +7,7 @@ import {
 import { LoginService } from 'src/app/services/login.service';
 import { MessageService } from 'src/app/services/message.service';
 import { environment } from 'src/environments/environment';
-import { faUser } from '@fortawesome/free-solid-svg-icons';
+import { faUser, faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
   selector: 'app-register',
@@ -16,8 +16,14 @@ import { faUser } from '@fortawesome/free-solid-svg-icons';
 })
 export class RegisterComponent {
   loading = false;
+  isPasswordVisible = false;  // Track visibility of password
   logo = environment.logo;
   manuallyReview = environment.reviewRegistrations;
+
+  // Font Awesome icons
+  faUser = faUser;
+  faEye = faEye;
+  faEyeSlash = faEyeSlash;
 
   minimumRegistrationDate: Date;
   minDate: Date;
@@ -33,10 +39,6 @@ export class RegisterComponent {
     avatar: new UntypedFormControl('', []),
   });
 
-  // fontawesome icons
-
-  faUser = faUser;
-
   constructor(
     private loginService: LoginService,
     private messages: MessageService
@@ -49,6 +51,11 @@ export class RegisterComponent {
     // do not accept dates before 1900
     this.minDate = new Date();
     this.minDate.setFullYear(1900, 0, 1);
+  }
+
+  // Toggle password visibility
+  togglePasswordVisibility() {
+    this.isPasswordVisible = !this.isPasswordVisible;
   }
 
   async onSubmit() {

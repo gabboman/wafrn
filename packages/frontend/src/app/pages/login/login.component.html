@@ -33,17 +33,25 @@
       <mat-label>Password</mat-label>
       <input
         formControlName="password"
+        [type]="showPassword ? 'text' : 'password'"
         name="password"
-        type="password"
         matInput
       />
-      <mat-hint
-        ><a
+      <button
+        mat-icon-button
+        matSuffix
+        type="button"
+        (click)="togglePasswordVisibility()"
+      >
+        <fa-icon [icon]="showPassword ? faEyeSlash : faEye"></fa-icon>
+      </button>
+      <mat-hint>
+        <a
           routerLink="/recoverPassword"
           class="font-medium no-underline ml-2 text-right cursor-pointer"
           >Forgot password? Click here!</a
-        ></mat-hint
-      >
+        >
+      </mat-hint>
     </mat-form-field>
 
     <button

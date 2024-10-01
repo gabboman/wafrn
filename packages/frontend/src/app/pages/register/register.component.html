@@ -21,8 +21,15 @@
 
     <mat-form-field class="w-full">
       <mat-label>Password</mat-label>
-      <input formControlName="password" type="password" matInput />
+      <input [type]="isPasswordVisible ? 'text' : 'password'" formControlName="password" matInput />
+      <button mat-icon-button matSuffix type="button" (click)="togglePasswordVisibility()">
+        <fa-icon [icon]="isPasswordVisible ? faEyeSlash : faEye"></fa-icon>
+      </button>
+      <mat-error *ngIf="loginForm.get('password')?.invalid && loginForm.get('password')?.touched">
+        Password is required
+      </mat-error>
     </mat-form-field>
+    
 
     <mat-form-field class="w-full mb-3">
       <mat-label>Your username</mat-label>
