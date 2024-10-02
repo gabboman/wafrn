@@ -18,6 +18,23 @@ import {
 } from '../db.js'
 import getPosstGroupDetails from './getPostGroupDetails.js'
 import getFollowedsIds from './cacheGetters/getFollowedsIds.js'
+import { Queue } from 'bullmq'
+import { environment } from '../environment.js'
+
+
+const updateMediaDataQueue = new Queue('processRemoteMediaData', {
+  connection: environment.bullmqConnection,
+  defaultJobOptions: {
+    removeOnComplete: true,
+    attempts: 3,
+    backoff: {
+      type: 'exponential',
+      delay: 1000
+    },
+    removeOnFail: 25000
+  }
+})
+
 
 async function getQuotes(
   postIds: string[]
@@ -32,7 +49,7 @@ async function getQuotes(
 }
 
 async function getMedias(postIds: string[]) {
-  return await Media.findAll({
+  const medias = await Media.findAll({
     attributes: ['id', 'NSFW', 'description', 'url', 'external', 'mediaOrder', 'mediaType', 'postId', 'blurhash', 'width', 'height'],
     where: {
       postId: {
@@ -40,6 +57,19 @@ async function getMedias(postIds: string[]) {
       }
     }
   })
+
+  let mediasToProcess = medias.filter((elem: any) => !elem.mediaType || (elem.mediaType?.startsWith('image') && !elem.width))
+  if (mediasToProcess && mediasToProcess.length > 0) {
+    updateMediaDataQueue.addBulk(
+      mediasToProcess.map((media: any) => {
+        return {
+          name: `getMediaData${media.id}`,
+          data: { mediaId: media.id }
+        }
+      })
+    )
+  }
+  return medias;
 }
 async function getMentionedUserIds(
   postIds: string[]
