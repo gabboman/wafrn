@@ -71,7 +71,7 @@ async function postToJSONLD(postId: string) {
       const postUrl = quotedPost.remotePostId
         ? quotedPost.remotePostId
         : `${environment.frontendUrl}/fediverse/post/${quotedPost.id}`
-      tagsAndQuotes = tagsAndQuotes + `RE: <a href="${postUrl}">${postUrl}</a><br>`
+      tagsAndQuotes = tagsAndQuotes + `<br>RE: <a href="${postUrl}">${postUrl}</a><br>`
       fediTags.push({
         type: 'Link',
         name: `RE: ${postUrl}`,
