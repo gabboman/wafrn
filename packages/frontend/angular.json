@@ -128,10 +128,24 @@
               "extractLicenses": false,
               "sourceMap": true,
               "namedChunks": true,
-              "fileReplacements":[
+              "fileReplacements": [
                 {
-                "replace": "src/environments/environment.ts",
-                "with":"src/environments/environment.dev.ts"
+                  "replace": "src/environments/environment.ts",
+                  "with": "src/environments/environment.dev.ts"
+                }
+              ]
+            },
+            "devprod": {
+              "buildOptimizer": false,
+              "optimization": false,
+              "vendorChunk": true,
+              "extractLicenses": false,
+              "sourceMap": true,
+              "namedChunks": true,
+              "fileReplacements": [
+                {
+                  "replace": "src/environments/environment.ts",
+                  "with": "src/environments/environment.devprod.ts"
                 }
               ]
             }
@@ -146,6 +160,9 @@
             },
             "development": {
               "buildTarget": "wafrn:build:development"
+            },
+            "devprod": {
+              "buildTarget": "wafrn:build:devprod"
             }
           },
           "defaultConfiguration": "development"
