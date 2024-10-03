@@ -60,8 +60,8 @@
           <mat-label>Force classic logo</mat-label>
         </div>
         <div class="w-full">
-          <mat-checkbox formControlName="forceOldEditor"></mat-checkbox>
-          <mat-label>Use old editor (HTML Editor. Does not support markdown like the new one)</mat-label>
+          <mat-checkbox [disabled]="true" formControlName="forceOldEditor"></mat-checkbox>
+          <mat-label>Old editor has been disabled</mat-label>
         </div>
         <div class="w-full">
           <mat-checkbox formControlName="federateWithThreads"></mat-checkbox>

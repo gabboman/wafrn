@@ -28,7 +28,7 @@ export class EditorService implements OnDestroy {
     private http: HttpClient,
     private dashboardService: DashboardService,
     private router: Router,
-    private dialog: MatDialog
+    private dialogService: MatDialog
   ) {
     this.editorSubscription = this.launchPostEditorEmitter.subscribe((data) => {
       if (data.action !== Action.None) {
@@ -132,11 +132,22 @@ export class EditorService implements OnDestroy {
   }
 
   public async openDialogWithData(data: any) {
+    const mobile = window.innerWidth <= 992;
     EditorService.editorData = {
       ...data,
       scrollDate: this.dashboardService.startScrollDate,
       path: window.location.pathname
     }
-    this.router.navigate(['/editor'])
+    this.dialogService.open(await this.getEditorComponent(), {
+      height: mobile ? '100vh' : 'min(600px, calc(100% - 30px))',
+      width: mobile ? '100vw' : 'min(960px, calc(100% - 30px))',
+      maxWidth: '100%',
+      maxHeight: '100%',
+    })
+  }
+
+  async getEditorComponent() {
+    const { NewEditorComponent } = await import('../components/new-editor/new-editor.component')
+    return NewEditorComponent;
   }
 }

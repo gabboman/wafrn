@@ -6,6 +6,7 @@ import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { Router } from '@angular/router';
+import { MatDialogRef } from '@angular/material/dialog';
 import { FontAwesomeModule, IconDefinition } from '@fortawesome/angular-fontawesome';
 import { faClose, faEnvelope, faGlobe, faQuoteLeft, faServer, faUnlock, faUser } from '@fortawesome/free-solid-svg-icons';
 import { EditorData } from 'src/app/interfaces/editor-data';
@@ -109,17 +110,14 @@ export class NewEditorComponent implements OnDestroy {
 
 
   constructor(
-    private router: Router,
     private messages: MessageService,
     private dashboardService: DashboardService,
     private editorService: EditorService,
     private loginService: LoginService,
     private postService: PostsService,
     private jwtService: JwtService,
+    private dialogRef: MatDialogRef<NewEditorComponent>,
   ) {
-    if (localStorage.getItem('forceOldEditor') === 'true') {
-      router.navigate(['/old-editor'])
-    }
     this.data = EditorService.editorData;
     this.privacy = this.loginService.getUserDefaultPostPrivacyLevel();
     if (this.data?.post) {
@@ -407,11 +405,7 @@ export class NewEditorComponent implements OnDestroy {
   }
 
   closeEditor() {
-    if (!this.data) {
-      this.router.navigate(['/'])
-    } else {
-      this.router.navigate([this.data.path])
-    }
+    this.dialogRef.close()
   }
 
 
