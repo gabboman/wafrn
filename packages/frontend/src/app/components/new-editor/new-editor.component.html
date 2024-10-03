@@ -11,18 +11,18 @@
 <button mat-mini-fab class="delete-btn" (mousedown)="closeEditor()">
   <fa-icon size="lg" [icon]="closeIcon"></fa-icon>
 </button>
-<h3 *ngIf="data?.post && !editing">In reply to:</h3>
+<h3 class="mt-3" *ngIf="data?.post && !editing">In reply to:</h3>
 <div class="in-reply-to-preview quoted-post" *ngIf="data && data.post && !editing">
   <div class="flex">
     <app-post-header [fragment]="data.post" [disableLink]="true"></app-post-header>
   </div>
   <app-post-fragment [fragment]="data.post"></app-post-fragment>
 </div>
-<h2 *ngIf="editing">
+<h2 class="mt-3" *ngIf="editing">
   You are editing your woot. Sorry you need to write all of it again.
 </h2>
 <ng-container *ngIf="data && data.ask">
-  <h2>Replying ask</h2>
+  <h2 class="mt-3">Replying ask</h2>
   <app-single-ask [ask]="data.ask"></app-single-ask>
 </ng-container>
 <div class="below-editor-toolbar">
