@@ -12,7 +12,7 @@
   <fa-icon size="lg" [icon]="closeIcon"></fa-icon>
 </button>
 <h3 class="mt-3" *ngIf="data?.post && !editing">In reply to:</h3>
-<div class="in-reply-to-preview quoted-post" *ngIf="data && data.post && !editing">
+<div class="quoted-post" *ngIf="data && data.post && !editing">
   <div class="flex">
     <app-post-header [fragment]="data.post" [disableLink]="true"></app-post-header>
   </div>

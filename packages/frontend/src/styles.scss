@@ -281,6 +281,9 @@ blockquote {
   cursor: pointer !important;
   margin-bottom: 4px;
   border: 1px solid #888;
+  overflow: hidden;
+  height: 0px;
+  padding-bottom: 85px;
 }
 
 .ql-size-small {
