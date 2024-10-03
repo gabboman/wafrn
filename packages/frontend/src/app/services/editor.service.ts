@@ -27,7 +27,8 @@ export class EditorService implements OnDestroy {
   constructor(
     private http: HttpClient,
     private dashboardService: DashboardService,
-    private router: Router
+    private router: Router,
+    private dialog: MatDialog
   ) {
     this.editorSubscription = this.launchPostEditorEmitter.subscribe((data) => {
       if (data.action !== Action.None) {
@@ -77,7 +78,7 @@ export class EditorService implements OnDestroy {
         .post(url, formdata)
         .toPromise();
       success = petitionResponse.id;
-      if(success){
+      if (success) {
         // HACK wait 0.7 seconds so post is fully processed?
         await new Promise((resolve) => setTimeout(resolve, 700))
       }

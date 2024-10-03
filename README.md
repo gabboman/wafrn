@@ -44,12 +44,10 @@ Follow the instructions of the script. It will leave the system ready with wafrn
 Ok, we have the stuff ready. Log in as the user we just created (it has asked it during the previous script)
 
 Now we will edit the backend environment file
-In this file, we edit the line `forceSync` and we set it to true to force it to create the database
 
 ```shell
 cd wafrn
 nano packages/backend/environment.ts
-#forceSync: false -> forceSync: true
 ```
 
 There is also an option called `adminPassword`. You can edit it too and set the admin password. In this state, it should be a random password.

@@ -828,16 +828,21 @@ User.belongsToMany(Post, {
 
 sequelize
   .sync({
-    force: environment.forceSync
+    force: false
   })
   .then(async () => {
-    if (environment.forceSync) {
-      logger.info('CLEANING DATA. Creating admin and deleted user')
-
-      // clear all keys stored in redis cache before cleaning the database
-      // this wont affect the bull queues because they are stored in a different redis database
+    let adminUser = await User.findOne({
+      where: {
+        url: environment.adminUser
+      }
+    })
+    let delUser = await User.findOne({
+      where: {
+        url: environment.deletedUser
+      }
+    })
+    if (!adminUser || !delUser) {
       await redisCache.flushdb()
-
       const { publicKey, privateKey } = generateKeyPairSync('rsa', {
         modulusLength: 4096,
         publicKeyEncoding: {
@@ -888,8 +893,8 @@ sequelize
         publicKey
       }
 
-      const adminUser = await User.create(admin)
-      const del = await User.create(deleted)
+      adminUser = adminUser ? adminUser : await User.create(admin)
+      delUser = delUser ? delUser : await User.create(deleted)
     }
   })
 

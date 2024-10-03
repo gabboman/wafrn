@@ -3,8 +3,6 @@ export const environment = {
   prod: true,
   // this makes the logs really heavy, but might be useful for queries
   logSQLQueries: false,
-  // VERY IMPORTANT. This to true DESTROYS YOUR FUCKING DATABASE. DO NOT. DO NOT. DO NOT. You set it to true the first time, create the admin user, then stop, set forcesync to false and enjoy
-  forceSync: false,
   workers: {
     // if you set this to true, workers will start in the main thread. no need for starting the utils/workers.ts in other tmux tab
     mainThread: true,
