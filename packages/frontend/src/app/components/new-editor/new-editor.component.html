@@ -19,7 +19,7 @@
   <app-post-fragment [fragment]="data.post"></app-post-fragment>
 </div>
 <h2 class="mt-3" *ngIf="editing">
-  You are editing your woot. Sorry you need to write all of it again.
+  You are editing your woot. Sorry, you need to write all of it again.
 </h2>
 <ng-container *ngIf="data && data.ask">
   <h2 class="mt-3">Replying ask</h2>
@@ -82,8 +82,8 @@
   </p>
   <p *ngIf="privacy === 3" class="my-2">
     Unlisted posts (quiet public in mastodon) are posts that opt out of search, that including hashtag
-    search in other instances. This is not recomended for art posts
-    or anything you want to be discoverable
+    search in other instances. This is not recommended for art posts
+    or anything you want to be discoverable!
   </p>
 </section>
 <section *ngIf="false && uploadedMedias.length === 0" class="mt-3" id="pollControls">
@@ -112,12 +112,12 @@
     </ng-container>
   </div>
   <p class="my-2" *ngIf="uploadedMedias.length >= 4">
-    Due some fediverse limitations, we can only have 4 medias per woot. Adding
+    Due to some fediverse limitations, we can only have 4 medias per woot. Adding
     more would break how the woot is seen in other places. Sorry for the
-    inconvenience
+    inconvenience.
   </p>
   <p class="my-2" *ngIf="!allDescriptionsFilled()">
-    Please fill the media descriptions. If you want to disable this check,
+    Please fill in the media descriptions. If you want to disable this check,
     there is an option in the profile that you can disable.
   </p>
 </section>
