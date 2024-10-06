@@ -24,8 +24,9 @@ export class EnvironmentService {
   constructor(
     private http: HttpClient
   ) {
-    if (environment.forceEnvironment) {
-      EnvironmentService.environment = environment.forceEnvironment
+    const environmentCopy: any = { ...environment }
+    if (environmentCopy.forceEnvironment) {
+      EnvironmentService.environment = environmentCopy.forceEnvironment
     }
     // we check if the localstorage has the environment for quicker load
     let localStorageEnv = localStorage.getItem('environment');
