@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { firstValueFrom, map } from 'rxjs';
+import { environment } from 'src/environments/environment';
 
 @Injectable({
   providedIn: 'root'
@@ -23,12 +24,16 @@ export class EnvironmentService {
   constructor(
     private http: HttpClient
   ) {
+    if (environment.forceEnvironment) {
+      EnvironmentService.environment = environment.forceEnvironment
+    }
     // we check if the localstorage has the environment for quicker load
     let localStorageEnv = localStorage.getItem('environment');
     if (localStorageEnv) {
       EnvironmentService.environment = JSON.parse(localStorageEnv)
     }
-    firstValueFrom(this.http.get('/api/environment')).then((res: any) => {
+
+    firstValueFrom(this.http.get(EnvironmentService.environment.baseUrl + '/environment')).then((res: any) => {
       EnvironmentService.environment = res;
       localStorage.setItem('environment', JSON.stringify(res))
     }).catch(error => {

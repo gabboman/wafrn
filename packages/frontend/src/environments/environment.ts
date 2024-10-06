@@ -4,23 +4,18 @@
 
 export const environment = {
   production: false,
-  maxUploadSize: '250',
-  logo: '/assets/logo.png',
-  baseUrl: 'http://localhost:3000/api',
-  //baseUrl: 'https://app.wafrn.net/api',
-  baseMediaUrl: 'https://dev.wafrn.net/api/uploads',
-  //baseMediaUrl: 'https://app.wafrn.net/api/uploads',
-  //baseMediaUrl: 'http://localhost:3000/api/uploads',
-  //baseMediaUrl: 'https://media.wafrn.net',
-  //baseMediaUrl: 'wafrnmedia.b-cdn.net',
-  externalCacheurl: 'http://localhost:3000/api/cache?media=',
-  //externalCacheurl: 'https://cdn.wafrn.net/api/cache?media=',
-  //externalCacheurl: 'https://cache.wafrn.net/?media=',
-  frontUrl: 'http://localhost:4200',
-  shortenPosts: 5,
-  reviewRegistrations: true,
-  disablePWA: false,
-  maintenance: false,
+  forceEnvironment: {
+    maxUploadSize: '250',
+    logo: '/assets/logo.png',
+    baseUrl: 'https://app.wafrn.net/api',
+    baseMediaUrl: 'https://media.wafrn.net',
+    externalCacheurl: 'https://cdn.wafrn.net.net/api/cache/?media=',
+    frontUrl: 'https://wafrn.vercel.app',
+    shortenPosts: 5,
+    reviewRegistrations: true,
+    disablePWA: false,
+    maintenance: false,
+  },
 };
 
 /*

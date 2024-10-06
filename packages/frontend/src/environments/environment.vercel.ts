@@ -4,16 +4,18 @@
 
 export const environment = {
   production: false,
-  maxUploadSize: '250',
-  logo: '/assets/logo.png',
-  baseUrl: 'https://app.wafrn.net/api',
-  baseMediaUrl: 'https://media.wafrn.net',
-  externalCacheurl: 'https://cdn.wafrn.net.net/api/cache/?media=',
-  frontUrl: 'https://wafrn.vercel.app',
-  shortenPosts: 5,
-  reviewRegistrations: true,
-  disablePWA: false,
-  maintenance: false,
+  forceEnvironment: {
+    maxUploadSize: '250',
+    logo: '/assets/logo.png',
+    baseUrl: 'https://app.wafrn.net/api',
+    baseMediaUrl: 'https://media.wafrn.net',
+    externalCacheurl: 'https://cdn.wafrn.net.net/api/cache/?media=',
+    frontUrl: 'https://wafrn.vercel.app',
+    shortenPosts: 5,
+    reviewRegistrations: true,
+    disablePWA: false,
+    maintenance: false,
+  },
 };
 
 /*
