@@ -86,7 +86,7 @@ async function getRemoteActorIdProcessor(job: Job) {
           remoteMentionUrl: remoteMentionUrl,
           followersCollectionUrl: userPetition.followers,
           followingCollectionUrl: userPetition.following,
-          isBot: userPetition.type != 'Person',
+          isBot: userPetition.type != 'Person' && url?.host.toLowerCase() != 'bsky.brid.gy',
           followerCount: followers,
           followingCount: followed,
           createdAt: userPetition.published ? new Date(userPetition.published) : new Date(),
