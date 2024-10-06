@@ -25,10 +25,11 @@ import { LoginService } from 'src/app/services/login.service';
 import { MessageService } from 'src/app/services/message.service';
 import { PostsService } from 'src/app/services/posts.service';
 import { ThemeService } from 'src/app/services/theme.service';
-import { environment } from 'src/environments/environment';
+
 import { MatDialog } from '@angular/material/dialog';
 import { AcceptThemeComponent } from 'src/app/components/accept-theme/accept-theme.component';
 import { BlogDetails } from 'src/app/interfaces/blogDetails';
+import { EnvironmentService } from 'src/app/services/environment.service';
 @Component({
   selector: 'app-view-blog',
   templateUrl: './view-blog.component.html',
@@ -125,11 +126,11 @@ export class ViewBlogComponent implements OnInit, OnDestroy {
         });
       });
       this.avatarUrl = this.blogDetails.url.startsWith('@')
-        ? environment.externalCacheurl +
+        ? EnvironmentService.environment.externalCacheurl +
         encodeURIComponent(this.blogDetails.avatar)
-        : environment.externalCacheurl +
+        : EnvironmentService.environment.externalCacheurl +
         encodeURIComponent(
-          environment.baseMediaUrl + this.blogDetails.avatar
+          EnvironmentService.environment.baseMediaUrl + this.blogDetails.avatar
         );
       this.titleService.setTitle(`${this.blogDetails.url}'s blog`);
       this.metaTagService.addTags([

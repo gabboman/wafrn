@@ -3,7 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { ProcessedPost } from 'src/app/interfaces/processed-post';
 import { DashboardService } from 'src/app/services/dashboard.service';
 import { LoginService } from 'src/app/services/login.service';
-import { environment } from 'src/environments/environment';
+
 import { PostsService } from 'src/app/services/posts.service';
 import { ThemeService } from 'src/app/services/theme.service';
 import { MatPaginator } from '@angular/material/paginator';
@@ -12,6 +12,7 @@ import { MatTableDataSource } from '@angular/material/table';
 import { faHome } from '@fortawesome/free-solid-svg-icons';
 import { SimplifiedUser } from 'src/app/interfaces/simplified-user';
 import { SimpleSeoService } from 'src/app/services/simple-seo.service';
+import { EnvironmentService } from 'src/app/services/environment.service';
 @Component({
   selector: 'app-single-post',
   templateUrl: './single-post.component.html',
@@ -22,9 +23,9 @@ export class SinglePostComponent implements OnDestroy {
   post: ProcessedPost[] = [];
   loading = true;
   blogUrl: string = '';
-  mediaUrl = environment.baseMediaUrl;
-  cacheUrl = environment.externalCacheurl;
-  localUrl = environment.frontUrl;
+  mediaUrl = EnvironmentService.environment.baseMediaUrl;
+  cacheUrl = EnvironmentService.environment.externalCacheurl;
+  localUrl = EnvironmentService.environment.frontUrl;
   forceSSR = false;
   postFound = true;
   userLoggedIn = false;

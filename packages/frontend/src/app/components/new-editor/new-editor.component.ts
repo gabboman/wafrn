@@ -12,7 +12,7 @@ import { faClose, faEnvelope, faGlobe, faQuoteLeft, faServer, faUnlock, faUser }
 import { EditorData } from 'src/app/interfaces/editor-data';
 import { PostHeaderComponent } from '../post/post-header/post-header.component';
 import { PostFragmentComponent } from '../post-fragment/post-fragment.component';
-import { environment } from 'src/environments/environment';
+
 import { QuestionPollQuestion } from 'src/app/interfaces/questionPoll';
 import { SingleAskComponent } from '../single-ask/single-ask.component';
 import { MatMenuModule, MatMenuTrigger } from '@angular/material/menu';
@@ -31,6 +31,7 @@ import { from, debounceTime, Subscription } from 'rxjs';
 import { JwtService } from 'src/app/services/jwt.service';
 import { AvatarSmallComponent } from '../avatar-small/avatar-small.component';
 import { MatCheckboxModule } from '@angular/material/checkbox';
+import { EnvironmentService } from 'src/app/services/environment.service';
 
 @Component({
   selector: 'app-new-editor',
@@ -68,8 +69,8 @@ export class NewEditorComponent implements OnDestroy {
   quoteOpen = false;
   data: EditorData | undefined;
   editing = false;
-  baseMediaUrl = environment.baseMediaUrl;
-  cacheurl = environment.externalCacheurl;
+  baseMediaUrl = EnvironmentService.environment.baseMediaUrl;
+  cacheurl = EnvironmentService.environment.externalCacheurl;
   userSelectionMentionValue = '';
   contentWarning = '';
   enablePrivacyEdition = true;
@@ -233,7 +234,7 @@ export class NewEditorComponent implements OnDestroy {
 
   async uploadImage(media: WafrnMedia) {
     try {
-      media.url = environment.baseMediaUrl + media.url;
+      media.url = EnvironmentService.environment.baseMediaUrl + media.url;
       this.uploadedMedias.push(media);
       this.messages.add({
         severity: 'success',
@@ -256,7 +257,7 @@ export class NewEditorComponent implements OnDestroy {
     try {
       const url = new URL(urlString);
       let postToAdd: ProcessedPost | undefined;
-      if (url.host === new URL(environment.frontUrl).host) {
+      if (url.host === new URL(EnvironmentService.environment.frontUrl).host) {
         // URL is a local one.  We need to check if it includes an UUID
         const UUIDRegex =
           /[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}/gm;

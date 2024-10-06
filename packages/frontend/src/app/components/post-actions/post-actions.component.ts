@@ -1,7 +1,7 @@
 import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
 import { ProcessedPost } from 'src/app/interfaces/processed-post';
 import { MessageService } from 'src/app/services/message.service';
-import { environment } from 'src/environments/environment';
+
 import {
   faArrowUpRightFromSquare,
   faChevronDown,
@@ -29,6 +29,7 @@ import { ReportService } from 'src/app/services/report.service';
 import { DeletePostService } from 'src/app/services/delete-post.service';
 import { PostsService } from 'src/app/services/posts.service';
 import { UtilsService } from 'src/app/services/utils.service';
+import { EnvironmentService } from 'src/app/services/environment.service';
 @Component({
   selector: 'app-post-actions',
   standalone: true,
@@ -36,7 +37,7 @@ import { UtilsService } from 'src/app/services/utils.service';
   templateUrl: './post-actions.component.html',
   styleUrl: './post-actions.component.scss',
 })
-export class PostActionsComponent implements OnChanges{
+export class PostActionsComponent implements OnChanges {
   @Input() content!: ProcessedPost;
   userLoggedIn = false;
   myId: string = 'user-00000000-0000-0000-0000-000000000000 ';
@@ -77,7 +78,7 @@ export class PostActionsComponent implements OnChanges{
 
   sharePost() {
     navigator.clipboard.writeText(
-      `${environment.frontUrl}/fediverse/post/${this.content.id}`
+      `${EnvironmentService.environment.frontUrl}/fediverse/post/${this.content.id}`
     );
     this.messages.add({
       severity: 'success',

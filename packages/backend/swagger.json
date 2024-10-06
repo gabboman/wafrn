@@ -530,6 +530,21 @@
                   },
                   "content": {
                     "example": "any"
+                  },
+                  "content_warning": {
+                    "example": "any"
+                  },
+                  "medias": {
+                    "example": "any"
+                  },
+                  "idPostToEdit": {
+                    "example": "any"
+                  },
+                  "ask": {
+                    "example": "any"
+                  },
+                  "tags": {
+                    "example": "any"
                   }
                 }
               }
@@ -2044,6 +2059,9 @@
           },
           "404": {
             "description": "Not Found"
+          },
+          "500": {
+            "description": "Internal Server Error"
           }
         }
       }

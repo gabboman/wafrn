@@ -1,27 +1,29 @@
-<mat-card *ngIf="data" class="overflow-hidden mt-1" (click)="showPicture()">
-  <b class="img-cw-text" *ngIf="nsfw">This contains sensitive content. Click to display</b>
+<div #media>
+  <mat-card *ngIf="data" class="overflow-hidden mt-1" (click)="showPicture()">
+    <b class="img-cw-text" *ngIf="nsfw">This contains sensitive content. Click to display</b>
 
-  <div (keyup)="showPicture()" class="img-container media-description bg-black-alpha-10">
-    <img #wafrnMedia *ngIf="
+    <div (keyup)="showPicture()" class="img-container media-description bg-black-alpha-10">
+      <img *ngIf="
       ((!extensionsToHideImgTag.includes(extension)) ||
       mimeType === 'UNKNOWN') && !mimeType.startsWith('video')
     " [src]="displayUrl" [alt]="data.description" role="none" loading="lazy" [ngClass]="{
       'nsfw': nsfw,
       'displayed-image': !nsfw
     }" />
-    <video (play)="showPicture()" preload="metadata" [ngClass]="{
+      <video (play)="showPicture()" preload="metadata" [ngClass]="{
     'nsfw': nsfw,
     'displayed-image': !nsfw
   }" *ngIf="mimeType.startsWith('video')" controls>
-      <source [src]="displayUrl" [type]="mimeType" />
-    </video>
-    <div *ngIf="!nsfw && mimeType.startsWith('pdf')">
-      <a [href]="displayUrl" target="_blank">Click here to see the PDF file that is embedded in this post</a>
+        <source [src]="displayUrl" [type]="mimeType" />
+      </video>
+      <div *ngIf="!nsfw && mimeType.startsWith('pdf')">
+        <a [href]="displayUrl" target="_blank">Click here to see the PDF file that is embedded in this post</a>
+      </div>
+      <audio *ngIf="!nsfw && mimeType.startsWith('audio')" controls>
+        <source [src]="displayUrl" [type]="mimeType" />
+      </audio>
+      <div *ngIf="data.description" class="px-2 " [innerText]="data.description"></div>
     </div>
-    <audio *ngIf="!nsfw && mimeType.startsWith('audio')" controls>
-      <source [src]="displayUrl" [type]="mimeType" />
-    </audio>
-    <div *ngIf="data.description" class="px-2 " [innerText]="data.description"></div>
-  </div>
 
-</mat-card>
+  </mat-card>
+</div>

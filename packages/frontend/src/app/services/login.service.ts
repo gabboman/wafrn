@@ -2,11 +2,12 @@ import { EventEmitter, Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { UntypedFormGroup } from '@angular/forms';
-import { environment } from 'src/environments/environment';
+
 import { UtilsService } from './utils.service';
 import { JwtService } from './jwt.service';
 import { PostsService } from './posts.service';
 import { firstValueFrom } from 'rxjs';
+import { EnvironmentService } from './environment.service';
 
 @Injectable({
   providedIn: 'root',
@@ -29,7 +30,7 @@ export class LoginService {
     let success = false;
     try {
       const petition: any = await this.http
-        .post(`${environment.baseUrl}/login`, loginForm.value)
+        .post(`${EnvironmentService.environment.baseUrl}/login`, loginForm.value)
         .toPromise();
       if (petition.success) {
         localStorage.setItem('authToken', petition.token);
@@ -61,7 +62,7 @@ export class LoginService {
         payload.append('avatar', img);
       }
       const petition: any = await this.http
-        .post(`${environment.baseUrl}/register`, payload)
+        .post(`${EnvironmentService.environment.baseUrl}/register`, payload)
         .toPromise();
       if (petition.success) {
         success = petition.success;
@@ -78,7 +79,7 @@ export class LoginService {
       email: email,
     };
     const response: any = await this.http
-      .post(`${environment.baseUrl}/forgotPassword`, payload)
+      .post(`${EnvironmentService.environment.baseUrl}/forgotPassword`, payload)
       .toPromise();
     if (response?.success) {
       this.router.navigate(['/']);
@@ -95,7 +96,7 @@ export class LoginService {
       password: password,
     };
     const response: any = await this.http
-      .post(`${environment.baseUrl}/resetPassword`, payload)
+      .post(`${EnvironmentService.environment.baseUrl}/resetPassword`, payload)
       .toPromise();
     if (response?.success) {
       this.router.navigate(['/']);
@@ -111,7 +112,7 @@ export class LoginService {
       code: code,
     };
     const response: any = await this.http
-      .post(`${environment.baseUrl}/activateUser`, payload)
+      .post(`${EnvironmentService.environment.baseUrl}/activateUser`, payload)
       .toPromise();
     if (response?.success) {
       this.router.navigate(['/']);
@@ -131,7 +132,7 @@ export class LoginService {
         payload.append('avatar', img);
       }
       const petition: any = await firstValueFrom(
-        this.http.post(`${environment.baseUrl}/editProfile`, payload)
+        this.http.post(`${EnvironmentService.environment.baseUrl}/editProfile`, payload)
       );
       if (petition.success) {
         success = true;

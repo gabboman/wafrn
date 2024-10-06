@@ -11,7 +11,7 @@ import { ProcessedPost } from 'src/app/interfaces/processed-post';
 import { EditorService } from 'src/app/services/editor.service';
 import { LoginService } from 'src/app/services/login.service';
 import { PostsService } from 'src/app/services/posts.service';
-import { environment } from 'src/environments/environment';
+
 import { DeletePostService } from 'src/app/services/delete-post.service';
 import { Action } from 'src/app/interfaces/editor-launcher-data';
 import { MessageService } from 'src/app/services/message.service';
@@ -34,6 +34,7 @@ import {
   faQuoteLeft,
   faCheck,
 } from '@fortawesome/free-solid-svg-icons';
+import { EnvironmentService } from 'src/app/services/environment.service';
 
 @Component({
   selector: 'app-post',
@@ -45,8 +46,8 @@ export class PostComponent implements OnInit, OnChanges, OnDestroy {
   @Input() showFull: boolean = false;
   originalPostContent: ProcessedPost[] = [];
   ready = false;
-  mediaBaseUrl = environment.baseMediaUrl;
-  cacheurl = environment.externalCacheurl;
+  mediaBaseUrl = EnvironmentService.environment.baseMediaUrl;
+  cacheurl = EnvironmentService.environment.externalCacheurl;
   userLoggedIn = false;
   followedUsers: string[] = [];
   notYetAcceptedFollows: string[] = [];
@@ -127,7 +128,7 @@ export class PostComponent implements OnInit, OnChanges, OnDestroy {
       this.postService.notYetAcceptedFollowedUsersIds;
     this.originalPostContent = this.post;
     if (!this.showFull) {
-      this.post = this.post.slice(0, environment.shortenPosts);
+      this.post = this.post.slice(0, EnvironmentService.environment.shortenPosts);
 
       if (this.originalPostContent.length === this.post.length) {
         this.showFull = true;

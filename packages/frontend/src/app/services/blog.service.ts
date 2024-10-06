@@ -1,9 +1,10 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
-import { environment } from 'src/environments/environment';
+
 import { followsResponse } from '../interfaces/follows-response';
 import { Ask } from '../interfaces/ask';
+import { EnvironmentService } from './environment.service';
 
 @Injectable({
   providedIn: 'root'
@@ -15,7 +16,7 @@ export class BlogService {
   ) { }
 
   async getFollowers(url: string, followed = false): Promise<followsResponse[]> {
-    const res = await firstValueFrom(this.http.get<followsResponse[]>(environment.baseUrl + `/user/${url}/follows?followers=${followed.toString()}`));
+    const res = await firstValueFrom(this.http.get<followsResponse[]>(EnvironmentService.environment.baseUrl + `/user/${url}/follows?followers=${followed.toString()}`));
     // we get all data on the front. we could order it on the back but that is server time
     // also its two different queries so its double work. here is just once! also 
     res.sort((a, b) => new Date(b.follows.createdAt).getTime() - new Date(a.follows.createdAt).getTime())
@@ -23,17 +24,17 @@ export class BlogService {
   }
 
   async deleteFollow(id: string): Promise<boolean> {
-    const res = await firstValueFrom(this.http.get(environment.baseUrl + `/user/deleteFollow/${id}`))
+    const res = await firstValueFrom(this.http.get(EnvironmentService.environment.baseUrl + `/user/deleteFollow/${id}`))
     return true;
   }
 
   async approveFollow(id: string): Promise<boolean> {
-    const res = await firstValueFrom(this.http.get(environment.baseUrl + `/user/approveFollow/${id}`))
+    const res = await firstValueFrom(this.http.get(EnvironmentService.environment.baseUrl + `/user/approveFollow/${id}`))
     return true;
   }
 
   async askuser(userUrl: string, ask: string) {
-    const res = await firstValueFrom(this.http.post(environment.baseUrl + `/user/${userUrl}/ask`,
+    const res = await firstValueFrom(this.http.post(EnvironmentService.environment.baseUrl + `/user/${userUrl}/ask`,
       {
         question: ask
       }
@@ -42,7 +43,7 @@ export class BlogService {
   }
 
   async ignoreAsk(ask: Ask) {
-    const res = await firstValueFrom(this.http.post(environment.baseUrl + `/user/ignoreAsk`,
+    const res = await firstValueFrom(this.http.post(EnvironmentService.environment.baseUrl + `/user/ignoreAsk`,
       {
         id: ask.id
       }

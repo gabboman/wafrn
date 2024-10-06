@@ -159,10 +159,12 @@
               "buildTarget": "wafrn:build:production"
             },
             "development": {
-              "buildTarget": "wafrn:build:development"
+              "buildTarget": "wafrn:build:development",
+              "proxyConfig": "src/proxy.conf.json"
             },
             "devprod": {
-              "buildTarget": "wafrn:build:devprod"
+              "buildTarget": "wafrn:build:devprod",
+              "proxyConfig": "src/proxy.conf.prod.json"
             }
           },
           "defaultConfiguration": "development"

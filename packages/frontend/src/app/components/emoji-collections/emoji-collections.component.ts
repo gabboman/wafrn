@@ -11,8 +11,9 @@ import { Subscription } from 'rxjs';
 import { Emoji } from 'src/app/interfaces/emoji';
 import { EmojiCollection } from 'src/app/interfaces/emoji-collection';
 import { emojis } from 'src/app/lists/emoji-compact';
+import { EnvironmentService } from 'src/app/services/environment.service';
 import { PostsService } from 'src/app/services/posts.service';
-import { environment } from 'src/environments/environment';
+
 
 @Component({
   selector: 'app-emoji-collections',
@@ -36,7 +37,7 @@ export class EmojiCollectionsComponent implements OnDestroy {
   subscription: Subscription;
   @Output() emoji: EventEmitter<Emoji> = new EventEmitter<Emoji>();
 
-  baseMediaUrl = environment.baseMediaUrl;
+  baseMediaUrl = EnvironmentService.environment.baseMediaUrl;
 
   constructor(private postService: PostsService) {
     this.subscription = this.postService.updateFollowers.subscribe(() => {
@@ -62,7 +63,7 @@ export class EmojiCollectionsComponent implements OnDestroy {
   }
 
   getEmojiCollectionFiltered(collection: EmojiCollection, query: string): Emoji[] {
-    return collection.emojis.filter(elem => elem.name.toLowerCase().includes(query.toLowerCase())).slice(0,50)
+    return collection.emojis.filter(elem => elem.name.toLowerCase().includes(query.toLowerCase())).slice(0, 50)
 
   }
 }

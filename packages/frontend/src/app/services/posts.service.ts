@@ -4,7 +4,7 @@ import { RawPost } from '../interfaces/raw-post';
 import { MediaService } from './media.service';
 import * as dompurify from 'isomorphic-dompurify'
 import { HttpClient } from '@angular/common/http';
-import { environment } from 'src/environments/environment';
+
 import { BehaviorSubject, firstValueFrom } from 'rxjs';
 import { JwtService } from './jwt.service';
 import { PostEmojiReaction, unlinkedPosts } from '../interfaces/unlinked-posts';
@@ -14,6 +14,7 @@ import { Emoji } from '../interfaces/emoji';
 import { EmojiCollection } from '../interfaces/emoji-collection';
 import { MessageService } from './message.service';
 import { emojis } from '../lists/emoji-compact';
+import { EnvironmentService } from './environment.service';
 @Injectable({
   providedIn: 'root',
 })
@@ -85,7 +86,7 @@ export class PostsService {
           silencedPosts: string[];
           emojis: EmojiCollection[];
           mutedUsers: string[];
-        }>(`${environment.baseUrl}/my-ui-options`)
+        }>(`${EnvironmentService.environment.baseUrl}/my-ui-options`)
       );
       this.emojiCollections = followsAndBlocks.emojis ? followsAndBlocks.emojis : [];
       this.emojiCollections = this.emojiCollections.concat({
@@ -127,7 +128,7 @@ export class PostsService {
     try {
       const response = await firstValueFrom(
         this.http.post<{ success: boolean }>(
-          `${environment.baseUrl}/follow`,
+          `${EnvironmentService.environment.baseUrl}/follow`,
           payload
         )
       );
@@ -147,7 +148,7 @@ export class PostsService {
     };
     try {
       const response = await this.http
-        .post<{ success: boolean }>(`${environment.baseUrl}/unfollow`, payload)
+        .post<{ success: boolean }>(`${EnvironmentService.environment.baseUrl}/unfollow`, payload)
         .toPromise();
       await this.loadFollowers();
       res = response?.success === true;
@@ -165,7 +166,7 @@ export class PostsService {
     };
     try {
       const response = await this.http
-        .post<{ success: boolean }>(`${environment.baseUrl}/like`, payload)
+        .post<{ success: boolean }>(`${EnvironmentService.environment.baseUrl}/like`, payload)
         .toPromise();
       await this.loadFollowers();
       res = response?.success === true;
@@ -186,7 +187,7 @@ export class PostsService {
     };
     try {
       const response = await this.http
-        .post<{ success: boolean }>(`${environment.baseUrl}/unlike`, payload)
+        .post<{ success: boolean }>(`${EnvironmentService.environment.baseUrl}/unlike`, payload)
         .toPromise();
       await this.loadFollowers();
       res = response?.success === true;
@@ -210,7 +211,7 @@ export class PostsService {
     try {
       const response = await firstValueFrom(
         this.http.post<{ success: boolean }>(
-          `${environment.baseUrl}/emojiReact`,
+          `${EnvironmentService.environment.baseUrl}/emojiReact`,
           payload
         )
       );
@@ -334,7 +335,7 @@ export class PostsService {
       notes: elem.notes ? elem.notes : 0,
       remotePostId: elem.remotePostId
         ? elem.remotePostId
-        : `${environment.frontUrl}/post/${elem.id}`,
+        : `${EnvironmentService.environment.frontUrl}/post/${elem.id}`,
       medias: medias.sort((a, b) => a.mediaOrder - b.mediaOrder),
       questionPoll: polls.length > 0 ? { ...polls[0], endDate: new Date(polls[0].endDate) } : undefined,
       mentionPost: mentionedUsers as SimplifiedUser[],
@@ -411,7 +412,7 @@ export class PostsService {
       const youtubeMatch = link.href.matchAll(this.youtubeRegex);
       if (link.innerText === link.href && youtubeMatch) {
         Array.from(youtubeMatch).forEach((youtubeString) => {
-          link.innerHTML = `<div class="watermark"><!-- Watermark container --><div class="watermark__inner"><!-- The watermark --><div class="watermark__body"><img alt="youtube logo" class="yt-watermark" loading="lazy" src="/assets/img/youtube_logo.png"></div></div><img class="yt-thumbnail" src="${environment.externalCacheurl +
+          link.innerHTML = `<div class="watermark"><!-- Watermark container --><div class="watermark__inner"><!-- The watermark --><div class="watermark__body"><img alt="youtube logo" class="yt-watermark" loading="lazy" src="/assets/img/youtube_logo.png"></div></div><img class="yt-thumbnail" src="${EnvironmentService.environment.externalCacheurl +
             encodeURIComponent(
               `https://img.youtube.com/vi/${youtubeString[6]}/hqdefault.jpg`
             )
@@ -426,7 +427,7 @@ export class PostsService {
             (elem) => elem.remoteId === link.href
           );
           if (mentionedUser) {
-            link.href = `${environment.frontUrl}/blog/${mentionedUser.url}`;
+            link.href = `${EnvironmentService.environment.frontUrl}/blog/${mentionedUser.url}`;
           }
         }
       }
@@ -472,12 +473,12 @@ export class PostsService {
 
   async loadRepliesFromFediverse(id: string) {
     return await this.http
-      .get(`${environment.baseUrl}/loadRemoteResponses?id=${id}`)
+      .get(`${EnvironmentService.environment.baseUrl}/loadRemoteResponses?id=${id}`)
       .toPromise();
   }
 
   getURL(urlString: string): URL {
-    let res = new URL(environment.frontUrl);
+    let res = new URL(EnvironmentService.environment.frontUrl);
     try {
       res = new URL(urlString);
     } catch (error) {
@@ -489,7 +490,7 @@ export class PostsService {
   async getDescendents(id: string): Promise<{ descendents: RawPost[] }> {
     const response = await firstValueFrom(
       this.http.get<unlinkedPosts>(
-        environment.baseUrl + '/v2/descendents/' + id
+        EnvironmentService.environment.baseUrl + '/v2/descendents/' + id
       )
     );
     const res: { descendents: RawPost[] } = { descendents: [] };
@@ -530,7 +531,7 @@ export class PostsService {
     };
     const response = await firstValueFrom(
       this.http.post<{ success: boolean }>(
-        `${environment.baseUrl}/v2/unsilencePost`,
+        `${EnvironmentService.environment.baseUrl}/v2/unsilencePost`,
         payload
       )
     );
@@ -545,7 +546,7 @@ export class PostsService {
     };
     const response = await firstValueFrom(
       this.http.post<{ success: boolean }>(
-        `${environment.baseUrl}/v2/silencePost`,
+        `${EnvironmentService.environment.baseUrl}/v2/silencePost`,
         payload
       )
     );
@@ -559,7 +560,7 @@ export class PostsService {
       votes: votes,
     };
     try {
-      const response = await firstValueFrom(this.http.post<{ success: boolean, message?: string }>(`${environment.baseUrl}/v2/pollVote/${pollId}`, payload))
+      const response = await firstValueFrom(this.http.post<{ success: boolean, message?: string }>(`${EnvironmentService.environment.baseUrl}/v2/pollVote/${pollId}`, payload))
       res = response.success
       this.messageService.add({ severity: res ? 'success' : 'error', summary: response.message ? response.message : res ? 'You voted succesfuly. It can take some time to display' : 'Something went wrong' })
     } catch (error) {
@@ -570,10 +571,10 @@ export class PostsService {
   }
 
   emojiToHtml(emoji: Emoji): string {
-    return `<img class="post-emoji" src="${environment.externalCacheurl +
+    return `<img class="post-emoji" src="${EnvironmentService.environment.externalCacheurl +
       (emoji.external
         ? encodeURIComponent(emoji.url)
-        : encodeURIComponent(environment.baseMediaUrl + emoji.url))
+        : encodeURIComponent(EnvironmentService.environment.baseMediaUrl + emoji.url))
       }">`;
   }
 

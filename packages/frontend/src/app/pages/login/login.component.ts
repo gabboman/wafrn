@@ -1,10 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { LoginService } from 'src/app/services/login.service';
-import { environment } from 'src/environments/environment';
+
 import { UntypedFormGroup, UntypedFormControl, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { MessageService } from 'src/app/services/message.service';
 import { faUser, faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
+import { EnvironmentService } from 'src/app/services/environment.service';
 
 @Component({
   selector: 'app-login',
@@ -13,7 +14,7 @@ import { faUser, faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
 })
 export class LoginComponent implements OnInit {
   loading = false;
-  logo = environment.logo;
+  logo = EnvironmentService.environment.logo;
   faUser = faUser;
   faEye = faEye;
   faEyeSlash = faEyeSlash;
@@ -29,9 +30,9 @@ export class LoginComponent implements OnInit {
     private loginService: LoginService,
     private messages: MessageService,
     private router: Router
-  ) {}
+  ) { }
 
-  ngOnInit(): void {}
+  ngOnInit(): void { }
 
   async onSubmit() {
     this.loading = true;

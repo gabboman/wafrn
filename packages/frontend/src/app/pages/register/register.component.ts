@@ -6,8 +6,9 @@ import {
 } from '@angular/forms';
 import { LoginService } from 'src/app/services/login.service';
 import { MessageService } from 'src/app/services/message.service';
-import { environment } from 'src/environments/environment';
+
 import { faUser, faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
+import { EnvironmentService } from 'src/app/services/environment.service';
 
 @Component({
   selector: 'app-register',
@@ -17,8 +18,8 @@ import { faUser, faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
 export class RegisterComponent {
   loading = false;
   isPasswordVisible = false;  // Track visibility of password
-  logo = environment.logo;
-  manuallyReview = environment.reviewRegistrations;
+  logo = EnvironmentService.environment.logo;
+  manuallyReview = EnvironmentService.environment.reviewRegistrations;
 
   // Font Awesome icons
   faUser = faUser;

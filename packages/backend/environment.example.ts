@@ -98,5 +98,17 @@ export const environment = {
     title: 'DOMAINNAME',
     description: 'DOMAINNAME, a wafrn instance',
     img: 'https://DOMAINNAME/assets/logo.png'
+  },
+  frontendEnvironment: {
+    maxUploadSize: '250', // upload size in mb.
+    baseUrl: 'https://DOMAINNAME/api',
+    logo: '/assets/logo.png',
+    baseMediaUrl: 'https://DOMAINNAME/api/uploads',
+    externalCacheurl: 'https://DOMAINNAME/api/cache/?media=',
+    frontUrl: 'https://DOMAINNAME',
+    shortenPosts: 3,
+    reviewRegistrations: true,
+    disablePWA: false,
+    maintenance: false,
   }
 }

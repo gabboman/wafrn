@@ -1,21 +1,22 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { environment } from 'src/environments/environment';
+
 import { server } from '../interfaces/servers';
 import { firstValueFrom } from 'rxjs';
 import { SimplifiedUser } from '../interfaces/simplified-user';
 import { statsReply } from '../interfaces/statsReply';
+import { EnvironmentService } from './environment.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AdminService {
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) { }
 
   async getServers(): Promise<server[]> {
     const response = await firstValueFrom(
       this.http.get<{ servers: server[] }>(
-        `${environment.baseUrl}/admin/server-list`
+        `${EnvironmentService.environment.baseUrl}/admin/server-list`
       )
     );
     return response?.servers ? response?.servers : [];
@@ -24,7 +25,7 @@ export class AdminService {
   async updateServers(serversToUpdate: server[]) {
     const response = await firstValueFrom(
       this.http.post(
-        `${environment.baseUrl}/admin/server-update`,
+        `${EnvironmentService.environment.baseUrl}/admin/server-update`,
         serversToUpdate
       )
     );
@@ -33,51 +34,51 @@ export class AdminService {
 
   async getBlocks(): Promise<any> {
     const response = await firstValueFrom(
-      this.http.get(`${environment.baseUrl}/admin/userBlockList`)
+      this.http.get(`${EnvironmentService.environment.baseUrl}/admin/userBlockList`)
     );
     return response;
   }
 
   async getReports(): Promise<any> {
     return firstValueFrom(
-      this.http.get(`${environment.baseUrl}/admin/reportList`)
+      this.http.get(`${EnvironmentService.environment.baseUrl}/admin/reportList`)
     );
   }
 
   async ignoreReport(id: number): Promise<any> {
     return firstValueFrom(
-      this.http.post(`${environment.baseUrl}/admin/ignoreReport`, { id: id })
+      this.http.post(`${EnvironmentService.environment.baseUrl}/admin/ignoreReport`, { id: id })
     );
   }
 
   async banUser(id: string) {
     return firstValueFrom(
-      this.http.post(`${environment.baseUrl}/admin/banUser`, { id: id })
+      this.http.post(`${EnvironmentService.environment.baseUrl}/admin/banUser`, { id: id })
     );
   }
 
   async banList() {
     return firstValueFrom(
-      this.http.get(`${environment.baseUrl}/admin/getBannedUsers`)
+      this.http.get(`${EnvironmentService.environment.baseUrl}/admin/getBannedUsers`)
     );
   }
   async pardonUser(id: string) {
     return firstValueFrom(
-      this.http.post(`${environment.baseUrl}/admin/unbanUser`, { id: id })
+      this.http.post(`${EnvironmentService.environment.baseUrl}/admin/unbanUser`, { id: id })
     );
   }
 
   async getPendingActivationUsers(): Promise<SimplifiedUser[]> {
     return firstValueFrom(
       this.http.get<SimplifiedUser[]>(
-        `${environment.baseUrl}/admin/getPendingApprovalUsers`
+        `${EnvironmentService.environment.baseUrl}/admin/getPendingApprovalUsers`
       )
     );
   }
 
   async requireExtraSteps(id: string): Promise<any> {
     return firstValueFrom(
-      this.http.post(`${environment.baseUrl}/admin/notActivateAndSendEmail`, {
+      this.http.post(`${EnvironmentService.environment.baseUrl}/admin/notActivateAndSendEmail`, {
         id,
       })
     );
@@ -85,7 +86,7 @@ export class AdminService {
 
   async activateUser(id: string): Promise<any> {
     return firstValueFrom(
-      this.http.post(`${environment.baseUrl}/admin/activateUser`, {
+      this.http.post(`${EnvironmentService.environment.baseUrl}/admin/activateUser`, {
         id,
       })
     );
@@ -93,7 +94,7 @@ export class AdminService {
 
   async getStats(): Promise<statsReply> {
     return firstValueFrom(
-      this.http.get<statsReply>(`${environment.baseUrl}/status/workerStats`)
+      this.http.get<statsReply>(`${EnvironmentService.environment.baseUrl}/status/workerStats`)
     );
   }
 }

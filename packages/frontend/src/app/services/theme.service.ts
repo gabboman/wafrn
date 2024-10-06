@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
-import { environment } from 'src/environments/environment';
 import { LoginService } from './login.service';
 import { HttpClient } from '@angular/common/http';
 import { UtilsService } from './utils.service';
 import { firstValueFrom } from 'rxjs';
+import { EnvironmentService } from './environment.service';
 
 @Injectable({
   providedIn: 'root',
@@ -12,8 +12,8 @@ export class ThemeService {
   constructor(
     private loginService: LoginService,
     private http: HttpClient,
-    private utils: UtilsService
-  ) {}
+    private utils: UtilsService,
+  ) { }
 
   setMyTheme() {
     this.setTheme(this.loginService.getLoggedUserUUID());
@@ -21,7 +21,7 @@ export class ThemeService {
 
   updateTheme(newTheme: string) {
     return firstValueFrom(
-      this.http.post(`${environment.baseUrl}/updateCSS`, { css: newTheme })
+      this.http.post(`${EnvironmentService.environment.baseUrl}/updateCSS`, { css: newTheme })
     );
   }
 
@@ -31,7 +31,7 @@ export class ThemeService {
     try {
       const storedResponse = localStorage.getItem('acceptsCustomThemes');
       res = storedResponse ? parseInt(storedResponse) : 0;
-    } catch (error) {}
+    } catch (error) { }
     return res;
   }
 
@@ -39,14 +39,14 @@ export class ThemeService {
     let res = false;
     try {
       const response = await firstValueFrom(
-        this.http.get(`${environment.baseMediaUrl}/themes/${theme}.css`, {
+        this.http.get(`${EnvironmentService.environment.baseMediaUrl}/themes/${theme}.css`, {
           responseType: 'text',
         })
       );
       if (response && response.length > 0) {
         res = true;
       }
-    } catch (error) {}
+    } catch (error) { }
     return res;
   }
 
@@ -55,8 +55,7 @@ export class ThemeService {
     try {
       const themeResponse = await this.http
         .get(
-          `${
-            environment.baseUrl
+          `${EnvironmentService.environment.baseUrl
           }/uploads/themes/${this.loginService.getLoggedUserUUID()}.css`,
           { responseType: 'text' }
         )
@@ -64,7 +63,7 @@ export class ThemeService {
       if (themeResponse && themeResponse.length > 0) {
         res = themeResponse;
       }
-    } catch (error) {}
+    } catch (error) { }
     return res;
   }
 
@@ -72,7 +71,7 @@ export class ThemeService {
     try {
       this.setStyle(
         'customUserTheme',
-        `${environment.baseUrl}/uploads/themes/${themeToSet}.css`
+        `${EnvironmentService.environment.baseUrl}/uploads/themes/${themeToSet}.css`
       );
     } catch (error) {
     }

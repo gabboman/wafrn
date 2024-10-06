@@ -19,8 +19,9 @@ import { DashboardService } from 'src/app/services/dashboard.service';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faHome } from '@fortawesome/free-solid-svg-icons';
 import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
-import { environment } from 'src/environments/environment';
+
 import { BottomReplyBarComponent } from "../../components/bottom-reply-bar/bottom-reply-bar.component";
+import { EnvironmentService } from 'src/app/services/environment.service';
 
 @Component({
   selector: 'app-forum',
@@ -39,7 +40,7 @@ import { BottomReplyBarComponent } from "../../components/bottom-reply-bar/botto
     FontAwesomeModule,
     MatPaginatorModule,
     BottomReplyBarComponent
-],
+  ],
   templateUrl: './forum.component.html',
   styleUrl: './forum.component.scss',
 })
@@ -53,12 +54,12 @@ export class ForumComponent implements OnDestroy {
   myId = '';
   notYetAcceptedFollows: string[] = [];
   followedUsers: string[] = [];
-  localUrl = environment.frontUrl;
+  localUrl = EnvironmentService.environment.frontUrl;
 
   // local pagination
   currentPage = 0;
   itemsPerPage = 50;
-  
+
 
   homeIcon = faHome;
   constructor(
@@ -71,11 +72,11 @@ export class ForumComponent implements OnDestroy {
     this.followedUsers = this.postService.followedUserIds;
     this.notYetAcceptedFollows =
       this.postService.notYetAcceptedFollowedUsersIds;
-      this.updateFollowsSubscription = this.postService.updateFollowers.subscribe(() => {
-        this.followedUsers = this.postService.followedUserIds;
-        this.notYetAcceptedFollows =
-          this.postService.notYetAcceptedFollowedUsersIds;
-      });
+    this.updateFollowsSubscription = this.postService.updateFollowers.subscribe(() => {
+      this.followedUsers = this.postService.followedUserIds;
+      this.notYetAcceptedFollows =
+        this.postService.notYetAcceptedFollowedUsersIds;
+    });
     this.userLoggedIn = loginService.checkUserLoggedIn();
     if (this.userLoggedIn) {
       this.myId = loginService.getLoggedUserUUID();
@@ -83,7 +84,7 @@ export class ForumComponent implements OnDestroy {
     this.subscription = this.route.params.subscribe(async (data: any) => {
       this.loading = true;
       const tmpForumPosts = this.forumService.getForumThread(data.id);
-      const tmpTmpPost =  this.dashboardService.getPostV2(data ? data.id : '');
+      const tmpTmpPost = this.dashboardService.getPostV2(data ? data.id : '');
       await Promise.all([tmpForumPosts, tmpTmpPost]);
       this.forumPosts = await tmpForumPosts;
       const tmpPost = await tmpTmpPost;
@@ -105,23 +106,23 @@ export class ForumComponent implements OnDestroy {
       behavior: "instant",
       block: "start",
       inline: "nearest"
-      });
-    }
+    });
+  }
 
-    async loadRepliesFromFediverse() {
-      this.loading = true;
-      await this.postService.loadRepliesFromFediverse(
-        this.post[this.post.length - 1].id
-      );
-      this.forumPosts = (await this.forumService.getForumThread(this.post[this.post.length - 1].id));
-      this.itemsPerPage = 50;
-      this.currentPage = 0;
-      this.loading = false;
-    }
+  async loadRepliesFromFediverse() {
+    this.loading = true;
+    await this.postService.loadRepliesFromFediverse(
+      this.post[this.post.length - 1].id
+    );
+    this.forumPosts = (await this.forumService.getForumThread(this.post[this.post.length - 1].id));
+    this.itemsPerPage = 50;
+    this.currentPage = 0;
+    this.loading = false;
+  }
 
-    changePage(event: PageEvent) {
-      this.scrollTo('scroll-here-on-page-change')
-      this.itemsPerPage = event.pageSize;
-      this.currentPage = event.pageIndex;
-    }
+  changePage(event: PageEvent) {
+    this.scrollTo('scroll-here-on-page-change')
+    this.itemsPerPage = event.pageSize;
+    this.currentPage = event.pageIndex;
+  }
 }

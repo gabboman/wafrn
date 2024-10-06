@@ -1,16 +1,17 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { environment } from 'src/environments/environment';
+
 import { MessageService } from './message.service';
+import { EnvironmentService } from './environment.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class BlocksService {
-  baseMediaUrl = environment.baseMediaUrl;
-  baseCacheUrl = environment.externalCacheurl;
+  baseMediaUrl = EnvironmentService.environment.baseMediaUrl;
+  baseCacheUrl = EnvironmentService.environment.externalCacheurl;
 
-  constructor(private http: HttpClient, private messages: MessageService) {}
+  constructor(private http: HttpClient, private messages: MessageService) { }
 
   async blockUser(id: string): Promise<boolean> {
     let success = false;
@@ -19,7 +20,7 @@ export class BlocksService {
         userId: id,
       };
       const response = await this.http
-        .post(`${environment.baseUrl}/block`, formData)
+        .post(`${EnvironmentService.environment.baseUrl}/block`, formData)
         .toPromise();
       this.messages.add({
         severity: 'success',
@@ -43,8 +44,8 @@ export class BlocksService {
         avatar: userBlocked[key].url.startsWith('@')
           ? this.baseCacheUrl + encodeURIComponent(userBlocked[key].avatar)
           : this.baseCacheUrl +
-            encodeURIComponent(this.baseMediaUrl + userBlocked[key].avatar),
-        url: userBlocked[key].url ,
+          encodeURIComponent(this.baseMediaUrl + userBlocked[key].avatar),
+        url: userBlocked[key].url,
         reason: userBlocked.reason,
         id: userBlocked[key].id,
       };
@@ -52,7 +53,7 @@ export class BlocksService {
   }
   async getBlockList(): Promise<Array<any>> {
     const response = await this.http
-      .get<Array<any>>(`${environment.baseUrl}/myBlocks`)
+      .get<Array<any>>(`${EnvironmentService.environment.baseUrl}/myBlocks`)
       .toPromise();
     return response ? this.processResponse(response, 'blocked') : [];
   }
@@ -60,7 +61,7 @@ export class BlocksService {
   async unblockUser(id: string): Promise<Array<any>> {
     const response = await this.http
       .post<Array<any>>(
-        `${environment.baseUrl}/unblock-user?id=${encodeURIComponent(id)}`,
+        `${EnvironmentService.environment.baseUrl}/unblock-user?id=${encodeURIComponent(id)}`,
         {}
       )
       .toPromise();
@@ -80,7 +81,7 @@ export class BlocksService {
         userId: id,
       };
       const response = await this.http
-        .post(`${environment.baseUrl}/mute`, formData)
+        .post(`${EnvironmentService.environment.baseUrl}/mute`, formData)
         .toPromise();
       this.messages.add({
         severity: 'success',
@@ -100,7 +101,7 @@ export class BlocksService {
   }
   async getMuteList(): Promise<Array<any>> {
     const response = await this.http
-      .get<Array<any>>(`${environment.baseUrl}/myMutes`)
+      .get<Array<any>>(`${EnvironmentService.environment.baseUrl}/myMutes`)
       .toPromise();
     return response ? this.processResponse(response, 'muted') : [];
   }
@@ -108,7 +109,7 @@ export class BlocksService {
   async unmuteUser(id: string): Promise<Array<any>> {
     const response = await this.http
       .post<Array<any>>(
-        `${environment.baseUrl}/unmute-user?id=${encodeURIComponent(id)}`,
+        `${EnvironmentService.environment.baseUrl}/unmute-user?id=${encodeURIComponent(id)}`,
         {}
       )
       .toPromise();
@@ -136,7 +137,7 @@ export class BlocksService {
         userId: id,
       };
       const response = await this.http
-        .post(`${environment.baseUrl}/blockUserServer`, formData)
+        .post(`${EnvironmentService.environment.baseUrl}/blockUserServer`, formData)
         .toPromise();
       this.messages.add({
         severity: 'success',
@@ -156,7 +157,7 @@ export class BlocksService {
   }
   async getMyServerBlockList(): Promise<Array<any>> {
     const response = await this.http
-      .get<Array<any>>(`${environment.baseUrl}/myServerBlocks`)
+      .get<Array<any>>(`${EnvironmentService.environment.baseUrl}/myServerBlocks`)
       .toPromise();
     return response ? this.processResponseServer(response) : [];
   }
@@ -164,7 +165,7 @@ export class BlocksService {
   async unblockServer(id: string): Promise<Array<any>> {
     const response = await this.http
       .post<Array<any>>(
-        `${environment.baseUrl}/unblockServer?id=${encodeURIComponent(id)}`,
+        `${EnvironmentService.environment.baseUrl}/unblockServer?id=${encodeURIComponent(id)}`,
         {}
       )
       .toPromise();

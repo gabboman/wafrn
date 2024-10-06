@@ -4,11 +4,12 @@ import { UserNotifications } from 'src/app/interfaces/user-notifications';
 import { RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { MatCardModule } from '@angular/material/card';
-import { environment } from 'src/environments/environment';
+
 import { PostFragmentComponent } from '../post-fragment/post-fragment.component';
 import { MatButton } from '@angular/material/button';
 import { AvatarSmallComponent } from "../avatar-small/avatar-small.component";
 import { PostHeaderComponent } from "../post/post-header/post-header.component";
+import { EnvironmentService } from 'src/app/services/environment.service';
 
 @Component({
   selector: 'app-single-notification',
@@ -23,7 +24,7 @@ import { PostHeaderComponent } from "../post/post-header/post-header.component";
     MatButton,
     PostHeaderComponent,
     AvatarSmallComponent
-],
+  ],
 })
 export class SingleNotificationComponent implements OnInit {
   emojiUrl: string = '';
@@ -33,7 +34,7 @@ export class SingleNotificationComponent implements OnInit {
   ngOnInit(): void {
     if (this.notification.emojiReact) {
       this.emojiUrl =
-        environment.externalCacheurl +
+        EnvironmentService.environment.externalCacheurl +
         encodeURIComponent(this.notification.emojiReact?.url as string);
     }
 

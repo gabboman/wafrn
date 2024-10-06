@@ -1,6 +1,6 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { environment } from 'src/environments/environment';
+
 import { Follower } from '../interfaces/follower';
 import { Reblog } from '../interfaces/reblog';
 import { JwtService } from './jwt.service';
@@ -11,6 +11,7 @@ import { UserNotifications } from '../interfaces/user-notifications';
 import { NotificationType } from '../enums/notification-type';
 import { ProcessedPost } from '../interfaces/processed-post';
 import { PostsService } from './posts.service';
+import { EnvironmentService } from './environment.service';
 
 @Injectable({
   providedIn: 'root',
@@ -69,7 +70,7 @@ export class NotificationsService {
           usersAwaitingAproval: number;
           followsAwaitingAproval: number;
           asks: number;
-        }>(`${environment.baseUrl}/v2/notificationsCount`, {
+        }>(`${EnvironmentService.environment.baseUrl}/v2/notificationsCount`, {
           params: petitionData,
         })
       );
@@ -132,7 +133,7 @@ export class NotificationsService {
         likes: any[],
         emojiReactions: any[],
         quotes: any[]
-      }>(`${environment.baseUrl}/v2/notificationsScroll`, {
+      }>(`${EnvironmentService.environment.baseUrl}/v2/notificationsScroll`, {
         params: petitionData,
       })
     );

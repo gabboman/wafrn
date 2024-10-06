@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { BlocksService } from 'src/app/services/blocks.service';
-import { environment } from 'src/environments/environment';
+
 
 @Component({
   selector: 'app-my-blocks',

@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable, OnDestroy } from '@angular/core';
 import { BehaviorSubject, Subscription } from 'rxjs';
-import { environment } from 'src/environments/environment';
+
 import { WafrnMedia } from '../interfaces/wafrn-media';
 import { Action, EditorLauncherData } from '../interfaces/editor-launcher-data';
 import { MatDialog } from '@angular/material/dialog';
@@ -10,12 +10,13 @@ import { Ask } from '../interfaces/ask';
 import { DashboardService } from './dashboard.service';
 import { Router } from '@angular/router';
 import { EditorData } from '../interfaces/editor-data';
+import { EnvironmentService } from './environment.service';
 
 @Injectable({
   providedIn: 'any',
 })
 export class EditorService implements OnDestroy {
-  base_url = environment.baseUrl;
+  base_url = EnvironmentService.environment.baseUrl;
   public launchPostEditorEmitter: BehaviorSubject<EditorLauncherData> =
     new BehaviorSubject<EditorLauncherData>({
       action: Action.None,
@@ -101,7 +102,7 @@ export class EditorService implements OnDestroy {
       payload.append('description', description);
       payload.append('nsfw', nsfw.toString());
       const petition: any = await this.http
-        .post<Array<WafrnMedia>>(`${environment.baseUrl}/uploadMedia`, payload)
+        .post<Array<WafrnMedia>>(`${EnvironmentService.environment.baseUrl}/uploadMedia`, payload)
         .toPromise();
       if (petition) {
         res = petition[0];
@@ -115,7 +116,7 @@ export class EditorService implements OnDestroy {
 
   async searchUser(url: string) {
     return await this.http
-      .get(`${environment.baseUrl}/userSearch/${encodeURIComponent(url)}`)
+      .get(`${EnvironmentService.environment.baseUrl}/userSearch/${encodeURIComponent(url)}`)
       .toPromise();
   }
 

@@ -8,7 +8,8 @@ import {
 } from '@angular/core';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { WafrnMedia } from 'src/app/interfaces/wafrn-media';
-import { environment } from 'src/environments/environment';
+import { EnvironmentService } from 'src/app/services/environment.service';
+
 
 @Component({
   selector: 'app-media-preview',
@@ -19,8 +20,8 @@ import { environment } from 'src/environments/environment';
 })
 export class MediaPreviewComponent implements OnInit {
   @Input() media!: WafrnMedia;
-  baseMediaUrl = environment.baseMediaUrl;
-  cacheUrl = environment.externalCacheurl;
+  baseMediaUrl = EnvironmentService.environment.baseMediaUrl;
+  cacheUrl = EnvironmentService.environment.externalCacheurl;
   success = false;
   elemUrl = '';
 

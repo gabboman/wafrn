@@ -5,9 +5,10 @@ import {
   Validators,
 } from '@angular/forms';
 import { faUser } from '@fortawesome/free-solid-svg-icons';
+import { EnvironmentService } from 'src/app/services/environment.service';
 import { LoginService } from 'src/app/services/login.service';
 import { MessageService } from 'src/app/services/message.service';
-import { environment } from 'src/environments/environment';
+
 
 @Component({
   selector: 'app-recover-password',
@@ -16,7 +17,7 @@ import { environment } from 'src/environments/environment';
 })
 export class RecoverPasswordComponent {
   loading = false;
-  logo = environment.logo;
+  logo = EnvironmentService.environment.logo;
   icon = faUser;
 
   loginForm = new UntypedFormGroup({
@@ -26,7 +27,7 @@ export class RecoverPasswordComponent {
   constructor(
     private loginService: LoginService,
     private messageService: MessageService
-  ) {}
+  ) { }
 
   async onSubmit() {
     this.loading = true;

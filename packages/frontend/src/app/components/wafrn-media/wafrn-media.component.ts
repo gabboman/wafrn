@@ -1,27 +1,31 @@
 import {
+  AfterViewInit,
   ChangeDetectorRef,
   Component,
+  ElementRef,
   Input,
   OnChanges,
+  OnInit,
   ViewChild,
 } from '@angular/core';
 import { WafrnMedia } from 'src/app/interfaces/wafrn-media';
+import { EnvironmentService } from 'src/app/services/environment.service';
 import { MediaService } from 'src/app/services/media.service';
 import { MessageService } from 'src/app/services/message.service';
-import { environment } from 'src/environments/environment';
+
 
 @Component({
   selector: 'app-wafrn-media',
   templateUrl: './wafrn-media.component.html',
   styleUrls: ['./wafrn-media.component.scss'],
 })
-export class WafrnMediaComponent implements OnChanges {
+export class WafrnMediaComponent implements OnChanges, AfterViewInit {
   nsfw = true;
   @Input() data!: WafrnMedia;
   tmpUrl = '';
   displayUrl: string = '';
   disableNSFWFilter = true;
-  @ViewChild('wafrnMedia') wafrnMedia!: HTMLElement;
+  @ViewChild('media', { read: ElementRef }) wafrnMedia!: ElementRef;
   extension = '';
   viewLongImage = false;
   extensionsToHideImgTag = [
@@ -36,7 +40,8 @@ export class WafrnMediaComponent implements OnChanges {
     'oga',
   ];
   mimeType = '';
-
+  height = 1;
+  width = 1;
   constructor(
     private mediaService: MediaService,
     private messagesService: MessageService,
@@ -49,9 +54,9 @@ export class WafrnMediaComponent implements OnChanges {
     if (this.data) {
       this.extension = this.getExtension();
       this.tmpUrl = this.data.external
-        ? environment.externalCacheurl + encodeURIComponent(this.data.url)
-        : environment.externalCacheurl +
-        encodeURIComponent(environment.baseMediaUrl + this.data.url);
+        ? EnvironmentService.environment.externalCacheurl + encodeURIComponent(this.data.url)
+        : EnvironmentService.environment.externalCacheurl +
+        encodeURIComponent(EnvironmentService.environment.baseMediaUrl + this.data.url);
       this.nsfw = this.data.NSFW && !this.disableNSFWFilter;
       this.displayUrl = this.tmpUrl //this.nsfw ? '/assets/img/nsfw_image.webp' : this.tmpUrl;
       if (this.data.mediaType) {
@@ -100,10 +105,12 @@ export class WafrnMediaComponent implements OnChanges {
           }
         }
       }
-
-
+      this.cdr.markForCheck();
     }
-    this.cdr.markForCheck();
+  }
+
+  ngAfterViewInit(): void {
+    // console.log(this.wafrnMedia.nativeElement)
   }
 
   showPicture() {

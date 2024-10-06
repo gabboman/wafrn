@@ -10,19 +10,20 @@ import { Subscription, filter } from 'rxjs';
 import { ProcessedPost } from 'src/app/interfaces/processed-post';
 import { SimplifiedUser } from 'src/app/interfaces/simplified-user';
 import { DashboardService } from 'src/app/services/dashboard.service';
+import { EnvironmentService } from 'src/app/services/environment.service';
 import { LoginService } from 'src/app/services/login.service';
 import { MessageService } from 'src/app/services/message.service';
 import { PostsService } from 'src/app/services/posts.service';
 import { ThemeService } from 'src/app/services/theme.service';
-import { environment } from 'src/environments/environment';
+
 @Component({
   selector: 'app-search',
   templateUrl: './search.component.html',
   styleUrls: ['./search.component.scss'],
 })
 export class SearchComponent implements OnInit, OnDestroy {
-  cacheurl = environment.externalCacheurl;
-  baseMediaUrl = environment.baseMediaUrl;
+  cacheurl = EnvironmentService.environment.externalCacheurl;
+  baseMediaUrl = EnvironmentService.environment.baseMediaUrl;
   searchForm: UntypedFormGroup = new UntypedFormGroup({
     search: new UntypedFormControl('', [Validators.required]),
   });
@@ -58,11 +59,11 @@ export class SearchComponent implements OnInit, OnDestroy {
       .subscribe(() => {
         this.ngOnInit();
       });
-      this.updateFollowersSubscription = this.postService.updateFollowers.subscribe(() => {
-        this.followedUsers = this.postService.followedUserIds;
-        this.notYetAcceptedFollows =
-          this.postService.notYetAcceptedFollowedUsersIds;
-      });
+    this.updateFollowersSubscription = this.postService.updateFollowers.subscribe(() => {
+      this.followedUsers = this.postService.followedUserIds;
+      this.notYetAcceptedFollows =
+        this.postService.notYetAcceptedFollowedUsersIds;
+    });
   }
   ngOnDestroy(): void {
     this.navigationSubscription.unsubscribe();

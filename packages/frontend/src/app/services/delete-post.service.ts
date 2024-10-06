@@ -2,7 +2,8 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Observable, ReplaySubject } from 'rxjs';
-import { environment } from 'src/environments/environment';
+import { EnvironmentService } from './environment.service';
+
 
 @Injectable({
   providedIn: 'root',
@@ -10,12 +11,12 @@ import { environment } from 'src/environments/environment';
 export class DeletePostService {
   public launchDeleteScreen: ReplaySubject<string> = new ReplaySubject();
 
-  constructor(private http: HttpClient, private dialogService: MatDialog) {}
+  constructor(private http: HttpClient, private dialogService: MatDialog) { }
 
   public deletePost(id: string): Observable<boolean> {
     let petitionData: HttpParams = new HttpParams();
     petitionData = petitionData.set('id', id);
-    return this.http.delete<boolean>(`${environment.baseUrl}/deletePost`, {
+    return this.http.delete<boolean>(`${EnvironmentService.environment.baseUrl}/deletePost`, {
       params: petitionData,
     });
   }
@@ -23,7 +24,7 @@ export class DeletePostService {
   public deleteRewoots(id: string): Observable<boolean> {
     let petitionData: HttpParams = new HttpParams();
     petitionData = petitionData.set('id', id);
-    return this.http.delete<boolean>(`${environment.baseUrl}/deleteRewoots`, {
+    return this.http.delete<boolean>(`${EnvironmentService.environment.baseUrl}/deleteRewoots`, {
       params: petitionData,
     });
   }

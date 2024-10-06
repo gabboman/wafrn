@@ -8,8 +8,9 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faFileUpload } from '@fortawesome/free-solid-svg-icons';
 import { lastValueFrom } from 'rxjs';
 import { WafrnMedia } from 'src/app/interfaces/wafrn-media';
+import { EnvironmentService } from 'src/app/services/environment.service';
 import { MessageService } from 'src/app/services/message.service';
-import { environment } from 'src/environments/environment';
+
 
 @Component({
   selector: 'app-file-upload',
@@ -34,18 +35,18 @@ export class FileUploadComponent {
     buttonText: string,
     formdataName: string
   } = {
-    url :`/uploadMedia`,
-    formdataName: 'image',
-    formats: `image/*, video/*, audio/*`,
-    buttonText: ``
-  }
+      url: `/uploadMedia`,
+      formdataName: 'image',
+      formats: `image/*, video/*, audio/*`,
+      buttonText: ``
+    }
   @Output() fileUpload: EventEmitter<WafrnMedia> =
     new EventEmitter<WafrnMedia>();
 
   constructor(
     private http: HttpClient,
     private messageService: MessageService
-  ) {}
+  ) { }
 
   // DIRTY if you touch ANYTHING ELSE here you better move this to a service. UNDERSTOOD?
   // TODO undo this dirty thing, move to a service, handle errors
@@ -56,7 +57,7 @@ export class FileUploadComponent {
     if (el.files && el.files[0]) {
       formdata.append(this.config.formdataName, el.files[0]);
       const petition: WafrnMedia[] | void = await lastValueFrom(
-        this.http.post<Array<WafrnMedia>>(environment.baseUrl + this.config.url, formdata)
+        this.http.post<Array<WafrnMedia>>(EnvironmentService.environment.baseUrl + this.config.url, formdata)
       ).catch((error: any) => {
         console.log('error uploading');
         console.warn(error);

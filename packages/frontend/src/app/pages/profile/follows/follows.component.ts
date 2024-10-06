@@ -15,7 +15,7 @@ import { followsResponse } from 'src/app/interfaces/follows-response';
 import { DashboardService } from 'src/app/services/dashboard.service';
 import { BlogService } from 'src/app/services/blog.service';
 import { PostsService } from 'src/app/services/posts.service';
-import { environment } from 'src/environments/environment';
+
 import { AvatarSmallComponent } from "../../../components/avatar-small/avatar-small.component";
 import { LoginService } from 'src/app/services/login.service';
 import { faCheck, faTrash } from '@fortawesome/free-solid-svg-icons';

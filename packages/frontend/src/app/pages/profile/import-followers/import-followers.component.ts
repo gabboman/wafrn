@@ -2,9 +2,10 @@ import { HttpClient } from '@angular/common/http';
 import { Component } from '@angular/core';
 import { lastValueFrom } from 'rxjs';
 import { FollowListElem } from 'src/app/interfaces/follow-list-elem';
+import { EnvironmentService } from 'src/app/services/environment.service';
 import { MessageService } from 'src/app/services/message.service';
 import { PostsService } from 'src/app/services/posts.service';
-import { environment } from 'src/environments/environment';
+
 
 @Component({
   selector: 'app-import-followers',
@@ -16,14 +17,14 @@ export class ImportFollowersComponent {
   progress = 0.0;
   failedFollows: string[] = [];
   uploading = false;
-  size = parseInt(environment.maxUploadSize) * 1024 * 1024;
+  size = parseInt(EnvironmentService.environment.maxUploadSize) * 1024 * 1024;
   response: {
     foundUsers: FollowListElem[];
     notFoundUsers: string[];
   } = {
-    foundUsers: [],
-    notFoundUsers: [],
-  };
+      foundUsers: [],
+      notFoundUsers: [],
+    };
 
   responseResults: {
     success?: boolean;
@@ -32,24 +33,24 @@ export class ImportFollowersComponent {
     errors: string[];
     errorMessage?: string;
   } = {
-    success: undefined,
-    newFollows: 0,
-    alreadyFollowing: 0,
-    errors: [],
-  };
+      success: undefined,
+      newFollows: 0,
+      alreadyFollowing: 0,
+      errors: [],
+    };
 
   constructor(
     private http: HttpClient,
     private postService: PostsService,
     private messages: MessageService
-  ) {}
+  ) { }
   async onFileSelected(event: Event) {
     this.uploading = true;
     const el = event.target as HTMLInputElement;
     const formdata = new FormData();
     if (el.files && el.files[0]) {
       formdata.append('follows', el.files[0]);
-      const uploadFollowListUrl = `${environment.baseUrl}/loadFollowList`;
+      const uploadFollowListUrl = `${EnvironmentService.environment.baseUrl}/loadFollowList`;
       const petition = await lastValueFrom(
         this.http.post<{
           foundUsers: FollowListElem[];

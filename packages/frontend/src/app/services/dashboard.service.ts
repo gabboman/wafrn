@@ -1,6 +1,6 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { EventEmitter, Injectable } from '@angular/core';
-import { environment } from 'src/environments/environment';
+
 import { ProcessedPost } from '../interfaces/processed-post';
 import { SimplifiedUser } from '../interfaces/simplified-user';
 import { PostsService } from './posts.service';
@@ -10,6 +10,7 @@ import { unlinkedPosts } from '../interfaces/unlinked-posts';
 import { Emoji } from '../interfaces/emoji';
 import { BlogDetails } from '../interfaces/blogDetails';
 import { Ask } from '../interfaces/ask';
+import { EnvironmentService } from './environment.service';
 
 @Injectable({
   providedIn: 'root',
@@ -26,7 +27,7 @@ export class DashboardService {
     private postService: PostsService,
     private messageService: MessageService
   ) {
-    this.baseUrl = environment.baseUrl;
+    this.baseUrl = EnvironmentService.environment.baseUrl;
   }
 
   async getDashboardPage(
@@ -40,7 +41,7 @@ export class DashboardService {
     petitionData = petitionData.set('page', '0');
     petitionData = petitionData.set('level', level);
     petitionData = petitionData.set('startScroll', date.getTime().toString());
-    const url = `${environment.baseUrl}/v2/dashboard`;
+    const url = `${EnvironmentService.environment.baseUrl}/v2/dashboard`;
     const dashboardPetition = await firstValueFrom(
       this.http.get<unlinkedPosts>(url, {
         params: petitionData,
@@ -78,7 +79,7 @@ export class DashboardService {
       this.http.get<{
         posts: unlinkedPosts;
         foundUsers: Array<SimplifiedUser>;
-      }>(`${environment.baseUrl}/v2/search`, { params: petitionData })
+      }>(`${EnvironmentService.environment.baseUrl}/v2/search`, { params: petitionData })
     );
     if (dashboardPetition) {
       postResult = this.postService.processPostNew(dashboardPetition.posts);
@@ -113,7 +114,7 @@ export class DashboardService {
     );
     petitionData = petitionData.set('id', blogId);
     const dashboardPetition: unlinkedPosts = await firstValueFrom(
-      this.http.get<unlinkedPosts>(`${environment.baseUrl}/v2/blog`, {
+      this.http.get<unlinkedPosts>(`${EnvironmentService.environment.baseUrl}/v2/blog`, {
         params: petitionData,
       })
     );
@@ -145,7 +146,7 @@ export class DashboardService {
   async getBlogDetails(url: string, ignoreEmojis = false) {
     let petitionData: HttpParams = new HttpParams();
     petitionData = petitionData.append('id', url);
-    const res: BlogDetails = await firstValueFrom(this.http.get<BlogDetails>(`${environment.baseUrl}/user`, { params: petitionData }));
+    const res: BlogDetails = await firstValueFrom(this.http.get<BlogDetails>(`${EnvironmentService.environment.baseUrl}/user`, { params: petitionData }));
     if (res.emojis && !ignoreEmojis) {
       res.emojis.forEach((emoji: Emoji) => {
         res.name = res.name.replaceAll(emoji.name, this.postService.emojiToHtml(emoji))

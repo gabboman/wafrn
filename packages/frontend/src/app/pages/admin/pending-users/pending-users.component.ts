@@ -4,7 +4,8 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { SimplifiedUser } from 'src/app/interfaces/simplified-user';
 import { AdminService } from 'src/app/services/admin.service';
-import { environment } from 'src/environments/environment';
+import { EnvironmentService } from 'src/app/services/environment.service';
+
 
 @Component({
   selector: 'app-pending-users',
@@ -34,7 +35,7 @@ export class PendingUsersComponent {
     this.pendingUsers = [];
     this.adminService.getPendingActivationUsers().then((response) => {
       this.pendingUsers = response.map((elem) => {
-        elem.avatar = environment.baseMediaUrl + elem.avatar;
+        elem.avatar = EnvironmentService.environment.baseMediaUrl + elem.avatar;
         return elem;
       });
     });

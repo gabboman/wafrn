@@ -8,7 +8,7 @@ import { SimplifiedUser } from 'src/app/interfaces/simplified-user';
 import { UserNotifications } from 'src/app/interfaces/user-notifications';
 import { NotificationsService } from 'src/app/services/notifications.service';
 import { ThemeService } from 'src/app/services/theme.service';
-import { environment } from 'src/environments/environment';
+
 
 @Component({
   selector: 'app-notifications',

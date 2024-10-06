@@ -2,9 +2,10 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { UntypedFormGroup } from '@angular/forms';
 import { ReplaySubject } from 'rxjs';
-import { environment } from 'src/environments/environment';
+
 import { ProcessedPost } from '../interfaces/processed-post';
 import { MatDialog } from '@angular/material/dialog';
+import { EnvironmentService } from './environment.service';
 
 @Injectable({
   providedIn: 'any',
@@ -16,7 +17,7 @@ export class ReportService {
   constructor(
     private http: HttpClient, //private messages: MessageService
     private dialogService: MatDialog
-  ) {}
+  ) { }
 
   async reportPost(
     post: ProcessedPost[],
@@ -30,7 +31,7 @@ export class ReportService {
       };
       //formData.severity = formData.severity.value;
       await this.http
-        .post(`${environment.baseUrl}/reportPost`, formData)
+        .post(`${EnvironmentService.environment.baseUrl}/reportPost`, formData)
         .toPromise();
       success = true;
     } catch (error) {

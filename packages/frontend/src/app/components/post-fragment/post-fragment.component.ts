@@ -14,7 +14,7 @@ import { WafrnMediaModule } from '../wafrn-media/wafrn-media.module';
 import { RouterModule } from '@angular/router';
 import { MatButtonModule } from '@angular/material/button';
 import { SimplifiedUser } from 'src/app/interfaces/simplified-user';
-import { environment } from 'src/environments/environment';
+
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { PostsService } from 'src/app/services/posts.service';
 import { LoginService } from 'src/app/services/login.service';
@@ -26,6 +26,7 @@ import { InjectHtmlModule } from 'src/app/directives/inject-html/inject-html.mod
 import { AvatarSmallComponent } from '../avatar-small/avatar-small.component';
 import { PostHeaderComponent } from "../post/post-header/post-header.component";
 import { SingleAskComponent } from '../single-ask/single-ask.component';
+import { EnvironmentService } from 'src/app/services/environment.service';
 
 type EmojiReaction = {
   id: string;
@@ -125,7 +126,7 @@ export class PostFragmentComponent implements OnChanges, OnDestroy {
       if (!hasReaction) {
         let image = '';
         if (reaction.emoji?.url) {
-          image = encodeURIComponent(reaction.emoji.external ? reaction.emoji.url : (environment.baseMediaUrl + reaction.emoji.url))
+          image = encodeURIComponent(reaction.emoji.external ? reaction.emoji.url : (EnvironmentService.environment.baseMediaUrl + reaction.emoji.url))
         }
         // create the basic structure to augment later
         emojiReactions[reaction.content] = {
@@ -133,7 +134,7 @@ export class PostFragmentComponent implements OnChanges, OnDestroy {
           content: reaction.content,
           external: reaction.emoji?.external == true,
           name: reaction.content,
-          img: image ? `${environment.externalCacheurl}${image}&avatar=true` : undefined,
+          img: image ? `${EnvironmentService.environment.externalCacheurl}${image}&avatar=true` : undefined,
           users: [], // this will be filled below,
           tooltip: '',
           includesMe: false,

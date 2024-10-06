@@ -14,7 +14,7 @@ import { EditorService } from 'src/app/services/editor.service';
 import { JwtService } from 'src/app/services/jwt.service';
 import { LoginService } from 'src/app/services/login.service';
 import { NotificationsService } from 'src/app/services/notifications.service';
-import { environment } from 'src/environments/environment';
+
 import {
   faQuestion,
   faHouse,
@@ -45,6 +45,7 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 import { MenuItem } from 'src/app/interfaces/menu-item';
 import { MatDialog } from '@angular/material/dialog';
+import { EnvironmentService } from 'src/app/services/environment.service';
 
 @Component({
   selector: 'app-navigation-menu',
@@ -53,7 +54,7 @@ import { MatDialog } from '@angular/material/dialog';
 })
 export class NavigationMenuComponent implements OnInit, OnDestroy {
   menuItems: MenuItem[] = [];
-  maintenanceMode = environment.maintenance;
+  maintenanceMode = EnvironmentService.environment.maintenance;
   menuVisible = false;
   notifications = 0;
   adminNotifications = 0;
@@ -62,7 +63,7 @@ export class NavigationMenuComponent implements OnInit, OnDestroy {
   awaitingAsks = 0;
   privateMessagesNotifications = '';
   mobile = false;
-  logo = environment.logo;
+  logo = EnvironmentService.environment.logo;
   defaultIcon = faQuestion;
   navigationSubscription: Subscription;
   loginSubscription: Subscription;

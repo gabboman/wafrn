@@ -2,7 +2,8 @@ import { CommonModule } from '@angular/common';
 import { Component, Input, OnInit } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { SimplifiedUser } from 'src/app/interfaces/simplified-user';
-import { environment } from 'src/environments/environment';
+import { EnvironmentService } from 'src/app/services/environment.service';
+
 
 @Component({
   selector: 'app-avatar-small',
@@ -21,10 +22,10 @@ export class AvatarSmallComponent implements OnInit {
 
 
   ngOnInit(): void {
-    this.avatar = environment.externalCacheurl + encodeURIComponent(
+    this.avatar = EnvironmentService.environment.externalCacheurl + encodeURIComponent(
       this.user.url.startsWith('@') ?
         this.user.avatar :
-        environment.baseMediaUrl + this.user.avatar
+        EnvironmentService.environment.baseMediaUrl + this.user.avatar
     ) + '&avatar=true'
   }
 

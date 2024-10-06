@@ -12,8 +12,9 @@ import { BlocksService } from 'src/app/services/blocks.service';
 import { LoginService } from 'src/app/services/login.service';
 import { MessageService } from 'src/app/services/message.service';
 import { PostsService } from 'src/app/services/posts.service';
-import { environment } from 'src/environments/environment';
+
 import { AskDialogContentComponent } from '../ask-dialog-content/ask-dialog-content.component';
+import { EnvironmentService } from 'src/app/services/environment.service';
 
 @Component({
   selector: 'app-blog-header',
@@ -60,18 +61,18 @@ export class BlogHeaderComponent implements OnChanges, OnDestroy {
   ngOnChanges(changes: SimpleChanges): void {
     if (this.blogDetails) {
       this.avatarUrl = this.blogDetails.url.startsWith('@')
-        ? environment.externalCacheurl +
+        ? EnvironmentService.environment.externalCacheurl +
         encodeURIComponent(this.blogDetails.avatar)
-        : environment.externalCacheurl +
+        : EnvironmentService.environment.externalCacheurl +
         encodeURIComponent(
-          environment.baseMediaUrl + this.blogDetails.avatar
+          EnvironmentService.environment.baseMediaUrl + this.blogDetails.avatar
         );
       this.headerUrl = this.blogDetails.url.startsWith('@')
-        ? environment.externalCacheurl +
+        ? EnvironmentService.environment.externalCacheurl +
         encodeURIComponent(this.blogDetails.headerImage)
-        : environment.externalCacheurl +
+        : EnvironmentService.environment.externalCacheurl +
         encodeURIComponent(
-          environment.baseMediaUrl + this.blogDetails.headerImage
+          EnvironmentService.environment.baseMediaUrl + this.blogDetails.headerImage
         );
       const askLevelOption = this.blogDetails.publicOptions.find(elem => elem.optionName == "wafrn.public.asks")
       let askLevel = askLevelOption ? parseInt(askLevelOption.optionValue) : 2;

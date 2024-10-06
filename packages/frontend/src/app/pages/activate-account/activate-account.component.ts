@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { EnvironmentService } from 'src/app/services/environment.service';
 import { LoginService } from 'src/app/services/login.service';
-import { environment } from 'src/environments/environment';
+
 
 @Component({
   selector: 'app-activate-account',
@@ -10,7 +11,7 @@ import { environment } from 'src/environments/environment';
 })
 export class ActivateAccountComponent implements OnInit {
 
-  logo = environment.logo;
+  logo = EnvironmentService.environment.logo;
 
   constructor(
     private activeRoute: ActivatedRoute,

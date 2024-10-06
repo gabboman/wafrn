@@ -1,7 +1,8 @@
 import { Component, Injector, OnInit } from '@angular/core';
 import { SwUpdate } from '@angular/service-worker';
 import { LoginService } from './services/login.service';
-import { environment } from 'src/environments/environment';
+import { EnvironmentService } from './services/environment.service';
+
 
 @Component({
   selector: 'app-root',
@@ -14,8 +15,9 @@ export class AppComponent implements OnInit {
   constructor(
     private swUpdate: SwUpdate,
     private injector: Injector,
-    private loginService: LoginService
-  ) {}
+    private loginService: LoginService,
+    private environmentService: EnvironmentService
+  ) { }
 
   ngOnInit() {
     // unregister serviceworkers
@@ -35,7 +37,7 @@ export class AppComponent implements OnInit {
         ) {
           window.location.reload();
         }
-        if (environment.disablePWA) {
+        if (EnvironmentService.environment.disablePWA) {
           if ('caches' in window) {
             caches.keys().then(function (keyList) {
               return Promise.all(

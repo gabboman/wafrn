@@ -1,0 +1,6 @@
+{
+  "/api": {
+    "target": "https://app.wafrn.net/",
+    "secure": true
+  }
+}
