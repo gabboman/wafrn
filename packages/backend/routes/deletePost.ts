@@ -36,7 +36,7 @@ const deletePostQueue = new Queue('deletePostQueue', {
 })
 
 export default function deletePost(app: Application) {
-  app.delete('/api/deletePost.js', authenticateToken, async (req: AuthorizedRequest, res: Response) => {
+  app.delete('/api/deletePost', authenticateToken, async (req: AuthorizedRequest, res: Response) => {
     let success = false
     try {
       const id = req.query.id as string
