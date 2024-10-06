@@ -626,7 +626,6 @@ export default function postsRoutes(app: Application) {
         }
 
         let content = req.body.content ? req.body.content.trim() : ''
-        content = markdownConverter.makeHtml(content)
         const content_warning = req.body.content_warning
           ? req.body.content_warning.trim()
           : posterUser?.NSFW
@@ -739,10 +738,11 @@ export default function postsRoutes(app: Application) {
                 ? userMentioned.urlToLower
                 : `@${userMentioned.urlToLower}`
               const targetString = `<span class="h-card" translate="no"><a href="${remoteUrl}" class="u-url mention">@<span>${url}</span></a></span>`
-              content = content.replace(stringToReplace, targetString)
+              content = (' ' + content + ' ').replace(` ${stringToReplace} `, ` ${targetString} `).trim()
             }
           }
         }
+        content = markdownConverter.makeHtml(content)
         let post: any
         content = content.trim()
         if (req.body.idPostToEdit) {
