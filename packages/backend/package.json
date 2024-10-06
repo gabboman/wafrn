@@ -14,7 +14,6 @@
 	"author": "",
 	"license": "MIT",
 	"dependencies": {
-		"@noble/ed25519": "^1.7.1",
 		"@opera7133/mfmp": "^1.0.2-5",
 		"@peertube/http-signature": "^1.7.0",
 		"@types/bcrypt": "^5.0.0",
@@ -36,8 +35,6 @@
 		"file-type": "^19.5.0",
 		"fluent-ffmpeg": "^2.1.2",
 		"fs-extra": "^11.2.0",
-		"g": "^2.0.1",
-		"gm": "^1.25.0",
 		"htmlparser2": "^9.0.0",
 		"ioredis": "^5.3.2",
 		"isomorphic-dompurify": "^2.7.0",
