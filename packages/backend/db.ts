@@ -96,7 +96,10 @@ const User = sequelize.define(
     nameToLower: Sequelize.TEXT,
     url: Sequelize.TEXT,
     urlToLower: Sequelize.TEXT,
-    NSFW: Sequelize.BOOLEAN,
+    NSFW: {
+      type: Sequelize.BOOLEAN,
+      allowNull: true
+    },
     avatar: Sequelize.TEXT,
     password: Sequelize.TEXT,
     birthDate: Sequelize.DATE,
