@@ -7,7 +7,7 @@ import {
 import { LoginService } from 'src/app/services/login.service';
 import { MessageService } from 'src/app/services/message.service';
 
-import { faUser, faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
+import { faEye, faEyeSlash, faUpload, faUser } from '@fortawesome/free-solid-svg-icons';
 import { EnvironmentService } from 'src/app/services/environment.service';
 
 @Component({
@@ -25,10 +25,13 @@ export class RegisterComponent {
   faUser = faUser;
   faEye = faEye;
   faEyeSlash = faEyeSlash;
+  faUpload = faUpload;
 
   minimumRegistrationDate: Date;
   minDate: Date;
   img: File | null = null;
+  selectedFileName: string = '';
+
 
   loginForm = new UntypedFormGroup({
     email: new UntypedFormControl('', [Validators.required, Validators.email]),
@@ -90,6 +93,7 @@ export class RegisterComponent {
   imgSelected(ev: Event) {
     const el = ev.target as HTMLInputElement;
     if (el.files?.[0]) {
+      this.selectedFileName = el.files[0].name;
       this.img = el.files[0];
     }
   }
