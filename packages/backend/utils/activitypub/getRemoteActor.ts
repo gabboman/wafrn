@@ -5,13 +5,6 @@ import { environment } from '../../environment.js'
 import { logger } from '../logger.js'
 import { getUserIdFromRemoteId } from '../cacheGetters/getUserIdFromRemoteId.js'
 
-const deletedUser = environment.forceSync
-  ? undefined
-  : User.findOne({
-    where: {
-      url: environment.deletedUser
-    }
-  })
 const queue = new Queue('getRemoteActorId', {
   connection: environment.bullmqConnection,
   defaultJobOptions: {
@@ -28,6 +21,11 @@ const queueEvents = new QueueEvents('getRemoteActorId', {
   connection: environment.bullmqConnection
 })
 async function getRemoteActor(actorUrl: string, user: any, forceUpdate = false): Promise<any> {
+  const deletedUser = User.findOne({
+    where: {
+      url: environment.deletedUser
+    }
+  })
   let remoteUser
   try {
     // we check its a string. A little bit dirty but could be worse

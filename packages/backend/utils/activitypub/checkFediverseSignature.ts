@@ -13,13 +13,7 @@ import { getKey } from '../cacheGetters/getKey.js'
 import { SignedRequest } from '../../interfaces/fediverse/signedRequest.js'
 import { getRemoteActor } from './getRemoteActor.js'
 import { LdSignature } from './rsa2017.js'
-const adminUser = environment.forceSync
-  ? null
-  : User.findOne({
-      where: {
-        url: environment.adminUser
-      }
-    })
+
 
 function getCheckFediverseSignatureFucnction(force = false) {
   return async function checkFediverseSignature(req: SignedRequest, res: Response, next: NextFunction) {
@@ -28,6 +22,11 @@ function getCheckFediverseSignatureFucnction(force = false) {
       ? `petition without sighead ${req.header('user-agent')}`
       : 'somewhere not specified'
     let remoteUserUrl = ''
+    const adminUser = User.findOne({
+      where: {
+        url: environment.adminUser
+      }
+    })
     try {
       const sigHead = httpSignature.parseRequest(req, {
         headers:

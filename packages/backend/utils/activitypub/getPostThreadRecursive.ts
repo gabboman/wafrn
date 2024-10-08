@@ -22,13 +22,7 @@ import { getApObjectPrivacy } from './getPrivacy.js'
 import * as DOMPurify from 'isomorphic-dompurify'
 import { Queue } from 'bullmq'
 
-const deletedUser = environment.forceSync
-  ? undefined
-  : User.findOne({
-    where: {
-      url: environment.deletedUser
-    }
-  })
+
 
 const updateMediaDataQueue = new Queue("processRemoteMediaData", {
   connection: environment.bullmqConnection,
@@ -49,6 +43,11 @@ async function getPostThreadRecursive(
   remotePostObject?: any,
   localPostToForceUpdate?: string
 ) {
+  const deletedUser = User.findOne({
+    where: {
+      url: environment.deletedUser
+    }
+  })
   try {
     remotePostId.startsWith(`${environment.frontendUrl}/fediverse/post/`)
   } catch (error) {

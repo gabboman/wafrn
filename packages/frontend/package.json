@@ -31,7 +31,7 @@
     "blurhash": "^2.0.5",
     "core-js": "^3.37.0",
     "dompurify": "^3.1.6",
-    "esbuild": "^0.21.3",
+    "esbuild": "^0.24.0",
     "isomorphic-dompurify": "^2.16.0",
     "ngx-quill": "^26.0.5",
     "parchment": "^2.0.1",

@@ -6,11 +6,11 @@ import optimizeMedia from '../utils/optimizeMedia.js'
 
 sequelize
   .sync({
-    force: environment.forceSync
+    force: false
   })
   .then(async () => {
     logger.info('Database & tables ready!')
-    if (environment.forceSync) {
+    if (false) {
       logger.info('CLEANING DATA')
       // seeder();
     }
