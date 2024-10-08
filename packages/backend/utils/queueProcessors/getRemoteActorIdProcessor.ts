@@ -90,7 +90,8 @@ async function getRemoteActorIdProcessor(job: Job) {
           followerCount: followers,
           followingCount: followed,
           createdAt: userPetition.published ? new Date(userPetition.published) : new Date(),
-          updatedAt: new Date()
+          updatedAt: new Date(),
+          NSFW: false
         }
         federatedHost.publicInbox = userPetition.endpoints?.sharedInbox
         await federatedHost.save()

@@ -98,6 +98,7 @@ const User = sequelize.define(
     urlToLower: Sequelize.TEXT,
     NSFW: {
       type: Sequelize.BOOLEAN,
+      defaultValue: false,
       allowNull: true
     },
     avatar: Sequelize.TEXT,
