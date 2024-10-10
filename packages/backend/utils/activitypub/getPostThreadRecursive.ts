@@ -193,7 +193,7 @@ async function getPostThreadRecursive(
             } else {
               mentionedUser = await getRemoteActor(mention.href, user)
             }
-            if (mentionedUser?.id) {
+            if (mentionedUser?.id && mentionedUser.id != (await deletedUser)?.id && !mentionedUsersIds.includes(mentionedUser.id)) {
               mentionedUsersIds.push(mentionedUser.id)
             }
           }
