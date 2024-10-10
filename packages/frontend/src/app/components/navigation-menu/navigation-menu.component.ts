@@ -55,6 +55,7 @@ import { EnvironmentService } from 'src/app/services/environment.service';
 export class NavigationMenuComponent implements OnInit, OnDestroy {
   menuItems: MenuItem[] = [];
   maintenanceMode = EnvironmentService.environment.maintenance;
+  maintenanceMessage = EnvironmentService.environment.maintenanceMessage;
   menuVisible = false;
   notifications = 0;
   adminNotifications = 0;

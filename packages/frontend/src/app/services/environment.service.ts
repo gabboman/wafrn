@@ -19,6 +19,7 @@ export class EnvironmentService {
     reviewRegistrations: true,
     disablePWA: false,
     maintenance: false,
+    maintenanceMessage: ''
   }
 
   constructor(
