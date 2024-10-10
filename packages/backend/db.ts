@@ -68,7 +68,6 @@ const FederatedHost = sequelize.define(
         fields: [
           {
             attribute: 'displayName',
-            type: 'FULLTEXT'
           }
         ]
       }
@@ -332,7 +331,7 @@ const Post = sequelize.define(
       primaryKey: true
     },
     content_warning: Sequelize.TEXT,
-    content: Sequelize.TEXT('medium'), // 16mb of data is more than enough
+    content: Sequelize.TEXT,
     remotePostId: Sequelize.TEXT,
     privacy: Sequelize.INTEGER,
     featured: {
@@ -344,11 +343,10 @@ const Post = sequelize.define(
   {
     indexes: [
       {
-        //unique: true,
+        unique: true,
         fields: [
           {
             attribute: 'remotePostId',
-            type: 'FULLTEXT'
           }
         ]
       },
@@ -661,7 +659,7 @@ QuestionPollQuestion.hasMany(QuestionPollAnswer, { onDelete: 'cascade' })
 QuestionPollAnswer.belongsTo(User)
 QuestionPollAnswer.belongsTo(QuestionPollQuestion)
 
-Post.hasMany(EmojiReaction)
+Post.hasMany(EmojiReaction, { onDelete: 'cascade' })
 EmojiReaction.belongsTo(Post)
 User.hasMany(EmojiReaction)
 EmojiReaction.belongsTo(User)
@@ -772,18 +770,18 @@ Post.belongsToMany(Post, {
 
 PostReport.belongsTo(User)
 PostReport.belongsTo(Post)
-Post.hasMany(PostReport)
-User.hasMany(PostReport)
+Post.hasMany(PostReport, { onDelete: 'cascade' })
+User.hasMany(PostReport, { onDelete: 'cascade' })
 User.hasMany(SilencedPost, { as: 'silencedPost' })
 Post.hasMany(SilencedPost, { as: 'silencedBy' }), SilencedPost.belongsTo(User)
 SilencedPost.belongsTo(Post)
-Post.hasMany(PostTag)
+Post.hasMany(PostTag, { onDelete: 'cascade' })
 PostTag.belongsTo(Post)
 
 UserReport.belongsTo(User, { foreignKey: 'ReporterId' })
 UserReport.belongsTo(User, { foreignKey: 'ReportedId' })
 
-User.belongsTo(FederatedHost, { foreignKey: 'federatedHostId' })
+User.belongsTo(FederatedHost, { foreignKey: { name: 'federatedHostId', allowNull: true } })
 FederatedHost.hasMany(User)
 User.hasMany(Post)
 Post.belongsTo(User, {
@@ -804,13 +802,14 @@ User.belongsToMany(Post, {
 Post.belongsToMany(User, {
   through: PostMentionsUserRelation,
   as: 'mentionPost',
-  foreignKey: 'postId'
-})
+  foreignKey: 'postId',
+  onDelete: 'cascade'
+},)
 
 UserLikesPostRelations.belongsTo(User)
 UserLikesPostRelations.belongsTo(Post)
-User.hasMany(UserLikesPostRelations)
-Post.hasMany(UserLikesPostRelations)
+User.hasMany(UserLikesPostRelations, { onDelete: 'cascade' })
+Post.hasMany(UserLikesPostRelations, { onDelete: 'cascade' })
 
 FederatedHost.belongsToMany(Post, {
   through: PostHostView,
@@ -818,7 +817,7 @@ FederatedHost.belongsToMany(Post, {
 })
 Post.belongsToMany(FederatedHost, {
   through: PostHostView,
-  as: 'hostView'
+  as: 'hostView',
 })
 
 Post.belongsToMany(User, {
