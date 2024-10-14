@@ -66,7 +66,7 @@ function wellKnownRoutes(app: Application) {
     res.end()
   })
 
-  app.get('/.well-known/nodeinfo', cacher.cache('seconds', 300), (req, res) => {
+  app.get('/.well-known/nodeinfo', cacher.cache('seconds', 600), (req, res) => {
     res.send({
       links: [
         {
@@ -78,7 +78,7 @@ function wellKnownRoutes(app: Application) {
     res.end()
   })
 
-  app.get('/.well-known/nodeinfo/2.0', cacher.cache('seconds', 300), async (req, res) => {
+  app.get('/.well-known/nodeinfo/2.0', cacher.cache('seconds', 600), async (req, res) => {
     const localUsersIds = await getAllLocalUserIds()
     const localUsers = localUsersIds.length
     const activeUsersSixMonths = await Post.count({
