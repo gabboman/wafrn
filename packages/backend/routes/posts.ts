@@ -738,7 +738,7 @@ export default function postsRoutes(app: Application) {
                 ? userMentioned.urlToLower
                 : `@${userMentioned.urlToLower}`
               const targetString = `<span class="h-card" translate="no"><a href="${remoteUrl}" class="u-url mention">@<span>${url}</span></a></span>`
-              content = content.replace(` ${stringToReplace} `, ` ${targetString} `).trim()
+              content = content.replace(`${stringToReplace}`, `${targetString}`).trim()
             }
           }
         }
