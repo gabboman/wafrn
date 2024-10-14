@@ -21,6 +21,7 @@ import { AddActivity } from '../activitypub/processors/add.js'
 import { BlockActivity } from '../activitypub/processors/block.js'
 import { MoveActivity } from '../activitypub/processors/move.js'
 import { RejectActivity } from '../activitypub/processors/reject.js'
+import { wait } from '../wait.js'
 
 async function inboxWorker(job: Job) {
   try {
@@ -78,6 +79,8 @@ async function inboxWorker(job: Job) {
           break
         }
         case 'Update': {
+          logger.debug(`Update recived ${body.id}`)
+          await wait(5000);
           await UpdateActivity(body, remoteUser, user)
           break
         }
