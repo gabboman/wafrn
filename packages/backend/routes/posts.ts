@@ -726,7 +726,7 @@ export default function postsRoutes(app: Application) {
             return null
           }
           if (dbFoundMentions && dbFoundMentions.length > 0) {
-            for (let userMentioned of dbFoundMentions.sort((a: any, b: any) => b.url.length - a.url.length)) {
+            for (let userMentioned of dbFoundMentions.sort((a: any, b: any) => a.url.length - b.url.length)) {
               const url = userMentioned.url.trim().startsWith('@')
                 ? userMentioned.url.split('@')[1].trim()
                 : `${userMentioned.url.trim()}`
