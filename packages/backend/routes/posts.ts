@@ -659,9 +659,9 @@ export default function postsRoutes(app: Application) {
             })
           })
         }
-        const mentionsInPost: string[] = content.match(/@[\w\.]+@?[\w\.]+[\w]*/gi)
+        const mentionsInPost: string[] = content.match(/@[\w\.]+@?(\.?\w)*/gm)
         if (mentionsInPost && mentionsInPost.length > 0) {
-          content = content.replaceAll(/@\w+@?[\w-\.]*/gi, (userUrl: string) => userUrl.toLowerCase())
+          content = content.replaceAll(/@[\w\.]+@?(\.?\w)*/gm, (userUrl: string) => userUrl.toLowerCase())
           const dbFoundMentions = await User.findAll({
             where: {
               urlToLower: {
@@ -738,7 +738,7 @@ export default function postsRoutes(app: Application) {
                 ? userMentioned.urlToLower
                 : `@${userMentioned.urlToLower}`
               const targetString = `<span class="h-card" translate="no"><a href="${remoteUrl}" class="u-url mention">@<span>${url}</span></a></span>`
-              content = (' ' + content + ' ').replace(` ${stringToReplace} `, ` ${targetString} `).trim()
+              content = content.replace(` ${stringToReplace} `, ` ${targetString} `).trim()
             }
           }
         }
