@@ -659,7 +659,7 @@ export default function postsRoutes(app: Application) {
             })
           })
         }
-        const mentionsInPost: string[] = content.match(/@[\w-\.]+@?[\w-\.]*/gi)
+        const mentionsInPost: string[] = content.match(/@[\w\.]+@?[\w\.]+[\w]*/gi)
         if (mentionsInPost && mentionsInPost.length > 0) {
           content = content.replaceAll(/@\w+@?[\w-\.]*/gi, (userUrl: string) => userUrl.toLowerCase())
           const dbFoundMentions = await User.findAll({
@@ -726,7 +726,7 @@ export default function postsRoutes(app: Application) {
             return null
           }
           if (dbFoundMentions && dbFoundMentions.length > 0) {
-            for (let userMentioned of dbFoundMentions) {
+            for (let userMentioned of dbFoundMentions.sort((a: any, b: any) => b.url.length - a.url.length)) {
               const url = userMentioned.url.trim().startsWith('@')
                 ? userMentioned.url.split('@')[1].trim()
                 : `${userMentioned.url.trim()}`

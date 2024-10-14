@@ -874,7 +874,8 @@ sequelize
         banned: false,
         activationCode: '',
         privateKey,
-        publicKey
+        publicKey,
+        lastTimeNotificationsCheck: new Date()
       }
 
       const deleted = {
