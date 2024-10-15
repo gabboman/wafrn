@@ -247,14 +247,14 @@ export default function userRoutes(app: Application) {
             }
           })
           if (disableForceAltText) {
-            disableForceAltText.optionValue = req.body.disableForceAltText
+            disableForceAltText.optionValue = req.body.disableForceAltText;
             await disableForceAltText.save()
           } else {
-            disableForceAltText = UserOptions.create({
+            await UserOptions.create({
               userId: posterId,
               optionName: 'wafrn.disableForceAltText',
               optionValue: req.body.disableForceAltText
-            })
+            });
           }
           let forceOldEditor = await UserOptions.findOne({
             where: {
@@ -263,14 +263,14 @@ export default function userRoutes(app: Application) {
             }
           })
           if (forceOldEditor) {
-            forceOldEditor.optionValue = req.body.forceOldEditor
-            await forceOldEditor.save()
+            forceOldEditor.optionValue = req.body.forceOldEditor;
+            await forceOldEditor.save();
           } else {
-            forceOldEditor = UserOptions.create({
+            await UserOptions.create({
               userId: posterId,
               optionName: 'wafrn.forceOldEditor',
               optionValue: req.body.forceOldEditor
-            })
+            });
           }
           if (req.body.forceClassicLogo !== undefined && req.body.forceClassicLogo !== null) {
             const forceClassicKey = 'wafrn.forceClassicLogo'
