@@ -240,38 +240,23 @@ export default function userRoutes(app: Application) {
             }
           }
 
-          let disableForceAltText = await UserOptions.findOne({
-            where: {
-              userId: posterId,
-              optionName: 'wafrn.disableForceAltText'
-            }
-          })
-          if (disableForceAltText) {
-            disableForceAltText.optionValue = req.body.disableForceAltText;
-            await disableForceAltText.save()
-          } else {
-            await UserOptions.create({
-              userId: posterId,
-              optionName: 'wafrn.disableForceAltText',
-              optionValue: req.body.disableForceAltText
-            });
+          
+
+          const options = [{ name: "wafrn.disableForceAltText", value: req.body.disableForceAltText },
+            { name: 'wafrn.forceOldEditor', value: req.body.forceOldEditor }
+          ]
+
+          for (const option of options) {
+            const userOption = await UserOptions.findOne({ userId: posterId, optionName: option.name })
+            
+            userOption ? await userOption.update({optionValue: option.value })
+                       : await UserOptions.create({
+                              userId: posterId,
+                              optionName: option.name,
+                              optionValue: option.value
+                         }); 
           }
-          let forceOldEditor = await UserOptions.findOne({
-            where: {
-              userId: posterId,
-              optionName: 'wafrn.forceOldEditor'
-            }
-          })
-          if (forceOldEditor) {
-            forceOldEditor.optionValue = req.body.forceOldEditor;
-            await forceOldEditor.save();
-          } else {
-            await UserOptions.create({
-              userId: posterId,
-              optionName: 'wafrn.forceOldEditor',
-              optionValue: req.body.forceOldEditor
-            });
-          }
+          
           if (req.body.forceClassicLogo !== undefined && req.body.forceClassicLogo !== null) {
             const forceClassicKey = 'wafrn.forceClassicLogo'
             const forceClassicNewValue = req.body.forceClassicLogo === 'true'
