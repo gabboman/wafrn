@@ -198,107 +198,34 @@ export default function userRoutes(app: Application) {
             )
           }
           // TODO find a better way of doing this than manualy doing stuff
-          if (req.body.asksLevel) {
-            const askLevelKey = 'wafrn.public.asks'
-            const askLevel = req.body.asksLevel
-            const askLevelOption = await UserOptions.findOne({
-              where: {
-                userId: posterId,
-                optionName: askLevelKey
-              }
-            })
-            if (askLevelOption) {
-              askLevelOption.optionValue = askLevel
-              askLevelOption.save()
-            } else {
-              await UserOptions.create({
-                userId: posterId,
-                optionName: askLevelKey,
-                public: true,
-                optionValue: askLevel
-              })
-            }
-          }
-          if (req.body.federateWithThreads) {
-            const federateWithThreadsKey = 'wafrn.federateWithThreads'
-            const federateWithThreads = req.body.federateWithThreads
-            let federateWithThreadsOption = await UserOptions.findOne({
-              where: {
-                userId: posterId,
-                optionName: federateWithThreadsKey
-              }
-            })
-            if (federateWithThreadsOption) {
-              federateWithThreadsOption.optionValue = federateWithThreads
-              await federateWithThreadsOption.save()
-            } else {
-              federateWithThreadsOption = await UserOptions.create({
-                userId: posterId,
-                optionName: federateWithThreadsKey,
-                optionValue: federateWithThreads
-              })
-            }
-          }
 
-          
-
-          const options = [{ name: "wafrn.disableForceAltText", value: req.body.disableForceAltText },
-            { name: 'wafrn.forceOldEditor', value: req.body.forceOldEditor }
+          const options: { name: string, value: string, public?: boolean }[] = [
+            { name: "wafrn.disableForceAltText", value: req.body.disableForceAltText },
+            { name: 'wafrn.federateWithThreads', value: req.body.federateWithThreads },
+            { name: 'wafrn.public.asks', value: req.body.asksLevel, public: true },
+            { name: 'wafrn.forceClassicLogo', value: req.body.forceClassicLogo == 'true' },
+            { name: 'wafrn.defaultPostEditorPrivacy', value: req.body.defaultPostEditorPrivacy }
           ]
 
           for (const option of options) {
-            const userOption = await UserOptions.findOne({ userId: posterId, optionName: option.name })
-            
-            userOption ? await userOption.update({optionValue: option.value })
-                       : await UserOptions.create({
-                              userId: posterId,
-                              optionName: option.name,
-                              optionValue: option.value
-                         }); 
-          }
-          
-          if (req.body.forceClassicLogo !== undefined && req.body.forceClassicLogo !== null) {
-            const forceClassicKey = 'wafrn.forceClassicLogo'
-            const forceClassicNewValue = req.body.forceClassicLogo === 'true'
-            let dbForceClassic = await UserOptions.findOne({
+            const userOption = await UserOptions.findOne({
               where: {
                 userId: posterId,
-                optionName: forceClassicKey
+                optionName: option.name
               }
             })
-            if (dbForceClassic) {
-              dbForceClassic.optionValue = forceClassicNewValue
-              await dbForceClassic.save()
-            } else {
-              dbForceClassic = await UserOptions.create({
-                userId: posterId,
-                optionName: forceClassicKey,
-                optionValue: forceClassicNewValue
-              })
-            }
-          }
-          if (req.body.defaultPostEditorPrivacy) {
-            const defaultPostEditorPrivacyKey = 'wafrn.defaultPostEditorPrivacy'
-            const defaultPostEditorPrivacy = req.body.defaultPostEditorPrivacy
-            let dbDefaultPostEditorPrivacy = await UserOptions.findOne({
-              where: {
-                userId: posterId,
-                optionName: defaultPostEditorPrivacyKey
-              }
-            })
-            if (dbDefaultPostEditorPrivacy) {
-              dbDefaultPostEditorPrivacy.optionValue = defaultPostEditorPrivacy
-              await dbDefaultPostEditorPrivacy.save()
-            } else {
-              dbDefaultPostEditorPrivacy = await UserOptions.create({
-                userId: posterId,
-                optionName: defaultPostEditorPrivacyKey,
-                optionValue: defaultPostEditorPrivacy
-              })
-            }
-            redisCache.del(`userOptions:${posterId}`)
-          }
 
+            userOption ? await userOption.update({
+              optionValue: option.value.toString(),
+              public: option.public == true
+            })
+              : await UserOptions.create({
+                userId: posterId,
+                optionName: option.name,
+                optionValue: option.value,
+                public: option.public == true
+              });
+          }
           if (req.body.name) {
             user.name = req.body.name
             userEmojis = userEmojis.concat(avaiableEmojis?.filter((emoji: any) => req.body.name.includes(emoji.name)))
@@ -323,6 +250,7 @@ export default function userRoutes(app: Application) {
           })
           await user.removeEmojis()
           user.setEmojis([...new Set(userEmojis)])
+          redisCache.del('userOptions:' + posterId)
           await user.save()
           success = true
         }
