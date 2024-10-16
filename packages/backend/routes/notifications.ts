@@ -236,7 +236,7 @@ export default function notificationRoutes(app: Application) {
       ? (
         await sequelize.query(
           isDatabaseMysql()
-            ? `SELECT postsId FROM postsancestors where ancestorId IN ("${superMutedIds.map((elem) => '"' + elem + '"')}")`
+            ? `SELECT postsId FROM postsancestors where ancestorId IN (${superMutedIds.map((elem) => '"' + elem + '"')})`
             : `SELECT "postsId" FROM "postsancestors" where "ancestorId" IN (${superMutedIds.map(
               (elem) => "'" + elem + "'"
             )})`,
