@@ -20,7 +20,7 @@ export default function silencePostRoutes(app: Application) {
         }
       })
       await redisCache.del('mutedPosts:' + userId)
-      res.send({ success: true })
+      await redisCache.del('superMutedPosts:' + userId)
     } else {
       res.send({
         success: false
