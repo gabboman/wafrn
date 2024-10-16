@@ -47,6 +47,7 @@ export default function silencePostRoutes(app: Application) {
           superMuted: req.body.superMute ? req.body.superMute === 'true' : false
         })
         await redisCache.del('mutedPosts:' + userId)
+        await redisCache.del('superMutedPosts:' + userId)
       }
       res.send({ success: true })
     } else {

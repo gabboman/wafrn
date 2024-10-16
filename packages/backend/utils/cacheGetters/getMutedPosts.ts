@@ -20,7 +20,7 @@ async function getMutedPosts(userId: string, superMute = false): Promise<Array<s
       attributes: ['postId']
     })
     res = mutedPostsQuery.map((elem: any) => elem.postId)
-    await redisCache.set((superMute ? 'superMutedPosts' : 'mutedPosts:') + userId, JSON.stringify(res))
+    await redisCache.set((superMute ? 'superMutedPosts:' : 'mutedPosts:') + userId, JSON.stringify(res), 'EX', 600)
   }
   return res
 }
