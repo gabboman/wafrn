@@ -29,7 +29,7 @@
         Password is required
       </mat-error>
     </mat-form-field>
-    
+
 
     <mat-form-field class="w-full mb-3">
       <mat-label>Your username</mat-label>
@@ -66,6 +66,7 @@
         <mat-option value="a">Autistic robot</mat-option>
         <mat-option value="a">Tomp</mat-option>
         <mat-option value="a">Kinbol</mat-option>
+        <mat-option value="a">Sphynx of black quartz, judge my vow</mat-option>
         <mat-option value="a">Small dog</mat-option>
         <mat-option value="a">9th-level Fighter</mat-option>
         <mat-option value="a">Big dog</mat-option>
@@ -73,6 +74,7 @@
         <mat-option value="a">Crisp sandwich</mat-option>
         <mat-option value="a">Kill <img style="max-height: 32px;" src="/assets/img/monsert.png"></mat-option>
         <mat-option value="a">Everything everywhere all at once</mat-option>
+        <mat-option value="a">I am just testing a new font</mat-option>
         <mat-option value="a">Gravity</mat-option>
         <mat-option value="a">Widsom</mat-option>
         <mat-option value="a">Wizard</mat-option>
@@ -105,14 +107,14 @@
     <div class="pt-2 px-3 pb-2 border-round-md" style="border: 1px solid #999">
       <label for="avatar" class="block text-900 font-medium mb-2">Upload your avatar</label>
       <div class="flex flex-row align-content-center">
-      <button type="button" mat-stroked-button color="primary" (click)="avatarInput.click()">
-        <fa-icon [icon]="faUpload" class="m-1"></fa-icon>Choose File</button>
-        <input #avatarInput formControlName="avatar" id="avatar" type="file" accept="image/jpeg,image/png,image/webp,image/gif"
-        hidden (change)="imgSelected($event)" />
+        <button type="button" mat-stroked-button color="primary" (click)="avatarInput.click()">
+          <fa-icon [icon]="faUpload" class="m-1"></fa-icon>Choose File</button>
+        <input #avatarInput formControlName="avatar" id="avatar" type="file"
+          accept="image/jpeg,image/png,image/webp,image/gif" hidden (change)="imgSelected($event)" />
         <p class="m-auto ml-1">{{ selectedFileName }}</p>
       </div>
     </div>
-    
+
     <button color="primary" mat-flat-button extended [disabled]="loading || !loginForm.valid"
       class="w-full border-round-md mt-4">
       <fa-icon [icon]="faUser"></fa-icon>
