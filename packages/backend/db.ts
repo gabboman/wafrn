@@ -468,11 +468,7 @@ const Media = sequelize.define('medias', {
   },
   NSFW: Sequelize.BOOLEAN,
   description: Sequelize.TEXT,
-  url: {
-    type: Sequelize.STRING(768),
-    allowNull: true,
-    unique: true
-  },
+  url: Sequelize.TEXT,
   ipUpload: Sequelize.STRING,
   external: {
     defaultValue: false,
