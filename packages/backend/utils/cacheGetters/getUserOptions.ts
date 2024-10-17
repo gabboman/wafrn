@@ -11,7 +11,7 @@ async function getUserOptions(userId: string): Promise<Array<{ optionName: strin
         userId: userId
       }
     })
-    redisCache.set('userOptions:' + userId, JSON.stringify(dbReply.map((elem: any) => elem.dataValues)), 'EX', 300)
+    redisCache.set('userOptions:' + userId, JSON.stringify(dbReply.map((elem: any) => elem.dataValues)), 'EX', 36000)
     return getUserOptions(userId)
   }
 }
