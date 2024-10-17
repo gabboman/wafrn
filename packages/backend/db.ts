@@ -86,8 +86,8 @@ const User = sequelize.define(
     },
     email: {
       type: Sequelize.STRING(768),
-      allowNull: true
-      //unique: true
+      allowNull: true,
+      unique: true
     },
     description: Sequelize.TEXT,
     descriptionToLower: Sequelize.TEXT,
@@ -124,7 +124,11 @@ const User = sequelize.define(
       primaryKey: false
     },
     remoteInbox: Sequelize.TEXT,
-    remoteId: Sequelize.TEXT,
+    remoteId: {
+      type: Sequelize.STRING(768),
+      allowNull: true,
+      unique: true
+    },
     remoteMentionUrl: Sequelize.TEXT,
     isBot: {
       type: Sequelize.BOOLEAN,
@@ -161,15 +165,6 @@ const User = sequelize.define(
   {
     indexes: [
       {
-        unique: true,
-        fields: [
-          {
-            attribute: 'remoteId'
-          }
-        ],
-        type: 'FULLTEXT'
-      },
-      {
         unique: false,
         fields: [
           {
@@ -186,33 +181,6 @@ const User = sequelize.define(
         unique: false,
         fields: ['activated']
       },
-      {
-        unique: true,
-        fields: [
-          {
-            attribute: 'url'
-          }
-        ],
-        type: 'FULLTEXT'
-      },
-      {
-        unique: true,
-        fields: [
-          {
-            attribute: 'urlToLower',
-            length: 768
-          }
-        ]
-      },
-      {
-        unique: true,
-        fields: [
-          {
-            attribute: 'email'
-          }
-        ],
-        type: 'FULLTEXT'
-      }
     ]
   }
 )
@@ -332,7 +300,11 @@ const Post = sequelize.define(
     },
     content_warning: Sequelize.TEXT,
     content: Sequelize.TEXT,
-    remotePostId: Sequelize.TEXT,
+    remotePostId: {
+      type: Sequelize.STRING(768),
+      allowNull: true,
+      unique: true
+    },
     privacy: Sequelize.INTEGER,
     featured: {
       type: Sequelize.BOOLEAN,
@@ -342,14 +314,6 @@ const Post = sequelize.define(
   },
   {
     indexes: [
-      {
-        unique: true,
-        fields: [
-          {
-            attribute: 'remotePostId',
-          }
-        ]
-      },
       {
         unique: false,
         fields: ['parentId']
@@ -446,8 +410,9 @@ const EmojiReaction = sequelize.define(
       primaryKey: true
     },
     remoteId: {
-      type: Sequelize.TEXT,
-      allowNull: true
+      type: Sequelize.STRING(768),
+      allowNull: true,
+      unique: true
     },
     content: Sequelize.TEXT
   },
@@ -487,7 +452,11 @@ const Media = sequelize.define('medias', {
   },
   NSFW: Sequelize.BOOLEAN,
   description: Sequelize.TEXT,
-  url: Sequelize.TEXT,
+  url: {
+    type: Sequelize.STRING(768),
+    allowNull: true,
+    unique: true
+  },
   ipUpload: Sequelize.STRING,
   external: {
     defaultValue: false,
@@ -569,9 +538,10 @@ const UserLikesPostRelations = sequelize.define(
       unique: false
     },
     remoteId: {
-      type: Sequelize.TEXT,
-      allowNull: true
-    }
+      type: Sequelize.STRING(768),
+      allowNull: true,
+      unique: true
+    },
   },
   {
     indexes: [
@@ -582,15 +552,6 @@ const UserLikesPostRelations = sequelize.define(
           }
         ]
       },
-      {
-        unique: true,
-        fields: [
-          {
-            attribute: 'remoteId',
-            type: 'FULLTEXT'
-          }
-        ]
-      }
     ]
   }
 )
@@ -607,7 +568,11 @@ const QuestionPollQuestion = sequelize.define('questionPollQuestion', {
 })
 
 const QuestionPollAnswer = sequelize.define('questionPollAnswer', {
-  remoteId: Sequelize.TEXT
+  remoteId: {
+    type: Sequelize.STRING(768),
+    allowNull: true,
+    unique: true
+  },
 })
 
 const PostHostView = sequelize.define('postHostView', {})
