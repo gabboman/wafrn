@@ -93,8 +93,16 @@ const User = sequelize.define(
     descriptionToLower: Sequelize.TEXT,
     name: Sequelize.TEXT,
     nameToLower: Sequelize.TEXT,
-    url: Sequelize.TEXT,
-    urlToLower: Sequelize.TEXT,
+    url: {
+      type: Sequelize.STRING(768),
+      allowNull: false,
+      unique: true
+    },
+    urlToLower: {
+      type: Sequelize.STRING(768),
+      allowNull: false,
+      unique: true
+    },
     NSFW: {
       type: Sequelize.BOOLEAN,
       defaultValue: false,
@@ -231,7 +239,11 @@ const Quotes = sequelize.define('quotes', {})
 const Follows = sequelize.define(
   'follows',
   {
-    remoteFollowId: Sequelize.TEXT,
+    remoteFollowId: {
+      type: Sequelize.STRING(768),
+      allowNull: true,
+      unique: true
+    },
     accepted: {
       type: Sequelize.BOOLEAN,
       defaultValue: false
@@ -262,7 +274,11 @@ const Follows = sequelize.define(
 const Blocks = sequelize.define(
   'blocks',
   {
-    remoteBlockId: Sequelize.TEXT,
+    remoteBlockId: {
+      type: Sequelize.STRING(768),
+      allowNull: true,
+      unique: true
+    },
     reason: Sequelize.TEXT
   },
   {
