@@ -11,7 +11,7 @@ async function AnnounceActivity(body: activityPubObject, remoteUser: any, user: 
   // check if posthas been procesed already
   const existingPost = await Post.findOne({
     where: {
-      remoteId: apObject.id
+      remotePostId: apObject.id
     }
   })
   if (existingPost) {
