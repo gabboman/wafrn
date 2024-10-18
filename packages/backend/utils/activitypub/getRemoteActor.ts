@@ -44,7 +44,7 @@ async function getRemoteActor(actorUrl: string, user: any, forceUpdate = false):
         logger.debug({
           message: `Error while geting user`,
           user: actorUrl,
-          by: user.id,
+          by: user.url,
           error: error
         })
       })
