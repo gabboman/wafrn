@@ -8,13 +8,22 @@ import { signAndAccept } from '../signAndAccept.js'
 
 async function AnnounceActivity(body: activityPubObject, remoteUser: any, user: any) {
   const apObject: activityPubObject = body
+  // check if posthas been procesed already
+  const existingPost = await Post.findOne({
+    where: {
+      remoteId: apObject.id
+    }
+  })
+  if (existingPost) {
+    return;
+  }
   // LEMMY HACK
   let urlToGet =
     typeof apObject.object === 'string'
       ? apObject.object
       : apObject.object.object
-      ? apObject.object.object
-      : apObject.id
+        ? apObject.object.object
+        : apObject.id
   urlToGet = typeof urlToGet === 'string' ? urlToGet : urlToGet?.id
   if (!urlToGet) {
     const error = new Error()
