@@ -6,7 +6,7 @@ import { Op } from 'sequelize'
 import { voteInPoll } from '../utils/activitypub/votePollRemote.js'
 export default function pollRoutes(app: Application) {
   app.post('/api/v2/pollVote/:poll', authenticateToken, async (req: AuthorizedRequest, res: Response) => {
-    const posterId = req.jwtData?.userId ? req.jwtData?.userId : ''
+    const posterId = req.jwtData?.userId ? req.jwtData?.userId : '00000000-0000-0000-0000-000000000000'
     const pollId = req.params.poll
     const votes: number[] = req.body.votes
 

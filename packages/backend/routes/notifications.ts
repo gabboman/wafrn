@@ -27,7 +27,7 @@ import { isDatabaseMysql } from '../utils/isDatabaseMysql.js'
 
 export default function notificationRoutes(app: Application) {
   app.get('/api/v2/notificationsScroll', authenticateToken, async (req: AuthorizedRequest, res: Response) => {
-    const userId = req.jwtData?.userId ? req.jwtData?.userId : ''
+    const userId = req.jwtData?.userId ? req.jwtData?.userId : '00000000-0000-0000-0000-000000000000'
     User.findByPk(userId).then(async (usr: any) => {
       if (usr && req.query?.page === '0') {
         usr.lastTimeNotificationsCheck = new Date()
@@ -154,7 +154,7 @@ export default function notificationRoutes(app: Application) {
   })
 
   app.get('/api/v2/notificationsCount', authenticateToken, async (req: AuthorizedRequest, res: Response) => {
-    const userId = req.jwtData?.userId ? req.jwtData?.userId : ''
+    const userId = req.jwtData?.userId ? req.jwtData?.userId : '00000000-0000-0000-0000-000000000000'
 
     //const blockedUsers = await getBlockedIds(userId)
     const startCountDate = (await User.findByPk(userId)).lastTimeNotificationsCheck
