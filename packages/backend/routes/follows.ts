@@ -27,7 +27,7 @@ export default function followsRoutes(app: Application) {
       )
       if (userFederatesWithThreads.length === 0) {
         const userToBeFollowed = await User.findByPk(req.body.userId)
-        if (userToBeFollowed.urlToLower.endsWith('threads.net')) {
+        if (userToBeFollowed.url.toLowerCase().endsWith('threads.net')) {
           res.status(500)
           res.send({
             error: true,

@@ -38,7 +38,7 @@ export default function likeRoutes(app: Application) {
         )
         if (userFederatesWithThreads.length === 0) {
           const userPosterOfPostToBeLiked = await User.findByPk((await post).userId)
-          if (userPosterOfPostToBeLiked.urlToLower.endsWith('threads.net')) {
+          if (userPosterOfPostToBeLiked.url.toLowerCase().endsWith('threads.net')) {
             res.sendStatus(500)
             return
           }

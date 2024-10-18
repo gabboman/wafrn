@@ -156,7 +156,9 @@ async function getBlogSEOCache(url: string): Promise<{ title: string; descriptio
   if (!resData) {
     const blog = await User.findOne({
       where: {
-        urlToLower: url.toLowerCase()
+        url: {
+          [Op.iLike]: url
+        }
       }
     })
     if (blog) {

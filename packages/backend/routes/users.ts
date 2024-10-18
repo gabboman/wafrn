@@ -67,7 +67,10 @@ export default function userRoutes(app: Application) {
               [Op.or]: [
                 { email: req.body.email.toLowerCase() },
                 {
-                  urlToLower: req.body.url.toLowerCase().trim().replace(' ', '_')
+                  literal: sequelize.where(
+                    sequelize.fn('lower', sequelize.col('url')),
+                    req.body.url.toLowerCase()
+                  )
                 }
               ]
             }
@@ -439,7 +442,10 @@ export default function userRoutes(app: Application) {
           }
         ],
         where: {
-          urlToLower: blogId,
+          literal: sequelize.where(
+            sequelize.fn('lower', sequelize.col('url')),
+            blogId
+          ),
           banned: false
         }
       })
@@ -626,7 +632,10 @@ export default function userRoutes(app: Application) {
     if (url) {
       const user = await User.findOne({
         where: {
-          urlToLower: url.toLowerCase()
+          literal: sequelize.where(
+            sequelize.fn('lower', sequelize.col('url')),
+            url.toLowerCase()
+          )
         }
       })
       if (user) {
@@ -699,7 +708,10 @@ export default function userRoutes(app: Application) {
     const url = req.params?.url as string
     const userRecivingAsk = await User.findOne({
       where: {
-        urlToLower: url.toLowerCase()
+        literal: sequelize.where(
+          sequelize.fn('lower', sequelize.col('url')),
+          url.toLowerCase()
+        )
       }
     })
     const userAskLevelDBOption = await UserOptions.findOne({

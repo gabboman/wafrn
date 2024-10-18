@@ -99,7 +99,10 @@ async function getRemoteActorIdProcessor(job: Job) {
         let userRes
         const existingUsers = await User.findAll({
           where: {
-            urlToLower: userData.url.toLowerCase()
+            literal: sequelize.where(
+              sequelize.fn('lower', sequelize.col('url')),
+              userData.url.toLowerCase()
+            )
           }
         })
         if (res) {

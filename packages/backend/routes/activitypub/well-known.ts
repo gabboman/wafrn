@@ -31,7 +31,10 @@ function wellKnownRoutes(app: Application) {
           : urlQueryResource.slice(`acct:${environment.frontendUrl}/fediverse/blog/`.length)
         const user = await User.findOne({
           where: {
-            urlToLower: userUrl.toLowerCase()
+            literal: sequelize.where(
+              sequelize.fn('lower', sequelize.col('url')),
+              userUrl.toLowerCase()
+            )
           }
         })
         if (!user) {

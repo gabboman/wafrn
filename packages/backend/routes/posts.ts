@@ -173,7 +173,9 @@ export default function postsRoutes(app: Application) {
     if (id) {
       const blog = await User.findOne({
         where: {
-          urlToLower: (id as string).toLowerCase()
+          url: {
+            [Op.iLike]: id ? id : ''
+          }
         }
       })
 
@@ -276,7 +278,7 @@ export default function postsRoutes(app: Application) {
                 }
               }
             })
-            const ancestorUrls: string[] = ancestorPostsUsers.map((elem: any) => elem.urlToLower)
+            const ancestorUrls: string[] = ancestorPostsUsers.map((elem: any) => elem.url.toLowerCase())
             if (ancestorUrls.some((elem) => elem.endsWith('threads.net'))) {
               success = false
               res.status(500)
@@ -376,7 +378,7 @@ export default function postsRoutes(app: Application) {
                 }
               }
             })
-            if (mentionedUsers.some((usr: any) => usr.urlToLower.endsWith('threads.net'))) {
+            if (mentionedUsers.some((usr: any) => usr.url.toLowerCase().endsWith('threads.net'))) {
               success = false
               res.status(500)
               res.send({
@@ -506,7 +508,6 @@ export default function postsRoutes(app: Application) {
             tagList.map((tag) => {
               return {
                 tagName: tag,
-                tagToLower: tag.toLowerCase(),
                 postId: post.id
               }
             })
@@ -583,7 +584,7 @@ export default function postsRoutes(app: Application) {
                 }
               }
             })
-            const ancestorUrls: string[] = ancestorPostsUsers.map((elem: any) => elem.urlToLower)
+            const ancestorUrls: string[] = ancestorPostsUsers.map((elem: any) => elem.url.toLowerCase())
             if (ancestorUrls.some((elem) => elem.endsWith('threads.net'))) {
               success = false
               res.status(500)
@@ -664,14 +665,16 @@ export default function postsRoutes(app: Application) {
           content = content.replaceAll(/@[\w\.]+@?(\.?\w)*/gm, (userUrl: string) => userUrl.toLowerCase())
           const dbFoundMentions = await User.findAll({
             where: {
-              urlToLower: {
-                [Op.in]: mentionsInPost.map((elem) => {
-                  let urlToSearch = elem.trim().toLowerCase()
-                  if (urlToSearch.match(new RegExp('@', 'g'))?.length == 1) {
-                    urlToSearch = urlToSearch.split('@')[1]
-                  }
-                  return urlToSearch
-                })
+              url: {
+                [Op.iLike]: {
+                  [Op.any]: mentionsInPost.map((elem) => {
+                    let urlToSearch = elem.trim().toLowerCase()
+                    if (urlToSearch.match(new RegExp('@', 'g'))?.length == 1) {
+                      urlToSearch = urlToSearch.split('@')[1]
+                    }
+                    return urlToSearch
+                  })
+                }
               }
             }
           })
@@ -682,7 +685,7 @@ export default function postsRoutes(app: Application) {
             (elem) => elem.optionName === 'wafrn.federateWithThreads' && elem.optionValue === 'true'
           )
           if (userFederatesWithThreads.length === 0) {
-            if (dbFoundMentions.some((usr: any) => usr.urlToLower.endsWith('threads.net'))) {
+            if (dbFoundMentions.some((usr: any) => usr.url.toLowerCase().endsWith('threads.net'))) {
               success = false
               res.status(500)
               res.send({
@@ -735,8 +738,8 @@ export default function postsRoutes(app: Application) {
                 : `${environment.frontendUrl}/fediverse/blog/${userMentioned.url}`
               const remoteUrl = userMentioned.remoteMentionUrl ? userMentioned.remoteMentionUrl : remoteId
               const stringToReplace = userMentioned.url.startsWith('@')
-                ? userMentioned.urlToLower
-                : `@${userMentioned.urlToLower}`
+                ? userMentioned.url.toLowerCase()
+                : `@${userMentioned.url.toLowerCase()}`
               const targetString = `<span class="h-card" translate="no"><a href="${remoteUrl}" class="u-url mention">@<span>${url}</span></a></span>`
               content = content.replace(`${stringToReplace}`, `${targetString}`).trim()
             }
@@ -800,7 +803,6 @@ export default function postsRoutes(app: Application) {
             tagList.map((tag) => {
               return {
                 tagName: tag,
-                tagToLower: tag.toLowerCase(),
                 postId: post.id
               }
             })

@@ -16,13 +16,13 @@ async function acceptRemoteFollow(userId: string, remoteUserId: string) {
 
   const apObj: activityPubObject = {
     '@context': 'https://www.w3.org/ns/activitystreams',
-    actor: environment.frontendUrl + '/fediverse/blog/' + localUser.urlToLower,
+    actor: environment.frontendUrl + '/fediverse/blog/' + localUser.url.toLowerCase(),
     id: `${environment.frontendUrl}/fediverse/accept/${encodeURIComponent(followToBeAccepted.remoteFollowId)}`,
     type: 'Accept',
     object: {
       actor: remoteUser.remoteId,
       id: followToBeAccepted.remoteFollowId,
-      object: environment.frontendUrl + '/fediverse/blog/' + localUser.urlToLower,
+      object: environment.frontendUrl + '/fediverse/blog/' + localUser.url.toLowerCase(),
       type: 'Follow'
     }
   }

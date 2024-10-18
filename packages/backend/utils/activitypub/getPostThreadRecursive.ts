@@ -185,7 +185,10 @@ async function getPostThreadRecursive(
                 where: {
                   [Op.or]: [
                     {
-                      urlToLower: username.toLowerCase()
+                      literal: sequelize.where(
+                        sequelize.fn('lower', sequelize.col('url')),
+                        username.toLowerCase()
+                      )
                     }
                   ]
                 }
@@ -306,7 +309,6 @@ async function addTagsToPost(post: any, tags: fediverseTag[]) {
       if (elem.name && post.id) {
         return {
           tagName: elem.name.replace('#', ''),
-          tagToLower: elem.name.replace('#', '').toLowerCase(),
           postId: post.id
         }
       }

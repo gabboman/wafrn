@@ -36,7 +36,9 @@ export default function searchRoutes(app: Application) {
       const page = Number(req?.query.page) || 0
       let taggedPostsId = PostTag.findAll({
         where: {
-          tagToLower: searchTerm
+          tagName: {
+            [Op.iLike]: searchTerm
+          }
         },
         include: [
           {
@@ -76,8 +78,8 @@ export default function searchRoutes(app: Application) {
               }
             },
             {
-              urlToLower: {
-                [Op.like]: `%${searchTerm}%`
+              url: {
+                [Op.iLike]: `%${searchTerm}%`
               }
             }
           ]
@@ -96,8 +98,8 @@ export default function searchRoutes(app: Application) {
           banned: false,
           [Op.or]: [
             {
-              urlToLower: {
-                [Op.like]: `%${searchTerm}%`
+              url: {
+                [Op.iLike]: `%${searchTerm}%`
               }
             }
           ]
@@ -111,7 +113,7 @@ export default function searchRoutes(app: Application) {
       // remote user search time
       if (posterId !== '00000000-0000-0000-0000-000000000000' && page === 0) {
         if (searchTerm.split('@').length === 3) {
-          remoteUsers = searchRemoteUser(searchTerm, usr)
+          remoteUsers = searchRemoteUser(searchTerm.trim(), usr)
           promises.push(remoteUsers)
         }
         const urlPattern = /(?:https?):\/\/(\w+:?\w*)?(\S+)(:\d+)?(\/|\/([\w#!:.?+=&%!\-\/]))?/
@@ -190,8 +192,8 @@ export default function searchRoutes(app: Application) {
         banned: false,
         [Op.or]: [
           {
-            urlToLower: {
-              [Op.like]: `%${searchTerm}%`
+            url: {
+              [Op.iLike]: `%${searchTerm}%`
             }
           }
         ]
@@ -211,8 +213,8 @@ export default function searchRoutes(app: Application) {
           },
           [
             {
-              urlToLower: {
-                [Op.like]: `%${searchTerm}%`
+              url: {
+                [Op.iLike]: `%${searchTerm}%`
               }
             }
           ]

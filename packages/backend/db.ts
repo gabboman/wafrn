@@ -90,15 +90,8 @@ const User = sequelize.define(
       unique: true
     },
     description: Sequelize.TEXT,
-    descriptionToLower: Sequelize.TEXT,
     name: Sequelize.TEXT,
-    nameToLower: Sequelize.TEXT,
     url: {
-      type: Sequelize.STRING(768),
-      allowNull: false,
-      unique: true
-    },
-    urlToLower: {
       type: Sequelize.STRING(768),
       allowNull: false,
       unique: true
@@ -189,15 +182,14 @@ const User = sequelize.define(
         unique: false,
         fields: ['activated']
       },
+      {
+        unique: true,
+        fields: [sequelize.fn('lower', sequelize.col('url'))]
+      }
     ]
   }
 )
 
-User.addHook('beforeSave', 'userToLower', (user: any, options: any) => {
-  user.descriptionToLower = user.description ? user.description.toLowerCase() : ''
-  user.nameToLower = user.name.toLowerCase()
-  user.urlToLower = user.url.toLowerCase()
-})
 
 const UserOptions = sequelize.define(
   'userOptions',
@@ -364,17 +356,12 @@ const PostTag = sequelize.define(
   'postTags',
   {
     tagName: Sequelize.TEXT,
-    tagToLower: Sequelize.TEXT
   },
   {
     indexes: [
       {
-        fields: [
-          {
-            attribute: 'tagToLower',
-            length: 768
-          }
-        ]
+        unique: false,
+        fields: [sequelize.fn('lower', sequelize.col('tagName'))]
       },
       {
         fields: ['postId']
@@ -382,10 +369,6 @@ const PostTag = sequelize.define(
     ]
   }
 )
-
-PostTag.addHook('beforeSave', 'tagToLower', (postTag: any, options: any) => {
-  postTag.tagToLower = postTag.tagName.toLowerCase()
-})
 
 const Emoji = sequelize.define(
   'emojis',

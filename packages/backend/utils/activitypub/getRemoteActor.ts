@@ -1,5 +1,5 @@
 import { Job, Queue, QueueEvents } from 'bullmq'
-import { User } from '../../db.js'
+import { sequelize, User } from '../../db.js'
 import { environment } from '../../environment.js'
 
 import { logger } from '../logger.js'
@@ -33,7 +33,10 @@ async function getRemoteActor(actorUrl: string, user: any, forceUpdate = false):
       const urlToSearch = actorUrl.split(environment.frontendUrl + '/fediverse/blog/')[1].toLowerCase()
       return User.findOne({
         where: {
-          urlToLower: urlToSearch
+          literal: sequelize.where(
+            sequelize.fn('lower', sequelize.col('url')),
+            urlToSearch.toLowerCase()
+          )
         }
       })
     }
