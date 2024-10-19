@@ -39,10 +39,12 @@ async function LikeActivity(body: activityPubObject, remoteUser: any, user: any)
       }
     } else {
       try {
-        const like = await UserLikesPostRelations.create({
-          userId: remoteUser.id,
-          postId: postToBeLiked.id,
-          remoteId: apObject.id
+        await UserLikesPostRelations.findOrCreate({
+          where: {
+            userId: remoteUser.id,
+            postId: postToBeLiked.id,
+            remoteId: apObject.id
+          }
         })
       } catch (error) {
         logger.trace(`Error processing like user ${remoteUser.url} post ${postToBeLiked.id} ${apObject.id}`)
