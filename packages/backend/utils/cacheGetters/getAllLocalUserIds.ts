@@ -19,7 +19,7 @@ async function getAllLocalUserIds(): Promise<string[]> {
     })
     if (localUsers) {
       res = localUsers.map((elem: any) => elem.id)
-      await redisCache.set('allLocalUserIds', JSON.stringify(res))
+      await redisCache.set('allLocalUserIds', JSON.stringify(res), 'EX', 600)
     }
   }
   return res
