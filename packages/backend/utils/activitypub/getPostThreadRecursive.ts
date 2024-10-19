@@ -390,7 +390,7 @@ async function processEmojis(post: any, fediEmojis: any[]) {
           url: newEmoji.icon?.url
         }
       })
-      emojis = emojis.concat(await Emoji.bulkCreate(newEmojis), {
+      emojis = emojis.concat(await Emoji.bulkCreate(newEmojis, { ignoreDuplicates: true }), {
         ignoreDuplicates: true
       })
     } catch (error) {
