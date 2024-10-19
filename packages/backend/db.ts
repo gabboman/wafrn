@@ -64,12 +64,8 @@ const FederatedHost = sequelize.define(
         fields: ['blocked']
       },
       {
-        unique: true, // fucking hell mysql
-        fields: [
-          {
-            attribute: 'displayName',
-          }
-        ]
+        unique: true,
+        fields: [sequelize.fn('lower', sequelize.col('displayName'))]
       }
     ]
   }
