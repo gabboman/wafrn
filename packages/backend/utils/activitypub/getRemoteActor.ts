@@ -52,6 +52,7 @@ async function getRemoteActor(actorUrl: string, user: any, forceUpdate = false):
         })
       })
     }
+    userId = userId == '' ? '00000000-0000-0000-0000-000000000000' : userId
     remoteUser = await User.findByPk(userId)
     if (
       !remoteUser ||
