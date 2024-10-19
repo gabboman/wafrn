@@ -11,6 +11,7 @@ import sequelizeHierarchyFork from 'sequelize-hierarchy-fork'
 sequelizeHierarchyFork(Sequelize)
 
 const sequelize = new Sequelize(environment.databaseConnectionString, {
+  benchmark: true,
   logging: (sql: any, time?: number) => {
     if (environment.logSQLQueries) {
       logger.trace({ duration: time, query: sql })
