@@ -9,6 +9,19 @@ import { Job, Queue } from 'bullmq'
 import _ from 'underscore'
 import { wait } from '../wait.js'
 
+const processPostViewQueue = new Queue('processRemoteView', {
+  connection: environment.bullmqConnection,
+  defaultJobOptions: {
+    removeOnComplete: true,
+    attempts: 3,
+    backoff: {
+      type: 'exponential',
+      delay: 25000
+    },
+    removeOnFail: 25000
+  }
+})
+
 const sendPostQueue = new Queue('sendPostToInboxes', {
   connection: environment.bullmqConnection,
   defaultJobOptions: {
@@ -91,19 +104,6 @@ async function prepareSendRemotePostWorker(job: Job) {
     }
   }
 
-  // before sending we store the fact that we have sent the post
-  await PostHostView.bulkCreate(
-    serversToSendThePost.map((host: any) => {
-      return {
-        federatedHostId: host.id,
-        postId: post.id
-      }
-    }),
-    {
-      ignoreDuplicates: true
-    }
-  )
-
   let userViews = usersToSendThePost
     .flatMap((usr: any) => usr.users)
     .map((elem: any) => {
@@ -120,8 +120,33 @@ async function prepareSendRemotePostWorker(job: Job) {
         }
       })
     )
-  userViews = userViews.filter(
-    (elem: any, index: number) => userViews.indexOf(userViews.find((fnd: any) => fnd.userId == elem.userId)) == index
+
+
+  // we store the fact that we have sent the post in a queue
+  await processPostViewQueue.addBulk(
+    serversToSendThePost.map((host: any) => {
+      return {
+        name: host.displayName + post.id,
+        data: {
+          postId: post.id,
+          federatedHostId: host.id,
+          userId: ''
+        }
+      }
+    })
+  )
+  // we store the fact that we have sent the post in a queue
+  await processPostViewQueue.addBulk(
+    userViews.map((userView: any) => {
+      return {
+        name: userView.userId + post.id,
+        data: {
+          postId: post.id,
+          federatedHostId: '',
+          userId: userView.userId
+        }
+      }
+    })
   )
 
   await RemoteUserPostView.bulkCreate(userViews, {

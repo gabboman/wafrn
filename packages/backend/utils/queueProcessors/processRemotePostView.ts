@@ -6,20 +6,23 @@ async function processRemotePostView(job: Job) {
   const serverView = job.data.federatedHostId
   const userView = job.data.userId
   const postId = job.data.postId
-  try {
-    if (userView) {
-      await RemoteUserPostView.create({
+  if (userView) {
+    await RemoteUserPostView.findOrCreate({
+      where: {
         userId: userView,
         postId: postId
-      })
-    }
-    if (serverView) {
-      await PostHostView.create({
+      }
+
+    })
+  }
+  if (serverView) {
+    await PostHostView.findOrCreate({
+      where: {
         federatedHostId: serverView,
         postId: postId
-      })
-    }
-  } catch (error) { }
+      }
+    })
+  }
 }
 
 export { processRemotePostView }

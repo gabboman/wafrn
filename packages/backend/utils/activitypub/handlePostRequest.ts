@@ -10,7 +10,7 @@ import { environment } from '../../environment.js'
 import { FederatedHost, Follows, User } from '../../db.js'
 import { Op } from 'sequelize'
 
-const sendPostQueue = new Queue('processRemoteView', {
+const processPostViewQueue = new Queue('processRemoteView', {
   connection: environment.bullmqConnection,
   defaultJobOptions: {
     removeOnComplete: true,
@@ -53,7 +53,7 @@ async function handlePostRequest(req: SignedRequest, res: Response) {
         return res.sendStatus(500)
       } else {
         const federatedHost = await remoteActor.getFederatedHost()
-        await sendPostQueue.add('processPost', {
+        await processPostViewQueue.add('processPost', {
           postId: post.id,
           federatedHostId: federatedHost && federatedHost.publicInbox ? federatedHost.id : '',
           userId: federatedHost?.publicInbox ? '' : remoteActor.id
