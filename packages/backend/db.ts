@@ -465,6 +465,13 @@ const Media = sequelize.define('medias', {
     defaultValue: 0
   },
   blurhash: Sequelize.STRING
+}, {
+  indexes: [
+    {
+      fields: ['postId'],
+      unique: false
+    }
+  ]
 })
 
 const PostReport = sequelize.define('postReports', {
