@@ -2,7 +2,7 @@ import { FederatedHost, sequelize } from '../../db.js'
 import { redisCache } from '../redis.js'
 
 async function getFederatedHostIdFromUrl(hostname: string): Promise<string> {
-  let res = ''
+  let res = '00000000-0000-0000-0000-000000000000'
   const cacheResult = await redisCache.get('FederatedHostId:' + hostname.toLocaleLowerCase())
   if (cacheResult) {
     res = cacheResult

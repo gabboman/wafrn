@@ -40,7 +40,14 @@ async function getRemoteActorIdProcessor(job: Job) {
     })
   }
   if (res === '' || (forceUpdate && url != undefined)) {
-    let federatedHost = await getHostFromCache(url?.host ? url.host : '')
+    let federatedHost = await FederatedHost.findOne({
+      where: {
+        literal: sequelize.where(
+          sequelize.fn('lower', sequelize.col('displayName')),
+          url?.host ? url.host.toLowerCase() : ''
+        )
+      }
+    })
     const hostBanned = federatedHost?.blocked
     if (hostBanned) {
       res = await getDeletedUser()
@@ -282,19 +289,6 @@ async function getRemoteActorIdProcessor(job: Job) {
   return res
 }
 
-async function getHostFromCache(displayName: string): Promise<any> {
-  let res = undefined
-  try {
-    res = await FederatedHost.findByPk(await getFederatedHostIdFromUrl(displayName))
-  } catch (error) {
-    logger.debug({
-      message: 'Error on getHostFromCache',
-      host: displayName,
-      error: error
-    })
-  }
-  return res
-}
 
 async function getDeletedUser() {
   return await getUserIdFromRemoteId(`https://${environment.instanceUrl}/fediverse/blog/${environment.deletedUser}`)
