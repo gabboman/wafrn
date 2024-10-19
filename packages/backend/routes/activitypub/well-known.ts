@@ -82,31 +82,60 @@ function wellKnownRoutes(app: Application) {
   })
 
   app.get('/.well-known/nodeinfo/2.0', cacher.cache('seconds', 600), async (req, res) => {
+
     const localUsersIds = await getAllLocalUserIds()
-    const localUsers = localUsersIds.length
-    const activeUsersSixMonths = await Post.count({
+
+    const sixMonths = User.count({
       where: {
-        userId: { [Op.in]: localUsersIds },
-        createdAt: {
-          [Op.gt]: new Date().setMonth(-6)
-        },
-        privacy: 0
+        id: {
+          [Op.in]: localUsersIds
+        }
       },
-      attributes: [[sequelize.fn('DISTINCT', sequelize.col('userId')), 'userId']],
-      group: ['userId']
+      include: [
+        {
+          model: Post,
+          required: true,
+          where: {
+            createdAt: {
+              [Op.gt]: new Date().setMonth(-6)
+            },
+            privacy: 0
+          },
+        }
+      ]
     })
 
-    const activeUsersLastMonth = await Post.count({
+    const oneMonth = User.count({
       where: {
-        userId: { [Op.in]: localUsersIds },
-        createdAt: {
-          [Op.gt]: new Date().setMonth(-1)
+        id: {
+          [Op.in]: localUsersIds
+        }
+
+      },
+      include: [
+        {
+          model: Post,
+          required: true,
+          where: {
+            createdAt: {
+              [Op.gt]: new Date().setMonth(-1)
+            },
+            privacy: 0
+          },
+        }
+      ]
+    })
+
+    const localPosts = Post.count({
+      where: {
+        userId: {
+          [Op.in]: localUsersIds
         },
         privacy: 0
-      },
-      attributes: [[sequelize.fn('DISTINCT', sequelize.col('userId')), 'userId']],
-      group: ['userId']
+      }
     })
+
+    await Promise.all([oneMonth, sixMonths, localPosts])
 
     res.send({
       version: '2.0',
@@ -121,18 +150,11 @@ function wellKnownRoutes(app: Application) {
       },
       usage: {
         users: {
-          total: localUsers,
-          activeMonth: activeUsersLastMonth.length,
-          activeHalfyear: activeUsersSixMonths.length
+          total: (await localUsersIds).length,
+          activeMonth: await oneMonth,
+          activeHalfyear: await sixMonths
         },
-        localPosts: await Post.count({
-          where: {
-            userId: {
-              [Op.in]: localUsersIds
-            },
-            privacy: 0
-          }
-        })
+        localPosts: await localPosts
       },
       openRegistrations: true,
       metadata: {}
