@@ -370,7 +370,6 @@ export class NewEditorComponent implements OnDestroy {
       await new Promise((resolve) => setTimeout(resolve, 500))
     }
     res = await this.editorService.createPost({
-      version: 'v3',
       content: content,
       media: this.uploadedMedias,
       privacy: this.privacy,

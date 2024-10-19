@@ -44,7 +44,6 @@ export class EditorService implements OnDestroy {
   }
 
   async createPost(options: {
-    version?: string;
     content: string;
     media: WafrnMedia[];
     privacy: number;
@@ -74,7 +73,7 @@ export class EditorService implements OnDestroy {
         postToQuote: options.idPosToQuote,
         ask: options.ask?.id
       };
-      const url = `${this.base_url}/${options.version ? options.version : 'v2'}/createPost`
+      const url = `${this.base_url}/v3/createPost`
       const petitionResponse: any = await this.http
         .post(url, formdata)
         .toPromise();
