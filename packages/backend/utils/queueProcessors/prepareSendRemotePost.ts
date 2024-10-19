@@ -98,7 +98,10 @@ async function prepareSendRemotePostWorker(job: Job) {
         federatedHostId: host.id,
         postId: post.id
       }
-    })
+    }),
+    {
+      ignoreDuplicates: true
+    }
   )
 
   let userViews = usersToSendThePost
@@ -121,7 +124,9 @@ async function prepareSendRemotePostWorker(job: Job) {
     (elem: any, index: number) => userViews.indexOf(userViews.find((fnd: any) => fnd.userId == elem.userId)) == index
   )
 
-  await RemoteUserPostView.bulkCreate(userViews)
+  await RemoteUserPostView.bulkCreate(userViews, {
+    ignoreDuplicates: true
+  })
 
   const objectToSend = await postToJSONLD(post.id)
   const ldSignature = new LdSignature()

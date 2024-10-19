@@ -62,7 +62,9 @@ export default function emojiRoutes(app: Application) {
                   emojiCollectionId: pack.id
                 }
               })
-              const emojisCreated = await Emoji.bulkCreate(emojisToCreate)
+              const emojisCreated = await Emoji.bulkCreate(emojisToCreate, {
+                ignoreDuplicates: true
+              })
               res.send({
                 success: true,
                 message: 'Pack created succesfuly'
