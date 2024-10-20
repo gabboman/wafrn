@@ -46,6 +46,7 @@ export class EditProfileComponent implements OnInit {
     forceClassicLogo: new FormControl(false),
     manuallyAcceptsFollows: new FormControl(false),
     forceOldEditor: new FormControl(false),
+    mutedWords: new FormControl('')
   });
 
   constructor(
@@ -87,6 +88,8 @@ export class EditProfileComponent implements OnInit {
         const publicOptions = blogDetails.publicOptions;
         const askLevel = publicOptions.find((elem) => elem.optionName == "wafrn.public.asks")
         this.editProfileForm.controls['asksLevel'].patchValue(askLevel ? parseInt(askLevel.optionValue) : 2)
+        const mutedWords = localStorage.getItem('mutedWords');
+        this.editProfileForm.controls['mutedWords'].patchValue(mutedWords);
         this.loading = false;
       });
   }

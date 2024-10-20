@@ -207,27 +207,29 @@ export default function userRoutes(app: Application) {
             { name: 'wafrn.federateWithThreads', value: req.body.federateWithThreads },
             { name: 'wafrn.public.asks', value: req.body.asksLevel, public: true },
             { name: 'wafrn.forceClassicLogo', value: req.body.forceClassicLogo == 'true' },
-            { name: 'wafrn.defaultPostEditorPrivacy', value: req.body.defaultPostEditorPrivacy }
+            { name: 'wafrn.defaultPostEditorPrivacy', value: req.body.defaultPostEditorPrivacy },
+            { name: 'wafrn.mutedWords', value: req.body.mutedWords }
           ]
 
           for (const option of options) {
-            const userOption = await UserOptions.findOne({
-              where: {
-                userId: posterId,
-                optionName: option.name
-              }
-            })
-
-            userOption ? await userOption.update({
-              optionValue: option.value.toString(),
-              public: option.public == true
-            })
-              : await UserOptions.create({
-                userId: posterId,
-                optionName: option.name,
-                optionValue: option.value,
+            if (option.value) {
+              const userOption = await UserOptions.findOne({
+                where: {
+                  userId: posterId,
+                  optionName: option.name
+                }
+              })
+              userOption ? await userOption.update({
+                optionValue: option.value.toString(),
                 public: option.public == true
-              });
+              })
+                : await UserOptions.create({
+                  userId: posterId,
+                  optionName: option.name,
+                  optionValue: option.value,
+                  public: option.public == true
+                });
+            }
           }
           if (req.body.name) {
             user.name = req.body.name

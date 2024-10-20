@@ -74,6 +74,20 @@
             you to make. By default meta will not see you, unless you mark this option
             in your profile.</p>
         </div>
+        <section id="tags" class="mt-2 w-full flex-row">
+          <mat-form-field class="w-full">
+            <mat-label>Muted words separated by commas</mat-label>
+            <input formControlName="mutedWords" placeholder="Separated by commas" matNativeControl />
+          </mat-form-field>
+          <div *ngIf="editProfileForm.value.mutedWords.split(',').length > 0" class="taglist">
+            Muted phrases:
+            @for(tag of editProfileForm.value.mutedWords.split(','); track $index) {
+            <span *ngIf="tag && tag !== '' && tag.trim() !== ''" class="tag">
+              {{ tag.trim() }}
+            </span>
+            }
+          </div>
+        </section>
       </mat-expansion-panel>
       <mat-expansion-panel hideToggle>
         <mat-expansion-panel-header>

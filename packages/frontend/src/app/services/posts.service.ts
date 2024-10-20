@@ -260,6 +260,11 @@ export class PostsService {
   }
 
   processSinglePost(unlinked: unlinkedPosts): ProcessedPost {
+    const mutedWordsRaw = localStorage.getItem('mutedWords');
+    let mutedWords: string[] = [];
+    if (mutedWordsRaw) {
+      mutedWords = mutedWordsRaw.split(',').map(word => word.trim());
+    }
     const elem = unlinked.posts[0];
     this.rewootedPosts = this.rewootedPosts.concat(unlinked.rewootIds)
     const user = unlinked.users.find((usr) => usr.id === elem.userId);
@@ -355,6 +360,10 @@ export class PostsService {
         ask.user = user;
       }
       newPost.ask = ask
+    }
+    const cwedWords = mutedWords.filter(word => newPost.content.includes(word) || newPost.tags.some(tag => tag.tagName.includes(word)))
+    if (cwedWords.length > 0) {
+      newPost.content_warning = `Post includes muted words: ${cwedWords} ${newPost.content_warning}`
     }
     return newPost;
   }
