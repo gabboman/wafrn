@@ -60,7 +60,7 @@ async function getRemoteActorIdProcessor(job: Job) {
             displayName: url?.host.toLocaleLowerCase(),
             publicInbox: userPetition.endpoints?.sharedInbox
           }
-          federatedHost = await FederatedHost.create(federatedHostToCreate)
+          federatedHost = (await FederatedHost.findOrCreate({ where: federatedHostToCreate }))[0]
         }
         const remoteMentionUrl = typeof userPetition.url === 'string' ? userPetition.url : ''
         let followers = 0
