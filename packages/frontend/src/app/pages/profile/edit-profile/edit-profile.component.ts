@@ -89,7 +89,9 @@ export class EditProfileComponent implements OnInit {
         const askLevel = publicOptions.find((elem) => elem.optionName == "wafrn.public.asks")
         this.editProfileForm.controls['asksLevel'].patchValue(askLevel ? parseInt(askLevel.optionValue) : 2)
         const mutedWords = localStorage.getItem('mutedWords');
-        this.editProfileForm.controls['mutedWords'].patchValue(mutedWords);
+        if (mutedWords) {
+          this.editProfileForm.controls['mutedWords'].patchValue(mutedWords);
+        }
         this.loading = false;
       });
   }
