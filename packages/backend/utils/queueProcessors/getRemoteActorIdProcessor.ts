@@ -55,12 +55,14 @@ async function getRemoteActorIdProcessor(job: Job) {
       const user = await User.findByPk(job.data.userId)
       const userPetition = await getPetitionSigned(user, actorUrl)
       if (userPetition) {
-        if (!federatedHost) {
+        if (!federatedHost && url) {
           const federatedHostToCreate = {
-            displayName: url?.host.toLocaleLowerCase(),
+            displayName: url.host.toLocaleLowerCase(),
             publicInbox: userPetition.endpoints?.sharedInbox
           }
           federatedHost = (await FederatedHost.findOrCreate({ where: federatedHostToCreate }))[0]
+        } if (!url) {
+          logger.warn({ message: 'Url is not valid wtf', trace: new Error().stack })
         }
         const remoteMentionUrl = typeof userPetition.url === 'string' ? userPetition.url : ''
         let followers = 0
