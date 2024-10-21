@@ -18,7 +18,7 @@ async function sendMail() {
   })
 
   for await (const user of users) {
-    const subject = `Hello ${user.url}, we have a new editor, new bugs!`
+    const subject = `Hey ${user.url}, we have made wafrn even faster!`
     const body = `
     <h1>What's up ${user.url}?</h1>
 <a href="https://app.wafrn.net"><img style="width:100%" src="https://app.wafrn.net/assets/logo.png" /> </a>
