@@ -373,7 +373,7 @@ export default function postsRoutes(app: Application) {
                 },
                 {
                   id: {
-                    [Op.in]: req.body.mentionedUsersids
+                    [Op.in]: req.body.mentionedUsersids ? req.body.mentionedUsersids : []
                   }
                 }
               ]
