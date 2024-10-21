@@ -357,17 +357,27 @@ export default function postsRoutes(app: Application) {
           content = content.replaceAll(/@[\w\.]+@?(\.?\w)*/gm, (userUrl: string) => userUrl.toLowerCase())
           const dbFoundMentions = await User.findAll({
             where: {
-              url: {
-                [Op.iLike]: {
-                  [Op.any]: mentionsInPost.map((elem) => {
-                    let urlToSearch = elem.trim().toLowerCase()
-                    if (urlToSearch.match(new RegExp('@', 'g'))?.length == 1) {
-                      urlToSearch = urlToSearch.split('@')[1]
+              [Op.or]: [
+                {
+                  url: {
+                    [Op.iLike]: {
+                      [Op.any]: mentionsInPost.map((elem) => {
+                        let urlToSearch = elem.trim().toLowerCase()
+                        if (urlToSearch.match(new RegExp('@', 'g'))?.length == 1) {
+                          urlToSearch = urlToSearch.split('@')[1]
+                        }
+                        return urlToSearch
+                      })
                     }
-                    return urlToSearch
-                  })
+                  }
+                },
+                {
+                  id: {
+                    [Op.in]: req.body.mentionedUsersids
+                  }
                 }
-              }
+              ]
+
             }
           })
           mentionsToAdd = dbFoundMentions.map((usr: any) => usr.id)
