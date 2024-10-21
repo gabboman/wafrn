@@ -144,6 +144,17 @@ export class NotificationsService {
         const medias = tmp.medias.filter(med => med.postId === post.id)
         post.medias = medias;
         post.emojis = [] // TODO fix this later
+        const mutedWordsRaw = localStorage.getItem('mutedWords');
+        let mutedWords: string[] = [];
+        if (mutedWordsRaw) {
+          mutedWords = mutedWordsRaw.split(',').map(word => word.trim()).filter(word => word.length > 0);
+        }
+        if (mutedWords.length > 0) {
+          const cwedWords = mutedWords.filter(word => post.content.toLowerCase().includes(word.toLowerCase()) || post.medias?.some((media: any) => media.description?.toLowerCase().includes(word.toLowerCase())))
+          if (cwedWords.length > 0) {
+            post.content_warning = `Post includes muted words: ${cwedWords} ${post.content_warning}`
+          }
+        }
         return post;
       })
       tmp.posts = tmp.posts.map((post: any) => {
