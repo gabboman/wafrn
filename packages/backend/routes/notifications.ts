@@ -231,7 +231,8 @@ export default function notificationRoutes(app: Application) {
     operator: any,
     limit?: boolean
   ): Promise<any[]> {
-    const superMutedIds = await getMutedPosts(userId, true)
+    let superMutedIds = await getMutedPosts(userId, true);
+    superMutedIds = superMutedIds ? superMutedIds : []
     const fullyMutedDoNotCountForMentions = superMutedIds.length
       ? (
         await sequelize.query(
