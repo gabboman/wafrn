@@ -305,6 +305,11 @@ const Post = sequelize.define(
     },
     content_warning: Sequelize.TEXT,
     content: Sequelize.TEXT,
+    title: {
+      type: Sequelize.STRING(64),
+      allowNull: true,
+      unique: false
+    },
     remotePostId: {
       type: Sequelize.STRING(768),
       allowNull: true,
