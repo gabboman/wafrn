@@ -23,6 +23,7 @@ export interface basicPost {
   id: string;
   content_warning: string;
   content: string;
+  title?: string;
   remotePostId?: string;
   privacy: number;
   featured: boolean;

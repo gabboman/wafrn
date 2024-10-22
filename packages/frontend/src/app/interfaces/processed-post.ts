@@ -12,6 +12,7 @@ export interface ProcessedPost {
   id: string;
   content_warning: string;
   content: string;
+  title?: string;
   createdAt: Date;
   updatedAt: Date;
   userId: string;

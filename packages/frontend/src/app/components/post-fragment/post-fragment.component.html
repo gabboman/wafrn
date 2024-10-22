@@ -1,4 +1,5 @@
 <ng-container *ngIf="fragment">
+  <h3 *ngIf="fragment.title" [innerText]="fragment.title"></h3>
   @if(fragment.ask){
   <app-single-ask [ask]="fragment.ask"></app-single-ask>
   }
