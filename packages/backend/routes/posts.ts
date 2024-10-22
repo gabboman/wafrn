@@ -149,13 +149,13 @@ export default function postsRoutes(app: Application) {
         })
         const users = posts?.descendents?.length
           ? await User.findAll({
-            attributes: ['url', 'avatar', 'name', 'id'],
-            where: {
-              id: {
-                [Op.in]: posts?.descendents.map((elem: any) => elem.userId)
+              attributes: ['url', 'avatar', 'name', 'id'],
+              where: {
+                id: {
+                  [Op.in]: posts?.descendents.map((elem: any) => elem.userId)
+                }
               }
-            }
-          })
+            })
           : []
         res.send({
           posts: posts?.descendents?.length ? posts.descendents : [],
@@ -322,8 +322,8 @@ export default function postsRoutes(app: Application) {
         const content_warning = req.body.content_warning
           ? req.body.content_warning.trim()
           : posterUser?.NSFW
-            ? 'This user has been marked as NSFW and the post has been labeled automatically as NSFW'
-            : ''
+          ? 'This user has been marked as NSFW and the post has been labeled automatically as NSFW'
+          : ''
         let mentionsToAdd: string[] = []
         let mediaToAdd: any[] = []
         const avaiableEmojis = await getAvaiableEmojis()
@@ -352,16 +352,22 @@ export default function postsRoutes(app: Application) {
             })
           })
         }
-        const mentionsInPost: string[] = content.match(/@[\w\.]+@?(\.?\w)*/gm)
-        if (mentionsInPost && mentionsInPost.length > 0) {
-          content = content.replaceAll(/@[\w\.]+@?(\.?\w)*/gm, (userUrl: string) => userUrl.toLowerCase())
-          const dbFoundMentions = await User.findAll({
+
+        const mentionRegex = /@[\w\.]+@?(\.?\w)*/gm
+        const mentionsInPost: string[] = content.match(mentionRegex)
+        content = content.replaceAll(mentionRegex, (userUrl: string) => userUrl.toLowerCase())
+
+        let dbFoundMentions: any[] = []
+        const newMentionedUsers = req.body.mentionedUsersIds || []
+        if (mentionsInPost?.length || newMentionedUsers.length) {
+          dbFoundMentions = await User.findAll({
             where: {
               [Op.or]: [
                 {
                   url: {
                     [Op.iLike]: {
                       [Op.any]: mentionsInPost.map((elem) => {
+                        // local users are stored without the @, so remove it from the query param
                         let urlToSearch = elem.trim().toLowerCase()
                         if (urlToSearch.match(new RegExp('@', 'g'))?.length == 1) {
                           urlToSearch = urlToSearch.split('@')[1]
@@ -373,14 +379,17 @@ export default function postsRoutes(app: Application) {
                 },
                 {
                   id: {
-                    [Op.in]: req.body.mentionedUsersids ? req.body.mentionedUsersids : []
+                    [Op.in]: newMentionedUsers
                   }
                 }
               ]
-
             }
           })
+        }
+
+        if (dbFoundMentions.length > 0) {
           mentionsToAdd = dbFoundMentions.map((usr: any) => usr.id)
+
           // we check if user federates with threads and if not we check they are not mentioning anyone from threads
           const options = await getUserOptions(posterId)
           const userFederatesWithThreads = options.filter(
@@ -430,23 +439,24 @@ export default function postsRoutes(app: Application) {
             })
             return null
           }
-          if (dbFoundMentions && dbFoundMentions.length > 0) {
-            for (let userMentioned of dbFoundMentions.sort((a: any, b: any) => a.url.length - b.url.length)) {
-              const url = userMentioned.url.trim().startsWith('@')
-                ? userMentioned.url.split('@')[1].trim()
-                : `${userMentioned.url.trim()}`
-              const remoteId = userMentioned.url.startsWith('@')
-                ? userMentioned.remoteId
-                : `${environment.frontendUrl}/fediverse/blog/${userMentioned.url}`
-              const remoteUrl = userMentioned.remoteMentionUrl ? userMentioned.remoteMentionUrl : remoteId
-              const stringToReplace = userMentioned.url.startsWith('@')
-                ? userMentioned.url.toLowerCase()
-                : `@${userMentioned.url.toLowerCase()}`
-              const targetString = `<span class="h-card" translate="no"><a href="${remoteUrl}" class="u-url mention">@<span>${url}</span></a></span>`
-              content = content.replace(`${stringToReplace}`, `${targetString}`).trim()
-            }
+
+          const sortedMentions = dbFoundMentions.sort((a: any, b: any) => a.url.length - b.url.length)
+          for (let userMentioned of sortedMentions) {
+            const url = userMentioned.url.trim().startsWith('@')
+              ? userMentioned.url.split('@')[1].trim()
+              : `${userMentioned.url.trim()}`
+            const remoteId = userMentioned.url.startsWith('@')
+              ? userMentioned.remoteId
+              : `${environment.frontendUrl}/fediverse/blog/${userMentioned.url}`
+            const remoteUrl = userMentioned.remoteMentionUrl ? userMentioned.remoteMentionUrl : remoteId
+            const stringToReplace = userMentioned.url.startsWith('@')
+              ? userMentioned.url.toLowerCase()
+              : `@${userMentioned.url.toLowerCase()}`
+            const targetString = `<span class="h-card" translate="no"><a href="${remoteUrl}" class="u-url mention">@<span>${url}</span></a></span>`
+            content = content.replace(`${stringToReplace}`, `${targetString}`).trim()
           }
         }
+
         content = markdownConverter.makeHtml(content)
         let post: any
         content = content.trim()
