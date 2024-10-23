@@ -12,8 +12,8 @@ export const environment = {
   },
   // this was a dev thing. leave to true unless you are doing stuff in local or your media url is yourinstance/uploads (not recomended)
   removeFolderNameFromFileUploads: true,
-  //YOU SHOULD TOTALLY USE MYSQL AND DO NOT COMMIT THE SAME MISTAKES AS ME. Mariadb works, but there were some performance issues because indexes
-  databaseConnectionString: 'mariadb://DBUSER:DBPASSWORD@127.0.0.1/DBNAME',
+  // we use now postgresql.
+  databaseConnectionString: 'postgresql://root:root@127.0.0.1/wafrn',
   listenIp: '127.0.0.1',
   port: APPPORT,
   // In the case of you wantint to put fedi petitions in another thread, use a different port here. You will have to update your apache config
