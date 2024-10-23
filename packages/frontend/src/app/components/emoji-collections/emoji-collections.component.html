@@ -1,5 +1,5 @@
 <mat-form-field class="w-full mt-2">
-  <mat-label>Search avaiable emojis</mat-label>
+  <mat-label>Search available emojis</mat-label>
   <input [(ngModel)]="filterText" matInput />
 </mat-form-field>
 @for (emojiCollection of emojiCollections; track $index) {
@@ -13,13 +13,13 @@
     <div [innerHtml]="emojiCollection.comment" class="my-2"></div>
     <div class="flex grid">
       @for(emoji of getEmojiCollectionFiltered(emojiCollection, filterText); track $index) {
-      <button mat-flat-button [matTooltip]="emoji.name"
-        (mousedown)="click(emoji)"
+      <button mat-flat-button [matTooltip]="emoji.name" (mousedown)="click(emoji)"
         class="p-2 flex align-content-center justify-content-center cursor-pointer bg-transparent">
         @if(!emoji.url) {
-          {{emoji.id}}
+        {{emoji.id}}
         }
-        <img *ngIf="emoji.url" loading="lazy" class="post-emoji-preview mr-2 ml-2" [src]="baseMediaUrl + emoji.url" [alt]="emoji.name" />
+        <img *ngIf="emoji.url" loading="lazy" class="post-emoji-preview mr-2 ml-2" [src]="baseMediaUrl + emoji.url"
+          [alt]="emoji.name" />
       </button>
       }
     </div>
