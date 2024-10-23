@@ -149,13 +149,13 @@ export default function postsRoutes(app: Application) {
         })
         const users = posts?.descendents?.length
           ? await User.findAll({
-              attributes: ['url', 'avatar', 'name', 'id'],
-              where: {
-                id: {
-                  [Op.in]: posts?.descendents.map((elem: any) => elem.userId)
-                }
+            attributes: ['url', 'avatar', 'name', 'id'],
+            where: {
+              id: {
+                [Op.in]: posts?.descendents.map((elem: any) => elem.userId)
               }
-            })
+            }
+          })
           : []
         res.send({
           posts: posts?.descendents?.length ? posts.descendents : [],
@@ -322,8 +322,8 @@ export default function postsRoutes(app: Application) {
         const content_warning = req.body.content_warning
           ? req.body.content_warning.trim()
           : posterUser?.NSFW
-          ? 'This user has been marked as NSFW and the post has been labeled automatically as NSFW'
-          : ''
+            ? 'This user has been marked as NSFW and the post has been labeled automatically as NSFW'
+            : ''
         let mentionsToAdd: string[] = []
         let mediaToAdd: any[] = []
         const avaiableEmojis = await getAvaiableEmojis()
@@ -353,7 +353,7 @@ export default function postsRoutes(app: Application) {
           })
         }
 
-        const mentionRegex = /@[\w\.]+@?(\.?\w)*/gm
+        const mentionRegex = /@[\w-\.]+@?[\w-\.]*/gm
         const mentionsInPost: string[] = content.match(mentionRegex)
         content = content.replaceAll(mentionRegex, (userUrl: string) => userUrl.toLowerCase())
 
