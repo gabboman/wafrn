@@ -33,18 +33,33 @@ export default async function optimizeMedia(
       fileAndExtension[1] = 'mp4'
       outputPath = fileAndExtension.join('.')
       // eslint-disable-next-line no-unused-vars
+
       new FfmpegCommand(inputPath)
-        .videoCodec('libx264')
-        .audioCodec('aac')
-        .save(outputPath)
-        .on('end', () => {
-          try {
-            fs.unlinkSync(inputPath)
-            logger.trace('media converted')
-          } catch (exc) {
-            logger.warn(exc)
-          }
+        .ffprobe(function (err: any, data: any) {
+          let horizontalResolution = data.streams[0] ? data.streams[0].coded_width : 1280;
+          let verticalResolution = data.streams[0] ? data.streams[0].coded_height : 1280;
+
+          horizontalResolution = Math.min(horizontalResolution, 1280)
+          verticalResolution = Math.min(verticalResolution, 1280)
+          const resolutionString = horizontalResolution > verticalResolution ? `${horizontalResolution}x?` : `?x${verticalResolution}`
+          new FfmpegCommand(inputPath)
+            .videoCodec('libx264')
+            .audioCodec('aac')
+            .renice(20)
+            .videoBitrate('3000k')
+            .size(resolutionString)
+            .save(outputPath)
+            .on('end', () => {
+              try {
+                fs.unlinkSync(inputPath)
+                logger.trace('media converted')
+              } catch (exc) {
+                logger.warn(exc)
+              }
+            })
         })
+
+
       break
     default:
       const metadata = await sharp(inputPath).metadata()
