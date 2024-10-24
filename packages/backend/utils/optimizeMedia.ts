@@ -36,8 +36,9 @@ export default async function optimizeMedia(
 
       new FfmpegCommand(inputPath)
         .ffprobe(function (err: any, data: any) {
-          let horizontalResolution = data.streams[0] ? data.streams[0].coded_width : 1280;
-          let verticalResolution = data.streams[0] ? data.streams[0].coded_height : 1280;
+          const stream = data.streams.find((stream: any) => stream.coded_height)
+          let horizontalResolution = stream ? stream.coded_width : 1280;
+          let verticalResolution = stream ? stream.coded_height : 1280;
 
           horizontalResolution = Math.min(horizontalResolution, 1280)
           verticalResolution = Math.min(verticalResolution, 1280)
