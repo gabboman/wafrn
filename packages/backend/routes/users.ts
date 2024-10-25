@@ -45,7 +45,7 @@ import { getAvaiableEmojisCache } from '../utils/cacheGetters/getAvaiableEmojis.
 import { rejectremoteFollow } from '../utils/activitypub/rejectRemoteFollow.js'
 import { acceptRemoteFollow } from '../utils/activitypub/acceptRemoteFollow.js'
 
-const forbiddenCharacters = [':', '@', '/', '<', '>', '"']
+const forbiddenCharacters = [':', '@', '/', '<', '>', '"', '&', '?', '_']
 
 export default function userRoutes(app: Application) {
   app.post(
