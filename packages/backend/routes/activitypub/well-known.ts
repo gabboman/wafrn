@@ -31,10 +31,7 @@ function wellKnownRoutes(app: Application) {
           : urlQueryResource.slice(`acct:${environment.frontendUrl}/fediverse/blog/`.length)
         const user = await User.findOne({
           where: {
-            literal: sequelize.where(
-              sequelize.fn('lower', sequelize.col('url')),
-              userUrl.toLowerCase()
-            )
+            literal: sequelize.where(sequelize.fn('lower', sequelize.col('url')), userUrl.toLowerCase())
           }
         })
         if (!user) {
@@ -82,7 +79,6 @@ function wellKnownRoutes(app: Application) {
   })
 
   app.get('/.well-known/nodeinfo/2.0', cacher.cache('seconds', 600), async (req, res) => {
-
     const localUsersIds = await getAllLocalUserIds()
 
     const sixMonths = User.count({
@@ -100,7 +96,7 @@ function wellKnownRoutes(app: Application) {
               [Op.gt]: new Date().setMonth(-6)
             },
             privacy: 0
-          },
+          }
         }
       ]
     })
@@ -110,7 +106,6 @@ function wellKnownRoutes(app: Application) {
         id: {
           [Op.in]: localUsersIds
         }
-
       },
       include: [
         {
@@ -121,7 +116,7 @@ function wellKnownRoutes(app: Application) {
               [Op.gt]: new Date().setMonth(-1)
             },
             privacy: 0
-          },
+          }
         }
       ]
     })
@@ -160,6 +155,21 @@ function wellKnownRoutes(app: Application) {
       metadata: {}
     })
     res.end()
+  })
+
+  app.get('/.well-known/assetlinks.json', (req, res) => {
+    res.json([
+      {
+        relation: ['delegate_permission/common.handle_all_urls'],
+        target: {
+          namespace: 'wafrn-rn',
+          package_name: 'dev.djara.wafrn_rn',
+          sha256_cert_fingerprints: [
+            '09:1A:D9:44:84:3E:18:0C:43:22:ED:E2:02:A7:33:09:4C:DC:07:DD:1A:CD:51:52:3F:E8:13:EA:E9:04:F4:87'
+          ]
+        }
+      }
+    ])
   })
 }
 
