@@ -72,7 +72,7 @@ export default async function optimizeMedia(
         outputPath = fileAndExtension.join('.')
       }
 
-      let conversion = await sharp(inputPath, { animated: true }).rotate()
+      let conversion = await sharp(inputPath, { animated: true, failOnError: false }).rotate()
       //.toFile(outputPath)
       if (options?.maxSize) {
         await conversion.resize(options.maxSize, options.maxSize)
