@@ -10,6 +10,7 @@
     "backend:develop": "cd packages/backend && tsx watch index.ts",
     "backend:worker": "cd packages/backend && tsx utils/workers.ts",
     "backend:serve": "cd packages/backend && tsx index.ts",
+    "backend:cohostImport": "cd packages/backend && tsx utils/maintenanceTasks/importcohost.ts",
     "frontend:serve": "cd packages/frontend && ng serve",
     "frontend:develop": "cd packages/frontend && ng serve --configuration development",
     "frontend:develop:prod": "cd packages/frontend && ng serve --configuration devprod",
@@ -33,6 +34,7 @@
     "packages/backend"
   ],
   "devDependencies": {
+    "@types/showdown": "^2.0.6",
     "typescript": "^5.4.5"
   },
   "dependencies": {
