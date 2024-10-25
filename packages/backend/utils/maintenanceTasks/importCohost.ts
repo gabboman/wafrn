@@ -85,7 +85,7 @@ for await (const postToImportFolder of postsToImportFolder) {
                         const fileName = attachment.fileURL.split('/')[attachment.fileURL.split('/').length - 1]
                         const fileLocation = exportPostsRoute + '/' + postToImportFolder + '/' + fileName
                         const newLocation = 'uploads/' + generateRandomString() + '.' + fileName.split('.')[fileName.split('.').length - 1]
-                        await fs.rename(fileLocation, newLocation)
+                        await fs.copyFile(fileLocation, newLocation)
                         const filenameresult = await optimizeMedia(newLocation)
                         await Media.create({
                             mediaOrder: mediaIndex,
