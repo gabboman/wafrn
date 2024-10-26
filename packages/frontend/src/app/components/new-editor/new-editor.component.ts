@@ -234,7 +234,7 @@ export class NewEditorComponent implements OnDestroy {
 
   async uploadImage(media: WafrnMedia) {
     try {
-      media.url = EnvironmentService.environment.baseMediaUrl + media.url;
+      media.url = EnvironmentService.environment.externalCacheurl + encodeURIComponent(EnvironmentService.environment.baseMediaUrl + media.url);
       this.uploadedMedias.push(media);
       this.messages.add({
         severity: 'success',
