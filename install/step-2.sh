@@ -4,7 +4,7 @@ if [ $(id -u) -e 0 ]; then
   exit
 fi
 
-echo "We are going to install NVM and the recomended node version into your user"
+echo "We are going to install NVM and the recommended node version into your user"
 
 curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash
 export NVM_DIR="$HOME/.nvm"
