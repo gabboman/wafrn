@@ -1,5 +1,5 @@
 #!/bin/bash
-# ATENTION FORTNITE GAMER! THIS SCRIPT NEEDS TO BE RUN AS ROOT
+# ATTENTION FORTNITE GAMER! THIS SCRIPT NEEDS TO BE RUN AS ROOT
 if [ "$EUID" -ne 0 ]
   then echo "Please run as root"
   exit
@@ -11,7 +11,7 @@ echo "Please introduce the port for the wafrn process to listen. If you are not 
 read PORT
 echo "Ok now we need your email for the admin mail"
 read ADMINEMAIL
-echo "How do you want the admin account to be called?"
+echo "What do you want the admin account to be called?"
 read ADMINUSER
 echo "Did you read the manual? We need a SMTP server config"
 echo "Tell us the smtp host"
@@ -28,10 +28,10 @@ echo "ok we are almost there!"
 echo "We will create a new user for wafrn and will clone the repo there. Write the user name. We recommend wafrn. YOU NEED TO REMEMBER THE PASSWORD YOU SET"
 read wafrnUser
 USERNAME=${wafrnUser//[^a-zA-Z0-9]/_}
-echo "we ware going to create the user. Set a password (wont be displayed)"
+echo "We are going to create the user. Set a password (wont be displayed)"
 adduser $USERNAME
 chmod 755 --recursive /home/${USERNAME}
-read -p "Ok thats all the data we need. Lets go!"
+read -p "Ok that's all the data we need. Lets go!"
 apt update
 apt dist-upgrade -y
 apt install -y git mariadb-server curl lsb-release wget dialog apache2 certbot python3-certbot-apache build-essential redis ffmpeg webp graphicsmagick tmux sudo
