@@ -95,7 +95,7 @@ for await (const postToImportFolder of postsToImportFolder) {
                             external: false,
                             postId: post.id
                         })
-                        postContent = postContent + `[image-${mediaIndex}]<br>`
+                        postContent = postContent + `[media-${mediaIndex}]<br>`
                         mediaIndex = mediaIndex + 1;
                     } catch (err) {
                         console.log(err)

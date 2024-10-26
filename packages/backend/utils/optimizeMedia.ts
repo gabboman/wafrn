@@ -39,16 +39,21 @@ export default async function optimizeMedia(
           const stream = data.streams.find((stream: any) => stream.coded_height)
           let horizontalResolution = stream ? stream.coded_width : 1280;
           let verticalResolution = stream ? stream.coded_height : 1280;
-
           horizontalResolution = Math.min(horizontalResolution, 1280)
           verticalResolution = Math.min(verticalResolution, 1280)
           const resolutionString = horizontalResolution > verticalResolution ? `${horizontalResolution}x?` : `?x${verticalResolution}`
+          const videoCodec = stream.codec_name == 'h264' ? 'copy' : 'libx264'
+          const options = [
+          ]
+          if (videoCodec != 'copy') {
+            options.push(`-s ${resolutionString}`)
+            options.push('-b:v 3M')
+          }
           new FfmpegCommand(inputPath)
-            .videoCodec('libx264')
             .audioCodec('aac')
+            .videoCodec(videoCodec)
+            .inputOptions(options)
             .renice(20)
-            .videoBitrate('3000k')
-            .size(resolutionString)
             .save(outputPath)
             .on('end', () => {
               try {
