@@ -44,7 +44,6 @@ export default async function optimizeMedia(
           const resolutionString = horizontalResolution > verticalResolution ? `${horizontalResolution}x?` : `?x${verticalResolution}`
           const videoCodec = stream.codec_name == 'h264' ? 'copy' : 'libx264'
           const options = [
-            `-c:v ${videoCodec}`,
           ]
           if (videoCodec != 'copy') {
             options.push(`-s ${resolutionString}`)
