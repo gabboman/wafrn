@@ -4,7 +4,7 @@ if [ "$EUID" -ne 0 ]
   then echo "Please run as root"
   exit
 fi
-echo "Remember, this script is made for DEBIAN 12. It will install MYSQL and some other extras"
+echo "Remember, this script is made for DEBIAN 12. It will install POSTGRESQL and some other extras"
 echo "Please write the domain name of your wafrn instance. Make sure you have the domain pointing to this server too"
 read DOMAINNAME
 echo "Please introduce the port for the wafrn process to listen. If you are not sure, write 3000"
@@ -34,14 +34,13 @@ chmod 755 --recursive /home/${USERNAME}
 read -p "Ok thats all the data we need. Lets go!"
 apt update
 apt dist-upgrade -y
-apt install -y git mariadb-server curl lsb-release wget dialog apache2 certbot python3-certbot-apache build-essential redis ffmpeg webp graphicsmagick tmux sudo
+apt install -y git postgresql curl lsb-release wget dialog apache2 certbot python3-certbot-apache build-essential redis ffmpeg webp graphicsmagick tmux sudo
 
 a2enmod proxy
 a2enmod proxy_http
 a2enmod headers
 a2enmod rewrite
 systemctl restart apache2
-systemctl enable --now mariadb
 
 usermod -aG www-data ${USERNAME}
 usermod -aG  ${USERNAME} www-data

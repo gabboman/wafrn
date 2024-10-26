@@ -20,7 +20,9 @@ First, you will need a Debian 12 VPS. The cheap Contabo one can do the trick wit
 You also need a domain.
 You will also need a way of sending emails to the people registering. An SMTP server or a free Brevo account with SMTP enabled can do the trick.
 
+# THIS GUIDE NEEDS UPDATING. IT WILL GET UPDATED SOON. SORRY
 ## First steps
+
 
 First, point the domain to your Debian VPS. Once that is done, we download the installer and execute it, as root.
 The installer will install all required packages, create the user and clone the repo and configure Apache.
