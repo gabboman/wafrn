@@ -120,6 +120,7 @@ export class NewEditorComponent implements OnDestroy {
     private dialogRef: MatDialogRef<NewEditorComponent>,
   ) {
     this.data = EditorService.editorData;
+    this.editing = this.data?.edit == true;
     this.privacy = this.loginService.getUserDefaultPostPrivacyLevel();
     if (this.data?.post) {
       this.contentWarning = this.data.post.content_warning
