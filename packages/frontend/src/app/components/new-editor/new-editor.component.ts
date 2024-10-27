@@ -32,6 +32,7 @@ import { JwtService } from 'src/app/services/jwt.service';
 import { AvatarSmallComponent } from '../avatar-small/avatar-small.component';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { EnvironmentService } from 'src/app/services/environment.service';
+import * as dompurify from 'isomorphic-dompurify'
 
 @Component({
   selector: 'app-new-editor',
@@ -144,6 +145,16 @@ export class NewEditorComponent implements OnDestroy {
       }
     }
     this.postCreatorForm.controls['content'].patchValue(postCreatorContent)
+
+    if (this.editing && this.data?.post) {
+
+      this.postCreatorForm.controls['content'].patchValue(this.postCreatorForm.controls['content'].value + ' ' + dompurify.sanitize(this.data.post.content, {
+        ALLOWED_TAGS: []
+      }))
+      this.contentWarning = this.data.post.content_warning;
+      this.tags = this.data.post.tags.map(tag => tag.tagName).join(',');
+      this.uploadedMedias = this.data.post.medias ? this.data.post.medias : []
+    }
   }
 
   @HostListener('window:scroll')
