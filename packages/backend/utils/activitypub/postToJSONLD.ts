@@ -80,19 +80,17 @@ async function postToJSONLD(postId: string) {
     })
   }
   for await (const tag of post.postTags) {
-    const externalTagName = tag.tagName.replaceAll('"', "'")
+    const externalTagName = tag.tagName.replaceAll('"', "'").replaceAll(' ', '-')
     const link = `${environment.frontendUrl}/dashboard/search/${encodeURIComponent(tag.tagName)}`
-    tagsAndQuotes = `${tagsAndQuotes}  <a class="hashtag" data-tag="post" href="${link}" rel="tag ugc">#${camelize(
-      externalTagName
-    )}</a>`
+    tagsAndQuotes = `${tagsAndQuotes}  <a class="hashtag" data-tag="post" href="${link}" rel="tag ugc">#${externalTagName}</a>`
     fediTags.push({
       type: 'Hashtag',
-      name: `#${camelize(externalTagName)}`,
+      name: `#${externalTagName}`,
       href: link
     })
     fediTags.push({
       type: 'WafrnHashtag',
-      name: externalTagName
+      name: tag.tagName.replaceAll('"', "'")
     })
   }
   for await (const userId of mentions) {
