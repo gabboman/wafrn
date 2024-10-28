@@ -76,9 +76,15 @@ export default async function optimizeMedia(
       }
 
       let conversion = await sharp(inputPath, { animated: true, failOnError: false }).rotate()
-      //.toFile(outputPath)
       if (options?.maxSize) {
         await conversion.resize(options.maxSize, options.maxSize)
+      }
+      if (fileAndExtension[1] == 'avif') {
+        conversion.avif({
+          effort: 9,
+          quality: 80,
+          lossless: inputPath.toLowerCase().endsWith('png')
+        })
       }
       await conversion.toFile(outputPath)
       if (!doNotDelete) {
