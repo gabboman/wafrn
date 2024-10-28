@@ -27,6 +27,7 @@ import { AvatarSmallComponent } from '../avatar-small/avatar-small.component';
 import { PostHeaderComponent } from "../post/post-header/post-header.component";
 import { SingleAskComponent } from '../single-ask/single-ask.component';
 import { EnvironmentService } from 'src/app/services/environment.service';
+import { WafrnMedia } from 'src/app/interfaces/wafrn-media';
 
 type EmojiReaction = {
   id: string;
@@ -72,6 +73,8 @@ export class PostFragmentComponent implements OnChanges, OnDestroy {
 
   reactionLoading = false;
   sanitizedContent = ""
+  wafrnFormattedContent: Array<string | WafrnMedia> = []
+  seenMedia: number[] = []
 
   constructor(
     private postService: PostsService,
@@ -111,7 +114,32 @@ export class PostFragmentComponent implements OnChanges, OnDestroy {
   }
 
   initializeContent() {
-    this.sanitizedContent = this.postService.getPostHtml(this.fragment as ProcessedPost)
+    let processedBlock: Array<string | WafrnMedia> = []
+    this.sanitizedContent = this.postService.getPostHtml(this.fragment as ProcessedPost);
+    if (this.fragment && this.fragment.medias && this.fragment?.medias?.length > 0) {
+      this.wafrnFormattedContent = [this.fragment.content];
+      for (let [mediaIndex, media] of this.fragment.medias.entries()) {
+        for (const [blockIndex, block] of this.wafrnFormattedContent.entries()) {
+          if (typeof (block) == 'string') {
+            const newBlock = block.split(`!(media-${mediaIndex + 1})`)
+            if (newBlock.length > 1) {
+              this.seenMedia.push(mediaIndex)
+              newBlock.forEach((textBlock, index) => {
+                processedBlock.push(textBlock);
+                if (index + 1 != newBlock.length) {
+                  processedBlock.push(media)
+                }
+              })
+            } else {
+              processedBlock.push(block)
+            }
+          }
+        }
+      }
+    } else {
+      processedBlock = [this.fragment?.content as string]
+    }
+    this.wafrnFormattedContent = processedBlock;
   }
 
   initializeEmojis() {

@@ -22,6 +22,7 @@ import { MessageService } from 'src/app/services/message.service';
 export class WafrnMediaComponent implements OnChanges, AfterViewInit {
   nsfw = true;
   @Input() data!: WafrnMedia;
+  @Input() mediaOrString!: WafrnMedia | string;
   tmpUrl = '';
   displayUrl: string = '';
   disableNSFWFilter = true;
@@ -51,6 +52,9 @@ export class WafrnMediaComponent implements OnChanges, AfterViewInit {
   }
 
   ngOnChanges(): void {
+    if (this.mediaOrString && typeof (this.mediaOrString) != 'string') {
+      this.data = this.mediaOrString as WafrnMedia;
+    }
     if (this.data) {
       this.extension = this.getExtension();
       this.tmpUrl = this.data.external
