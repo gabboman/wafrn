@@ -121,7 +121,7 @@ export class PostFragmentComponent implements OnChanges, OnDestroy {
       for (let [mediaIndex, media] of this.fragment.medias.entries()) {
         for (const [blockIndex, block] of this.wafrnFormattedContent.entries()) {
           if (typeof (block) == 'string') {
-            const newBlock = block.split(`!(media-${mediaIndex + 1})`)
+            const newBlock = block.split(`![media-${mediaIndex + 1}]`)
             if (newBlock.length > 1) {
               this.seenMedia.push(mediaIndex)
               newBlock.forEach((textBlock, index) => {
