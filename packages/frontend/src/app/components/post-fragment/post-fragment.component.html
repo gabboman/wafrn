@@ -19,14 +19,17 @@
     </button>
   </div>
   <div [ngClass]="{ 'post-danger': fragment.content_warning && showCw, 'mt-4': fragment.content_warning}">
-    <div *ngIf="fragment.content !== '' || fragment.tags?.length"
-      class="fragment-content wafrn-text-default overflow-hidden"
-      [ngClass]="{ blurry: fragment.content_warning && showCw }" [injectHTML]="sanitizedContent"></div>
+    <div *ngFor="let block of wafrnFormattedContent" class="fragment-content wafrn-text-default overflow-hidden"
+      [ngClass]="{ blurry: fragment.content_warning && showCw }">
+      <div [injectHTML]="block"></div>
+      <app-wafrn-media [mediaOrString]="block"></app-wafrn-media>
+    </div>
+
     <div *ngIf="fragment.questionPoll" [ngClass]="{ blurry: fragment.content_warning && showCw }">
       <app-poll [poll]="fragment.questionPoll"></app-poll>
     </div>
-    <div *ngFor="let media of fragment.medias" [ngClass]="{ blurry: fragment.content_warning && showCw }">
-      <app-wafrn-media [data]="media"></app-wafrn-media>
+    <div *ngFor="let media of fragment.medias; index as i" [ngClass]="{ blurry: fragment.content_warning && showCw }">
+      <app-wafrn-media *ngIf="!seenMedia.includes(i)" [data]="media"></app-wafrn-media>
     </div>
     <div id="fragment-tags" class="flex flex-wrap gap-2 mt-4" *ngIf="fragment.tags && fragment.tags.length"
       [ngClass]="{ blurry: fragment.content_warning && showCw }">

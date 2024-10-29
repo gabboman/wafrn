@@ -306,7 +306,7 @@ const Post = sequelize.define(
     content_warning: Sequelize.TEXT,
     content: Sequelize.TEXT,
     title: {
-      type: Sequelize.STRING(64),
+      type: Sequelize.STRING(256),
       allowNull: true,
       unique: false
     },
@@ -347,6 +347,10 @@ const Post = sequelize.define(
       {
         unique: false,
         fields: ['featured']
+      },
+      {
+        unique: true,
+        fields: ['userId', 'title']
       }
     ]
   }

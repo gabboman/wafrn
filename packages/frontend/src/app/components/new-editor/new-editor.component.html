@@ -37,7 +37,7 @@
       <fa-icon size="lg" [icon]="quoteIcon"></fa-icon>
     </button>
   </div>
-  <div class="flex justify-content-end my-2" *ngIf="uploadedMedias.length < 4 && pollQuestions.length === 0" matTooltip="Upload Media">
+  <div class="flex justify-content-end my-2" *ngIf="pollQuestions.length === 0" matTooltip="Upload Media">
     <app-file-upload (fileUpload)="uploadImage($event)"></app-file-upload>
   </div>
   <div class="flex justify-content-end my-2">
@@ -112,9 +112,7 @@
     </ng-container>
   </div>
   <p class="my-2" *ngIf="uploadedMedias.length >= 4">
-    Due to some fediverse limitations, we can only have 4 medias per woot. Adding
-    more would break how the woot is seen in other places. Sorry for the
-    inconvenience.
+    ATTENTION! ANY FURTHER MEDIA UPLOADED WILL NOT BE DISPLAYED ON MASTODON
   </p>
   <p class="my-2" *ngIf="!allDescriptionsFilled()">
     Please fill in the media descriptions. If you want to disable this check,
