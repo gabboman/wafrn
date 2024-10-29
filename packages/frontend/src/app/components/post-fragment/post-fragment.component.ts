@@ -130,11 +130,12 @@ export class PostFragmentComponent implements OnChanges, OnDestroy {
                   processedBlock.push(media)
                 }
               })
-            } else {
-              processedBlock.push(block)
             }
           }
         }
+      }
+      if (processedBlock.length == 0) {
+        processedBlock.push(this.fragment.content)
       }
     } else {
       processedBlock = [this.fragment?.content as string]
