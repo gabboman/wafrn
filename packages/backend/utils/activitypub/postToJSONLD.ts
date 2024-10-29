@@ -53,11 +53,9 @@ async function postToJSONLD(postId: string) {
   // we remove the wafrnmedia from the post for the outside world, as they get this on the attachments
   processedContent = processedContent.replaceAll(wafrnMediaRegex, '')
   if (ask) {
-    processedContent = `<p>${getUserName(userAsker)} asked </p> <blockquote>${
-      ask.question
-    }</blockquote> ${processedContent} <p>To properly see this ask, <a href="${
-      environment.frontendUrl + '/fediverse/post/' + post.id
-    }">check the post in the original instance</a></p>`
+    processedContent = `<p>${getUserName(userAsker)} asked </p> <blockquote>${ask.question
+      }</blockquote> ${processedContent} <p>To properly see this ask, <a href="${environment.frontendUrl + '/fediverse/post/' + post.id
+      }">check the post in the original instance</a></p>`
   }
   const mentions: string[] = post.mentionPost.map((elem: any) => elem.id)
   const fediMentions: fediverseTag[] = []
@@ -82,19 +80,17 @@ async function postToJSONLD(postId: string) {
     })
   }
   for await (const tag of post.postTags) {
-    const externalTagName = tag.tagName.replaceAll('"', "'")
+    const externalTagName = tag.tagName.replaceAll('"', "'").replaceAll(' ', '-')
     const link = `${environment.frontendUrl}/dashboard/search/${encodeURIComponent(tag.tagName)}`
-    tagsAndQuotes = `${tagsAndQuotes}  <a class="hashtag" data-tag="post" href="${link}" rel="tag ugc">#${camelize(
-      externalTagName
-    )}</a>`
+    tagsAndQuotes = `${tagsAndQuotes}  <a class="hashtag" data-tag="post" href="${link}" rel="tag ugc">#${externalTagName}</a>`
     fediTags.push({
       type: 'Hashtag',
-      name: `#${camelize(externalTagName)}`,
+      name: `#${externalTagName}`,
       href: link
     })
     fediTags.push({
       type: 'WafrnHashtag',
-      name: externalTagName
+      name: tag.tagName.replaceAll('"', "'")
     })
   }
   for await (const userId of mentions) {
@@ -150,6 +146,7 @@ async function postToJSONLD(postId: string) {
       summary: post.content_warning ? post.content_warning : '',
       inReplyTo: parentPostString,
       published: new Date(post.createdAt).toISOString(),
+      updated: new Date(post.updatedAt).toISOString(),
       url: `${environment.frontendUrl}/fediverse/post/${post.id}`,
       attributedTo: `${environment.frontendUrl}/fediverse/blog/${localUser.url.toLowerCase()}`,
       to: usersToSend.to,
@@ -211,8 +208,8 @@ async function postToJSONLD(postId: string) {
         post.privacy / 1 === 10
           ? mentionedUsers
           : post.privacy / 1 === 0
-          ? ['https://www.w3.org/ns/activitystreams#Public']
-          : [stringMyFollowers],
+            ? ['https://www.w3.org/ns/activitystreams#Public']
+            : [stringMyFollowers],
       cc: [`${environment.frontendUrl}/fediverse/blog/${localUser.url.toLowerCase()}`, stringMyFollowers],
       object: parentPostString
     }
@@ -244,7 +241,7 @@ function getToAndCC(
       break
     }
     default: {
-      ;(to = mentionedUsers), (cc = [])
+      ; (to = mentionedUsers), (cc = [])
     }
   }
   return {
