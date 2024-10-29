@@ -61,9 +61,40 @@ const prepareSendPostQueue = new Queue('prepareSendPost', {
 })
 export default function postsRoutes(app: Application) {
   app.get(
+    '/api/article/:user/:title',
+    optionalAuthentication,
+    navigationRateLimiter,
+    async (req: AuthorizedRequest, res: Response) => {
+      const userUrl = req.params?.user;
+      const postTitle = req.params?.title.replaceAll('-', ' ')
+      const user = await User.findOne({
+        where: {
+          url: {
+            [Op.iLike]: userUrl.toLowerCase()
+          }
+        }
+      })
+      if (!user) {
+        res.sendStatus(404)
+      } else {
+        const postFound = await Post.findOne({
+          where: {
+            userId: user.id,
+            title: {
+              [Op.iLike]: postTitle.toLowerCase()
+            }
+          }
+        })
+        if (postFound) {
+          res.redirect('/api/v2/post/' + postFound.id)
+        } else {
+          res.sendStatus(404)
+        }
+      }
+    })
+  app.get(
     '/api/v2/post/:id',
     optionalAuthentication,
-
     navigationRateLimiter,
     async (req: AuthorizedRequest, res: Response) => {
       try {
