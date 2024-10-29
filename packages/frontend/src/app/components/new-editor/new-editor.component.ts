@@ -32,6 +32,7 @@ import { JwtService } from 'src/app/services/jwt.service';
 import { AvatarSmallComponent } from '../avatar-small/avatar-small.component';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { EnvironmentService } from 'src/app/services/environment.service';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 @Component({
   selector: 'app-new-editor',
@@ -53,7 +54,8 @@ import { EnvironmentService } from 'src/app/services/environment.service';
     MediaPreviewComponent,
     MatProgressSpinnerModule,
     AvatarSmallComponent,
-    MatCheckboxModule
+    MatCheckboxModule,
+    MatTooltipModule
   ],
   templateUrl: './new-editor.component.html',
   styleUrl: './new-editor.component.scss'
@@ -227,12 +229,17 @@ export class NewEditorComponent implements OnDestroy {
     return res;
   }
 
+  getPrivacyIconName() {
+    return this.privacyOptions.find(elem => elem.level === this.privacy)?.name;
+  }
+
   get idPostToReblog() {
     return this.data?.post?.id;
   }
 
 
   async uploadImage(media: WafrnMedia) {
+    console.log(media);
     try {
       media.url = EnvironmentService.environment.externalCacheurl + encodeURIComponent(EnvironmentService.environment.baseMediaUrl + media.url);
       this.uploadedMedias.push(media);

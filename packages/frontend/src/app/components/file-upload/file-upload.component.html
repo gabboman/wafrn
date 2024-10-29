@@ -4,20 +4,19 @@
   class="file-input"
   (change)="onFileSelected($event)"
   #fileUpload
+  hidden
 />
 
-<div *ngIf="!uploading" class="file-upload">
+<div *ngIf="uploadStatus !== UploadStatus.Uploading" class="file-upload">
   <button
     [disabled]="disabled"
     mat-button
     class="w-full input-height-btn"
-    (mousedown)="fileUpload.click()"
+    (click)="fileUpload.click()"
   >
-    <fa-icon size="lg" [icon]="uploadIcon"></fa-icon> {{config.buttonText}}
-  </button>
+    <fa-icon size="lg" [icon]="uploadIcon"></fa-icon> </button>
 </div>
 
-<div *ngIf="uploading" class="flex gap-2 align-items-center w-full">
-  <mat-spinner color="accent" diameter="42"></mat-spinner>
-  <p class="m-0 text-lg text-600">Uploading...</p>
+<div *ngIf="uploadStatus === UploadStatus.Uploading" class="flex mt-3 align-items-center justify-content-center w-full">
+  <mat-spinner color="accent" diameter="25"></mat-spinner>
 </div>
