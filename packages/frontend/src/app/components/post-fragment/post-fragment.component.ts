@@ -125,7 +125,8 @@ export class PostFragmentComponent implements OnChanges, OnDestroy {
               processedBlock.push(elem);
             }
           } else {
-            const mediaToInsert = this.fragment.medias[parseInt(elem) - 1];
+            const medias = this.fragment?.medias as WafrnMedia[]
+            const mediaToInsert = medias[parseInt(elem) - 1];
             if(mediaToInsert) {
               processedBlock.push(mediaToInsert)
             }
