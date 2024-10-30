@@ -8,26 +8,26 @@ import {
   OnInit,
   Output,
 } from '@angular/core';
-import { ProcessedPost } from 'src/app/interfaces/processed-post';
+import { ProcessedPost } from '../../interfaces/processed-post';
 import { PollModule } from '../poll/poll.module';
 import { WafrnMediaModule } from '../wafrn-media/wafrn-media.module';
 import { RouterModule } from '@angular/router';
 import { MatButtonModule } from '@angular/material/button';
-import { SimplifiedUser } from 'src/app/interfaces/simplified-user';
+import { SimplifiedUser } from '../../interfaces/simplified-user';
 
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { PostsService } from 'src/app/services/posts.service';
-import { LoginService } from 'src/app/services/login.service';
-import { JwtService } from 'src/app/services/jwt.service';
+import { PostsService } from '../../services/posts.service';
+import { LoginService } from '../../services/login.service';
+import { JwtService } from '../../services/jwt.service';
 import { EmojiReactComponent } from '../emoji-react/emoji-react.component';
-import { MessageService } from 'src/app/services/message.service';
-import { Emoji } from 'src/app/interfaces/emoji';
-import { InjectHtmlModule } from 'src/app/directives/inject-html/inject-html.module';
+import { MessageService } from '../../services/message.service';
+import { Emoji } from '../../interfaces/emoji';
+import { InjectHtmlModule } from '../../directives/inject-html/inject-html.module';
 import { AvatarSmallComponent } from '../avatar-small/avatar-small.component';
 import { PostHeaderComponent } from "../post/post-header/post-header.component";
 import { SingleAskComponent } from '../single-ask/single-ask.component';
-import { EnvironmentService } from 'src/app/services/environment.service';
-import { WafrnMedia } from 'src/app/interfaces/wafrn-media';
+import { EnvironmentService } from '../../services/environment.service';
+import { WafrnMedia } from '../../interfaces/wafrn-media';
 
 type EmojiReaction = {
   id: string;
@@ -118,7 +118,7 @@ export class PostFragmentComponent implements OnChanges, OnDestroy {
     this.sanitizedContent = this.postService.getPostHtml(this.fragment as ProcessedPost);
     if (this.fragment && this.fragment.medias && this.fragment?.medias?.length > 0) {
       this.wafrnFormattedContent = [this.fragment.content];
-      for (let [mediaIndex, media] of this.fragment.medias.entries()) {
+      for (const [mediaIndex, media] of this.fragment.medias.entries()) {
         for (const [blockIndex, block] of this.wafrnFormattedContent.entries()) {
           if (typeof (block) == 'string') {
             const newBlock = block.split(`![media-${mediaIndex + 1}]`)

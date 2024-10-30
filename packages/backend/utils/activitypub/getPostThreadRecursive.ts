@@ -397,7 +397,7 @@ async function processEmojis(post: any, fediEmojis: any[]) {
     }
   }
 
-  return post.setEmojis(emojis)
+  return await post.setEmojis(emojis)
 }
 
 export { getPostThreadRecursive }

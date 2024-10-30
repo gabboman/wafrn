@@ -8,10 +8,10 @@ import {
   OnInit,
   ViewChild,
 } from '@angular/core';
-import { WafrnMedia } from 'src/app/interfaces/wafrn-media';
-import { EnvironmentService } from 'src/app/services/environment.service';
-import { MediaService } from 'src/app/services/media.service';
-import { MessageService } from 'src/app/services/message.service';
+import { WafrnMedia } from '../../interfaces/wafrn-media';
+import { EnvironmentService } from '../../services/environment.service';
+import { MediaService } from '../../services/media.service';
+import { MessageService } from '../../services/message.service';
 
 
 @Component({

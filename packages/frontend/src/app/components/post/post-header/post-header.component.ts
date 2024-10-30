@@ -1,11 +1,11 @@
 import { Component, Input } from '@angular/core';
 import { AvatarSmallComponent } from '../../avatar-small/avatar-small.component';
-import { ProcessedPost } from 'src/app/interfaces/processed-post';
+import { ProcessedPost } from '../../../interfaces/processed-post';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
-import { PostsService } from 'src/app/services/posts.service';
-import { MessageService } from 'src/app/services/message.service';
-import { LoginService } from 'src/app/services/login.service';
+import { PostsService } from '../../../services/posts.service';
+import { MessageService } from '../../../services/message.service';
+import { LoginService } from '../../../services/login.service';
 import { PostActionsComponent } from '../../post-actions/post-actions.component';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';

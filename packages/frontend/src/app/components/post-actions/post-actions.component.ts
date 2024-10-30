@@ -1,11 +1,10 @@
 import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
-import { ProcessedPost } from 'src/app/interfaces/processed-post';
-import { MessageService } from 'src/app/services/message.service';
+import { ProcessedPost } from '../../interfaces/processed-post';
+import { MessageService } from '../../services/message.service';
 
 import {
   faArrowUpRightFromSquare,
   faChevronDown,
-  faClockRotateLeft,
   faHeart,
   faHeartBroken,
   faShareNodes,
@@ -22,14 +21,14 @@ import {
 import { MatButtonModule } from '@angular/material/button';
 import { MatMenuModule } from '@angular/material/menu';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { EditorService } from 'src/app/services/editor.service';
-import { LoginService } from 'src/app/services/login.service';
+import { EditorService } from '../../services/editor.service';
+import { LoginService } from '../../services/login.service';
 import { CommonModule } from '@angular/common';
-import { ReportService } from 'src/app/services/report.service';
-import { DeletePostService } from 'src/app/services/delete-post.service';
-import { PostsService } from 'src/app/services/posts.service';
-import { UtilsService } from 'src/app/services/utils.service';
-import { EnvironmentService } from 'src/app/services/environment.service';
+import { ReportService } from '../../services/report.service';
+import { DeletePostService } from '../../services/delete-post.service';
+import { PostsService } from '../../services/posts.service';
+import { UtilsService } from '../../services/utils.service';
+import { EnvironmentService } from '../../services/environment.service';
 @Component({
   selector: 'app-post-actions',
   standalone: true,

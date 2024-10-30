@@ -19,6 +19,10 @@ const routes: Routes = [
     path: ':id',
     component: ForumComponent,
   },
+  {
+    path: ':blog/:title',
+    component: ForumComponent,
+  }
 ];
 
 @NgModule({
@@ -38,4 +42,4 @@ const routes: Routes = [
     AvatarSmallComponent
   ],
 })
-export class SinglePostModule {}
+export class SinglePostModule { }

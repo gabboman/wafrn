@@ -49,6 +49,7 @@ export class SinglePostComponent implements OnDestroy {
     this.userLoggedIn = loginService.checkUserLoggedIn();
     this.routeParamsSubscription = this.route.params.subscribe(async (data: any) => {
       this.forceSSR = this.route.snapshot.queryParams['force-ssr'] === 'true';
+      console.log(data)
       const tmpPost = await this.dashboardService
         .getPostV2(data ? data.id : '')
         .catch(() => {

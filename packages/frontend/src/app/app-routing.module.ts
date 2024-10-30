@@ -74,6 +74,13 @@ const routes: Routes = [
           ),
       },
       {
+        path: 'article/',
+        loadChildren: () =>
+          import('./pages/single-post/single-post.module').then(
+            (m) => m.SinglePostModule
+          ),
+      },
+      {
         path: 'blog',
         loadChildren: () =>
           import('./pages/view-blog/view-blog.module').then(

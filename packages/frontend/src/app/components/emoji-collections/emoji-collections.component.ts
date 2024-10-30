@@ -8,11 +8,11 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faCopy } from '@fortawesome/free-solid-svg-icons';
 import { Subscription } from 'rxjs';
-import { Emoji } from 'src/app/interfaces/emoji';
-import { EmojiCollection } from 'src/app/interfaces/emoji-collection';
-import { emojis } from 'src/app/lists/emoji-compact';
-import { EnvironmentService } from 'src/app/services/environment.service';
-import { PostsService } from 'src/app/services/posts.service';
+import { Emoji } from '../../interfaces/emoji';
+import { EmojiCollection } from '../../interfaces/emoji-collection';
+//import { emojis } from '../../lists/emoji-compact';
+import { EnvironmentService } from '../../services/environment.service';
+import { PostsService } from '../../services/posts.service';
 
 
 @Component({

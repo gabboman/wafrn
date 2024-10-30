@@ -81,7 +81,6 @@ export default async function optimizeMedia(
       }
       if (fileAndExtension[1] == 'avif') {
         conversion.avif({
-          effort: 9,
           quality: 80,
           lossless: inputPath.toLowerCase().endsWith('png')
         })

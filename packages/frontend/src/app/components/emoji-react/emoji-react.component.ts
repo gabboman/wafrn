@@ -4,11 +4,11 @@ import { EmojiCollectionsComponent } from '../emoji-collections/emoji-collection
 import { Overlay, OverlayModule } from '@angular/cdk/overlay';
 import { MatButtonModule } from '@angular/material/button';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { PostsService } from 'src/app/services/posts.service';
+import { PostsService } from '../../services/posts.service';
 import { LoaderComponent } from '../loader/loader.component';
-import { MessageService } from 'src/app/services/message.service';
+import { MessageService } from '../../services/message.service';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { Emoji } from 'src/app/interfaces/emoji';
+import { Emoji } from '../../interfaces/emoji';
 
 @Component({
   selector: 'app-emoji-react',

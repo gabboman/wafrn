@@ -1,8 +1,8 @@
 import { CommonModule } from '@angular/common';
 import { Component, Input, OnInit } from '@angular/core';
 import { RouterModule } from '@angular/router';
-import { SimplifiedUser } from 'src/app/interfaces/simplified-user';
-import { EnvironmentService } from 'src/app/services/environment.service';
+import { SimplifiedUser } from '../../interfaces/simplified-user';
+import { EnvironmentService } from '../../services/environment.service';
 
 
 @Component({

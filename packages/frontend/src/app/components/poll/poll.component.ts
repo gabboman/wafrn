@@ -1,8 +1,8 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { AbstractControl, FormControl, UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
-import { QuestionPoll } from 'src/app/interfaces/questionPoll';
-import { LoginService } from 'src/app/services/login.service';
-import { PostsService } from 'src/app/services/posts.service';
+import {  FormControl,  UntypedFormGroup, Validators } from '@angular/forms';
+import { QuestionPoll } from '../../interfaces/questionPoll';
+import {LoginService} from "../../services/login.service";
+import { PostsService } from '../../services/posts.service';
 
 @Component({
   selector: 'app-poll',
@@ -61,9 +61,9 @@ export class PollComponent  implements OnInit{
     const voteSuccess = await this.postsService.voteInPoll(this.poll.id, votes);
     if(voteSuccess) {
       this.alreadyVoted = true;
-      
+
     }
-    
+
   }
 
   isFormValid(): boolean {
