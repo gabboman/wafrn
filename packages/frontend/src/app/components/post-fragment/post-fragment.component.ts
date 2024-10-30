@@ -117,26 +117,21 @@ export class PostFragmentComponent implements OnChanges, OnDestroy {
     let processedBlock: Array<string | WafrnMedia> = []
     this.sanitizedContent = this.postService.getPostHtml(this.fragment as ProcessedPost);
     if (this.fragment && this.fragment.medias && this.fragment?.medias?.length > 0) {
-      this.wafrnFormattedContent = [this.fragment.content];
-      for (const [mediaIndex, media] of this.fragment.medias.entries()) {
-        for (const [blockIndex, block] of this.wafrnFormattedContent.entries()) {
-          if (typeof (block) == 'string') {
-            const newBlock = block.split(`![media-${mediaIndex + 1}]`)
-            if (newBlock.length > 1) {
-              this.seenMedia.push(mediaIndex)
-              newBlock.forEach((textBlock, index) => {
-                processedBlock.push(textBlock);
-                if (index + 1 != newBlock.length) {
-                  processedBlock.push(media)
-                }
-              })
+      const mediaDetectorRegex = /\!\[media\-([0-9]+)]/gm
+        const textDivided = this.fragment.content.split(mediaDetectorRegex)
+        textDivided.forEach((elem, index) => {
+          if(index % 2 == 0) {
+            if(elem != '') {
+              processedBlock.push(elem);
+            }
+          } else {
+            const mediaToInsert = this.fragment.medias[parseInt(elem) - 1];
+            if(mediaToInsert) {
+              processedBlock.push(mediaToInsert)
             }
           }
-        }
-      }
-      if (processedBlock.length == 0) {
-        processedBlock.push(this.fragment.content)
-      }
+        })
+
     } else {
       processedBlock = [this.fragment?.content as string]
     }
