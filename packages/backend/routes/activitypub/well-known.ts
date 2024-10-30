@@ -80,57 +80,30 @@ function wellKnownRoutes(app: Application) {
 
   app.get('/.well-known/nodeinfo/2.0', cacher.cache('seconds', 600), async (req, res) => {
     const localUsersIds = await getAllLocalUserIds()
-
-    const sixMonths = User.count({
+    const localUsers = localUsersIds.length
+    const activeUsersSixMonths = await Post.count({
       where: {
-        id: {
-          [Op.in]: localUsersIds
-        }
-      },
-      include: [
-        {
-          model: Post,
-          required: true,
-          where: {
-            createdAt: {
-              [Op.gt]: new Date().setMonth(-6)
-            },
-            privacy: 0
-          }
-        }
-      ]
-    })
-
-    const oneMonth = User.count({
-      where: {
-        id: {
-          [Op.in]: localUsersIds
-        }
-      },
-      include: [
-        {
-          model: Post,
-          required: true,
-          where: {
-            createdAt: {
-              [Op.gt]: new Date().setMonth(-1)
-            },
-            privacy: 0
-          }
-        }
-      ]
-    })
-
-    const localPosts = Post.count({
-      where: {
-        userId: {
-          [Op.in]: localUsersIds
+        userId: { [Op.in]: localUsersIds },
+        createdAt: {
+          [Op.gt]: new Date().setMonth(-6)
         },
         privacy: 0
-      }
+      },
+      attributes: [[sequelize.fn('DISTINCT', sequelize.col('userId')), 'userId']],
+      group: ['userId']
     })
 
-    await Promise.all([oneMonth, sixMonths, localPosts])
+    const activeUsersLastMonth = await Post.count({
+      where: {
+        userId: { [Op.in]: localUsersIds },
+        createdAt: {
+          [Op.gt]: new Date().setMonth(-1)
+        },
+        privacy: 0
+      },
+      attributes: [[sequelize.fn('DISTINCT', sequelize.col('userId')), 'userId']],
+      group: ['userId']
+    })
 
     res.send({
       version: '2.0',
@@ -145,18 +118,24 @@ function wellKnownRoutes(app: Application) {
       },
       usage: {
         users: {
-          total: (await localUsersIds).length,
-          activeMonth: await oneMonth,
-          activeHalfyear: await sixMonths
+          total: localUsers,
+          activeMonth: activeUsersLastMonth.length,
+          activeHalfyear: activeUsersSixMonths.length
         },
-        localPosts: await localPosts
+        localPosts: await Post.count({
+          where: {
+            userId: {
+              [Op.in]: localUsersIds
+            },
+            privacy: 0
+          }
+        })
       },
       openRegistrations: true,
       metadata: {}
     })
     res.end()
   })
-
   app.get('/.well-known/assetlinks.json', (req, res) => {
     res.json([
       {
