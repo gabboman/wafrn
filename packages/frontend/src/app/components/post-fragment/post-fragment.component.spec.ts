@@ -37,4 +37,90 @@ describe('PostFragmentComponent', () => {
   it('should create', () => {
     expect(component).toBeTruthy();
   });
+
+  it('should process fragment blocks appropiately',  () => {
+    // Initial test, the simple one
+    component.fragment = {
+      ask: undefined,
+      createdAt: new Date(),
+      descendents: [],
+      emojiReactions: [],
+      emojis: [],
+      medias: [],
+      mentionPost: [],
+      notes: 0,
+      parentId: "",
+      privacy: 0,
+      questionPoll: undefined,
+      quotes: [],
+      remotePostId: "",
+      tags: [],
+      title: "",
+      updatedAt: new Date(),
+      user: undefined,
+      userId: "",
+      userLikesPostRelations: [],
+      id: '1',
+      content: 'No medias attached and ![media-1] string',
+      content_warning: ''
+
+
+    };
+    component.initializeContent();
+    fixture.detectChanges();
+    expect(JSON.stringify(component.wafrnFormattedContent)).toBe(JSON.stringify(['No medias attached and ![media-1] string']))
+    if(component.fragment) {
+      component.fragment.content = "post with one media ![media-1] and a second line";
+      component.fragment.medias = [{
+        id: '1',
+        NSFW: false,
+        description: '',
+        url: '',
+        external: false,
+        mediaOrder: 0
+      }, {
+        id: '2',
+        NSFW: false,
+        description: '',
+        url: '',
+        external: false,
+        mediaOrder: 0
+      }, ];
+      component.initializeContent();
+      fixture.detectChanges();
+      expect(JSON.stringify(component.wafrnFormattedContent)).toBe(JSON.stringify(['post with one media ', {
+        id: '1',
+        NSFW: false,
+        description: '',
+        url: '',
+        external: false,
+        mediaOrder: 0
+      }, ' and a second line' ]));
+      component.fragment.content = 'start ![media-1] middle ![media-2] end'
+      component.initializeContent();
+      fixture.detectChanges()
+      expect(JSON.stringify(component.wafrnFormattedContent)).toBe(JSON.stringify([
+          'start ',
+        {
+        id: '1',
+        NSFW: false,
+        description: '',
+        url: '',
+        external: false,
+        mediaOrder: 0
+        },
+        ' middle ',
+        {
+          id: '2',
+          NSFW: false,
+          description: '',
+          url: '',
+          external: false,
+          mediaOrder: 0
+        },
+        ' end'
+      ]));
+    }
+
+  })
 });
