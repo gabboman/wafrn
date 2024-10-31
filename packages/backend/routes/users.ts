@@ -206,7 +206,7 @@ export default function userRoutes(app: Application) {
             { name: "wafrn.disableForceAltText", value: req.body.disableForceAltText },
             { name: 'wafrn.federateWithThreads', value: req.body.federateWithThreads },
             { name: 'wafrn.public.asks', value: req.body.asksLevel, public: true },
-            { name: 'wafrn.forceClassicLogo', value: req.body.forceClassicLogo == 'true' },
+            { name: 'wafrn.forceClassicLogo', value: (req.body.forceClassicLogo == 'true').toString() },
             { name: 'wafrn.defaultPostEditorPrivacy', value: req.body.defaultPostEditorPrivacy },
             { name: 'wafrn.mutedWords', value: req.body.mutedWords }
           ]

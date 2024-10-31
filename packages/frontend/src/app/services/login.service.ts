@@ -156,6 +156,6 @@ export class LoginService {
 
   getForceClassicLogo(): boolean {
     const res = localStorage.getItem('forceClassicLogo');
-    return res ? res === '1' : false
+    return res == "true";
   }
 }
