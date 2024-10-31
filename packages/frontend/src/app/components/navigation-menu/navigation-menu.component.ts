@@ -490,17 +490,17 @@ export class NavigationMenuComponent implements OnInit, OnDestroy {
 
   async updateNotifications(url: string) {
     if (this.jwtService.tokenValid()) {
+      const response = await this.notificationsService.getUnseenNotifications();
       if (url === '/dashboard/notifications') {
         this.notifications = 0;
       } else {
-        const response =
-          await this.notificationsService.getUnseenNotifications();
         this.notifications = response.notifications;
+      }
         this.adminNotifications = response.reports;
         this.usersAwaitingAproval = response.usersAwaitingAproval;
         this.followsAwaitingAproval = response.followsAwaitingAproval
         this.awaitingAsks = response.asks;
-      }
+
       this.drawMenu();
       this.cdr.detectChanges();
     }
