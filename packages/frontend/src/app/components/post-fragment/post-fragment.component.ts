@@ -129,6 +129,9 @@ export class PostFragmentComponent implements OnChanges, OnDestroy {
             const mediaToInsert = medias[parseInt(elem) - 1];
             if(mediaToInsert) {
               processedBlock.push(mediaToInsert)
+              this.seenMedia.push(parseInt(elem) - 1)
+            } else {
+              processedBlock.push(`![media-${elem}]`)
             }
           }
         })
