@@ -19,7 +19,7 @@ import { getPetitionSigned } from './getPetitionSigned.js'
 import { fediverseTag } from '../../interfaces/fediverse/tags.js'
 import { loadPoll } from './loadPollFromPost.js'
 import { getApObjectPrivacy } from './getPrivacy.js'
-import * as DOMPurify from 'isomorphic-dompurify'
+import dompurify from 'isomorphic-dompurify'
 import { Queue } from 'bullmq'
 
 
@@ -273,7 +273,7 @@ async function getPostThreadRecursive(
       await processMentions(newPost, mentionedUsersIds)
       await loadPoll(remotePostObject, newPost, user)
       if (newPost.privacy === 10) {
-        const postCleanContent = DOMPurify.sanitize(newPost.content, { ALLOWED_TAGS: [] }).trim()
+        const postCleanContent = dompurify.sanitize(newPost.content, { ALLOWED_TAGS: [] }).trim()
         const mentions = await newPost.getMentionPost()
         if (postCleanContent.startsWith('!ask') && mentions.length === 1) {
           let askContent = postCleanContent.split(`!ask @${mentions[0].url}`)[1]
