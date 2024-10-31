@@ -474,7 +474,6 @@ export class PostsService {
         : `:${emoji.name}:`;
       sanitized = sanitized.replaceAll(strToReplace, this.emojiToHtml(emoji));
     });
-
     return sanitized;
   }
 

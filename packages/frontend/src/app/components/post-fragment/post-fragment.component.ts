@@ -118,7 +118,7 @@ export class PostFragmentComponent implements OnChanges, OnDestroy {
     this.sanitizedContent = this.postService.getPostHtml(this.fragment as ProcessedPost);
     if (this.fragment && this.fragment.medias && this.fragment?.medias?.length > 0) {
       const mediaDetectorRegex = /\!\[media\-([0-9]+)]/gm
-        const textDivided = this.fragment.content.split(mediaDetectorRegex)
+        const textDivided = this.sanitizedContent.split(mediaDetectorRegex)
         textDivided.forEach((elem, index) => {
           if(index % 2 == 0) {
             if(elem != '') {
@@ -137,7 +137,7 @@ export class PostFragmentComponent implements OnChanges, OnDestroy {
         })
 
     } else {
-      processedBlock = [this.fragment?.content as string]
+      processedBlock = [this.sanitizedContent]
     }
     this.wafrnFormattedContent = processedBlock;
   }

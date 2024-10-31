@@ -120,8 +120,11 @@ export default function searchRoutes(app: Application) {
         if (searchTerm.match(urlPattern)) {
           const existingPost = await Post.findOne({
             where: {
-              remotePostId: searchTerm
-            }
+              literal: sequelize.where(
+                sequelize.fn('lower', sequelize.col('remotePostId')),
+                searchTerm.toLowerCase()
+              ),
+            },
           })
           if (existingPost) {
             // We have the post. We ask for an update of it!

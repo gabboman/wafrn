@@ -83,7 +83,6 @@ export class ForumComponent implements OnDestroy {
     }
     this.subscription = this.route.params.subscribe(async (data: any) => {
       this.loading = true;
-      console.log(data)
       const tmpForumPosts = this.forumService.getForumThread(data.id);
       const tmpTmpPost = this.dashboardService.getPostV2(data ? data.id : '');
       await Promise.all([tmpForumPosts, tmpTmpPost]);
