@@ -1,4 +1,4 @@
-import { Op, Sequelize } from 'sequelize'
+import {Model, Op, Sequelize} from 'sequelize'
 import { logger } from '../logger.js'
 import { postPetitionSigned } from '../activitypub/postPetitionSigned.js'
 import { postToJSONLD } from '../activitypub/postToJSONLD.js'
@@ -6,8 +6,9 @@ import { LdSignature } from '../activitypub/rsa2017.js'
 import { FederatedHost, Post, User, PostHostView, RemoteUserPostView, sequelize } from '../../db.js'
 import { environment } from '../../environment.js'
 import { Job, Queue } from 'bullmq'
-import _ from 'underscore'
+import {Agent, BskyAgent, CredentialSession} from '@atproto/api'
 import { wait } from '../wait.js'
+import dompurify from 'isomorphic-dompurify'
 
 const processPostViewQueue = new Queue('processRemoteView', {
   connection: environment.bullmqConnection,
@@ -38,16 +39,8 @@ async function prepareSendRemotePostWorker(job: Job) {
   // TODO fix this! this is dirtier than my unwashed gim clothes
   await wait(1500)
   //async function sendRemotePost(localUser: any, post: any) {
-  const post = await Post.findOne({
-    where: {
-      id: job.id
-    }
-  })
-  const localUser = await User.findOne({
-    where: {
-      id: post.userId
-    }
-  })
+  const post = await Post.findByPk(job.id) as Model<any, any>
+  const localUser = await User.findByPk(post.userId)  as Model<any, any>
 
   // servers with shared inbox
   let serversToSendThePost
@@ -199,6 +192,38 @@ async function prepareSendRemotePostWorker(job: Job) {
       )
     }
     await Promise.allSettled(addSendPostToQueuePromises)
+  }
+
+  if(post.privacy === 0 && localUser.enableBsky && environment.enableBsky) {
+    try {
+      // ok the user has bluesky time to send the post
+      const agent = new BskyAgent({
+        service: 'https://' + environment.bskyPds
+      })
+      /*await agent.createAccount({
+        email: localUser.url + '@' + environment.instanceUrl,
+        password: localUser.bskyAuthData,
+        handle: localUser.url.replaceAll('_', '-') + '.' + environment.bskyPds,
+        inviteCode: 'INVITECODE',
+      })
+      */
+
+      await agent.login({
+        identifier: localUser.url + '@' + environment.instanceUrl,
+        password: localUser.bskyAuthData
+      })
+      const bskyPost = await agent.post({
+        text: dompurify.sanitize(post.content, { ALLOWED_TAGS: [] }),
+        createdAt: new Date(post.createdAt).toISOString()
+      })
+      logger.debug(bskyPost)
+    } catch(error) {
+      logger.warn({
+        message: 'Error while posting to bsky',
+        error: error
+      })
+    }
+
   }
 }
 

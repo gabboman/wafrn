@@ -158,7 +158,15 @@ const User = sequelize.define(
     disableEmailNotifications: {
       type: Sequelize.BOOLEAN,
       defaultValue: false
+    },
+    enableBsky: {
+      type: Sequelize.BOOLEAN,
+      defaultValue: false
+    },
+    bskyAuthData: {
+      type: Sequelize.TEXT
     }
+
   },
   {
     indexes: [
@@ -616,6 +624,9 @@ const Ask = sequelize.define(
     ]
   }
 )
+const BskyInviteCodes = sequelize.define('bskyInviteCodes', {
+  code: Sequelize.STRING(512)
+})
 
 Post.hasOne(Ask)
 Ask.belongsTo(Post)
@@ -627,7 +638,6 @@ User.hasMany(Ask, {
   as: 'userAsked',
   foreignKey: 'userAsker'
 })
-
 Post.hasOne(QuestionPoll)
 QuestionPoll.belongsTo(Post)
 QuestionPoll.hasMany(QuestionPollQuestion, { onDelete: 'cascade' })
