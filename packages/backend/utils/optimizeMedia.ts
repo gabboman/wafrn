@@ -80,10 +80,12 @@ export default async function optimizeMedia(
         await conversion.resize(options.maxSize, options.maxSize)
       }
       if (fileAndExtension[1] == 'avif') {
+        /* disable lossless images as it takes time and space that bsky dislikes
         conversion.avif({
           quality: 80,
           lossless: inputPath.toLowerCase().endsWith('png')
         })
+         */
       }
       await conversion.toFile(outputPath)
       if (!doNotDelete) {

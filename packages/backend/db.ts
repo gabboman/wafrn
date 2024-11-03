@@ -165,6 +165,9 @@ const User = sequelize.define(
     },
     bskyAuthData: {
       type: Sequelize.TEXT
+    },
+    bskyDid: {
+      type: Sequelize.STRING(768)
     }
 
   },
@@ -172,11 +175,7 @@ const User = sequelize.define(
     indexes: [
       {
         unique: false,
-        fields: [
-          {
-            attribute: 'remoteInbox'
-          }
-        ],
+        fields: ['remoteInbox'],
         type: 'FULLTEXT'
       },
       {
@@ -190,6 +189,10 @@ const User = sequelize.define(
       {
         unique: true,
         fields: [sequelize.fn('lower', sequelize.col('url'))]
+      },
+      {
+        unique: true,
+        fields: ['bskyDid']
       }
     ]
   }
@@ -313,6 +316,7 @@ const Post = sequelize.define(
     },
     content_warning: Sequelize.TEXT,
     content: Sequelize.TEXT,
+    markdownContent: Sequelize.TEXT,
     title: {
       type: Sequelize.STRING(256),
       allowNull: true,
@@ -323,6 +327,8 @@ const Post = sequelize.define(
       allowNull: true,
       unique: true
     },
+    bskyUri: Sequelize.STRING(768),
+    bskyCid: Sequelize.STRING(768),
     privacy: Sequelize.INTEGER,
     featured: {
       type: Sequelize.BOOLEAN,
