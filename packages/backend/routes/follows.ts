@@ -76,11 +76,7 @@ export default function followsRoutes(app: Application) {
     try {
       const posterId = req.jwtData?.userId
       if (req.body?.userId) {
-        const userUnfollowed = await User.findOne({
-          where: {
-            id: req.body.userId
-          }
-        })
+        const userUnfollowed = await User.findByPk(req.body.userId) as Model<any, any>
 
         if (userUnfollowed.remoteId) {
           const localUser = await User.findOne({ where: { id: posterId } })

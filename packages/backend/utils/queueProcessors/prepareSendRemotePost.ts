@@ -3,7 +3,17 @@ import { logger } from '../logger.js'
 import { postPetitionSigned } from '../activitypub/postPetitionSigned.js'
 import { postToJSONLD } from '../activitypub/postToJSONLD.js'
 import { LdSignature } from '../activitypub/rsa2017.js'
-import { FederatedHost, Post, User, PostHostView, RemoteUserPostView, sequelize } from '../../db.js'
+import {
+  FederatedHost,
+  Post,
+  User,
+  PostHostView,
+  RemoteUserPostView,
+  sequelize,
+  Media,
+  Quotes,
+  PostTag
+} from '../../db.js'
 import { environment } from '../../environment.js'
 import { Job, Queue } from 'bullmq'
 import {Agent, BskyAgent, CredentialSession} from '@atproto/api'
@@ -198,12 +208,44 @@ async function prepareSendRemotePostWorker(job: Job) {
 
   if(post.privacy === 0 && localUser.enableBsky && environment.enableBsky) {
     try {
-      // ok the user has bluesky time to send the post
-      const agent = await getAtProtoSession(localUser)
-      const bskyPost = await agent.post(await postToAtproto(post, agent));
-      post.bskyUri = bskyPost.uri;
-      post.bskyCid = bskyPost.cid;
-      await post.save();
+      // if parent has no bsky data we dont reblog
+      const parent = await Post.findByPk(post.parentId) as Model<any, any>;
+      if(!parent || parent.bskyUri) {
+        // ok the user has bluesky time to send the post
+        const agent = await getAtProtoSession(localUser)
+        let isReblog = false;
+        if(post.content == '' && post.content_warning == "" && post.parentId) {
+          const mediaCount = await Media.count({
+            where: {
+              postId: post.id
+            }
+          })
+          const quotesCount = await Quotes.count({
+            where: {
+              quoterPostId: post.id
+            }
+          })
+          const tagsCount = await PostTag.count({
+            where: {
+              postId: post.id
+            }
+          })
+          if(mediaCount + quotesCount + tagsCount === 0) {
+            isReblog = true;
+            if(parent.bskyUri) {
+              const {uri} = await agent.repost(parent.bskyUri, parent.bskyCid)
+              post.bskyUri = uri;
+              await post.save();
+            }
+          }
+        } if(!isReblog) {
+          const bskyPost = await agent.post(await postToAtproto(post, agent));
+          post.bskyUri = bskyPost.uri;
+          post.bskyCid = bskyPost.cid;
+          await post.save();
+        }
+      }
+
     } catch(error) {
       logger.warn({
         message: 'Error while posting to bsky',

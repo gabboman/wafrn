@@ -1,12 +1,33 @@
 import {Model} from "sequelize";
 import {BskyAgent, RichText} from "@atproto/api";
-import {Media} from "../../db.js";
+import {Media, Post, Quotes} from "../../db.js";
 import {environment} from "../../environment.js";
 import fs from "fs/promises";
 
-// TODO in reply to.
 async function postToAtproto(post: Model<any, any>, agent: BskyAgent) {
+  const quotedPostId = await Quotes.findOne({
+    where: {
+      quoterPostId: post.id
+    }
+  }) as Model<any, any>
+  let bskyQuote;
+  let quotedPost;
+  if(quotedPostId) {
+    quotedPost = await Post.findByPk(quotedPostId.quotedPostId);
+    bskyQuote =  {
+      "$type": "app.bsky.embed.record",
+      "record": {
+        "uri": quotedPost.bskyUri,
+        "cid": quotedPost.bskyCid
+      }
+    }
+  }
+
   let postText: string = post.markdownContent
+  if (quotedPost && ! bskyQuote) {
+    const remoteId = quotedPost.remoteId ? quotedPost.remoteId : `https://${environment.instanceUrl}/fediverse/post/${quotedPost.id}`;
+    postText = postText + "\nRE: " + remoteId
+  }
   const medias = await Media.findAll({
     where: {
       postId: post.id
@@ -53,6 +74,31 @@ async function postToAtproto(post: Model<any, any>, agent: BskyAgent) {
       images: await Promise.all(bskyMedias)
     }
   }
+  if(post.parentId) {
+    // ok this post is in reply to something
+    const parent = await Post.findByPk(post.parentId) as Model<any, any>
+    const ancestors = await post.getAncestors({
+      where: {
+        hierarchyLevel: 1
+      }
+    })
+    const rootPost = ancestors[0]
+    res.reply = {
+      root: {
+        uri: rootPost.bskyUri,
+        cid: rootPost.bskyCid,
+      },
+      parent: {
+        uri: parent.bskyUri,
+        cid: parent.bskyCid,
+      }
+    }
+  }
+
+  if(bskyQuote) {
+    res.embed = bskyQuote
+  }
+
   return res;
 }
 
