@@ -30,5 +30,6 @@ export interface ProcessedPost {
   emojiReactions: PostEmojiReaction[];
   quotes: ProcessedPost[];
   parentId?: string,
-  ask?: Ask
+  ask?: Ask,
+  markdownContent: string,
 }

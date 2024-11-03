@@ -175,6 +175,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
           emojiReactions: [],
           id: '872c9649-5043-460e-a9df-c35a568c8aef',
           content_warning: '',
+          markdownContent: '',
           content:
             '<p>To fully enjoy this hellsite, please consider joining us, <a href="/register" rel="noopener noreferrer" target="_blank">register into wafrn!</a></p><p><br></p><p>bring your twisted ideas onto others, share recipies of cake that swap the flour for mayo or hot sauce!</p><p><br></p><p><br></p><p>Consider <a href="/register" rel="noopener noreferrer" target="_blank">joining wafrn</a>!</p>',
           createdAt: new Date(),
