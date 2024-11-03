@@ -167,6 +167,7 @@ const User = sequelize.define(
       type: Sequelize.TEXT
     },
     bskyDid: {
+      unique: true,
       type: Sequelize.STRING(768)
     }
 
@@ -247,7 +248,12 @@ const Follows = sequelize.define(
     accepted: {
       type: Sequelize.BOOLEAN,
       defaultValue: false
-    }
+    },
+    bskyUri: {
+      type: Sequelize.STRING(768),
+      allowNull: true,
+      unique: true
+    },
   },
   {
     indexes: [

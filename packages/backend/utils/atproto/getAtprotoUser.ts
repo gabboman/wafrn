@@ -17,13 +17,14 @@ async function getAtprotoUser(handle, localUser) {
       followingCount:  data.followsCount,
       followersCount: data.followersCount,
       headerImage: data.banner,
+      // bsky does not has this function lol
+      manuallyAcceptsFollows: false,
     }
     let userFound = await User.findOne({
       where: {
         bskyDid: data.did
       }
     });
-    console.log(newData)
     if(userFound) {
       await userFound.update(newData);
       await userFound.save();
