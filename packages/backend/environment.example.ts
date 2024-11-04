@@ -13,7 +13,7 @@ export const environment = {
   // this was a dev thing. leave to true unless you are doing stuff in local or your media url is yourinstance/uploads (not recomended)
   removeFolderNameFromFileUploads: true,
   // we use now postgresql.
-  databaseConnectionString: 'postgresql://root:root@127.0.0.1/wafrn',
+  databaseConnectionString: 'postgresql://MAINDB/DBNAME',
   listenIp: '127.0.0.1',
   port: APPPORT,
   // In the case of you wantint to put fedi petitions in another thread, use a different port here. You will have to update your apache config
@@ -48,17 +48,17 @@ export const environment = {
   // There is a script that loads the file from this url and blocks the servers
   blocklistUrl: '',
   // In some cases we serve the frontend with the backend with a small preprocessing. We need the location of the frontend
-  frontedLocation: 'LOCATION_OF_FRONTEND_FULL_ROUTE',
+  frontedLocation: 'FRONTEND_PATH',
   // oh yes, you need TWO reis connections, one for queues other for cache
   bullmqConnection: {
-    host: 'localhost',
-    port: 6379,
+    host: 'REDISHOST',
+    port: REDISPORT,
     db: 0
   },
   // second database used for cache
   redisioConnection: {
-    host: 'localhost',
-    port: 6379,
+    host: 'REDISHOST',
+    port: REDISPORT,
     db: 1
   },
   // this will create a backendlog.log file on the folder superior to this one.
