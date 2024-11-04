@@ -1,7 +1,4 @@
-FROM node:bookworm as builder
-
-#RUN apt-get update && apt-get upgrade -y
-#RUN apt-get install -y git curl lsb-release wget dialog build-essential ffmpeg webp graphicsmagick tmux sudo
+FROM node:20-bookworm as builder
 
 WORKDIR /wafrn
 COPY . .
@@ -11,5 +8,6 @@ RUN npm ci && npm run frontend:deploy
 
 FROM caddy:latest
 
-COPY --from=builder /wafrn/packages/frontend/dist/ /usr/local/apache2/htdocs/
+COPY --from=builder /wafrn/packages/frontend/dist/ /usr/share/caddy/
+
 

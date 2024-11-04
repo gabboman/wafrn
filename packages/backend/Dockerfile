@@ -43,7 +43,7 @@ COPY packages/backend/environment.example.ts packages/backend/environment.ts
 # to prevent node err: cannot open logs/*.log
 RUN mkdir -p packages/backend/logs
 
-# do sed with args here
+# do sed with args here, these really should be envvars instead of doing this
 RUN sed -i "s/ADMINUSER/${ADMINUSER}/g" packages/backend/environment.ts && \
   sed -i "s/ADMINEMAIL/${ADMINEMAIL}/g" packages/backend/environment.ts && \
   sed -i "s/ADMINPASSWORD/${ADMINPASSWORD}/g" packages/backend/environment.ts && \
@@ -61,8 +61,6 @@ RUN sed -i "s/ADMINUSER/${ADMINUSER}/g" packages/backend/environment.ts && \
   sed -i "s/REDISPORT/${REDISPORT}/g" packages/backend/environment.ts && \
   sed -i "s/FRONTEND_PATH/${FRONTEND_PATH}/g" packages/backend/environment.ts
 
-
 RUN npm ci
 
 ENTRYPOINT [ "npm", "run", "backend:serve"]
-#ENTRYPOINT [ "cat", "packages/backend/environment.ts" ]
