@@ -32,8 +32,10 @@ services:
     build:
       context: .
       dockerfile: packages/frontend/Dockerfile
+      args:
+        DOMAINNAME: wafrn.example.com
     ports:
-      - 9992:8080
+      - 9992:80
 
   db:
     image: postgres:17

@@ -61,6 +61,6 @@ RUN sed -i "s/ADMINUSER/${ADMINUSER}/g" packages/backend/environment.ts && \
   sed -i "s/REDISPORT/${REDISPORT}/g" packages/backend/environment.ts && \
   sed -i "s/FRONTEND_PATH/${FRONTEND_PATH}/g" packages/backend/environment.ts
 
-RUN npm ci
+RUN npm install && npm ci
 
 ENTRYPOINT [ "npm", "run", "backend:serve"]
