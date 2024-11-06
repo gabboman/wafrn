@@ -1,25 +1,65 @@
-version: '3'
 services:
+  backend:
+    image: wafrn-backend
+    build:
+      context: .
+      dockerfile: packages/backend/Dockerfile
+      args:
+        ADMINUSER: admin
+        ADMINEMAIL: "admin@example.com"
+        ADMINPASSWORD: example_password # CHANGEME
+        JWTSECRET: secret
+        MAINDB: root:root@db:5432 # CHANGEME: 2nd 'root' is the password
+        DBNAME: wafrn
+        DOMAINNAME: wafrn.example.com
+        PORT: 9000
+        SMTPHOST: smtp.example.com
+        SMTPUSER: wafrn
+        SMTPPORT: 9003
+        SMTPPASSWORD: example_password # CHANGEME
+        SMTPFROM: wafrn@example.com
+        REDISHOST: redis
+        REDISPORT: 6379
+        FRONTEND_PATH: "\\/wafrn\\/packages\\/frontend" # needs to be escaped for the sed command (\/) and yaml (\\)
+    depends_on:
+      - db
+      - redis
+    ports:
+      - 9000:9000
+    restart: unless-stopped
+
+  frontend:
+    build:
+      context: .
+      dockerfile: packages/frontend/Dockerfile
+      args:
+        DOMAINNAME: wafrn.example.com
+    ports:
+      - 9992:80
+
   db:
     image: postgres:17
     restart: always
     environment:
       POSTGRES_USER: root
       POSTGRES_PASSWORD: root
+      POSTGRES_DB: wafrn
     volumes:
       - dbpg:/var/lib/postgresql
     ports:
       - 5432:5432
+
   adminer:
     image: adminer
     restart: always
     ports:
       - 8080:8080
+
   redis:
     image: redis:7.2.4
     restart: always
     ports:
-      - '6379:6379'
+      - "6379:6379"
 
 volumes:
   dbpg:
