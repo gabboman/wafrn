@@ -20,7 +20,7 @@ export class LoginService {
     private utils: UtilsService,
     private jwt: JwtService,
     private postsService: PostsService
-  ) { }
+  ) {}
 
   checkUserLoggedIn(): boolean {
     return this.jwt.tokenValid();
@@ -30,7 +30,10 @@ export class LoginService {
     let success = false;
     try {
       const petition: any = await this.http
-        .post(`${EnvironmentService.environment.baseUrl}/login`, loginForm.value)
+        .post(
+          `${EnvironmentService.environment.baseUrl}/login`,
+          loginForm.value
+        )
         .toPromise();
       if (petition.success) {
         localStorage.setItem('authToken', petition.token);
@@ -126,13 +129,45 @@ export class LoginService {
     img: File | undefined
   ): Promise<boolean> {
     let success = false;
+
+    const optionFormKeyMap = {
+      disableForceAltText: 'wafrn.disableForceAltText',
+      federateWithThreads: 'wafrn.federateWithThreads',
+      asksLevel: 'wafrn.public.asks',
+      forceClassicLogo: 'wafrn.forceClassicLogo',
+      defaultPostEditorPrivacy: 'wafrn.defaultPostEditorPrivacy',
+      mutedWords: 'wafrn.mutedWords',
+    };
+
     try {
-      const payload = this.utils.objectToFormData(updateProfileForm.value);
+      const { name, description, manuallyAcceptsFollows, ...form } =
+        updateProfileForm.value;
+
+      const payload = this.utils.objectToFormData({
+        name,
+        description,
+        manuallyAcceptsFollows,
+      });
+
+      const options = [];
+      for (const key in form) {
+        if (form[key]) {
+          const name = optionFormKeyMap[key as keyof typeof optionFormKeyMap];
+          const value = form[key];
+          options.push({ name, value });
+        }
+      }
+
+      payload.append('options', JSON.stringify(options));
+
       if (img) {
         payload.append('avatar', img);
       }
       const petition: any = await firstValueFrom(
-        this.http.post(`${EnvironmentService.environment.baseUrl}/editProfile`, payload)
+        this.http.post(
+          `${EnvironmentService.environment.baseUrl}/editProfile`,
+          payload
+        )
       );
       if (petition.success) {
         success = true;
@@ -156,6 +191,6 @@ export class LoginService {
 
   getForceClassicLogo(): boolean {
     const res = localStorage.getItem('forceClassicLogo');
-    return res == "true";
+    return res == 'true';
   }
 }

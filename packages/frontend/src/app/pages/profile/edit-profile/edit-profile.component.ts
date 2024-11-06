@@ -46,7 +46,7 @@ export class EditProfileComponent implements OnInit {
     forceClassicLogo: new FormControl(false),
     manuallyAcceptsFollows: new FormControl(false),
     forceOldEditor: new FormControl(false),
-    mutedWords: new FormControl('')
+    mutedWords: new FormControl(''),
   });
 
   constructor(
@@ -67,7 +67,7 @@ export class EditProfileComponent implements OnInit {
         blogDetails['avatar'] = '';
         this.editProfileForm.patchValue(blogDetails);
         this.editProfileForm.controls['disableNSFWFilter'].patchValue(
-          this.mediaService.checkNSFWFilterDisabled
+          this.mediaService.checkNSFWFilterDisabled()
         );
         this.editProfileForm.controls['defaultPostEditorPrivacy'].patchValue(
           this.loginService.getUserDefaultPostPrivacyLevel()
@@ -83,11 +83,18 @@ export class EditProfileComponent implements OnInit {
         this.editProfileForm.controls['disableForceAltText'].patchValue(
           disableForceAltText === 'true'
         );
-        const forceOldEditor = localStorage.getItem('forceOldEditor') === 'true'
-        this.editProfileForm.controls['forceOldEditor'].patchValue(forceOldEditor);
+        const forceOldEditor =
+          localStorage.getItem('forceOldEditor') === 'true';
+        this.editProfileForm.controls['forceOldEditor'].patchValue(
+          forceOldEditor
+        );
         const publicOptions = blogDetails.publicOptions;
-        const askLevel = publicOptions.find((elem) => elem.optionName == "wafrn.public.asks")
-        this.editProfileForm.controls['asksLevel'].patchValue(askLevel ? parseInt(askLevel.optionValue) : 2)
+        const askLevel = publicOptions.find(
+          (elem) => elem.optionName == 'wafrn.public.asks'
+        );
+        this.editProfileForm.controls['asksLevel'].patchValue(
+          askLevel ? parseInt(askLevel.optionValue) : 2
+        );
         const mutedWords = localStorage.getItem('mutedWords');
         if (mutedWords) {
           this.editProfileForm.controls['mutedWords'].patchValue(mutedWords);
