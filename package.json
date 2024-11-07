@@ -7,6 +7,7 @@
     "full:upgrade": "git pull && pm2 restart all && npm run frontend:deploy",
     "backend:prettier-format": "cd packages/backend && prettier --config .prettierrc '**/*.ts' --write",
     "backend:develop": "cd packages/backend && tsx watch index.ts",
+    "backend:atproto": "cd packages/backend && tsx watch atproto.ts",
     "backend:worker": "cd packages/backend && tsx utils/workers.ts",
     "backend:serve": "cd packages/backend && tsx index.ts",
     "backend:cohostImport": "cd packages/backend && tsx utils/maintenanceTasks/importcohost.ts",

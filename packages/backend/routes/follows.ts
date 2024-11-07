@@ -46,6 +46,7 @@ export default function followsRoutes(app: Application) {
           const followResult = await agent.follow(userToBeFollowed.bskyDid)
           if(followResult.validationStatus == 'valid') {
             await follow(posterId, req.body.userId, res, followResult)
+            redisCache.del('follows:bsky')
             return res.send({success: true})
           } else {
             res.sendStatus(500)
@@ -97,6 +98,7 @@ export default function followsRoutes(app: Application) {
         if(follow?.bskyUri) {
           const agent = await getAtProtoSession(await User.findByPk(posterId));
           await agent.deleteFollow(follow.bskyUri)
+          redisCache.del('follows:bsky')
         }
         userUnfollowed.removeFollower(posterId)
         redisCache.del('follows:full:' + posterId)

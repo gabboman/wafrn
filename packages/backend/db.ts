@@ -574,6 +574,11 @@ const UserLikesPostRelations = sequelize.define(
       allowNull: true,
       unique: true
     },
+    bskyUri: {
+      type: Sequelize.STRING(768),
+      allowNull: true,
+      unique: true
+    }
   },
   {
     indexes: [

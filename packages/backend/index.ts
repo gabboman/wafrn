@@ -4,7 +4,14 @@ import bodyParser from 'body-parser'
 import { environment } from './environment.js'
 import { logger } from './utils/logger.js'
 
-import { workerInbox, workerPrepareSendPost, workerGetUser, workerSendPostChunk } from './utils/workers.js'
+import {
+  workerInbox,
+  workerPrepareSendPost,
+  workerGetUser,
+  workerSendPostChunk,
+  workerProcessFirehose,
+  workerDeletePost, workerProcessRemotePostView, workerProcessRemoteMediaData
+} from './utils/workers.js'
 
 import { SignedRequest } from './interfaces/fediverse/signedRequest.js'
 import { activityPubRoutes } from './routes/activitypub/activitypub.js'
@@ -104,35 +111,21 @@ frontend(app)
 
 app.listen(PORT, environment.listenIp, () => {
   logger.info('Started app')
-
+  const workers = [
+    workerInbox, workerSendPostChunk, workerPrepareSendPost, workerGetUser, workerDeletePost, workerProcessRemotePostView, workerProcessRemoteMediaData, workerProcessFirehose
+  ]
   if (environment.workers.mainThread) {
-    workerInbox.on('completed', (job) => { })
-
-    workerInbox.on('failed', (job, err) => {
-      logger.warn(`${job?.id} has failed with ${err.message}`)
-    })
-
-    workerPrepareSendPost.on('completed', (job) => { })
-
-    workerPrepareSendPost.on('failed', (job, err) => {
-      console.warn(`sending post ${job?.id} has failed with ${err.message}`)
-    })
-
-    workerGetUser.on('completed', (job) => { })
-    workerGetUser.on('failed', (job, err) => {
-      console.debug({ message: `get user ${job?.id} has failed with ${err.message}`, data: job?.data, error: err })
-    })
-
-    workerSendPostChunk.on('completed', (job) => { })
-
-    workerSendPostChunk.on('failed', (job, err) => {
-      console.warn(`sending post to some inboxes ${job?.id} has failed with ${err.message}`)
+    workers.forEach((worker) => {
+      worker.on('error', (err) => {
+        logger.warn({
+          message: `worker ${worker.name} failed`,
+          error: err
+        })
+      })
     })
   } else {
-    workerInbox.pause()
-    workerPrepareSendPost.pause()
-    workerSendPostChunk.pause()
-    // we do the getremoteactor here too
-    workerGetUser.pause()
+    workers.forEach(async (worker) => {
+      await worker.pause()
+    })
   }
 })
