@@ -153,7 +153,7 @@ export class LoginService {
       for (const key in form) {
         if (form[key]) {
           const name = optionFormKeyMap[key as keyof typeof optionFormKeyMap];
-          const value = form[key];
+          const value = JSON.stringify(form[key]);
           options.push({ name, value });
         }
       }
