@@ -67,10 +67,7 @@ export default function userRoutes(app: Application) {
               [Op.or]: [
                 { email: req.body.email.toLowerCase() },
                 {
-                  literal: sequelize.where(
-                    sequelize.fn('lower', sequelize.col('url')),
-                    req.body.url.toLowerCase()
-                  )
+                  literal: sequelize.where(sequelize.fn('lower', sequelize.col('url')), req.body.url.toLowerCase())
                 }
               ]
             }
@@ -111,7 +108,7 @@ export default function userRoutes(app: Application) {
               activationCode,
               privateKey,
               publicKey,
-              isBot: false,
+              isBot: false
             }
 
             const userWithEmail = User.create(user)
@@ -120,8 +117,9 @@ export default function userRoutes(app: Application) {
               : `Welcome to ${environment.instanceUrl}!`
             const mailBody = environment.reviewRegistrations
               ? `Hello ${req.body.url}, at this moment we are manually reviewing registrations. You will recive an email from us once it's accepted`
-              : `<h1>Welcome to ${environment.instanceUrl}</h1> To activate your account <a href="${environment.instanceUrl
-              }/activate/${encodeURIComponent(req.body.email.toLowerCase())}/${activationCode}">click here!</a>`
+              : `<h1>Welcome to ${environment.instanceUrl}</h1> To activate your account <a href="${
+                  environment.instanceUrl
+                }/activate/${encodeURIComponent(req.body.email.toLowerCase())}/${activationCode}">click here!</a>`
             const emailSent = environment.disableRequireSendEmail
               ? true
               : sendActivationEmail(req.body.email.toLowerCase(), activationCode, mailHeader, mailBody)
@@ -189,51 +187,21 @@ export default function userRoutes(app: Application) {
           }
         })
         if (req.body) {
+          const { name, description, manuallyAcceptsFollows, options: optionJSON } = req.body
+
           const avaiableEmojis = await getAvaiableEmojis()
           let userEmojis: any[] = []
-          if (req.body.manuallyAcceptsFollows) {
-            user.manuallyAcceptsFollows = req.body.manuallyAcceptsFollows
+          if (manuallyAcceptsFollows) {
+            user.manuallyAcceptsFollows = manuallyAcceptsFollows
           }
-          if (req.body.description) {
-            user.description = req.body.description
-            userEmojis = userEmojis.concat(
-              avaiableEmojis?.filter((emoji: any) => req.body.description.includes(emoji.name))
-            )
+          if (description) {
+            user.description = description
+            userEmojis = userEmojis.concat(avaiableEmojis?.filter((emoji: any) => description.includes(emoji.name)))
           }
-          // TODO find a better way of doing this than manualy doing stuff
 
-          const options: { name: string, value: string, public?: boolean }[] = [
-            { name: "wafrn.disableForceAltText", value: req.body.disableForceAltText },
-            { name: 'wafrn.federateWithThreads', value: req.body.federateWithThreads },
-            { name: 'wafrn.public.asks', value: req.body.asksLevel, public: true },
-            { name: 'wafrn.forceClassicLogo', value: (req.body.forceClassicLogo == 'true').toString() },
-            { name: 'wafrn.defaultPostEditorPrivacy', value: req.body.defaultPostEditorPrivacy },
-            { name: 'wafrn.mutedWords', value: req.body.mutedWords }
-          ]
-
-          for (const option of options) {
-            if (option.value) {
-              const userOption = await UserOptions.findOne({
-                where: {
-                  userId: posterId,
-                  optionName: option.name
-                }
-              })
-              userOption ? await userOption.update({
-                optionValue: option.value.toString(),
-                public: option.public == true
-              })
-                : await UserOptions.create({
-                  userId: posterId,
-                  optionName: option.name,
-                  optionValue: option.value,
-                  public: option.public == true
-                });
-            }
-          }
-          if (req.body.name) {
-            user.name = req.body.name
-            userEmojis = userEmojis.concat(avaiableEmojis?.filter((emoji: any) => req.body.name.includes(emoji.name)))
+          if (name) {
+            user.name = name
+            userEmojis = userEmojis.concat(avaiableEmojis?.filter((emoji: any) => name.includes(emoji.name)))
           }
 
           if (req.file != null) {
@@ -243,11 +211,7 @@ export default function userRoutes(app: Application) {
               user.avatar = avatarURL
             }
           }
-          await UserEmojiRelation.destroy({
-            where: {
-              userId: user.id
-            }
-          })
+
           await UserEmojiRelation.destroy({
             where: {
               userId: user.id
@@ -257,6 +221,45 @@ export default function userRoutes(app: Application) {
           user.setEmojis([...new Set(userEmojis)])
           redisCache.del('userOptions:' + posterId)
           await user.save()
+
+          const _options = JSON.parse(optionJSON)
+          if (Array.isArray(_options)) {
+            const options = _options.map((opt) => {
+              let value = opt.value
+              if (opt.name === 'wafrn.forceClassicLogo') {
+                value = String(value == 'true')
+              }
+
+              return {
+                ...opt,
+                value,
+                public: opt.name.startsWith('wafrn.public')
+              }
+            })
+
+            for (const option of options) {
+              if (option.value) {
+                const userOption = await UserOptions.findOne({
+                  where: {
+                    userId: posterId,
+                    optionName: option.name
+                  }
+                })
+                userOption
+                  ? await userOption.update({
+                      optionValue: option.value.toString(),
+                      public: option.public == true
+                    })
+                  : await UserOptions.create({
+                      userId: posterId,
+                      optionName: option.name,
+                      optionValue: option.value,
+                      public: option.public == true
+                    })
+              }
+            }
+          }
+
           success = true
         }
       } catch (error) {
@@ -444,10 +447,7 @@ export default function userRoutes(app: Application) {
           }
         ],
         where: {
-          literal: sequelize.where(
-            sequelize.fn('lower', sequelize.col('url')),
-            blogId
-          ),
+          literal: sequelize.where(sequelize.fn('lower', sequelize.col('url')), blogId),
           banned: false
         }
       })
@@ -458,19 +458,19 @@ export default function userRoutes(app: Application) {
       let followed = blog.url.startsWith('@')
         ? blog.followingCount
         : Follows.count({
-          where: {
-            followerId: blog.id,
-            accepted: true
-          }
-        })
+            where: {
+              followerId: blog.id,
+              accepted: true
+            }
+          })
       let followers = blog.url.startsWith('@')
         ? blog.followerCount
         : Follows.count({
-          where: {
-            followedId: blog.id,
-            accepted: true
-          }
-        })
+            where: {
+              followedId: blog.id,
+              accepted: true
+            }
+          })
       const publicOptions = UserOptions.findAll({
         where: {
           userId: blog.id,
@@ -634,10 +634,7 @@ export default function userRoutes(app: Application) {
     if (url) {
       const user = await User.findOne({
         where: {
-          literal: sequelize.where(
-            sequelize.fn('lower', sequelize.col('url')),
-            url.toLowerCase()
-          )
+          literal: sequelize.where(sequelize.fn('lower', sequelize.col('url')), url.toLowerCase())
         }
       })
       if (user) {
@@ -710,10 +707,7 @@ export default function userRoutes(app: Application) {
     const url = req.params?.url as string
     const userRecivingAsk = await User.findOne({
       where: {
-        literal: sequelize.where(
-          sequelize.fn('lower', sequelize.col('url')),
-          url.toLowerCase()
-        )
+        literal: sequelize.where(sequelize.fn('lower', sequelize.col('url')), url.toLowerCase())
       }
     })
     const userAskLevelDBOption = await UserOptions.findOne({
