@@ -1,4 +1,5 @@
-img, video {
+img,
+video {
   max-width: 100%;
   width: 100%;
 }
@@ -18,6 +19,10 @@ img, video {
     filter: grayscale(1) contrast(0%);
     background-color: grey;
   }
+}
+
+.img-video-container {
+  position: relative;
 }
 
 .img-cw-text {
