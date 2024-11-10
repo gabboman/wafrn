@@ -21,7 +21,7 @@ import AuthorizedRequest from '../interfaces/authorizedRequest.js'
 import { LdSignature } from '../utils/activitypub/rsa2017.js'
 import { deletePostCommon } from '../utils/deletePost.js'
 import { redisCache } from '../utils/redis.js'
-import {getAtProtoSession} from "../utils/atproto/getAtProtoSession.js";
+import {getAtProtoSession} from "../atproto/utils/getAtProtoSession.js";
 
 const deletePostQueue = new Queue('deletePostQueue', {
   connection: environment.bullmqConnection,

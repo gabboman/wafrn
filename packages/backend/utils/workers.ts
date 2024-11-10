@@ -7,7 +7,7 @@ import { getRemoteActorIdProcessor } from './queueProcessors/getRemoteActorIdPro
 import { logger } from './logger.js'
 import { processRemotePostView } from './queueProcessors/processRemotePostView.js'
 import { processRemoteMedia } from './queueProcessors/remoteMediaProcessor.js'
-import {processFirehose} from "./atproto/workers/processFirehoseWorker.js";
+import {processFirehose} from "../atproto/workers/processFirehoseWorker.js";
 
 logger.info('starting workers')
 const workerInbox = new Worker('inbox', (job: Job) => inboxWorker(job), {

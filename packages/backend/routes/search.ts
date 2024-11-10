@@ -18,7 +18,7 @@ import { getallBlockedServers } from '../utils/cacheGetters/getAllBlockedServers
 import { getUnjointedPosts } from '../utils/baseQueryNew.js'
 import getFollowedsIds from '../utils/cacheGetters/getFollowedsIds.js'
 import { getUserEmojis } from '../utils/cacheGetters/getUserEmojis.js'
-import {getAtprotoUser} from "../utils/atproto/getAtprotoUser.js";
+import {getAtprotoUser} from "../atproto/utils/getAtprotoUser.js";
 export default function searchRoutes(app: Application) {
   app.get('/api/v2/search/', authenticateToken, async (req: AuthorizedRequest, res: Response) => {
     // const success = false;

@@ -15,7 +15,7 @@ import { getNotYetAcceptedFollowedids } from '../utils/cacheGetters/getNotYetAcc
 import { getUserOptions } from '../utils/cacheGetters/getUserOptions.js'
 import { getMutedPosts } from '../utils/cacheGetters/getMutedPosts.js'
 import { environment } from '../environment.js'
-import {getAtProtoSession} from "../utils/atproto/getAtProtoSession.js";
+import {getAtProtoSession} from "../atproto/utils/getAtProtoSession.js";
 
 export default function followsRoutes(app: Application) {
   app.post('/api/follow', authenticateToken, async (req: AuthorizedRequest, res: Response) => {

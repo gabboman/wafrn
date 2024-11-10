@@ -1,8 +1,7 @@
 import { Firehose } from "@skyware/firehose";
-import {getCacheAtDids} from "./utils/atproto/cache/getCacheAtDids.js";
+import {getCacheAtDids} from "./atproto/cache/getCacheAtDids.js";
 import {Queue} from "bullmq";
 import {environment} from "./environment.js";
-import {getAtProtoThread} from "./utils/atproto/getAtProtoThread.js";
 
 const firehose = new Firehose();
 

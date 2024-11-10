@@ -6,7 +6,7 @@ import { logger } from '../utils/logger.js'
 import { likePostRemote } from '../utils/activitypub/likePost.js'
 import AuthorizedRequest from '../interfaces/authorizedRequest.js'
 import { getUserOptions } from '../utils/cacheGetters/getUserOptions.js'
-import {getAtProtoSession} from "../utils/atproto/getAtProtoSession.js";
+import {getAtProtoSession} from "../atproto/utils/getAtProtoSession.js";
 import {Model} from "sequelize";
 
 export default function likeRoutes(app: Application) {

@@ -254,6 +254,11 @@ const Follows = sequelize.define(
       allowNull: true,
       unique: true
     },
+    bskyPath: {
+      type: Sequelize.STRING(768),
+      allowNull: true,
+      unique: true
+    }
   },
   {
     indexes: [
@@ -574,7 +579,7 @@ const UserLikesPostRelations = sequelize.define(
       allowNull: true,
       unique: true
     },
-    bskyUri: {
+    bskyPath: {
       type: Sequelize.STRING(768),
       allowNull: true,
       unique: true
