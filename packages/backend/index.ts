@@ -69,7 +69,11 @@ app.get('/api/', (req, res) =>
 app.use('/api/uploads', express.static('uploads'))
 
 app.use('/api/environment', (req: Request, res: Response) => {
-  res.send(environment.frontendEnvironment);
+  res.send({
+    ...environment.frontendEnvironment,
+    reviewRegistrations: environment.reviewRegistrations,
+    maxUploadSize: environment.uploadLimit
+  })
 })
 
 userRoutes(app)
@@ -106,24 +110,24 @@ app.listen(PORT, environment.listenIp, () => {
   logger.info('Started app')
 
   if (environment.workers.mainThread) {
-    workerInbox.on('completed', (job) => { })
+    workerInbox.on('completed', (job) => {})
 
     workerInbox.on('failed', (job, err) => {
       logger.warn(`${job?.id} has failed with ${err.message}`)
     })
 
-    workerPrepareSendPost.on('completed', (job) => { })
+    workerPrepareSendPost.on('completed', (job) => {})
 
     workerPrepareSendPost.on('failed', (job, err) => {
       console.warn(`sending post ${job?.id} has failed with ${err.message}`)
     })
 
-    workerGetUser.on('completed', (job) => { })
+    workerGetUser.on('completed', (job) => {})
     workerGetUser.on('failed', (job, err) => {
       console.debug({ message: `get user ${job?.id} has failed with ${err.message}`, data: job?.data, error: err })
     })
 
-    workerSendPostChunk.on('completed', (job) => { })
+    workerSendPostChunk.on('completed', (job) => {})
 
     workerSendPostChunk.on('failed', (job, err) => {
       console.warn(`sending post to some inboxes ${job?.id} has failed with ${err.message}`)

@@ -1,9 +1,9 @@
 services:
   backend:
-    image: wafrn-backend
     build:
-      context: .
-      dockerfile: packages/backend/Dockerfile
+      context: packages/backend
+      dockerfile: Dockerfile
+      # these args configure private env vars for the backend and public env vars for the frontend
       args:
         ADMINUSER: admin
         ADMINEMAIL: "admin@example.com"
@@ -11,7 +11,7 @@ services:
         JWTSECRET: secret
         MAINDB: root:root@db:5432 # CHANGEME: 2nd 'root' is the password
         DBNAME: wafrn
-        DOMAINNAME: wafrn.example.com
+        DOMAINNAME: localhost
         PORT: 9000
         SMTPHOST: smtp.example.com
         SMTPUSER: wafrn
@@ -20,20 +20,41 @@ services:
         SMTPFROM: wafrn@example.com
         REDISHOST: redis
         REDISPORT: 6379
+        LOG_SQL_QUERIES: false # this makes the logs really heavy, but might be useful for debugging
         FRONTEND_PATH: "\\/wafrn\\/packages\\/frontend" # needs to be escaped for the sed command (\/) and yaml (\\)
+        ## Uncomment and change these if you want to configure the frontend environment variables
+        # FRONTEND_LOGO: "\\/assets\\/logo.png"
+        # FRONTEND_URL: "localhost:9992"
+        # FRONTEND_SHORTEN_POSTS: 3
+        # FRONTEND_DISABLE_PWA: false
+        # FRONTEND_MAINTENANCE: false
+        ## You can use a full URL in the next three if you want
+        # FRONTEND_API_URL: "\\/api"
+        # FRONTEND_CACHE_URL: "\\/api\\/cache?media="
+        # FRONTEND_MEDIA_URL: "\\/api\\/uploads"
     depends_on:
       - db
       - redis
     ports:
       - 9000:9000
     restart: unless-stopped
+    environment:
+      - NODE_ENV=production
 
   frontend:
     build:
       context: .
       dockerfile: packages/frontend/Dockerfile
+      # these args configure apache redirections and headers
       args:
-        DOMAINNAME: wafrn.example.com
+        BACKEND_URL: backend:9000 # Important: Do not include the protocol (http://) here
+        FRONTEND_URL: localhost:9992
+        ## Uncomment and change these if want to configure server name and admin email for apache
+        # SERVER_NAME: localhost:9992
+        # ADMIN_EMAIL: admin@localhost:9992
+        ## Uncomment and change these if you have different URLs for the cache and media server
+        # CACHE_URL: localhost:9992
+        # MEDIA_URL: localhost:9992
     ports:
       - 9992:80
 
