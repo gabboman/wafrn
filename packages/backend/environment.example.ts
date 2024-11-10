@@ -1,8 +1,7 @@
 export const environment = {
-  // this makes the logs really heavy, but might be useful for queries
   prod: true,
   // this makes the logs really heavy, but might be useful for queries
-  logSQLQueries: false,
+  logSQLQueries: LOG_SQL_QUERIES,
   workers: {
     // if you set this to true, workers will start in the main thread. no need for starting the utils/workers.ts in other tmux tab
     mainThread: true,
@@ -14,7 +13,7 @@ export const environment = {
   removeFolderNameFromFileUploads: true,
   // we use now postgresql.
   databaseConnectionString: 'postgresql://MAINDB/DBNAME',
-  listenIp: '127.0.0.1',
+  listenIp: '0.0.0.0',
   port: APPPORT,
   // In the case of you wantint to put fedi petitions in another thread, use a different port here. You will have to update your apache config
   fediPort: APPPORT,
@@ -100,15 +99,13 @@ export const environment = {
     img: 'https://DOMAINNAME/assets/logo.png'
   },
   frontendEnvironment: {
-    maxUploadSize: '250', // upload size in mb.
-    baseUrl: 'https://DOMAINNAME/api',
-    logo: '/assets/logo.png',
-    baseMediaUrl: 'https://DOMAINNAME/api/uploads',
-    externalCacheurl: 'https://DOMAINNAME/api/cache/?media=',
-    frontUrl: 'https://DOMAINNAME',
-    shortenPosts: 3,
-    reviewRegistrations: true,
-    disablePWA: false,
-    maintenance: false,
+    logo: 'FRONTEND_LOGO',
+    frontUrl: 'FRONTEND_URL',
+    baseUrl: 'FRONTEND_API_URL',
+    baseMediaUrl: 'FRONTEND_MEDIA_URL',
+    externalCacheurl: 'FRONTEND_CACHE_URL',
+    shortenPosts: FRONTEND_SHORTEN_POSTS,
+    disablePWA: FRONTEND_DISABLE_PWA,
+    maintenance: FRONTEND_MAINTENANCE
   }
 }

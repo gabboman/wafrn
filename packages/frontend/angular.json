@@ -1,10 +1,8 @@
 {
-  "$schema": "../../node_modules/@angular/cli/lib/config/schema.json",
+  "$schema": "./node_modules/@angular/cli/lib/config/schema.json",
   "cli": {
     "analytics": "2ed75e61-714f-4d01-bf90-aa49cf351d90",
-    "schematicCollections": [
-      "@angular-eslint/schematics"
-    ]
+    "schematicCollections": ["@angular-eslint/schematics"]
   },
   "version": 1,
   "newProjectRoot": "projects",
@@ -46,10 +44,10 @@
               "src/robots.txt"
             ],
             "styles": [
-              "../../node_modules/primeflex/primeflex.css",
-              "../../node_modules/quill/dist/quill.snow.css",
-              "../../node_modules/quill/dist/quill.core.css",
-              "../../node_modules/quill-mention-wafrn/dist/quill.mention.css",
+              "./node_modules/primeflex/primeflex.css",
+              "./node_modules/quill/dist/quill.snow.css",
+              "./node_modules/quill/dist/quill.core.css",
+              "./node_modules/quill-mention-wafrn/dist/quill.mention.css",
               "src/styles.scss"
             ],
             "scripts": [],
@@ -181,15 +179,11 @@
             "tsConfig": "tsconfig.spec.json",
             "polyfills": ["zone.js", "zone.js/testing"]
           }
-        }
-      ,
+        },
         "lint": {
           "builder": "@angular-eslint/builder:lint",
           "options": {
-            "lintFilePatterns": [
-              "src/**/*.ts",
-              "src/**/*.html"
-            ]
+            "lintFilePatterns": ["src/**/*.ts", "src/**/*.html"]
           }
         }
       }

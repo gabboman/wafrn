@@ -76,7 +76,11 @@ app.get('/api/', (req, res) =>
 app.use('/api/uploads', express.static('uploads'))
 
 app.use('/api/environment', (req: Request, res: Response) => {
-  res.send(environment.frontendEnvironment);
+  res.send({
+    ...environment.frontendEnvironment,
+    reviewRegistrations: environment.reviewRegistrations,
+    maxUploadSize: environment.uploadLimit
+  })
 })
 
 userRoutes(app)
@@ -115,14 +119,16 @@ app.listen(PORT, environment.listenIp, () => {
     workerInbox, workerSendPostChunk, workerPrepareSendPost, workerGetUser, workerDeletePost, workerProcessRemotePostView, workerProcessRemoteMediaData, workerProcessFirehose
   ]
   if (environment.workers.mainThread) {
-    workers.forEach((worker) => {
-      worker.on('error', (err) => {
-        logger.warn({
-          message: `worker ${worker.name} failed`,
-          error: err
+    workers.forEach(
+      (worker) => {
+        worker.on('error', (err) => {
+          logger.warn({
+            message: `worker ${worker.name} failed`,
+            error: err
+          })
         })
-      })
-    })
+      }
+    )
   } else {
     workers.forEach(async (worker) => {
       await worker.pause()
