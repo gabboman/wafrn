@@ -1,7 +1,7 @@
 import {getAtProtoSession} from "./getAtProtoSession.js";
 import {sequelize, User} from "../../db.js";
 import {ProfileViewBasic} from "@atproto/api/dist/client/types/app/bsky/actor/defs.js";
-import {Model} from "sequelize";
+import {Model, Op} from "sequelize";
 import {environment} from "../../environment.js";
 
 
@@ -9,7 +9,16 @@ async function getAtprotoUser(handle: string, localUser: Model<any, any>, petiti
   // we check if we found the user
   let userFound = await User.findOne({
     where: {
-      bskyDid: handle
+      [Op.or]: [
+        {
+        bskyDid: handle,
+        },
+        {
+          literal: sequelize.where(sequelize.fn('lower', sequelize.col('url')), handle.toLowerCase())
+
+        }
+      ]
+
     }
   });
   // sometimes we can get the dids and if its a local user we just return it and thats it

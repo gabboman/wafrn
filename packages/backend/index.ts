@@ -42,6 +42,7 @@ import checkIpBlocked from './utils/checkIpBlocked.js'
 import overrideContentType from './utils/overrideContentType.js'
 import swagger from 'swagger-ui-express'
 import { readFile } from 'fs/promises'
+import {Worker} from "bullmq";
 
 const swaggerJSON = JSON.parse(await readFile(new URL('./swagger.json', import.meta.url), 'utf-8'))
 // rest of the code remains same
@@ -116,8 +117,11 @@ frontend(app)
 app.listen(PORT, environment.listenIp, () => {
   logger.info('Started app')
   const workers = [
-    workerInbox, workerSendPostChunk, workerPrepareSendPost, workerGetUser, workerDeletePost, workerProcessRemotePostView, workerProcessRemoteMediaData, workerProcessFirehose
+    workerInbox, workerSendPostChunk, workerPrepareSendPost, workerGetUser, workerDeletePost, workerProcessRemotePostView, workerProcessRemoteMediaData
   ]
+  if(environment.enableBsky) {
+    workers.push(workerProcessFirehose as Worker)
+  }
   if (environment.workers.mainThread) {
     workers.forEach(
       (worker) => {

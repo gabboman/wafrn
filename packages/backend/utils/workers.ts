@@ -80,17 +80,17 @@ const workerProcessRemoteMediaData = new Worker(
   }
 )
 
-const workerProcessFirehose = new Worker(
+const workerProcessFirehose = environment.enableBsky ? new Worker(
   'firehoseQueue', async (job: Job) => await processFirehose(job),
   {
     connection: environment.bullmqConnection,
     metrics: {
       maxDataPoints: MetricsTime.ONE_WEEK * 2
     },
-    concurrency: environment.workers.low,
+    concurrency: environment.workers.medium,
     lockDuration: 120000
   }
-)
+) : null
 
 const workers = [
   workerInbox,
@@ -101,8 +101,10 @@ const workers = [
   workerSendPostChunk,
   workerProcessRemotePostView,
   workerProcessRemoteMediaData,
-  workerProcessFirehose
 ]
+if(environment.enableBsky) {
+  workers.push(workerProcessFirehose as Worker)
+}
 
 workers.forEach((worker) => {
   worker.on('error', (err) => {

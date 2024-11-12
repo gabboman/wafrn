@@ -2,11 +2,12 @@
 // returns the post id
 import {getAtProtoSession} from "./getAtProtoSession.js";
 import {QueryParams} from "@atproto/sync/dist/firehose/lexicons.js";
-import {Post, User} from "../../db.js";
+import {Media, Post, User} from "../../db.js";
 import {environment} from "../../environment.js";
 import {Model} from "sequelize";
 import {PostView, ThreadViewPost} from "@atproto/api/dist/client/types/app/bsky/feed/defs.js";
 import {getAtprotoUser} from "./getAtprotoUser.js";
+import {CreateOrUpdateOp} from "@skyware/firehose";
 const adminUser =  User.findOne({
   where: {
     url: environment.adminUser
@@ -14,8 +15,20 @@ const adminUser =  User.findOne({
 })
 const agent = await getAtProtoSession(await adminUser as Model<any, any>);
 
-async function getAtProtoThread(uri: string): Promise<string> {
-  const thread: ThreadViewPost = (await agent.getPostThread({uri: uri, depth: 1000, parentHeight: 1000})).data.thread as ThreadViewPost
+async function getAtProtoThread(uri: string, operation?: { operation: CreateOrUpdateOp, remoteUser: Model<any, any> }): Promise<string> {
+  if(operation ) {
+    const postExisting = await Post.findOne({
+      where: {
+        bskyUri: uri
+      }
+    })
+    if (postExisting) {
+      return postExisting.id;
+    }
+  }
+
+  // TODO optimize this a bit if post is not in reply to anything that we dont have
+  const thread: ThreadViewPost =  (await agent.getPostThread({uri: uri, depth: 1000, parentHeight: 1000})).data.thread as ThreadViewPost
 
   let parentId: string | undefined  = undefined
   if(thread.parent) {
@@ -51,7 +64,17 @@ async function processParents(thread: ThreadViewPost): Promise<string | undefine
 async function processSinglePost(post: PostView, parentId?: string): Promise<string | undefined> {
   const postCreator = await getAtprotoUser(post.author.did, await adminUser as Model<any, any>, post.author )
   if(postCreator) {
-    let needUpdate = true;
+    const medias = post.record.embed?.images?.map((media, index) => {
+      return {
+        mediaType: media.image.mimetype,
+        description: media.alt,
+        height: media.aspectRatio?.height,
+        width: media.aspectRatio?.width,
+        url: Buffer.from(media.image.original.ref.multihash.bytes).toString(),
+        mediaOrder: index
+      }
+    })
+
     const newData = {
       userId: postCreator.id,
       bskyCid: post.cid,
@@ -69,9 +92,10 @@ async function processSinglePost(post: PostView, parentId?: string): Promise<str
     })
     if(!postToProcess) {
       postToProcess = await Post.create(newData);
+      if(medias) {
+        await Media.bulkCreate(medias.map((media: any) => {return {...media, postId: postToProcess.id}}))
+      }
     }
-
-
     return postToProcess.id
   }
 

@@ -56,6 +56,19 @@ export default function statusRoutes(app: Application) {
         removeOnFail: 25000
       }
     })
+    const firehoseQueue = new Queue('firehoseQueue', {
+      connection: environment.bullmqConnection,
+      defaultJobOptions: {
+        removeOnComplete: true,
+        attempts: 6,
+        backoff: {
+          type: 'exponential',
+          delay: 25000
+        },
+        removeOnFail: 25000
+      }
+    })
+    const atProtoAwaiting = firehoseQueue.count()
     const sendPostFailed = sendPostsQueue.getMetrics('failed')
     const sendPostSuccess = sendPostsQueue.getMetrics('completed')
     const sendPostAwaiting = sendPostsQueue.count()
@@ -76,20 +89,16 @@ export default function statusRoutes(app: Application) {
       inboxSuccess,
       sendPostAwaiting,
       prepareSendPostAwaiting,
-      inboxAwaiting
+      inboxAwaiting,
+      atProtoAwaiting
     ])
 
     res.send({
-      sendPostFailed: await sendPostFailed,
-      sendPostSuccess: await sendPostSuccess,
       sendPostAwaiting: await sendPostAwaiting,
-      prepareSendFail: await prepareSendPostFail,
-      prepareSendSuccess: await prepareSendPostSuccess,
       prepareSendPostAwaiting: await prepareSendPostAwaiting,
-      inboxFail: await inboxFail,
-      inboxSuccess: await inboxSuccess,
       inboxAwaiting: await inboxAwaiting,
-      deletePostAwaiting: await deletePostAwaiting
+      deletePostAwaiting: await deletePostAwaiting,
+      atProtoAwaiting: await atProtoAwaiting
     })
   })
 }

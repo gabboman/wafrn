@@ -2,6 +2,7 @@ import { Firehose } from "@skyware/firehose";
 import {getCacheAtDids} from "./atproto/cache/getCacheAtDids.js";
 import {Queue} from "bullmq";
 import {environment} from "./environment.js";
+import {checkCommitMentions} from "./atproto/utils/checkCommitMentions.js";
 
 const firehose = new Firehose();
 
@@ -19,7 +20,8 @@ const firehoseQueue = new Queue('firehoseQueue', {
 })
 
 firehose.on("commit", async (commit) => {
-  if((await getCacheAtDids()).includes(commit.repo))
+  const cacheData = await getCacheAtDids()
+  if(cacheData.followedDids.includes(commit.repo) || await checkCommitMentions(commit, cacheData.localUserDids))
   for await (const op of commit.ops) {
     const data = {
       repo: commit.repo,

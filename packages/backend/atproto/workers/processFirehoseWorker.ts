@@ -54,8 +54,8 @@ async function processFirehose(job: Job) {
             break;
           }
           case 'app.bsky.feed.post': {
-            console.log(operation);
-
+            const postBskyUri = `at://${job.data.repo}/${operation.path}`;
+            await getAtProtoThread(postBskyUri, {operation, remoteUser})
             break;
           }
           case 'app.bsky.graph.follow': {
@@ -80,7 +80,6 @@ async function processFirehose(job: Job) {
       case 'delete': {
         // you need to check the path and do a deleete based on that.
         const deleteOperation = operation as DeleteOp;
-        console.log(deleteOperation.path);
         try {
           const opName = deleteOperation.path.split('app.bsky.graph.')[0].split('/')[0];
           switch (opName){
