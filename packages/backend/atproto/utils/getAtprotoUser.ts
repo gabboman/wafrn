@@ -49,7 +49,7 @@ async function getAtprotoUser(handle: string, localUser: Model<any, any>, petiti
     const newData = {
       bskyDid: data.did,
       url: '@' + data.handle,
-      name: data.displayName,
+      name: data.displayName ? data.displayName : data.handle,
       avatar: data.avatar,
       description: data.description,
       followingCount:  data.followsCount,

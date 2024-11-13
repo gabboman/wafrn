@@ -24,6 +24,37 @@ async function getAtProtoThread(uri: string, operation?: { operation: CreateOrUp
     })
     if (postExisting) {
       return postExisting.id;
+    } else {
+      const postObject: PostView = {
+        record: operation.operation.record,
+        cid: operation.operation.cid,
+        uri: uri,
+        indexedAt: new Date().toISOString(),
+        author: {
+          did: operation.remoteUser.bskyDid,
+          handle: operation.remoteUser.url.split('@')[1],
+          displayName: operation.remoteUser.name
+        }
+      }
+      if(postObject.record.reply) {
+        const parentFound = await Post.findOne({
+          where: {
+            bskyUri: postObject.record.reply.parent.uri
+          }
+        })
+        if(parentFound) {
+          return await processSinglePost(postObject, parentFound.id) as string;
+        } else {
+          const parentThread: ThreadViewPost =  (await agent.getPostThread({uri: postObject.record.reply.parent.uri, depth: 0, parentHeight: 1000})).data.thread as ThreadViewPost
+          const parentId = await processParents(parentThread as ThreadViewPost) as string
+          return await processSinglePost(postObject, parentId) as string;
+
+        }
+
+      } else {
+        return await processSinglePost(postObject) as string;
+      }
+
     }
   }
 
@@ -63,6 +94,15 @@ async function processParents(thread: ThreadViewPost): Promise<string | undefine
 
 async function processSinglePost(post: PostView, parentId?: string): Promise<string | undefined> {
   const postCreator = await getAtprotoUser(post.author.did, await adminUser as Model<any, any>, post.author )
+  if(!postCreator || !post) {
+    const usr = postCreator ? postCreator : await User.findOne({where: {url: environment.deletedUser}}) as Model<any, any>;
+    const invalidPost = await Post.create({
+      userId: usr.id,
+      content: `Failed to get atproto post`,
+      parentId: parentId
+    })
+    return invalidPost.id
+  }
   if(postCreator) {
     const medias = post.record.embed?.images?.map((media, index) => {
       return {

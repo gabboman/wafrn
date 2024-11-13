@@ -23,7 +23,7 @@ async function processFirehose(job: Job) {
         const record = operation.record;
         switch(record['$type']) {
           case 'app.bsky.feed.like': {
-            if((await getCacheAtDids()).includes(job.data.repo)) {
+            if((await getCacheAtDids()).followedDids.includes(job.data.repo)) {
               const postLikedUri = record.subject.uri;
               const postId = await getAtProtoThread(postLikedUri);
               if(postId) {
