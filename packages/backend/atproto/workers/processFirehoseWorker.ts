@@ -1,12 +1,12 @@
-import {Job} from "bullmq";
-import {getAtprotoUser} from "../utils/getAtprotoUser.js";
-import {Follows, Post, User, UserLikesPostRelations} from "../../db.js";
-import {environment} from "../../environment.js";
-import {Model} from "sequelize";
-import {logger} from "../../utils/logger.js";
-import {DeleteOp, RepoOp} from "@skyware/firehose";
-import {getAtProtoThread} from "../utils/getAtProtoThread.js";
-import {getCacheAtDids} from "../cache/getCacheAtDids.js";
+import { Job } from "bullmq";
+import { getAtprotoUser } from "../utils/getAtprotoUser.js";
+import { Follows, Post, User, UserLikesPostRelations } from "../../db.js";
+import { environment } from "../../environment.js";
+import { Model } from "sequelize";
+import { logger } from "../../utils/logger.js";
+import { DeleteOp, RepoOp } from "@skyware/firehose";
+import { getAtProtoThread } from "../utils/getAtProtoThread.js";
+import { getCacheAtDids } from "../cache/getCacheAtDids.js";
 
 const adminUser = User.findOne({
   where: {
@@ -17,16 +17,16 @@ async function processFirehose(job: Job) {
   // FIRST VERSION. THIS IS GONA BE DIRTY
   const remoteUser = await getAtprotoUser(job.data.repo, await adminUser as Model<any, any>);
   const operation: RepoOp = job.data.operation;
-   if(remoteUser && operation) {
+  if (remoteUser && operation) {
     switch (operation.action) {
       case 'create': {
         const record = operation.record;
-        switch(record['$type']) {
+        switch (record['$type']) {
           case 'app.bsky.feed.like': {
-            if((await getCacheAtDids()).followedDids.includes(job.data.repo)) {
+            if ((await getCacheAtDids()).followedDids.includes(job.data.repo)) {
               const postLikedUri = record.subject.uri;
               const postId = await getAtProtoThread(postLikedUri);
-              if(postId) {
+              if (postId) {
                 await UserLikesPostRelations.findOrCreate({
                   where: {
                     userId: remoteUser.id,
@@ -41,7 +41,7 @@ async function processFirehose(job: Job) {
                   bskyUri: record.subject.uri
                 }
               });
-              if(postInDb) {
+              if (postInDb) {
                 await UserLikesPostRelations.findOrCreate({
                   where: {
                     userId: remoteUser.id,
@@ -55,23 +55,23 @@ async function processFirehose(job: Job) {
           }
           case 'app.bsky.feed.post': {
             const postBskyUri = `at://${job.data.repo}/${operation.path}`;
-            await getAtProtoThread(postBskyUri, {operation, remoteUser})
+            await getAtProtoThread(postBskyUri, { operation, remoteUser })
             break;
           }
           case 'app.bsky.graph.follow': {
             const userFollowed = await getAtprotoUser(record.subject, await adminUser as Model<any, any>);
-            if(userFollowed) {
+            if (userFollowed) {
               let tmp = await Follows.create({
-                  followedId: userFollowed.id,
-                  followerId: remoteUser.id,
-                  bskyPath: operation.path,
-                  accepted: true,
+                followedId: userFollowed.id,
+                followerId: remoteUser.id,
+                bskyPath: operation.path,
+                accepted: true,
               });
             }
             break;
           }
           default: {
-            logger.warn({message: `Bsky create type not implemented: ${record['$type']}`, record: record})
+            logger.warn({ message: `Bsky create type not implemented: ${record['$type']}`, record: record })
           }
 
         }
@@ -82,17 +82,17 @@ async function processFirehose(job: Job) {
         const deleteOperation = operation as DeleteOp;
         try {
           const opName = deleteOperation.path.split('app.bsky.graph.')[0].split('/')[0];
-          switch (opName){
+          switch (opName) {
             case 'follow': {
               await Follows.destroy({
-                where:{
+                where: {
                   bskyPath: operation.path
                 }
               })
               break;
             }
             default: {
-              logger.info({message: `Bsky deleted type not implemented: ${deleteOperation.path}`})
+              logger.info({ message: `Bsky deleted type not implemented: ${deleteOperation.path}` })
             }
           }
         } catch (error) {
@@ -105,7 +105,7 @@ async function processFirehose(job: Job) {
         break;
       }
       default: {
-        logger.warn({message: `Bsky action not implemented: ${operation.action}`, operation: operation})
+        logger.warn({ message: `Bsky action not implemented: ${operation.action}`, operation: operation })
       }
     }
 
@@ -115,4 +115,4 @@ async function processFirehose(job: Job) {
 
 }
 
-export {processFirehose}
+export { processFirehose }

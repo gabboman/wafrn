@@ -69,12 +69,47 @@ export default function cacheRoutes(app: Application) {
         res.sendStatus(404)
       }
     } catch (error) {
-      logger.trace({
-        message: 'error on cache',
-        url: req.query?.media,
-        error: error
-      })
-      res.sendStatus(500)
+      // HACK this is DIRTY I should fix this
+      const url = req.query.media ? req.query.media as string : ''
+      if (url.startsWith('?cid=')) {
+        const did = decodeURIComponent(url.split('&did=')[1]);
+        const cid = decodeURIComponent(url.split('&did=')[0].split('?cid=')[1]);
+        if (did && cid) {
+          const fileName = `cache/bsky_${cid}`
+          if (fs.existsSync(fileName)) {
+            res.set('Cache-control', 'public, max-age=3600')
+            // We have the image! we just serve it
+            res.sendFile(fileName, { root: '.' })
+          } else {
+            const remoteResponse = await axios.get(`https://cdn.bsky.app/img/feed_thumbnail/plain/${did}/${cid}`, {
+              responseType: 'stream',
+              headers: { 'User-Agent': environment.instanceUrl }
+            });
+            const path = fileName
+            const filePath = fs.createWriteStream(path)
+            filePath.on('finish', async () => {
+              // we set some cache
+              res.set('Cache-control', 'public, max-age=3600')
+              filePath.close()
+
+              res.sendFile(fileName, { root: '.' })
+
+            })
+            remoteResponse.data.pipe(filePath)
+
+          }
+
+        }
+
+      } else {
+        logger.trace({
+          message: 'error on cache',
+          url: req.query?.media,
+          error: error
+        })
+        res.sendStatus(500)
+      }
+
     }
   })
 }
