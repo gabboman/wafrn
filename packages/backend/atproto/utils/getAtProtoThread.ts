@@ -6,7 +6,7 @@ import { Media, Post, User } from "../../db.js";
 import { environment } from "../../environment.js";
 import { Model } from "sequelize";
 import { PostView, ThreadViewPost } from "@atproto/api/dist/client/types/app/bsky/feed/defs.js";
-import { getAtprotoUser } from "./getAtprotoUser.js";
+import { getAtprotoUser, forcePopulateUsers } from "./getAtprotoUser.js";
 import { CreateOrUpdateOp } from "@skyware/firehose";
 const adminUser = User.findOne({
   where: {
@@ -47,6 +47,7 @@ async function getAtProtoThread(uri: string, operation?: { operation: CreateOrUp
         } else {
           const parentThread: ThreadViewPost = (await agent.getPostThread({ uri: postObject.record.reply.parent.uri, depth: 0, parentHeight: 1000 })).data.thread as ThreadViewPost;
           const dids = getDidsFromThread(parentThread)
+          forcePopulateUsers(dids, (await adminUser) as Model<any, any>)
           const parentId = await processParents(parentThread as ThreadViewPost) as string
           return await processSinglePost(postObject, parentId) as string;
 
@@ -61,7 +62,8 @@ async function getAtProtoThread(uri: string, operation?: { operation: CreateOrUp
 
   // TODO optimize this a bit if post is not in reply to anything that we dont have
   const thread: ThreadViewPost = (await agent.getPostThread({ uri: uri, depth: 1000, parentHeight: 1000 })).data.thread as ThreadViewPost
-
+  const tmpDids = getDidsFromThread(thread)
+  forcePopulateUsers(tmpDids, (await adminUser) as Model<any, any>)
   let parentId: string | undefined = undefined
   if (thread.parent) {
     parentId = await processParents(thread.parent as ThreadViewPost) as string
@@ -172,7 +174,7 @@ function getPostMedias(post: PostView) {
     if (embed.external) {
       res = [
         {
-          mediaType: embed.external.thumb.mimeType,
+          mediaType: embed.external.thumb?.mimeType,
           description: embed.external.title,
           url: embed.external.uri,
           mediaOrder: 0,

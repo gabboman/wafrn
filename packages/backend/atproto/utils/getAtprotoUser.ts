@@ -6,8 +6,7 @@ import { environment } from "../../environment.js";
 import _ from "underscore";
 
 
-async function getAtprotoUserList(profiles: ProfileViewBasic[], localUser: Model<any, any>) {
-  const dids = profiles.map(elem => elem.did);
+async function forcePopulateUsers(dids: string[], localUser: Model<any, any>) {
   const userFounds = await User.findAll({
     where: {
       bskyDid: {
@@ -22,7 +21,26 @@ async function getAtprotoUserList(profiles: ProfileViewBasic[], localUser: Model
     const usersToGet = _.chunk(notFoundUsers, 25);
     let petitionsResult = []
     for await (const group of usersToGet) {
-      const petition = await agent.getProfiles({ actors: group })
+      const petition = await agent.getProfiles({ actors: group });
+      if (petition.data.profiles && petition.data.profiles.length > 0) {
+        await User.bulkCreate(
+          petition.data.profiles.map(data => {
+            return {
+              bskyDid: data.did,
+              url: '@' + (data.handle === 'handle.invalid' ? `handle.invalid${data.did}` : data.handle),
+              name: data.displayName ? data.displayName : data.handle,
+              avatar: data.avatar,
+              description: data.description,
+              followingCount: data.followsCount,
+              followersCount: data.followersCount,
+              headerImage: data.banner,
+              // bsky does not has this function lol
+              manuallyAcceptsFollows: false,
+              updatedAt: new Date()
+            }
+          })
+        )
+      }
 
     }
   }
@@ -97,4 +115,4 @@ async function getAtprotoUser(handle: string, localUser: Model<any, any>, petiti
   }
 }
 
-export { getAtprotoUser, getAtprotoUserList };
+export { getAtprotoUser, forcePopulateUsers };
