@@ -169,6 +169,17 @@ function getPostMedias(post: PostView) {
   let res = []
   const embed = post.record.embed;
   if (embed) {
+    if (embed.external) {
+      res = [
+        {
+          mediaType: embed.external.thumb.mimeType,
+          description: embed.external.title,
+          url: embed.external.uri,
+          mediaOrder: 0,
+          external: true
+        }
+      ]
+    }
     if (embed.images) {
       res = embed.images.map((media, index) => {
         const cid = media.image.ref['$link'] ? media.image.ref['$link'] : media.image.ref.toString()
