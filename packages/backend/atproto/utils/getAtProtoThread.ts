@@ -105,20 +105,8 @@ async function processSinglePost(post: PostView, parentId?: string): Promise<str
     return invalidPost.id
   }
   if (postCreator) {
-    const medias = post.record.embed?.images ? post.record.embed?.images?.map((media, index) => {
-      const cid = media.image.ref['$link'] ? media.image.ref['$link'] : media.image.ref.toString()
-      const did = post.author.did
-      return {
-        mediaType: media.image.mimeType,
-        description: media.alt,
-        height: media.aspectRatio?.height,
-        width: media.aspectRatio?.width,
-        url: `?cid=${encodeURIComponent(cid)}&did=${encodeURIComponent(did)}`,
-        mediaOrder: index,
-        external: true
-      }
-    }) : []
 
+    const medias = getPostMedias(post)
     const newData = {
       userId: postCreator.id,
       bskyCid: post.cid,
@@ -174,6 +162,46 @@ function getRepliesDidRecursive(thread: ThreadViewPost, dids: string[]): string[
       res = res.concat(getRepliesDidRecursive(reply as ThreadViewPost, res))
     }
   }
+  return res;
+}
+
+function getPostMedias(post: PostView) {
+  let res = []
+  const embed = post.record.embed;
+  if (embed) {
+    if (embed.images) {
+      res = embed.images.map((media, index) => {
+        const cid = media.image.ref['$link'] ? media.image.ref['$link'] : media.image.ref.toString()
+        const did = post.author.did
+        return {
+          mediaType: media.image.mimeType,
+          description: media.alt,
+          height: media.aspectRatio?.height,
+          width: media.aspectRatio?.width,
+          url: `?cid=${encodeURIComponent(cid)}&did=${encodeURIComponent(did)}`,
+          mediaOrder: index,
+          external: true
+        }
+      })
+    }
+    if (embed.video) {
+      const video = embed.video;
+      const cid = video.ref['$link'] ? video.ref['$link'] : video.ref.toString()
+      const did = post.author.did
+      res = [{
+        mediaType: embed.video.mimeType,
+        description: '',
+        height: embed.aspectRatio?.height,
+        width: embed.aspectRatio?.width,
+        url: `?cid=${encodeURIComponent(cid)}&did=${encodeURIComponent(did)}`,
+        mediaOrder: 0,
+        external: true
+      }]
+    }
+
+  }
+
+
   return res;
 }
 
