@@ -58,6 +58,21 @@ async function processFirehose(job: Job) {
             await getAtProtoThread(postBskyUri, { operation, remoteUser })
             break;
           }
+          case 'app.bsky.feed.repost': {
+            const postToBeRewooted = await getAtProtoThread(record.subject.uri);
+            if (postToBeRewooted) {
+              const rewootCreated = await Post.create({
+                content: '',
+                userId: remoteUser.id,
+                parentId: postToBeRewooted,
+                bskyUri: `at://${job.data.repo}/${operation.path}`,
+                bskyCid: operation.cid,
+                privacy: 0
+              })
+            }
+
+            break;
+          }
           case 'app.bsky.graph.follow': {
             const userFollowed = await getAtprotoUser(record.subject, await adminUser as Model<any, any>);
             if (userFollowed) {

@@ -2,12 +2,13 @@
 // returns the post id
 import { getAtProtoSession } from "./getAtProtoSession.js";
 import { QueryParams } from "@atproto/sync/dist/firehose/lexicons.js";
-import { Media, Post, User } from "../../db.js";
+import { Media, Post, PostMentionsUserRelation, User } from "../../db.js";
 import { environment } from "../../environment.js";
-import { Model } from "sequelize";
+import { Model, Op } from "sequelize";
 import { PostView, ThreadViewPost } from "@atproto/api/dist/client/types/app/bsky/feed/defs.js";
 import { getAtprotoUser, forcePopulateUsers } from "./getAtprotoUser.js";
 import { CreateOrUpdateOp } from "@skyware/firehose";
+import { getAllLocalUserIds } from "../../utils/cacheGetters/getAllLocalUserIds.js";
 const adminUser = User.findOne({
   where: {
     url: environment.adminUser
@@ -46,8 +47,8 @@ async function getAtProtoThread(uri: string, operation?: { operation: CreateOrUp
           return await processSinglePost(postObject, parentFound.id) as string;
         } else {
           const parentThread: ThreadViewPost = (await agent.getPostThread({ uri: postObject.record.reply.parent.uri, depth: 0, parentHeight: 1000 })).data.thread as ThreadViewPost;
-          const dids = getDidsFromThread(parentThread)
-          forcePopulateUsers(dids, (await adminUser) as Model<any, any>)
+          //const dids = getDidsFromThread(parentThread)
+          //await forcePopulateUsers(dids, (await adminUser) as Model<any, any>)
           const parentId = await processParents(parentThread as ThreadViewPost) as string
           return await processSinglePost(postObject, parentId) as string;
 
@@ -62,8 +63,8 @@ async function getAtProtoThread(uri: string, operation?: { operation: CreateOrUp
 
   // TODO optimize this a bit if post is not in reply to anything that we dont have
   const thread: ThreadViewPost = (await agent.getPostThread({ uri: uri, depth: 1000, parentHeight: 1000 })).data.thread as ThreadViewPost
-  const tmpDids = getDidsFromThread(thread)
-  forcePopulateUsers(tmpDids, (await adminUser) as Model<any, any>)
+  //const tmpDids = getDidsFromThread(thread)
+  //forcePopulateUsers(tmpDids, (await adminUser) as Model<any, any>)
   let parentId: string | undefined = undefined
   if (thread.parent) {
     parentId = await processParents(thread.parent as ThreadViewPost) as string
@@ -109,11 +110,24 @@ async function processSinglePost(post: PostView, parentId?: string): Promise<str
   if (postCreator) {
 
     const medias = getPostMedias(post)
+    let tags: string[] = []
+    let mentions: string[] = []
+    let postText = post.record.text
+    if (post.record.facets && post.record.facets.length > 0) {
+      const facets = post.record.facets;
+      const tagFacets = facets.filter(elem => elem.features.some(feature => feature['$type'] == 'app.bsky.richtext.facet#tag'))
+      const mentionFacets = facets.filter(elem => elem.features.some(feature => feature['$type'] == 'app.bsky.richtext.facet#mention'))
+      const linkFacets = facets.filter(elem => elem.features.some(feature => feature['$type'] == 'app.bsky.richtext.facet#link'))
+      mentionFacets.forEach(async (bskyMention) => {
+        const userMentioned = await getAtprotoUser(bskyMention.features[0].did, await adminUser as Model<any, any>)
+        mentions.push(userMentioned.id)
+      });
+    }
     const newData = {
       userId: postCreator.id,
       bskyCid: post.cid,
       bskyUri: post.uri,
-      content: post.record.text,
+      content: postText,
       createdAt: new Date(post.record.createdAt),
       privacy: 0,
       parentId: parentId,
@@ -130,6 +144,29 @@ async function processSinglePost(post: PostView, parentId?: string): Promise<str
         await Media.bulkCreate(medias.map((media: any) => { return { ...media, postId: postToProcess.id } }))
       }
     }
+    if (parentId) {
+      const ancestors = await postToProcess.getAncestors({
+        attributes: ['userId'],
+        where: {
+          hierarchyLevel: {
+            [Op.gt]: postToProcess.hierarchyLevel - 5
+          }
+        }
+      });
+      mentions = mentions.concat(ancestors.map(elem => elem.userId))
+    }
+    mentions = [... new Set(mentions)];
+    if (mentions.length > 0) {
+      await PostMentionsUserRelation.bulkCreate(
+        mentions.map(mnt => {
+          return {
+            userId: mnt,
+            postId: postToProcess.id
+          }
+        })
+      )
+    }
+
     return postToProcess.id
   }
 
@@ -213,8 +250,6 @@ function getPostMedias(post: PostView) {
     }
 
   }
-
-
   return res;
 }
 

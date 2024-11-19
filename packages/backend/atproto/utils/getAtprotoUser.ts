@@ -56,7 +56,6 @@ async function getAtprotoUser(handle: string, localUser: Model<any, any>, petiti
         },
         {
           literal: sequelize.where(sequelize.fn('lower', sequelize.col('url')), handle.toLowerCase())
-
         }
       ]
 
@@ -102,7 +101,14 @@ async function getAtprotoUser(handle: string, localUser: Model<any, any>, petiti
     }
     userFound = userFound ? userFound : await User.findOne({
       where: {
-        bskyDid: data.did
+        [Op.or]: [
+          {
+            bskyDid: newData.bskyDid
+          },
+          {
+            url: newData.url
+          }
+        ]
       }
     });
     if (userFound) {
