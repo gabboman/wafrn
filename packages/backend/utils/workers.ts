@@ -7,7 +7,7 @@ import { getRemoteActorIdProcessor } from './queueProcessors/getRemoteActorIdPro
 import { logger } from './logger.js'
 import { processRemotePostView } from './queueProcessors/processRemotePostView.js'
 import { processRemoteMedia } from './queueProcessors/remoteMediaProcessor.js'
-import {processFirehose} from "../atproto/workers/processFirehoseWorker.js";
+import { processFirehose } from "../atproto/workers/processFirehoseWorker.js";
 
 logger.info('starting workers')
 const workerInbox = new Worker('inbox', (job: Job) => inboxWorker(job), {
@@ -87,8 +87,9 @@ const workerProcessFirehose = environment.enableBsky ? new Worker(
     metrics: {
       maxDataPoints: MetricsTime.ONE_WEEK * 2
     },
-    concurrency: environment.workers.medium,
-    lockDuration: 120000
+    concurrency: environment.workers.high,
+    // up to five minutes
+    lockDuration: 300000,
   }
 ) : null
 
@@ -102,7 +103,7 @@ const workers = [
   workerProcessRemotePostView,
   workerProcessRemoteMediaData,
 ]
-if(environment.enableBsky) {
+if (environment.enableBsky) {
   workers.push(workerProcessFirehose as Worker)
 }
 

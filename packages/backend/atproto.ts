@@ -3,6 +3,7 @@ import { getCacheAtDids } from "./atproto/cache/getCacheAtDids.js";
 import { Queue } from "bullmq";
 import { environment } from "./environment.js";
 import { checkCommitMentions } from "./atproto/utils/checkCommitMentions.js";
+import { logger } from "./utils/logger.js";
 
 const firehose = new Firehose(`wss://bolson.bsky.dev`);
 
@@ -30,4 +31,11 @@ firehose.on("commit", async (commit) => {
       await firehoseQueue.add('processFirehoseQueue', data)
     }
 });
+
+firehose.on("error", (error) => {
+  logger.warn({
+    message: `Error on firehose`,
+    error: error
+  })
+})
 firehose.start();

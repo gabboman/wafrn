@@ -4,6 +4,7 @@ import { ProfileViewBasic } from "@atproto/api/dist/client/types/app/bsky/actor/
 import { Model, Op } from "sequelize";
 import { environment } from "../../environment.js";
 import _ from "underscore";
+import { wait } from "../../utils/wait.js";
 
 
 async function forcePopulateUsers(dids: string[], localUser: Model<any, any>) {
@@ -83,7 +84,18 @@ async function getAtprotoUser(handle: string, localUser: Model<any, any>, petiti
   }
   const agent = await getAtProtoSession(localUser);
   // TODO check if current user exist
-  const bskyUserResponse = petitionData ? { success: true, data: petitionData } : await agent.getProfile({ actor: handle });
+  let bskyUserResponse = petitionData ? { success: true, data: petitionData } : undefined;
+  if (!bskyUserResponse) {
+    try {
+      bskyUserResponse = await agent.getProfile({ actor: handle });
+    } catch (error) {
+      return await User.findOne({
+        where: {
+          url: environment.deletedUser
+        }
+      });
+    }
+  }
   if (bskyUserResponse.success) {
     const data = bskyUserResponse.data;
     const newData = {
@@ -99,26 +111,37 @@ async function getAtprotoUser(handle: string, localUser: Model<any, any>, petiti
       manuallyAcceptsFollows: false,
       updatedAt: new Date()
     }
-    userFound = userFound ? userFound : await User.findOne({
-      where: {
-        [Op.or]: [
-          {
-            bskyDid: newData.bskyDid
-          },
-          {
-            url: newData.url
-          }
-        ]
-      }
-    });
+    userFound = userFound ? userFound : await internalGetDBUser(newData.bskyDid, newData.url);
     if (userFound) {
       await userFound.update(newData);
       await userFound.save();
     } else {
-      userFound = await User.create(newData)
+      try {
+        userFound = await User.create(newData)
+      } catch (error) {
+        // not the best solution but yeah that should work
+        await wait(1500);
+        userFound = await internalGetDBUser(newData.bskyDid, newData.url)
+      }
     }
     return userFound
   }
 }
 
+function internalGetDBUser(did: string, url: string) {
+
+  return User.findOne({
+    where: {
+      [Op.or]: [
+        {
+          bskyDid: did
+        },
+        {
+          url: url
+        }
+      ]
+    }
+  });
+
+}
 export { getAtprotoUser, forcePopulateUsers };

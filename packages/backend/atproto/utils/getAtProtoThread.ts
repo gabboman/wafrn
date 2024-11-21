@@ -2,7 +2,7 @@
 // returns the post id
 import { getAtProtoSession } from "./getAtProtoSession.js";
 import { QueryParams } from "@atproto/sync/dist/firehose/lexicons.js";
-import { Media, Post, PostMentionsUserRelation, User } from "../../db.js";
+import { Media, Post, PostMentionsUserRelation, PostTag, User } from "../../db.js";
 import { environment } from "../../environment.js";
 import { Model, Op } from "sequelize";
 import { PostView, ThreadViewPost } from "@atproto/api/dist/client/types/app/bsky/feed/defs.js";
@@ -62,7 +62,7 @@ async function getAtProtoThread(uri: string, operation?: { operation: CreateOrUp
   }
 
   // TODO optimize this a bit if post is not in reply to anything that we dont have
-  const thread: ThreadViewPost = (await agent.getPostThread({ uri: uri, depth: 1000, parentHeight: 1000 })).data.thread as ThreadViewPost
+  const thread: ThreadViewPost = (await agent.getPostThread({ uri: uri, depth: 50, parentHeight: 1000 })).data.thread as ThreadViewPost
   //const tmpDids = getDidsFromThread(thread)
   //forcePopulateUsers(tmpDids, (await adminUser) as Model<any, any>)
   let parentId: string | undefined = undefined
@@ -122,6 +122,25 @@ async function processSinglePost(post: PostView, parentId?: string): Promise<str
         const userMentioned = await getAtprotoUser(bskyMention.features[0].did, await adminUser as Model<any, any>)
         mentions.push(userMentioned.id)
       });
+      tags = tagFacets.map(elem => elem.features[0].tag)
+      if (tagFacets.length > 0 || mentionFacets.length > 0 || linkFacets.length > 0) {
+        const postRichTextBase = postText.split('')
+        tagFacets.forEach(tag => {
+          postRichTextBase[tag.index.byteStart] = `<a target ="blank" href="/dashboard/search/${tag.features[0].tag}">` + postRichTextBase[tag.index.byteStart];
+          postRichTextBase[tag.index.byteEnd - 1] = postRichTextBase[tag.index.byteEnd - 1] + '</a>'
+        })
+        linkFacets.forEach(linkFacet => {
+          postRichTextBase[linkFacet.index.byteStart] = `<a target ="blank" href="${linkFacet.features[0].uri}">` + postRichTextBase[linkFacet.index.byteStart];
+          postRichTextBase[linkFacet.index.byteEnd - 1] = postRichTextBase[linkFacet.index.byteEnd - 1] + '</a>'
+        });
+        mentionFacets.forEach(mentionFacet => {
+          postRichTextBase[mentionFacet.index.byteStart] = `<a target ="blank" href="/blog/${mentionFacet.features[0].did}">` + postRichTextBase[mentionFacet.index.byteStart];
+          postRichTextBase[mentionFacet.index.byteEnd - 1] = postRichTextBase[mentionFacet.index.byteEnd - 1] + '</a>'
+        });
+
+
+        postText = postRichTextBase.join('')
+      }
     }
     const newData = {
       userId: postCreator.id,
@@ -163,8 +182,16 @@ async function processSinglePost(post: PostView, parentId?: string): Promise<str
             userId: mnt,
             postId: postToProcess.id
           }
-        })
+        }), { ignoreDuplicates: true }
       )
+    }
+    if (tags.length > 0) {
+      await PostTag.bulkCreate(tags.map(tag => {
+        return {
+          postId: postToProcess.id,
+          tagName: tag
+        }
+      }))
     }
 
     return postToProcess.id
