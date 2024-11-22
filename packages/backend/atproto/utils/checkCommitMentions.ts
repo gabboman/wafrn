@@ -5,8 +5,9 @@ import { getLocalUserId } from "../../utils/cacheGetters/getLocalUserId.js";
 import { getAllLocalUserIds } from "../../utils/cacheGetters/getAllLocalUserIds.js";
 
 // Preemptive checks to see if
-async function checkCommitMentions(commit: ParsedCommit, didsToCheck: string[]): Promise<boolean> {
-
+async function checkCommitMentions(commit: ParsedCommit, cacheData: { followedDids: string[], localUserDids: string[], followedUsersLocalIds: string[] }): Promise<boolean> {
+  const didsToCheck = cacheData.localUserDids;
+  const followedUsersLocalIds = cacheData.followedUsersLocalIds
 
   let res = false;
   // first we check if there are any mentions to local users. if so we return true
@@ -48,9 +49,9 @@ async function checkCommitMentions(commit: ParsedCommit, didsToCheck: string[]):
     })
     if (existingPostInDb) {
       const localUsers = await getAllLocalUserIds();
-      const userIds = [existingPostInDb.userId, ...existingPostInDb.ancestors.map(elem => elem.userId)]
-      const postInReplyToLocalUser = userIds.some(usrId => localUsers.includes(usrId))
-      postsFounds = postInReplyToLocalUser ? 1 : 0
+      const userIds = [existingPostInDb.userId, ...existingPostInDb.ancestors.map(elem => elem.userId)].concat(followedUsersLocalIds)
+      const postInReplyToLocalUserOrFollowedUser = userIds.some(usrId => localUsers.includes(usrId))
+      postsFounds = postInReplyToLocalUserOrFollowedUser ? 1 : 0
     }
   }
 

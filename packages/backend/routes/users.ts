@@ -433,7 +433,8 @@ export default function userRoutes(app: Application) {
           'headerImage',
           'followingCount',
           'followerCount',
-          'manuallyAcceptsFollows'
+          'manuallyAcceptsFollows',
+          'bskyDid'
         ],
         include: [
           {
