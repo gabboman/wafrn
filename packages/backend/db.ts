@@ -23,8 +23,8 @@ const sequelize = new Sequelize(environment.databaseConnectionString, {
     connectTimeout: 10000
   },
   pool: {
-    max: 50,
-    min: 5,
+    max: 20,
+    min: 0,
     acquire: 30000,
     idle: 5000
   },
