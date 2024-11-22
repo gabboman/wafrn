@@ -10,7 +10,7 @@ environment.ts
 public
 uploads
 logs
-cache
+/cache
 environment.prod.ts
 environment.dev.ts
 
