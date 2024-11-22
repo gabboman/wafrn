@@ -14,7 +14,7 @@ const adminUser = User.findOne({
     url: environment.adminUser
   }
 })
-const agent = await getAtProtoSession(await adminUser as Model<any, any>);
+const agent = environment.enableBsky ? await getAtProtoSession(await adminUser as Model<any, any>) : undefined;
 
 async function getAtProtoThread(uri: string, operation?: { operation: CreateOrUpdateOp, remoteUser: Model<any, any> }): Promise<string> {
   if (operation) {
