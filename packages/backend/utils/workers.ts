@@ -7,6 +7,7 @@ import { getRemoteActorIdProcessor } from './queueProcessors/getRemoteActorIdPro
 import { logger } from './logger.js'
 import { processRemotePostView } from './queueProcessors/processRemotePostView.js'
 import { processRemoteMedia } from './queueProcessors/remoteMediaProcessor.js'
+import { processFirehose } from "../atproto/workers/processFirehoseWorker.js";
 
 logger.info('starting workers')
 const workerInbox = new Worker('inbox', (job: Job) => inboxWorker(job), {
@@ -79,6 +80,19 @@ const workerProcessRemoteMediaData = new Worker(
   }
 )
 
+const workerProcessFirehose = environment.enableBsky ? new Worker(
+  'firehoseQueue', async (job: Job) => await processFirehose(job),
+  {
+    connection: environment.bullmqConnection,
+    metrics: {
+      maxDataPoints: MetricsTime.ONE_WEEK * 2
+    },
+    concurrency: environment.workers.high,
+    // up to five minutes
+    lockDuration: 300000,
+  }
+) : null
+
 const workers = [
   workerInbox,
   workerDeletePost,
@@ -87,8 +101,11 @@ const workers = [
   workerProcessRemotePostView,
   workerSendPostChunk,
   workerProcessRemotePostView,
-  workerProcessRemoteMediaData
+  workerProcessRemoteMediaData,
 ]
+if (environment.enableBsky) {
+  workers.push(workerProcessFirehose as Worker)
+}
 
 workers.forEach((worker) => {
   worker.on('error', (err) => {
@@ -99,4 +116,4 @@ workers.forEach((worker) => {
   })
 })
 
-export { workerInbox, workerSendPostChunk, workerPrepareSendPost, workerGetUser, workerDeletePost }
+export { workerInbox, workerSendPostChunk, workerPrepareSendPost, workerGetUser, workerDeletePost, workerProcessRemotePostView, workerProcessRemoteMediaData, workerProcessFirehose }

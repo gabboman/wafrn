@@ -34,7 +34,8 @@ export interface basicPost {
   parentId?: string;
   ancestors: basicPost[];
   notes?: number;
-  quotes?: basicPost[]
+  quotes?: basicPost[];
+  markdownContent: string;
 }
 
 interface EmojiRelations {

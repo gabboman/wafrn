@@ -506,7 +506,8 @@ export default function postsRoutes(app: Application) {
             content_warning,
             userId: posterId,
             privacy: bodyPrivacy,
-            parentId: req.body.parent
+            parentId: req.body.parent,
+            markdownContent: req.body.content,
           })
         }
         if (postToBeQuoted) {

@@ -11,11 +11,11 @@ function getApObjectPrivacy(apObject: activityPubObject, remoteUser: any): numbe
   ) {
     privacy = 1
   }
-  if (apObject.cc && apObject.cc.includes('https://www.w3.org/ns/activitystreams#Public')) {
+  if (apObject.cc && (apObject.cc.includes('https://www.w3.org/ns/activitystreams#Public') || apObject.cc.includes('as:Public'))) {
     // unlisted
     privacy = 3
   }
-  if (apObject.to && apObject.to.includes('https://www.w3.org/ns/activitystreams#Public')) {
+  if (apObject.to && (apObject.to.includes('https://www.w3.org/ns/activitystreams#Public') || apObject.to.includes('as:Public'))) {
     // post is PUBLIC
     privacy = 0
   }

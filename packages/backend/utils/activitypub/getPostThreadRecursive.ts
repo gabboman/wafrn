@@ -157,6 +157,10 @@ async function getPostThreadRecursive(
 
       const lemmyName = postPetition.name ? postPetition.name : ''
       postTextContent = postTextContent ? postTextContent : `<p>${lemmyName}</p>`
+      let createdAt = new Date(postPetition.published);
+      if(createdAt.getTime() > new Date().getTime()) {
+        createdAt = new Date();
+      }
       const postToCreate: any = {
         content: '' + postTextContent,
         content_warning: postPetition.summary
@@ -165,7 +169,7 @@ async function getPostThreadRecursive(
             ? 'User is marked as NSFW by this instance staff. Possible NSFW without tagging'
             : '',
         createdAt: new Date(postPetition.published),
-        updatedAt: new Date(),
+        updatedAt: createdAt,
         userId: remoteUserServerBaned || remoteUser.banned ? (await deletedUser).id : remoteUser.id,
         remotePostId: postPetition.id,
         privacy: privacy

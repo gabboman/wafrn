@@ -18,6 +18,7 @@ import { getallBlockedServers } from '../utils/cacheGetters/getAllBlockedServers
 import { getUnjointedPosts } from '../utils/baseQueryNew.js'
 import getFollowedsIds from '../utils/cacheGetters/getFollowedsIds.js'
 import { getUserEmojis } from '../utils/cacheGetters/getUserEmojis.js'
+import {getAtprotoUser} from "../atproto/utils/getAtprotoUser.js";
 export default function searchRoutes(app: Application) {
   app.get('/api/v2/search/', authenticateToken, async (req: AuthorizedRequest, res: Response) => {
     // const success = false;
@@ -112,9 +113,12 @@ export default function searchRoutes(app: Application) {
 
       // remote user search time
       if (posterId !== '00000000-0000-0000-0000-000000000000' && page === 0) {
-        if (searchTerm.split('@').length === 3) {
+        if (searchTerm.split('@').length === 3  && searchTerm.split('@')[0] == '') {
           remoteUsers = searchRemoteUser(searchTerm.trim(), usr)
           promises.push(remoteUsers)
+        }
+        if(searchTerm.split('@').length === 2 && searchTerm.split('@')[0] == '' && !searchTerm.split('@')[1].endsWith(environment.bskyPds)) {
+          remoteUsers = [await getAtprotoUser(searchTerm.split('@')[1], usr)]
         }
         const urlPattern = /(?:https?):\/\/(\w+:?\w*)?(\S+)(:\d+)?(\/|\/([\w#!:.?+=&%!\-\/]))?/
         if (searchTerm.match(urlPattern)) {

@@ -150,9 +150,7 @@ export class NewEditorComponent implements OnDestroy {
 
     if (this.editing && this.data?.post) {
 
-      this.postCreatorForm.controls['content'].patchValue(this.postCreatorForm.controls['content'].value + ' ' + dompurify.sanitize(this.data.post.content, {
-        ALLOWED_TAGS: []
-      }))
+      this.postCreatorForm.controls['content'].patchValue(this.data.post.markdownContent)
       this.contentWarning = this.data.post.content_warning;
       this.tags = this.data.post.tags.map(tag => tag.tagName).join(',');
       this.uploadedMedias = this.data.post.medias ? this.data.post.medias : [];

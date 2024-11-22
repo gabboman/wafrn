@@ -11,7 +11,7 @@ import {
   UserLikesPostRelations
 } from '../db.js'
 import { authenticateToken } from '../utils/authenticateToken.js'
-import { Op, Sequelize } from 'sequelize'
+import {Model, Op, Sequelize} from 'sequelize'
 import { logger } from '../utils/logger.js'
 import { Queue } from 'bullmq'
 import { environment } from '../environment.js'
@@ -21,6 +21,7 @@ import AuthorizedRequest from '../interfaces/authorizedRequest.js'
 import { LdSignature } from '../utils/activitypub/rsa2017.js'
 import { deletePostCommon } from '../utils/deletePost.js'
 import { redisCache } from '../utils/redis.js'
+import {getAtProtoSession} from "../atproto/utils/getAtProtoSession.js";
 
 const deletePostQueue = new Queue('deletePostQueue', {
   connection: environment.bullmqConnection,
@@ -41,7 +42,7 @@ export default function deletePost(app: Application) {
     try {
       const id = req.query.id as string
       const posterId = req.jwtData?.userId
-      const user = await User.findByPk(posterId)
+      const user = await User.findByPk(posterId) as Model<any, any>
       if (id) {
         const postToDelete = await Post.findOne({
           where: {
@@ -53,6 +54,16 @@ export default function deletePost(app: Application) {
           res.sendStatus(500)
           return
         }
+        // bsky delete
+        if(postToDelete.bskyUri) {
+          const agent = await getAtProtoSession(user);
+          if(postToDelete.bskyCid) {
+            await agent.deletePost(postToDelete.bskyUri)
+          } else {
+            await agent.deleteRepost(postToDelete.bskyUri)
+          }
+        }
+        // bsky delete end
         const objectToSend: activityPubObject = {
           '@context': [`${environment.frontendUrl}/contexts/litepub-0.1.jsonld`],
           actor: `${environment.frontendUrl}/fediverse/blog/${user.url.toLowerCase()}`,
@@ -162,7 +173,7 @@ export default function deletePost(app: Application) {
     try {
       const id = req.query.id as string
       const posterId = req.jwtData?.userId
-      const user = await User.findByPk(posterId)
+      const user = await User.findByPk(posterId) as Model<any, any>
       if (id) {
         let postsToDeleteUnfiltered = await Post.findAll({
           where: {
@@ -195,6 +206,10 @@ export default function deletePost(app: Application) {
         if (!reblogsToDelete) {
           return res.send(true)
         }
+        const agent = await getAtProtoSession(user)
+        postsToDeleteUnfiltered.filter(elem => elem.bskyUri && ! elem.bskyCid).forEach(elem => {
+          agent.deleteRepost(elem.bskyUri)
+        })
         const objectsToSend: activityPubObject[] = reblogsToDelete.map((elem) => {
           return {
             '@context': [`${environment.frontendUrl}/contexts/litepub-0.1.jsonld`],

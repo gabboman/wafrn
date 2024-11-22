@@ -1,13 +1,26 @@
-import { Op, Sequelize } from 'sequelize'
+import {Model, Op, Sequelize} from 'sequelize'
 import { logger } from '../logger.js'
 import { postPetitionSigned } from '../activitypub/postPetitionSigned.js'
 import { postToJSONLD } from '../activitypub/postToJSONLD.js'
 import { LdSignature } from '../activitypub/rsa2017.js'
-import { FederatedHost, Post, User, PostHostView, RemoteUserPostView, sequelize } from '../../db.js'
+import {
+  FederatedHost,
+  Post,
+  User,
+  PostHostView,
+  RemoteUserPostView,
+  sequelize,
+  Media,
+  Quotes,
+  PostTag
+} from '../../db.js'
 import { environment } from '../../environment.js'
 import { Job, Queue } from 'bullmq'
-import _ from 'underscore'
+import {Agent, BskyAgent, CredentialSession} from '@atproto/api'
 import { wait } from '../wait.js'
+import dompurify from 'isomorphic-dompurify'
+import {postToAtproto} from "../../atproto/utils/postToAtproto.js";
+import {getAtProtoSession} from "../../atproto/utils/getAtProtoSession.js";
 
 const processPostViewQueue = new Queue('processRemoteView', {
   connection: environment.bullmqConnection,
@@ -38,16 +51,8 @@ async function prepareSendRemotePostWorker(job: Job) {
   // TODO fix this! this is dirtier than my unwashed gim clothes
   await wait(1500)
   //async function sendRemotePost(localUser: any, post: any) {
-  const post = await Post.findOne({
-    where: {
-      id: job.id
-    }
-  })
-  const localUser = await User.findOne({
-    where: {
-      id: post.userId
-    }
-  })
+  const post = await Post.findByPk(job.id) as Model<any, any>
+  const localUser = await User.findByPk(post.userId)  as Model<any, any>
 
   // servers with shared inbox
   let serversToSendThePost
@@ -199,6 +204,55 @@ async function prepareSendRemotePostWorker(job: Job) {
       )
     }
     await Promise.allSettled(addSendPostToQueuePromises)
+  }
+
+  if(post.privacy === 0 && localUser.enableBsky && environment.enableBsky) {
+    try {
+      // if parent has no bsky data we dont reblog
+      const parent = await Post.findByPk(post.parentId) as Model<any, any>;
+      if(!parent || parent.bskyUri) {
+        // ok the user has bluesky time to send the post
+        const agent = await getAtProtoSession(localUser)
+        let isReblog = false;
+        if(post.content == '' && post.content_warning == "" && post.parentId) {
+          const mediaCount = await Media.count({
+            where: {
+              postId: post.id
+            }
+          })
+          const quotesCount = await Quotes.count({
+            where: {
+              quoterPostId: post.id
+            }
+          })
+          const tagsCount = await PostTag.count({
+            where: {
+              postId: post.id
+            }
+          })
+          if(mediaCount + quotesCount + tagsCount === 0) {
+            isReblog = true;
+            if(parent.bskyUri) {
+              const {uri} = await agent.repost(parent.bskyUri, parent.bskyCid)
+              post.bskyUri = uri;
+              await post.save();
+            }
+          }
+        } if(!isReblog) {
+          const bskyPost = await agent.post(await postToAtproto(post, agent));
+          post.bskyUri = bskyPost.uri;
+          post.bskyCid = bskyPost.cid;
+          await post.save();
+        }
+      }
+
+    } catch(error) {
+      logger.warn({
+        message: 'Error while posting to bsky',
+        error: error
+      })
+    }
+
   }
 }
 

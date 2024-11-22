@@ -158,17 +158,25 @@ const User = sequelize.define(
     disableEmailNotifications: {
       type: Sequelize.BOOLEAN,
       defaultValue: false
+    },
+    enableBsky: {
+      type: Sequelize.BOOLEAN,
+      defaultValue: false
+    },
+    bskyAuthData: {
+      type: Sequelize.TEXT
+    },
+    bskyDid: {
+      unique: true,
+      type: Sequelize.STRING(768)
     }
+
   },
   {
     indexes: [
       {
         unique: false,
-        fields: [
-          {
-            attribute: 'remoteInbox'
-          }
-        ],
+        fields: ['remoteInbox'],
         type: 'FULLTEXT'
       },
       {
@@ -182,6 +190,10 @@ const User = sequelize.define(
       {
         unique: true,
         fields: [sequelize.fn('lower', sequelize.col('url'))]
+      },
+      {
+        unique: true,
+        fields: ['bskyDid']
       }
     ]
   }
@@ -236,6 +248,16 @@ const Follows = sequelize.define(
     accepted: {
       type: Sequelize.BOOLEAN,
       defaultValue: false
+    },
+    bskyUri: {
+      type: Sequelize.STRING(768),
+      allowNull: true,
+      unique: true
+    },
+    bskyPath: {
+      type: Sequelize.STRING(768),
+      allowNull: true,
+      unique: true
     }
   },
   {
@@ -305,6 +327,7 @@ const Post = sequelize.define(
     },
     content_warning: Sequelize.TEXT,
     content: Sequelize.TEXT,
+    markdownContent: Sequelize.TEXT,
     title: {
       type: Sequelize.STRING(256),
       allowNull: true,
@@ -315,6 +338,8 @@ const Post = sequelize.define(
       allowNull: true,
       unique: true
     },
+    bskyUri: Sequelize.STRING(768),
+    bskyCid: Sequelize.STRING(768),
     privacy: Sequelize.INTEGER,
     featured: {
       type: Sequelize.BOOLEAN,
@@ -554,6 +579,11 @@ const UserLikesPostRelations = sequelize.define(
       allowNull: true,
       unique: true
     },
+    bskyPath: {
+      type: Sequelize.STRING(768),
+      allowNull: true,
+      unique: true
+    }
   },
   {
     indexes: [
@@ -616,6 +646,9 @@ const Ask = sequelize.define(
     ]
   }
 )
+const BskyInviteCodes = sequelize.define('bskyInviteCodes', {
+  code: Sequelize.STRING(512)
+})
 
 Post.hasOne(Ask)
 Ask.belongsTo(Post)
@@ -627,7 +660,6 @@ User.hasMany(Ask, {
   as: 'userAsked',
   foreignKey: 'userAsker'
 })
-
 Post.hasOne(QuestionPoll)
 QuestionPoll.belongsTo(Post)
 QuestionPoll.hasMany(QuestionPollQuestion, { onDelete: 'cascade' })
