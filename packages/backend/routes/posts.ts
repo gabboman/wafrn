@@ -494,6 +494,7 @@ export default function postsRoutes(app: Application) {
         if (req.body.idPostToEdit) {
           post = await Post.findByPk(req.body.idPostToEdit)
           post.content = content
+          post.markdownContent = req.body.content
           post.content_warning = content_warning
           post.privacy = bodyPrivacy
           await post.save()
