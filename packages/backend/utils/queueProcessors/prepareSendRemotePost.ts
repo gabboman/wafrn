@@ -102,7 +102,7 @@ async function prepareSendRemotePostWorker(job: Job) {
     }
   }
   // we check if we need to send the post to fedi
-  if (!(!parent || (parent.bskyUri && parentPoster.url.startsWith('@')))) {
+  if (!parent || (!parent.bskyUri || !parentPoster.url.startsWith('@'))) {
     // servers with shared inbox
     let serversToSendThePost
     const localUserFollowers = await localUser.getFollower()
