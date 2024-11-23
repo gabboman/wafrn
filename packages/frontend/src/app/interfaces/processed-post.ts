@@ -32,4 +32,5 @@ export interface ProcessedPost {
   parentId?: string,
   ask?: Ask,
   markdownContent: string,
+  bskyUri?: string
 }

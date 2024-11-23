@@ -86,7 +86,14 @@ export class PostActionsComponent implements OnChanges {
   }
 
   shareOriginalPost() {
-    navigator.clipboard.writeText(this.content.remotePostId);
+    let remoteId = this.content.remotePostId
+    if (this.content.bskyUri) {
+      console.log(this.content.bskyUri)
+      const parts = this.content.bskyUri.split('/app.bsky.feed.post/')
+      const userDid = parts[0].split('at://')[1]
+      remoteId = `https://bsky.app/profile/${userDid}/post/${userDid}`
+    }
+    navigator.clipboard.writeText(remoteId);
     this.messages.add({
       severity: 'success',
       summary: 'The woot original URL was copied to your clipboard!',
@@ -94,9 +101,15 @@ export class PostActionsComponent implements OnChanges {
   }
 
   viewOriginalPost() {
-    navigator.clipboard.writeText(this.content.remotePostId);
+    let remoteId = this.content.remotePostId
+    if (this.content.bskyUri) {
+      console.log(this.content.bskyUri)
+      const parts = this.content.bskyUri.split('/app.bsky.feed.post/')
+      const userDid = parts[0].split('at://')[1]
+      remoteId = `https://bsky.app/profile/${userDid}/post/${parts[1]}`
+    }
     window.open(
-      this.content.remotePostId, "_blank");
+      remoteId, "_blank");
   }
 
   async quickReblog() {
