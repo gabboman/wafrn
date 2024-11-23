@@ -9,6 +9,7 @@ import { PostView, ThreadViewPost } from "@atproto/api/dist/client/types/app/bsk
 import { getAtprotoUser, forcePopulateUsers } from "./getAtprotoUser.js";
 import { CreateOrUpdateOp } from "@skyware/firehose";
 import { getAllLocalUserIds } from "../../utils/cacheGetters/getAllLocalUserIds.js";
+import { wait } from "../../utils/wait.js";
 const adminUser = User.findOne({
   where: {
     url: environment.adminUser
@@ -176,6 +177,12 @@ async function processSinglePost(post: PostView, parentId?: string): Promise<str
     }
     mentions = [... new Set(mentions)];
     if (mentions.length > 0) {
+      await PostMentionsUserRelation.destroy({
+        where: {
+          postId: postToProcess.id
+        }
+      })
+      await wait(50)
       await PostMentionsUserRelation.bulkCreate(
         mentions.map(mnt => {
           return {
@@ -186,6 +193,12 @@ async function processSinglePost(post: PostView, parentId?: string): Promise<str
       )
     }
     if (tags.length > 0) {
+      await PostTag.destroy({
+        where: {
+          postId: postToProcess.id
+        }
+      })
+      await wait(50)
       await PostTag.bulkCreate(tags.map(tag => {
         return {
           postId: postToProcess.id,
