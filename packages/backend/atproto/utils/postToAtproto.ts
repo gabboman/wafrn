@@ -24,7 +24,7 @@ async function postToAtproto(post: Model<any, any>, agent: BskyAgent) {
   }
   const contentWarning = post.content_warning ? `[${post.content_warning.trim()}]` : ''
   const tags = (await post.getPostTags()).map(elem => `#${elem.tagName.trim().replaceAll(' ', '-')}`).join(' ')
-  let postText: string = (contentWarning + post.markdownContent + ' ' tags).trim()
+  let postText: string = (contentWarning + post.markdownContent + ' ' + tags).trim()
   if (quotedPost && !bskyQuote) {
     const remoteId = quotedPost.remoteId ? quotedPost.remoteId : `https://${environment.instanceUrl}/fediverse/post/${quotedPost.id}`;
     postText = postText + "\nRE: " + remoteId
