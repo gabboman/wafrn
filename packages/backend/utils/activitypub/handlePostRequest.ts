@@ -37,7 +37,12 @@ async function handlePostRequest(req: SignedRequest, res: Response) {
       const user = post.user
       if (user.url.startsWith('@')) {
         // EXTERNAL USER
-        res.redirect(post.remotePostId)
+        if (post.remotePostId) {
+          res.redirect(post.remotePostId)
+        } else {
+          // bsky post
+          res.sendStatus(404)
+        }
         return
       }
       if (user.banned) {
