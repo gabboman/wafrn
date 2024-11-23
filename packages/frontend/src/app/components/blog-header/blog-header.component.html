@@ -94,7 +94,8 @@
     This is an external user, and the profile might not be complete.
     <br />
     To check this user's complete profile in their instance,
-    <a [href]="blogDetails.remoteId" target="_blank"> click here</a>.
+    <a [href]="blogDetails.url.split('@').length == 3 ? blogDetails.remoteId : ('https://bsky.app/profile/' + blogDetails.url.split('@')[1])"
+      target="_blank"> click here</a>.
   </div>
   <div *ngIf="allowRemoteAsk" class="justify-content-center">You can send this user a non-anonymous ask from your fedi
     instance with the following
