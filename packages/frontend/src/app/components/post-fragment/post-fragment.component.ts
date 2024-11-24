@@ -112,9 +112,13 @@ export class PostFragmentComponent implements OnChanges, OnDestroy {
   }
 
   initializeContent() {
-    if (this.fragment?.content_warning && !this.fragment.muted_words_cw) {
+    if (this.fragment?.content_warning && this.fragment.muted_words_cw) {
       const disableCW = localStorage.getItem('disableCW') === 'true'
-      this.showCw = !disableCW
+    } else if (this.fragment?.content_warning && !this.fragment.muted_words_cw) {
+      console.log('aa')
+      const disableCW = localStorage.getItem('disableCW') === 'true'
+      this.showCw = this.showCw && !disableCW
+
     }
     let processedBlock: Array<string | WafrnMedia> = []
     this.sanitizedContent = this.postService.getPostHtml(this.fragment as ProcessedPost);
