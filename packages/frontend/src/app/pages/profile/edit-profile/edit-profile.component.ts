@@ -15,10 +15,10 @@ import { MessageService } from 'src/app/services/message.service';
 import { ThemeService } from 'src/app/services/theme.service';
 
 @Component({
-    selector: 'app-edit-profile',
-    templateUrl: './edit-profile.component.html',
-    styleUrls: ['./edit-profile.component.scss'],
-    standalone: false
+  selector: 'app-edit-profile',
+  templateUrl: './edit-profile.component.html',
+  styleUrls: ['./edit-profile.component.scss'],
+  standalone: false
 })
 export class EditProfileComponent implements OnInit {
   loading = true;
@@ -48,6 +48,7 @@ export class EditProfileComponent implements OnInit {
     manuallyAcceptsFollows: new FormControl(false),
     forceOldEditor: new FormControl(false),
     mutedWords: new FormControl(''),
+    disableCW: new FormControl(false)
   });
 
   constructor(
@@ -97,9 +98,11 @@ export class EditProfileComponent implements OnInit {
           askLevel ? parseInt(askLevel.optionValue) : 2
         );
         const mutedWords = localStorage.getItem('mutedWords');
-        if (mutedWords) {
-          this.editProfileForm.controls['mutedWords'].patchValue(mutedWords);
+        if (mutedWords && mutedWords.trim().length) {
+          this.editProfileForm.controls['mutedWords'].patchValue(JSON.parse(mutedWords));
         }
+        const disableCW = localStorage.getItem('disableCW') == 'true'
+        this.editProfileForm.controls['disableCW'].patchValue(disableCW)
         this.loading = false;
       });
   }

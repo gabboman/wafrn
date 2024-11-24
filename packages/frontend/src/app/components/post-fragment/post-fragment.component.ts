@@ -41,22 +41,21 @@ type EmojiReaction = {
 };
 
 @Component({
-    selector: 'app-post-fragment',
-    imports: [
-        CommonModule,
-        PollModule,
-        WafrnMediaModule,
-        RouterModule,
-        MatButtonModule,
-        MatTooltipModule,
-        EmojiReactComponent,
-        InjectHtmlModule,
-        AvatarSmallComponent,
-        PostHeaderComponent,
-        SingleAskComponent
-    ],
-    templateUrl: './post-fragment.component.html',
-    styleUrl: './post-fragment.component.scss'
+  selector: 'app-post-fragment',
+  imports: [
+    CommonModule,
+    PollModule,
+    WafrnMediaModule,
+    RouterModule,
+    MatButtonModule,
+    MatTooltipModule,
+    EmojiReactComponent,
+    InjectHtmlModule,
+    PostHeaderComponent,
+    SingleAskComponent
+  ],
+  templateUrl: './post-fragment.component.html',
+  styleUrl: './post-fragment.component.scss'
 })
 export class PostFragmentComponent implements OnChanges, OnDestroy {
   @Input() fragment: ProcessedPost | undefined;
@@ -113,27 +112,31 @@ export class PostFragmentComponent implements OnChanges, OnDestroy {
   }
 
   initializeContent() {
+    if (this.fragment?.content_warning && !this.fragment.muted_words_cw) {
+      const disableCW = localStorage.getItem('disableCW') === 'true'
+      this.showCw = !disableCW
+    }
     let processedBlock: Array<string | WafrnMedia> = []
     this.sanitizedContent = this.postService.getPostHtml(this.fragment as ProcessedPost);
     if (this.fragment && this.fragment.medias && this.fragment?.medias?.length > 0) {
       const mediaDetectorRegex = /\!\[media\-([0-9]+)]/gm
-        const textDivided = this.sanitizedContent.split(mediaDetectorRegex)
-        textDivided.forEach((elem, index) => {
-          if(index % 2 == 0) {
-            if(elem != '') {
-              processedBlock.push(elem);
-            }
-          } else {
-            const medias = this.fragment?.medias as WafrnMedia[]
-            const mediaToInsert = medias[parseInt(elem) - 1];
-            if(mediaToInsert) {
-              processedBlock.push(mediaToInsert)
-              this.seenMedia.push(parseInt(elem) - 1)
-            } else {
-              processedBlock.push(`![media-${elem}]`)
-            }
+      const textDivided = this.sanitizedContent.split(mediaDetectorRegex)
+      textDivided.forEach((elem, index) => {
+        if (index % 2 == 0) {
+          if (elem != '') {
+            processedBlock.push(elem);
           }
-        })
+        } else {
+          const medias = this.fragment?.medias as WafrnMedia[]
+          const mediaToInsert = medias[parseInt(elem) - 1];
+          if (mediaToInsert) {
+            processedBlock.push(mediaToInsert)
+            this.seenMedia.push(parseInt(elem) - 1)
+          } else {
+            processedBlock.push(`![media-${elem}]`)
+          }
+        }
+      })
 
     } else {
       processedBlock = [this.sanitizedContent]

@@ -222,10 +222,10 @@ export default function userRoutes(app: Application) {
           await user.save()
 
           const _options = JSON.parse(optionJSON)
+          const booleanOptions = ['wafrn.forceClassicLogo', 'wafrn.disableCW']
           if (Array.isArray(_options)) {
-            const options = _options.map((opt) => {
+            const options = _options.filter(elem => elem.name).map((opt) => {
               let value = opt.value
-              const booleanOptions = ['wafrn.forceClassicLogo', 'wafrn.disableCW']
               if (booleanOptions.includes(opt.name)) {
                 value = String(value == 'true')
               }
@@ -236,6 +236,8 @@ export default function userRoutes(app: Application) {
                 public: opt.name.startsWith('wafrn.public')
               }
             })
+
+
 
             for (const option of options) {
               if (option.value) {

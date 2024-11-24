@@ -11,6 +11,7 @@ import { Ask } from './ask';
 export interface ProcessedPost {
   id: string;
   content_warning: string;
+  muted_words_cw?: string;
   content: string;
   title?: string;
   createdAt: Date;

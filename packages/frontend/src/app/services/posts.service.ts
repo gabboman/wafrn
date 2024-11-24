@@ -261,8 +261,8 @@ export class PostsService {
   processSinglePost(unlinked: unlinkedPosts): ProcessedPost {
     const mutedWordsRaw = localStorage.getItem('mutedWords');
     let mutedWords: string[] = [];
-    if (mutedWordsRaw) {
-      mutedWords = mutedWordsRaw.split(',').map(word => word.trim()).filter(word => word.length > 0);
+    if (mutedWordsRaw && mutedWordsRaw.trim().length > 0) {
+      mutedWords = JSON.parse(mutedWordsRaw).split(',').map((word: string) => word.trim()).filter((word: string) => word.length > 0);
     }
     const elem = unlinked.posts[0];
     this.rewootedPosts = this.rewootedPosts.concat(unlinked.rewootIds)
@@ -364,7 +364,7 @@ export class PostsService {
       newPost.medias?.some(media => media.description?.toLowerCase().includes(word.toLowerCase())) ||
       newPost.tags.some(tag => tag.tagName.toLowerCase().includes(word.toLowerCase())))
     if (cwedWords.length > 0) {
-      newPost.content_warning = `Post includes muted words: ${cwedWords} ${newPost.content_warning}`
+      newPost.muted_words_cw = `Post includes muted words: ${cwedWords} ${newPost.content_warning}`
     }
     return newPost;
   }
