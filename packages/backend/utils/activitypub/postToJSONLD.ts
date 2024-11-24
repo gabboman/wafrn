@@ -64,19 +64,17 @@ async function postToJSONLD(postId: string) {
   const quotedPosts = post.quoted
   if (quotedPosts && quotedPosts.length > 0) {
     const mainQuotedPost = quotedPosts[0]
-    quotedPostString = mainQuotedPost.remotePostId
-      ? mainQuotedPost.remotePostId
-      : `${environment.frontendUrl}/fediverse/post/${mainQuotedPost.id}`
+    quotedPostString = getPostUrlForquote(mainQuotedPost)
     quotedPosts.forEach((quotedPost: any) => {
-      const postUrl = quotedPost.remotePostId
-        ? quotedPost.remotePostId
-        : `${environment.frontendUrl}/fediverse/post/${quotedPost.id}`
+      const postUrl = getPostUrlForquote(quotedPost)
       tagsAndQuotes = tagsAndQuotes + `<br>RE: <a href="${postUrl}">${postUrl}</a><br>`
-      fediTags.push({
-        type: 'Link',
-        name: `RE: ${postUrl}`,
-        href: postUrl
-      })
+      if (!postUrl.startsWith('https://bsky.app/')) {
+        fediTags.push({
+          type: 'Link',
+          name: `RE: ${postUrl}`,
+          href: postUrl
+        })
+      }
     })
   }
   for await (const tag of post.postTags) {
@@ -262,6 +260,20 @@ function getUserName(user?: { url: string }): string {
   let res = user ? '@' + user.url + '@' + environment.instanceUrl : 'anonymous'
   if (user?.url.startsWith('@')) {
     res = user.url
+  }
+  return res
+}
+
+function getPostUrlForquote(post: any): string {
+  const isPostFromBsky = !!post.bskyUri
+  const isPostFromFedi = !!post.remotePostId
+  let res = `${environment.frontendUrl}/fediverse/post/${post.id}`;
+  if (isPostFromBsky && post.user.url.startsWith('@')) {
+    const parts = post.bskyUri.split('/app.bsky.feed.post/')
+    const userDid = parts[0].split('at://')[1]
+    res = `https://bsky.app/profile/${userDid}/post/${parts[1]}`
+  } else if (isPostFromFedi) {
+    res = post.remotePostId
   }
   return res
 }

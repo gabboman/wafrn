@@ -18,6 +18,10 @@ async function getPostAndUserFromPostId(postId: string): Promise<{ found: boolea
         },
         {
           model: Post,
+          include: [{
+            model: User,
+            as: 'user'
+          }],
           as: 'quoted',
           required: false
         },
