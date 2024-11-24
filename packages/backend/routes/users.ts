@@ -225,7 +225,8 @@ export default function userRoutes(app: Application) {
           if (Array.isArray(_options)) {
             const options = _options.map((opt) => {
               let value = opt.value
-              if (opt.name === 'wafrn.forceClassicLogo') {
+              const booleanOptions = ['wafrn.forceClassicLogo', 'wafrn.disableCW']
+              if (booleanOptions.includes(opt.name)) {
                 value = String(value == 'true')
               }
 
