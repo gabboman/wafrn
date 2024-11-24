@@ -20,7 +20,7 @@ export class LoginService {
     private utils: UtilsService,
     private jwt: JwtService,
     private postsService: PostsService
-  ) {}
+  ) { }
 
   checkUserLoggedIn(): boolean {
     return this.jwt.tokenValid();
@@ -137,6 +137,7 @@ export class LoginService {
       forceClassicLogo: 'wafrn.forceClassicLogo',
       defaultPostEditorPrivacy: 'wafrn.defaultPostEditorPrivacy',
       mutedWords: 'wafrn.mutedWords',
+      disableCW: 'wafrn.disableCW'
     };
 
     try {
@@ -151,7 +152,7 @@ export class LoginService {
 
       const options = [];
       for (const key in form) {
-        if (form[key]) {
+        if (form[key] != undefined) {
           const name = optionFormKeyMap[key as keyof typeof optionFormKeyMap];
           const value = JSON.stringify(form[key]);
           options.push({ name, value });

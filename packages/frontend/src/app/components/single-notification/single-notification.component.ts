@@ -12,18 +12,17 @@ import { PostHeaderComponent } from "../post/post-header/post-header.component";
 import { EnvironmentService } from 'src/app/services/environment.service';
 
 @Component({
-    selector: 'app-single-notification',
-    templateUrl: './single-notification.component.html',
-    styleUrls: ['./single-notification.component.scss'],
-    imports: [
-        CommonModule,
-        RouterModule,
-        MatCardModule,
-        PostFragmentComponent,
-        MatButton,
-        PostHeaderComponent,
-        AvatarSmallComponent
-    ]
+  selector: 'app-single-notification',
+  templateUrl: './single-notification.component.html',
+  styleUrls: ['./single-notification.component.scss'],
+  imports: [
+    CommonModule,
+    RouterModule,
+    MatCardModule,
+    PostFragmentComponent,
+    PostHeaderComponent,
+    AvatarSmallComponent
+  ]
 })
 export class SingleNotificationComponent implements OnInit {
   emojiUrl: string = '';

@@ -1,15 +1,16 @@
 @use '@angular/material' as mat;
 
-$font-family: sans-serif;
+//$font-family: sans-serif;
 // Define a dark theme
 $dark-theme: mat.define-theme((color: (theme-type: dark,
         primary: mat.$violet-palette,
       ),
+      /*
       typography: (brand-family: $font-family,
         plain-family: $font-family,
-
         bold-weight: 900,
-      )));
+      )*/
+    ));
 
 $bgcolor: #151116;
 $cardcolor: #2a323d;
@@ -23,8 +24,8 @@ html {
   @include mat.app-background();
   @include mat.all-component-typographies($dark-theme);
   @include mat.all-component-themes($dark-theme);
-  font-family: $font-family;
-  background-color: $bgcolor
+  //font-family: $font-family;
+  //background-color: $bgcolor
 }
 
 @include mat.color-variants-backwards-compatibility($dark-theme);
