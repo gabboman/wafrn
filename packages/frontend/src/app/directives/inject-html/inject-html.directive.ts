@@ -2,7 +2,8 @@ import { Directive, ElementRef, Input } from '@angular/core';
 import { WafrnMedia } from 'src/app/interfaces/wafrn-media';
 
 @Directive({
-  selector: '[injectHTML]'
+    selector: '[injectHTML]',
+    standalone: false
 })
 export class InjectHTMLDirective {
 

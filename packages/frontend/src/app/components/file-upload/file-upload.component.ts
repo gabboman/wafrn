@@ -17,17 +17,16 @@ enum UploadStatus {
 }
 
 @Component({
-  selector: 'app-file-upload',
-  templateUrl: './file-upload.component.html',
-  styleUrls: ['./file-upload.component.scss'],
-  imports: [
-    CommonModule,
-    FormsModule,
-    FontAwesomeModule,
-    MatButtonModule,
-    MatProgressSpinnerModule,
-  ],
-  standalone: true
+    selector: 'app-file-upload',
+    templateUrl: './file-upload.component.html',
+    styleUrls: ['./file-upload.component.scss'],
+    imports: [
+        CommonModule,
+        FormsModule,
+        FontAwesomeModule,
+        MatButtonModule,
+        MatProgressSpinnerModule,
+    ]
 })
 export class FileUploadComponent {
   @Input() disabled = false;

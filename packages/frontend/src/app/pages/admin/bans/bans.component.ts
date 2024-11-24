@@ -3,9 +3,10 @@ import { AdminService } from 'src/app/services/admin.service';
 
 
 @Component({
-  selector: 'app-bans',
-  templateUrl: './bans.component.html',
-  styleUrls: ['./bans.component.scss'],
+    selector: 'app-bans',
+    templateUrl: './bans.component.html',
+    styleUrls: ['./bans.component.scss'],
+    standalone: false
 })
 export class BansComponent {
   bannedUsers: any[] = [];

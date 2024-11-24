@@ -15,9 +15,10 @@ import { MessageService } from 'src/app/services/message.service';
 import { ThemeService } from 'src/app/services/theme.service';
 
 @Component({
-  selector: 'app-edit-profile',
-  templateUrl: './edit-profile.component.html',
-  styleUrls: ['./edit-profile.component.scss'],
+    selector: 'app-edit-profile',
+    templateUrl: './edit-profile.component.html',
+    styleUrls: ['./edit-profile.component.scss'],
+    standalone: false
 })
 export class EditProfileComponent implements OnInit {
   loading = true;

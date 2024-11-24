@@ -8,9 +8,10 @@ import { PostsService } from 'src/app/services/posts.service';
 
 
 @Component({
-  selector: 'app-import-followers',
-  templateUrl: './import-followers.component.html',
-  styleUrls: ['./import-followers.component.scss'],
+    selector: 'app-import-followers',
+    templateUrl: './import-followers.component.html',
+    styleUrls: ['./import-followers.component.scss'],
+    standalone: false
 })
 export class ImportFollowersComponent {
   step = 0;

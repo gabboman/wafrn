@@ -41,23 +41,22 @@ type EmojiReaction = {
 };
 
 @Component({
-  selector: 'app-post-fragment',
-  standalone: true,
-  imports: [
-    CommonModule,
-    PollModule,
-    WafrnMediaModule,
-    RouterModule,
-    MatButtonModule,
-    MatTooltipModule,
-    EmojiReactComponent,
-    InjectHtmlModule,
-    AvatarSmallComponent,
-    PostHeaderComponent,
-    SingleAskComponent
-  ],
-  templateUrl: './post-fragment.component.html',
-  styleUrl: './post-fragment.component.scss',
+    selector: 'app-post-fragment',
+    imports: [
+        CommonModule,
+        PollModule,
+        WafrnMediaModule,
+        RouterModule,
+        MatButtonModule,
+        MatTooltipModule,
+        EmojiReactComponent,
+        InjectHtmlModule,
+        AvatarSmallComponent,
+        PostHeaderComponent,
+        SingleAskComponent
+    ],
+    templateUrl: './post-fragment.component.html',
+    styleUrl: './post-fragment.component.scss'
 })
 export class PostFragmentComponent implements OnChanges, OnDestroy {
   @Input() fragment: ProcessedPost | undefined;

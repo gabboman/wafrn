@@ -5,9 +5,10 @@ import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
 
 @Component({
-  selector: 'app-server-list',
-  templateUrl: './server-list.component.html',
-  styleUrls: ['./server-list.component.scss'],
+    selector: 'app-server-list',
+    templateUrl: './server-list.component.html',
+    styleUrls: ['./server-list.component.scss'],
+    standalone: false
 })
 export class ServerListComponent implements OnInit {
   ready = false;

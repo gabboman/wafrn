@@ -14,11 +14,13 @@ $dark-theme: mat.define-theme((color: (theme-type: dark,
 $bgcolor: #151116;
 $cardcolor: #2a323d;
 
-@include mat.core();
+@include mat.elevation-classes();
+@include mat.app-background();
 
 html {
   // Apply the dark theme by default
-  @include mat.core-theme($dark-theme);
+  @include mat.elevation-classes();
+  @include mat.app-background();
   @include mat.all-component-typographies($dark-theme);
   @include mat.all-component-themes($dark-theme);
   font-family: $font-family;

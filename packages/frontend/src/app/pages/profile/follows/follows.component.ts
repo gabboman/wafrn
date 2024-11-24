@@ -23,24 +23,23 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { SimplifiedUser } from 'src/app/interfaces/simplified-user';
 
 @Component({
-  selector: 'app-follows',
-  standalone: true,
-  imports: [
-    CommonModule,
-    LoaderComponent,
-    BlogHeaderComponent,
-    MatTableModule,
-    MatPaginatorModule,
-    FormsModule,
-    MatCardModule,
-    MatInputModule,
-    MatButtonModule,
-    RouterModule,
-    AvatarSmallComponent,
-    FontAwesomeModule
-  ],
-  templateUrl: './follows.component.html',
-  styleUrl: './follows.component.scss'
+    selector: 'app-follows',
+    imports: [
+        CommonModule,
+        LoaderComponent,
+        BlogHeaderComponent,
+        MatTableModule,
+        MatPaginatorModule,
+        FormsModule,
+        MatCardModule,
+        MatInputModule,
+        MatButtonModule,
+        RouterModule,
+        AvatarSmallComponent,
+        FontAwesomeModule
+    ],
+    templateUrl: './follows.component.html',
+    styleUrl: './follows.component.scss'
 })
 export class FollowsComponent implements OnInit, OnDestroy {
   navigationSubscription: Subscription

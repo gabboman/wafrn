@@ -30,11 +30,10 @@ import { PostsService } from '../../services/posts.service';
 import { UtilsService } from '../../services/utils.service';
 import { EnvironmentService } from '../../services/environment.service';
 @Component({
-  selector: 'app-post-actions',
-  standalone: true,
-  imports: [CommonModule, MatButtonModule, MatMenuModule, FontAwesomeModule],
-  templateUrl: './post-actions.component.html',
-  styleUrl: './post-actions.component.scss',
+    selector: 'app-post-actions',
+    imports: [CommonModule, MatButtonModule, MatMenuModule, FontAwesomeModule],
+    templateUrl: './post-actions.component.html',
+    styleUrl: './post-actions.component.scss'
 })
 export class PostActionsComponent implements OnChanges {
   @Input() content!: ProcessedPost;

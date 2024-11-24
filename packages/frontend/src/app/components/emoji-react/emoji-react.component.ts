@@ -11,19 +11,18 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { Emoji } from '../../interfaces/emoji';
 
 @Component({
-  selector: 'app-emoji-react',
-  standalone: true,
-  imports: [
-    CommonModule,
-    MatButtonModule,
-    EmojiCollectionsComponent,
-    FontAwesomeModule,
-    OverlayModule,
-    LoaderComponent,
-    MatTooltipModule,
-  ],
-  templateUrl: './emoji-react.component.html',
-  styleUrl: './emoji-react.component.scss',
+    selector: 'app-emoji-react',
+    imports: [
+        CommonModule,
+        MatButtonModule,
+        EmojiCollectionsComponent,
+        FontAwesomeModule,
+        OverlayModule,
+        LoaderComponent,
+        MatTooltipModule,
+    ],
+    templateUrl: './emoji-react.component.html',
+    styleUrl: './emoji-react.component.scss'
 })
 export class EmojiReactComponent {
   scrollStrategy;

@@ -3,9 +3,10 @@ import { AdminService } from 'src/app/services/admin.service';
 
 
 @Component({
-  selector: 'app-blocks',
-  templateUrl: './blocks.component.html',
-  styleUrls: ['./blocks.component.scss'],
+    selector: 'app-blocks',
+    templateUrl: './blocks.component.html',
+    styleUrls: ['./blocks.component.scss'],
+    standalone: false
 })
 export class BlocksComponent {
   userBlocks: any[] = [];

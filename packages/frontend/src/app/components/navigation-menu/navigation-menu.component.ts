@@ -48,9 +48,10 @@ import { MatDialog } from '@angular/material/dialog';
 import { EnvironmentService } from 'src/app/services/environment.service';
 
 @Component({
-  selector: 'app-navigation-menu',
-  templateUrl: './navigation-menu.component.html',
-  styleUrls: ['./navigation-menu.component.scss'],
+    selector: 'app-navigation-menu',
+    templateUrl: './navigation-menu.component.html',
+    styleUrls: ['./navigation-menu.component.scss'],
+    standalone: false
 })
 export class NavigationMenuComponent implements OnInit, OnDestroy {
   menuItems: MenuItem[] = [];

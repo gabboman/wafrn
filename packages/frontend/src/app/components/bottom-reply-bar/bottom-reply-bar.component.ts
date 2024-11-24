@@ -13,16 +13,15 @@ import { MessageService } from 'src/app/services/message.service';
 import { PostsService } from 'src/app/services/posts.service';
 
 @Component({
-  selector: 'app-bottom-reply-bar',
-  standalone: true,
-  imports: [
-    CommonModule,
-    RouterModule,
-    FontAwesomeModule,
-    MatTooltipModule
-  ],
-  templateUrl: './bottom-reply-bar.component.html',
-  styleUrl: './bottom-reply-bar.component.scss'
+    selector: 'app-bottom-reply-bar',
+    imports: [
+        CommonModule,
+        RouterModule,
+        FontAwesomeModule,
+        MatTooltipModule
+    ],
+    templateUrl: './bottom-reply-bar.component.html',
+    styleUrl: './bottom-reply-bar.component.scss'
 })
 export class BottomReplyBarComponent implements OnChanges {
 

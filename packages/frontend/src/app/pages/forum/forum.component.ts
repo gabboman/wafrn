@@ -24,25 +24,24 @@ import { BottomReplyBarComponent } from "../../components/bottom-reply-bar/botto
 import { EnvironmentService } from 'src/app/services/environment.service';
 
 @Component({
-  selector: 'app-forum',
-  standalone: true,
-  imports: [
-    CommonModule,
-    RouterModule,
-    PostFragmentComponent,
-    LoaderComponent,
-    MatCardModule,
-    MatButtonModule,
-    PostActionsComponent,
-    AvatarSmallComponent,
-    PostHeaderComponent,
-    PostModule,
-    FontAwesomeModule,
-    MatPaginatorModule,
-    BottomReplyBarComponent
-  ],
-  templateUrl: './forum.component.html',
-  styleUrl: './forum.component.scss',
+    selector: 'app-forum',
+    imports: [
+        CommonModule,
+        RouterModule,
+        PostFragmentComponent,
+        LoaderComponent,
+        MatCardModule,
+        MatButtonModule,
+        PostActionsComponent,
+        AvatarSmallComponent,
+        PostHeaderComponent,
+        PostModule,
+        FontAwesomeModule,
+        MatPaginatorModule,
+        BottomReplyBarComponent
+    ],
+    templateUrl: './forum.component.html',
+    styleUrl: './forum.component.scss'
 })
 export class ForumComponent implements OnDestroy {
   loading = true;

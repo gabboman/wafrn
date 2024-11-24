@@ -12,11 +12,10 @@ import { EnvironmentService } from 'src/app/services/environment.service';
 
 
 @Component({
-  selector: 'app-media-preview',
-  templateUrl: './media-preview.component.html',
-  styleUrls: ['./media-preview.component.scss'],
-  standalone: true,
-  imports: [CommonModule, MatProgressSpinnerModule],
+    selector: 'app-media-preview',
+    templateUrl: './media-preview.component.html',
+    styleUrls: ['./media-preview.component.scss'],
+    imports: [CommonModule, MatProgressSpinnerModule]
 })
 export class MediaPreviewComponent implements OnInit {
   @Input() media!: WafrnMedia;

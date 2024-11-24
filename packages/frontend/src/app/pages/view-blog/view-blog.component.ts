@@ -31,9 +31,10 @@ import { AcceptThemeComponent } from 'src/app/components/accept-theme/accept-the
 import { BlogDetails } from 'src/app/interfaces/blogDetails';
 import { EnvironmentService } from 'src/app/services/environment.service';
 @Component({
-  selector: 'app-view-blog',
-  templateUrl: './view-blog.component.html',
-  styleUrls: ['./view-blog.component.scss'],
+    selector: 'app-view-blog',
+    templateUrl: './view-blog.component.html',
+    styleUrls: ['./view-blog.component.scss'],
+    standalone: false
 })
 export class ViewBlogComponent implements OnInit, OnDestroy {
   loading = true;

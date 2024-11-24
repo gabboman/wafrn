@@ -17,9 +17,10 @@ import { PostsService } from 'src/app/services/posts.service';
 import { ThemeService } from 'src/app/services/theme.service';
 
 @Component({
-  selector: 'app-search',
-  templateUrl: './search.component.html',
-  styleUrls: ['./search.component.scss'],
+    selector: 'app-search',
+    templateUrl: './search.component.html',
+    styleUrls: ['./search.component.scss'],
+    standalone: false
 })
 export class SearchComponent implements OnInit, OnDestroy {
   cacheurl = EnvironmentService.environment.externalCacheurl;

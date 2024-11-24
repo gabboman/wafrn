@@ -5,9 +5,10 @@ import {LoginService} from "../../services/login.service";
 import { PostsService } from '../../services/posts.service';
 
 @Component({
-  selector: 'app-poll',
-  templateUrl: './poll.component.html',
-  styleUrls: ['./poll.component.scss']
+    selector: 'app-poll',
+    templateUrl: './poll.component.html',
+    styleUrls: ['./poll.component.scss'],
+    standalone: false
 })
 export class PollComponent  implements OnInit{
 

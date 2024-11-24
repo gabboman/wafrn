@@ -8,11 +8,10 @@ import { EnvironmentService } from 'src/app/services/environment.service';
 
 
 @Component({
-  selector: 'app-pending-users',
-  standalone: true,
-  imports: [CommonModule, MatButtonModule, MatCardModule],
-  templateUrl: './pending-users.component.html',
-  styleUrl: './pending-users.component.scss',
+    selector: 'app-pending-users',
+    imports: [CommonModule, MatButtonModule, MatCardModule],
+    templateUrl: './pending-users.component.html',
+    styleUrl: './pending-users.component.scss'
 })
 export class PendingUsersComponent {
   pendingUsers: SimplifiedUser[] = [];

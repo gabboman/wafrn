@@ -17,18 +17,17 @@ import { AskDialogContentComponent } from '../ask-dialog-content/ask-dialog-cont
 import { EnvironmentService } from 'src/app/services/environment.service';
 
 @Component({
-  selector: 'app-blog-header',
-  standalone: true,
-  imports: [
-    CommonModule,
-    MatCardModule,
-    FontAwesomeModule,
-    MatMenuModule,
-    MatButtonModule,
-    RouterModule,
-  ],
-  templateUrl: './blog-header.component.html',
-  styleUrl: './blog-header.component.scss'
+    selector: 'app-blog-header',
+    imports: [
+        CommonModule,
+        MatCardModule,
+        FontAwesomeModule,
+        MatMenuModule,
+        MatButtonModule,
+        RouterModule,
+    ],
+    templateUrl: './blog-header.component.html',
+    styleUrl: './blog-header.component.scss'
 })
 export class BlogHeaderComponent implements OnChanges, OnDestroy {
   @Input() blogDetails!: BlogDetails;

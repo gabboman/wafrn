@@ -2,9 +2,10 @@ import { Component } from '@angular/core';
 import { BlocksService } from 'src/app/services/blocks.service';
 
 @Component({
-  selector: 'app-my-mutes',
-  templateUrl: './my-mutes.component.html',
-  styleUrls: ['./my-mutes.component.scss'],
+    selector: 'app-my-mutes',
+    templateUrl: './my-mutes.component.html',
+    styleUrls: ['./my-mutes.component.scss'],
+    standalone: false
 })
 export class MyMutesComponent {
   loading = true;

@@ -11,18 +11,17 @@ import { LoginService } from 'src/app/services/login.service';
 import { MessageService } from 'src/app/services/message.service';
 
 @Component({
-  selector: 'app-ask-dialog-content',
-  standalone: true,
-  imports: [
-    CommonModule,
-    FormsModule,
-    ReactiveFormsModule,
-    MatInput,
-    MatFormFieldModule,
-    MatButtonModule
-  ],
-  templateUrl: './ask-dialog-content.component.html',
-  styleUrl: './ask-dialog-content.component.scss'
+    selector: 'app-ask-dialog-content',
+    imports: [
+        CommonModule,
+        FormsModule,
+        ReactiveFormsModule,
+        MatInput,
+        MatFormFieldModule,
+        MatButtonModule
+    ],
+    templateUrl: './ask-dialog-content.component.html',
+    styleUrl: './ask-dialog-content.component.scss'
 })
 export class AskDialogContentComponent {
 

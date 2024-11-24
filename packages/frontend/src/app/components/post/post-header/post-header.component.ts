@@ -13,20 +13,18 @@ import { faShareNodes, faChevronDown, faHeart, faHeartBroken, faReply, faRepeat,
 import { MatButtonModule } from '@angular/material/button';
 
 @Component({
-  selector: 'app-post-header',
-  standalone: true,
-  imports: [
-    CommonModule,
-    RouterModule,
-    AvatarSmallComponent,
-    PostActionsComponent,
-    MatTooltipModule,
-    FontAwesomeModule,
-    MatButtonModule
-
-  ],
-  templateUrl: './post-header.component.html',
-  styleUrl: './post-header.component.scss'
+    selector: 'app-post-header',
+    imports: [
+        CommonModule,
+        RouterModule,
+        AvatarSmallComponent,
+        PostActionsComponent,
+        MatTooltipModule,
+        FontAwesomeModule,
+        MatButtonModule
+    ],
+    templateUrl: './post-header.component.html',
+    styleUrl: './post-header.component.scss'
 })
 export class PostHeaderComponent {
 

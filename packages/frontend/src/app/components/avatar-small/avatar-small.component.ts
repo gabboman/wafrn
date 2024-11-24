@@ -6,14 +6,13 @@ import { EnvironmentService } from '../../services/environment.service';
 
 
 @Component({
-  selector: 'app-avatar-small',
-  standalone: true,
-  imports: [
-    CommonModule,
-    RouterModule
-  ],
-  templateUrl: './avatar-small.component.html',
-  styleUrl: './avatar-small.component.scss'
+    selector: 'app-avatar-small',
+    imports: [
+        CommonModule,
+        RouterModule
+    ],
+    templateUrl: './avatar-small.component.html',
+    styleUrl: './avatar-small.component.scss'
 })
 export class AvatarSmallComponent implements OnInit {
   @Input() user!: SimplifiedUser;

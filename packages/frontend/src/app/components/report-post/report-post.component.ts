@@ -24,23 +24,22 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatButtonModule } from '@angular/material/button';
 @Component({
-  selector: 'app-report-post',
-  templateUrl: './report-post.component.html',
-  styleUrls: ['./report-post.component.scss'],
-  standalone: true,
-  imports: [
-    CommonModule,
-    FormsModule,
-    ReactiveFormsModule,
-    MatDialogContent,
-    MatDialogTitle,
-    MatDialogActions,
-    MatDialogClose,
-    MatInputModule,
-    MatSelectModule,
-    MatCheckboxModule,
-    MatButtonModule,
-  ],
+    selector: 'app-report-post',
+    templateUrl: './report-post.component.html',
+    styleUrls: ['./report-post.component.scss'],
+    imports: [
+        CommonModule,
+        FormsModule,
+        ReactiveFormsModule,
+        MatDialogContent,
+        MatDialogTitle,
+        MatDialogActions,
+        MatDialogClose,
+        MatInputModule,
+        MatSelectModule,
+        MatCheckboxModule,
+        MatButtonModule,
+    ]
 })
 export class ReportPostComponent implements OnDestroy {
   loading = false;

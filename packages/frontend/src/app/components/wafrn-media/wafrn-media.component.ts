@@ -15,9 +15,10 @@ import { MessageService } from '../../services/message.service';
 
 
 @Component({
-  selector: 'app-wafrn-media',
-  templateUrl: './wafrn-media.component.html',
-  styleUrls: ['./wafrn-media.component.scss'],
+    selector: 'app-wafrn-media',
+    templateUrl: './wafrn-media.component.html',
+    styleUrls: ['./wafrn-media.component.scss'],
+    standalone: false
 })
 export class WafrnMediaComponent implements OnChanges, AfterViewInit {
   nsfw = true;

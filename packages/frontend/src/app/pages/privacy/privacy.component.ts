@@ -4,9 +4,10 @@ import { SimpleSeoService } from 'src/app/services/simple-seo.service';
 
 
 @Component({
-  selector: 'app-privacy',
-  templateUrl: './privacy.component.html',
-  styleUrls: ['./privacy.component.scss']
+    selector: 'app-privacy',
+    templateUrl: './privacy.component.html',
+    styleUrls: ['./privacy.component.scss'],
+    standalone: false
 })
 export class PrivacyComponent implements OnInit {
   logo = EnvironmentService.environment.logo;

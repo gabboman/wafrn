@@ -8,20 +8,19 @@ import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 
 @Component({
-  selector: 'app-aac-for-alex',
-  standalone: true,
-  imports: [
-    CommonModule,
-    MatButtonModule,
-    MatCardModule,
-    FormsModule,
-    ReactiveFormsModule,
-    MatInputModule,
-    MatFormFieldModule,
-    MatSelectModule
-  ],
-  templateUrl: './aac-for-alex.component.html',
-  styleUrl: './aac-for-alex.component.scss'
+    selector: 'app-aac-for-alex',
+    imports: [
+        CommonModule,
+        MatButtonModule,
+        MatCardModule,
+        FormsModule,
+        ReactiveFormsModule,
+        MatInputModule,
+        MatFormFieldModule,
+        MatSelectModule
+    ],
+    templateUrl: './aac-for-alex.component.html',
+    styleUrl: './aac-for-alex.component.scss'
 })
 export class AacForAlexComponent implements OnInit {
 

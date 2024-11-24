@@ -16,19 +16,18 @@ import { PostsService } from '../../services/posts.service';
 
 
 @Component({
-  selector: 'app-emoji-collections',
-  standalone: true,
-  imports: [
-    CommonModule,
-    MatButtonModule,
-    FontAwesomeModule,
-    FormsModule,
-    MatInputModule,
-    MatTooltipModule,
-    MatExpansionModule,
-  ],
-  templateUrl: './emoji-collections.component.html',
-  styleUrl: './emoji-collections.component.scss',
+    selector: 'app-emoji-collections',
+    imports: [
+        CommonModule,
+        MatButtonModule,
+        FontAwesomeModule,
+        FormsModule,
+        MatInputModule,
+        MatTooltipModule,
+        MatExpansionModule,
+    ],
+    templateUrl: './emoji-collections.component.html',
+    styleUrl: './emoji-collections.component.scss'
 })
 export class EmojiCollectionsComponent implements OnDestroy {
   copyIcon = faCopy;

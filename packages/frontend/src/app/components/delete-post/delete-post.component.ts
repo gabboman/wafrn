@@ -12,18 +12,17 @@ import {
 } from '@angular/material/dialog';
 import { LoaderComponent } from "../loader/loader.component";
 @Component({
-  selector: 'app-delete-post',
-  templateUrl: './delete-post.component.html',
-  styleUrls: ['./delete-post.component.scss'],
-  standalone: true,
-  imports: [
-    MatButtonModule,
-    MatDialogContent,
-    MatDialogTitle,
-    MatDialogActions,
-    MatDialogClose,
-    LoaderComponent
-],
+    selector: 'app-delete-post',
+    templateUrl: './delete-post.component.html',
+    styleUrls: ['./delete-post.component.scss'],
+    imports: [
+        MatButtonModule,
+        MatDialogContent,
+        MatDialogTitle,
+        MatDialogActions,
+        MatDialogClose,
+        LoaderComponent
+    ]
 })
 export class DeletePostComponent {
   postToDelete: string;

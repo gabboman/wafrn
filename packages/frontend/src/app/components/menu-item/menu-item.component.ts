@@ -9,18 +9,17 @@ import { faChevronUp, faChevronDown } from '@fortawesome/free-solid-svg-icons';
 import {MatBadgeModule} from '@angular/material/badge';
 
 @Component({
-  selector: 'app-menu-item',
-  standalone: true,
-  imports: [
-    CommonModule,
-    RouterModule,
-    FontAwesomeModule,
-    MatButtonModule,
-    MatListModule,
-    MatBadgeModule
-  ],
-  templateUrl: './menu-item.component.html',
-  styleUrl: './menu-item.component.scss'
+    selector: 'app-menu-item',
+    imports: [
+        CommonModule,
+        RouterModule,
+        FontAwesomeModule,
+        MatButtonModule,
+        MatListModule,
+        MatBadgeModule
+    ],
+    templateUrl: './menu-item.component.html',
+    styleUrl: './menu-item.component.scss'
 })
 export class MenuItemComponent {
 

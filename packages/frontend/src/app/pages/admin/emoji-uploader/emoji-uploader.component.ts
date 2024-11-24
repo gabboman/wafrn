@@ -7,18 +7,17 @@ import { FileUploadComponent } from 'src/app/components/file-upload/file-upload.
 import { LoaderComponent } from 'src/app/components/loader/loader.component';
 
 @Component({
-  selector: 'app-emoji-uploader',
-  standalone: true,
-  imports: [
-    CommonModule,
-    FormsModule,
-    MatCardModule,
-    LoaderComponent,
-    FileUploadComponent,
-    EmojiCollectionsComponent
-  ],
-  templateUrl: './emoji-uploader.component.html',
-  styleUrl: './emoji-uploader.component.scss'
+    selector: 'app-emoji-uploader',
+    imports: [
+        CommonModule,
+        FormsModule,
+        MatCardModule,
+        LoaderComponent,
+        FileUploadComponent,
+        EmojiCollectionsComponent
+    ],
+    templateUrl: './emoji-uploader.component.html',
+    styleUrl: './emoji-uploader.component.scss'
 })
 export class EmojiUploaderComponent {
 

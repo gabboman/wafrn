@@ -2,9 +2,10 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 
 @Component({
-  selector: 'app-doom',
-  templateUrl: './doom.component.html',
-  styleUrls: ['./doom.component.scss'],
+    selector: 'app-doom',
+    templateUrl: './doom.component.html',
+    styleUrls: ['./doom.component.scss'],
+    standalone: false
 })
 export class DoomComponent implements OnInit {
 

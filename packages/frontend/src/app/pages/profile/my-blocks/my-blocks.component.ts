@@ -3,9 +3,10 @@ import { BlocksService } from 'src/app/services/blocks.service';
 
 
 @Component({
-  selector: 'app-my-blocks',
-  templateUrl: './my-blocks.component.html',
-  styleUrls: ['./my-blocks.component.scss'],
+    selector: 'app-my-blocks',
+    templateUrl: './my-blocks.component.html',
+    styleUrls: ['./my-blocks.component.scss'],
+    standalone: false
 })
 export class MyBlocksComponent {
   blocks: Array<any> = [];

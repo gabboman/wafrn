@@ -2,9 +2,10 @@ import { Component } from '@angular/core';
 import { BlocksService } from 'src/app/services/blocks.service';
 
 @Component({
-  selector: 'app-my-server-blocks',
-  templateUrl: './my-server-blocks.component.html',
-  styleUrls: ['./my-server-blocks.component.scss'],
+    selector: 'app-my-server-blocks',
+    templateUrl: './my-server-blocks.component.html',
+    styleUrls: ['./my-server-blocks.component.scss'],
+    standalone: false
 })
 export class MyServerBlocksComponent {
   serverBlocks: any[] = [];

@@ -9,16 +9,15 @@ import { DashboardService } from 'src/app/services/dashboard.service';
 import { EditorService } from 'src/app/services/editor.service';
 
 @Component({
-  selector: 'app-ask-list',
-  standalone: true,
-  imports: [
-    CommonModule,
-    SingleAskComponent,
-    MatButtonModule,
-    MatCardModule
-  ],
-  templateUrl: './ask-list.component.html',
-  styleUrl: './ask-list.component.scss'
+    selector: 'app-ask-list',
+    imports: [
+        CommonModule,
+        SingleAskComponent,
+        MatButtonModule,
+        MatCardModule
+    ],
+    templateUrl: './ask-list.component.html',
+    styleUrl: './ask-list.component.scss'
 })
 export class AskListComponent {
 

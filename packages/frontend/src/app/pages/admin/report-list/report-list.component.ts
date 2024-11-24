@@ -5,9 +5,10 @@ import { AdminService } from 'src/app/services/admin.service';
 
 
 @Component({
-  selector: 'app-report-list',
-  templateUrl: './report-list.component.html',
-  styleUrls: ['./report-list.component.scss'],
+    selector: 'app-report-list',
+    templateUrl: './report-list.component.html',
+    styleUrls: ['./report-list.component.scss'],
+    standalone: false
 })
 export class ReportListComponent implements OnInit {
   @ViewChild(MatPaginator) paginator!: MatPaginator;

@@ -9,17 +9,16 @@ import { MessageService } from 'src/app/services/message.service';
 import { ThemeService } from 'src/app/services/theme.service';
 
 @Component({
-  selector: 'app-css-editor',
-  standalone: true,
-  imports: [
-    CommonModule,
-    MatCardModule,
-    FormsModule,
-    MatInputModule,
-    MatButtonModule
-  ],
-  templateUrl: './css-editor.component.html',
-  styleUrl: './css-editor.component.scss'
+    selector: 'app-css-editor',
+    imports: [
+        CommonModule,
+        MatCardModule,
+        FormsModule,
+        MatInputModule,
+        MatButtonModule
+    ],
+    templateUrl: './css-editor.component.html',
+    styleUrl: './css-editor.component.scss'
 })
 export class CssEditorComponent {
   ready = false;

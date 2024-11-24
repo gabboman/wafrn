@@ -5,9 +5,10 @@ import { LoginService } from 'src/app/services/login.service';
 
 
 @Component({
-  selector: 'app-activate-account',
-  templateUrl: './activate-account.component.html',
-  styleUrls: ['./activate-account.component.scss']
+    selector: 'app-activate-account',
+    templateUrl: './activate-account.component.html',
+    styleUrls: ['./activate-account.component.scss'],
+    standalone: false
 })
 export class ActivateAccountComponent implements OnInit {
 

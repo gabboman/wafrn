@@ -11,9 +11,10 @@ import { faEye, faEyeSlash, faUpload, faUser } from '@fortawesome/free-solid-svg
 import { EnvironmentService } from 'src/app/services/environment.service';
 
 @Component({
-  selector: 'app-register',
-  templateUrl: './register.component.html',
-  styleUrls: ['./register.component.scss'],
+    selector: 'app-register',
+    templateUrl: './register.component.html',
+    styleUrls: ['./register.component.scss'],
+    standalone: false
 })
 export class RegisterComponent {
   loading = false;

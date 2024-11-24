@@ -14,9 +14,10 @@ import { SimplifiedUser } from 'src/app/interfaces/simplified-user';
 import { SimpleSeoService } from 'src/app/services/simple-seo.service';
 import { EnvironmentService } from 'src/app/services/environment.service';
 @Component({
-  selector: 'app-single-post',
-  templateUrl: './single-post.component.html',
-  styleUrls: ['./single-post.component.scss'],
+    selector: 'app-single-post',
+    templateUrl: './single-post.component.html',
+    styleUrls: ['./single-post.component.scss'],
+    standalone: false
 })
 export class SinglePostComponent implements OnDestroy {
   homeIcon = faHome;

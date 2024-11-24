@@ -5,11 +5,10 @@ import { MatDialogRef } from '@angular/material/dialog';
 import { ThemeService } from 'src/app/services/theme.service';
 
 @Component({
-  selector: 'app-accept-theme',
-  standalone: true,
-  imports: [DialogModule, MatButtonModule],
-  templateUrl: './accept-theme.component.html',
-  styleUrl: './accept-theme.component.scss',
+    selector: 'app-accept-theme',
+    imports: [DialogModule, MatButtonModule],
+    templateUrl: './accept-theme.component.html',
+    styleUrl: './accept-theme.component.scss'
 })
 export class AcceptThemeComponent {
   constructor(
