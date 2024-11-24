@@ -64,9 +64,9 @@ async function postToJSONLD(postId: string) {
   const quotedPosts = post.quoted
   if (quotedPosts && quotedPosts.length > 0) {
     const mainQuotedPost = quotedPosts[0]
-    quotedPostString = getPostUrlForquote(mainQuotedPost)
+    quotedPostString = getPostUrlForQuote(mainQuotedPost)
     quotedPosts.forEach((quotedPost: any) => {
-      const postUrl = getPostUrlForquote(quotedPost)
+      const postUrl = getPostUrlForQuote(quotedPost)
       tagsAndQuotes = tagsAndQuotes + `<br>RE: <a href="${postUrl}">${postUrl}</a><br>`
       if (!postUrl.startsWith('https://bsky.app/')) {
         fediTags.push({
@@ -264,7 +264,7 @@ function getUserName(user?: { url: string }): string {
   return res
 }
 
-function getPostUrlForquote(post: any): string {
+function getPostUrlForQuote(post: any): string {
   const isPostFromBsky = !!post.bskyUri
   const isPostFromFedi = !!post.remotePostId
   let res = `${environment.frontendUrl}/fediverse/post/${post.id}`;
@@ -278,4 +278,4 @@ function getPostUrlForquote(post: any): string {
   return res
 }
 
-export { postToJSONLD }
+export { postToJSONLD, getPostUrlForQuote }

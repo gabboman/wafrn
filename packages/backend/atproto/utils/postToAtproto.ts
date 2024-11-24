@@ -1,8 +1,9 @@
 import { Model } from "sequelize";
 import { BskyAgent, RichText } from "@atproto/api";
-import { Media, Post, Quotes } from "../../db.js";
+import { Media, Post, Quotes, User } from "../../db.js";
 import { environment } from "../../environment.js";
 import fs from "fs/promises";
+import { getPostUrlForQuote } from "../../utils/activitypub/postToJSONLD.js";
 
 async function postToAtproto(post: Model<any, any>, agent: BskyAgent) {
   const quotedPostId = await Quotes.findOne({
@@ -13,7 +14,14 @@ async function postToAtproto(post: Model<any, any>, agent: BskyAgent) {
   let bskyQuote;
   let quotedPost;
   if (quotedPostId) {
-    quotedPost = await Post.findByPk(quotedPostId.quotedPostId);
+    quotedPost = await Post.findByPk(quotedPostId.quotedPostId, {
+      include: [
+        {
+          model: User,
+          as: 'user'
+        }
+      ]
+    });
     if (quotedPost.bskyUri) {
       bskyQuote = {
         "$type": "app.bsky.embed.record",
@@ -28,7 +36,7 @@ async function postToAtproto(post: Model<any, any>, agent: BskyAgent) {
   const tags = (await post.getPostTags()).map(elem => `#${elem.tagName.trim().replaceAll(' ', '-')}`).join(' ')
   let postText: string = (contentWarning + post.markdownContent + ' ' + tags).trim()
   if (quotedPost && !bskyQuote) {
-    const remoteId = quotedPost.remoteId ? quotedPost.remoteId : `https://${environment.instanceUrl}/fediverse/post/${quotedPost.id}`;
+    const remoteId = getPostUrlForQuote(quotedPost);
     postText = postText + "\nRE: " + remoteId
   }
   const medias = await Media.findAll({
