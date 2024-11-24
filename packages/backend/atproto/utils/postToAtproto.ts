@@ -14,11 +14,13 @@ async function postToAtproto(post: Model<any, any>, agent: BskyAgent) {
   let quotedPost;
   if (quotedPostId) {
     quotedPost = await Post.findByPk(quotedPostId.quotedPostId);
-    bskyQuote = {
-      "$type": "app.bsky.embed.record",
-      "record": {
-        "uri": quotedPost.bskyUri,
-        "cid": quotedPost.bskyCid
+    if (quotedPost.bskyUri) {
+      bskyQuote = {
+        "$type": "app.bsky.embed.record",
+        "record": {
+          "uri": quotedPost.bskyUri,
+          "cid": quotedPost.bskyCid
+        }
       }
     }
   }
