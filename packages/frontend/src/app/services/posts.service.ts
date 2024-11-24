@@ -2,9 +2,8 @@ import { Injectable } from '@angular/core';
 import { ProcessedPost } from '../interfaces/processed-post';
 import { RawPost } from '../interfaces/raw-post';
 import { MediaService } from './media.service';
-import * as dompurify from 'isomorphic-dompurify'
 import { HttpClient } from '@angular/common/http';
-
+import sanitizeHtml from 'sanitize-html';
 import { BehaviorSubject, firstValueFrom } from 'rxjs';
 import { JwtService } from './jwt.service';
 import { PostEmojiReaction, unlinkedPosts } from '../interfaces/unlinked-posts';
@@ -372,8 +371,8 @@ export class PostsService {
 
   getPostHtml(post: ProcessedPost): string {
     const content = post.content;
-    let sanitized = dompurify.sanitize(content, {
-      ALLOWED_TAGS: [
+    let sanitized = sanitizeHtml(content, {
+      allowedTags: [
         'b',
         'i',
         'u',
@@ -398,7 +397,9 @@ export class PostsService {
         'font',
         'blockquote',
       ],
-      ALLOWED_ATTR: ['href', 'color'],
+      allowedAttributes: {
+        'a': ['href']
+      },
     });
     // we remove stuff like img and script tags. we only allow certain stuff.
     const parsedAsHTML = this.parser.parseFromString(sanitized, 'text/html');
@@ -444,8 +445,8 @@ export class PostsService {
       }
       const linkAsUrl: URL = this.getURL(link.href);
       if (mentionedHosts.includes(linkAsUrl.hostname)) {
-        const sanitizedContent = dompurify.sanitize(link.innerHTML, {
-          ALLOWED_TAGS: [],
+        const sanitizedContent = sanitizeHtml(link.innerHTML, {
+          allowedTags: [],
         });
         if (
           sanitizedContent.startsWith('@') &&
@@ -478,7 +479,9 @@ export class PostsService {
   }
 
   getPostContentSanitized(content: string): string {
-    return dompurify.sanitize(content);
+
+    return sanitizeHtml(content);
+
   }
 
   async loadRepliesFromFediverse(id: string) {

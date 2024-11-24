@@ -33,32 +33,31 @@ import { AvatarSmallComponent } from '../avatar-small/avatar-small.component';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { EnvironmentService } from 'src/app/services/environment.service';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import * as dompurify from 'isomorphic-dompurify'
 
 @Component({
-    selector: 'app-new-editor',
-    imports: [
-        CommonModule,
-        FormsModule,
-        ReactiveFormsModule,
-        MatCardModule,
-        MatButtonModule,
-        MatFormFieldModule,
-        MatInputModule,
-        FontAwesomeModule,
-        PostHeaderComponent,
-        PostFragmentComponent,
-        SingleAskComponent,
-        MatMenuModule,
-        FileUploadComponent,
-        MediaPreviewComponent,
-        MatProgressSpinnerModule,
-        AvatarSmallComponent,
-        MatCheckboxModule,
-        MatTooltipModule
-    ],
-    templateUrl: './new-editor.component.html',
-    styleUrl: './new-editor.component.scss'
+  selector: 'app-new-editor',
+  imports: [
+    CommonModule,
+    FormsModule,
+    ReactiveFormsModule,
+    MatCardModule,
+    MatButtonModule,
+    MatFormFieldModule,
+    MatInputModule,
+    FontAwesomeModule,
+    PostHeaderComponent,
+    PostFragmentComponent,
+    SingleAskComponent,
+    MatMenuModule,
+    FileUploadComponent,
+    MediaPreviewComponent,
+    MatProgressSpinnerModule,
+    AvatarSmallComponent,
+    MatCheckboxModule,
+    MatTooltipModule
+  ],
+  templateUrl: './new-editor.component.html',
+  styleUrl: './new-editor.component.scss'
 })
 export class NewEditorComponent implements OnDestroy {
   privacyOptions = [
