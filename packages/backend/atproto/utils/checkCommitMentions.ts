@@ -6,7 +6,7 @@ import { getAllLocalUserIds } from "../../utils/cacheGetters/getAllLocalUserIds.
 
 // Preemptive checks to see if
 async function checkCommitMentions(commit: ParsedCommit, cacheData: { followedDids: string[], localUserDids: string[], followedUsersLocalIds: string[] }): Promise<boolean> {
-  const didsToCheck = cacheData.localUserDids;
+  const didsToCheck = [... new Set(cacheData.localUserDids.concat(cacheData.followedDids))];
   const followedUsersLocalIds = cacheData.followedUsersLocalIds
 
   let res = false;
@@ -27,11 +27,13 @@ async function checkCommitMentions(commit: ParsedCommit, cacheData: { followedDi
     }
   }
   // second one first approach: is post being replied on db? if so we store it.
-  const urisToCheck: string[] = commit.ops.filter(op => op.action === 'create' && op.path.startsWith('app.bsky.feed.post') && op.record?.reply).map(op => op.record.reply.parent.uri)
+  const urisToCheck: string[] = commit.ops.filter(op => op.action === 'create' && op.path.startsWith('app.bsky.feed.post') && op.record?.reply).map(op => { return { parent: op.record.reply.parent.uri, root: op.record.reply.root.uri } }).map(elem => [elem.parent, elem.root]).flat().map(elem => elem.split('at://')[1]).map(elem => elem.split('/app.bsky.feed')[0])
   let postsFounds = 0;
 
 
   if (urisToCheck.length > 0) {
+    postsFounds = urisToCheck.some(elem => didsToCheck.includes(elem)) ? 1 : 0
+    /*
     // if post starts with uri of any of our users it must be in reply to one of our users!
     if (urisToCheck.map(elem => elem.split('/app.bsky.feed.post/')[0]).some(elem => didsToCheck.includes(elem))) {
       return true;
@@ -53,6 +55,7 @@ async function checkCommitMentions(commit: ParsedCommit, cacheData: { followedDi
       const postInReplyToLocalUserOrFollowedUser = userIds.some(usrId => localUsers.includes(usrId))
       postsFounds = postInReplyToLocalUserOrFollowedUser ? 1 : 0
     }
+    */
   }
 
   if (postsFounds > 0) {
