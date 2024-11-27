@@ -14,7 +14,8 @@ async function checkCommitMentions(commit: ParsedCommit, cacheData: { followedDi
   for (const operation of commit.ops) {
     // we check lik
     if (operation.action === 'create' && operation.path.startsWith('app.bsky.feed.like')) {
-      if (didsToCheck.some(elem => operation.record.subject.uri.includes(elem))) {
+      // we do not ned 18k likes on a mark hamill post. We better do just a "people you follow liked..."
+      if (didsToCheck.some(elem => elem == commit.repo)) {
         return true;
       }
     }
