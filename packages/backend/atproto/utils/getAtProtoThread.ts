@@ -31,7 +31,7 @@ async function getAtProtoThread(uri: string, operation?: { operation: CreateOrUp
         record: operation.operation.record,
         cid: operation.operation.cid,
         uri: uri,
-        labels: operation.operation.labels,
+        labels: operation.operation.record.labels,
         indexedAt: new Date().toISOString(),
         author: {
           did: operation.remoteUser.bskyDid,
