@@ -30,10 +30,10 @@ import { PostsService } from '../../services/posts.service';
 import { UtilsService } from '../../services/utils.service';
 import { EnvironmentService } from '../../services/environment.service';
 @Component({
-    selector: 'app-post-actions',
-    imports: [CommonModule, MatButtonModule, MatMenuModule, FontAwesomeModule],
-    templateUrl: './post-actions.component.html',
-    styleUrl: './post-actions.component.scss'
+  selector: 'app-post-actions',
+  imports: [CommonModule, MatButtonModule, MatMenuModule, FontAwesomeModule],
+  templateUrl: './post-actions.component.html',
+  styleUrl: './post-actions.component.scss'
 })
 export class PostActionsComponent implements OnChanges {
   @Input() content!: ProcessedPost;
@@ -90,7 +90,7 @@ export class PostActionsComponent implements OnChanges {
       console.log(this.content.bskyUri)
       const parts = this.content.bskyUri.split('/app.bsky.feed.post/')
       const userDid = parts[0].split('at://')[1]
-      remoteId = `https://bsky.app/profile/${userDid}/post/${userDid}`
+      remoteId = `https://bsky.app/profile/${userDid}/post/${parts[1]}`
     }
     navigator.clipboard.writeText(remoteId);
     this.messages.add({
