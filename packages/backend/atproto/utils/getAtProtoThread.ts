@@ -151,6 +151,7 @@ async function processSinglePost(post: PostView, parentId?: string): Promise<str
       createdAt: new Date(post.record.createdAt),
       privacy: 0,
       parentId: parentId,
+      content_warning: getPostLabels(post)
     }
     if (!parentId) {
       delete newData.parentId
@@ -289,6 +290,15 @@ function getPostMedias(post: PostView) {
       }]
     }
 
+  }
+  return res;
+}
+
+// TODO improve this so we get better nsfw messages lol
+function getPostLabels(post: PostView): string {
+  let res = '';
+  if (post.labels && post.labels.length > 0) {
+    res = "Post is labeled as NSFW:"
   }
   return res;
 }
