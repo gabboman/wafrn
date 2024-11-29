@@ -8,6 +8,13 @@
 }
 
 .reacted {
-  background-color: #555;
+  background-color: rgba(#D6BAFF, 0.25);
+  color: white;
 }
 
+#emoji-reactions > button {
+    margin-right: 6px;
+    margin-bottom: 4px;
+    /* what professional engineering right here */
+    vertical-align: -5.1%;
+}

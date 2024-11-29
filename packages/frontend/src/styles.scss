@@ -52,6 +52,13 @@ $editor-buttons: #ffffffde;
   max-width: 100% !important;
 }
 
+/* This little experiment sadly didn't work */
+/* .cdk-overlay-pane.mat-mdc-dialog-panel:not(app-new-editor) > * { */
+/*   margin: auto; */
+/*   max-width: 400px; */
+/* } */
+
+
 a,
 a:visited,
 .ql-snow a {
@@ -285,9 +292,8 @@ blockquote {
   margin-bottom: 4px;
   border: 1px solid #888;
   overflow: hidden;
-  // TODO: fix this hack.
-  height: 0px;
-  padding-bottom: 85px;
+  flex-shrink: 0;
+  max-height: 128px;
 }
 
 .ql-size-small {
@@ -380,4 +386,8 @@ mat-paginator,
 
 pre {
   overflow-x: scroll
+}
+
+.mat-mdc-dialog-inner-container > .mat-mdc-dialog-surface {
+    padding: 20px;
 }
