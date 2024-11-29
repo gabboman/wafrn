@@ -48,9 +48,12 @@ $editor-buttons: #ffffffde;
 }
 
 // dirty hack because bug regarding the editor
-.cdk-overlay-pane.mat-mdc-dialog-panel {
-  max-width: 100% !important;
-}
+/* not sure what this fixed but site seems fine without it */
+/* on desktop & mobile */
+/* .cdk-overlay-pane.mat-mdc-dialog-panel { */
+/*   max-width: 100% !important; */
+/* } */
+
 
 a,
 a:visited,
@@ -285,9 +288,8 @@ blockquote {
   margin-bottom: 4px;
   border: 1px solid #888;
   overflow: hidden;
-  // TODO: fix this hack.
-  height: 0px;
-  padding-bottom: 85px;
+  flex-shrink: 0;
+  max-height: 128px;
 }
 
 .ql-size-small {
@@ -380,4 +382,8 @@ mat-paginator,
 
 pre {
   overflow-x: scroll
+}
+
+.mat-mdc-dialog-inner-container > .mat-mdc-dialog-surface:has(app-new-editor) {
+    padding: 20px;
 }
