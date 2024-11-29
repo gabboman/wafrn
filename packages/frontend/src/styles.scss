@@ -48,10 +48,14 @@ $editor-buttons: #ffffffde;
 }
 
 // dirty hack because bug regarding the editor
-/* not sure what this fixed but site seems fine without it */
-/* on desktop & mobile */
-/* .cdk-overlay-pane.mat-mdc-dialog-panel { */
-/*   max-width: 100% !important; */
+.cdk-overlay-pane.mat-mdc-dialog-panel {
+  max-width: 100% !important;
+}
+
+/* This little experiment sadly didn't work */
+/* .cdk-overlay-pane.mat-mdc-dialog-panel:not(app-new-editor) > * { */
+/*   margin: auto; */
+/*   max-width: 400px; */
 /* } */
 
 
@@ -384,7 +388,6 @@ pre {
   overflow-x: scroll
 }
 
-/* .mat-mdc-dialog-inner-container > .mat-mdc-dialog-surface:has(app-new-editor) { */
 .mat-mdc-dialog-inner-container > .mat-mdc-dialog-surface {
     padding: 20px;
 }

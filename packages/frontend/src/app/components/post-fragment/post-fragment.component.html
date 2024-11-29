@@ -65,7 +65,7 @@
       <button [disabled]=" reactionLoading" [ngClass]="{
       reacted: emoji.includesMe,
       blurry: (fragment.content_warning || fragment.muted_words_cw) && showCw
-    }" (mousedown)="toggleEmojiReact(emoji)" mat-stroked-button matTooltipTouchGestures="on"
+    }" (mousedown)="toggleEmojiReact(emoji)" mat-raised-button matTooltipTouchGestures="on"
         [matTooltip]="emoji.tooltip">
         @if (emoji.img) {
         <img class="post-emoji" [src]="emoji.img" [alt]="emoji.content" />
@@ -76,9 +76,9 @@
         }
       </button>
       } @else {
-      <span [ngClass]="{
+      <button [ngClass]="{
         blurry: (fragment.content_warning || fragment.muted_words_cw) && showCw
-      }" class="p-3" [matTooltip]="emoji.tooltip ">
+      }" class="p-3" [matTooltip]="emoji.tooltip " mat-stroked-button>
         @if (emoji.img) {
         <img class="post-emoji" [src]="emoji.img" [alt]="emoji.content" />
         } @else {
@@ -86,7 +86,7 @@
         } @if (emoji.users.length !== 1) {
         <span> {{ emoji.users.length }}</span>
         }
-      </span>
+      </button>
       }
 
       }
