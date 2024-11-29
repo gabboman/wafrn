@@ -384,6 +384,7 @@ pre {
   overflow-x: scroll
 }
 
-.mat-mdc-dialog-inner-container > .mat-mdc-dialog-surface:has(app-new-editor) {
+/* .mat-mdc-dialog-inner-container > .mat-mdc-dialog-surface:has(app-new-editor) { */
+.mat-mdc-dialog-inner-container > .mat-mdc-dialog-surface {
     padding: 20px;
 }
