@@ -353,6 +353,7 @@ export class NewEditorComponent implements OnDestroy {
     this.uploadedMedias.splice(index, 1);
   }
 
+  @HostListener('keydown.control.enter')
   async submitPost() {
     if (!this.allDescriptionsFilled() ||
       this.postBeingSubmitted ||
