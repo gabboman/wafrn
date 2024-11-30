@@ -48,10 +48,10 @@ import { MatDialog } from '@angular/material/dialog';
 import { EnvironmentService } from 'src/app/services/environment.service';
 
 @Component({
-    selector: 'app-navigation-menu',
-    templateUrl: './navigation-menu.component.html',
-    styleUrls: ['./navigation-menu.component.scss'],
-    standalone: false
+  selector: 'app-navigation-menu',
+  templateUrl: './navigation-menu.component.html',
+  styleUrls: ['./navigation-menu.component.scss'],
+  standalone: false
 })
 export class NavigationMenuComponent implements OnInit, OnDestroy {
   menuItems: MenuItem[] = [];
@@ -497,10 +497,10 @@ export class NavigationMenuComponent implements OnInit, OnDestroy {
       } else {
         this.notifications = response.notifications;
       }
-        this.adminNotifications = response.reports;
-        this.usersAwaitingAproval = response.usersAwaitingAproval;
-        this.followsAwaitingAproval = response.followsAwaitingAproval
-        this.awaitingAsks = response.asks;
+      this.adminNotifications = response.reports;
+      this.usersAwaitingAproval = response.usersAwaitingAproval;
+      this.followsAwaitingAproval = response.followsAwaitingAproval
+      this.awaitingAsks = response.asks;
 
       this.drawMenu();
       this.cdr.detectChanges();
@@ -512,8 +512,11 @@ export class NavigationMenuComponent implements OnInit, OnDestroy {
     this.mobile = window.innerWidth <= 992;
   }
 
+  @HostListener('window:keydown.n')
   async openEditor() {
-    this.editorService.openDialogWithData(undefined);
+    if (this.jwtService.tokenValid()) {
+      this.editorService.openDialogWithData(undefined);
+    }
   }
 
   onCloseMenu() {

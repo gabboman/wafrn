@@ -132,18 +132,21 @@ export class EditorService implements OnDestroy {
   }
 
   public async openDialogWithData(data: any) {
-    const mobile = window.innerWidth <= 992;
-    EditorService.editorData = {
-      ...data,
-      scrollDate: this.dashboardService.startScrollDate,
-      path: window.location.pathname
+    if (this.dialogService.openDialogs.length === 0) {
+      const mobile = window.innerWidth <= 992;
+      EditorService.editorData = {
+        ...data,
+        scrollDate: this.dashboardService.startScrollDate,
+        path: window.location.pathname
+      }
+      this.dialogService.open(await this.getEditorComponent(), {
+        height: mobile ? '100vh' : 'min(600px, calc(100% - 30px))',
+        width: mobile ? '100vw' : 'min(960px, calc(100% - 30px))',
+        maxWidth: '100%',
+        maxHeight: '100%',
+      })
     }
-    this.dialogService.open(await this.getEditorComponent(), {
-      height: mobile ? '100vh' : 'min(600px, calc(100% - 30px))',
-      width: mobile ? '100vw' : 'min(960px, calc(100% - 30px))',
-      maxWidth: '100%',
-      maxHeight: '100%',
-    })
+
   }
 
   async getEditorComponent() {
