@@ -513,6 +513,7 @@ export class NavigationMenuComponent implements OnInit, OnDestroy {
   }
 
   @HostListener('window:keydown.n')
+  @HostListener('window:keydown.p')
   async openEditor() {
     if (this.jwtService.tokenValid()) {
       this.editorService.openDialogWithData(undefined);
