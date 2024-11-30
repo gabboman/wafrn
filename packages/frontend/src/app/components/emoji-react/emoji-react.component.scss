@@ -5,4 +5,6 @@
     overflow-x: hidden;
     overflow-y: scroll;
     background-color: var(--mdc-filled-text-field-container-color);
+    border: 1px solid #888;
+    border-radius: 8px;
 }
