@@ -361,7 +361,11 @@ table,
 mat-paginator,
 .ql-mention-list-container,
 .mat-mdc-menu-panel {
-  background-color: $cardcolor !important;
+  /* background-color: $cardcolor !important; */
+  --mdc-outlined-card-container-color: transparent;
+  --mdc-outlined-card-outline-color: #999999;
+  --mdc-elevated-card-container-color: #2a323d;
+  --mat-paginator-container-background-color: #2a323d;
 }
 
 
@@ -390,4 +394,12 @@ pre {
 
 .mat-mdc-dialog-inner-container > .mat-mdc-dialog-surface {
     padding: 20px;
+}
+
+/* NOTE: This is a custom class not provided by Angular. */
+/* The !important is here because angular later overrides the color. */
+/* This should be fine as it's only used sparingly. */
+.mat-card-important {
+  background-color: rgba(#f22f2f, 0.5) !important;
+  --mdc-outlined-card-outline-color:#ff5b5b !important;
 }
