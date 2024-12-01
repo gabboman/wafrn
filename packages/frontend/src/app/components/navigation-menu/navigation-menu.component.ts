@@ -515,7 +515,8 @@ export class NavigationMenuComponent implements OnInit, OnDestroy {
   @HostListener('window:keydown.n')
   @HostListener('window:keydown.p')
   async openEditor() {
-    if (this.jwtService.tokenValid()) {
+    const nodeName = document.activeElement?.nodeName ? document.activeElement.nodeName : ''
+    if (!['INPUT', 'TEXTAREA'].includes(nodeName) && this.jwtService.tokenValid()) {
       this.editorService.openDialogWithData(undefined);
     }
   }
