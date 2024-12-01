@@ -4,7 +4,7 @@
       <label for="avatar" class="block text-900 font-medium mb-2">Choose another avatar</label>
       <input formControlName="avatar" id="avatar" type="file" accept="image/jpeg,image/png,image/webp,image/gif"
         (change)="imgSelected($event)" class="w-full mb-3" />
-    </div>
+      </div>
 
     <mat-form-field class="w-full">
       <mat-label>Display name (can contain emoji codes)</mat-label>
@@ -20,75 +20,66 @@
         <button pButton type="button" class="ql-link" aria-label="Insert Link" title="Insert Link"></button>
       </div>
     </quill-editor>
+    <hr>
+    <span>Options</span>
+    <mat-form-field class="w-full">
+      <mat-label>Default post privacy</mat-label>
+      <mat-select [required]="true" formControlName="defaultPostEditorPrivacy">
+        @for(option of privacyOptions; track $index) {
+        <mat-option [value]="option.level">{{ option.name }}</mat-option>
+        }
+      </mat-select>
+    </mat-form-field>
+    <mat-form-field class="w-full">
+      <mat-label>Asks</mat-label>
+      <mat-select [required]="true" formControlName="asksLevel">
+        @for(option of askOptions; track $index) {
+        <mat-option [value]="option.level">{{ option.name }}</mat-option>
+        }
+      </mat-select>
+    </mat-form-field>
+    <div class="w-full">
+      <mat-checkbox formControlName="manuallyAcceptsFollows"></mat-checkbox>
+      <mat-label>Manualy accept follows</mat-label>
+    </div>
+    <div class="w-full">
+      <mat-checkbox formControlName="disableForceAltText"></mat-checkbox>
+      <mat-label>Allow uploading media without alt text (enable this only if you're
+        evil)</mat-label>
+    </div>
+    <div class="w-full">
+      <mat-checkbox formControlName="forceClassicLogo"></mat-checkbox>
+      <mat-label>Force classic logo</mat-label>
+    </div>
+    <div class="w-full">
+      <mat-checkbox formControlName="disableCW"></mat-checkbox>
+      <mat-label>Disable CW unless post contains muted words</mat-label>
+    </div>
+    <div class="w-full">
+      <mat-checkbox formControlName="federateWithThreads"></mat-checkbox>
+      <mat-label>Enable federation with Threads (meta/facebook)</mat-label>
+    </div>
+    <mat-card appearance="outlined" class="my-4">
+          <mat-card-content>Threads is a microblogging platform by Meta (formerly Facebook). We
+            understand not everyone will want to make their content available there.
+            By default meta will not see you, unless you enable this option.</mat-card-content>
+    </mat-card>
+    <section id="tags" class="mt-2 w-full flex-row">
+      <mat-form-field class="w-full">
+        <mat-label>Muted words separated by commas</mat-label>
+        <input formControlName="mutedWords" placeholder="Separated by commas" matNativeControl />
+      </mat-form-field>
+      <div *ngIf="editProfileForm.value.mutedWords.split(',').length > 0" class="taglist">
+        Muted phrases:
+        @for(tag of editProfileForm.value.mutedWords.split(','); track $index) {
+        <span *ngIf="tag && tag !== '' && tag.trim() !== ''" class="tag">
+          {{ tag.trim() }}
+        </span>
+        }
+      </div>
+    </section>
+    <hr>
     <mat-accordion>
-      <mat-expansion-panel hideToggle>
-        <mat-expansion-panel-header>
-          <mat-panel-title>
-            Options
-          </mat-panel-title>
-          <mat-panel-description>
-            Wafrn options like federating with threads, default post privacy...
-          </mat-panel-description>
-        </mat-expansion-panel-header>
-        <mat-form-field class="w-full">
-          <mat-label>Default post privacy</mat-label>
-          <mat-select [required]="true" formControlName="defaultPostEditorPrivacy">
-            @for(option of privacyOptions; track $index) {
-            <mat-option [value]="option.level">{{ option.name }}</mat-option>
-            }
-          </mat-select>
-        </mat-form-field>
-        <mat-form-field class="w-full">
-          <mat-label>Asks</mat-label>
-          <mat-select [required]="true" formControlName="asksLevel">
-            @for(option of askOptions; track $index) {
-            <mat-option [value]="option.level">{{ option.name }}</mat-option>
-            }
-          </mat-select>
-        </mat-form-field>
-        <div class="w-full">
-          <mat-checkbox formControlName="manuallyAcceptsFollows"></mat-checkbox>
-          <mat-label>Manualy accept follows</mat-label>
-        </div>
-        <div class="w-full">
-          <mat-checkbox formControlName="disableForceAltText"></mat-checkbox>
-          <mat-label>Allow uploading media without alt text (enable this only if you're
-            evil)</mat-label>
-        </div>
-        <div class="w-full">
-          <mat-checkbox formControlName="forceClassicLogo"></mat-checkbox>
-          <mat-label>Force classic logo</mat-label>
-        </div>
-        <div class="w-full">
-          <mat-checkbox formControlName="disableCW"></mat-checkbox>
-          <mat-label>Disable CW unless post contains muted words</mat-label>
-        </div>
-        <div class="w-full">
-          <mat-checkbox formControlName="federateWithThreads"></mat-checkbox>
-          <mat-label>Enable federation with Threads (meta/facebook)</mat-label>
-        </div>
-        <div class="flex align-items-center justify-content-between mb-6">
-          <p>Threads is a platform created by meta (formerly facebook). We understand
-            both the fact that you might want to federate with them, and also that you
-            may not. Hence why, unlike in other places, this kind of decisions are for
-            you to make. By default meta will not see you, unless you mark this option
-            in your profile.</p>
-        </div>
-        <section id="tags" class="mt-2 w-full flex-row">
-          <mat-form-field class="w-full">
-            <mat-label>Muted words separated by commas</mat-label>
-            <input formControlName="mutedWords" placeholder="Separated by commas" matNativeControl />
-          </mat-form-field>
-          <div *ngIf="editProfileForm.value.mutedWords.split(',').length > 0" class="taglist">
-            Muted phrases:
-            @for(tag of editProfileForm.value.mutedWords.split(','); track $index) {
-            <span *ngIf="tag && tag !== '' && tag.trim() !== ''" class="tag">
-              {{ tag.trim() }}
-            </span>
-            }
-          </div>
-        </section>
-      </mat-expansion-panel>
       <mat-expansion-panel hideToggle>
         <mat-expansion-panel-header>
           <mat-panel-title>
