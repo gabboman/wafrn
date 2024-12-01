@@ -41,7 +41,9 @@ import {
   faHourglass,
   faBellSlash,
   faIcons,
-  faSkull
+  faSkull,
+  faFileEdit,
+  faPaintbrush
 } from '@fortawesome/free-solid-svg-icons';
 import { MenuItem } from 'src/app/interfaces/menu-item';
 import { MatDialog } from '@angular/material/dialog';
@@ -331,16 +333,16 @@ export class NavigationMenuComponent implements OnInit, OnDestroy {
         badge: this.followsAwaitingAproval,
         items: [
           {
-            label: 'Awaiting follows',
-            title: 'awaiting follows',
+            label: 'Manage followers',
+            title: 'Manage followers',
             badge: this.followsAwaitingAproval,
             icon: faUser,
             command: () => this.hideMenu(),
             routerLink: '/blog/' + this.jwtService.getTokenData().url + '/followers'
           },
           {
-            label: 'Edit profile',
-            title: 'Edit profile',
+            label: 'Profile options',
+            title: 'Profile options',
             icon: faUserEdit,
             command: () => {
               this.hideMenu();
@@ -351,7 +353,7 @@ export class NavigationMenuComponent implements OnInit, OnDestroy {
           {
             label: 'Edit my theme',
             title: 'Edit my theme',
-            icon: faUserEdit,
+            icon: faPaintbrush,
             command: () => {
               this.hideMenu();
             },

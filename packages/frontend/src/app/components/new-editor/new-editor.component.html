@@ -75,17 +75,6 @@
       (blur)="editorFocusedOut()" (focus)="editorFocusedIn()" matNativeControl></textarea>
   </mat-form-field>
 </form>
-<section id="privacy-messages">
-  <p *ngIf="privacy === 10" class="my-2">
-    Attention! ADMINS of both your instance, and the target instance can read
-    the DMs.
-  </p>
-  <p *ngIf="privacy === 3" class="my-2">
-    Unlisted posts (quiet public in mastodon) are posts that opt out of search, including hashtag
-    searches on other instances. This is not recommended for art posts,
-    or anything you want to be discoverable!
-  </p>
-</section>
 <section *ngIf="false && uploadedMedias.length === 0" class="mt-3" id="pollControls">
   <button class="w-full" mat-button (mousedown)="quoteOpen = true" mat-flat-button>
     add poll
@@ -152,6 +141,17 @@
       </span>
       }
     </div>
+  </section>
+
+  <section id="privacy-messages">
+    <mat-card appearance="outlined" *ngIf="privacy === 10" class="mb-2 mt-1 mat-card-important">
+        <mat-card-content>Attention! ADMINS of both your instance, and the external instance can read
+        these DMs.</mat-card-content>
+    </mat-card>
+    <mat-card appearance="outlined" *ngIf="privacy === 3" class="mb-2 mt-1">
+        <mat-card-content>This post is set as unlisted. It opts out of search, hashtags
+          and other features. This is not recommended for anything you want discoverable.</mat-card-content>
+    </mat-card>
   </section>
 
   <button mat-flat-button class="w-full mt-2 flex-row" [disabled]="
