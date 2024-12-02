@@ -11,10 +11,10 @@ import { faEye, faEyeSlash, faUpload, faUser } from '@fortawesome/free-solid-svg
 import { EnvironmentService } from 'src/app/services/environment.service';
 
 @Component({
-    selector: 'app-register',
-    templateUrl: './register.component.html',
-    styleUrls: ['./register.component.scss'],
-    standalone: false
+  selector: 'app-register',
+  templateUrl: './register.component.html',
+  styleUrls: ['./register.component.scss'],
+  standalone: false
 })
 export class RegisterComponent {
   loading = false;
@@ -51,7 +51,7 @@ export class RegisterComponent {
     // minimum age: 14
     this.minimumRegistrationDate = new Date();
     this.minimumRegistrationDate.setFullYear(
-      this.minimumRegistrationDate.getFullYear() - 14
+      this.minimumRegistrationDate.getFullYear() - 18
     );
     // do not accept dates before 1900
     this.minDate = new Date();

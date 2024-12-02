@@ -62,6 +62,13 @@ export default function userRoutes(app: Application) {
           !forbiddenCharacters.some((char) => req.body.url.includes(char)) &&
           validateEmail(req.body.email)
         ) {
+          const birthDate = new Date(req.body.birthDate);
+          const minimumAge = new Date()
+          minimumAge.setFullYear(new Date().getFullYear() - 18)
+          if (birthDate.getTime() > minimumAge.getTime()) {
+            res.status(400)
+            return res.send({ error: true, message: 'Invalid age' })
+          }
           const emailExists = await User.findOne({
             where: {
               [Op.or]: [
