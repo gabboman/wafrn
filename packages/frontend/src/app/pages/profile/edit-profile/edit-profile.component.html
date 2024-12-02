@@ -11,7 +11,7 @@
       <input formControlName="name" matInput />
     </mat-form-field>
     <span>Your bio/description. You can put emoji codes here too</span>
-    <quill-editor #quill formControlName="description" class="w-full" [modules]="{ toolbar: [] }">
+    <quill-editor #quill formControlName="description" class="w-full" [modules]="{ toolbar: [], theme: 'bubble' }">
       <div quill-editor-toolbar style="border-top-left-radius: 5px; border-top-right-radius: 5px">
         <button pButton type="button" class="ql-bold" aria-label="Bold" title="Bold"></button>
         <button pButton type="button" class="ql-italic" aria-label="Italic" title="Italic"></button>
