@@ -62,7 +62,7 @@ export default function userRoutes(app: Application) {
           !forbiddenCharacters.some((char) => req.body.url.includes(char)) &&
           validateEmail(req.body.email)
         ) {
-          const birthDate = new Date(req.body.birthDate);
+          const birthDate = new Date(req.body.birthDate)
           const minimumAge = new Date()
           minimumAge.setFullYear(new Date().getFullYear() - 18)
           if (birthDate.getTime() > minimumAge.getTime()) {
@@ -124,8 +124,9 @@ export default function userRoutes(app: Application) {
               : `Welcome to ${environment.instanceUrl}!`
             const mailBody = environment.reviewRegistrations
               ? `Hello ${req.body.url}, at this moment we are manually reviewing registrations. You will recive an email from us once it's accepted`
-              : `<h1>Welcome to ${environment.instanceUrl}</h1> To activate your account <a href="${environment.instanceUrl
-              }/activate/${encodeURIComponent(req.body.email.toLowerCase())}/${activationCode}">click here!</a>`
+              : `<h1>Welcome to ${environment.instanceUrl}</h1> To activate your account <a href="${
+                  environment.instanceUrl
+                }/activate/${encodeURIComponent(req.body.email.toLowerCase())}/${activationCode}">click here!</a>`
             const emailSent = environment.disableRequireSendEmail
               ? true
               : sendActivationEmail(req.body.email.toLowerCase(), activationCode, mailHeader, mailBody)
@@ -229,22 +230,17 @@ export default function userRoutes(app: Application) {
           await user.save()
 
           const _options = JSON.parse(optionJSON)
-          const booleanOptions = ['wafrn.forceClassicLogo', 'wafrn.disableCW']
           if (Array.isArray(_options)) {
-            const options = _options.filter(elem => elem.name).map((opt) => {
-              let value = opt.value
-              if (booleanOptions.includes(opt.name)) {
-                value = String(value == 'true')
-              }
-
-              return {
-                ...opt,
-                value,
-                public: opt.name.startsWith('wafrn.public')
-              }
-            })
-
-
+            const options = _options
+              .filter((elem) => elem.name)
+              .map((opt) => {
+                return {
+                  ...opt,
+                  // NOTE: opt.value should be a string result of JSON.stringify, adding this to prevent any potential security issues
+                  value: String(opt.value),
+                  public: opt.name.startsWith('wafrn.public')
+                }
+              })
 
             for (const option of options) {
               if (option.value) {
@@ -256,15 +252,15 @@ export default function userRoutes(app: Application) {
                 })
                 userOption
                   ? await userOption.update({
-                    optionValue: option.value.toString(),
-                    public: option.public == true
-                  })
+                      optionValue: option.value,
+                      public: option.public == true
+                    })
                   : await UserOptions.create({
-                    userId: posterId,
-                    optionName: option.name,
-                    optionValue: option.value,
-                    public: option.public == true
-                  })
+                      userId: posterId,
+                      optionName: option.name,
+                      optionValue: option.value,
+                      public: option.public == true
+                    })
               }
             }
           }
@@ -473,19 +469,19 @@ export default function userRoutes(app: Application) {
       let followed = blog.url.startsWith('@')
         ? blog.followingCount
         : Follows.count({
-          where: {
-            followerId: blog.id,
-            accepted: true
-          }
-        })
+            where: {
+              followerId: blog.id,
+              accepted: true
+            }
+          })
       let followers = blog.url.startsWith('@')
         ? blog.followerCount
         : Follows.count({
-          where: {
-            followedId: blog.id,
-            accepted: true
-          }
-        })
+            where: {
+              followedId: blog.id,
+              accepted: true
+            }
+          })
       const publicOptions = UserOptions.findAll({
         where: {
           userId: blog.id,
