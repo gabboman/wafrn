@@ -1,11 +1,10 @@
-import { getAtProtoSession } from "./getAtProtoSession.js";
-import { sequelize, User } from "../../db.js";
-import { ProfileViewBasic } from "@atproto/api/dist/client/types/app/bsky/actor/defs.js";
-import { Model, Op } from "sequelize";
-import { environment } from "../../environment.js";
-import _ from "underscore";
-import { wait } from "../../utils/wait.js";
-
+import { getAtProtoSession } from './getAtProtoSession.js'
+import { sequelize, User } from '../../db.js'
+import { ProfileViewBasic } from '@atproto/api/dist/client/types/app/bsky/actor/defs.js'
+import { Model, Op } from 'sequelize'
+import { environment } from '../../environment.js'
+import _ from 'underscore'
+import { wait } from '../../utils/wait.js'
 
 async function forcePopulateUsers(dids: string[], localUser: Model<any, any>) {
   const userFounds = await User.findAll({
@@ -15,17 +14,17 @@ async function forcePopulateUsers(dids: string[], localUser: Model<any, any>) {
       }
     }
   })
-  const foundUsersDids = userFounds.map(elem => elem.bskyDid)
-  const notFoundUsers = dids.filter(elem => !foundUsersDids.includes(elem))
+  const foundUsersDids = userFounds.map((elem) => elem.bskyDid)
+  const notFoundUsers = dids.filter((elem) => !foundUsersDids.includes(elem))
   if (notFoundUsers.length > 0) {
-    const agent = await getAtProtoSession(localUser);
-    const usersToGet = _.chunk(notFoundUsers, 25);
+    const agent = await getAtProtoSession(localUser)
+    const usersToGet = _.chunk(notFoundUsers, 25)
     let petitionsResult = []
     for await (const group of usersToGet) {
-      const petition = await agent.getProfiles({ actors: group });
+      const petition = await agent.getProfiles({ actors: group })
       if (petition.data.profiles && petition.data.profiles.length > 0) {
         await User.bulkCreate(
-          petition.data.profiles.map(data => {
+          petition.data.profiles.map((data) => {
             return {
               bskyDid: data.did,
               url: '@' + (data.handle === 'handle.invalid' ? `handle.invalid${data.did}` : data.handle),
@@ -37,67 +36,68 @@ async function forcePopulateUsers(dids: string[], localUser: Model<any, any>) {
               headerImage: data.banner,
               // bsky does not has this function lol
               manuallyAcceptsFollows: false,
-              updatedAt: new Date()
+              updatedAt: new Date(),
+              remoteId: `https://bsky.app/profile/${data.handle}`
             }
           })
         )
       }
-
     }
   }
 }
 
 async function getAtprotoUser(handle: string, localUser: Model<any, any>, petitionData?: ProfileViewBasic) {
   // we check if we found the user
-  let userFound = handle == 'handle.invalid' ? undefined : await User.findOne({
-    where: {
-      [Op.or]: [
-        {
-          bskyDid: handle,
-        },
-        {
-          literal: sequelize.where(sequelize.fn('lower', sequelize.col('url')), handle.toLowerCase())
-        }
-      ]
-
-    }
-  });
+  let userFound =
+    handle == 'handle.invalid'
+      ? undefined
+      : await User.findOne({
+          where: {
+            [Op.or]: [
+              {
+                bskyDid: handle
+              },
+              {
+                literal: sequelize.where(sequelize.fn('lower', sequelize.col('url')), handle.toLowerCase())
+              }
+            ]
+          }
+        })
   // sometimes we can get the dids and if its a local user we just return it and thats it
   if (userFound && !userFound.url.startsWith('@')) {
-    return userFound;
+    return userFound
   }
   // We check if the user is local.
   if (handle.endsWith('.' + environment.bskyPds)) {
-    let userUrl = handle.split('.' + environment.bskyPds)[0];
+    let userUrl = handle.split('.' + environment.bskyPds)[0]
     if (userUrl.startsWith('@')) {
-      userUrl = userUrl.split('@')[1];
+      userUrl = userUrl.split('@')[1]
     }
     if (userUrl.includes('.')) {
-      return;
+      return
     }
     return User.findOne({
       where: {
-        literal: sequelize.where(
-          sequelize.fn('lower', sequelize.col('url')), userUrl)
+        literal: sequelize.where(sequelize.fn('lower', sequelize.col('url')), userUrl)
       }
     })
   }
-  const agent = await getAtProtoSession(localUser);
+  const agent = await getAtProtoSession(localUser)
   // TODO check if current user exist
-  let bskyUserResponse = petitionData ? { success: true, data: petitionData } : undefined;
+  let bskyUserResponse = petitionData ? { success: true, data: petitionData } : undefined
   if (!bskyUserResponse) {
     try {
-      bskyUserResponse = await agent.getProfile({ actor: handle });
+      bskyUserResponse = await agent.getProfile({ actor: handle })
     } catch (error) {
       return await User.findOne({
         where: {
           url: environment.deletedUser
         }
-      });
+      })
     }
   }
   if (bskyUserResponse.success) {
-    const data = bskyUserResponse.data;
+    const data = bskyUserResponse.data
     const newData = {
       bskyDid: data.did,
       url: '@' + (data.handle === 'handle.invalid' ? `handle.invalid${data.did}` : data.handle),
@@ -109,18 +109,19 @@ async function getAtprotoUser(handle: string, localUser: Model<any, any>, petiti
       headerImage: data.banner,
       // bsky does not has this function lol
       manuallyAcceptsFollows: false,
-      updatedAt: new Date()
+      updatedAt: new Date(),
+      remoteId: `https://bsky.app/profile/${data.handle}`
     }
-    userFound = userFound ? userFound : await internalGetDBUser(newData.bskyDid, newData.url);
+    userFound = userFound ? userFound : await internalGetDBUser(newData.bskyDid, newData.url)
     if (userFound) {
-      await userFound.update(newData);
-      await userFound.save();
+      await userFound.update(newData)
+      await userFound.save()
     } else {
       try {
         userFound = await User.create(newData)
       } catch (error) {
         // not the best solution but yeah that should work
-        await wait(1500);
+        await wait(1500)
         userFound = await internalGetDBUser(newData.bskyDid, newData.url)
       }
     }
@@ -129,7 +130,6 @@ async function getAtprotoUser(handle: string, localUser: Model<any, any>, petiti
 }
 
 function internalGetDBUser(did: string, url: string) {
-
   return User.findOne({
     where: {
       [Op.or]: [
@@ -141,7 +141,6 @@ function internalGetDBUser(did: string, url: string) {
         }
       ]
     }
-  });
-
+  })
 }
-export { getAtprotoUser, forcePopulateUsers };
+export { getAtprotoUser, forcePopulateUsers }
