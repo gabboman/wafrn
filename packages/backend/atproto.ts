@@ -32,11 +32,4 @@ firehose.on("commit", async (commit) => {
       await firehoseQueue.add('processFirehoseQueue', data)
     }
 });
-
-firehose.on("error", (error) => {
-  logger.warn({
-    message: `Error on firehose`,
-    error: error
-  })
-})
 firehose.start();
