@@ -2,7 +2,7 @@
 // returns the post id
 import { getAtProtoSession } from "./getAtProtoSession.js";
 import { QueryParams } from "@atproto/sync/dist/firehose/lexicons.js";
-import { Media, Post, PostMentionsUserRelation, PostTag, User } from "../../db.js";
+import { Media, Post, PostMentionsUserRelation, PostTag, Quotes, User } from "../../db.js";
 import { environment } from "../../environment.js";
 import { Model, Op } from "sequelize";
 import { PostView, ThreadViewPost } from "@atproto/api/dist/client/types/app/bsky/feed/defs.js";
@@ -10,6 +10,7 @@ import { getAtprotoUser, forcePopulateUsers } from "./getAtprotoUser.js";
 import { CreateOrUpdateOp } from "@skyware/firehose";
 import { getAllLocalUserIds } from "../../utils/cacheGetters/getAllLocalUserIds.js";
 import { wait } from "../../utils/wait.js";
+import { isArray } from "underscore";
 const adminUser = User.findOne({
   where: {
     url: environment.adminUser
@@ -208,7 +209,13 @@ async function processSinglePost(post: PostView, parentId?: string): Promise<str
         }
       }))
     }
-
+    const quotedPostId = getQuotedPostUri(post)
+    if (quotedPostId) {
+      await Quotes.create({
+        quoterPostId: postToProcess.id,
+        quotedPostId: quotedPostId
+      })
+    }
     return postToProcess.id
   }
 
@@ -291,6 +298,15 @@ function getPostMedias(post: PostView) {
       }]
     }
 
+  }
+  return res;
+}
+
+function getQuotedPostUri(post: PostView): string | undefined {
+  let res: string | undefined = undefined
+  const embed = post.record.embed;
+  if (embed && embed['$type'] === 'app.bsky.embed.record') {
+    res = embed.record.uri
   }
   return res;
 }
