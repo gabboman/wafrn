@@ -44,7 +44,7 @@ export default function notificationRoutes(app: Application) {
       : new Date()
     const quotesDate = req.query?.quotesDate ? new Date(parseInt(req.query.quotesDate as string)) : new Date()
 
-    const newQuotes = await Quotes.findAll(await getQuotedPostsQuery(userId, quotesDate, Op.lt, true))
+    const newQuotes = Quotes.findAll(await getQuotedPostsQuery(userId, quotesDate, Op.lt, true))
 
     const reblogQuery: any = await getReblogQuery(userId, reblogsDate)
     reblogQuery.where.createdAt = {
@@ -75,6 +75,8 @@ export default function notificationRoutes(app: Application) {
       limit: environment.postsPerPage
     })
     const likes = getLikedPostsId(userId, likesDate, Op.lt, true)
+
+    await Promise.all([newEmojiReactions, likes, reblogs, newQuotes])
     const postIds = mentionedPostsId
       .concat((await newEmojiReactions).map((react: any) => react.postId))
       .concat((await likes).map((like: any) => like.postId))
@@ -84,7 +86,7 @@ export default function notificationRoutes(app: Application) {
       .concat((await newQuotes).map((quote: any) => quote.quotedPostId))
 
     const medias = getMedias(postIds)
-    const posts = await Post.findAll({
+    const posts = Post.findAll({
       where: {
         id: {
           [Op.in]: postIds
@@ -92,7 +94,7 @@ export default function notificationRoutes(app: Application) {
       }
     })
 
-    const asks = await Ask.findAll({
+    const asks = Ask.findAll({
       attributes: ['question', 'apObject', 'createdAt', 'updatedAt', 'postId', 'userAsked', 'userAsker'],
       where: {
         postId: {
@@ -101,14 +103,16 @@ export default function notificationRoutes(app: Application) {
       }
     })
 
+    await Promise.all([asks, posts, medias])
+
     const userIds = (await reblogs)
       .map((rb: any) => rb.userId)
       .concat((await newEmojiReactions).map((react: any) => react.userId))
       .concat((await follows).map((elem: any) => elem.followerId))
       .concat((await likes).map((like: any) => like.userId))
       .concat([userId])
-      .concat(posts.map((post: any) => post.userId))
-      .concat(asks.map((ask: any) => ask.userAsker))
+      .concat((await posts).map((post: any) => post.userId))
+      .concat((await asks).map((ask: any) => ask.userAsker))
 
     const users = User.findAll({
       attributes: ['name', 'url', 'avatar', 'id'],
