@@ -11,6 +11,7 @@ import { CreateOrUpdateOp } from "@skyware/firehose";
 import { getAllLocalUserIds } from "../../utils/cacheGetters/getAllLocalUserIds.js";
 import { wait } from "../../utils/wait.js";
 import { isArray } from "underscore";
+import { logger } from "../../utils/logger.js";
 const adminUser = User.findOne({
   where: {
     url: environment.adminUser
@@ -281,20 +282,27 @@ function getPostMedias(post: PostView) {
     }
     if (embed.images || embed.media) {
       const thingToProcess = embed.images ? embed.images : embed.media.images
-      const toConcat = thingToProcess.map((media, index) => {
-        const cid = media.image.ref['$link'] ? media.image.ref['$link'] : media.image.ref.toString()
-        const did = post.author.did
-        return {
-          mediaType: media.image.mimeType,
-          description: media.alt,
-          height: media.aspectRatio?.height,
-          width: media.aspectRatio?.width,
-          url: `?cid=${encodeURIComponent(cid)}&did=${encodeURIComponent(did)}`,
-          mediaOrder: index,
-          external: true
-        }
-      })
-      res = res.concat(toConcat)
+      if (thingToProcess) {
+        const toConcat = thingToProcess.map((media, index) => {
+          const cid = media.image.ref['$link'] ? media.image.ref['$link'] : media.image.ref.toString()
+          const did = post.author.did
+          return {
+            mediaType: media.image.mimeType,
+            description: media.alt,
+            height: media.aspectRatio?.height,
+            width: media.aspectRatio?.width,
+            url: `?cid=${encodeURIComponent(cid)}&did=${encodeURIComponent(did)}`,
+            mediaOrder: index,
+            external: true
+          }
+        })
+        res = res.concat(toConcat)
+      } else {
+        logger.debug({
+          message: `Bsky problem getting medias on post ${post.uri}`
+        })
+      }
+
     }
     if (embed.video) {
       const video = embed.video;
