@@ -143,7 +143,7 @@ export default function notificationRoutes(app: Application) {
     })
 
     res.send({
-      asks,
+      asks: await asks,
       emojiReactions: await newEmojiReactions,
       emojis: await emojis,
       users: await users,
