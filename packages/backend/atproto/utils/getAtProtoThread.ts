@@ -18,7 +18,7 @@ const adminUser = User.findOne({
 })
 const agent = environment.enableBsky ? await getAtProtoSession(await adminUser as Model<any, any>) : undefined;
 
-async function getAtProtoThread(uri: string, operation?: { operation: CreateOrUpdateOp, remoteUser: Model<any, any> }): Promise<string> {
+async function getAtProtoThread(uri: string, operation?: { operation: CreateOrUpdateOp, remoteUser: Model<any, any> }, forceUpdate?: boolean): Promise<string> {
   if (operation) {
     const postExisting = await Post.findOne({
       where: {
@@ -53,12 +53,12 @@ async function getAtProtoThread(uri: string, operation?: { operation: CreateOrUp
           //const dids = getDidsFromThread(parentThread)
           //await forcePopulateUsers(dids, (await adminUser) as Model<any, any>)
           const parentId = await processParents(parentThread as ThreadViewPost) as string
-          return await processSinglePost(postObject, parentId) as string;
+          return await processSinglePost(postObject, parentId, forceUpdate) as string;
 
         }
 
       } else {
-        return await processSinglePost(postObject) as string;
+        return await processSinglePost(postObject, undefined, forceUpdate) as string;
       }
 
     }
@@ -72,7 +72,7 @@ async function getAtProtoThread(uri: string, operation?: { operation: CreateOrUp
   if (thread.parent) {
     parentId = await processParents(thread.parent as ThreadViewPost) as string
   }
-  const procesedPost = await processSinglePost(thread.post, parentId)
+  const procesedPost = await processSinglePost(thread.post, parentId, forceUpdate)
   if (thread.replies && procesedPost) {
     for await (const repliesThread of thread.replies) {
       processReplies(repliesThread, procesedPost)
@@ -269,7 +269,7 @@ function getPostMedias(post: PostView) {
   const embed = post.record.embed;
   if (embed) {
     if (embed.external) {
-      res = [
+      res = res.concat([
         {
           mediaType: embed.external.thumb?.mimeType,
           description: embed.external.title,
@@ -277,10 +277,11 @@ function getPostMedias(post: PostView) {
           mediaOrder: 0,
           external: true
         }
-      ]
+      ])
     }
-    if (embed.images) {
-      res = embed.images.map((media, index) => {
+    if (embed.images || embed.media) {
+      const thingToProcess = embed.images ? embed.images : embed.media.images
+      const toConcat = thingToProcess.map((media, index) => {
         const cid = media.image.ref['$link'] ? media.image.ref['$link'] : media.image.ref.toString()
         const did = post.author.did
         return {
@@ -293,12 +294,13 @@ function getPostMedias(post: PostView) {
           external: true
         }
       })
+      res = res.concat(toConcat)
     }
     if (embed.video) {
       const video = embed.video;
       const cid = video.ref['$link'] ? video.ref['$link'] : video.ref.toString()
       const did = post.author.did
-      res = [{
+      res = res.concat([{
         mediaType: embed.video.mimeType,
         description: '',
         height: embed.aspectRatio?.height,
@@ -306,7 +308,7 @@ function getPostMedias(post: PostView) {
         url: `?cid=${encodeURIComponent(cid)}&did=${encodeURIComponent(did)}`,
         mediaOrder: 0,
         external: true
-      }]
+      }])
     }
 
   }
@@ -316,7 +318,7 @@ function getPostMedias(post: PostView) {
 function getQuotedPostUri(post: PostView): string | undefined {
   let res: string | undefined = undefined
   const embed = post.record.embed;
-  if (embed && embed['$type'] === 'app.bsky.embed.record') {
+  if (embed && ['app.bsky.embed.record', 'app.bsky.embed.recordWithMedia'].includes(embed['$type'])) {
     res = embed.record.uri
   }
   return res;
