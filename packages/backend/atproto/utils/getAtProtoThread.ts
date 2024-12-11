@@ -99,7 +99,17 @@ async function processParents(thread: ThreadViewPost): Promise<string | undefine
   return await processSinglePost(thread.post, parentId)
 }
 
-async function processSinglePost(post: PostView, parentId?: string): Promise<string | undefined> {
+async function processSinglePost(post: PostView, parentId?: string, forceUpdate?: boolean): Promise<string | undefined> {
+  if (!forceUpdate) {
+    const existingPost = await Post.findOne({
+      where: {
+        bskyUri: post.uri
+      }
+    })
+    if (existingPost) {
+      return existingPost.id
+    }
+  }
   const postCreator = await getAtprotoUser(post.author.did, await adminUser as Model<any, any>, post.author)
   if (!postCreator || !post) {
     const usr = postCreator ? postCreator : await User.findOne({ where: { url: environment.deletedUser } }) as Model<any, any>;
@@ -211,9 +221,10 @@ async function processSinglePost(post: PostView, parentId?: string): Promise<str
     }
     const quotedPostId = getQuotedPostUri(post)
     if (quotedPostId) {
+      const quotedPost = await getAtProtoThread(quotedPostId)
       await Quotes.create({
         quoterPostId: postToProcess.id,
-        quotedPostId: quotedPostId
+        quotedPostId: quotedPost
       })
     }
     return postToProcess.id
