@@ -27,6 +27,7 @@ $light-theme: mat.define-theme((color: (theme-type: light,
   --cardcolor: #2a323d;
   --wafrn-blue: rgb(56, 254, 241);
 }
+
 /* $bgcolor: #151116;
 $cardcolor: #2a323d; */
 
@@ -47,11 +48,11 @@ html {
 @include mat.typography-hierarchy($dark-theme); // typography styles could be included too
 
 @media (prefers-color-scheme: light) {
-:root {
-  --bgcolor: unset;
-  --cardcolor: unset;
-  --wafrn-blue: rgb(18, 95, 90);
-}
+  :root {
+    --bgcolor: unset;
+    --cardcolor: unset;
+    --wafrn-blue: rgb(18, 95, 90);
+  }
 
   html {
     // Apply the dark theme by default
@@ -410,6 +411,7 @@ mat-paginator,
 }
 
 @media (prefers-color-scheme: light) {
+
   .mat-mdc-card,
   table,
   mat-paginator,
@@ -446,8 +448,8 @@ pre {
   overflow-x: scroll
 }
 
-.mat-mdc-dialog-inner-container > .mat-mdc-dialog-surface {
-    padding: 20px;
+.mat-mdc-dialog-inner-container>.mat-mdc-dialog-surface {
+  padding: 20px;
 }
 
 /* NOTE: This is a custom class not provided by Angular. */
@@ -455,5 +457,16 @@ pre {
 /* This should be fine as it's only used sparingly. */
 .mat-card-important {
   background-color: rgba(#f22f2f, 0.5) !important;
-  --mdc-outlined-card-outline-color:#ff5b5b !important;
+  --mdc-outlined-card-outline-color: #ff5b5b !important;
+}
+
+// HACK not the best thing but yeah it works
+.affected-color-buttons {
+  fill: white !important;
+
+  @media (prefers-color-scheme: dark) {
+    path {
+      fill: black !important;
+    }
+  }
 }
