@@ -7,9 +7,10 @@ import { Media } from "../../db.js";
 import { environment } from "../../environment.js";
 import { fileTypeFromFile } from 'file-type';
 import sharp from "sharp";
+import { Model } from "sequelize";
 
 async function processRemoteMedia(job: Job) {
-    const media = await Media.findByPk(job.data.mediaId);
+    const media = await Media.findByPk(job.data.mediaId) as Model<any, any>;
     let fileLocation = "";
     if (media.external) {
         // TODO this code uses parts from the cacher. Could be better done? absolutely. Will do once it breaks
@@ -52,11 +53,6 @@ async function processRemoteMedia(job: Job) {
             media.updatedAt = new Date();
         }
         await media.save()
-    }
-
-    if (media.external) {
-        // we delete the cached file because we dont want all the files to fill our disk
-        await fs.unlink(fileLocation);
     }
 }
 
