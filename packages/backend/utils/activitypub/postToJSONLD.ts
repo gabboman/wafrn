@@ -129,6 +129,10 @@ async function postToJSONLD(postId: string) {
 
   const usersToSend = getToAndCC(post.privacy, mentionedUsers, stringMyFollowers)
   const actorUrl = `${environment.frontendUrl}/fediverse/blog/${localUser.url.toLowerCase()}`
+  let misskeyQuoteURL = quotedPostString;
+  if (misskeyQuoteURL?.startsWith('https://bsky.app/')) {
+    misskeyQuoteURL = null;
+  }
   let postAsJSONLD: activityPubObject = {
     '@context': ['https://www.w3.org/ns/activitystreams', `${environment.frontendUrl}/contexts/litepub-0.1.jsonld`],
     id: `${environment.frontendUrl}/fediverse/activity/post/${post.id}`,
@@ -152,9 +156,9 @@ async function postToJSONLD(postId: string) {
       sensitive: !!post.content_warning || contentWarning,
       atomUri: `${environment.frontendUrl}/fediverse/post/${post.id}`,
       inReplyToAtomUri: parentPostString,
-      quoteUrl: quotedPostString,
-      _misksey_quote: quotedPostString,
-      quoteUri: quotedPostString,
+      quoteUrl: misskeyQuoteURL,
+      _misksey_quote: misskeyQuoteURL,
+      quoteUri: misskeyQuoteURL,
       // conversation: conversationString,
       content: (processedContent + tagsAndQuotes).replace(lineBreaksAtEndRegex, ''),
       attachment: postMedias
