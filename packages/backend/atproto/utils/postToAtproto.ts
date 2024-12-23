@@ -32,9 +32,9 @@ async function postToAtproto(post: Model<any, any>, agent: BskyAgent) {
       }
     }
   }
-  const contentWarning = post.content_warning ? `[${post.content_warning.trim()}]` : ''
+  const contentWarning = post.content_warning ? `[${post.content_warning.trim()}]\n` : ''
   const tags = (await post.getPostTags()).map(elem => `#${elem.tagName.trim().replaceAll(' ', '-')}`).join(' ')
-  let postText: string = (contentWarning + post.markdownContent + ' ' + tags).trim()
+  let postText: string = (contentWarning + post.markdownContent.trim() + ' ' + tags).trim()
   if (quotedPost && !bskyQuote) {
     const remoteId = getPostUrlForQuote(quotedPost);
     postText = postText + "\nRE: " + remoteId
@@ -49,7 +49,7 @@ async function postToAtproto(post: Model<any, any>, agent: BskyAgent) {
   for await (const [index, media] of medias.entries()) {
     const data = await fs.stat('uploads/' + media.url);
     maxMediaSize = maxMediaSize > data.size ? maxMediaSize : data.size;
-    if (data.size > 1000000) {
+    if (data.size > 1000000 || media.url.endsWith('mp4')) {
       mediasToNotSend.push(index)
     }
   }
