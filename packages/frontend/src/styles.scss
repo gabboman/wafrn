@@ -42,6 +42,7 @@ html {
   @include mat.all-component-themes($dark-theme);
   //font-family: $font-family;
   //background-color: var(--bgcolor)
+  overflow-wrap: break-word;
 }
 
 @include mat.color-variants-backwards-compatibility($dark-theme);
