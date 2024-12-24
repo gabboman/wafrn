@@ -14,6 +14,15 @@ This project uses NPM. You can check that NPM is installed in the terminal by ru
 npm -v
 ```
 
+If you have Nix installed, you can run the development environment through the provided `shell.nix` file which includes
+Node 20.
+
+```bash
+nix-shell
+
+# Now in nix shell with Node 20 installed
+```
+
 ### Setup
 
 First, [fork the repo](https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/working-with-forks/fork-a-repo).
