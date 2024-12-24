@@ -32,13 +32,16 @@ git clone git@github.com:[YOUR USERNAME HERE]/wafrn.git ./wafrn
 You can run the development server through the command line:
 
 ```bash
-npm run start
+npm run frontend:develop      # Point to local backend
+npm run frontend:develop:prod # Point to production backend
 ```
 
 When the server is set up, you should get a success message:
 
-```bash
-** Angular Live Development Server is listening on localhost:4200, open your browser on http://localhost:4200/ **
+```text
+Watch mode enabled. Watching for file changes...
+  ➜  Local:   http://localhost:4200/
+  ➜  press h + enter to show help
 ```
 
 ## Contributing
