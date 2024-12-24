@@ -444,6 +444,10 @@ mat-paginator,
   max-height: unset !important;
 }
 
+.mat-drawer-inner-container {
+  overscroll-behavior-y: contain;
+}
+
 pre {
   overflow-x: scroll
 }
