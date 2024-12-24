@@ -14,7 +14,7 @@ a[href *= "dQw4w9WgXcQ"]::before {
 }
 ```
 
-### Initial template made by @fizzyday@app.wafrn.net
+### Initial template made by [@fizzyday@app.wafrn.net](https://app.wafrn.net/blog/fizzyday)
 
 Here is a theming template you can use to customize the appearance of your profile and how the dashboard appears to you.
 
