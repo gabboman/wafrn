@@ -28,8 +28,10 @@
     @else {
     <mat-card class="p-3 pb-2 mb-2 lg:mx-4 scalein wafrn-container flex-shrink-0">
       <div class="flex">
-        <app-avatar-small class="mr-2" [user]="content.user"></app-avatar-small> {{content.user.url}} rewooted <a
-          class="ml-1" [routerLink]="'/fediverse/post/' + content.parentId"> this post</a>
+        <app-avatar-small class="mr-2" [user]="content.user"></app-avatar-small>
+        <div class="break-words">
+          {{content.user.url}} rewooted <a [routerLink]="'/fediverse/post/' + content.parentId">this post</a>
+        </div>
       </div>
     </mat-card>
     }
