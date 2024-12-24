@@ -29,7 +29,7 @@
     <mat-card class="p-3 pb-2 mb-2 lg:mx-4 scalein wafrn-container flex-shrink-0">
       <div class="flex">
         <app-avatar-small class="mr-2" [user]="content.user"></app-avatar-small>
-        <div class="break-words">
+        <div style="word-break: break-word">
           {{content.user.url}} rewooted <a [routerLink]="'/fediverse/post/' + content.parentId">this post</a>
         </div>
       </div>
