@@ -5,12 +5,12 @@
 Add this to detect rickrolls
 
 ```css
-a[href *= "dQw4w9WgXcQ"]::before {
-    content: "this is a rickroll → ";
-    color: red;
-    background-color: white;
-    border-radius: 5px;
-    padding: 2px;
+a[href*="dQw4w9WgXcQ"]::before {
+  content: "this is a rickroll → ";
+  color: red;
+  background-color: white;
+  border-radius: 5px;
+  padding: 2px;
 }
 ```
 

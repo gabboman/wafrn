@@ -91,7 +91,7 @@ Then we will edit the file `/etc/apache/apache2.conf` and we will edit this:
         AllowOverride None
         Require all granted
 </Directory>
-# this directory will point towards the angular app compiled. We recomend doing this to avoid downtime when updating the front
+# this directory will point towards the angular app compiled. We recommend doing this to avoid downtime when updating the front
 # this directory will also be configured in the backend config later
 <Directory /home/wafrn/front>
         Options Indexes FollowSymLinks
@@ -184,10 +184,10 @@ We create the file `/etc/apache2/sites-avaiable/YOUR-FRONTEND-DOMAIN.conf` with 
         ProxyPass /post/ http://localhost:5000/post/
         ProxyPassReverse /post/ http://localhost:5000/post/
 
-	Header set Access-Control-Allow-Origin "*"
+  Header set Access-Control-Allow-Origin "*"
   # next line can be ignored for single user instance. if you want users, to protect their privacy you need to set this up
   # so someone can not do shady stuff with themes
-	Header set Content-Security-Policy "default-src 'self' 'unsafe-inline' 'unsafe-eval' https://YOURDOMAIN https://YOUR-CACHE-DOMAIN https://YOUR-MEDIA-DOMAIN; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://YOURDOMAIN; img-src 'self' https://YOUR-MEDIA-DOMAIN wafrncache.b-cdn.net; font-src 'self' https://YOUR-CACHE-DOMAIN https://YOUR-MEDIA-DOMAIN; object-src 'none'; frame-src 'none'; frame-ancestors 'none'; upgrade-insecure-requests; block-all-mixed-content"
+  Header set Content-Security-Policy "default-src 'self' 'unsafe-inline' 'unsafe-eval' https://YOURDOMAIN https://YOUR-CACHE-DOMAIN https://YOUR-MEDIA-DOMAIN; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://YOURDOMAIN; img-src 'self' https://YOUR-MEDIA-DOMAIN wafrncache.b-cdn.net; font-src 'self' https://YOUR-CACHE-DOMAIN https://YOUR-MEDIA-DOMAIN; object-src 'none'; frame-src 'none'; frame-ancestors 'none'; upgrade-insecure-requests; block-all-mixed-content"
         ErrorLog ${APACHE_LOG_DIR}/error_wafrn.log
         CustomLog ${APACHE_LOG_DIR}/wafrn_app.log combined
         # Possible values include: debug, info, notice, warn, error, crit,
