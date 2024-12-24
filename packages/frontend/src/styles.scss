@@ -460,17 +460,6 @@ pre {
   --mdc-outlined-card-outline-color: #ff5b5b !important;
 }
 
-// HACK not the best thing but yeah it works
-.affected-color-buttons {
-  fill: white !important;
-
-  @media (prefers-color-scheme: dark) {
-    path {
-      fill: black !important;
-    }
-  }
-}
-
 .force-comic-sans {
   font-family: "Comic Sans MS", cursive, sans-serif;
 }
