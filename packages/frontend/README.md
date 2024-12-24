@@ -14,6 +14,15 @@ This project uses NPM. You can check that NPM is installed in the terminal by ru
 npm -v
 ```
 
+If you have Nix installed, you can run the development environment through the provided `shell.nix` file which includes
+Node 20.
+
+```bash
+nix-shell
+
+# Now in nix shell with Node 20 installed
+```
+
 ### Setup
 
 First, [fork the repo](https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/working-with-forks/fork-a-repo).
@@ -32,13 +41,16 @@ git clone git@github.com:[YOUR USERNAME HERE]/wafrn.git ./wafrn
 You can run the development server through the command line:
 
 ```bash
-npm run start
+npm run frontend:develop      # Point to local backend
+npm run frontend:develop:prod # Point to production backend
 ```
 
 When the server is set up, you should get a success message:
 
-```bash
-** Angular Live Development Server is listening on localhost:4200, open your browser on http://localhost:4200/ **
+```text
+Watch mode enabled. Watching for file changes...
+  ➜  Local:   http://localhost:4200/
+  ➜  press h + enter to show help
 ```
 
 ## Contributing
