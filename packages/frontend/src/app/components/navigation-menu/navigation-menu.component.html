@@ -2,7 +2,13 @@
   <mat-drawer style="position: fixed; border-radius: 0" class="side-menu" [mode]="mobile ? 'over' : 'side'"
     [opened]="menuVisible || !mobile" (closed)="hideMenu()">
     <a [href]="'/'" class="block" (mousedown)="hideMenu()">
-      <img [src]="logo" class="block mx-auto my-3" alt="instance logo" style="max-width: 200px; max-height: 72px" />
+      <img
+        [src]="logo"
+        class="block mx-auto my-3"
+        alt="instance logo"
+        width="200"
+        style="aspect-ratio: 3 / 1; object-fit: contain;"
+      />
     </a>
     <hr class="mx-3" />
     <mat-nav-list>
