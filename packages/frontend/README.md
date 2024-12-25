@@ -23,6 +23,12 @@ nix-shell
 # Now in nix shell with Node 20 installed
 ```
 
+If you want the shell to run the production server and immediately exit upon the command's completion, you can run
+
+```bash
+nix-shell --command "trap 'exit' INT;npm run frontend:develop:prod"
+```
+
 ### Setup
 
 First, [fork the repo](https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/working-with-forks/fork-a-repo).
