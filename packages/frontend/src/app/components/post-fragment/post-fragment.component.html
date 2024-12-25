@@ -78,7 +78,7 @@
       } @else {
       <button [ngClass]="{
         blurry: (fragment.content_warning || fragment.muted_words_cw) && showCw
-      }" [matTooltip]="emoji.tooltip " mat-stroked-button>
+      }" [matTooltip]="emoji.tooltip " mat-raised-button>
         @if (emoji.img) {
         <img class="post-emoji" [src]="emoji.img" [alt]="emoji.content" />
         } @else {
