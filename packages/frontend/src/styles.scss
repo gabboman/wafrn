@@ -1,104 +1,52 @@
 @use "@angular/material" as mat;
-
-//$font-family: sans-serif;
-// Define a dark theme
-$dark-theme: mat.define-theme(
-  (
-    color: (
-      theme-type: dark,
-      primary: mat.$violet-palette,
-    ),
-    /* typography: (
-      brand-family: mat.$font-family,
-      plain-family: mat.$font-family,
-      bold-weight: 900,
-    ), */
-  )
-);
-
-$light-theme: mat.define-theme(
-  (
-    color: (
-      theme-type: light,
-      primary: mat.$violet-palette,
-    ),
-    /*
-      typography: (brand-family: $font-family,
-        plain-family: $font-family,
-        bold-weight: 900,
-      )*/
-  )
-);
-
-:root {
-  --bgcolor: #151116;
-  --cardcolor: #2a323d;
-  --wafrn-blue: rgb(56, 254, 241);
-}
-
-@include mat.elevation-classes();
-@include mat.app-background();
+@use "./app/styles/quil.scss";
 
 html {
+  color-scheme: light dark;
+  @include mat.theme(
+    (
+      color: mat.$violet-palette,
+      density: 0,
+    )
+  );
+}
+
+// HACK: Have to make dummy theme to initialize typography
+$theme: mat.define-theme(
+  (
+    color: (
+      primary: mat.$violet-palette,
+    ),
+  )
+);
+
+@include mat.typography-hierarchy($theme);
+
+:root {
+  --mat-sys-background: light-dark(#ffffff, #151116);
+  --mat-sys-surface-container-low: light-dark(#f8f2f6, #2a313c);
+  --wafrn-blue: light-dark(#125e59, #39fef1);
+  --mat-sys-label-small-size: 0.688rem;
+}
+
+html {
+  background-color: var(--mat-sys-surface);
   overflow-wrap: break-word;
-  @include mat.theme($dark-theme);
-  // Apply the dark theme by default
-  @include mat.elevation-classes();
-  @include mat.app-background();
-  @include mat.all-component-typographies($dark-theme);
-  @include mat.all-component-themes($dark-theme);
-  //font-family: $font-family;
-  //background-color: var(--bgcolor)
 }
 
 body {
   margin: 0;
 }
 
-@include mat.color-variants-backwards-compatibility($dark-theme);
-// typography styles could be included too
-@include mat.typography-hierarchy($dark-theme);
-
-@media (prefers-color-scheme: light) {
-  :root {
-    --bgcolor: unset;
-    --cardcolor: unset;
-    --wafrn-blue: rgb(18, 95, 90);
-  }
-
-  html {
-    // Apply the dark theme by default
-    @include mat.elevation-classes();
-    @include mat.app-background();
-    @include mat.all-component-typographies($light-theme);
-    @include mat.all-component-themes($light-theme);
-    //font-family: $font-family;
-    //background-color: var(--bgcolor)
-  }
-
-  @include mat.color-variants-backwards-compatibility($light-theme);
-  @include mat.typography-hierarchy($light-theme);
-
-  /* TODO: nuke quill-editor I never wanna see it again */
-  quill-editor * {
-    color: black !important;
-  }
-}
-
 .mat-drawer-content {
   background-color: var(--bgcolor);
 }
 
-$wafrn-blue: rgb(56, 254, 241);
-// $wafrn-blue: #D6CA98; I tried but people told me not to :(
-// $wafrn-dark: rgb(18, 95, 90);
-$editor-buttons: #ffffffde;
-
-@media (min-width: 992px) {
-  .show-sidebar-menu-button {
-    display: none;
-  }
-}
+/* @media (min-width: 992px) { */
+/*   .show-sidebar-menu-button { */
+/*     display: none; */
+/*   } */
+/* } */
 
 // dirty hack because bug regarding the editor
 .cdk-overlay-pane.mat-mdc-dialog-panel {
@@ -117,56 +65,10 @@ a:visited,
   text-align: center;
 }
 
-.ql-snow .ql-stroke {
-  fill: none;
-  stroke: $editor-buttons;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-  stroke-width: 2;
-}
-
-.ql-snow .ql-fill,
-.ql-snow .ql-stroke.ql-fill {
-  fill: $editor-buttons;
-}
-
-.ql-snow .ql-picker {
-  color: $editor-buttons;
-}
-
-.uploadImageButton {
-  color: $editor-buttons;
-}
-
-.ql-snow.ql-container {
-  border-radius: 0 0 5px 5px;
-  border-color: #999;
-}
-
-.ql-snow > .ql-editor {
-  color: white;
-  font-size: 1.25em !important;
-  border-radius: 0 0 5px 5px;
-  font-size: 1em;
-  min-height: 140px;
-  max-height: 400px;
-  overflow-y: auto;
-}
-
 li {
   list-style-type: inside circle;
   margin-left: 1.5em;
 }
-
-.ql-snow > .ql-editor.ql-blank::before {
-  color: white;
-  opacity: 0.5;
-}
-
-.ql-editor:focus {
-  background-color: var(--mdc-filled-text-field-container-color);
-}
-
 $avatar-length: 40px;
 
 .avatar-container {
@@ -207,23 +109,11 @@ $avatar-length: 40px;
   margin: 0;
 }
 
-.ql-mention-list-item {
-  margin: 0;
-}
-
-.ql-mention-list-item.selected {
-  background-color: #20262e;
-}
-
 .post-emoji {
   display: inline-flex;
   max-height: 1.5em;
   max-width: 1.5em;
   vertical-align: middle;
-}
-
-.ql-picker-options {
-  background-color: var(--mdc-filled-text-field-container-color) !important;
 }
 
 .font-small {
@@ -268,7 +158,9 @@ $avatar-length: 40px;
 }
 
 hr {
-  border-top: 0px;
+  border-style: solid;
+  border-width: 1px 0 0 0;
+  border-color: var(--mat-sys-outline-variant);
 }
 
 blockquote {
@@ -278,28 +170,6 @@ blockquote {
 
 .mdc-button {
   min-width: unset !important;
-}
-
-.ql-tooltip {
-  z-index: 999 !important;
-}
-
-.ql-toolbar.ql-snow {
-  border-color: #999;
-}
-
-.quill-mention-inner {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-
-  img {
-    object-fit: contain;
-    width: 24px;
-    height: 24px;
-    display: block;
-    margin: 0 auto;
-  }
 }
 
 .share-button {
@@ -341,35 +211,10 @@ blockquote {
   max-height: 128px;
 }
 
-.ql-size-small {
-  font-size: 0.75em;
-  font-size: 1em;
-}
-
 .wafrn-text-default {
   font-size: 1rem;
   line-height: 1.5;
   word-wrap: break-word;
-}
-
-.ql-size-large {
-  font-size: 2.5em;
-}
-
-.ql-size-huge {
-  font-size: 3.5em;
-}
-
-.ql-align-center {
-  text-align: center;
-}
-
-.ql-align-right {
-  text-align: right;
-}
-
-.ql-align-justify {
-  text-align: justify;
 }
 
 // mobile only styles
@@ -389,42 +234,14 @@ blockquote {
 .tag {
   padding: 0 6px;
   cursor: pointer;
-  background-color: var(
-    --mat-stepper-header-selected-state-icon-background-color
-  );
-  color: var(--mdc-filled-button-label-text-color) !important;
+  background-color: var(--mat-sys-primary);
+  color: var(--mat-sys-on-primary);
   text-decoration: none;
   border-radius: 5px;
   font-size: 13px;
   line-height: 16px;
   padding-top: 2px;
   word-break: break-all;
-}
-
-.mat-mdc-card,
-table,
-mat-paginator,
-.ql-mention-list-container,
-.mat-mdc-menu-panel {
-  /* background-color: var(--cardcolor) !important; */
-  --mdc-outlined-card-container-color: transparent;
-  --mdc-outlined-card-outline-color: #999999;
-  --mdc-elevated-card-container-color: #2a323d;
-  --mat-paginator-container-background-color: #2a323d;
-}
-
-@media (prefers-color-scheme: light) {
-  .mat-mdc-card,
-  table,
-  mat-paginator,
-  .ql-mention-list-container,
-  .mat-mdc-menu-panel {
-    /* background-color: var(--cardcolor) !important; */
-    --mdc-outlined-card-container-color: transparent;
-    --mdc-outlined-card-outline-color: unset;
-    --mdc-elevated-card-container-color: unset;
-    --mat-paginator-container-background-color: unset;
-  }
 }
 
 .post-danger {
@@ -470,4 +287,9 @@ pre {
 
 .force-comic-sans {
   font-family: "Comic Sans MS", cursive, sans-serif;
+}
+
+* {
+  scrollbar-color: var(--mat-sys-primary) transparent;
+  scrollbar-width: thin;
 }

@@ -1,0 +1,113 @@
+@media (prefers-color-scheme: light) {
+  /* TODO: nuke quill-editor I never wanna see it again */
+  quill-editor * {
+    color: black !important;
+  }
+}
+
+// QL stuff to nuke later
+$editor-buttons: #ffffffde;
+
+.ql-snow .ql-stroke {
+  fill: none;
+  stroke: $editor-buttons;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 2;
+}
+
+.ql-snow .ql-fill,
+.ql-snow .ql-stroke.ql-fill {
+  fill: $editor-buttons;
+}
+
+.ql-snow .ql-picker {
+  color: $editor-buttons;
+}
+
+.uploadImageButton {
+  color: $editor-buttons;
+}
+
+.ql-snow.ql-container {
+  border-radius: 0 0 5px 5px;
+  border-color: #999;
+}
+
+.ql-snow > .ql-editor {
+  color: white;
+  font-size: 1.25em !important;
+  border-radius: 0 0 5px 5px;
+  font-size: 1em;
+  min-height: 140px;
+  max-height: 400px;
+  overflow-y: auto;
+}
+
+.ql-snow > .ql-editor.ql-blank::before {
+  color: white;
+  opacity: 0.5;
+}
+
+.ql-editor:focus {
+  background-color: var(--mdc-filled-text-field-container-color);
+}
+
+.ql-mention-list-item {
+  margin: 0;
+}
+
+.ql-mention-list-item.selected {
+  background-color: #20262e;
+}
+
+.ql-picker-options {
+  background-color: var(--mdc-filled-text-field-container-color) !important;
+}
+
+.ql-tooltip {
+  z-index: 999 !important;
+}
+
+.ql-toolbar.ql-snow {
+  border-color: #999;
+}
+
+.quill-mention-inner {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  img {
+    object-fit: contain;
+    width: 24px;
+    height: 24px;
+    display: block;
+    margin: 0 auto;
+  }
+}
+
+.ql-size-small {
+  font-size: 0.75em;
+  font-size: 1em;
+}
+
+.ql-size-large {
+  font-size: 2.5em;
+}
+
+.ql-size-huge {
+  font-size: 3.5em;
+}
+
+.ql-align-center {
+  text-align: center;
+}
+
+.ql-align-right {
+  text-align: right;
+}
+
+.ql-align-justify {
+  text-align: justify;
+}
