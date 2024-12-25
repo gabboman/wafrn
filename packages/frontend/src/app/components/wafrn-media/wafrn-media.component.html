@@ -1,6 +1,6 @@
 <div #media>
   <mat-card *ngIf="data" class="overflow-hidden mt-1" (click)="showPicture()">
-    <div (keyup)="showPicture()" class="img-container media-description bg-black-alpha-10">
+    <div (keyup)="showPicture()" class="img-container media-description">
       <div class="img-video-container">
         <b class="img-cw-text" *ngIf="nsfw">This contains sensitive content. Click to display</b>
 
@@ -29,7 +29,7 @@
         <source [src]="displayUrl" [type]="mimeType" />
       </audio>
 
-      <div *ngIf="data.description" class="px-2" [innerText]="data.description"></div>
+      <div *ngIf="data.description" class="px-2 py-1 image-description" [innerText]="data.description"></div>
     </div>
   </mat-card>
 </div>
