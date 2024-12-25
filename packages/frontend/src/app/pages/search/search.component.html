@@ -2,7 +2,7 @@
   <!-- SEARCH FORM -->
   <div class="pb-4 lg:px-4">
     <mat-card>
-      <div class="p-3 text-600 font-medium line-height-3">
+      <div class="p-3 font-medium line-height-3">
         <p>
           You can search for users by url and description, and posts by tags. No
           need to add # to your search. To force the server to search for a
@@ -93,6 +93,6 @@
   class="p-4 flex gap-3 align-items-center"
 >
   <mat-spinner *ngIf="loading" diameter="42"></mat-spinner>
-  <p *ngIf="loading" class="m-0 text-lg text-600">Loading more...</p>
-  <p *ngIf="posts.length === 0" class="m-0 text-lg text-600">No new results</p>
+  <p *ngIf="loading" class="m-0 text-lg">Loading more...</p>
+  <p *ngIf="posts.length === 0" class="m-0 text-lg">No new results</p>
 </footer>

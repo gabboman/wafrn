@@ -1,10 +1,10 @@
 <mat-card class="p-3 mb-6 lg:mx-4 scalein wafrn-container">
   <div class="text-center mb-5">
     <img loading="lazy" [src]="logo" alt="Image" height="50" class="mb-3" />
-    <div class="text-900 text-3xl font-medium mb-3">
+    <div class="text-3xl font-medium mb-3">
       Welcome! We hope you enjoy this place!
     </div>
-    <span class="text-600 font-medium line-height-3">Do you have an account?</span>
+    <span class="font-medium line-height-3">Do you have an account?</span>
     <a routerLink="/login" class="font-medium no-underline ml-2 cursor-pointer">Just log in!</a>
   </div>
 
@@ -110,7 +110,7 @@
       </mat-select>
     </mat-form-field>
     <div class="pt-2 px-3 pb-2 border-round-md" style="border: 1px solid #999">
-      <label for="avatar" class="block text-900 font-medium mb-2">Upload your avatar</label>
+      <label for="avatar" class="block font-medium mb-2">Upload your avatar</label>
       <div class="flex flex-row align-content-center">
         <button type="button" mat-stroked-button color="primary" (click)="avatarInput.click()">
           <fa-icon [icon]="faUpload" class="m-1"></fa-icon>Choose File</button>

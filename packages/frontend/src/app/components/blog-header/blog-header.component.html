@@ -8,7 +8,7 @@
     <div [innerHtml]="blogDetails.name" class="text-xl font-medium line-height-3"></div>
   </div>
   <div class="flex justify-content-center flex-wrap mb-2">
-    <div [innerText]="blogDetails.url" class="text-600 line-height-3"></div>
+    <div [innerText]="blogDetails.url" class="line-height-3"></div>
   </div>
   @if (userLoggedIn && !isMe) {
   <div *ngIf="userLoggedIn" class="flex gap-0 flex-nowrap w-min mx-auto">
@@ -89,7 +89,7 @@
       <p class="big text-center">{{ blogDetails.followers }}</p>
     </div>
   </div>
-  <div class="mt-6 text-600 text-sm" *ngIf="blogDetails.url.startsWith('@')">
+  <div class="mt-6 text-sm" *ngIf="blogDetails.url.startsWith('@')">
     <strong>Attention!</strong>
     This is an external user, and the profile might not be complete.
     <br />

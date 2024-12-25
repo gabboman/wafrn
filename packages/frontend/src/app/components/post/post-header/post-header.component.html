@@ -16,7 +16,7 @@
     <app-post-actions *ngIf="!simplified" [content]="fragment"></app-post-actions>
   </div>
   <div *ngIf="!simplified" class="date-line mb-1 flex gap-2 align-items-center">
-    <span class="text-xs text-600">
+    <span class="text-xs">
       {{ fragment.createdAt | date : "short" }}
       <fa-icon [icon]="
               fragment.privacy === 0
@@ -32,7 +32,7 @@
     </span>
     <span *ngIf="
             fragment.updatedAt.getTime() - fragment.createdAt.getTime() > 60000
-          " class="text-xs text-600">
+          " class="text-xs">
       <fa-icon [matTooltip]="fragment.updatedAt.toLocaleString()" [icon]="editedIcon"></fa-icon>
     </span>
     <button mat-stroked-button color="accent" *ngIf="
