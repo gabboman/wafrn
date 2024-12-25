@@ -16,6 +16,7 @@ import {
   faUserSlash,
   faVolumeMute,
   faVolumeUp,
+  faExclamationTriangle,
 } from '@fortawesome/free-solid-svg-icons';
 import { Subscription, filter } from 'rxjs';
 import { ProcessedPost } from 'src/app/interfaces/processed-post';
@@ -62,6 +63,7 @@ export class ViewBlogComponent implements OnInit, OnDestroy {
   quickReblogIcon = faClockRotateLeft;
   reportIcon = faTriangleExclamation;
   homeIcon = faHome;
+  infoAlert = faExclamationTriangle;
 
   constructor(
     private activatedRoute: ActivatedRoute,

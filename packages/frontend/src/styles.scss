@@ -23,10 +23,10 @@ $theme: mat.define-theme(
 @include mat.typography-hierarchy($theme);
 
 :root {
-  --mat-sys-background: light-dark(#ffffff, #151116);
-  --mat-sys-surface-container-low: light-dark(#f8f2f6, #2a313c);
-  --wafrn-blue: light-dark(#125e59, #39fef1);
+  --wafrn-blue: light-dark(#125e59, #96d8d1);
   --mat-sys-label-small-size: 0.688rem;
+
+  --info-card-warning-background: light-dark(#d7c3b8, #52443c);
 }
 
 html {
@@ -41,12 +41,6 @@ body {
 .mat-drawer-content {
   background-color: var(--bgcolor);
 }
-
-/* @media (min-width: 992px) { */
-/*   .show-sidebar-menu-button { */
-/*     display: none; */
-/*   } */
-/* } */
 
 // dirty hack because bug regarding the editor
 .cdk-overlay-pane.mat-mdc-dialog-panel {
@@ -176,21 +170,6 @@ blockquote {
   gap: 0.5em;
 }
 
-.split-button-left {
-  border-top-right-radius: 0;
-  border-bottom-right-radius: 0;
-  min-width: 0;
-}
-
-.split-button-right {
-  width: 30px !important;
-  min-width: unset !important;
-  padding: 0 2px;
-  border-top-left-radius: 0;
-  border-bottom-left-radius: 0;
-  border-left: 1px solid #ffffff44;
-}
-
 .shortened-post {
   max-height: 1250px;
   overflow: hidden;
@@ -205,16 +184,19 @@ blockquote {
   border-radius: 0.25em;
   cursor: pointer !important;
   margin-bottom: 4px;
-  border: 1px solid #888;
+  border: 1px solid var(--mat-sys-outline);
   overflow: hidden;
   flex-shrink: 0;
   max-height: 128px;
 }
 
-.wafrn-text-default {
-  font-size: 1rem;
-  line-height: 1.5;
-  word-wrap: break-word;
+.post-text {
+  & > :first-child {
+    margin-top: 0;
+  }
+  & > :last-child {
+    margin-bottom: 0;
+  }
 }
 
 // mobile only styles
@@ -232,14 +214,14 @@ blockquote {
 }
 
 .tag {
-  padding: 0 6px;
+  padding: 0 0.75ch;
   cursor: pointer;
   background-color: var(--mat-sys-primary);
   color: var(--mat-sys-on-primary);
   text-decoration: none;
-  border-radius: 5px;
-  font-size: 13px;
-  line-height: 16px;
+  border-radius: var(--mat-sys-corner-small);
+  font-size: 0.8em;
+  line-height: 1.3;
   padding-top: 2px;
   word-break: break-all;
 }
@@ -290,6 +272,6 @@ pre {
 }
 
 * {
-  scrollbar-color: var(--mat-sys-primary) transparent;
+  scrollbar-color: var(--mat-sys-outline-variant) transparent;
   scrollbar-width: thin;
 }

@@ -11,6 +11,7 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { MatMenuModule } from '@angular/material/menu';
 import { LoaderComponent } from 'src/app/components/loader/loader.component';
 import { BlogHeaderComponent } from "../../components/blog-header/blog-header.component";
+import { InfoCardComponent } from 'src/app/components/info-card/info-card.component';
 const routes: Routes = [
   {
     path: ':url',
@@ -39,7 +40,8 @@ const routes: Routes = [
     FontAwesomeModule,
     MatMenuModule,
     LoaderComponent,
-    BlogHeaderComponent
+    BlogHeaderComponent,
+    InfoCardComponent
 ],
 })
 export class ViewBlogModule {}
