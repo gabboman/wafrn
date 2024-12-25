@@ -7,6 +7,7 @@ import { loginRequiredGuard } from 'src/app/guards/login-required.guard';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { MatButtonModule } from '@angular/material/button';
+import { LoaderComponent } from 'src/app/components/loader/loader.component';
 
 const routes: Routes = [
   {
@@ -39,6 +40,7 @@ const routes: Routes = [
     MatProgressSpinnerModule,
     MatButtonModule,
     FontAwesomeModule,
+    LoaderComponent
   ],
 })
 export class DashboardModule {}
