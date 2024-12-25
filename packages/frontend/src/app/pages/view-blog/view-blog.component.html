@@ -1,34 +1,32 @@
-@if(blogDetails) {
-<app-blog-header [blogDetails]="blogDetails" ></app-blog-header>
-
-<div *ngFor="let post of posts; let indexOfelement = index">
-  <ng-template> </ng-template>
-  <app-post [post]="post"></app-post>
-</div>
-<footer class="p-4 flex gap-3 align-items-center">
-  <mat-spinner *ngIf="!noMorePosts" diameter="42"></mat-spinner>
-  <p
-    [hidden]="loading || noMorePosts"
-    id="if-you-see-this-load-more-posts"
-    class="m-0 text-lg text-600"
-  >
-    Loading more...
-  </p>
-  <p *ngIf="loading" class="m-0 text-lg text-600">Loading more posts</p>
-  <p *ngIf="noMorePosts" class="m-0 text-lg text-600">
-    No more posts.<a
-      *ngIf="blogDetails.url.startsWith('@')"
-      [href]="blogDetails.remoteId"
-      target="_blank"
-      >This is an external user, there might be more posts in their profile.
-      Click here to go to their original instance</a
-    >.
-  </p>
-</footer>
-} @if(loading && !blogDetails) {
-<app-loader></app-loader>
-} @if(!loading && !found) {
+<app-loader *ngIf="loading && !blogDetails"></app-loader>
+@if(!loading && !found) {
 <app-pagenotfound />
+}
+@if(blogDetails) {
+<app-blog-header [blogDetails]="blogDetails"></app-blog-header>
+@for (post of posts; track $index) {
+  <ng-template></ng-template>
+  <app-post [post]="post"></app-post>
+}
+<footer class="p-4 flex gap-3 align-items-center wafrn-container">
+  <div [hidden]="loading || noMorePosts" id="if-you-see-this-load-more-posts"></div>
+  <mat-spinner *ngIf="!noMorePosts" diameter="24"></mat-spinner>
+  <p *ngIf="loading" class="m-0 text-lg">Loading more posts</p>
+  <div *ngIf="noMorePosts">
+    <p class="text-lg">
+      No more posts...
+    </p>
+    <p class="text-sm">
+      As this user is from a remote instance, the shown information may be incomplete.<br>
+      <a
+        *ngIf="blogDetails.url.startsWith('@')"
+        [href]="blogDetails.remoteId"
+        target="_blank"
+        >View on remote instance</a
+      >.
+    </p>
+  </div>
+</footer>
 }
 
 <button
