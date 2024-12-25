@@ -63,6 +63,12 @@ li {
   list-style-type: inside circle;
   margin-left: 1.5em;
 }
+
+img {
+  display: block;
+  max-height: 100%;
+}
+
 $avatar-length: 40px;
 
 .avatar-container {
