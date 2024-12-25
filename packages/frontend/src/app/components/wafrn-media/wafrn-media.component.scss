@@ -36,5 +36,8 @@ video {
 
 .img-container {
   position: relative;
-  text-align: center;
+
+  & > img {
+    margin-inline: auto;
+  }
 }
