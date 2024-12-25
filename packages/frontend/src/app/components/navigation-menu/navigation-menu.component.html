@@ -1,5 +1,5 @@
 <mat-drawer-container>
-  <mat-drawer style="position: fixed; border-radius: 0" class="side-menu" [mode]="mobile ? 'over' : 'side'"
+  <mat-drawer style="position: fixed; border-radius: 0" class="p-2 side-menu" [mode]="mobile ? 'over' : 'side'"
     [opened]="menuVisible || !mobile" (closed)="hideMenu()">
     <a [href]="'/'" class="block" (mousedown)="hideMenu()">
       <img
@@ -10,7 +10,7 @@
         style="aspect-ratio: 3 / 1; object-fit: contain;"
       />
     </a>
-    <hr class="mx-3" />
+    <hr/>
     <mat-nav-list>
       @for (link of menuItems; track $index) { @if (link.divider) {
       <hr style="margin: 16px 0" />
@@ -21,7 +21,7 @@
   </mat-drawer>
   <mat-drawer-content>
     <button style="position: fixed; z-index: 500; top: 1em; left: 0.5em" mat-flat-button color="primary"
-      *ngIf="!menuVisible" [hidden]="!mobile" type="button" class="show-sidebar-menu-button"
+      [hidden]="!mobile" type="button" class="show-sidebar-menu-button"
       (mousedown)="showMenu()"
       [matBadge]="notifications + adminNotifications + usersAwaitingAproval + followsAwaitingAproval + awaitingAsks"
       [matBadgeHidden]="

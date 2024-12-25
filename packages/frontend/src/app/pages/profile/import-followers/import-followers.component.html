@@ -23,10 +23,11 @@
       </button>
     </div>
 
-    <div *ngIf="uploading" class="grid w-full">
-      <mat-spinner color="accent" diameter="42"></mat-spinner>
+    <div *ngIf="uploading" class="w-full flex flex-column align-items-center gap-3">
+      <mat-spinner color="accent" diameter="32"></mat-spinner>
       <p class="m-0 text-lg text-600">Uploading... This might take some time</p>
     </div>
+
     } @case (1) {
     <button
       (mousedown)="followEveryone()"
@@ -45,7 +46,7 @@
     <p [innerText]="user"></p>
     } } } @case (2) {
     <mat-spinner color="accent" diameter="42"></mat-spinner>
-    <p class="m-0 text-lg text-600">
+    <p class="m-0 text-lg">
       Following people... This might take some time
     </p>
     <mat-progress-bar

@@ -21,9 +21,9 @@
   </div>
   <div
     [ngClass]="{ 'post-danger': (fragment.content_warning || fragment.muted_words_cw) && showCw, 'mt-4': (fragment.content_warning || fragment.muted_words_cw)}">
-    <div *ngFor="let block of wafrnFormattedContent" class="fragment-content wafrn-text-default overflow-hidden"
+    <div *ngFor="let block of wafrnFormattedContent" class="fragment-content overflow-hidden"
       [ngClass]="{ blurry: (fragment.content_warning || fragment.muted_words_cw) && showCw }">
-      <div [injectHTML]="block"></div>
+      <div [injectHTML]="block" class="post-text"></div>
       <app-wafrn-media [mediaOrString]="block"></app-wafrn-media>
     </div>
 
@@ -35,7 +35,7 @@
       [ngClass]="{ blurry: (fragment.content_warning || fragment.muted_words_cw) && showCw }">
       <app-wafrn-media *ngIf="!seenMedia.includes(i)" [data]="media"></app-wafrn-media>
     </div>
-    <div id="fragment-tags" class="flex flex-wrap gap-2 mt-4" *ngIf="fragment.tags && fragment.tags.length"
+    <div class="flex flex-wrap gap-2 mt-3 mb-2 tag-list" *ngIf="fragment.tags && fragment.tags.length"
       [ngClass]="{ blurry: (fragment.content_warning || fragment.muted_words_cw) && showCw }">
       @for(tag of fragment.tags; track $index) {
       <a class="tag" [routerLink]="'/dashboard/search/' + tag.tagName">
@@ -54,7 +54,7 @@
       </div>
     </div>
     }
-    <section class="mt-2" id="emoji-reactions">
+    <section class="mt-3" id="emoji-reactions">
       @for (emoji of emojiCollection; track $index) {
 
       @if (avaiableEmojiNames.includes(emoji.name) || !emoji.img) {
@@ -78,7 +78,7 @@
       } @else {
       <button [ngClass]="{
         blurry: (fragment.content_warning || fragment.muted_words_cw) && showCw
-      }" class="p-3" [matTooltip]="emoji.tooltip " mat-stroked-button>
+      }" [matTooltip]="emoji.tooltip " mat-raised-button>
         @if (emoji.img) {
         <img class="post-emoji" [src]="emoji.img" [alt]="emoji.content" />
         } @else {

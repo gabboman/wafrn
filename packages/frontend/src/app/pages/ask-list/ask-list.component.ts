@@ -7,6 +7,7 @@ import { Ask } from 'src/app/interfaces/ask';
 import { BlogService } from 'src/app/services/blog.service';
 import { DashboardService } from 'src/app/services/dashboard.service';
 import { EditorService } from 'src/app/services/editor.service';
+import { LoaderComponent } from 'src/app/components/loader/loader.component';
 
 @Component({
     selector: 'app-ask-list',
@@ -14,7 +15,8 @@ import { EditorService } from 'src/app/services/editor.service';
         CommonModule,
         SingleAskComponent,
         MatButtonModule,
-        MatCardModule
+        MatCardModule,
+        LoaderComponent
     ],
     templateUrl: './ask-list.component.html',
     styleUrl: './ask-list.component.scss'

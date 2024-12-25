@@ -6,7 +6,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { MatMenuModule } from '@angular/material/menu';
 import { RouterModule } from '@angular/router';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { faChevronDown, faServer, faUser, faUserSlash, faVolumeMute, faVolumeUp } from '@fortawesome/free-solid-svg-icons';
+import { faChevronDown, faExclamationTriangle, faServer, faUser, faUserSlash, faVolumeMute, faVolumeUp } from '@fortawesome/free-solid-svg-icons';
 import { BlogDetails } from 'src/app/interfaces/blogDetails';
 import { BlocksService } from 'src/app/services/blocks.service';
 import { LoginService } from 'src/app/services/login.service';
@@ -15,6 +15,7 @@ import { PostsService } from 'src/app/services/posts.service';
 
 import { AskDialogContentComponent } from '../ask-dialog-content/ask-dialog-content.component';
 import { EnvironmentService } from 'src/app/services/environment.service';
+import { InfoCardComponent } from '../info-card/info-card.component';
 
 @Component({
     selector: 'app-blog-header',
@@ -25,6 +26,7 @@ import { EnvironmentService } from 'src/app/services/environment.service';
         MatMenuModule,
         MatButtonModule,
         RouterModule,
+        InfoCardComponent
     ],
     templateUrl: './blog-header.component.html',
     styleUrl: './blog-header.component.scss'
@@ -44,6 +46,7 @@ export class BlogHeaderComponent implements OnChanges, OnDestroy {
   unblockServerIcon = faServer;
   allowAsk = false;
   allowRemoteAsk = false;
+  infoAlert = faExclamationTriangle;
 
 
 

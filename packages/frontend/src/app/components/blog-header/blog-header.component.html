@@ -1,17 +1,18 @@
-<mat-card class="wafrn-container p-3 lg:mx-4 mb-6 over overflow-hidden">
-  <div class="flex align-content-end justify-content-center header-image" [style.background]="'url('+ headerUrl + ')'">
+<mat-card class="wafrn-container p-3 lg:mx-4 overflow-hidden mb-6 blog-header">
+  <div class="flex align-content-end justify-content-center header-image mb-2" [style.background-image]="'url('+ headerUrl + ')'">
     <img style="max-width: 100%; max-height: 15vh" [src]="avatarUrl" alt="user avatar"
       class="border-round-md mt-6 mb-4" />
   </div>
 
   <div class="flex justify-content-center flex-wrap">
-    <div [innerHtml]="blogDetails.name" class="text-xl font-medium line-height-3"></div>
+    <p [innerHtml]="blogDetails.name" class="m-0 text-xl font-medium line-height-3"></p>
   </div>
-  <div class="flex justify-content-center flex-wrap mb-2">
-    <div [innerText]="blogDetails.url" class="text-600 line-height-3"></div>
+  <div class="flex justify-content-center flex-wrap">
+    <p [innerText]="blogDetails.url" class="m-0 text-sm line-height-3 blog-url"></p>
   </div>
+  <hr class="w-full my-3">
   @if (userLoggedIn && !isMe) {
-  <div *ngIf="userLoggedIn" class="flex gap-0 flex-nowrap w-min mx-auto">
+  <div *ngIf="userLoggedIn" class="flex gap-0 flex-nowrap mx-auto">
     <button mat-stroked-button [color]="
           postService.followedUserIds.indexOf(blogDetails.id) === -1 ? 'primary' : 'warn'
         " *ngIf="!postService.notYetAcceptedFollowedUsersIds.includes(blogDetails.id)" class="split-button-left"
@@ -63,43 +64,57 @@
     } }
   </mat-menu>
   }
-  <div class="flex justify-content-center flex-wrap mt-3 mb-2">
+  <div class="mt-3 mb-2">
     <div style="word-wrap: anywhere" [innerHtml]="blogDetails.description"></div>
   </div>
-  <table *ngIf="fediAttachment" class="w-full overflow-hidden">
-    <tr *ngFor="let fediAt of fediAttachment">
-      <th [innerHTML]="fediAt.name"></th>
-      <th [innerHTML]="fediAt.value"></th>
-    </tr>
+  @if (fediAttachment.length !== 0) {
+  <hr class="w-full my-3">
+  <div class="w-full overflow-hidden flex flex-column gap-2">
+    <p>Fediverse Attachments</p>
+    <dl *ngFor="let fediAt of fediAttachment" class="flex m-0">
+      <dt [innerHTML]="fediAt.name" class="w-3"></dt>
+      <dd [innerHTML]="fediAt.value" class="w-8 ml-2"></dd>
+    </dl>
+  </div>
+  }
+  @if (allowAsk) {
 
-  </table>
   <div class="flex justify-content-center flex-wrap">
-    <button *ngIf="allowAsk" mat-stroked-button [innerHTML]="'Ask ' +blogDetails.name + ' something'"
+    <button mat-stroked-button [innerHTML]="'Ask ' +blogDetails.name + ' something'"
       (mousedown)="openAskDialog()"></button>
-
   </div>
-  <div *ngIf="!blogDetails.url.startsWith('@') || (blogDetails.followers && blogDetails.followed)"
-    class="follow-counts">
-    <div [routerLink]="['/blog', blogDetails.url ,'following']">
-      <p>Following</p>
-      <p class="big text-center">{{ blogDetails.followed }}</p>
-    </div>
-    <div [routerLink]="['/blog', blogDetails.url ,'followers']">
-      <p>Followed</p>
-      <p class="big text-center">{{ blogDetails.followers }}</p>
-    </div>
+  }
+  @if (!blogDetails.url.startsWith('@') || (blogDetails.followers && blogDetails.followed)) {
+  <hr class="w-full my-3">
+  <div class="flex justify-content-evenly follow-counts">
+    <a [routerLink]="['/blog', blogDetails.url ,'following']" class="flex flex-column justify-content-center">
+      <b class="m-0 text-lg text-center">{{ blogDetails.followed }}</b>
+      <p class="m-0 text-xs">Following</p>
+    </a>
+    <a [routerLink]="['/blog', blogDetails.url ,'followers']" class="flex flex-column justify-content-center">
+      <b class="m-0 text-lg text-center">{{ blogDetails.followers }}</b>
+      <p class="m-0 text-xs">Followers</p>
+    </a>
   </div>
-  <div class="mt-6 text-600 text-sm" *ngIf="blogDetails.url.startsWith('@')">
-    <strong>Attention!</strong>
-    This is an external user, and the profile might not be complete.
-    <br />
-    To check this user's complete profile in their instance,
-    <a [href]="blogDetails.url.split('@').length == 3 ? blogDetails.remoteId : ('https://bsky.app/profile/' + blogDetails.url.split('@')[1])"
-      target="_blank"> click here</a>.
+  }
+  <div *ngIf="allowRemoteAsk" class="justify-content-center">
+    <p class="m-0">
+      You can send this user a non-anonymous ask from your fedi instance with
+      the following structure: " !ask &#64;{{ blogDetails.url }} YOUR QUESTION
+      HERE". The medias and emojis you attach will be ignored, and you can only
+      send one mention on the post. If it goes wrong, the user will receive it
+      as a regular DM. Also, the content of the DM will be published as the AP
+      object to verify the ask as genuine
+    </p>
   </div>
-  <div *ngIf="allowRemoteAsk" class="justify-content-center">You can send this user a non-anonymous ask from your fedi
-    instance with the following
-    structure: " !ask &#64;{{blogDetails.url}} YOUR QUESTION HERE". The medias and emojis you attach will be ignored,
-    and you can only send one mention on the post. If it goes wrong, the user will receive it as a regular DM. Also, the
-    content of the DM will be published as the AP object to verify the ask as genuine</div>
 </mat-card>
+<app-info-card
+  [type]="infoAlert"
+  class="block p-4 pt-3 pb-6 wafrn-container notification"
+  *ngIf="blogDetails.url.startsWith('@')"
+  >As this user is from a remote instance, the shown information may be
+  incomplete.
+  <a [href]="blogDetails.url.split('@').length == 3 ? blogDetails.remoteId : ('https://bsky.app/profile/' + blogDetails.url.split('@')[1])" target="_blank"
+    >View on remote instance</a
+  >
+</app-info-card>

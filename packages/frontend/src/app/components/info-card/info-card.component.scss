@@ -1,0 +1,13 @@
+.info-card {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  background-color: var(--info-card-warning-background);
+  color: var(--mat-sys-on-surface-container-low);
+  border-radius: var(--mat-sys-corner-small);
+  padding: 0.5rem 1rem;
+
+  & fa-icon {
+    margin-right: 1ch;
+  }
+}

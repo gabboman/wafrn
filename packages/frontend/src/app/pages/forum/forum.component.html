@@ -21,7 +21,6 @@
     <mat-card [id]="'post-' + content.id" class="p-3 pb-2 mb-2 lg:mx-4 scalein wafrn-container flex-shrink-0">
       <app-post-header [fragment]="content" [simplified]="false"></app-post-header>
       <app-post-fragment [selfManageCw]="true" [fragment]="content"></app-post-fragment>
-      <hr class="dotted">
       <app-bottom-reply-bar [fragment]="content"></app-bottom-reply-bar>
     </mat-card>
     }
