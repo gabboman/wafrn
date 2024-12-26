@@ -241,10 +241,10 @@ blockquote {
 .post-danger {
   background: repeating-linear-gradient(
     45deg,
-    var(--bgcolor),
-    var(--bgcolor) 10px,
-    var(--cardcolor) 10px,
-    var(--cardcolor) 20px
+    var(--mat-sys-surface),
+    var(--mat-sys-surface) 10px,
+    var(--mat-sys-surface-container-low) 10px,
+    var(--mat-sys-surface-container-low) 20px
   );
 }
 
