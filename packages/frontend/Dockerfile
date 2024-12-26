@@ -13,7 +13,7 @@ RUN npm install
 COPY packages/frontend .
 
 # copy the frontend environment file
-RUN rm src/environments/environment.prod.ts && mv src/environments/environment.example.ts src/environments/environment.prod.ts
+RUN rm -f src/environments/environment.prod.ts && mv src/environments/environment.example.ts src/environments/environment.prod.ts
 
 # set node_env as production for the build command
 ENV NODE_ENV=production
