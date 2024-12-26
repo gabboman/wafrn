@@ -1,6 +1,23 @@
+.user-name {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  line-height: 1.35;
+}
+
+.user-url {
+  line-height: 1.35;
+  color: var(--mat-sys-outline);
+}
+
 .follow-button {
-    height: 24px;
-    padding: 0.5em;
-    cursor: pointer;
-    margin-left: 0px;
-  }
+  height: 1.75em;
+  cursor: pointer;
+  border-color: var(--mat-sys-outline-variant);
+  padding: 0.5em;
+  border-radius: var(--mat-sys-corner-small);
+}
+
+.metadata {
+  color: var(--mat-sys-outline-variant);
+}

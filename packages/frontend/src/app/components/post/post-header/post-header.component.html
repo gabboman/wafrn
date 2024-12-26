@@ -1,51 +1,44 @@
 <ng-container *ngIf="fragment">
-  <div class="flex mb-1 gap-2 align-items-center">
-    <app-avatar-small [user]="fragment.user"></app-avatar-small>
-    <div class="center-text flex-grow-1 flex-shrink-1 min-w-0">
-      <div class="w-full overflow-hidden flex flex-column">
-        <div class="max-w-full white-space-nowrap overflow-hidden text-overflow-ellipsis user-name flex">
-          <a class="mr-1" [routerLink]="!disableLink ? '/blog/' + fragment.user.url: null"
-            [innerHTML]="fragment.user.name">
-          </a>
-          {{headerText}}
+  <div class="flex justify-content-between">
+    <div>
+      <div class="flex gap-2">
+        <div class="flex gap-2 min-w-0 mr-auto">
+          <app-avatar-small [user]="fragment.user"></app-avatar-small>
+          <div class="flex flex-column min-w-0">
+            <div class="user-name">
+              <a class="subtle-link" [routerLink]="!disableLink ? '/blog/' + fragment.user.url: null"
+                [innerHTML]="fragment.user.name"></a>
+              {{headerText}}
+            </div>
+            <span class="text-sm max-w-full white-space-nowrap overflow-hidden text-overflow-ellipsis user-url"
+              [innerText]="fragment.user.url"></span>
+          </div>
         </div>
-        <span class="font-small max-w-full white-space-nowrap overflow-hidden text-overflow-ellipsis user-url"
-          [innerText]="fragment.user.url"></span>
+      </div>
+      <div class="mt-1 flex justify-content-between metadata">
+        <div *ngIf="!simplified" class="date-line flex gap-2 align-items-center">
+          <span class="text-sm" matTooltip="{{fragment.createdAt | date : 'short'}}">
+            {{ fragment.createdAt | dateTimeFromJsDate | dateTimeToRelative:{ style: 'long' } }}
+          </span>
+          <span *ngIf="fragment.updatedAt.getTime() - fragment.createdAt.getTime() > 60000" matTooltip="Edited {{ fragment.updatedAt | date : 'short' }}" class="text-xs">
+            <fa-icon [icon]="editedIcon"></fa-icon>
+          </span>
+          <span class="text-xs" matTooltip="{{privacyOptions[fragment.privacy].name}}">
+            <fa-icon [icon]="privacyOptions[fragment.privacy].icon"></fa-icon>
+          </span>
+        </div>
       </div>
     </div>
-    <app-post-actions *ngIf="!simplified" [content]="fragment"></app-post-actions>
-  </div>
-  <div *ngIf="!simplified" class="date-line mb-1 flex gap-2 align-items-center">
-    <span class="text-xs">
-      {{ fragment.createdAt | date : "short" }}
-      <fa-icon [icon]="
-              fragment.privacy === 0
-                ? worldIcon
-                : fragment.privacy === 1
-                ? userIcon
-                : fragment.privacy === 2
-                ? serverIcon
-                : fragment.privacy === 3
-                ? unlockIcon
-                : envelopeIcon
-            "></fa-icon>
-    </span>
-    <span *ngIf="
-            fragment.updatedAt.getTime() - fragment.createdAt.getTime() > 60000
-          " class="text-xs">
-      <fa-icon [matTooltip]="fragment.updatedAt.toLocaleString()" [icon]="editedIcon"></fa-icon>
-    </span>
-    <button mat-stroked-button color="accent" *ngIf="
-            !postService.notYetAcceptedFollowedUsersIds.includes(fragment.userId) &&
-            !postService.followedUserIds.includes(fragment.userId) &&
-            userLoggedIn
-          " class="follow-button flex-shrink-0" (mousedown)="followUser(fragment.userId)">
-      Follow
-    </button>
-    <button mat-stroked-button color="accent"
-      *ngIf="postService.notYetAcceptedFollowedUsersIds.includes(fragment.userId) && userLoggedIn"
-      class="follow-button flex-shrink-0" (mousedown)="unfollowUser(fragment.userId)">
-      Awaiting approval
-    </button>
+    <div class="flex flex-column align-items-center">
+      <app-post-actions *ngIf="!simplified" [content]="fragment"></app-post-actions>
+      <button mat-button color="accent" *ngIf="
+        !postService.notYetAcceptedFollowedUsersIds.includes(fragment.userId) &&
+        !postService.followedUserIds.includes(fragment.userId) &&
+        userLoggedIn
+        " class="text-sm follow-button" (mousedown)="followUser(fragment.userId)">Follow</button>
+      <button mat-button color="accent"
+        *ngIf="postService.notYetAcceptedFollowedUsersIds.includes(fragment.userId) && userLoggedIn"
+        class="text-sm follow-button" (mousedown)="unfollowUser(fragment.userId)">Awaiting approval</button>
+    </div>
   </div>
 </ng-container>

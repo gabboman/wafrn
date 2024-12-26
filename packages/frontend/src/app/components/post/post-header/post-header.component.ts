@@ -11,6 +11,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faShareNodes, faChevronDown, faHeart, faHeartBroken, faReply, faRepeat, faQuoteLeft, faArrowUpRightFromSquare, faTrash, faClose, faGlobe, faUnlock, faEnvelope, faServer, faUser, faPen } from '@fortawesome/free-solid-svg-icons';
 import { MatButtonModule } from '@angular/material/button';
+import { LuxonModule } from 'luxon-angular';
 
 @Component({
     selector: 'app-post-header',
@@ -21,7 +22,9 @@ import { MatButtonModule } from '@angular/material/button';
         PostActionsComponent,
         MatTooltipModule,
         FontAwesomeModule,
-        MatButtonModule
+        MatButtonModule,
+        MatTooltipModule,
+        LuxonModule
     ],
     templateUrl: './post-header.component.html',
     styleUrl: './post-header.component.scss'
@@ -33,6 +36,15 @@ export class PostHeaderComponent {
   @Input() disableLink: boolean = false;
   @Input() headerText: string = '';
   userLoggedIn = false;
+
+  // table for the icons
+  privacyOptions = [
+    { level: 0, name: 'Public', icon: faGlobe },
+    { level: 1, name: 'Followers only', icon: faUser },
+    { level: 2, name: 'This instance only', icon: faServer },
+    { level: 3, name: 'Unlisted', icon: faUnlock },
+    { level: 10, name: 'Direct Message', icon: faEnvelope },
+  ];
 
   // icons
   shareIcon = faShareNodes;
@@ -56,7 +68,6 @@ export class PostHeaderComponent {
     private messages: MessageService,
     private loginService: LoginService
   ) {
-
     this.userLoggedIn = loginService.checkUserLoggedIn()
   }
 

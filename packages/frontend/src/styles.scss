@@ -71,6 +71,14 @@ img {
   max-height: 100%;
 }
 
+.subtle-link {
+  text-decoration: none;
+
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
 $avatar-length: 40px;
 
 .avatar-container {
@@ -116,10 +124,6 @@ $avatar-length: 40px;
   max-height: 1.5em;
   max-width: 1.5em;
   vertical-align: middle;
-}
-
-.font-small {
-  font-size: 0.85em;
 }
 
 // youtube player

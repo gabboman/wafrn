@@ -11,6 +11,7 @@ import { ServiceWorkerModule } from '@angular/service-worker';
 import { MAT_RIPPLE_GLOBAL_OPTIONS, MatNativeDateModule, RippleGlobalOptions } from '@angular/material/core';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { LuxonModule } from 'luxon-angular';
 
 const globalRippleConfig: RippleGlobalOptions = {
   disabled: true,
@@ -21,7 +22,9 @@ const globalRippleConfig: RippleGlobalOptions = {
 };
 @NgModule({ declarations: [AppComponent],
     bootstrap: [AppComponent],
-    exports: [], imports: [BrowserModule,
+    exports: [],
+    imports: [
+        BrowserModule,
         BrowserAnimationsModule,
         CommonModule,
         FormsModule,
@@ -35,9 +38,12 @@ const globalRippleConfig: RippleGlobalOptions = {
             registrationStrategy: 'registerWhenStable:30000',
         }),
         FontAwesomeModule,
-        MatSnackBarModule], providers: [
+        MatSnackBarModule
+    ],
+    providers: [
         { provide: HTTP_INTERCEPTORS, useClass: WafrnAuthInterceptor, multi: true },
         { provide: MAT_RIPPLE_GLOBAL_OPTIONS, useValue: globalRippleConfig },
         provideHttpClient(withInterceptorsFromDi())
-    ] })
+    ]
+})
 export class AppModule {}

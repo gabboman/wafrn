@@ -1,0 +1,7 @@
+.post-actions > button {
+  aspect-ratio: 1 / 1;
+}
+
+::ng-deep :root .mat-mdc-menu-content {
+  padding-block: 0;
+}
