@@ -19,9 +19,22 @@
   color: var(--mat-sys-on-primary);
 }
 
-#emoji-reactions > button {
-  margin-right: 6px;
-  margin-bottom: 4px;
-  /* what professional engineering right here */
-  vertical-align: -5.1%;
+.external-emoji {
+  -webkit-user-select: none;
+  user-select: none;
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  overflow: visible;
+  color: var(--mat-sys-primary);
+  height: var(--mdc-protected-button-container-height, 40px);
+  font-family: var(--mdc-protected-button-label-text-font, var(--mat-sys-label-large-font));
+  font-size: var(--mdc-protected-button-label-text-size, var(--mat-sys-label-large-size));
+  letter-spacing: var(--mdc-protected-button-label-text-tracking, var(--mat-sys-label-large-tracking));
+  text-transform: var(--mdc-protected-button-label-text-transform);
+  font-weight: var(--mdc-protected-button-label-text-weight, var(--mat-sys-label-large-weight));
+  padding: 0 var(--mat-protected-button-horizontal-padding, 24px);
+  vertical-align: middle;
+  border-radius: var(--mdc-protected-button-container-shape, var(--mat-sys-corner-full));
 }
