@@ -4,6 +4,7 @@ import {
   HostListener,
   OnDestroy,
   OnInit,
+  ViewEncapsulation,
 } from '@angular/core';
 import { NavigationEnd, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
@@ -53,7 +54,8 @@ import { EnvironmentService } from 'src/app/services/environment.service';
   selector: 'app-navigation-menu',
   templateUrl: './navigation-menu.component.html',
   styleUrls: ['./navigation-menu.component.scss'],
-  standalone: false
+  standalone: false,
+  encapsulation: ViewEncapsulation.None,
 })
 export class NavigationMenuComponent implements OnInit, OnDestroy {
   menuItems: MenuItem[] = [];

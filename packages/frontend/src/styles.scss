@@ -29,6 +29,12 @@ $theme: mat.define-theme(
   --info-card-warning-background: light-dark(#d7c3b8, #52443c);
 }
 
+* {
+  box-sizing: border-box;
+  scrollbar-color: var(--mat-sys-outline-variant) transparent;
+  scrollbar-width: thin;
+}
+
 html {
   background-color: var(--mat-sys-surface);
   overflow-wrap: break-word;
@@ -36,10 +42,6 @@ html {
 
 body {
   margin: 0;
-}
-
-.mat-drawer-content {
-  background-color: var(--bgcolor);
 }
 
 // dirty hack because bug regarding the editor
@@ -253,10 +255,6 @@ blockquote {
   max-height: unset !important;
 }
 
-.mat-drawer-inner-container {
-  overscroll-behavior-y: contain;
-}
-
 pre {
   overflow-x: scroll;
 }
@@ -275,9 +273,4 @@ pre {
 
 .force-comic-sans {
   font-family: "Comic Sans MS", cursive, sans-serif;
-}
-
-* {
-  scrollbar-color: var(--mat-sys-outline-variant) transparent;
-  scrollbar-width: thin;
 }
