@@ -182,9 +182,11 @@ export class PostFragmentComponent implements OnChanges, OnDestroy {
       }
     });
 
-    this.emojiCollection = Object.values(emojiReactions).sort(
-      (a, b) => b.users.length - a.users.length
-    );
+    this.emojiCollection = Object.values(emojiReactions)
+      .sort((a, b) => +(this.avaiableEmojiNames.includes(b.name) || !b.img) - +(this.avaiableEmojiNames.includes(a.name) || !a.img))
+      .sort(
+        (a, b) => b.users.length - a.users.length
+      );
     for (let emoji of this.emojiCollection) {
       emoji.tooltip = (this.isLike(emoji) ? 'Liked' : emoji.content) +
         ' by ' +
