@@ -126,7 +126,8 @@ export class LoginService {
 
   async updateProfile(
     updateProfileForm: UntypedFormGroup,
-    img: File | undefined
+    img: File | undefined,
+    headerImg: File | undefined
   ): Promise<boolean> {
     let success = false;
 
@@ -164,6 +165,10 @@ export class LoginService {
       if (img) {
         payload.append('avatar', img);
       }
+      if (headerImg) {
+        payload.append('headerImage', headerImg);
+      }
+
       const petition: any = await firstValueFrom(
         this.http.post(
           `${EnvironmentService.environment.baseUrl}/editProfile`,

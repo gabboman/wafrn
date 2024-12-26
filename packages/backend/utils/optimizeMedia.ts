@@ -69,6 +69,7 @@ export default async function optimizeMedia(
       const metadata = await sharp(inputPath).metadata()
       if (!options?.outPath) {
         fileAndExtension[0] = fileAndExtension[0] + '_processed'
+        outputPath = fileAndExtension.join('.')
       }
       if (metadata.delay) {
         fileAndExtension[1] = 'webp'

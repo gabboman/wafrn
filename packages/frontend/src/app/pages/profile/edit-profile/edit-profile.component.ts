@@ -23,6 +23,7 @@ import { ThemeService } from 'src/app/services/theme.service';
 export class EditProfileComponent implements OnInit {
   loading = true;
   img: File | undefined = undefined;
+  headerImg: File | undefined = undefined;
   privacyOptions = [
     { level: 0, name: 'Public' },
     { level: 1, name: 'Followers only' },
@@ -113,12 +114,19 @@ export class EditProfileComponent implements OnInit {
     }
   }
 
+  headerImgSelected(filePickerEvent: any) {
+    if (filePickerEvent.target.files[0]) {
+      this.headerImg = filePickerEvent.target.files[0];
+    }
+  }
+
   async onSubmit() {
     this.loading = true;
     try {
       const res = await this.loginService.updateProfile(
         this.editProfileForm,
-        this.img
+        this.img,
+        this.headerImg,
       );
 
       this.messages.add({

@@ -13,7 +13,25 @@ export default function cacheRoutes(app: Application) {
   app.get('/api/cache', async (req: Request, res: Response) => {
     try {
       if (req.query?.media) {
-        const mediaLink: string = new URL(req.query.media).href
+        // this urlBase will always reflect the starting URL requested from the client, the one that is in the browser, not the internal one behind the proxies
+        const urlBase = req.protocol + '://' + req.get('host') + req.originalUrl
+        // with the second parameter to the URL constructor we can provide a base URL in case the media URL is something like "/api/uploads/..." so the URL constructor does not throw an error
+        const url = new URL(req.query.media, urlBase)
+        // this is only useful for local development
+        if (url.hostname === 'localhost' && url.pathname.startsWith('/api/uploads/')) {
+          const localFileName = url.pathname.replace('/api/uploads/', 'uploads/')
+          if (fs.existsSync(localFileName)) {
+            res.set('Cache-control', 'public, max-age=3600')
+            // We have the image! we just serve it
+            res.sendFile(localFileName, { root: '.' })
+            return
+          } else {
+            logger.info(`[remoteCache] local file ${localFileName} not found`)
+            res.sendStatus(404)
+            return
+          }
+        }
+        const mediaLink = url.href as string
         const mediaLinkArray = mediaLink.split('.')
         let linkExtension = mediaLinkArray[mediaLinkArray.length - 1].toLowerCase().replaceAll('/', '_')
         if (linkExtension.includes('/')) {
@@ -45,6 +63,7 @@ export default function cacheRoutes(app: Application) {
             res.sendFile(localFileName, { root: '.' })
           }
         } else {
+          logger.info(`[remoteCache] trying to fetch URL ${mediaLink}`)
           const remoteResponse = await axios.get(mediaLink, {
             responseType: 'stream',
             headers: { 'User-Agent': environment.instanceUrl }
