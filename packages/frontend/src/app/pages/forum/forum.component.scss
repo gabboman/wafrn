@@ -30,3 +30,8 @@ hr {
   cursor: pointer;
   margin-left: 0px;
 }
+
+// mat-card elements are inserted
+::ng-deep app-post:has(+ .reply-loader) > mat-card:last-child {
+  margin-bottom: 0 !important;
+}

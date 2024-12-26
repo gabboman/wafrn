@@ -3,16 +3,15 @@
   <div class="wafrn-container mx-1 md:mx-4 flex align-items-center">
   </div>
   <app-post [post]="post"></app-post>
-  <div id="scroll-here-on-page-change"></div>
-  <mat-card *ngIf="(!post[post.length - 1].remotePostId.startsWith(localUrl) && userLoggedIn) || post.length > 1 "
-    class="p-3 pb-2 mb-2 lg:mx-4 scalein wafrn-container flex-shrink-0">
-    <div class="flex" *ngIf="post.length > 1"><a [routerLink]="'/fediverse/post/' +  post[0].id">View initial post</a>
-    </div>
-    <button *ngIf="!post[post.length - 1].remotePostId.startsWith(localUrl) && userLoggedIn" class="w-full"
-      (mousedown)="loadRepliesFromFediverse()" color="primary" mat-stroked-button>
+  <div *ngIf="(!post[post.length - 1].remotePostId.startsWith(localUrl) && userLoggedIn) || post.length > 1 "
+    class="px-3 mt-3 mb-6 lg:mx-4 wafrn-container flex flex-column gap-2 reply-loader">
+    <button *ngIf="!post[post.length - 1].remotePostId.startsWith(localUrl) && userLoggedIn"
+      (mousedown)="loadRepliesFromFediverse()" color="primary" mat-stroked-button class="w-full">
       Fetch more external replies
     </button>
-  </mat-card>
+    <p *ngIf="post.length > 1" class="m-0"><a [routerLink]="'/fediverse/post/' +  post[0].id">View initial post</a></p>
+  </div>
+  <div id="scroll-here-on-page-change"></div>
   <ng-container
     *ngFor="let content of forumPosts | slice: currentPage * itemsPerPage : currentPage * itemsPerPage + itemsPerPage">
     @if(content.content !== '' || content.tags.length > 0 || content.quotes.length > 0 ||
@@ -35,7 +34,6 @@
     </mat-card>
     }
   </ng-container>
-
 </ng-container>
 
 <footer *ngIf="forumPosts.length > 0" class="p-3 py-2 mb-4 lg:mx-4 wafrn-container">
