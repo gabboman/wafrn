@@ -1,9 +1,13 @@
 //app-navigation-menu,
-.side-menu {
-  height: 100vh;
+:root .side-menu {
   display: block;
-  background: var(--mat-sys-surface-container-low);
+  background-color: var(--mat-sys-surface-container-low);
   box-shadow: var(--mat-sys-level2);
+}
+
+.mat-drawer-inner-container {
+  padding: 0.5rem;
+  overscroll-behavior-y: contain;
 }
 
 .mat-drawer-content {
