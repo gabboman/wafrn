@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
+import { MatButtonModule } from '@angular/material/button';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { RouterModule } from '@angular/router';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
@@ -18,6 +19,7 @@ import { PostsService } from 'src/app/services/posts.service';
         CommonModule,
         RouterModule,
         FontAwesomeModule,
+        MatButtonModule,
         MatTooltipModule
     ],
     templateUrl: './bottom-reply-bar.component.html',
@@ -72,7 +74,7 @@ export class BottomReplyBarComponent implements OnChanges {
     ngOnChanges(changes: SimpleChanges): void {
       this.myRewootsIncludePost = this.postService.rewootedPosts.includes(this.fragment.id)
 
-      
+
         const finalOne = this.fragment
         this.isEmptyReblog =  (
           this.fragment &&
@@ -83,24 +85,24 @@ export class BottomReplyBarComponent implements OnChanges {
           finalOne.medias?.length == 0
         );
       }
-    
+
 
     async replyPost(post: ProcessedPost) {
       await this.editorService.replyPost(post);
     }
-  
+
     async quotePost(post: ProcessedPost) {
       await this.editorService.quotePost(post);
     }
-  
+
     async editPost(post: ProcessedPost) {
       await this.editorService.replyPost(post, true);
     }
-  
+
     async deletePost(id: string) {
       this.deletePostService.openDeletePostDialog(id);
     }
-  
+
     async deleteRewoots(id: string) {
       this.loadingAction = true;
       const success = await firstValueFrom(this.deletePostService.deleteRewoots(id));
@@ -126,7 +128,7 @@ export class BottomReplyBarComponent implements OnChanges {
       }
       this.loadingAction = false;
     }
-  
+
     async unlikePost(postToUnlike: ProcessedPost) {
       this.loadingAction = true;
       if (await this.postService.unlikePost(postToUnlike.id)) {
