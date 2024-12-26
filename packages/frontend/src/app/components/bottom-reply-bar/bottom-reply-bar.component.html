@@ -1,9 +1,11 @@
 <div class="flex justify-content-between">
+  @if (notes) {
   <p class="m-0 pl-1 flex align-items-center">
-    <a *ngIf="notes" [routerLink]="'/fediverse/post/' + fragment.id"
+    <a [routerLink]="'/fediverse/post/' + fragment.id"
       >Notes: {{ notes }}</a
     >
   </p>
+  }
   @if (userLoggedIn) {
   <div *ngIf="!loadingAction" class="flex gap-1 action-list">
     @if (fragment.privacy !== 10 && fragment.privacy !== 1 && fragment.privacy !== 2) {
