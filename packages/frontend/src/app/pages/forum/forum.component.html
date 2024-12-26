@@ -38,11 +38,10 @@
 
 </ng-container>
 
-
-<mat-card *ngIf="forumPosts.length > 0" class="p-3 pb-2 mb-2 lg:mx-4 scalein wafrn-container flex-shrink-0">
+<footer *ngIf="forumPosts.length > 0" class="p-3 py-2 mb-4 lg:mx-4 wafrn-container">
   <mat-paginator (page)="changePage($event)" [pageSizeOptions]="[10, 25, 50, 100, 250]" showFirstLastButtons
     [length]="forumPosts.length" [pageIndex]="currentPage" [pageSize]="itemsPerPage"></mat-paginator>
-</mat-card>
+</footer>
 
 <button [routerLink]="'/dashboard'" mat-flat-button color="default" aria-label="Go back to the dashboard"
   style="position: fixed; z-index: 500; top: 1em; right: 0.5em">
