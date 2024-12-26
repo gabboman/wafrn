@@ -184,7 +184,10 @@ export default function userRoutes(app: Application) {
   app.post(
     '/api/editProfile',
     authenticateToken,
-    uploadHandler().single('avatar'),
+    uploadHandler().fields([
+      { name: 'avatar', maxCount: 1 },
+      { name: 'headerImage', maxCount: 1 }
+    ]),
     async (req: AuthorizedRequest, res: Response) => {
       let success = false
       try {
@@ -212,12 +215,24 @@ export default function userRoutes(app: Application) {
             userEmojis = userEmojis.concat(avaiableEmojis?.filter((emoji: any) => name.includes(emoji.name)))
           }
 
-          if (req.file != null) {
-            let avatarURL = `/${await optimizeMedia(req.file.path, { forceImageExtension: 'webp' })}`
+          console.log('files >', req.files)
+
+          const avatar = req.files.avatar?.[0]
+          const headerImage = req.files.headerImage?.[0]
+
+          if (avatar != null) {
+            let url = `/${await optimizeMedia(avatar.path, { forceImageExtension: 'webp' })}`
             if (environment.removeFolderNameFromFileUploads) {
-              avatarURL = avatarURL.slice('/uploads/'.length - 1)
-              user.avatar = avatarURL
+              url = url.slice('/uploads/'.length - 1)
             }
+            user.avatar = url
+          }
+          if (headerImage != null) {
+            let url = `/${await optimizeMedia(headerImage.path, { forceImageExtension: 'webp' })}`
+            if (environment.removeFolderNameFromFileUploads) {
+              url = url.slice('/uploads/'.length - 1)
+            }
+            user.headerImage = url
           }
 
           await UserEmojiRelation.destroy({
@@ -269,7 +284,7 @@ export default function userRoutes(app: Application) {
           success = true
         }
       } catch (error) {
-        logger.error(error)
+        console.error(error)
       }
 
       res.send({

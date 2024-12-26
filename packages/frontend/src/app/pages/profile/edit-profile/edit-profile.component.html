@@ -2,9 +2,26 @@
   <form [hidden]="loading" [formGroup]="editProfileForm" (ngSubmit)="onSubmit()">
     <div class="pt-2 px-3 border-round-md mb-4" style="border: 1px solid #999">
       <label for="avatar" class="block font-medium mb-2">Choose another avatar</label>
-      <input formControlName="avatar" id="avatar" type="file" accept="image/jpeg,image/png,image/webp,image/gif"
-        (change)="imgSelected($event)" class="w-full mb-3" />
-      </div>
+      <input
+        formControlName="avatar"
+        id="avatar"
+        type="file"
+        accept="image/jpeg,image/png,image/webp,image/gif"
+        (change)="imgSelected($event)"
+        class="w-full mb-3"
+      />
+    </div>
+    <div class="pt-2 px-3 border-round-md mb-4" style="border: 1px solid #999">
+      <label for="avatar" class="block font-medium mb-2">Choose header image</label>
+      <input
+        formControlName="headerImage"
+        id="headerImage"
+        type="file"
+        accept="image/jpeg,image/png,image/webp,image/gif"
+        (change)="headerImgSelected($event)"
+        class="w-full mb-3"
+      />
+    </div>
 
     <mat-form-field class="w-full">
       <mat-label>Display name (can contain emoji codes)</mat-label>
