@@ -40,6 +40,9 @@ services:
     restart: unless-stopped
     environment:
       - NODE_ENV=production
+    volumes:
+      - ./packages/backend/uploads:/wafrn/uploads
+      - ./packages/backend/cache:/wafrn/cache
 
   frontend:
     build:
