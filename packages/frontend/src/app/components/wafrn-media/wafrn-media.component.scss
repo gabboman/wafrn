@@ -44,7 +44,8 @@ video {
 .img-container {
   position: relative;
 
-  & img {
+  & img,
+  & video {
     margin-inline: auto;
   }
 }
