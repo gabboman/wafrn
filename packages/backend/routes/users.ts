@@ -215,8 +215,6 @@ export default function userRoutes(app: Application) {
             userEmojis = userEmojis.concat(avaiableEmojis?.filter((emoji: any) => name.includes(emoji.name)))
           }
 
-          console.log('files >', req.files)
-
           const avatar = req.files.avatar?.[0]
           const headerImage = req.files.headerImage?.[0]
 
@@ -284,7 +282,7 @@ export default function userRoutes(app: Application) {
           success = true
         }
       } catch (error) {
-        console.error(error)
+        logger.error(error)
       }
 
       res.send({

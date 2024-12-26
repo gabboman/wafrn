@@ -26,7 +26,7 @@ export default function cacheRoutes(app: Application) {
             res.sendFile(localFileName, { root: '.' })
             return
           } else {
-            console.log('> file not found', localFileName)
+            logger.info(`[remoteCache] local file ${localFileName} not found`)
             res.sendStatus(404)
             return
           }
@@ -63,7 +63,7 @@ export default function cacheRoutes(app: Application) {
             res.sendFile(localFileName, { root: '.' })
           }
         } else {
-          console.log('> trying to fetch URL ', mediaLink)
+          logger.info(`[remoteCache] trying to fetch URL ${mediaLink}`)
           const remoteResponse = await axios.get(mediaLink, {
             responseType: 'stream',
             headers: { 'User-Agent': environment.instanceUrl }
@@ -146,7 +146,7 @@ export default function cacheRoutes(app: Application) {
 
 
       } else {
-        console.error({
+        logger.trace({
           message: 'error on cache',
           url: req.query?.media,
           error: error
