@@ -143,4 +143,15 @@ export class BlogHeaderComponent implements OnChanges, OnDestroy {
       width: '100%',
     });
   }
+
+  formatBigNumber(n: number) {
+    if (n < 10000) {
+      return n
+    }
+
+    return Intl.NumberFormat('en-US',  {
+      notation: 'compact',
+      compactDisplay: 'short',
+    }).format(n);
+  }
 }
