@@ -6,7 +6,6 @@ import { CommonModule } from '@angular/common';
 import { MatCardModule } from '@angular/material/card';
 
 import { PostFragmentComponent } from '../post-fragment/post-fragment.component';
-import { AvatarSmallComponent } from "../avatar-small/avatar-small.component";
 import { PostHeaderComponent } from "../post/post-header/post-header.component";
 import { EnvironmentService } from 'src/app/services/environment.service';
 import { PostRibbonComponent } from '../post-ribbon/post-ribbon.component';
@@ -23,7 +22,6 @@ import { DateTimeFromJsDatePipe, DateTimeToRelativePipe, LuxonModule } from 'lux
     MatCardModule,
     PostFragmentComponent,
     PostHeaderComponent,
-    AvatarSmallComponent,
     PostRibbonComponent,
     LuxonModule
   ],
