@@ -42,11 +42,10 @@
     </div>
     }
   </div>
-  <hr />
   <button *ngIf="veryLongPost || !showFull" color="accent" class="w-full mb-3 mt-2 w-full" mat-stroked-button
     (mousedown)="expandPost()">
     Expand woot ({{originalPostContent.length}} posts)
   </button>
-
+  <hr />
   <app-bottom-reply-bar [fragment]="finalPost" [notes]="notes" ></app-bottom-reply-bar>
 </mat-card>
