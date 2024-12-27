@@ -173,14 +173,14 @@
       [routerLink]="['/blog', blogDetails.url, 'following']"
       class="flex flex-column justify-content-center subtle-link"
     >
-      <b class="m-0 text-lg text-center">{{ blogDetails.followed }}</b>
+      <b class="m-0 text-lg text-center">{{ formatBigNumber(blogDetails.followed) }}</b>
       <p class="m-0 text-xs">Following</p>
     </a>
     <a
       [routerLink]="['/blog', blogDetails.url, 'followers']"
       class="flex flex-column justify-content-center subtle-link"
     >
-      <b class="m-0 text-lg text-center">{{ blogDetails.followers }}</b>
+      <b class="m-0 text-lg text-center">{{ formatBigNumber(blogDetails.followers) }}</b>
       <p class="m-0 text-xs">Followers</p>
     </a>
   </footer>

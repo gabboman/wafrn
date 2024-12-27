@@ -145,9 +145,13 @@ export class BlogHeaderComponent implements OnChanges, OnDestroy {
   }
 
   formatBigNumber(n: number) {
+    if (n < 10000) {
+      return n
+    }
+
     return Intl.NumberFormat('en-US',  {
       notation: 'compact',
-      compactDisplay: 'short'
+      compactDisplay: 'short',
     }).format(n);
   }
 }
