@@ -144,7 +144,7 @@ export class BlogHeaderComponent implements OnChanges, OnDestroy {
     });
   }
 
-  formatPostCount(n: number) {
+  formatBigNumber(n: number) {
     return Intl.NumberFormat('en-US',  {
       notation: 'compact',
       compactDisplay: 'short'
