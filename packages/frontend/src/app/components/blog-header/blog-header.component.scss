@@ -14,8 +14,8 @@
 }
 
 .blog-avatar-image {
-  max-width: 15vh;
-  height: 15vh;
+  max-height: 15vh;
+  aspect-ratio: 1 / 1;
   object-fit: cover;
   border-radius: var(--mat-sys-corner-small);
   margin-top: calc(-1 * 15vh + 2.5rem);
