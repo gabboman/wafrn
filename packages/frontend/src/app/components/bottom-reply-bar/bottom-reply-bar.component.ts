@@ -108,6 +108,16 @@ export class BottomReplyBarComponent implements OnChanges {
       const success = await firstValueFrom(this.deletePostService.deleteRewoots(id));
       if(success){
         this.myRewootsIncludePost = false;
+        this.messages.add({
+          severity: 'success',
+          summary: 'You successfully deleted your rewoot',
+        });
+      } else {
+        this.messages.add({
+          severity: 'error',
+          summary:
+            'Something went wrong! Check your internet connectivity and try again',
+        });
       }
       this.loadingAction = false;
     }

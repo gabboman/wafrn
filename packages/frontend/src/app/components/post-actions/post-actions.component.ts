@@ -17,6 +17,7 @@ import {
   faRepeat,
   faQuoteLeft,
   faGlobe,
+  faClose,
 } from '@fortawesome/free-solid-svg-icons';
 import { MatButtonModule } from '@angular/material/button';
 import { MatMenuModule } from '@angular/material/menu';
@@ -29,6 +30,7 @@ import { DeletePostService } from '../../services/delete-post.service';
 import { PostsService } from '../../services/posts.service';
 import { UtilsService } from '../../services/utils.service';
 import { EnvironmentService } from '../../services/environment.service';
+import { firstValueFrom } from 'rxjs';
 @Component({
   selector: 'app-post-actions',
   imports: [CommonModule, MatButtonModule, MatMenuModule, FontAwesomeModule],
@@ -40,6 +42,8 @@ export class PostActionsComponent implements OnChanges {
   userLoggedIn = false;
   myId: string = 'user-00000000-0000-0000-0000-000000000000 ';
   postSilenced = false;
+  myRewootsIncludePost = false;
+
   // icons
   shareIcon = faShareNodes;
   expandDownIcon = faChevronDown;
@@ -51,6 +55,7 @@ export class PostActionsComponent implements OnChanges {
   goExternalPost = faGlobe;
   reportIcon = faTriangleExclamation;
   deleteIcon = faTrash;
+  closeIcon = faClose;
   editedIcon = faPen;
   silenceIcon = faBellSlash;
   unsilenceIcon = faBell;
@@ -71,6 +76,7 @@ export class PostActionsComponent implements OnChanges {
     }
   }
   ngOnChanges(changes: SimpleChanges): void {
+    this.myRewootsIncludePost = this.postService.rewootedPosts.includes(this.content.id);
     this.checkPostSilenced()
   }
 
@@ -112,22 +118,31 @@ export class PostActionsComponent implements OnChanges {
   }
 
   async quickReblog() {
-    const response = await this.editor.createPost({
-      content: '',
-      idPostToReblog: this.content.id,
-      privacy: 0,
-      media: [],
-    });
-    if (response) {
-      this.messages.add({
-        severity: 'success',
-        summary: 'You reblogged the woot succesfully',
+    if (this.content?.privacy !== 10) {
+      const response = await this.editor.createPost({
+        content: '',
+        idPostToReblog: this.content.id,
+        privacy: 0,
+        media: [],
       });
+      if (response) {
+        this.myRewootsIncludePost = true;
+        this.messages.add({
+          severity: 'success',
+          summary: 'You reblogged the woot succesfully',
+        });
+      } else {
+        this.messages.add({
+          severity: 'error',
+          summary:
+            'Something went wrong! Check your internet conectivity and try again',
+        });
+      }
     } else {
       this.messages.add({
-        severity: 'error',
+        severity: 'warn',
         summary:
-          'Something went wrong! Check your internet conectivity and try again',
+          'Sorry, this woot is not rebloggeable as requested by the user',
       });
     }
   }
@@ -187,6 +202,23 @@ export class PostActionsComponent implements OnChanges {
       this.messages.add({
         severity: 'error',
         summary: 'Something went wrong. Please try again',
+      });
+    }
+  }
+
+  async deleteRewoots() {
+    const success = await firstValueFrom(this.deletePostService.deleteRewoots(this.content.id));
+    if(success){
+      this.myRewootsIncludePost = false;
+      this.messages.add({
+        severity: 'success',
+        summary: 'You successfully deleted your rewoot',
+      });
+    } else {
+      this.messages.add({
+        severity: 'error',
+        summary:
+          'Something went wrong! Check your internet connectivity and try again',
       });
     }
   }
