@@ -1,10 +1,10 @@
 <div *ngIf="title" class="wafrn-container mx-1 md:mx-4 flex align-items-center">
   <h3 class="flex-grow-1 m-0 text-2xl">{{ title }}</h3>
 </div>
-<app-loader *ngIf="loadingPosts">posts</app-loader>
 @for (post of posts; track $index) {
   <app-post [post]="post"></app-post>
 }
+<app-loader *ngIf="loadingPosts">posts</app-loader>
 <footer class="p-4 flex gap-3 align-items-center">
   <div [hidden]="loadingPosts || noMorePosts" id="if-you-see-this-load-more-posts" class="m-0 text-lg"></div>
   <p *ngIf="noMorePosts" class="m-0 text-lg">No more posts found</p>

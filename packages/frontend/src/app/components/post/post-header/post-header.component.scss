@@ -18,6 +18,8 @@
   border-radius: var(--mat-sys-corner-small);
 }
 
-.metadata {
+.date-line {
   color: var(--mat-sys-outline-variant);
+  line-height: 1;
+  gap: 0.375rem; // Does not exist in PrimeFlex
 }

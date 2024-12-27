@@ -1,9 +1,15 @@
+:host {
+  --mdc-text-button-container-height: 2.25rem;
+  --mdc-outlined-button-container-height: 2.25rem;
+  --mdc-outlined-button-outline-color: var(--mat-sys-outline-variant);
+}
+
+.notes-link {
+  padding-inline: 0.75rem;
+  margin-left: -0.25rem;
+}
+
 .action-list button {
   aspect-ratio: 1 / 1;
   padding: 0;
-  --mdc-text-button-container-height: 2.25rem;
 }
-
-// fa-icon {
-//   line-height: 1;
-// }

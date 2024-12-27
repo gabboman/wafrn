@@ -1,38 +1,36 @@
-<mat-card *ngIf="notification" class="p-3 pb-2 mb-2 lg:mx-4 scalein wafrn-container flex-shrink-0 overflow-hidden">
-  <header class="flex align-items-center overflow-hidden">
-    <app-avatar-small
-      [user]="{avatar: notification.avatar, url: notification.userUrl, id: notification.url, name: notification.url}"></app-avatar-small>
-    <div class="p-1">
-      <p class="m-0 text-md">
-        <a [routerLink]="'/blog/' + notification.userUrl">{{
-          notification.userUrl
-          }}</a>
-        @switch (notification.type) { @case(notificationType.MENTION) {
-        mentioned you in a woot } @case(notificationType.LIKE) { liked one of
-        your woots } @case(notificationType.FOLLOW) { now follows you! }
+<mat-card *ngIf="notification" class="wafrn-container post-card">
+  <app-post-ribbon
+    [user]="{
+      avatar: notification.avatar,
+      url: notification.userUrl,
+      id: notification.url,
+      name: notification.url
+    }"
+    [icon]="notificationIcons[notification.type]"
+    [card]="false"
+  >
+    <a [routerLink]="'/blog/' + notification.userUrl" [innerHTML]="notification.userUrl" class="subtle-link"></a>
+      @switch (notification.type) {
+        @case(notificationType.MENTION) { mentioned you in a woot }
+        @case(notificationType.LIKE) { liked one of your woots }
+        @case(notificationType.FOLLOW) { now follows you! }
         @case(notificationType.REBLOG) { rewooted one of your woots }
         @case (notificationType.QUOTE) { quoted you in a woot }
         @case(notificationType.EMOJIREACT) { reacted with @if (emojiUrl) {
-        <img class="post-emoji" [src]="emojiUrl" [alt]="notification.emojiName" />
+          <img class="post-emoji" [src]="emojiUrl" [alt]="notification.emojiName" />
         } @else {
-        {{ notification.emojiName }}
+          {{ notification.emojiName }}
         } to your woot } }
-      </p>
-      <p class="m-0 no-underline text-xs text-gray-300">
-        {{ notification.date | date : "short" }}
-      </p>
-    </div>
-  </header>
-  <div class="relative notification-content-shortened" *ngIf="notification.type !== notificationType.FOLLOW">
-
+        {{ this.timeAgo }}
+  </app-post-ribbon>
+  @if (notification.type !== notificationType.FOLLOW) {
+  <hr />
+  <div class="relative notification-content-shortened">
     <a [routerLink]="notification.url" class="absolute inset-0">
       <span class="opacity-0">direct link to the post</span>
     </a>
-    <div *ngIf="notification.type !== notificationType.MENTION" class="flex mt-3 center-text overflow-hidden">
-      <app-post-header class="overflow-hidden" [fragment]="notification.fragment"></app-post-header>
-    </div>
-    <div class="cursor-pointer" [routerLink]="notification.url">
-      <app-post-fragment [fragment]="notification.fragment"></app-post-fragment>
-    </div>
+    <app-post-header [fragment]="notification.fragment"></app-post-header>
+    <app-post-fragment [fragment]="notification.fragment"></app-post-fragment>
   </div>
+  }
 </mat-card>

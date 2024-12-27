@@ -1,11 +1,13 @@
 <div class="flex justify-content-between">
-  @if (notes) {
-  <p class="m-0 pl-1 flex align-items-center">
-    <a [routerLink]="'/fediverse/post/' + fragment.id" class="subtle-link"
-      >Notes: {{ notes }}</a
-    >
-  </p>
-  }
+  <div class="flex align-items-center">
+    @if (notes) {
+    <p class="m-0 text-sm">
+      <a [routerLink]="'/fediverse/post/' + fragment.id" class="subtle-link notes-link" mat-stroked-button
+        ><b>{{ notes }}</b> notes</a
+      >
+    </p>
+    }
+  </div>
   @if (userLoggedIn) {
   <div *ngIf="!loadingAction" class="flex gap-1 action-list">
     @if (fragment.privacy !== 10 && fragment.privacy !== 1 && fragment.privacy !== 2) {

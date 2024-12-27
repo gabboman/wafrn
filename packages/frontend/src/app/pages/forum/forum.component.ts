@@ -17,11 +17,12 @@ import { PostComponent } from 'src/app/components/post/post.component';
 import { PostModule } from 'src/app/components/post/post.module';
 import { DashboardService } from 'src/app/services/dashboard.service';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { faHome } from '@fortawesome/free-solid-svg-icons';
+import { faHome, faRepeat } from '@fortawesome/free-solid-svg-icons';
 import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
 
 import { BottomReplyBarComponent } from "../../components/bottom-reply-bar/bottom-reply-bar.component";
 import { EnvironmentService } from 'src/app/services/environment.service';
+import { PostRibbonComponent } from 'src/app/components/post-ribbon/post-ribbon.component';
 
 @Component({
   selector: 'app-forum',
@@ -37,7 +38,8 @@ import { EnvironmentService } from 'src/app/services/environment.service';
     PostModule,
     FontAwesomeModule,
     MatPaginatorModule,
-    BottomReplyBarComponent
+    BottomReplyBarComponent,
+    PostRibbonComponent
   ],
   templateUrl: './forum.component.html',
   styleUrl: './forum.component.scss'
@@ -54,9 +56,17 @@ export class ForumComponent implements OnDestroy {
   followedUsers: string[] = [];
   localUrl = EnvironmentService.environment.frontUrl;
 
+  // evil
+  findReply = (id: string | undefined) => {
+    return this.forumPosts.find(post=>post.id === id) ?? this.post.find(post=>post.id === id);
+  }
+
   // local pagination
   currentPage = 0;
   itemsPerPage = 50;
+
+  // icons
+  rewootIcon = faRepeat;
 
 
   homeIcon = faHome;

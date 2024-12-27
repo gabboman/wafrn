@@ -1,5 +1,5 @@
 <button
-  mat-stroked-button
+  mat-button
   (mousedown)="openOverlay()"
   type="button"
   cdkOverlayOrigin
@@ -28,7 +28,7 @@
   [cdkConnectedOverlayOpen]="isOpen"
   [cdkConnectedOverlayScrollStrategy]="scrollStrategy"
 >
-  <div class="emojireact-overlay p-3 scalein animation-duration-200">
+  <div class="p-3 emojireact-overlay">
     <p class="text-xs">
       Mastodon does not support emojireacts yet
     </p>

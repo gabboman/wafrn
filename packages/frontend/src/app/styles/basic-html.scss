@@ -1,0 +1,36 @@
+a,
+a:visited,
+.ql-snow a {
+  color: var(--wafrn-blue);
+}
+
+li {
+  list-style-type: inside circle;
+  margin-left: 1.5em;
+}
+
+img,
+video {
+  display: block;
+  max-height: 100%;
+}
+
+hr {
+  border-style: solid;
+  border-width: 1px 0 0 0;
+  border-color: var(--mat-sys-outline-variant);
+}
+
+blockquote {
+  border-inline-start: 3px solid var(--mat-sys-outline);
+  padding-inline-start: 0.75rem;
+  margin: 0 0 0.75em;
+}
+
+pre {
+  overflow-x: scroll;
+}
+
+details {
+  cursor: pointer;
+}
