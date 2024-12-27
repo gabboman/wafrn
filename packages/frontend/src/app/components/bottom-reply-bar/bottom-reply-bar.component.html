@@ -7,19 +7,21 @@
   </p>
   }
   @if (userLoggedIn) {
-  <div *ngIf="!loadingAction" class="flex gap-1 action-list">
+  <div class="flex gap-1 action-list">
     @if (fragment.privacy !== 10 && fragment.privacy !== 1 && fragment.privacy !== 2) {
     <button mat-button color="accent" (mousedown)="quotePost(fragment)" class="cursor-pointer quote-icon">
       <fa-icon size="lg" [icon]="quoteIcon" matTooltip="Quote woot"></fa-icon>
     </button>
     }
     @if (myRewootsIncludePost) {
-    <button mat-button color="accent" (mousedown)="deleteRewoots(fragment.id)" class="cursor-pointer delete-rewoot-icon">
+    <button mat-button color="accent" (mousedown)="deleteRewoots(fragment.id)"
+      class="cursor-pointer delete-rewoot-icon" [attr.disabled]="loadingAction">
       <fa-icon size="lg" [icon]="closeIcon" matTooltip="Delete rewoot"></fa-icon>
     </button>
     }
     @if (!myRewootsIncludePost && fragment.privacy !== 10 && fragment.privacy !== 1) {
-    <button mat-button color="accent" (mousedown)="quickReblog(fragment)" class="cursor-pointer rewoot-icon">
+    <button mat-button color="accent" (mousedown)="quickReblog(fragment)"
+      class="cursor-pointer rewoot-icon" [attr.disabled]="loadingAction">
       <fa-icon size="lg" [icon]="quickReblogIcon" matTooltip="Rewoot"></fa-icon>
     </button>
     }

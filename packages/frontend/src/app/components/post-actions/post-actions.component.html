@@ -24,10 +24,17 @@
     <fa-icon class="mr-2" [icon]="reblogIcon"></fa-icon>
     Reply woot
   </button>
+  @if (myRewootsIncludePost) {
+  <button (mousedown)="deleteRewoots()" mat-menu-item>
+    <fa-icon class="mr-2" [icon]="closeIcon"></fa-icon>
+    Delete rewoot
+  </button>
+  } @else {
   <button *ngIf="content.privacy !== 10 && content.privacy !== 1" (mousedown)="quickReblog()" mat-menu-item>
     <fa-icon class="mr-2" [icon]="quickReblogIcon"></fa-icon>
-    Quick rewoot
+    Rewoot
   </button>
+  }
   <button *ngIf="content.privacy !== 10 && content.privacy !== 1 && content.privacy !== 2" (mousedown)="quoteWoot()"
     mat-menu-item>
     <fa-icon class="mr-2" [icon]="quoteIcon"></fa-icon>
