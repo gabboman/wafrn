@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { AvatarSmallComponent } from '../../avatar-small/avatar-small.component';
 import { ProcessedPost } from '../../../interfaces/processed-post';
 import { CommonModule } from '@angular/common';
@@ -11,25 +11,29 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faShareNodes, faChevronDown, faHeart, faHeartBroken, faReply, faRepeat, faQuoteLeft, faArrowUpRightFromSquare, faTrash, faClose, faGlobe, faUnlock, faEnvelope, faServer, faUser, faPen } from '@fortawesome/free-solid-svg-icons';
 import { MatButtonModule } from '@angular/material/button';
-import { LuxonModule } from 'luxon-angular';
+import { DateTimeToRelativePipe, LuxonModule, DateTimeFromJsDatePipe } from 'luxon-angular';
 
 @Component({
-    selector: 'app-post-header',
-    imports: [
-        CommonModule,
-        RouterModule,
-        AvatarSmallComponent,
-        PostActionsComponent,
-        MatTooltipModule,
-        FontAwesomeModule,
-        MatButtonModule,
-        MatTooltipModule,
-        LuxonModule
-    ],
-    templateUrl: './post-header.component.html',
-    styleUrl: './post-header.component.scss'
+  selector: 'app-post-header',
+  imports: [
+    CommonModule,
+    RouterModule,
+    AvatarSmallComponent,
+    PostActionsComponent,
+    MatTooltipModule,
+    FontAwesomeModule,
+    MatButtonModule,
+    MatTooltipModule,
+    LuxonModule
+  ],
+  providers: [
+    DateTimeToRelativePipe,
+    DateTimeFromJsDatePipe
+  ],
+  templateUrl: './post-header.component.html',
+  styleUrl: './post-header.component.scss'
 })
-export class PostHeaderComponent {
+export class PostHeaderComponent implements OnChanges {
 
   @Input() fragment: ProcessedPost | undefined;
   @Input() simplified: boolean = true;
@@ -37,13 +41,12 @@ export class PostHeaderComponent {
   @Input() headerText: string = '';
   userLoggedIn = false;
 
-  // table for the icons
+  // table for the icons. ATTENTION, PRIVACY 10 IS SET ON CONSTRUCTOR
   privacyOptions = [
     { level: 0, name: 'Public', icon: faGlobe },
     { level: 1, name: 'Followers only', icon: faUser },
     { level: 2, name: 'This instance only', icon: faServer },
     { level: 3, name: 'Unlisted', icon: faUnlock },
-    { level: 10, name: 'Direct Message', icon: faEnvelope },
   ];
 
   // icons
@@ -63,12 +66,28 @@ export class PostHeaderComponent {
   serverIcon = faServer;
   userIcon = faUser;
   editedIcon = faPen;
+
+  timeAgo = "";
+
   constructor(
     public postService: PostsService,
     private messages: MessageService,
-    private loginService: LoginService
+    private loginService: LoginService,
+    private dateTimeToRelative: DateTimeToRelativePipe,
+    private dateTimeFromJsDatePipe: DateTimeFromJsDatePipe
   ) {
-    this.userLoggedIn = loginService.checkUserLoggedIn()
+    // its an array
+    this.privacyOptions[10] = { level: 10, name: 'Direct Message', icon: faEnvelope },
+
+      this.userLoggedIn = loginService.checkUserLoggedIn()
+  }
+  ngOnChanges(changes: SimpleChanges): void {
+    //
+    this.timeAgo = this.dateTimeToRelative.transform(
+      this.dateTimeFromJsDatePipe.transform(this.fragment?.createdAt),
+      // TODO unhardcode locale
+      { style: 'long', locale: 'en' }
+    )
   }
 
   async followUser(id: string) {

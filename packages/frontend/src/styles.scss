@@ -3,22 +3,15 @@
 
 html {
   color-scheme: light dark;
-  @include mat.theme(
-    (
-      color: mat.$violet-palette,
+  @include mat.theme((color: mat.$violet-palette,
       density: 0,
-    )
-  );
+    ));
 }
 
 // HACK: Have to make dummy theme to initialize typography
-$theme: mat.define-theme(
-  (
-    color: (
-      primary: mat.$violet-palette,
-    ),
-  )
-);
+$theme: mat.define-theme((color: (primary: mat.$violet-palette,
+      ),
+    ));
 
 @include mat.typography-hierarchy($theme);
 
@@ -27,6 +20,10 @@ $theme: mat.define-theme(
   --mat-sys-label-small-size: 0.688rem;
 
   --info-card-warning-background: light-dark(#d7c3b8, #52443c);
+}
+
+:root {
+  @include mat.badge-overrides((background-color:var(--mdc-filled-button-container-color, var(--mat-sys-primary))));
 }
 
 * {
@@ -116,7 +113,7 @@ $avatar-length: 40px;
   user-select: unset;
 }
 
-.mention > span {
+.mention>span {
   margin: 0;
 }
 
@@ -204,10 +201,11 @@ blockquote {
 }
 
 .post-text {
-  & > :first-child {
+  &> :first-child {
     margin-top: 0;
   }
-  & > :last-child {
+
+  &> :last-child {
     margin-bottom: 0;
   }
 }
@@ -240,13 +238,11 @@ blockquote {
 }
 
 .post-danger {
-  background: repeating-linear-gradient(
-    45deg,
-    var(--mat-sys-surface),
-    var(--mat-sys-surface) 10px,
-    var(--mat-sys-surface-container-low) 10px,
-    var(--mat-sys-surface-container-low) 20px
-  );
+  background: repeating-linear-gradient(45deg,
+      var(--mat-sys-surface),
+      var(--mat-sys-surface) 10px,
+      var(--mat-sys-surface-container-low) 10px,
+      var(--mat-sys-surface-container-low) 20px);
 }
 
 .center-text {
@@ -264,7 +260,7 @@ pre {
   overflow-x: scroll;
 }
 
-.mat-mdc-dialog-inner-container > .mat-mdc-dialog-surface {
+.mat-mdc-dialog-inner-container>.mat-mdc-dialog-surface {
   padding: 20px;
 }
 
