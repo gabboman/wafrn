@@ -1,6 +1,6 @@
 <ng-container *ngIf="fragment">
   <div class="flex justify-content-between">
-    <div class="flex flex-column gap-2">
+    <div class="flex-column gap-2 max-w-80">
       <div class="flex gap-2">
         <div class="flex gap-2 mr-auto min-w-0">
           <app-avatar-small [user]="fragment.user"></app-avatar-small>
@@ -17,9 +17,10 @@
       </div>
       <div *ngIf="!simplified" class="flex align-items-center date-line">
         <span class="text-sm" matTooltip="{{fragment.createdAt | date : 'short'}}">
-            {{ this.timeAgo }}
+          {{ this.timeAgo }}
         </span>
-        <span *ngIf="fragment.updatedAt.getTime() - fragment.createdAt.getTime() > 60000" matTooltip="Edited {{ fragment.updatedAt | date : 'short' }}" class="text-xs">
+        <span *ngIf="fragment.updatedAt.getTime() - fragment.createdAt.getTime() > 60000"
+          matTooltip="Edited {{ fragment.updatedAt | date : 'short' }}" class="text-xs">
           <fa-icon [icon]="editedIcon"></fa-icon>
         </span>
         <span class="text-xs" matTooltip="{{privacyOptions[fragment.privacy].name}}">

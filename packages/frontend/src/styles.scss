@@ -209,7 +209,7 @@ video {
   max-height: unset !important;
 }
 
-.mat-mdc-dialog-inner-container > .mat-mdc-dialog-surface {
+.mat-mdc-dialog-inner-container>.mat-mdc-dialog-surface {
   padding: 20px;
 }
 
@@ -223,4 +223,8 @@ video {
 
 .force-comic-sans {
   font-family: "Comic Sans MS", cursive, sans-serif;
+}
+
+.max-w-80 {
+  max-width: 80%;
 }
