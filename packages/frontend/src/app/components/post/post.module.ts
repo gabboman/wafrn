@@ -14,6 +14,7 @@ import { PostActionsComponent } from '../post-actions/post-actions.component';
 import { AvatarSmallComponent } from '../avatar-small/avatar-small.component';
 import { PostHeaderComponent } from "./post-header/post-header.component";
 import { BottomReplyBarComponent } from "../bottom-reply-bar/bottom-reply-bar.component";
+import { PostRibbonComponent } from '../post-ribbon/post-ribbon.component';
 
 @NgModule({
   declarations: [PostComponent],
@@ -30,7 +31,8 @@ import { BottomReplyBarComponent } from "../bottom-reply-bar/bottom-reply-bar.co
     PostActionsComponent,
     AvatarSmallComponent,
     PostHeaderComponent,
-    BottomReplyBarComponent
+    BottomReplyBarComponent,
+    PostRibbonComponent
 ],
   exports: [PostComponent],
   providers: [ReportService],

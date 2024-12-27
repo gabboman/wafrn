@@ -70,8 +70,8 @@ export class PostComponent implements OnInit, OnChanges, OnDestroy {
   expandDownIcon = faChevronDown;
   solidHeartIcon = faHeart;
   clearHeartIcon = faHeartBroken;
-  reblogIcon = faReply;
-  quickReblogIcon = faRepeat;
+  replyIcon = faReply;
+  reblogIcon = faRepeat;
   quoteIcon = faQuoteLeft;
   shareExternalIcon = faArrowUpRightFromSquare;
   deleteIcon = faTrash;

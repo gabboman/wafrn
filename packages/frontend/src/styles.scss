@@ -1,5 +1,7 @@
 @use "@angular/material" as mat;
 @use "./app/styles/quil.scss";
+@use "./app/styles/post-card.scss";
+@use "./app/styles/basic-html.scss";
 
 html {
   color-scheme: light dark;
@@ -20,6 +22,8 @@ $theme: mat.define-theme((color: (primary: mat.$violet-palette,
   --mat-sys-label-small-size: 0.688rem;
 
   --info-card-warning-background: light-dark(#d7c3b8, #52443c);
+
+  --avatar-size: 40px;
 }
 
 :root {
@@ -44,12 +48,6 @@ body {
 // dirty hack because bug regarding the editor
 .cdk-overlay-pane.mat-mdc-dialog-panel {
   max-width: 100% !important;
-}
-
-a,
-a:visited,
-.ql-snow a {
-  color: var(--wafrn-blue);
 }
 
 #script-warn {
@@ -78,18 +76,14 @@ video {
   }
 }
 
-$avatar-length: 40px;
-
 .avatar-container {
   display: flex;
-  height: $avatar-length;
-  width: $avatar-length;
+  height: var(--avatar-size);
+  width: var(--avatar-size);
   justify-content: center;
 }
 
 .avatar {
-  max-height: $avatar-length;
-  max-width: $avatar-length;
   border-radius: 8px;
   display: flex;
   object-fit: cover;
@@ -162,17 +156,6 @@ $avatar-length: 40px;
   max-width: 15%;
 }
 
-hr {
-  border-style: solid;
-  border-width: 1px 0 0 0;
-  border-color: var(--mat-sys-outline-variant);
-}
-
-blockquote {
-  border-inline-start: 3px solid #9baec8;
-  padding-inline-start: 1em !important;
-}
-
 .mdc-button {
   min-width: unset !important;
 }
@@ -201,16 +184,6 @@ blockquote {
   max-height: 128px;
 }
 
-.post-text {
-  &> :first-child {
-    margin-top: 0;
-  }
-
-  &> :last-child {
-    margin-bottom: 0;
-  }
-}
-
 // mobile only styles
 @media (max-width: 992px) {
   .w-full-mobile {
@@ -225,27 +198,6 @@ blockquote {
   }
 }
 
-.tag {
-  padding: 0 0.75ch;
-  cursor: pointer;
-  background-color: var(--mat-sys-primary);
-  color: var(--mat-sys-on-primary);
-  text-decoration: none;
-  border-radius: var(--mat-sys-corner-small);
-  font-size: 0.8em;
-  line-height: 1.3;
-  padding-top: 2px;
-  word-break: break-all;
-}
-
-.post-danger {
-  background: repeating-linear-gradient(45deg,
-      var(--mat-sys-surface),
-      var(--mat-sys-surface) 10px,
-      var(--mat-sys-surface-container-low) 10px,
-      var(--mat-sys-surface-container-low) 20px);
-}
-
 .center-text {
   display: flex;
   flex-direction: row;
@@ -257,11 +209,7 @@ blockquote {
   max-height: unset !important;
 }
 
-pre {
-  overflow-x: scroll;
-}
-
-.mat-mdc-dialog-inner-container>.mat-mdc-dialog-surface {
+.mat-mdc-dialog-inner-container > .mat-mdc-dialog-surface {
   padding: 20px;
 }
 

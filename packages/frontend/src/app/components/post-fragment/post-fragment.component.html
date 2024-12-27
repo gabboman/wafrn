@@ -23,7 +23,7 @@
     [ngClass]="{ 'post-danger': (fragment.content_warning || fragment.muted_words_cw) && showCw, 'mt-4': (fragment.content_warning || fragment.muted_words_cw)}">
     <div *ngFor="let block of wafrnFormattedContent" class="fragment-content overflow-hidden"
       [ngClass]="{ blurry: (fragment.content_warning || fragment.muted_words_cw) && showCw }">
-      <div [injectHTML]="block" class="post-text"></div>
+      <div [injectHTML]="block" class="mt-3 post-text"></div>
       <app-wafrn-media [mediaOrString]="block"></app-wafrn-media>
     </div>
 
@@ -54,7 +54,7 @@
       </div>
     </div>
     }
-    <section class="mt-3" class="my-3 flex flex-wrap gap-1 emoji-reactions">
+    <section class="mt-3" class="mt-3 flex flex-wrap gap-1 emoji-reactions">
       @for (emoji of emojiCollection; track $index) {
 
       @if (avaiableEmojiNames.includes(emoji.name) || !emoji.img) {

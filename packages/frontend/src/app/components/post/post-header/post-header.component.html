@@ -1,6 +1,6 @@
 <ng-container *ngIf="fragment">
   <div class="flex justify-content-between">
-    <div class="min-w-0">
+    <div class="flex flex-column gap-2">
       <div class="flex gap-2">
         <div class="flex gap-2 mr-auto min-w-0">
           <app-avatar-small [user]="fragment.user"></app-avatar-small>
@@ -15,23 +15,20 @@
           </div>
         </div>
       </div>
-      <div class="mt-1 flex justify-content-between metadata">
-        <div *ngIf="!simplified" class="date-line flex gap-2 align-items-center">
-          <span class="text-sm" matTooltip="{{fragment.createdAt | date : 'short'}}">
+      <div *ngIf="!simplified" class="flex align-items-center date-line">
+        <span class="text-sm" matTooltip="{{fragment.createdAt | date : 'short'}}">
             {{ this.timeAgo }}
-          </span>
-          <span *ngIf="fragment.updatedAt.getTime() - fragment.createdAt.getTime() > 60000"
-            [matTooltip]="fragment.updatedAt | date : 'short'" class="text-xs">
-            <fa-icon [icon]="editedIcon"></fa-icon>
-          </span>
-          <span class="text-xs" matTooltip="{{privacyOptions[fragment.privacy].name}}">
-            <fa-icon [icon]="privacyOptions[fragment.privacy].icon"></fa-icon>
-          </span>
-        </div>
+        </span>
+        <span *ngIf="fragment.updatedAt.getTime() - fragment.createdAt.getTime() > 60000" matTooltip="Edited {{ fragment.updatedAt | date : 'short' }}" class="text-xs">
+          <fa-icon [icon]="editedIcon"></fa-icon>
+        </span>
+        <span class="text-xs" matTooltip="{{privacyOptions[fragment.privacy].name}}">
+          <fa-icon [icon]="privacyOptions[fragment.privacy].icon"></fa-icon>
+        </span>
       </div>
     </div>
     <div class="flex flex-column align-items-center">
-      <app-post-actions *ngIf="!simplified" [content]="fragment"></app-post-actions>
+      <app-post-actions *ngIf="!simplified" [content]="fragment" class="align-self-end"></app-post-actions>
       <button mat-button color="accent" *ngIf="
         !postService.notYetAcceptedFollowedUsersIds.includes(fragment.userId) &&
         !postService.followedUserIds.includes(fragment.userId) &&

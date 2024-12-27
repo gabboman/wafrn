@@ -1,8 +1,6 @@
 <app-loader *ngIf="loading"></app-loader>
 <ng-container *ngIf="!loading">
-  <div class="wafrn-container mx-1 md:mx-4 flex align-items-center">
-  </div>
-  <app-post [post]="post"></app-post>
+  <app-post [post]="post" class="initial-post"></app-post>
   <div *ngIf="(!post[post.length - 1].remotePostId.startsWith(localUrl) && userLoggedIn) || post.length > 1 "
     class="px-3 mt-3 mb-6 lg:mx-4 wafrn-container flex flex-column gap-2 reply-loader">
     <button *ngIf="!post[post.length - 1].remotePostId.startsWith(localUrl) && userLoggedIn"
@@ -17,21 +15,19 @@
     @if(content.content !== '' || content.tags.length > 0 || content.quotes.length > 0 ||
     content.questionPoll?.questionPollQuestions || (content.medias && content.medias.length
     > 0)) {
-    <mat-card [id]="'post-' + content.id" class="p-3 pb-2 mb-2 lg:mx-4 scalein wafrn-container flex-shrink-0">
+    <mat-card [id]="'post-' + content.id" class="wafrn-container post-card">
       <app-post-header [fragment]="content" [simplified]="false"></app-post-header>
       <app-post-fragment [selfManageCw]="true" [fragment]="content"></app-post-fragment>
+      <hr />
       <app-bottom-reply-bar [fragment]="content"></app-bottom-reply-bar>
     </mat-card>
     }
     @else {
-    <mat-card class="p-3 pb-2 mb-2 lg:mx-4 scalein wafrn-container flex-shrink-0">
-      <div class="flex">
-        <app-avatar-small class="mr-2" [user]="content.user"></app-avatar-small>
-        <div style="word-break: break-word">
-          {{content.user.url}} rewooted <a [routerLink]="'/fediverse/post/' + content.parentId">this post</a>
-        </div>
-      </div>
-    </mat-card>
+    <app-post-ribbon [user]="content.user" [icon]="rewootIcon">
+      <a class="subtle-link" [routerLink]="'/blog/' + content.user.url" [innerHTML]="content.user.name"></a>
+      rewooted <a [routerLink]="'/fediverse/post/' + content.parentId" class="subtle-link"
+        [innerHTML]="findReply(content.parentId)?.user?.name ?? 'Unknown User'"></a>
+    </app-post-ribbon>
     }
   </ng-container>
 </ng-container>

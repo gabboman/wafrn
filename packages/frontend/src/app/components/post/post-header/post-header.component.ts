@@ -49,6 +49,9 @@ export class PostHeaderComponent implements OnChanges {
     { level: 3, name: 'Unlisted', icon: faUnlock },
   ];
 
+  // DO NOT COMMIT THIS
+  getPrivacy = (level: number) => this.privacyOptions.find((elem) => elem.level === level) ?? this.privacyOptions[0];
+
   // icons
   shareIcon = faShareNodes;
   expandDownIcon = faChevronDown;

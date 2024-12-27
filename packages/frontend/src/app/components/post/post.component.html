@@ -1,11 +1,30 @@
-<mat-card [id]="'post-element-' + finalPost.id" class="p-3 mx-2 mb-6 lg:mx-4 scalein wafrn-container">
+<mat-card
+  [id]="'post-element-' + finalPost.id"
+  class="wafrn-container post-card"
+  [ngClass]="{ 'top-bar': post.length > 1 }"
+>
+    @if(post.length > 1) {
+    <app-post-ribbon
+      [user]="originalPostContent[this.originalPostContent.length - 1].user"
+      [icon]="headerText === 'replied' ? replyIcon : reblogIcon"
+      [card]="false"
+    >
+      <a
+        class="subtle-link"
+        [routerLink]="
+          '/blog/' +
+          originalPostContent[this.originalPostContent.length - 1].user.url
+        "
+        [innerHTML]="
+          originalPostContent[this.originalPostContent.length - 1].user.name
+        "
+      ></a>
+      {{ headerText }}
+    </app-post-ribbon>
+    }
   <div [ngClass]="{
       'shortened-post': veryLongPost || !showFull
     }">
-    <div *ngIf="post.length > 1" class="center-text overflow-hidden">
-      <app-post-header class="w-full" [headerText]="headerText"
-        [fragment]="originalPostContent[this.originalPostContent.length - 1]"></app-post-header>
-    </div>
     @for (content of post; track $index; let index = $index) {
     <hr *ngIf="
         (post.length > 1 && (content.content !== '' || content.tags.length)) ||
