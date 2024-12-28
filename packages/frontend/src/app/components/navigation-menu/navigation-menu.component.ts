@@ -490,7 +490,6 @@ export class NavigationMenuComponent implements OnInit, OnDestroy {
       this.usersAwaitingApproval = response.usersAwaitingApproval
       this.followsAwaitingApproval = response.followsAwaitingApproval
       this.awaitingAsks = response.asks
-
       this.drawMenu()
       this.cdr.detectChanges()
     }
