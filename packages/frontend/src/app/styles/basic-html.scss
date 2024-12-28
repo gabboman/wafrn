@@ -28,12 +28,16 @@ blockquote {
 }
 
 pre {
-  overflow-x: auto;
+  padding: 0.5rem 0.75rem;
   font-size: 0.85rem;
   background-color: var(--mat-sys-surface-container);
   border: 1px solid var(--mat-sys-outline-variant);
-  padding: 0.5rem;
   border-radius: var(--mat-sys-corner-small);
+  overflow-x: auto;
+
+  & > code {
+    all: unset;
+  }
 }
 
 details {
