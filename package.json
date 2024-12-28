@@ -16,10 +16,10 @@
     "frontend:develop:prod": "cd packages/frontend && ng serve --configuration devprod",
     "frontend:build": "cd packages/frontend && ng build",
     "frontend:deploy": "cd packages/frontend && ng build && rm -rf ../../frontend && mv dist/wafrn/browser ../../frontend",
-    "frontend:prettier-format": "cd packages/frontend && prettier --config .prettierrc '**/*.{ts,html,scss}' --write",
+    "frontend:prettier-format": "echo 'Use lint script for full format' && cd packages/frontend && prettier --config .prettierrc '**/*.{ts,html,scss}' --write",
     "frontend:test": "cd packages/frontend && jest",
     "vercel-build": "cd packages/frontend && ng build  --configuration=vercel",
-    "lint": "cd packages/frontend && ng lint"
+    "lint": "cd packages/frontend && ng lint --fix"
   },
   "repository": {
     "type": "git",
