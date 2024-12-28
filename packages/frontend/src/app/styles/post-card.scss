@@ -22,24 +22,26 @@
 }
 
 // Elements inside cards
-.avatar-container {
-  display: flex;
-  height: var(--avatar-size);
-  width: var(--avatar-size);
-  justify-content: center;
+:root .user-link {
+  text-decoration: none;
+  color: unset;
+
+  &:hover.user-name,
+  &:hover .user-url {
+    text-decoration: underline;
+  }
 }
 
-.avatar {
-  border-radius: 8px;
-  display: flex;
-  object-fit: cover;
+.user-name {
+  font-weight: 500;
 }
 
-.post-emoji {
-  display: inline-flex;
-  max-height: 1.5em;
-  max-width: 1.5em;
-  vertical-align: middle;
+.user-url {
+  color: var(--mat-sys-outline);
+}
+
+.post-action {
+  color: var(--mat-sys-outline);
 }
 
 .post-text {
