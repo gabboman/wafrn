@@ -1,19 +1,26 @@
-@use "@angular/material" as mat;
-@use "./app/styles/quil.scss";
-@use "./app/styles/post-card.scss";
-@use "./app/styles/basic-html.scss";
+@use '@angular/material' as mat;
+@use './app/styles/quil.scss';
+@use './app/styles/post-card.scss';
+@use './app/styles/basic-html.scss';
 
 html {
   color-scheme: light dark;
-  @include mat.theme((color: mat.$violet-palette,
-      density: 0,
-    ));
+  @include mat.theme(
+    (
+      color: mat.$violet-palette,
+      density: 0
+    )
+  );
 }
 
 // HACK: Have to make dummy theme to initialize typography
-$theme: mat.define-theme((color: (primary: mat.$violet-palette,
-      ),
-    ));
+$theme: mat.define-theme(
+  (
+    color: (
+      primary: mat.$violet-palette
+    )
+  )
+);
 
 @include mat.typography-hierarchy($theme);
 
@@ -27,7 +34,11 @@ $theme: mat.define-theme((color: (primary: mat.$violet-palette,
 }
 
 :root {
-  @include mat.badge-overrides((background-color:var(--mdc-filled-button-container-color, var(--mat-sys-primary))));
+  @include mat.badge-overrides(
+    (
+      background-color: var(--mdc-filled-button-container-color, var(--mat-sys-primary))
+    )
+  );
 }
 
 * {
@@ -108,7 +119,7 @@ video {
   user-select: unset;
 }
 
-.mention>span {
+.mention > span {
   margin: 0;
 }
 
@@ -209,7 +220,7 @@ video {
   max-height: unset !important;
 }
 
-.mat-mdc-dialog-inner-container>.mat-mdc-dialog-surface {
+.mat-mdc-dialog-inner-container > .mat-mdc-dialog-surface {
   padding: 20px;
 }
 
@@ -222,7 +233,7 @@ video {
 }
 
 .force-comic-sans {
-  font-family: "Comic Sans MS", cursive, sans-serif;
+  font-family: 'Comic Sans MS', cursive, sans-serif;
 }
 
 .max-w-80 {

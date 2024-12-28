@@ -22,7 +22,7 @@ $_palettes: (
     95: #e0f4ff,
     98: #f3faff,
     99: #fafcff,
-    100: #ffffff,
+    100: #ffffff
   ),
   secondary: (
     0: #000000,
@@ -40,7 +40,7 @@ $_palettes: (
     95: #ffecee,
     98: #fff8f7,
     99: #fffbff,
-    100: #ffffff,
+    100: #ffffff
   ),
   tertiary: (
     0: #000000,
@@ -58,7 +58,7 @@ $_palettes: (
     95: #f2efff,
     98: #fcf8ff,
     99: #fffbff,
-    100: #ffffff,
+    100: #ffffff
   ),
   neutral: (
     0: #000000,
@@ -86,7 +86,7 @@ $_palettes: (
     96: #daf9ff,
     98: #edfcff,
     99: #f6feff,
-    100: #ffffff,
+    100: #ffffff
   ),
   neutral-variant: (
     0: #000000,
@@ -104,7 +104,7 @@ $_palettes: (
     95: #eaf2f7,
     98: #f3faff,
     99: #fafcff,
-    100: #ffffff,
+    100: #ffffff
   ),
   error: (
     0: #000000,
@@ -122,29 +122,31 @@ $_palettes: (
     95: #ffedea,
     98: #fff8f7,
     99: #fffbff,
-    100: #ffffff,
-  ),
+    100: #ffffff
+  )
 );
 
 $_rest: (
   secondary: map.get($_palettes, secondary),
   neutral: map.get($_palettes, neutral),
-  neutral-variant: map.get($_palettes,  neutral-variant),
-  error: map.get($_palettes, error),
+  neutral-variant: map.get($_palettes, neutral-variant),
+  error: map.get($_palettes, error)
 );
 $_primary: map.merge(map.get($_palettes, primary), $_rest);
 $_tertiary: map.merge(map.get($_palettes, tertiary), $_rest);
 
-$dark-theme: mat.define-theme((
-  color: (
-    theme-type: dark,
-    primary: $_primary,
-    tertiary: $_tertiary,
-  ),
-  typography: (
-    brand-family:  'Roboto,sans-serif',
-    plain-family:  'Roboto,sans-serif',
-    
-    bold-weight: 900,
+$dark-theme: mat.define-theme(
+  (
+    color: (
+      theme-type: dark,
+      primary: $_primary,
+      tertiary: $_tertiary
+    ),
+    typography: (
+      brand-family: 'Roboto,sans-serif',
+      plain-family: 'Roboto,sans-serif',
+
+      bold-weight: 900
+    )
   )
-));
+);

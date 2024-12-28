@@ -1,13 +1,13 @@
-import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
-import { RouterModule } from '@angular/router';
-import { MyMutesComponent } from './my-mutes.component';
-import { MatTableModule } from '@angular/material/table';
-import { MatCardModule } from '@angular/material/card';
-import { MatPaginatorModule } from '@angular/material/paginator';
-import { MatButtonModule } from '@angular/material/button';
-import { AvatarSmallComponent } from 'src/app/components/avatar-small/avatar-small.component';
+import { NgModule } from '@angular/core'
+import { CommonModule } from '@angular/common'
+import { FormsModule } from '@angular/forms'
+import { RouterModule } from '@angular/router'
+import { MyMutesComponent } from './my-mutes.component'
+import { MatTableModule } from '@angular/material/table'
+import { MatCardModule } from '@angular/material/card'
+import { MatPaginatorModule } from '@angular/material/paginator'
+import { MatButtonModule } from '@angular/material/button'
+import { AvatarSmallComponent } from 'src/app/components/avatar-small/avatar-small.component'
 
 @NgModule({
   declarations: [MyMutesComponent],
@@ -17,14 +17,14 @@ import { AvatarSmallComponent } from 'src/app/components/avatar-small/avatar-sma
     RouterModule.forChild([
       {
         path: '',
-        component: MyMutesComponent,
-      },
+        component: MyMutesComponent
+      }
     ]),
     MatTableModule,
     MatCardModule,
     MatPaginatorModule,
     MatButtonModule,
     AvatarSmallComponent
-  ],
+  ]
 })
 export class MyMutesModule {}

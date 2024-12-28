@@ -1,34 +1,34 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
-import { ProcessedPost } from 'src/app/interfaces/processed-post';
-import { DashboardService } from 'src/app/services/dashboard.service';
-import { JwtService } from 'src/app/services/jwt.service';
-import { PostsService } from 'src/app/services/posts.service';
-import { Title, Meta } from '@angular/platform-browser';
-import { ThemeService } from 'src/app/services/theme.service';
-import { MessageService } from 'src/app/services/message.service';
-import { faArrowsRotate } from '@fortawesome/free-solid-svg-icons';
-import { Subscription } from 'rxjs';
-import { LoaderComponent } from 'src/app/components/loader/loader.component';
+import { Component, OnDestroy, OnInit } from '@angular/core'
+import { ActivatedRoute, Router } from '@angular/router'
+import { ProcessedPost } from 'src/app/interfaces/processed-post'
+import { DashboardService } from 'src/app/services/dashboard.service'
+import { JwtService } from 'src/app/services/jwt.service'
+import { PostsService } from 'src/app/services/posts.service'
+import { Title, Meta } from '@angular/platform-browser'
+import { ThemeService } from 'src/app/services/theme.service'
+import { MessageService } from 'src/app/services/message.service'
+import { faArrowsRotate } from '@fortawesome/free-solid-svg-icons'
+import { Subscription } from 'rxjs'
+import { LoaderComponent } from 'src/app/components/loader/loader.component'
 
 @Component({
-    selector: 'app-dashboard',
-    templateUrl: './dashboard.component.html',
-    styleUrls: ['./dashboard.component.scss'],
-    standalone: false
+  selector: 'app-dashboard',
+  templateUrl: './dashboard.component.html',
+  styleUrls: ['./dashboard.component.scss'],
+  standalone: false
 })
 export class DashboardComponent implements OnInit, OnDestroy {
-  loadingPosts = false;
-  noMorePosts = false;
-  posts: ProcessedPost[][] = [];
-  viewedPostsNumber = 0;
-  viewedPostsIds: string[] = [];
-  currentPage = 0;
-  level = 1;
-  timestamp = new Date().getTime();
-  title = '';
-  reloadIcon = faArrowsRotate;
-  updateFollowersSubscription?: Subscription;
+  loadingPosts = false
+  noMorePosts = false
+  posts: ProcessedPost[][] = []
+  viewedPostsNumber = 0
+  viewedPostsIds: string[] = []
+  currentPage = 0
+  level = 1
+  timestamp = new Date().getTime()
+  title = ''
+  reloadIcon = faArrowsRotate
+  updateFollowersSubscription?: Subscription
 
   constructor(
     private dashboardService: DashboardService,
@@ -41,98 +41,92 @@ export class DashboardComponent implements OnInit, OnDestroy {
     private themeService: ThemeService,
     private activatedRoute: ActivatedRoute
   ) {
-    this.titleService.setTitle('Wafrn - the social network that respects you');
+    this.titleService.setTitle('Wafrn - the social network that respects you')
     this.metaTagService.addTags([
       {
         name: 'description',
-        content: 'Explore the posts in wafrn and if it looks cool join us!',
+        content: 'Explore the posts in wafrn and if it looks cool join us!'
       },
       {
         name: 'og:description',
-        content: 'Explore the posts in wafrn and if it looks cool join us!',
-      },
-    ]);
+        content: 'Explore the posts in wafrn and if it looks cool join us!'
+      }
+    ])
   }
   ngOnDestroy(): void {
-    this.updateFollowersSubscription?.unsubscribe();
+    this.updateFollowersSubscription?.unsubscribe()
   }
 
   ngOnInit(): void {
-    window.scrollTo(0, 0);
-    const purePath = this.router.url.split('?')[0];
+    window.scrollTo(0, 0)
+    const purePath = this.router.url.split('?')[0]
     if (purePath.endsWith('explore')) {
-      this.level = 0;
-      this.title = 'Explore the fediverse';
+      this.level = 0
+      this.title = 'Explore the fediverse'
     }
     if (purePath.endsWith('exploreLocal')) {
-      this.level = 2;
-      this.title = 'Explore WAFRN';
+      this.level = 2
+      this.title = 'Explore WAFRN'
     }
     if (purePath.endsWith('private')) {
-      this.level = 10;
-      this.title = 'Private messages';
+      this.level = 10
+      this.title = 'Private messages'
     }
     if (purePath.endsWith('silencedPosts')) {
-      this.level = 25;
-      this.title = 'My silenced posts';
+      this.level = 25
+      this.title = 'My silenced posts'
     }
 
-    this.updateFollowersSubscription =
-      this.postService.updateFollowers.subscribe(() => {
-        if (this.postService.followedUserIds.length === 1 && this.level === 1) {
-          // if the user follows NO ONE we take them to the explore page!
-          this.messages.add({
-            severity: 'info',
-            summary:
-              "You aren't following anyone, so we took you to the explore page",
-          });
-          this.router.navigate(['/dashboard/exploreLocal']);
-        }
-      });
+    this.updateFollowersSubscription = this.postService.updateFollowers.subscribe(() => {
+      if (this.postService.followedUserIds.length === 1 && this.level === 1) {
+        // if the user follows NO ONE we take them to the explore page!
+        this.messages.add({
+          severity: 'info',
+          summary: "You aren't following anyone, so we took you to the explore page"
+        })
+        this.router.navigate(['/dashboard/exploreLocal'])
+      }
+    })
 
     this.loadPosts(this.currentPage).then(() => {
       setTimeout(() => {
-        this.themeService.setMyTheme();
+        this.themeService.setMyTheme()
         // we detect the bottom of the page and load more posts
-        const element = document.querySelector(
-          '#if-you-see-this-load-more-posts'
-        );
-        const observer = new IntersectionObserver(
-          (intersectionEntries: IntersectionObserverEntry[]) => {
-            if (intersectionEntries[0].isIntersecting) {
-              this.currentPage++;
-              this.loadPosts(this.currentPage);
-            }
+        const element = document.querySelector('#if-you-see-this-load-more-posts')
+        const observer = new IntersectionObserver((intersectionEntries: IntersectionObserverEntry[]) => {
+          if (intersectionEntries[0].isIntersecting) {
+            this.currentPage++
+            this.loadPosts(this.currentPage)
           }
-        );
+        })
         if (element) {
-          observer.observe(element);
+          observer.observe(element)
         }
-      });
-    });
+      })
+    })
   }
 
   reloadPosts() {
-    this.posts = [];
-    this.currentPage = 0;
-    this.viewedPostsNumber = 0;
-    this.viewedPostsIds = [];
-    this.timestamp = new Date().getTime();
-    this.loadPosts(this.currentPage);
-    window.scrollTo(0, 0);
+    this.posts = []
+    this.currentPage = 0
+    this.viewedPostsNumber = 0
+    this.viewedPostsIds = []
+    this.timestamp = new Date().getTime()
+    this.loadPosts(this.currentPage)
+    window.scrollTo(0, 0)
   }
 
   async countViewedPost() {
-    this.viewedPostsNumber++;
+    this.viewedPostsNumber++
     if (this.posts.length - 1 < this.viewedPostsNumber) {
-      this.currentPage++;
-      await this.loadPosts(this.currentPage);
+      this.currentPage++
+      await this.loadPosts(this.currentPage)
     }
   }
 
   async loadPosts(page: number) {
-    this.loadingPosts = true;
-    let scrollDate = new Date(this.timestamp);
+    this.loadingPosts = true
+    let scrollDate = new Date(this.timestamp)
     /*
     // diable this part of ignoring the start date when closing post editor
     if(page === 0 && EditorService.editorData) {
@@ -141,29 +135,24 @@ export class DashboardComponent implements OnInit, OnDestroy {
     }
     */
     if (page !== 0) {
-      const lastPostBlock = this.posts[this.posts.length - 1];
-      scrollDate = new Date(lastPostBlock[lastPostBlock.length - 1].createdAt);
+      const lastPostBlock = this.posts[this.posts.length - 1]
+      scrollDate = new Date(lastPostBlock[lastPostBlock.length - 1].createdAt)
     }
-    const tmpPosts = await this.dashboardService.getDashboardPage(
-      scrollDate,
-      this.level
-    );
-    this.noMorePosts = tmpPosts.length === 0;
+    const tmpPosts = await this.dashboardService.getDashboardPage(scrollDate, this.level)
+    this.noMorePosts = tmpPosts.length === 0
     const filteredPosts = tmpPosts.filter((post: ProcessedPost[]) => {
-      let allFragmentsSeen = true;
+      let allFragmentsSeen = true
       post.forEach((component) => {
         const thisFragmentSeen =
           this.viewedPostsIds.includes(component.id) ||
-          (component.content === '' &&
-            component.tags.length === 0 &&
-            component.medias?.length === 0);
-        allFragmentsSeen = thisFragmentSeen && allFragmentsSeen;
+          (component.content === '' && component.tags.length === 0 && component.medias?.length === 0)
+        allFragmentsSeen = thisFragmentSeen && allFragmentsSeen
         if (!thisFragmentSeen) {
-          this.viewedPostsIds.push(component.id);
+          this.viewedPostsIds.push(component.id)
         }
-      });
-      return !allFragmentsSeen;
-    });
+      })
+      return !allFragmentsSeen
+    })
 
     // we do the filtering here to avoid repeating posts. Also by doing it here we avoid flickering
 
@@ -184,11 +173,10 @@ export class DashboardComponent implements OnInit, OnDestroy {
           updatedAt: new Date(),
           userId: '40472b5b-b668-4156-b795-a60f2986e928',
           user: {
-            avatar:
-              '/1641804617334_2f7de58d61c79f0bca67869c5b375f74a3787a17.webp',
+            avatar: '/1641804617334_2f7de58d61c79f0bca67869c5b375f74a3787a17.webp',
             url: 'admin',
             name: 'admin',
-            id: 'admin',
+            id: 'admin'
           },
           medias: [],
           tags: [],
@@ -197,18 +185,18 @@ export class DashboardComponent implements OnInit, OnDestroy {
           privacy: 0,
           userLikesPostRelations: [],
           emojis: [],
-          descendents: [],
-        },
-      ]);
+          descendents: []
+        }
+      ])
     }
     filteredPosts.forEach((post) => {
-      this.posts.push(post);
-    });
+      this.posts.push(post)
+    })
     // if we get a lot of filtered posts, we might want to load the next page
     if (tmpPosts.length > 5 && filteredPosts.length < 5) {
-      this.currentPage = this.currentPage + 1;
-      await this.loadPosts(this.currentPage);
+      this.currentPage = this.currentPage + 1
+      await this.loadPosts(this.currentPage)
     }
-    this.loadingPosts = false;
+    this.loadingPosts = false
   }
 }

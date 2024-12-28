@@ -1,65 +1,49 @@
 <mat-card class="p-3 mb-6 lg:mx-4 wafrn-container">
   <mat-card-content>
-    @switch (step) { @case (0) {
-    <h2>Import your followers from another instance</h2>
-    <span>Let's upload a CSV</span>
-    <input
-      [hidden]="true"
-      type="file"
-      accept=".csv"
-      class="file-input"
-      (change)="onFileSelected($event)"
-      #fileUpload
-    />
+    @switch (step) {
+      @case (0) {
+        <h2>Import your followers from another instance</h2>
+        <span>Let's upload a CSV</span>
+        <input
+          [hidden]="true"
+          type="file"
+          accept=".csv"
+          class="file-input"
+          (change)="onFileSelected($event)"
+          #fileUpload
+        />
 
-    <div *ngIf="!uploading" class="file-upload">
-      <button
-        mat-flat-button
-        color="accent"
-        class="upload-btn w-full"
-        (mousedown)="fileUpload.click()"
-      >
-        Upload CSV
-      </button>
-    </div>
+        <div *ngIf="!uploading" class="file-upload">
+          <button mat-flat-button color="accent" class="upload-btn w-full" (mousedown)="fileUpload.click()">
+            Upload CSV
+          </button>
+        </div>
 
-    <div *ngIf="uploading" class="w-full flex flex-column align-items-center gap-3">
-      <mat-spinner color="accent" diameter="32"></mat-spinner>
-      <p class="m-0 text-lg text-600">Uploading... This might take some time</p>
-    </div>
-
-    } @case (1) {
-    <button
-      (mousedown)="followEveryone()"
-      mat-flat-button
-      class="w-full"
-      color="primary"
-    >
-      Follow all users
-    </button>
-    @if(response.notFoundUsers.length > 0) {
-    <span
-      >We had problems finding these {{ response.notFoundUsers.length }} users
-      users:</span
-    >
-    @for (user of response.notFoundUsers; track $index) {
-    <p [innerText]="user"></p>
-    } } } @case (2) {
-    <mat-spinner color="accent" diameter="42"></mat-spinner>
-    <p class="m-0 text-lg">
-      Following people... This might take some time
-    </p>
-    <mat-progress-bar
-      mode="determinate"
-      [value]="(progress * 100) / response.foundUsers.length"
-    ></mat-progress-bar>
-    } @case(3) {
-    <span
-      >We had problems following these {{ failedFollows.length }} users
-      users:</span
-    >
-    @for (user of failedFollows; track $index) {
-    <a [routerLink]="['blog', user]"><p [innerText]="user"></p></a>
-    } } }
+        <div *ngIf="uploading" class="w-full flex flex-column align-items-center gap-3">
+          <mat-spinner color="accent" diameter="32"></mat-spinner>
+          <p class="m-0 text-lg text-600">Uploading... This might take some time</p>
+        </div>
+      }
+      @case (1) {
+        <button (mousedown)="followEveryone()" mat-flat-button class="w-full" color="primary">Follow all users</button>
+        @if (response.notFoundUsers.length > 0) {
+          <span>We had problems finding these {{ response.notFoundUsers.length }} users users:</span>
+          @for (user of response.notFoundUsers; track $index) {
+            <p [innerText]="user"></p>
+          }
+        }
+      }
+      @case (2) {
+        <mat-spinner color="accent" diameter="42"></mat-spinner>
+        <p class="m-0 text-lg">Following people... This might take some time</p>
+        <mat-progress-bar mode="determinate" [value]="(progress * 100) / response.foundUsers.length"></mat-progress-bar>
+      }
+      @case (3) {
+        <span>We had problems following these {{ failedFollows.length }} users users:</span>
+        @for (user of failedFollows; track $index) {
+          <a [routerLink]="['blog', user]"><p [innerText]="user"></p></a>
+        }
+      }
+    }
   </mat-card-content>
 </mat-card>

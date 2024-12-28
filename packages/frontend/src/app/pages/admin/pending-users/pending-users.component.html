@@ -1,7 +1,4 @@
-<mat-card
-  class="p-3 mb-6 lg:mx-4 scalein wafrn-container"
-  *ngFor="let user of pendingUsers"
->
+<mat-card class="p-3 mb-6 lg:mx-4 scalein wafrn-container" *ngFor="let user of pendingUsers">
   <div class="flex justify-content-center mb-2">
     <img
       loading="lazy"
@@ -21,10 +18,6 @@
   <div class="flex justify-content-center flex-wrap mt-3 mb-2">
     <div style="word-wrap: anywhere" [innerHtml]="user.description"></div>
   </div>
-  <button (mousedown)="activateUser(user.id)" mat-flat-button color="primary">
-    Activate user
-  </button>
-  <button (mousedown)="requireExtra(user.id)" mat-flat-button color="warn">
-    Require extra steps
-  </button>
+  <button (mousedown)="activateUser(user.id)" mat-flat-button color="primary">Activate user</button>
+  <button (mousedown)="requireExtra(user.id)" mat-flat-button color="warn">Require extra steps</button>
 </mat-card>

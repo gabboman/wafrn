@@ -1,16 +1,13 @@
 <mat-card class="p-3 mb-6 lg:mx-4 scalein wafrn-container">
   <div class="text-center mb-5">
     <img loading="lazy" [src]="logo" alt="Image" height="50" class="mb-3" />
-    <div class="text-3xl font-medium mb-3">
-      Welcome! We hope you enjoy this place!
-    </div>
+    <div class="text-3xl font-medium mb-3">Welcome! We hope you enjoy this place!</div>
     <span class="font-medium line-height-3">Do you have an account?</span>
     <a routerLink="/login" class="font-medium no-underline ml-2 cursor-pointer">Just log in!</a>
   </div>
 
   <button mat-flat-button color="warn" class="w-full h-full py-2 mb-3" *ngIf="manuallyReview">
-    An administrator will review your profile before you can join. This process
-    can take a few hours.
+    An administrator will review your profile before you can join. This process can take a few hours.
   </button>
 
   <form [hidden]="loading" [formGroup]="loginForm" (ngSubmit)="onSubmit()">
@@ -30,7 +27,6 @@
       </mat-error>
     </mat-form-field>
 
-
     <mat-form-field class="w-full mb-3">
       <mat-label>Your username</mat-label>
       <input formControlName="url" type="text" matInput />
@@ -40,16 +36,22 @@
     <mat-form-field class="w-full mb-3">
       <mat-label>Describe yourself</mat-label>
       <input formControlName="description" type="text" matInput />
-      <mat-hint>A short description of yourself so other people can know who you
-        are</mat-hint>
+      <mat-hint>A short description of yourself so other people can know who you are</mat-hint>
     </mat-form-field>
 
     <mat-form-field class="w-full mb-3">
       <mat-label>Your birth date</mat-label>
-      <input formControlName="birthDate" matInput [min]="minDate" [max]="minimumRegistrationDate"
-        [matDatepicker]="picker" />
-      <mat-hint>MM/DD/YYYY - Your birthday date is required for legal reasons in the european union and USA. Its not
-        shared with anyone</mat-hint>
+      <input
+        formControlName="birthDate"
+        matInput
+        [min]="minDate"
+        [max]="minimumRegistrationDate"
+        [matDatepicker]="picker"
+      />
+      <mat-hint
+        >MM/DD/YYYY - Your birthday date is required for legal reasons in the european union and USA. Its not shared
+        with anyone</mat-hint
+      >
       <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
       <mat-datepicker #picker></mat-datepicker>
     </mat-form-field>
@@ -72,10 +74,12 @@
         <mat-option value="a">Big dog</mat-option>
         <mat-option value="a">fallback avatar</mat-option>
         <mat-option value="a">Crisp sandwich</mat-option>
-        <mat-option value="a">Kill <img style="max-height: 32px;" src="/assets/img/monsert.png"></mat-option>
+        <mat-option value="a">Kill <img style="max-height: 32px" src="/assets/img/monsert.png" /></mat-option>
         <mat-option value="a">Everything everywhere all at once</mat-option>
-        <mat-option value="a">Big scary werewolf that actually has an anxiety disorder and is more scared of you than
-          you are of it</mat-option>
+        <mat-option value="a"
+          >Big scary werewolf that actually has an anxiety disorder and is more scared of you than you are of
+          it</mat-option
+        >
         <mat-option value="a">I am just testing a new font</mat-option>
         <mat-option value="a">Gravity</mat-option>
         <mat-option value="a">Widsom</mat-option>
@@ -94,8 +98,7 @@
         <mat-option value="a">STOP CALLING ME I DONT WANT ANY OF THOSE GENDERS I AM NOT INTERESTED</mat-option>
         <mat-option value="a">Unicorn</mat-option>
 
-        <mat-option value="a">I am about to enter in a plane and Im editing wafrn code
-        </mat-option>
+        <mat-option value="a">I am about to enter in a plane and Im editing wafrn code </mat-option>
 
         <mat-option value="a">I am going to kill god</mat-option>
         <mat-option value="a">A pumpkin full of meat would fix me</mat-option>
@@ -108,22 +111,34 @@
         <mat-option value="a">God</mat-option>
         <mat-option value="a">Wait, you wrote widsom not wisdom before</mat-option>
         <mat-option value="a">Utrechter</mat-option>
-
       </mat-select>
     </mat-form-field>
     <div class="pt-2 px-3 pb-2 border-round-md" style="border: 1px solid #999">
       <label for="avatar" class="block font-medium mb-2">Upload your avatar</label>
       <div class="flex flex-row align-content-center">
         <button type="button" mat-stroked-button color="primary" (click)="avatarInput.click()">
-          <fa-icon [icon]="faUpload" class="m-1"></fa-icon>Choose File</button>
-        <input #avatarInput formControlName="avatar" id="avatar" type="file"
-          accept="image/jpeg,image/png,image/webp,image/gif" hidden (change)="imgSelected($event)" />
+          <fa-icon [icon]="faUpload" class="m-1"></fa-icon>Choose File
+        </button>
+        <input
+          #avatarInput
+          formControlName="avatar"
+          id="avatar"
+          type="file"
+          accept="image/jpeg,image/png,image/webp,image/gif"
+          hidden
+          (change)="imgSelected($event)"
+        />
         <p class="m-auto ml-1">{{ selectedFileName }}</p>
       </div>
     </div>
 
-    <button color="primary" mat-flat-button extended [disabled]="loading || !loginForm.valid"
-      class="w-full border-round-md mt-4">
+    <button
+      color="primary"
+      mat-flat-button
+      extended
+      [disabled]="loading || !loginForm.valid"
+      class="w-full border-round-md mt-4"
+    >
       <fa-icon [icon]="faUser"></fa-icon>
       Register
     </button>

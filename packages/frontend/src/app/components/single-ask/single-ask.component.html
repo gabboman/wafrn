@@ -1,16 +1,19 @@
 <div class="flex flex-column border-1 border-300 border-round-sm p-2 mt-2 mb-2 ask-container" *ngIf="ask">
-    <div class="flex align-items-center">
-        @if(ask.user){
-        <app-avatar-small [user]="ask.user" class="mr-2"></app-avatar-small> {{ask.user.url}} asked:
-        } @else {
-        <app-avatar-small [user]="{
-                avatar: '',
-                url: '@deleted_user',
-                name: '',
-                id: ''
-            }" class="mr-2"></app-avatar-small> Anonymous asked
-        }
-    </div>
-    <div [innerText]="ask.question" class="flex">
-    </div>
+  <div class="flex align-items-center">
+    @if (ask.user) {
+      <app-avatar-small [user]="ask.user" class="mr-2"></app-avatar-small> {{ ask.user.url }} asked:
+    } @else {
+      <app-avatar-small
+        [user]="{
+          avatar: '',
+          url: '@deleted_user',
+          name: '',
+          id: ''
+        }"
+        class="mr-2"
+      ></app-avatar-small>
+      Anonymous asked
+    }
+  </div>
+  <div [innerText]="ask.question" class="flex"></div>
 </div>

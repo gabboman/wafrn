@@ -1,12 +1,9 @@
 <app-post [showFull]="true" *ngIf="!loading && postFound && post" [post]="post"></app-post>
 <app-loader *ngIf="loading"></app-loader>
-<mat-card *ngIf="
-    !loading &&
-    postFound &&
-    post &&
-    post.length > 0 &&
-    post[post.length - 1].descendents
-  " class="p-3 m-2 mb-6 lg:mx-4 wafrn-container">
+<mat-card
+  *ngIf="!loading && postFound && post && post.length > 0 && post[post.length - 1].descendents"
+  class="p-3 m-2 mb-6 lg:mx-4 wafrn-container"
+>
   You might want to check the replies in the
   <a [routerLink]="'/fediverse/post/' + post[0].id">initial post</a>
   <table mat-table [dataSource]="dataSource">
@@ -15,7 +12,7 @@
       <th mat-header-cell *matHeaderCellDef>User</th>
       <td mat-cell *matCellDef="let element">
         <a class="flex align-items-center" [routerLink]="'/blog/' + element.user.url">
-            <app-avatar-small class="mr-2" [user]="element.user"></app-avatar-small>
+          <app-avatar-small class="mr-2" [user]="element.user"></app-avatar-small>
           {{ element.user.url }}
         </a>
       </td>
@@ -25,8 +22,7 @@
       <th mat-header-cell *matHeaderCellDef>Action</th>
       <td mat-cell *matCellDef="let element">
         <a [routerLink]="'/fediverse/post/' + element.id">
-          @if(element?.content !== '') { replied to the post } @else { rewooted
-          }
+          @if(element?.content !== '') { replied to the post } @else { rewooted }
         </a>
       </td>
     </ng-container>
@@ -35,25 +31,31 @@
     <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
     <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
   </table>
-  <mat-paginator [hidden]="
-      !(
-        !loading &&
-        postFound &&
-        post &&
-        post.length > 0 &&
-        post[post.length - 1].descendents
-      )
-    " [pageSizeOptions]="[5, 10, 25, 50, 100]" showFirstLastButtons aria-label="Select page">
+  <mat-paginator
+    [hidden]="!(!loading && postFound && post && post.length > 0 && post[post.length - 1].descendents)"
+    [pageSizeOptions]="[5, 10, 25, 50, 100]"
+    showFirstLastButtons
+    aria-label="Select page"
+  >
   </mat-paginator>
-  <button *ngIf="
-      !post[post.length - 1].remotePostId.startsWith(localUrl) && userLoggedIn
-    " class="w-full" (mousedown)="loadRepliesFromFediverse()" color="primary" mat-stroked-button>
+  <button
+    *ngIf="!post[post.length - 1].remotePostId.startsWith(localUrl) && userLoggedIn"
+    class="w-full"
+    (mousedown)="loadRepliesFromFediverse()"
+    color="primary"
+    mat-stroked-button
+  >
     Fetch more external replies
   </button>
 </mat-card>
 
-<button [routerLink]="'/dashboard'" mat-flat-button color="default" aria-label="Go back to the dashboard"
-  style="position: fixed; z-index: 500; top: 1em; right: 0.5em">
+<button
+  [routerLink]="'/dashboard'"
+  mat-flat-button
+  color="default"
+  aria-label="Go back to the dashboard"
+  style="position: fixed; z-index: 500; top: 1em; right: 0.5em"
+>
   <fa-icon [icon]="homeIcon" />
 </button>
 

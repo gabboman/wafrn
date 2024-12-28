@@ -14,24 +14,31 @@
     <button mat-button color="accent" (mousedown)="quotePost(fragment)" class="cursor-pointer quote-icon">
       <fa-icon size="lg" [icon]="quoteIcon" matTooltip="Quote woot"></fa-icon>
     </button>
-    }
-    @if (myRewootsIncludePost) {
-    <button mat-button color="accent" (mousedown)="deleteRewoots(fragment.id)"
-      class="cursor-pointer delete-rewoot-icon" [attr.disabled]="loadingAction">
+    } @if (myRewootsIncludePost) {
+    <button
+      mat-button
+      color="accent"
+      (mousedown)="deleteRewoots(fragment.id)"
+      class="cursor-pointer delete-rewoot-icon"
+      [attr.disabled]="loadingAction"
+    >
       <fa-icon size="lg" [icon]="closeIcon" matTooltip="Delete rewoot"></fa-icon>
     </button>
-    }
-    @if (!myRewootsIncludePost && fragment.privacy !== 10 && fragment.privacy !== 1) {
-    <button mat-button color="accent" (mousedown)="quickReblog(fragment)"
-      class="cursor-pointer rewoot-icon" [attr.disabled]="loadingAction">
+    } @if (!myRewootsIncludePost && fragment.privacy !== 10 && fragment.privacy !== 1) {
+    <button
+      mat-button
+      color="accent"
+      (mousedown)="quickReblog(fragment)"
+      class="cursor-pointer rewoot-icon"
+      [attr.disabled]="loadingAction"
+    >
       <fa-icon size="lg" [icon]="quickReblogIcon" matTooltip="Rewoot"></fa-icon>
     </button>
     }
     <button mat-button color="accent" (mousedown)="replyPost(fragment)" class="cursor-pointer reply-icon">
       <fa-icon size="lg" [icon]="reblogIcon" matTooltip="Reply woot"></fa-icon>
     </button>
-    @if(fragment.userId !== myId ) {
-    @if(fragment.userLikesPostRelations.includes(myId)) {
+    @if(fragment.userId !== myId ) { @if(fragment.userLikesPostRelations.includes(myId)) {
     <button mat-button color="accent" (mousedown)="unlikePost(fragment)" class="cursor-pointer unlike-icon">
       <fa-icon size="lg" [icon]="clearHeartIcon" matTooltip="Remove like"></fa-icon>
     </button>

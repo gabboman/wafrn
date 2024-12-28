@@ -1,6 +1,6 @@
-import { SimplifiedUser } from "./simplified-user";
+import { SimplifiedUser } from './simplified-user'
 
 export interface WafrnMention {
-    userId: string,
-    user: SimplifiedUser
+  userId: string
+  user: SimplifiedUser
 }

@@ -1,21 +1,16 @@
-import { Injectable } from '@angular/core';
-import { Meta, MetaDefinition, Title } from '@angular/platform-browser';
-import { EnvironmentService } from './environment.service';
+import { Injectable } from '@angular/core'
+import { Meta, MetaDefinition, Title } from '@angular/platform-browser'
+import { EnvironmentService } from './environment.service'
 
 @Injectable({
-  providedIn: 'root',
+  providedIn: 'root'
 })
 export class SimpleSeoService {
-  constructor(private titleService: Title, private metaTagService: Meta) { }
+  constructor(private titleService: Title, private metaTagService: Meta) {}
 
-  setSEOTags(
-    title: string,
-    description: string,
-    author: string,
-    image: string
-  ): void {
-    const sanitizedDescription = description;
-    this.titleService.setTitle(title);
+  setSEOTags(title: string, description: string, author: string, image: string): void {
+    const sanitizedDescription = description
+    this.titleService.setTitle(title)
     const tags: MetaDefinition[] = [
       { name: 'description', content: sanitizedDescription },
       { name: 'author', content: author },
@@ -29,8 +24,8 @@ export class SimpleSeoService {
       { name: 'twitter:title', content: title },
       { name: 'twitter:site', content: EnvironmentService.environment.frontUrl },
       { name: 'twitter:description', content: sanitizedDescription },
-      { name: 'twitter:image', content: image },
-    ];
-    this.metaTagService.addTags(tags);
+      { name: 'twitter:image', content: image }
+    ]
+    this.metaTagService.addTags(tags)
   }
 }

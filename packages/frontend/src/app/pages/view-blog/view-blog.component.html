@@ -1,30 +1,32 @@
 <app-loader *ngIf="loading && !blogDetails"></app-loader>
-@if(!loading && !found) {
-<app-pagenotfound />
+@if (!loading && !found) {
+  <app-pagenotfound />
 }
-@if(blogDetails) {
-<app-blog-header [blogDetails]="blogDetails"></app-blog-header>
-@for (post of posts; track $index) {
-<ng-template></ng-template>
-<app-post [post]="post"></app-post>
-}
-<app-loader *ngIf="loading">posts</app-loader>
-<footer class="p-4 text-center wafrn-container">
-  <div
-    [hidden]="loading || noMorePosts"
-    id="if-you-see-this-load-more-posts"
-  ></div>
-  <div *ngIf="noMorePosts">
-    <p class="mb-4 text-lg">No more posts...</p>
-    <app-info-card *ngIf="blogDetails.url.startsWith('@')" [type]="infoAlert"
-      >As this user is from a remote instance, the shown information may be
-      incomplete.
-      <a [href]="blogDetails.url.split('@').length == 3 ? blogDetails.remoteId : ('https://bsky.app/profile/' + blogDetails.url.split('@')[1])" target="_blank"
-        >View on remote instance</a
-      >
-    </app-info-card>
-  </div>
-</footer>
+@if (blogDetails) {
+  <app-blog-header [blogDetails]="blogDetails"></app-blog-header>
+  @for (post of posts; track $index) {
+    <ng-template></ng-template>
+    <app-post [post]="post"></app-post>
+  }
+  <app-loader *ngIf="loading">posts</app-loader>
+  <footer class="p-4 text-center wafrn-container">
+    <div [hidden]="loading || noMorePosts" id="if-you-see-this-load-more-posts"></div>
+    <div *ngIf="noMorePosts">
+      <p class="mb-4 text-lg">No more posts...</p>
+      <app-info-card *ngIf="blogDetails.url.startsWith('@')" [type]="infoAlert"
+        >As this user is from a remote instance, the shown information may be incomplete.
+        <a
+          [href]="
+            blogDetails.url.split('@').length == 3
+              ? blogDetails.remoteId
+              : 'https://bsky.app/profile/' + blogDetails.url.split('@')[1]
+          "
+          target="_blank"
+          >View on remote instance</a
+        >
+      </app-info-card>
+    </div>
+  </footer>
 }
 
 <button

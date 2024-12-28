@@ -6,38 +6,60 @@
           <app-avatar-small [user]="fragment.user"></app-avatar-small>
           <div class="flex flex-column min-w-0">
             <div class="user-name">
-              <a class="subtle-link" [routerLink]="!disableLink ? '/blog/' + fragment.user.url: null"
-                [innerHTML]="fragment.user.name"></a>
-              {{headerText}}
+              <a
+                class="subtle-link"
+                [routerLink]="!disableLink ? '/blog/' + fragment.user.url : null"
+                [innerHTML]="fragment.user.name"
+              ></a>
+              {{ headerText }}
             </div>
-            <span class="text-sm max-w-full white-space-nowrap overflow-hidden text-overflow-ellipsis user-url"
-              [innerText]="fragment.user.url"></span>
+            <span
+              class="text-sm max-w-full white-space-nowrap overflow-hidden text-overflow-ellipsis user-url"
+              [innerText]="fragment.user.url"
+            ></span>
           </div>
         </div>
       </div>
       <div *ngIf="!simplified" class="flex align-items-center date-line">
-        <span class="text-sm" matTooltip="{{fragment.createdAt | date : 'short'}}">
+        <span class="text-sm" matTooltip="{{ fragment.createdAt | date : 'short' }}">
           {{ this.timeAgo }}
         </span>
-        <span *ngIf="fragment.updatedAt.getTime() - fragment.createdAt.getTime() > 60000"
-          matTooltip="Edited {{ fragment.updatedAt | date : 'short' }}" class="text-xs">
+        <span
+          *ngIf="fragment.updatedAt.getTime() - fragment.createdAt.getTime() > 60000"
+          matTooltip="Edited {{ fragment.updatedAt | date : 'short' }}"
+          class="text-xs"
+        >
           <fa-icon [icon]="editedIcon"></fa-icon>
         </span>
-        <span class="text-xs" matTooltip="{{privacyOptions[fragment.privacy].name}}">
+        <span class="text-xs" matTooltip="{{ privacyOptions[fragment.privacy].name }}">
           <fa-icon [icon]="privacyOptions[fragment.privacy].icon"></fa-icon>
         </span>
       </div>
     </div>
     <div class="flex flex-column align-items-center">
       <app-post-actions *ngIf="!simplified" [content]="fragment" class="align-self-end"></app-post-actions>
-      <button mat-button color="accent" *ngIf="
-        !postService.notYetAcceptedFollowedUsersIds.includes(fragment.userId) &&
-        !postService.followedUserIds.includes(fragment.userId) &&
-        userLoggedIn
-        " class="text-sm follow-button" (mousedown)="followUser(fragment.userId)">Follow</button>
-      <button mat-button color="accent"
+      <button
+        mat-button
+        color="accent"
+        *ngIf="
+          !postService.notYetAcceptedFollowedUsersIds.includes(fragment.userId) &&
+          !postService.followedUserIds.includes(fragment.userId) &&
+          userLoggedIn
+        "
+        class="text-sm follow-button"
+        (mousedown)="followUser(fragment.userId)"
+      >
+        Follow
+      </button>
+      <button
+        mat-button
+        color="accent"
         *ngIf="postService.notYetAcceptedFollowedUsersIds.includes(fragment.userId) && userLoggedIn"
-        class="text-sm follow-button" (mousedown)="unfollowUser(fragment.userId)">Awaiting approval</button>
+        class="text-sm follow-button"
+        (mousedown)="unfollowUser(fragment.userId)"
+      >
+        Awaiting approval
+      </button>
     </div>
   </div>
 </ng-container>

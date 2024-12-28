@@ -1,183 +1,305 @@
-<!doctypehtml><html><head><meta charset=utf-8><meta content="text/html; charset=utf-8" http-equiv=Content-Type><style>body{width:100%;height:100%;margin-top:0;margin-left:0px;background: rgba(0,0,0,0);}progress{-webkit-appearance:none;-moz-appearance:none;appearance:none;position:absolute;width:250px;height:50px}#canvas{image-rendering:pixelated;width:100%}#container{display:flex;height:100%;justify-content:center;align-items:center}</style></head><body><div id=container><progress hidden id=progress max=100 value=0></progress><canvas height=600 id=canvas oncontextmenu=event.preventDefault() width=800></canvas></div><button id=fullscreenBtn>Go Fullscreen</button><script>var progressElement=document.getElementById("progress"),Module={print:(...e)=>{var t=e.join(" ");console.log(t)},canvas:document.getElementById("canvas"),setStatus:e=>{if(Module.setStatus.last||(Module.setStatus.last={time:Date.now(),text:""}),e!==Module.setStatus.last.text){var t=e.match(/([^(]+)\((\d+(\.\d+)?)\/(\d+)\)/),s=Date.now();t&&s-Module.setStatus.last.time<30||(Module.setStatus.last.time=s,Module.setStatus.last.text=e,t?(e=t[1],progressElement.value=100*parseInt(t[2]),progressElement.max=100*parseInt(t[4]),progressElement.hidden=!1):(progressElement.value=null,progressElement.max=null,progressElement.hidden=!0))}}};document.getElementById("fullscreenBtn").addEventListener("click",(function(){var e=document.getElementById("canvas");e.requestFullscreen?e.requestFullscreen():e.mozRequestFullScreen?e.mozRequestFullScreen():e.webkitRequestFullscreen?e.webkitRequestFullscreen():e.msRequestFullscreen&&e.msRequestFullscreen()}))</script><script async src=dosbox.js></script></body></html><script type="text/javascript">
-  var Module = typeof Module != 'undefined' ? Module : {};
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta content="text/html; charset=utf-8" http-equiv="Content-Type" />
+    <style>
+      body {
+        width: 100%;
+        height: 100%;
+        margin-top: 0;
+        margin-left: 0px;
+        background: rgba(0, 0, 0, 0);
+      }
+      progress {
+        -webkit-appearance: none;
+        -moz-appearance: none;
+        appearance: none;
+        position: absolute;
+        width: 250px;
+        height: 50px;
+      }
+      #canvas {
+        image-rendering: pixelated;
+        width: 100%;
+      }
+      #container {
+        display: flex;
+        height: 100%;
+        justify-content: center;
+        align-items: center;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="container">
+      <progress hidden id="progress" max="100" value="0"></progress
+      ><canvas height="600" id="canvas" oncontextmenu="event.preventDefault()" width="800"></canvas>
+    </div>
+    <button id="fullscreenBtn">Go Fullscreen</button>
+    <script>
+      var progressElement = document.getElementById('progress'),
+        Module = {
+          print: (...e) => {
+            var t = e.join(' ')
+            console.log(t)
+          },
+          canvas: document.getElementById('canvas'),
+          setStatus: (e) => {
+            if (
+              (Module.setStatus.last || (Module.setStatus.last = { time: Date.now(), text: '' }),
+              e !== Module.setStatus.last.text)
+            ) {
+              var t = e.match(/([^(]+)\((\d+(\.\d+)?)\/(\d+)\)/),
+                s = Date.now()
+              ;(t && s - Module.setStatus.last.time < 30) ||
+                ((Module.setStatus.last.time = s),
+                (Module.setStatus.last.text = e),
+                t
+                  ? ((e = t[1]),
+                    (progressElement.value = 100 * parseInt(t[2])),
+                    (progressElement.max = 100 * parseInt(t[4])),
+                    (progressElement.hidden = !1))
+                  : ((progressElement.value = null), (progressElement.max = null), (progressElement.hidden = !0)))
+            }
+          }
+        }
+      document.getElementById('fullscreenBtn').addEventListener('click', function () {
+        var e = document.getElementById('canvas')
+        e.requestFullscreen
+          ? e.requestFullscreen()
+          : e.mozRequestFullScreen
+          ? e.mozRequestFullScreen()
+          : e.webkitRequestFullscreen
+          ? e.webkitRequestFullscreen()
+          : e.msRequestFullscreen && e.msRequestFullscreen()
+      })
+    </script>
+    <script async src="dosbox.js"></script>
+  </body>
+</html>
+<script type="text/javascript">
+  var Module = typeof Module != 'undefined' ? Module : {}
 
   if (!Module.expectedDataFileDownloads) {
-    Module.expectedDataFileDownloads = 0;
+    Module.expectedDataFileDownloads = 0
   }
 
-  Module.expectedDataFileDownloads++;
-  (() => {
+  Module.expectedDataFileDownloads++
+  ;(() => {
     // Do not attempt to redownload the virtual filesystem data when in a pthread or a Wasm Worker context.
-    var isPthread = typeof ENVIRONMENT_IS_PTHREAD != 'undefined' && ENVIRONMENT_IS_PTHREAD;
-    var isWasmWorker = typeof ENVIRONMENT_IS_WASM_WORKER != 'undefined' && ENVIRONMENT_IS_WASM_WORKER;
-    if (isPthread || isWasmWorker) return;
+    var isPthread = typeof ENVIRONMENT_IS_PTHREAD != 'undefined' && ENVIRONMENT_IS_PTHREAD
+    var isWasmWorker = typeof ENVIRONMENT_IS_WASM_WORKER != 'undefined' && ENVIRONMENT_IS_WASM_WORKER
+    if (isPthread || isWasmWorker) return
     function loadPackage(metadata) {
-
-      var PACKAGE_PATH = '';
+      var PACKAGE_PATH = ''
       if (typeof window === 'object') {
-        PACKAGE_PATH = window['encodeURIComponent'](window.location.pathname.toString().substring(0, window.location.pathname.toString().lastIndexOf('/')) + '/');
+        PACKAGE_PATH = window['encodeURIComponent'](
+          window.location.pathname.toString().substring(0, window.location.pathname.toString().lastIndexOf('/')) + '/'
+        )
       } else if (typeof process === 'undefined' && typeof location !== 'undefined') {
         // web worker
-        PACKAGE_PATH = encodeURIComponent(location.pathname.toString().substring(0, location.pathname.toString().lastIndexOf('/')) + '/');
+        PACKAGE_PATH = encodeURIComponent(
+          location.pathname.toString().substring(0, location.pathname.toString().lastIndexOf('/')) + '/'
+        )
       }
-      var PACKAGE_NAME = '/home/leonie/Documents/projects/Sharkey/em-dosbox/src/doom.data';
-      var REMOTE_PACKAGE_BASE = 'doom.data';
+      var PACKAGE_NAME = '/home/leonie/Documents/projects/Sharkey/em-dosbox/src/doom.data'
+      var REMOTE_PACKAGE_BASE = 'doom.data'
       if (typeof Module['locateFilePackage'] === 'function' && !Module['locateFile']) {
-        Module['locateFile'] = Module['locateFilePackage'];
-        err('warning: you defined Module.locateFilePackage, that has been renamed to Module.locateFile (using your locateFilePackage for now)');
+        Module['locateFile'] = Module['locateFilePackage']
+        err(
+          'warning: you defined Module.locateFilePackage, that has been renamed to Module.locateFile (using your locateFilePackage for now)'
+        )
       }
-      var REMOTE_PACKAGE_NAME = Module['locateFile'] ? Module['locateFile'](REMOTE_PACKAGE_BASE, '') : REMOTE_PACKAGE_BASE;
-var REMOTE_PACKAGE_SIZE = metadata['remote_package_size'];
+      var REMOTE_PACKAGE_NAME = Module['locateFile']
+        ? Module['locateFile'](REMOTE_PACKAGE_BASE, '')
+        : REMOTE_PACKAGE_BASE
+      var REMOTE_PACKAGE_SIZE = metadata['remote_package_size']
 
       function fetchRemotePackage(packageName, packageSize, callback, errback) {
-        if (typeof process === 'object' && typeof process.versions === 'object' && typeof process.versions.node === 'string') {
-          require('fs').readFile(packageName, function(err, contents) {
+        if (
+          typeof process === 'object' &&
+          typeof process.versions === 'object' &&
+          typeof process.versions.node === 'string'
+        ) {
+          require('fs').readFile(packageName, function (err, contents) {
             if (err) {
-              errback(err);
+              errback(err)
             } else {
-              callback(contents.buffer);
+              callback(contents.buffer)
             }
-          });
-          return;
+          })
+          return
         }
-        var xhr = new XMLHttpRequest();
-        xhr.open('GET', packageName, true);
-        xhr.responseType = 'arraybuffer';
-        xhr.onprogress = function(event) {
-          var url = packageName;
-          var size = packageSize;
-          if (event.total) size = event.total;
+        var xhr = new XMLHttpRequest()
+        xhr.open('GET', packageName, true)
+        xhr.responseType = 'arraybuffer'
+        xhr.onprogress = function (event) {
+          var url = packageName
+          var size = packageSize
+          if (event.total) size = event.total
           if (event.loaded) {
             if (!xhr.addedTotal) {
-              xhr.addedTotal = true;
-              if (!Module.dataFileDownloads) Module.dataFileDownloads = {};
+              xhr.addedTotal = true
+              if (!Module.dataFileDownloads) Module.dataFileDownloads = {}
               Module.dataFileDownloads[url] = {
                 loaded: event.loaded,
                 total: size
-              };
+              }
             } else {
-              Module.dataFileDownloads[url].loaded = event.loaded;
+              Module.dataFileDownloads[url].loaded = event.loaded
             }
-            var total = 0;
-            var loaded = 0;
-            var num = 0;
+            var total = 0
+            var loaded = 0
+            var num = 0
             for (var download in Module.dataFileDownloads) {
-            var data = Module.dataFileDownloads[download];
-              total += data.total;
-              loaded += data.loaded;
-              num++;
+              var data = Module.dataFileDownloads[download]
+              total += data.total
+              loaded += data.loaded
+              num++
             }
-            total = Math.ceil(total * Module.expectedDataFileDownloads/num);
-            Module['setStatus']?.(`Downloading data... (${loaded}/${total})`);
+            total = Math.ceil((total * Module.expectedDataFileDownloads) / num)
+            Module['setStatus']?.(`Downloading data... (${loaded}/${total})`)
           } else if (!Module.dataFileDownloads) {
-            Module['setStatus']?.('Downloading data...');
+            Module['setStatus']?.('Downloading data...')
           }
-        };
-        xhr.onerror = function(event) {
-          throw new Error("NetworkError for: " + packageName);
         }
-        xhr.onload = function(event) {
-          if (xhr.status == 200 || xhr.status == 304 || xhr.status == 206 || (xhr.status == 0 && xhr.response)) { // file URLs can return 0
-            var packageData = xhr.response;
-            callback(packageData);
+        xhr.onerror = function (event) {
+          throw new Error('NetworkError for: ' + packageName)
+        }
+        xhr.onload = function (event) {
+          if (xhr.status == 200 || xhr.status == 304 || xhr.status == 206 || (xhr.status == 0 && xhr.response)) {
+            // file URLs can return 0
+            var packageData = xhr.response
+            callback(packageData)
           } else {
-            throw new Error(xhr.statusText + " : " + xhr.responseURL);
+            throw new Error(xhr.statusText + ' : ' + xhr.responseURL)
           }
-        };
-        xhr.send(null);
-      };
+        }
+        xhr.send(null)
+      }
 
       function handleError(error) {
-        console.error('package error:', error);
-      };
+        console.error('package error:', error)
+      }
 
-      var fetchedCallback = null;
-      var fetched = Module['getPreloadedPackage'] ? Module['getPreloadedPackage'](REMOTE_PACKAGE_NAME, REMOTE_PACKAGE_SIZE) : null;
+      var fetchedCallback = null
+      var fetched = Module['getPreloadedPackage']
+        ? Module['getPreloadedPackage'](REMOTE_PACKAGE_NAME, REMOTE_PACKAGE_SIZE)
+        : null
 
-      if (!fetched) fetchRemotePackage(REMOTE_PACKAGE_NAME, REMOTE_PACKAGE_SIZE, function(data) {
-        if (fetchedCallback) {
-          fetchedCallback(data);
-          fetchedCallback = null;
-        } else {
-          fetched = data;
+      if (!fetched)
+        fetchRemotePackage(
+          REMOTE_PACKAGE_NAME,
+          REMOTE_PACKAGE_SIZE,
+          function (data) {
+            if (fetchedCallback) {
+              fetchedCallback(data)
+              fetchedCallback = null
+            } else {
+              fetched = data
+            }
+          },
+          handleError
+        )
+
+      function runWithFS(Module) {
+        function assert(check, msg) {
+          if (!check) throw msg + new Error().stack
         }
-      }, handleError);
 
-    function runWithFS(Module) {
-
-      function assert(check, msg) {
-        if (!check) throw msg + new Error().stack;
-      }
-
-      /** @constructor */
-      function DataRequest(start, end, audio) {
-        this.start = start;
-        this.end = end;
-        this.audio = audio;
-      }
-      DataRequest.prototype = {
-        requests: {},
-        open: function(mode, name) {
-          this.name = name;
-          this.requests[name] = this;
-          Module['addRunDependency'](`fp ${this.name}`);
-        },
-        send: function() {},
-        onload: function() {
-          var byteArray = this.byteArray.subarray(this.start, this.end);
-          this.finish(byteArray);
-        },
-        finish: function(byteArray) {
-          var that = this;
-          // canOwn this data in the filesystem, it is a slide into the heap that will never change
-          Module['FS_createDataFile'](this.name, null, byteArray, true, true, true);
-          Module['removeRunDependency'](`fp ${that.name}`);
-          this.requests[this.name] = null;
+        /** @constructor */
+        function DataRequest(start, end, audio) {
+          this.start = start
+          this.end = end
+          this.audio = audio
         }
-      };
+        DataRequest.prototype = {
+          requests: {},
+          open: function (mode, name) {
+            this.name = name
+            this.requests[name] = this
+            Module['addRunDependency'](`fp ${this.name}`)
+          },
+          send: function () {},
+          onload: function () {
+            var byteArray = this.byteArray.subarray(this.start, this.end)
+            this.finish(byteArray)
+          },
+          finish: function (byteArray) {
+            var that = this
+            // canOwn this data in the filesystem, it is a slide into the heap that will never change
+            Module['FS_createDataFile'](this.name, null, byteArray, true, true, true)
+            Module['removeRunDependency'](`fp ${that.name}`)
+            this.requests[this.name] = null
+          }
+        }
 
-      var files = metadata['files'];
-      for (var i = 0; i < files.length; ++i) {
-        new DataRequest(files[i]['start'], files[i]['end'], files[i]['audio'] || 0).open('GET', files[i]['filename']);
-      }
+        var files = metadata['files']
+        for (var i = 0; i < files.length; ++i) {
+          new DataRequest(files[i]['start'], files[i]['end'], files[i]['audio'] || 0).open('GET', files[i]['filename'])
+        }
 
-      function processPackageData(arrayBuffer) {
-        assert(arrayBuffer, 'Loading data file failed.');
-        assert(arrayBuffer.constructor.name === ArrayBuffer.name, 'bad input to processPackageData');
-        var byteArray = new Uint8Array(arrayBuffer);
-        var curr;
-        // Reuse the bytearray from the XHR as the source for file reads.
-          DataRequest.prototype.byteArray = byteArray;
-          var files = metadata['files'];
+        function processPackageData(arrayBuffer) {
+          assert(arrayBuffer, 'Loading data file failed.')
+          assert(arrayBuffer.constructor.name === ArrayBuffer.name, 'bad input to processPackageData')
+          var byteArray = new Uint8Array(arrayBuffer)
+          var curr
+          // Reuse the bytearray from the XHR as the source for file reads.
+          DataRequest.prototype.byteArray = byteArray
+          var files = metadata['files']
           for (var i = 0; i < files.length; ++i) {
-            DataRequest.prototype.requests[files[i].filename].onload();
-          }          Module['removeRunDependency']('datafile_/home/leonie/Documents/projects/Sharkey/em-dosbox/src/doom.data');
+            DataRequest.prototype.requests[files[i].filename].onload()
+          }
+          Module['removeRunDependency']('datafile_/home/leonie/Documents/projects/Sharkey/em-dosbox/src/doom.data')
+        }
+        Module['addRunDependency']('datafile_/home/leonie/Documents/projects/Sharkey/em-dosbox/src/doom.data')
 
-      };
-      Module['addRunDependency']('datafile_/home/leonie/Documents/projects/Sharkey/em-dosbox/src/doom.data');
+        if (!Module.preloadResults) Module.preloadResults = {}
 
-      if (!Module.preloadResults) Module.preloadResults = {};
-
-      Module.preloadResults[PACKAGE_NAME] = {fromCache: false};
-      if (fetched) {
-        processPackageData(fetched);
-        fetched = null;
-      } else {
-        fetchedCallback = processPackageData;
+        Module.preloadResults[PACKAGE_NAME] = { fromCache: false }
+        if (fetched) {
+          processPackageData(fetched)
+          fetched = null
+        } else {
+          fetchedCallback = processPackageData
+        }
       }
-
+      if (Module['calledRun']) {
+        runWithFS(Module)
+      } else {
+        if (!Module['preRun']) Module['preRun'] = []
+        Module['preRun'].push(runWithFS) // FS is not initialized yet, wait for it
+      }
     }
-    if (Module['calledRun']) {
-      runWithFS(Module);
-    } else {
-      if (!Module['preRun']) Module['preRun'] = [];
-      Module["preRun"].push(runWithFS); // FS is not initialized yet, wait for it
-    }
+    loadPackage({
+      files: [
+        { filename: '/DEFAULT.CFG', start: 0, end: 769 },
+        { filename: '/DM.DOC', start: 769, end: 7166 },
+        { filename: '/DM.EXE', start: 7166, end: 40806 },
+        { filename: '/DMFAQ66A.TXT', start: 40806, end: 161007 },
+        { filename: '/DMFAQ66B.TXT', start: 161007, end: 301601 },
+        { filename: '/DMFAQ66C.TXT', start: 301601, end: 378499 },
+        { filename: '/DMFAQ66D.TXT', start: 378499, end: 413071 },
+        { filename: '/DOOM.EXE', start: 413071, end: 1122976 },
+        { filename: '/DOOM1.WAD', start: 1122976, end: 5318996 },
+        { filename: '/DWANGO.DOC', start: 5318996, end: 5329619 },
+        { filename: '/DWANGO.EXE', start: 5329619, end: 5394640 },
+        { filename: '/DWANGO.STR', start: 5394640, end: 5397176 },
+        { filename: '/HELPME.TXT', start: 5397176, end: 5401866 },
+        { filename: '/IPXSETUP.EXE', start: 5401866, end: 5419917 },
+        { filename: '/MODEM.CFG', start: 5419917, end: 5419984 },
+        { filename: '/MODEM.NUM', start: 5419984, end: 5420051 },
+        { filename: '/MODEM.STR', start: 5420051, end: 5423456 },
+        { filename: '/ORDER.FRM', start: 5423456, end: 5428073 },
+        { filename: '/README.TXT', start: 5428073, end: 5449704 },
+        { filename: '/SERSETUP.EXE', start: 5449704, end: 5469961 },
+        { filename: '/SETUP.EXE', start: 5469961, end: 5515845 },
+        { filename: '/file_id.diz', start: 5515845, end: 5516024 }
+      ],
+      remote_package_size: 5516024
+    })
+  })()
 
-    }
-    loadPackage({"files": [{"filename": "/DEFAULT.CFG", "start": 0, "end": 769}, {"filename": "/DM.DOC", "start": 769, "end": 7166}, {"filename": "/DM.EXE", "start": 7166, "end": 40806}, {"filename": "/DMFAQ66A.TXT", "start": 40806, "end": 161007}, {"filename": "/DMFAQ66B.TXT", "start": 161007, "end": 301601}, {"filename": "/DMFAQ66C.TXT", "start": 301601, "end": 378499}, {"filename": "/DMFAQ66D.TXT", "start": 378499, "end": 413071}, {"filename": "/DOOM.EXE", "start": 413071, "end": 1122976}, {"filename": "/DOOM1.WAD", "start": 1122976, "end": 5318996}, {"filename": "/DWANGO.DOC", "start": 5318996, "end": 5329619}, {"filename": "/DWANGO.EXE", "start": 5329619, "end": 5394640}, {"filename": "/DWANGO.STR", "start": 5394640, "end": 5397176}, {"filename": "/HELPME.TXT", "start": 5397176, "end": 5401866}, {"filename": "/IPXSETUP.EXE", "start": 5401866, "end": 5419917}, {"filename": "/MODEM.CFG", "start": 5419917, "end": 5419984}, {"filename": "/MODEM.NUM", "start": 5419984, "end": 5420051}, {"filename": "/MODEM.STR", "start": 5420051, "end": 5423456}, {"filename": "/ORDER.FRM", "start": 5423456, "end": 5428073}, {"filename": "/README.TXT", "start": 5428073, "end": 5449704}, {"filename": "/SERSETUP.EXE", "start": 5449704, "end": 5469961}, {"filename": "/SETUP.EXE", "start": 5469961, "end": 5515845}, {"filename": "/file_id.diz", "start": 5515845, "end": 5516024}], "remote_package_size": 5516024});
-
-  })();
-
-Module['arguments'] = [ './DOOM.EXE' ];
+  Module['arguments'] = ['./DOOM.EXE']
 </script>

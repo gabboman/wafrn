@@ -1,15 +1,13 @@
 export interface PublicOption {
+  userId: string
 
-    userId: string;
+  optionName: string
 
-    optionName: string;
+  optionValue: string
 
-    optionValue: string;
+  public: boolean
 
-    public: boolean;
+  createdAt: string
 
-    createdAt: string;
-
-    updatedAt: string;
-
+  updatedAt: string
 }

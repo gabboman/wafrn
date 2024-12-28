@@ -4,5 +4,5 @@ export enum NotificationType {
   REBLOG = 2,
   MENTION = 3,
   EMOJIREACT = 4,
-  QUOTE = 5,
+  QUOTE = 5
 }

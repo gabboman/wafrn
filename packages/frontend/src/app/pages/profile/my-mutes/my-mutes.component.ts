@@ -1,27 +1,27 @@
-import { Component } from '@angular/core';
-import { BlocksService } from 'src/app/services/blocks.service';
+import { Component } from '@angular/core'
+import { BlocksService } from 'src/app/services/blocks.service'
 
 @Component({
-    selector: 'app-my-mutes',
-    templateUrl: './my-mutes.component.html',
-    styleUrls: ['./my-mutes.component.scss'],
-    standalone: false
+  selector: 'app-my-mutes',
+  templateUrl: './my-mutes.component.html',
+  styleUrls: ['./my-mutes.component.scss'],
+  standalone: false
 })
 export class MyMutesComponent {
-  loading = true;
-  mutedUsers: Array<any> = [];
-  displayedColumns = ['muted', 'actions'];
+  loading = true
+  mutedUsers: Array<any> = []
+  displayedColumns = ['muted', 'actions']
 
   constructor(private blocksService: BlocksService) {
     this.blocksService.getMuteList().then((response) => {
-      this.mutedUsers = response;
-      this.loading = false;
-    });
+      this.mutedUsers = response
+      this.loading = false
+    })
   }
 
   async unmuteUser(id: string) {
-    this.loading = true;
-    this.mutedUsers = await this.blocksService.unmuteUser(id);
-    this.loading = false;
+    this.loading = true
+    this.mutedUsers = await this.blocksService.unmuteUser(id)
+    this.loading = false
   }
 }

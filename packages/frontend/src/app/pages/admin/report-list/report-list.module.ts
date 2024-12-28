@@ -1,15 +1,15 @@
-import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { ReportListComponent } from './report-list.component';
-import { RouterModule } from '@angular/router';
-import { MatCardModule } from '@angular/material/card';
-import { MatPaginatorModule } from '@angular/material/paginator';
-import { MatTableModule } from '@angular/material/table';
-import { MatInputModule } from '@angular/material/input';
-import { FormsModule } from '@angular/forms';
-import { MatCheckboxModule } from '@angular/material/checkbox';
-import { MatButtonModule } from '@angular/material/button';
-import { AvatarSmallComponent } from 'src/app/components/avatar-small/avatar-small.component';
+import { NgModule } from '@angular/core'
+import { CommonModule } from '@angular/common'
+import { ReportListComponent } from './report-list.component'
+import { RouterModule } from '@angular/router'
+import { MatCardModule } from '@angular/material/card'
+import { MatPaginatorModule } from '@angular/material/paginator'
+import { MatTableModule } from '@angular/material/table'
+import { MatInputModule } from '@angular/material/input'
+import { FormsModule } from '@angular/forms'
+import { MatCheckboxModule } from '@angular/material/checkbox'
+import { MatButtonModule } from '@angular/material/button'
+import { AvatarSmallComponent } from 'src/app/components/avatar-small/avatar-small.component'
 
 @NgModule({
   declarations: [ReportListComponent],
@@ -18,8 +18,8 @@ import { AvatarSmallComponent } from 'src/app/components/avatar-small/avatar-sma
     RouterModule.forChild([
       {
         path: '',
-        component: ReportListComponent,
-      },
+        component: ReportListComponent
+      }
     ]),
     MatTableModule,
     FormsModule,
@@ -29,6 +29,6 @@ import { AvatarSmallComponent } from 'src/app/components/avatar-small/avatar-sma
     MatCheckboxModule,
     MatButtonModule,
     AvatarSmallComponent
-  ],
+  ]
 })
 export class ReportListModule {}

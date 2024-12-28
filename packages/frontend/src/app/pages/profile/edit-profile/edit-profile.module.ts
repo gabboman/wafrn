@@ -1,25 +1,25 @@
-import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { EditProfileComponent } from './edit-profile.component';
-import { RouterModule, Routes } from '@angular/router';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { loginRequiredGuard } from 'src/app/guards/login-required.guard';
-import { QuillModule } from 'ngx-quill';
-import { MatCardModule } from '@angular/material/card';
-import { MatButtonModule } from '@angular/material/button';
-import { MatInputModule } from '@angular/material/input';
-import { MatSelectModule } from '@angular/material/select';
-import { MatCheckboxModule } from '@angular/material/checkbox';
-import { EmojiCollectionsComponent } from 'src/app/components/emoji-collections/emoji-collections.component';
-import { MatExpansionModule } from '@angular/material/expansion';
+import { NgModule } from '@angular/core'
+import { CommonModule } from '@angular/common'
+import { EditProfileComponent } from './edit-profile.component'
+import { RouterModule, Routes } from '@angular/router'
+import { FormsModule, ReactiveFormsModule } from '@angular/forms'
+import { loginRequiredGuard } from 'src/app/guards/login-required.guard'
+import { QuillModule } from 'ngx-quill'
+import { MatCardModule } from '@angular/material/card'
+import { MatButtonModule } from '@angular/material/button'
+import { MatInputModule } from '@angular/material/input'
+import { MatSelectModule } from '@angular/material/select'
+import { MatCheckboxModule } from '@angular/material/checkbox'
+import { EmojiCollectionsComponent } from 'src/app/components/emoji-collections/emoji-collections.component'
+import { MatExpansionModule } from '@angular/material/expansion'
 
 const routes: Routes = [
   {
     path: '',
     component: EditProfileComponent,
-    canActivate: [loginRequiredGuard],
-  },
-];
+    canActivate: [loginRequiredGuard]
+  }
+]
 
 @NgModule({
   declarations: [EditProfileComponent],
@@ -36,6 +36,6 @@ const routes: Routes = [
     MatCheckboxModule,
     EmojiCollectionsComponent,
     MatExpansionModule
-  ],
+  ]
 })
 export class EditProfileModule {}

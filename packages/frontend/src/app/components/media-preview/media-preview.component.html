@@ -1,11 +1,7 @@
 <div *ngIf="!success" class="w-full" style="height: 25vh">
   <mat-spinner></mat-spinner>
 </div>
-<div
-  *ngIf="media && success"
-  class="w-full flex align-items-center justify-content-center"
-  style="height: 25vh"
->
+<div *ngIf="media && success" class="w-full flex align-items-center justify-content-center" style="height: 25vh">
   <img
     alt="loading"
     *ngIf="!media.url.endsWith('webm')"

@@ -1,64 +1,54 @@
-import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
-import { FormsModule } from '@angular/forms';
-import { MatButtonModule } from '@angular/material/button';
-import { MatCardModule } from '@angular/material/card';
-import { MatInputModule } from '@angular/material/input';
-import { Router } from '@angular/router';
-import { MessageService } from 'src/app/services/message.service';
-import { ThemeService } from 'src/app/services/theme.service';
+import { CommonModule } from '@angular/common'
+import { Component } from '@angular/core'
+import { FormsModule } from '@angular/forms'
+import { MatButtonModule } from '@angular/material/button'
+import { MatCardModule } from '@angular/material/card'
+import { MatInputModule } from '@angular/material/input'
+import { Router } from '@angular/router'
+import { MessageService } from 'src/app/services/message.service'
+import { ThemeService } from 'src/app/services/theme.service'
 
 @Component({
-    selector: 'app-css-editor',
-    imports: [
-        CommonModule,
-        MatCardModule,
-        FormsModule,
-        MatInputModule,
-        MatButtonModule
-    ],
-    templateUrl: './css-editor.component.html',
-    styleUrl: './css-editor.component.scss'
+  selector: 'app-css-editor',
+  imports: [CommonModule, MatCardModule, FormsModule, MatInputModule, MatButtonModule],
+  templateUrl: './css-editor.component.html',
+  styleUrl: './css-editor.component.scss'
 })
 export class CssEditorComponent {
-  ready = false;
-  myCSS = '';
-  constructor(
-    private themeService: ThemeService,
-    private messages: MessageService,
-    private router: Router
-  ) {
+  ready = false
+  myCSS = ''
+  constructor(private themeService: ThemeService, private messages: MessageService, private router: Router) {
     this.themeService
       .getMyThemeAsSting()
       .then((theme) => {
-        this.myCSS = theme;
-        this.ready = true;
+        this.myCSS = theme
+        this.ready = true
       })
       .catch((error) => {
-        console.warn(error);
-        this.ready = true;
-      });
+        console.warn(error)
+        this.ready = true
+      })
   }
 
   submit() {
-    this.ready = false;
+    this.ready = false
     this.themeService
       .updateTheme(this.myCSS)
       .then(() => {
-        this.ready = true;
+        this.ready = true
         this.messages.add({
           severity: 'success',
-          summary: 'Success!',
-        });
-        this.router.navigate(['/dashboard']);
+          summary: 'Success!'
+        })
+        this.router.navigate(['/dashboard'])
       })
       .catch((error: any) => {
-        console.log(error);
-        this.ready = true;
+        console.log(error)
+        this.ready = true
         this.messages.add({
           severity: 'error',
-          summary: 'Something went wrong',
-        });
-      });
+          summary: 'Something went wrong'
+        })
+      })
   }
 }

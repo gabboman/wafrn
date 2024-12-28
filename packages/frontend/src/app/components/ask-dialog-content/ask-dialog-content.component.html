@@ -1,8 +1,8 @@
 <p *ngIf="loggedIn">Attention! You are logged in. This question is not anonymous</p>
 <form [formGroup]="askForm" (ngSubmit)="onSubmit()">
-    <mat-form-field class="w-full">
-        <mat-label>What is your question</mat-label>
-        <textarea formControlName="content" type="textarea" matNativeControl></textarea>
-    </mat-form-field>
-    <button [disabled]="!askForm.valid" mat-flat-button class="w-full" type="submit">Ask</button>
+  <mat-form-field class="w-full">
+    <mat-label>What is your question</mat-label>
+    <textarea formControlName="content" type="textarea" matNativeControl></textarea>
+  </mat-form-field>
+  <button [disabled]="!askForm.valid" mat-flat-button class="w-full" type="submit">Ask</button>
 </form>

@@ -37,32 +37,31 @@
         <button pButton type="button" class="ql-link" aria-label="Insert Link" title="Insert Link"></button>
       </div>
     </quill-editor>
-    <hr>
+    <hr />
     <span>Options</span>
     <mat-form-field class="w-full">
       <mat-label>Default post privacy</mat-label>
       <mat-select [required]="true" formControlName="defaultPostEditorPrivacy">
-        @for(option of privacyOptions; track $index) {
-        <mat-option [value]="option.level">{{ option.name }}</mat-option>
+        @for (option of privacyOptions; track $index) {
+          <mat-option [value]="option.level">{{ option.name }}</mat-option>
         }
       </mat-select>
     </mat-form-field>
     <mat-form-field class="w-full">
       <mat-label>Asks</mat-label>
       <mat-select [required]="true" formControlName="asksLevel">
-        @for(option of askOptions; track $index) {
-        <mat-option [value]="option.level">{{ option.name }}</mat-option>
+        @for (option of askOptions; track $index) {
+          <mat-option [value]="option.level">{{ option.name }}</mat-option>
         }
       </mat-select>
     </mat-form-field>
     <div class="w-full">
       <mat-checkbox formControlName="manuallyAcceptsFollows"></mat-checkbox>
-      <mat-label>Manualy accept follows</mat-label>
+      <mat-label>Manually accept follows</mat-label>
     </div>
     <div class="w-full">
       <mat-checkbox formControlName="disableForceAltText"></mat-checkbox>
-      <mat-label>Allow uploading media without alt text (enable this only if you're
-        evil)</mat-label>
+      <mat-label>Allow uploading media without alt text (enable this only if you're evil)</mat-label>
     </div>
     <div class="w-full">
       <mat-checkbox formControlName="forceClassicLogo"></mat-checkbox>
@@ -77,9 +76,11 @@
       <mat-label>Enable federation with Threads (meta/facebook)</mat-label>
     </div>
     <mat-card appearance="outlined" class="my-4">
-          <mat-card-content>Threads is a microblogging platform by Meta (formerly Facebook). We
-            understand not everyone will want to make their content available there.
-            By default meta will not see you, unless you enable this option.</mat-card-content>
+      <mat-card-content
+        >Threads is a microblogging platform by Meta (formerly Facebook). We understand not everyone will want to make
+        their content available there. By default meta will not see you, unless you enable this
+        option.</mat-card-content
+      >
     </mat-card>
     <section id="tags" class="mt-2 w-full flex-row">
       <mat-form-field class="w-full">
@@ -88,28 +89,27 @@
       </mat-form-field>
       <div *ngIf="editProfileForm.value.mutedWords.split(',').length > 0" class="taglist">
         Muted phrases:
-        @for(tag of editProfileForm.value.mutedWords.split(','); track $index) {
-        <span *ngIf="tag && tag !== '' && tag.trim() !== ''" class="tag">
-          {{ tag.trim() }}
-        </span>
+        @for (tag of editProfileForm.value.mutedWords.split(','); track $index) {
+          <span *ngIf="tag && tag !== '' && tag.trim() !== ''" class="tag">
+            {{ tag.trim() }}
+          </span>
         }
       </div>
     </section>
-    <hr>
+    <hr />
     <mat-accordion>
       <mat-expansion-panel hideToggle>
         <mat-expansion-panel-header>
-          <mat-panel-title>
-            available emojis
-          </mat-panel-title>
+          <mat-panel-title> available emojis </mat-panel-title>
         </mat-expansion-panel-header>
         <app-emoji-collections (emoji)="emojiClicked($event)"></app-emoji-collections>
       </mat-expansion-panel>
     </mat-accordion>
     <hr />
     <div class="flex align-items-center justify-content-between mb-6">
-      <a routerLink="/recoverPassword" class="font-medium no-underline ml-2 text-blue-500 text-right cursor-pointer">To
-        change your password, please use the reset password form</a>
+      <a routerLink="/recoverPassword" class="font-medium no-underline ml-2 text-blue-500 text-right cursor-pointer"
+        >To change your password, please use the reset password form</a
+      >
     </div>
     <button [disabled]="!editProfileForm.valid" mat-flat-button color="primary" icon="pi pi-user" class="w-full">
       Update profile

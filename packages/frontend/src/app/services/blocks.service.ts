@@ -1,41 +1,38 @@
-import { HttpClient } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http'
+import { Injectable } from '@angular/core'
 
-import { MessageService } from './message.service';
-import { EnvironmentService } from './environment.service';
+import { MessageService } from './message.service'
+import { EnvironmentService } from './environment.service'
 
 @Injectable({
-  providedIn: 'root',
+  providedIn: 'root'
 })
 export class BlocksService {
-  baseMediaUrl = EnvironmentService.environment.baseMediaUrl;
-  baseCacheUrl = EnvironmentService.environment.externalCacheurl;
+  baseMediaUrl = EnvironmentService.environment.baseMediaUrl
+  baseCacheUrl = EnvironmentService.environment.externalCacheurl
 
-  constructor(private http: HttpClient, private messages: MessageService) { }
+  constructor(private http: HttpClient, private messages: MessageService) {}
 
   async blockUser(id: string): Promise<boolean> {
-    let success = false;
+    let success = false
     try {
       const formData = {
-        userId: id,
-      };
-      const response = await this.http
-        .post(`${EnvironmentService.environment.baseUrl}/block`, formData)
-        .toPromise();
+        userId: id
+      }
+      const response = await this.http.post(`${EnvironmentService.environment.baseUrl}/block`, formData).toPromise()
       this.messages.add({
         severity: 'success',
-        summary: 'You blocked this user.',
-      });
-      success = true;
+        summary: 'You blocked this user.'
+      })
+      success = true
     } catch (error) {
-      console.error(error);
+      console.error(error)
       this.messages.add({
         severity: 'error',
-        summary:
-          'Something went wrong blocking the user! Check your internet conectivity and try again.',
-      });
+        summary: 'Something went wrong blocking the user! Check your internet conectivity and try again.'
+      })
     }
-    return success;
+    return success
   }
 
   processResponse(serverResponse: Array<any>, key: string) {
@@ -43,132 +40,114 @@ export class BlocksService {
       return {
         avatar: userBlocked[key].url.startsWith('@')
           ? this.baseCacheUrl + encodeURIComponent(userBlocked[key].avatar)
-          : this.baseCacheUrl +
-          encodeURIComponent(this.baseMediaUrl + userBlocked[key].avatar),
+          : this.baseCacheUrl + encodeURIComponent(this.baseMediaUrl + userBlocked[key].avatar),
         url: userBlocked[key].url,
         reason: userBlocked.reason,
-        id: userBlocked[key].id,
-      };
-    });
+        id: userBlocked[key].id
+      }
+    })
   }
   async getBlockList(): Promise<Array<any>> {
-    const response = await this.http
-      .get<Array<any>>(`${EnvironmentService.environment.baseUrl}/myBlocks`)
-      .toPromise();
-    return response ? this.processResponse(response, 'blocked') : [];
+    const response = await this.http.get<Array<any>>(`${EnvironmentService.environment.baseUrl}/myBlocks`).toPromise()
+    return response ? this.processResponse(response, 'blocked') : []
   }
 
   async unblockUser(id: string): Promise<Array<any>> {
     const response = await this.http
-      .post<Array<any>>(
-        `${EnvironmentService.environment.baseUrl}/unblock-user?id=${encodeURIComponent(id)}`,
-        {}
-      )
-      .toPromise();
+      .post<Array<any>>(`${EnvironmentService.environment.baseUrl}/unblock-user?id=${encodeURIComponent(id)}`, {})
+      .toPromise()
     if (response) {
       this.messages.add({
         severity: 'success',
-        summary: 'You unblocked this user',
-      });
+        summary: 'You unblocked this user'
+      })
     }
-    return response ? this.processResponse(response, 'blocked') : [];
+    return response ? this.processResponse(response, 'blocked') : []
   }
 
   async muteUser(id: string): Promise<boolean> {
-    let success = false;
+    let success = false
     try {
       const formData = {
-        userId: id,
-      };
-      const response = await this.http
-        .post(`${EnvironmentService.environment.baseUrl}/mute`, formData)
-        .toPromise();
+        userId: id
+      }
+      const response = await this.http.post(`${EnvironmentService.environment.baseUrl}/mute`, formData).toPromise()
       this.messages.add({
         severity: 'success',
-        summary: 'You muted this user',
-      });
+        summary: 'You muted this user'
+      })
 
-      success = true;
+      success = true
     } catch (error) {
-      console.error(error);
+      console.error(error)
       this.messages.add({
         severity: 'error',
-        summary:
-          'Something went wrong blocking the user! Check your internet conectivity and try again.',
-      });
+        summary: 'Something went wrong blocking the user! Check your internet conectivity and try again.'
+      })
     }
-    return success;
+    return success
   }
   async getMuteList(): Promise<Array<any>> {
-    const response = await this.http
-      .get<Array<any>>(`${EnvironmentService.environment.baseUrl}/myMutes`)
-      .toPromise();
-    return response ? this.processResponse(response, 'muted') : [];
+    const response = await this.http.get<Array<any>>(`${EnvironmentService.environment.baseUrl}/myMutes`).toPromise()
+    return response ? this.processResponse(response, 'muted') : []
   }
 
   async unmuteUser(id: string): Promise<Array<any>> {
     const response = await this.http
-      .post<Array<any>>(
-        `${EnvironmentService.environment.baseUrl}/unmute-user?id=${encodeURIComponent(id)}`,
-        {}
-      )
-      .toPromise();
+      .post<Array<any>>(`${EnvironmentService.environment.baseUrl}/unmute-user?id=${encodeURIComponent(id)}`, {})
+      .toPromise()
     if (response) {
       this.messages.add({
         severity: 'success',
-        summary: 'You unmuted this user',
-      });
+        summary: 'You unmuted this user'
+      })
     }
-    return response ? this.processResponse(response, 'muted') : [];
+    return response ? this.processResponse(response, 'muted') : []
   }
 
   processResponseServer(response: any) {
     return response.map((elem: any) => {
       return {
         id: elem.blockedServer.id,
-        displayName: elem.blockedServer.displayName,
-      };
-    });
+        displayName: elem.blockedServer.displayName
+      }
+    })
   }
   async blockServer(id: string): Promise<boolean> {
-    let success = false;
+    let success = false
     try {
       const formData = {
-        userId: id,
-      };
+        userId: id
+      }
       const response = await this.http
         .post(`${EnvironmentService.environment.baseUrl}/blockUserServer`, formData)
-        .toPromise();
+        .toPromise()
       this.messages.add({
         severity: 'success',
-        summary: 'You blocked this server',
-      });
+        summary: 'You blocked this server'
+      })
 
-      success = true;
+      success = true
     } catch (error) {
-      console.error(error);
+      console.error(error)
       this.messages.add({
         severity: 'error',
-        summary:
-          'Something went wrong blocking the server! Check your internet conectivity and try again.',
-      });
+        summary: 'Something went wrong blocking the server! Check your internet conectivity and try again.'
+      })
     }
-    return success;
+    return success
   }
   async getMyServerBlockList(): Promise<Array<any>> {
     const response = await this.http
       .get<Array<any>>(`${EnvironmentService.environment.baseUrl}/myServerBlocks`)
-      .toPromise();
-    return response ? this.processResponseServer(response) : [];
+      .toPromise()
+    return response ? this.processResponseServer(response) : []
   }
 
   async unblockServer(id: string): Promise<Array<any>> {
     const response = await this.http
-      .post<Array<any>>(
-        `${EnvironmentService.environment.baseUrl}/unblockServer?id=${encodeURIComponent(id)}`,
-        {}
-      )
-      .toPromise();
-    return response ? this.processResponseServer(response) : [];
+      .post<Array<any>>(`${EnvironmentService.environment.baseUrl}/unblockServer?id=${encodeURIComponent(id)}`, {})
+      .toPromise()
+    return response ? this.processResponseServer(response) : []
   }
 }

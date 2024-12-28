@@ -1,121 +1,104 @@
-import { Injectable } from '@angular/core';
-import { LoginService } from './login.service';
-import { HttpClient } from '@angular/common/http';
-import { UtilsService } from './utils.service';
-import { firstValueFrom } from 'rxjs';
-import { EnvironmentService } from './environment.service';
+import { Injectable } from '@angular/core'
+import { LoginService } from './login.service'
+import { HttpClient } from '@angular/common/http'
+import { UtilsService } from './utils.service'
+import { firstValueFrom } from 'rxjs'
+import { EnvironmentService } from './environment.service'
 
 @Injectable({
-  providedIn: 'root',
+  providedIn: 'root'
 })
 export class ThemeService {
-  constructor(
-    private loginService: LoginService,
-    private http: HttpClient,
-    private utils: UtilsService,
-  ) { }
+  constructor(private loginService: LoginService, private http: HttpClient, private utils: UtilsService) {}
 
   setMyTheme() {
-    this.setTheme(this.loginService.getLoggedUserUUID());
+    this.setTheme(this.loginService.getLoggedUserUUID())
   }
 
   updateTheme(newTheme: string) {
-    return firstValueFrom(
-      this.http.post(`${EnvironmentService.environment.baseUrl}/updateCSS`, { css: newTheme })
-    );
+    return firstValueFrom(this.http.post(`${EnvironmentService.environment.baseUrl}/updateCSS`, { css: newTheme }))
   }
 
   // 0 no data 1 does not want custom css 2 accepts custom css
   hasUserAcceptedCustomThemes(): number {
-    let res = 0;
+    let res = 0
     try {
-      const storedResponse = localStorage.getItem('acceptsCustomThemes');
-      res = storedResponse ? parseInt(storedResponse) : 0;
-    } catch (error) { }
-    return res;
+      const storedResponse = localStorage.getItem('acceptsCustomThemes')
+      res = storedResponse ? parseInt(storedResponse) : 0
+    } catch (error) {}
+    return res
   }
 
   async checkThemeExists(theme: string): Promise<boolean> {
-    let res = false;
+    let res = false
     try {
       const response = await firstValueFrom(
         this.http.get(`${EnvironmentService.environment.baseMediaUrl}/themes/${theme}.css`, {
-          responseType: 'text',
+          responseType: 'text'
         })
-      );
+      )
       if (response && response.length > 0) {
-        res = true;
+        res = true
       }
-    } catch (error) { }
-    return res;
+    } catch (error) {}
+    return res
   }
 
   async getMyThemeAsSting(): Promise<string> {
-    let res = '';
+    let res = ''
     try {
       const themeResponse = await this.http
-        .get(
-          `${EnvironmentService.environment.baseUrl
-          }/uploads/themes/${this.loginService.getLoggedUserUUID()}.css`,
-          { responseType: 'text' }
-        )
-        .toPromise();
+        .get(`${EnvironmentService.environment.baseUrl}/uploads/themes/${this.loginService.getLoggedUserUUID()}.css`, {
+          responseType: 'text'
+        })
+        .toPromise()
       if (themeResponse && themeResponse.length > 0) {
-        res = themeResponse;
+        res = themeResponse
       }
-    } catch (error) { }
-    return res;
+    } catch (error) {}
+    return res
   }
 
   setTheme(themeToSet: string) {
     try {
-      this.setStyle(
-        'customUserTheme',
-        `${EnvironmentService.environment.baseUrl}/uploads/themes/${themeToSet}.css`
-      );
-    } catch (error) {
-    }
+      this.setStyle('customUserTheme', `${EnvironmentService.environment.baseUrl}/uploads/themes/${themeToSet}.css`)
+    } catch (error) {}
   }
 
   private getLinkElementForKey(key: string) {
-    return (
-      this.getExistingLinkElementByKey(key) ||
-      this.createLinkElementWithKey(key)
-    );
+    return this.getExistingLinkElementByKey(key) || this.createLinkElementWithKey(key)
   }
 
   private getExistingLinkElementByKey(key: string) {
-    return document.head.querySelector(
-      `link[rel="stylesheet"].${this.getClassNameForKey(key)}`
-    );
+    return document.head.querySelector(`link[rel="stylesheet"].${this.getClassNameForKey(key)}`)
   }
 
   private createLinkElementWithKey(key: string) {
-    const linkEl = document.createElement('link');
-    linkEl.setAttribute('rel', 'stylesheet');
-    linkEl.classList.add(this.getClassNameForKey(key));
-    document.head.appendChild(linkEl);
-    return linkEl;
+    const linkEl = document.createElement('link')
+    linkEl.setAttribute('rel', 'stylesheet')
+    linkEl.classList.add(this.getClassNameForKey(key))
+    document.head.appendChild(linkEl)
+    return linkEl
   }
 
   private getClassNameForKey(key: string) {
-    return `app-${key}`;
+    return `app-${key}`
   }
 
   /**
    * Set the stylesheet with the specified key.
    */
   private setStyle(key: string, href: string) {
-    this.getLinkElementForKey(key).setAttribute('href', href);
+    this.getLinkElementForKey(key).setAttribute('href', href)
   }
 
   /**
    * Remove the stylesheet with the specified key.
    */
   private removeStyle(key: string) {
-    const existingLinkElement = this.getExistingLinkElementByKey(key);
+    const existingLinkElement = this.getExistingLinkElementByKey(key)
     if (existingLinkElement) {
-      document.head.removeChild(existingLinkElement);
+      document.head.removeChild(existingLinkElement)
     }
   }
 }
