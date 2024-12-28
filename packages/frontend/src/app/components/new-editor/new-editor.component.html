@@ -176,18 +176,18 @@
     </div>
   </section>
 
-  <section id="privacy-messages">
-    <mat-card appearance="outlined" *ngIf="privacy === 10" class="mb-2 mt-1 mat-card-important">
-      <mat-card-content
-        >Attention! ADMINS of both your instance, and the external instance can read these DMs.</mat-card-content
-      >
-    </mat-card>
-    <mat-card appearance="outlined" *ngIf="privacy === 3" class="mb-2 mt-1">
-      <mat-card-content
-        >This post is set as unlisted. It opts out of search, hashtags and other features. This is not recommended for
-        anything you want discoverable.</mat-card-content
-      >
-    </mat-card>
+  <section id="mb-2 privacy-messages">
+    @if (privacy === 10) {
+      <app-info-card [type]="alertIcon">
+        Attention! ADMINS of both your instance, and the external instance can read these DMs.
+      </app-info-card>
+    }
+    @if (privacy === 3) {
+      <app-info-card [type]="infoIcon">
+        This post is set as unlisted. It opts out of search, hashtags and other features. This is not recommended for
+        anything you want discoverable.
+      </app-info-card>
+    }
   </section>
 
   <button
