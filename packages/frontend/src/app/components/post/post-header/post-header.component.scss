@@ -1,13 +1,9 @@
-.user-name {
+.user-name,
+.user-url {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
   line-height: 1.35;
-}
-
-.user-url {
-  line-height: 1.35;
-  color: var(--mat-sys-outline);
 }
 
 .follow-button {
