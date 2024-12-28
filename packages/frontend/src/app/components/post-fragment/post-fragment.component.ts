@@ -217,7 +217,6 @@ export class PostFragmentComponent implements OnChanges, OnDestroy {
       })
     } else {
       // CODE TO REMOVE LIKE
-      console.log(this.emojiCollection, likesCollection)
       if (likesCollection) {
         if (likesCollection.users.length === 1) {
           this.emojiCollection = this.emojiCollection.filter((col) => col.id !== 'Like')
