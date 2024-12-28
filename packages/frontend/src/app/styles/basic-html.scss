@@ -27,8 +27,26 @@ blockquote {
   margin: 0 0 0.75em;
 }
 
+code {
+  display: inline;
+  padding: 0 0.2em;
+  font-size: 0.875rem;
+  background-color: var(--mat-sys-surface-container);
+  border: 1px solid var(--mat-sys-outline-variant);
+  border-radius: 4px;
+}
+
 pre {
-  overflow-x: scroll;
+  padding: 0.5rem 0.75rem;
+  font-size: 0.85rem;
+  background-color: var(--mat-sys-surface-container);
+  border: 1px solid var(--mat-sys-outline-variant);
+  border-radius: var(--mat-sys-corner-small);
+  overflow-x: auto;
+
+  & > code {
+    all: unset;
+  }
 }
 
 details {

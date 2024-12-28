@@ -11,7 +11,9 @@ import { FontAwesomeModule, IconDefinition } from '@fortawesome/angular-fontawes
 import {
   faClose,
   faEnvelope,
+  faExclamationTriangle,
   faGlobe,
+  faQuestionCircle,
   faQuoteLeft,
   faServer,
   faUnlock,
@@ -41,6 +43,7 @@ import { AvatarSmallComponent } from '../avatar-small/avatar-small.component'
 import { MatCheckboxModule } from '@angular/material/checkbox'
 import { EnvironmentService } from 'src/app/services/environment.service'
 import { MatTooltipModule } from '@angular/material/tooltip'
+import { InfoCardComponent } from '../info-card/info-card.component'
 
 @Component({
   selector: 'app-new-editor',
@@ -62,7 +65,8 @@ import { MatTooltipModule } from '@angular/material/tooltip'
     MatProgressSpinnerModule,
     AvatarSmallComponent,
     MatCheckboxModule,
-    MatTooltipModule
+    MatTooltipModule,
+    InfoCardComponent
   ],
   templateUrl: './new-editor.component.html',
   styleUrl: './new-editor.component.scss'
@@ -110,6 +114,8 @@ export class NewEditorComponent implements OnDestroy {
 
   closeIcon = faClose
   quoteIcon = faQuoteLeft
+  infoIcon = faQuestionCircle
+  alertIcon = faExclamationTriangle
   emojiSubscription: Subscription
   editorUpdatedSubscription: Subscription | undefined
   httpMentionPetitionSubscription: Subscription | undefined

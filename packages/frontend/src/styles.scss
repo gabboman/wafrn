@@ -25,15 +25,6 @@ $theme: mat.define-theme(
 @include mat.typography-hierarchy($theme);
 
 :root {
-  --wafrn-blue: light-dark(#125e59, #96d8d1);
-  --mat-sys-label-small-size: 0.688rem;
-
-  --info-card-warning-background: light-dark(#d7c3b8, #52443c);
-
-  --avatar-size: 40px;
-}
-
-:root {
   @include mat.badge-overrides(
     (
       background-color: var(--mdc-filled-button-container-color, var(--mat-sys-primary))
@@ -41,6 +32,15 @@ $theme: mat.define-theme(
   );
 }
 
+// Variables
+:root {
+  --wafrn-blue: light-dark(#125e59, #96d8d1);
+  --mat-sys-label-small-size: 0.688rem;
+
+  --info-card-warning-background: light-dark(#d7c3b8, #52443c);
+}
+
+// Global style fixes
 * {
   box-sizing: border-box;
   scrollbar-color: var(--mat-sys-outline-variant) transparent;
@@ -48,35 +48,29 @@ $theme: mat.define-theme(
 }
 
 html {
+  height: 100%;
   background-color: var(--mat-sys-surface);
   overflow-wrap: break-word;
 }
 
 body {
+  min-height: 100%;
   margin: 0;
 }
 
-// dirty hack because bug regarding the editor
-.cdk-overlay-pane.mat-mdc-dialog-panel {
-  max-width: 100% !important;
+.wafrn-container {
+  max-width: 800px;
 }
 
-#script-warn {
-  width: 100%;
-  color: var(--wafrn-blue);
-  text-align: center;
-}
+// No JavaScript
+.no-js {
+  position: fixed;
+  inset: 0;
+  cursor: wait;
 
-li {
-  list-style-type: inside circle;
-  margin-left: 1.5em;
-}
-
-img,
-video {
-  display: block;
-  max-height: 100%;
-  max-width: 100%;
+  & .text-muted {
+    color: var(--mat-sys-outline);
+  }
 }
 
 .subtle-link {
@@ -87,112 +81,13 @@ video {
   }
 }
 
-.avatar-container {
-  display: flex;
-  height: var(--avatar-size);
-  width: var(--avatar-size);
-  justify-content: center;
-}
-
-.avatar {
-  border-radius: 8px;
-  display: flex;
-  object-fit: cover;
-}
-
-.margin-auto {
-  margin: auto;
-}
-
-.wafrn-container {
-  max-width: 800px;
-}
-
-.mention {
-  height: unset;
-  width: unset;
-  border-radius: unset;
-  background-color: unset;
-  padding: unset;
-  margin-right: unset;
-  -webkit-user-select: unset;
-  user-select: unset;
-}
-
-.mention > span {
-  margin: 0;
-}
-
-.post-emoji {
-  display: inline-flex;
-  max-height: 1.5em;
-  max-width: 1.5em;
-  vertical-align: middle;
-}
-
-// youtube player
-
-.yt-thumbnail {
-  max-width: 100%;
-  width: 100%;
-}
-
-.yt-watermark {
-  max-width: 100%;
-}
-
-.watermark {
-  /* Used to position the watermark */
-  position: relative;
-}
-
-.watermark__inner {
-  /* Center the content */
-  align-items: center;
-  display: flex;
-  justify-content: center;
-
-  /* Absolute position */
-  left: 0px;
-  position: absolute;
-  top: 0px;
-
-  /* Take full size */
-  height: 100%;
-  width: 100%;
-}
-
-.watermark__body {
-  max-height: 15%;
-  max-width: 15%;
+// dirty hack because bug regarding the editor
+.cdk-overlay-pane.mat-mdc-dialog-panel {
+  max-width: 100% !important;
 }
 
 .mdc-button {
   min-width: unset !important;
-}
-
-.share-button {
-  gap: 0.5em;
-}
-
-.shortened-post {
-  max-height: 1250px;
-  overflow: hidden;
-}
-
-.quoted-post {
-  position: relative;
-  padding: 0.5em;
-  -webkit-box-shadow: 0px 0px 5px 2px rgba(0, 0, 0, 0.3);
-  -moz-box-shadow: 0px 0px 5px 2px rgba(0, 0, 0, 0.3);
-  box-shadow: 0px 0px 5px 2px rgba(0, 0, 0, 0.3);
-  border-radius: 0.25em;
-  cursor: pointer !important;
-  margin-bottom: 4px;
-  border: 1px solid var(--mat-sys-outline);
-  overflow: hidden;
-  flex-shrink: 0;
-  max-height: 128px;
 }
 
 // mobile only styles
@@ -209,27 +104,12 @@ video {
   }
 }
 
-.center-text {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  gap: 0.25em;
-}
-
 .mat-mdc-dialog-content {
   max-height: unset !important;
 }
 
 .mat-mdc-dialog-inner-container > .mat-mdc-dialog-surface {
   padding: 20px;
-}
-
-/* NOTE: This is a custom class not provided by Angular. */
-/* The !important is here because angular later overrides the color. */
-/* This should be fine as it's only used sparingly. */
-.mat-card-important {
-  background-color: rgba(#f22f2f, 0.5) !important;
-  --mdc-outlined-card-outline-color: #ff5b5b !important;
 }
 
 .force-comic-sans {
