@@ -34,7 +34,7 @@
         <app-bottom-reply-bar [fragment]="content"></app-bottom-reply-bar>
       </mat-card>
     } @else {
-      <app-post-ribbon [user]="content.user" [icon]="rewootIcon">
+      <app-post-ribbon [user]="content.user" [icon]="rewootIcon" [time]="content.createdAt">
         <a class="subtle-link" [routerLink]="'/blog/' + content.user.url" [innerHTML]="content.user.name"></a>
         rewooted
         <a

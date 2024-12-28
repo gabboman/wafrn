@@ -8,6 +8,7 @@
     }"
     [icon]="notificationIcons[notification.type]"
     [card]="false"
+    [time]="notification.date"
   >
     <a [routerLink]="'/blog/' + notification.userUrl" [innerHTML]="notification.userUrl" class="subtle-link"></a>
     @switch (notification.type) {
@@ -36,7 +37,6 @@
         to your woot
       }
     }
-    {{ this.timeAgo }}
   </app-post-ribbon>
   @if (notification.type !== notificationType.FOLLOW) {
     <hr />

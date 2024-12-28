@@ -39,7 +39,6 @@ export class SingleNotificationComponent implements OnInit {
   emojiUrl: string = ''
   @Input() notification!: UserNotifications
   notificationType = NotificationType
-  timeAgo = ''
 
   notificationIcons = {
     [NotificationType.MENTION]: faShareNodes,
@@ -70,13 +69,5 @@ export class SingleNotificationComponent implements OnInit {
         EnvironmentService.environment.externalCacheurl +
         encodeURIComponent(this.notification.emojiReact?.url as string)
     }
-  }
-
-  ngOnChanges(changes: SimpleChanges): void {
-    this.timeAgo = this.dateTimeToRelative.transform(
-      this.dateTimeFromJsDatePipe.transform(this.notification.date),
-      // TODO unhardcode locale
-      { style: 'long', locale: 'en' }
-    )
   }
 }

@@ -8,6 +8,7 @@
       [user]="originalPostContent[this.originalPostContent.length - 1].user"
       [icon]="headerText === 'replied' ? replyIcon : reblogIcon"
       [card]="false"
+      [time]="originalPostContent[this.originalPostContent.length - 1].createdAt"
     >
       <a
         class="subtle-link"

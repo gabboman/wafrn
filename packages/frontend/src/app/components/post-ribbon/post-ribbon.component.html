@@ -8,10 +8,11 @@
 
 <ng-template #template>
   <div class="flex gap-2 align-items-center min-w-0" [ngClass]="{ 'nudge-left': !card() }">
-    <div class="w-1rem flex justify-content-center">
+    <div class="w-1rem flex justify-content-center ribbon-icon">
       <fa-icon [icon]="icon()"></fa-icon>
     </div>
     <app-avatar-small [user]="user()"></app-avatar-small>
-    <p class="m-0 min-w-0"><ng-content></ng-content></p>
+    <p class="m-0 min-w-0 white-space-nowrap overflow-hidden text-overflow-ellipsis"><ng-content></ng-content></p>
+    <div class="ml-auto text-sm flex-shrink-0 ribbon-date" matTooltip="{{ time() | date: 'short' }}">{{ timeAgo }}</div>
   </div>
 </ng-template>

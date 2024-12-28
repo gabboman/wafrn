@@ -2,6 +2,14 @@
   --avatar-size: 32px;
 }
 
+.ribbon-icon {
+  margin-right: 0.125rem;
+}
+
+.ribbon-date {
+  color: var(--mat-sys-outline);
+}
+
 .post-card {
   padding-inline: 0.75rem;
 }
