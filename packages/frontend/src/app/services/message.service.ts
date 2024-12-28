@@ -1,30 +1,30 @@
-import { Injectable } from '@angular/core';
-import { MatSnackBar } from '@angular/material/snack-bar';
+import { Injectable } from '@angular/core'
+import { MatSnackBar } from '@angular/material/snack-bar'
 
 @Injectable({
-  providedIn: 'root',
+  providedIn: 'root'
 })
 export class MessageService {
   constructor(private snackBar: MatSnackBar) {}
 
   add(message: {
-    severity: 'error' | 'success' | 'warn' | 'info';
-    summary: string;
+    severity: 'error' | 'success' | 'warn' | 'info'
+    summary: string
     //detail?: string;
   }) {
-    let icon = '';
+    let icon = ''
     switch (message.severity) {
       case 'warn':
       case 'error':
-        icon = '❌';
-        break;
+        icon = '❌'
+        break
       default:
-        icon = '✅';
+        icon = '✅'
     }
     this.snackBar.open(message.summary, icon, {
       duration: 3000,
       horizontalPosition: 'right',
-      verticalPosition: 'top',
-    });
+      verticalPosition: 'top'
+    })
   }
 }

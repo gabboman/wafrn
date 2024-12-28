@@ -6,12 +6,11 @@
   gap: 4px;
 }
 
-
 .grid {
   margin: 0;
 }
 
-.grid>div {
+.grid > div {
   border: 1px solid #999;
   border-radius: 8px;
 }
@@ -36,7 +35,6 @@
   margin-left: -2px;
 }
 
-
 p {
   margin: 0;
 }
@@ -45,7 +43,7 @@ app-media-preview {
   display: block;
   margin-bottom: 8px;
 
-  &+mat-form-field {
+  & + mat-form-field {
     margin-bottom: -12px;
   }
 }
@@ -59,7 +57,6 @@ app-media-preview {
 .quote-container {
   position: relative;
 }
-
 
 .post-editor-toolbar {
   border-bottom: none;
@@ -80,19 +77,19 @@ app-media-preview {
   z-index: 999;
   overflow-x: hidden;
   overflow-y: scroll;
-  background-color: #1d1b1e;  
+  background-color: #1d1b1e;
   border-radius: 8px;
-  border: 1px solid #888;	
+  border: 1px solid #888;
   padding: 8px;
 }
 
 /* Not sure if this is how to do it but lmao */
 .suggestionsMenu > div {
-	margin-block: 4px;
+  margin-block: 4px;
 }
 
 .suggestionsMenu > div > app-avatar-small {
-	margin-right: 4px;
+  margin-right: 4px;
 }
 
 /* This doesn't work and I cannot figure out the correct class to target */

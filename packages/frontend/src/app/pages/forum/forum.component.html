@@ -1,43 +1,69 @@
 <app-loader *ngIf="loading"></app-loader>
 <ng-container *ngIf="!loading">
   <app-post [post]="post" class="initial-post"></app-post>
-  <div *ngIf="(!post[post.length - 1].remotePostId.startsWith(localUrl) && userLoggedIn) || post.length > 1 "
-    class="px-3 mt-3 mb-6 lg:mx-4 wafrn-container flex flex-column gap-2 reply-loader">
-    <button *ngIf="!post[post.length - 1].remotePostId.startsWith(localUrl) && userLoggedIn"
-      (mousedown)="loadRepliesFromFediverse()" color="primary" mat-stroked-button class="w-full">
+  <div
+    *ngIf="(!post[post.length - 1].remotePostId.startsWith(localUrl) && userLoggedIn) || post.length > 1"
+    class="px-3 mt-3 mb-6 lg:mx-4 wafrn-container flex flex-column gap-2 reply-loader"
+  >
+    <button
+      *ngIf="!post[post.length - 1].remotePostId.startsWith(localUrl) && userLoggedIn"
+      (mousedown)="loadRepliesFromFediverse()"
+      color="primary"
+      mat-stroked-button
+      class="w-full"
+    >
       Fetch more external replies
     </button>
-    <p *ngIf="post.length > 1" class="m-0"><a [routerLink]="'/fediverse/post/' +  post[0].id">View initial post</a></p>
+    <p *ngIf="post.length > 1" class="m-0"><a [routerLink]="'/fediverse/post/' + post[0].id">View initial post</a></p>
   </div>
   <div id="scroll-here-on-page-change"></div>
   <ng-container
-    *ngFor="let content of forumPosts | slice: currentPage * itemsPerPage : currentPage * itemsPerPage + itemsPerPage">
-    @if(content.content !== '' || content.tags.length > 0 || content.quotes.length > 0 ||
-    content.questionPoll?.questionPollQuestions || (content.medias && content.medias.length
-    > 0)) {
-    <mat-card [id]="'post-' + content.id" class="wafrn-container post-card">
-      <app-post-header [fragment]="content" [simplified]="false"></app-post-header>
-      <app-post-fragment [selfManageCw]="true" [fragment]="content"></app-post-fragment>
-      <hr />
-      <app-bottom-reply-bar [fragment]="content"></app-bottom-reply-bar>
-    </mat-card>
-    }
-    @else {
-    <app-post-ribbon [user]="content.user" [icon]="rewootIcon">
-      <a class="subtle-link" [routerLink]="'/blog/' + content.user.url" [innerHTML]="content.user.name"></a>
-      rewooted <a [routerLink]="'/fediverse/post/' + content.parentId" class="subtle-link"
-        [innerHTML]="findReply(content.parentId)?.user?.name ?? 'Unknown User'"></a>
-    </app-post-ribbon>
+    *ngFor="let content of forumPosts | slice: currentPage * itemsPerPage : currentPage * itemsPerPage + itemsPerPage"
+  >
+    @if (
+      content.content !== '' ||
+      content.tags.length > 0 ||
+      content.quotes.length > 0 ||
+      content.questionPoll?.questionPollQuestions ||
+      (content.medias && content.medias.length > 0)
+    ) {
+      <mat-card [id]="'post-' + content.id" class="wafrn-container post-card">
+        <app-post-header [fragment]="content" [simplified]="false"></app-post-header>
+        <app-post-fragment [selfManageCw]="true" [fragment]="content"></app-post-fragment>
+        <hr />
+        <app-bottom-reply-bar [fragment]="content"></app-bottom-reply-bar>
+      </mat-card>
+    } @else {
+      <app-post-ribbon [user]="content.user" [icon]="rewootIcon">
+        <a class="subtle-link" [routerLink]="'/blog/' + content.user.url" [innerHTML]="content.user.name"></a>
+        rewooted
+        <a
+          [routerLink]="'/fediverse/post/' + content.parentId"
+          class="subtle-link"
+          [innerHTML]="findReply(content.parentId)?.user?.name ?? 'Unknown User'"
+        ></a>
+      </app-post-ribbon>
     }
   </ng-container>
 </ng-container>
 
 <footer *ngIf="forumPosts.length > 0" class="p-3 py-2 mb-4 lg:mx-4 wafrn-container">
-  <mat-paginator (page)="changePage($event)" [pageSizeOptions]="[10, 25, 50, 100, 250]" showFirstLastButtons
-    [length]="forumPosts.length" [pageIndex]="currentPage" [pageSize]="itemsPerPage"></mat-paginator>
+  <mat-paginator
+    (page)="changePage($event)"
+    [pageSizeOptions]="[10, 25, 50, 100, 250]"
+    showFirstLastButtons
+    [length]="forumPosts.length"
+    [pageIndex]="currentPage"
+    [pageSize]="itemsPerPage"
+  ></mat-paginator>
 </footer>
 
-<button [routerLink]="'/dashboard'" mat-flat-button color="default" aria-label="Go back to the dashboard"
-  style="position: fixed; z-index: 500; top: 1em; right: 0.5em">
+<button
+  [routerLink]="'/dashboard'"
+  mat-flat-button
+  color="default"
+  aria-label="Go back to the dashboard"
+  style="position: fixed; z-index: 500; top: 1em; right: 0.5em"
+>
   <fa-icon [icon]="homeIcon" />
 </button>

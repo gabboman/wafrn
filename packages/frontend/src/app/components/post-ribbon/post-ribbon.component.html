@@ -1,13 +1,13 @@
 @if (card()) {
-<mat-card class="py-2 wafrn-container post-card">
-  <ng-container *ngTemplateOutlet="template"></ng-container>
-</mat-card>
+  <mat-card class="py-2 wafrn-container post-card">
+    <ng-container *ngTemplateOutlet="template"></ng-container>
+  </mat-card>
 } @else {
-<ng-container *ngTemplateOutlet="template"></ng-container>
+  <ng-container *ngTemplateOutlet="template"></ng-container>
 }
 
 <ng-template #template>
-  <div class="flex gap-2 align-items-center min-w-0" [ngClass]="{'nudge-left': !card()}">
+  <div class="flex gap-2 align-items-center min-w-0" [ngClass]="{ 'nudge-left': !card() }">
     <div class="w-1rem flex justify-content-center">
       <fa-icon [icon]="icon()"></fa-icon>
     </div>

@@ -10,7 +10,13 @@
   <p *ngIf="noMorePosts" class="m-0 text-lg">No more posts found</p>
 </footer>
 
-<button (mousedown)="reloadPosts()" mat-flat-button color="default" aria-label="Refresh"
-  class="refresh-button" style="position: fixed; z-index: 500; top: 1em; right: 0.5em">
+<button
+  (mousedown)="reloadPosts()"
+  mat-flat-button
+  color="default"
+  aria-label="Refresh"
+  class="refresh-button"
+  style="position: fixed; z-index: 500; top: 1em; right: 0.5em"
+>
   <fa-icon [icon]="reloadIcon" />
 </button>

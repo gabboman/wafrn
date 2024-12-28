@@ -1,20 +1,13 @@
-import {
-  ChangeDetectorRef,
-  Component,
-  HostListener,
-  OnDestroy,
-  OnInit,
-  ViewEncapsulation,
-} from '@angular/core';
-import { NavigationEnd, Router } from '@angular/router';
-import { Subscription } from 'rxjs';
-import { Action } from 'src/app/interfaces/editor-launcher-data';
-import { AdminService } from 'src/app/services/admin.service';
-import { DashboardService } from 'src/app/services/dashboard.service';
-import { EditorService } from 'src/app/services/editor.service';
-import { JwtService } from 'src/app/services/jwt.service';
-import { LoginService } from 'src/app/services/login.service';
-import { NotificationsService } from 'src/app/services/notifications.service';
+import { ChangeDetectorRef, Component, HostListener, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core'
+import { NavigationEnd, Router } from '@angular/router'
+import { Subscription } from 'rxjs'
+import { Action } from 'src/app/interfaces/editor-launcher-data'
+import { AdminService } from 'src/app/services/admin.service'
+import { DashboardService } from 'src/app/services/dashboard.service'
+import { EditorService } from 'src/app/services/editor.service'
+import { JwtService } from 'src/app/services/jwt.service'
+import { LoginService } from 'src/app/services/login.service'
+import { NotificationsService } from 'src/app/services/notifications.service'
 
 import {
   faQuestion,
@@ -45,38 +38,38 @@ import {
   faSkull,
   faFileEdit,
   faPaintbrush
-} from '@fortawesome/free-solid-svg-icons';
-import { MenuItem } from 'src/app/interfaces/menu-item';
-import { MatDialog } from '@angular/material/dialog';
-import { EnvironmentService } from 'src/app/services/environment.service';
+} from '@fortawesome/free-solid-svg-icons'
+import { MenuItem } from 'src/app/interfaces/menu-item'
+import { MatDialog } from '@angular/material/dialog'
+import { EnvironmentService } from 'src/app/services/environment.service'
 
 @Component({
   selector: 'app-navigation-menu',
   templateUrl: './navigation-menu.component.html',
   styleUrls: ['./navigation-menu.component.scss'],
   standalone: false,
-  encapsulation: ViewEncapsulation.None,
+  encapsulation: ViewEncapsulation.None
 })
 export class NavigationMenuComponent implements OnInit, OnDestroy {
-  menuItems: MenuItem[] = [];
-  maintenanceMode = EnvironmentService.environment.maintenance;
-  maintenanceMessage = EnvironmentService.environment.maintenanceMessage;
-  menuVisible = false;
-  notifications = 0;
-  adminNotifications = 0;
-  usersAwaitingAproval = 0;
-  followsAwaitingAproval = 0;
-  awaitingAsks = 0;
-  privateMessagesNotifications = '';
-  mobile = false;
-  logo = EnvironmentService.environment.logo;
-  defaultIcon = faQuestion;
-  navigationSubscription: Subscription;
-  loginSubscription: Subscription;
-  scrollSubscription: Subscription;
-  hamburguerIcon = faBars;
-  pencilIcon = faPencil;
-  currentRoute = '';
+  menuItems: MenuItem[] = []
+  maintenanceMode = EnvironmentService.environment.maintenance
+  maintenanceMessage = EnvironmentService.environment.maintenanceMessage
+  menuVisible = false
+  notifications = 0
+  adminNotifications = 0
+  usersAwaitingApproval = 0
+  followsAwaitingApproval = 0
+  awaitingAsks = 0
+  privateMessagesNotifications = ''
+  mobile = false
+  logo = EnvironmentService.environment.logo
+  defaultIcon = faQuestion
+  navigationSubscription: Subscription
+  loginSubscription: Subscription
+  scrollSubscription: Subscription
+  hamburguerIcon = faBars
+  pencilIcon = faPencil
+  currentRoute = ''
   constructor(
     private editorService: EditorService,
     private router: Router,
@@ -88,47 +81,45 @@ export class NavigationMenuComponent implements OnInit, OnDestroy {
     private dashboardService: DashboardService,
     private dialogService: MatDialog
   ) {
-    this.router.routeReuseStrategy.shouldReuseRoute = () => false;
-    this.loginSubscription = this.loginSubscription = this.loginService.loginEventEmitter.subscribe(
-      () => {
-        this.drawMenu();
-      }
-    );
+    this.router.routeReuseStrategy.shouldReuseRoute = () => false
+    this.loginSubscription = this.loginSubscription = this.loginService.loginEventEmitter.subscribe(() => {
+      this.drawMenu()
+    })
     if (this.loginService.getForceClassicLogo()) {
       this.logo = '/assets/classicLogo.png'
     }
     this.navigationSubscription = this.router.events.subscribe((ev) => {
       scroll(0, 0)
       if (ev instanceof NavigationEnd) {
-        this.currentRoute = ev.url;
-        this.updateNotifications(ev.url);
+        this.currentRoute = ev.url
+        this.updateNotifications(ev.url)
       }
-    });
+    })
 
     this.scrollSubscription = this.dashboardService.scrollEventEmitter.subscribe(() => {
-      this.updateNotifications('scroll');
-    });
+      this.updateNotifications('scroll')
+    })
   }
 
   ngOnInit(): void {
-    this.drawMenu();
-    this.onResize();
-    this.menuVisible = !this.mobile;
+    this.drawMenu()
+    this.onResize()
+    this.menuVisible = !this.mobile
   }
 
   ngOnDestroy(): void {
-    this.navigationSubscription.unsubscribe();
-    this.loginSubscription.unsubscribe();
-    this.scrollSubscription.unsubscribe();
+    this.navigationSubscription.unsubscribe()
+    this.loginSubscription.unsubscribe()
+    this.scrollSubscription.unsubscribe()
   }
 
   showMenu() {
-    this.menuVisible = true;
+    this.menuVisible = true
   }
 
   hideMenu() {
-    this.menuVisible = false;
-    this.editorService.launchPostEditorEmitter.next({ action: Action.Close });
+    this.menuVisible = false
+    this.editorService.launchPostEditorEmitter.next({ action: Action.Close })
   }
 
   drawMenu() {
@@ -140,8 +131,8 @@ export class NavigationMenuComponent implements OnInit, OnDestroy {
         routerLink: '/login',
         visible: !this.jwtService.tokenValid(),
         command: () => {
-          this.hideMenu();
-        },
+          this.hideMenu()
+        }
       },
       {
         label: 'Register',
@@ -150,8 +141,8 @@ export class NavigationMenuComponent implements OnInit, OnDestroy {
         routerLink: '/',
         visible: !this.jwtService.tokenValid(),
         command: () => {
-          this.hideMenu();
-        },
+          this.hideMenu()
+        }
       },
       {
         label: 'Explore without an account',
@@ -160,8 +151,8 @@ export class NavigationMenuComponent implements OnInit, OnDestroy {
         routerLink: '/dashboard/exploreLocal',
         visible: !this.jwtService.tokenValid(),
         command: () => {
-          this.hideMenu();
-        },
+          this.hideMenu()
+        }
       },
       {
         label: 'Dashboard',
@@ -170,8 +161,8 @@ export class NavigationMenuComponent implements OnInit, OnDestroy {
         routerLink: '/dashboard',
         visible: this.jwtService.tokenValid(),
         command: () => {
-          this.hideMenu();
-        },
+          this.hideMenu()
+        }
       },
 
       {
@@ -179,10 +170,10 @@ export class NavigationMenuComponent implements OnInit, OnDestroy {
         title: 'Write a woot',
         icon: faPencil,
         command: async () => {
-          this.hideMenu();
+          this.hideMenu()
           this.openEditor()
         },
-        visible: this.jwtService.tokenValid(),
+        visible: this.jwtService.tokenValid()
       },
       {
         label: 'Notifications',
@@ -192,8 +183,8 @@ export class NavigationMenuComponent implements OnInit, OnDestroy {
         badge: this.notifications,
         visible: this.jwtService.tokenValid(),
         command: () => {
-          this.hideMenu();
-        },
+          this.hideMenu()
+        }
       },
       {
         label: 'Explore',
@@ -208,21 +199,20 @@ export class NavigationMenuComponent implements OnInit, OnDestroy {
             routerLink: '/dashboard/exploreLocal',
             visible: this.jwtService.tokenValid(),
             command: () => {
-              this.hideMenu();
-            },
+              this.hideMenu()
+            }
           },
           {
             label: 'Explore the fediverse',
             icon: faCompass,
-            title:
-              'Take a look to all the public posts avaiable to us, not only of people in this servers',
+            title: 'Take a look to all the public posts avaiable to us, not only of people in this servers',
             routerLink: '/dashboard/explore',
             visible: this.jwtService.tokenValid(),
             command: () => {
-              this.hideMenu();
-            },
-          },
-        ],
+              this.hideMenu()
+            }
+          }
+        ]
       },
       {
         label: 'Unanswered Asks',
@@ -239,15 +229,15 @@ export class NavigationMenuComponent implements OnInit, OnDestroy {
         title: 'Private messages are here!',
         routerLink: '/dashboard/private',
         command: () => {
-          this.hideMenu();
+          this.hideMenu()
         },
-        visible: this.jwtService.tokenValid(),
+        visible: this.jwtService.tokenValid()
       },
       {
         label: 'Admin',
         icon: faPowerOff,
         title: 'Check your notifications',
-        badge: this.adminNotifications + this.usersAwaitingAproval,
+        badge: this.adminNotifications + this.usersAwaitingApproval,
         visible: this.jwtService.adminToken(),
         items: [
           {
@@ -256,8 +246,8 @@ export class NavigationMenuComponent implements OnInit, OnDestroy {
             title: 'List of all the servers',
             routerLink: '/admin/server-list',
             command: () => {
-              this.hideMenu();
-            },
+              this.hideMenu()
+            }
           },
           {
             label: 'Add emojis',
@@ -265,8 +255,8 @@ export class NavigationMenuComponent implements OnInit, OnDestroy {
             title: 'Add emoji collection',
             routerLink: '/admin/emojis',
             command: () => {
-              this.hideMenu();
-            },
+              this.hideMenu()
+            }
           },
           {
             label: 'User reports',
@@ -275,8 +265,8 @@ export class NavigationMenuComponent implements OnInit, OnDestroy {
             badge: this.adminNotifications,
             routerLink: '/admin/user-reports',
             command: () => {
-              this.hideMenu();
-            },
+              this.hideMenu()
+            }
           },
           {
             label: 'User bans',
@@ -284,8 +274,8 @@ export class NavigationMenuComponent implements OnInit, OnDestroy {
             icon: faBan,
             routerLink: '/admin/bans',
             command: () => {
-              this.hideMenu();
-            },
+              this.hideMenu()
+            }
           },
           {
             label: 'User blocklists',
@@ -293,8 +283,8 @@ export class NavigationMenuComponent implements OnInit, OnDestroy {
             icon: faHourglass,
             routerLink: '/admin/user-blocks',
             command: () => {
-              this.hideMenu();
-            },
+              this.hideMenu()
+            }
           },
           {
             label: 'Stats',
@@ -302,20 +292,20 @@ export class NavigationMenuComponent implements OnInit, OnDestroy {
             icon: faChartSimple,
             routerLink: '/admin/stats',
             command: () => {
-              this.hideMenu();
-            },
+              this.hideMenu()
+            }
           },
           {
-            label: 'Users awaiting aproval',
-            title: 'User awaiting aproval',
-            badge: this.usersAwaitingAproval,
+            label: 'Users awaiting approval',
+            title: 'User awaiting approval',
+            badge: this.usersAwaitingApproval,
             icon: faUserLock,
             routerLink: '/admin/activate-users',
             command: () => {
-              this.hideMenu();
-            },
-          },
-        ],
+              this.hideMenu()
+            }
+          }
+        ]
       },
       {
         label: 'Search',
@@ -323,21 +313,21 @@ export class NavigationMenuComponent implements OnInit, OnDestroy {
         icon: faSearch,
         visible: this.jwtService.tokenValid(),
         command: () => {
-          this.hideMenu();
+          this.hideMenu()
         },
-        routerLink: '/dashboard/search',
+        routerLink: '/dashboard/search'
       },
       {
         label: 'Settings',
         title: 'Your blog, your profile, blocks, and other stuff',
         visible: this.jwtService.tokenValid(),
         icon: faCog,
-        badge: this.followsAwaitingAproval,
+        badge: this.followsAwaitingApproval,
         items: [
           {
             label: 'Manage followers',
             title: 'Manage followers',
-            badge: this.followsAwaitingAproval,
+            badge: this.followsAwaitingApproval,
             icon: faUser,
             command: () => this.hideMenu(),
             routerLink: '/blog/' + this.jwtService.getTokenData().url + '/followers'
@@ -347,70 +337,70 @@ export class NavigationMenuComponent implements OnInit, OnDestroy {
             title: 'Profile options',
             icon: faUserEdit,
             command: () => {
-              this.hideMenu();
+              this.hideMenu()
             },
             routerLink: '/profile/edit',
-            visible: this.jwtService.tokenValid(),
+            visible: this.jwtService.tokenValid()
           },
           {
             label: 'Edit my theme',
             title: 'Edit my theme',
             icon: faPaintbrush,
             command: () => {
-              this.hideMenu();
+              this.hideMenu()
             },
             routerLink: '/profile/css',
-            visible: this.jwtService.tokenValid(),
+            visible: this.jwtService.tokenValid()
           },
           {
             label: 'Manage muted users',
             title: 'Manage muted users',
             icon: faVolumeMute,
             command: () => {
-              this.hideMenu();
+              this.hideMenu()
             },
             routerLink: '/profile/mutes',
-            visible: this.jwtService.tokenValid(),
+            visible: this.jwtService.tokenValid()
           },
           {
             label: 'Manage muted posts',
             title: 'Manage muted posts',
             icon: faBellSlash,
             command: () => {
-              this.hideMenu();
+              this.hideMenu()
             },
             routerLink: '/profile/silencedPosts',
-            visible: this.jwtService.tokenValid(),
+            visible: this.jwtService.tokenValid()
           },
           {
             label: 'Manage blocked users',
             title: 'Manage blocked users',
             icon: faBan,
             command: () => {
-              this.hideMenu();
+              this.hideMenu()
             },
             routerLink: '/profile/blocks',
-            visible: this.jwtService.tokenValid(),
+            visible: this.jwtService.tokenValid()
           },
           {
             label: 'Manage blocked servers',
             title: 'Manage blocked servers',
             icon: faServer,
             command: () => {
-              this.hideMenu();
+              this.hideMenu()
             },
             routerLink: '/profile/serverBlocks',
-            visible: this.jwtService.tokenValid(),
+            visible: this.jwtService.tokenValid()
           },
           {
             label: 'Import follows',
             title: 'Import follows',
             icon: faUserEdit,
             command: () => {
-              this.hideMenu();
+              this.hideMenu()
             },
             routerLink: '/profile/importFollows',
-            visible: this.jwtService.tokenValid(),
+            visible: this.jwtService.tokenValid()
           },
           {
             label: 'Special secret menu',
@@ -418,30 +408,26 @@ export class NavigationMenuComponent implements OnInit, OnDestroy {
             icon: faSkull,
             visible: this.jwtService.tokenValid(),
             command: () => {
-              this.hideMenu();
+              this.hideMenu()
             },
-            routerLink: '/doom',
-          },
-        ],
+            routerLink: '/doom'
+          }
+        ]
       },
       {
         label: 'My blog',
         title: 'View your own blog',
         icon: faUser,
         command: () => {
-          this.hideMenu();
+          this.hideMenu()
         },
-        routerLink:
-          '/blog/' +
-          (this.jwtService.tokenValid()
-            ? this.jwtService.getTokenData()['url']
-            : ''),
-        visible: this.jwtService.tokenValid(),
+        routerLink: '/blog/' + (this.jwtService.tokenValid() ? this.jwtService.getTokenData()['url'] : ''),
+        visible: this.jwtService.tokenValid()
       },
       {
         label: '',
         title: '',
-        divider: true,
+        divider: true
       },
       {
         label: 'Privacy policy & rules',
@@ -449,8 +435,8 @@ export class NavigationMenuComponent implements OnInit, OnDestroy {
         icon: faEyeSlash,
         routerLink: '/privacy',
         command: () => {
-          this.hideMenu();
-        },
+          this.hideMenu()
+        }
       },
       {
         label: 'Check the source code!',
@@ -458,8 +444,8 @@ export class NavigationMenuComponent implements OnInit, OnDestroy {
         title: 'The frontend is made in angular, and the backend in typescript. you can check the code here',
         url: 'https://github.com/gabboman/wafrn',
         command: () => {
-          this.hideMenu();
-        },
+          this.hideMenu()
+        }
       },
       {
         label: 'Patreon',
@@ -467,8 +453,8 @@ export class NavigationMenuComponent implements OnInit, OnDestroy {
         icon: faEuro,
         url: 'https://patreon.com/wafrn',
         command: () => {
-          this.hideMenu();
-        },
+          this.hideMenu()
+        }
       },
       {
         label: 'Ko-fi',
@@ -476,44 +462,43 @@ export class NavigationMenuComponent implements OnInit, OnDestroy {
         icon: faEuro,
         url: 'https://ko-fi.com/wafrn',
         command: () => {
-          this.hideMenu();
-        },
+          this.hideMenu()
+        }
       },
       {
         label: 'Log out',
         icon: faSignOut,
-        title:
-          'nintendo this button is for you, and your 25000000 alt accounts',
+        title: 'nintendo this button is for you, and your 25000000 alt accounts',
         command: () => {
-          this.loginService.logOut();
-          this.hideMenu();
+          this.loginService.logOut()
+          this.hideMenu()
         },
-        visible: this.jwtService.tokenValid(),
-      },
-    ];
+        visible: this.jwtService.tokenValid()
+      }
+    ]
   }
 
   async updateNotifications(url: string) {
     if (this.jwtService.tokenValid()) {
-      const response = await this.notificationsService.getUnseenNotifications();
+      const response = await this.notificationsService.getUnseenNotifications()
       if (url === '/dashboard/notifications') {
-        this.notifications = 0;
+        this.notifications = 0
       } else {
-        this.notifications = response.notifications;
+        this.notifications = response.notifications
       }
-      this.adminNotifications = response.reports;
-      this.usersAwaitingAproval = response.usersAwaitingAproval;
-      this.followsAwaitingAproval = response.followsAwaitingAproval
-      this.awaitingAsks = response.asks;
+      this.adminNotifications = response.reports
+      this.usersAwaitingApproval = response.usersAwaitingApproval
+      this.followsAwaitingApproval = response.followsAwaitingApproval
+      this.awaitingAsks = response.asks
 
-      this.drawMenu();
-      this.cdr.detectChanges();
+      this.drawMenu()
+      this.cdr.detectChanges()
     }
   }
 
   @HostListener('window:resize', ['$event'])
   onResize() {
-    this.mobile = window.innerWidth <= 992;
+    this.mobile = window.innerWidth <= 992
   }
 
   @HostListener('window:keydown.n')
@@ -521,11 +506,11 @@ export class NavigationMenuComponent implements OnInit, OnDestroy {
   async openEditor() {
     const nodeName = document.activeElement?.nodeName ? document.activeElement.nodeName : ''
     if (!['INPUT', 'TEXTAREA'].includes(nodeName) && this.jwtService.tokenValid()) {
-      this.editorService.openDialogWithData(undefined);
+      this.editorService.openDialogWithData(undefined)
     }
   }
 
   onCloseMenu() {
-    this.menuVisible = false;
+    this.menuVisible = false
   }
 }

@@ -1,18 +1,13 @@
-import { Component, OnInit } from '@angular/core';
-import {
-  FormControl,
-  UntypedFormControl,
-  UntypedFormGroup,
-  Validators,
-} from '@angular/forms';
-import { BlogDetails } from 'src/app/interfaces/blogDetails';
-import { Emoji } from 'src/app/interfaces/emoji';
-import { DashboardService } from 'src/app/services/dashboard.service';
-import { JwtService } from 'src/app/services/jwt.service';
-import { LoginService } from 'src/app/services/login.service';
-import { MediaService } from 'src/app/services/media.service';
-import { MessageService } from 'src/app/services/message.service';
-import { ThemeService } from 'src/app/services/theme.service';
+import { Component, OnInit } from '@angular/core'
+import { FormControl, UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms'
+import { BlogDetails } from 'src/app/interfaces/blogDetails'
+import { Emoji } from 'src/app/interfaces/emoji'
+import { DashboardService } from 'src/app/services/dashboard.service'
+import { JwtService } from 'src/app/services/jwt.service'
+import { LoginService } from 'src/app/services/login.service'
+import { MediaService } from 'src/app/services/media.service'
+import { MessageService } from 'src/app/services/message.service'
+import { ThemeService } from 'src/app/services/theme.service'
 
 @Component({
   selector: 'app-edit-profile',
@@ -21,20 +16,20 @@ import { ThemeService } from 'src/app/services/theme.service';
   standalone: false
 })
 export class EditProfileComponent implements OnInit {
-  loading = true;
-  img: File | undefined = undefined;
-  headerImg: File | undefined = undefined;
+  loading = true
+  img: File | undefined = undefined
+  headerImg: File | undefined = undefined
   privacyOptions = [
     { level: 0, name: 'Public' },
     { level: 1, name: 'Followers only' },
     { level: 2, name: 'This instance only' },
-    { level: 3, name: 'Unlisted' },
-  ];
+    { level: 3, name: 'Unlisted' }
+  ]
   askOptions = [
     { level: 1, name: 'Allow anon asks' },
     { level: 2, name: 'Only allow asks from identified users' },
-    { level: 3, name: 'Disable asks' },
-  ];
+    { level: 3, name: 'Disable asks' }
+  ]
   editProfileForm = new UntypedFormGroup({
     avatar: new UntypedFormControl('', []),
     name: new FormControl('', Validators.required),
@@ -50,7 +45,7 @@ export class EditProfileComponent implements OnInit {
     forceOldEditor: new FormControl(false),
     mutedWords: new FormControl(''),
     disableCW: new FormControl(false)
-  });
+  })
 
   constructor(
     private jwtService: JwtService,
@@ -60,94 +55,73 @@ export class EditProfileComponent implements OnInit {
     private messages: MessageService,
     private themeService: ThemeService
   ) {
-    this.themeService.setTheme('');
+    this.themeService.setTheme('')
   }
 
   ngOnInit(): void {
-    this.dashboardService
-      .getBlogDetails(this.jwtService.getTokenData()['url'], true)
-      .then(async (blogDetails) => {
-        blogDetails['avatar'] = '';
-        this.editProfileForm.patchValue(blogDetails);
-        this.editProfileForm.controls['disableNSFWFilter'].patchValue(
-          this.mediaService.checkNSFWFilterDisabled()
-        );
-        this.editProfileForm.controls['defaultPostEditorPrivacy'].patchValue(
-          this.loginService.getUserDefaultPostPrivacyLevel()
-        );
-        this.editProfileForm.controls['forceClassicLogo'].patchValue(
-          this.loginService.getForceClassicLogo()
-        );
-        const federateWithThreads = localStorage.getItem('federateWithThreads');
-        this.editProfileForm.controls['federateWithThreads'].patchValue(
-          federateWithThreads === 'true'
-        );
-        const disableForceAltText = localStorage.getItem('disableForceAltText');
-        this.editProfileForm.controls['disableForceAltText'].patchValue(
-          disableForceAltText === 'true'
-        );
-        const forceOldEditor =
-          localStorage.getItem('forceOldEditor') === 'true';
-        this.editProfileForm.controls['forceOldEditor'].patchValue(
-          forceOldEditor
-        );
-        const publicOptions = blogDetails.publicOptions;
-        const askLevel = publicOptions.find(
-          (elem) => elem.optionName == 'wafrn.public.asks'
-        );
-        this.editProfileForm.controls['asksLevel'].patchValue(
-          askLevel ? parseInt(askLevel.optionValue) : 2
-        );
-        const mutedWords = localStorage.getItem('mutedWords');
-        if (mutedWords && mutedWords.trim().length) {
-          this.editProfileForm.controls['mutedWords'].patchValue(JSON.parse(mutedWords));
-        }
-        const disableCW = localStorage.getItem('disableCW') == 'true'
-        this.editProfileForm.controls['disableCW'].patchValue(disableCW)
-        this.loading = false;
-      });
+    this.dashboardService.getBlogDetails(this.jwtService.getTokenData()['url'], true).then(async (blogDetails) => {
+      blogDetails['avatar'] = ''
+      this.editProfileForm.patchValue(blogDetails)
+      this.editProfileForm.controls['disableNSFWFilter'].patchValue(this.mediaService.checkNSFWFilterDisabled())
+      this.editProfileForm.controls['defaultPostEditorPrivacy'].patchValue(
+        this.loginService.getUserDefaultPostPrivacyLevel()
+      )
+      this.editProfileForm.controls['forceClassicLogo'].patchValue(this.loginService.getForceClassicLogo())
+      const federateWithThreads = localStorage.getItem('federateWithThreads')
+      this.editProfileForm.controls['federateWithThreads'].patchValue(federateWithThreads === 'true')
+      const disableForceAltText = localStorage.getItem('disableForceAltText')
+      this.editProfileForm.controls['disableForceAltText'].patchValue(disableForceAltText === 'true')
+      const forceOldEditor = localStorage.getItem('forceOldEditor') === 'true'
+      this.editProfileForm.controls['forceOldEditor'].patchValue(forceOldEditor)
+      const publicOptions = blogDetails.publicOptions
+      const askLevel = publicOptions.find((elem) => elem.optionName == 'wafrn.public.asks')
+      this.editProfileForm.controls['asksLevel'].patchValue(askLevel ? parseInt(askLevel.optionValue) : 2)
+      const mutedWords = localStorage.getItem('mutedWords')
+      if (mutedWords && mutedWords.trim().length) {
+        this.editProfileForm.controls['mutedWords'].patchValue(JSON.parse(mutedWords))
+      }
+      const disableCW = localStorage.getItem('disableCW') == 'true'
+      this.editProfileForm.controls['disableCW'].patchValue(disableCW)
+      this.loading = false
+    })
   }
 
   imgSelected(filePickerEvent: any) {
     if (filePickerEvent.target.files[0]) {
-      this.img = filePickerEvent.target.files[0];
+      this.img = filePickerEvent.target.files[0]
     }
   }
 
   headerImgSelected(filePickerEvent: any) {
     if (filePickerEvent.target.files[0]) {
-      this.headerImg = filePickerEvent.target.files[0];
+      this.headerImg = filePickerEvent.target.files[0]
     }
   }
 
   async onSubmit() {
-    this.loading = true;
+    this.loading = true
     try {
-      const res = await this.loginService.updateProfile(
-        this.editProfileForm,
-        this.img,
-        this.headerImg,
-      );
+      const res = await this.loginService.updateProfile(this.editProfileForm, this.img, this.headerImg)
 
       this.messages.add({
         severity: 'success',
-        summary: 'Your profile was updated!',
-      });
+        summary: 'Your profile was updated!'
+      })
     } catch (error) {
       this.messages.add({
         severity: 'error',
-        summary: 'Something went wrong',
-      });
-      console.error(error);
+        summary: 'Something went wrong'
+      })
+      console.error(error)
     }
-    this.loading = false;
+    this.loading = false
   }
 
   emojiClicked(emoji: Emoji) {
-    navigator.clipboard.writeText(' ' + emoji.name + ' ');
+    navigator.clipboard.writeText(' ' + emoji.name + ' ')
     this.messages.add({
       severity: 'success',
-      summary: `The emoji ${emoji.name} was copied to your clipboard`,
-    });
+      summary: `The emoji ${emoji.name} was copied to your clipboard`
+    })
   }
 }

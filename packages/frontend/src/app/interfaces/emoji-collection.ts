@@ -1,7 +1,7 @@
-import { Emoji } from "./emoji";
+import { Emoji } from './emoji'
 
-export interface EmojiCollection{
-    name: string,
-    emojis: Emoji[],
-    comment: string
-  }
+export interface EmojiCollection {
+  name: string
+  emojis: Emoji[]
+  comment: string
+}

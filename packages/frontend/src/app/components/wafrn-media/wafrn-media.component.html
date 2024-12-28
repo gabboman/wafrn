@@ -4,22 +4,33 @@
       <div class="img-video-container">
         <b class="img-cw-text" *ngIf="nsfw">This contains sensitive content. Click to display</b>
 
-        <img *ngIf="
-        ((!extensionsToHideImgTag.includes(extension)) ||
-        mimeType === 'UNKNOWN') && !mimeType.startsWith('video')
-      " [src]="displayUrl" [alt]="data.description" role="none" loading="lazy" [ngClass]="{
-        'nsfw': nsfw,
-        'displayed-image': !nsfw
-      }" />
+        <img
+          *ngIf="
+            (!extensionsToHideImgTag.includes(extension) || mimeType === 'UNKNOWN') && !mimeType.startsWith('video')
+          "
+          [src]="displayUrl"
+          [alt]="data.description"
+          role="none"
+          loading="lazy"
+          [ngClass]="{
+            nsfw: nsfw,
+            'displayed-image': !nsfw
+          }"
+        />
 
-        <video (play)="showPicture()" preload="metadata" [ngClass]="{
-      'nsfw': nsfw,
-      'displayed-image': !nsfw
-    }" *ngIf="mimeType.startsWith('video')" controls>
+        <video
+          (play)="showPicture()"
+          preload="metadata"
+          [ngClass]="{
+            nsfw: nsfw,
+            'displayed-image': !nsfw
+          }"
+          *ngIf="mimeType.startsWith('video')"
+          controls
+        >
           <source [src]="displayUrl" [type]="mimeType" />
         </video>
       </div>
-
 
       <div *ngIf="!nsfw && mimeType.startsWith('pdf')">
         <a [href]="displayUrl" target="_blank">Click here to see the PDF file that is embedded in this post</a>

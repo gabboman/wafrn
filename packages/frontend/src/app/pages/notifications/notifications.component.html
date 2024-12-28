@@ -3,15 +3,21 @@
 </div>
 <app-loader *ngIf="notificationsToShow.length === 0">notifications</app-loader>
 
-@for(notification of notificationsToShow; track $index) {
+@for (notification of notificationsToShow; track $index) {
   <app-single-notification [notification]="notification"></app-single-notification>
-  @if($index % 19 === 0 && $index > 0) {
+  @if ($index % 19 === 0 && $index > 0) {
     <!--This element is the one that says NOTIFICATION LOAD TIME-->
     <div *ngIf="$index > page * 20" class="load-more-notifications-intersector"></div>
   }
 }
 
-<button (mousedown)=" reload()" mat-flat-button color="default" aria-label="Refresh"
-  class="refresh-button" style="position: fixed; z-index: 500; top: 1em; right: 0.5em">
+<button
+  (mousedown)="reload()"
+  mat-flat-button
+  color="default"
+  aria-label="Refresh"
+  class="refresh-button"
+  style="position: fixed; z-index: 500; top: 1em; right: 0.5em"
+>
   <fa-icon [icon]="reloadIcon" />
 </button>

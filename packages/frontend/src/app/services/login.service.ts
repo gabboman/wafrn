@@ -1,127 +1,121 @@
-import { EventEmitter, Injectable } from '@angular/core';
-import { Router } from '@angular/router';
-import { HttpClient } from '@angular/common/http';
-import { UntypedFormGroup } from '@angular/forms';
+import { EventEmitter, Injectable } from '@angular/core'
+import { Router } from '@angular/router'
+import { HttpClient } from '@angular/common/http'
+import { UntypedFormGroup } from '@angular/forms'
 
-import { UtilsService } from './utils.service';
-import { JwtService } from './jwt.service';
-import { PostsService } from './posts.service';
-import { firstValueFrom } from 'rxjs';
-import { EnvironmentService } from './environment.service';
+import { UtilsService } from './utils.service'
+import { JwtService } from './jwt.service'
+import { PostsService } from './posts.service'
+import { firstValueFrom } from 'rxjs'
+import { EnvironmentService } from './environment.service'
 
 @Injectable({
-  providedIn: 'root',
+  providedIn: 'root'
 })
 export class LoginService {
-  public loginEventEmitter: EventEmitter<string> = new EventEmitter();
+  public loginEventEmitter: EventEmitter<string> = new EventEmitter()
   constructor(
     private http: HttpClient,
     private router: Router,
     private utils: UtilsService,
     private jwt: JwtService,
     private postsService: PostsService
-  ) { }
+  ) {}
 
   checkUserLoggedIn(): boolean {
-    return this.jwt.tokenValid();
+    return this.jwt.tokenValid()
   }
 
   async logIn(loginForm: UntypedFormGroup): Promise<boolean> {
-    let success = false;
+    let success = false
     try {
       const petition: any = await this.http
-        .post(
-          `${EnvironmentService.environment.baseUrl}/login`,
-          loginForm.value
-        )
-        .toPromise();
+        .post(`${EnvironmentService.environment.baseUrl}/login`, loginForm.value)
+        .toPromise()
       if (petition.success) {
-        localStorage.setItem('authToken', petition.token);
-        await this.postsService.loadFollowers();
-        this.loginEventEmitter.emit('logged in');
-        success = true;
-        this.router.navigate(['/dashboard']);
+        localStorage.setItem('authToken', petition.token)
+        await this.postsService.loadFollowers()
+        this.loginEventEmitter.emit('logged in')
+        success = true
+        this.router.navigate(['/dashboard'])
       }
     } catch (exception) {
-      console.error(exception);
+      console.error(exception)
     }
-    return success;
+    return success
   }
 
   logOut() {
-    localStorage.clear();
-    this.router.navigate(['/']);
-    this.loginEventEmitter.emit('logged out');
+    localStorage.clear()
+    this.router.navigate(['/'])
+    this.loginEventEmitter.emit('logged out')
   }
 
-  async register(
-    registerForm: UntypedFormGroup,
-    img: File | null
-  ): Promise<boolean> {
-    let success = false;
+  async register(registerForm: UntypedFormGroup, img: File | null): Promise<boolean> {
+    let success = false
     try {
-      const payload = this.utils.objectToFormData(registerForm.value);
+      const payload = this.utils.objectToFormData(registerForm.value)
       if (img) {
-        payload.append('avatar', img);
+        payload.append('avatar', img)
       }
       const petition: any = await this.http
         .post(`${EnvironmentService.environment.baseUrl}/register`, payload)
-        .toPromise();
+        .toPromise()
       if (petition.success) {
-        success = petition.success;
+        success = petition.success
       }
     } catch (exception) {
-      console.error(exception);
+      console.error(exception)
     }
-    return success;
+    return success
   }
 
   async requestPasswordReset(email: string) {
-    const res = false;
+    const res = false
     const payload = {
-      email: email,
-    };
+      email: email
+    }
     const response: any = await this.http
       .post(`${EnvironmentService.environment.baseUrl}/forgotPassword`, payload)
-      .toPromise();
+      .toPromise()
     if (response?.success) {
-      this.router.navigate(['/']);
+      this.router.navigate(['/'])
     }
 
-    return res;
+    return res
   }
 
   async resetPassword(email: string, code: string, password: string) {
-    const res = false;
+    const res = false
     const payload = {
       email: email,
       code: code,
-      password: password,
-    };
+      password: password
+    }
     const response: any = await this.http
       .post(`${EnvironmentService.environment.baseUrl}/resetPassword`, payload)
-      .toPromise();
+      .toPromise()
     if (response?.success) {
-      this.router.navigate(['/']);
+      this.router.navigate(['/'])
     }
 
-    return res;
+    return res
   }
 
   async activateAccount(email: string, code: string) {
-    const res = false;
+    const res = false
     const payload = {
       email: email,
-      code: code,
-    };
+      code: code
+    }
     const response: any = await this.http
       .post(`${EnvironmentService.environment.baseUrl}/activateUser`, payload)
-      .toPromise();
+      .toPromise()
     if (response?.success) {
-      this.router.navigate(['/']);
+      this.router.navigate(['/'])
     }
 
-    return res;
+    return res
   }
 
   async updateProfile(
@@ -129,7 +123,7 @@ export class LoginService {
     img: File | undefined,
     headerImg: File | undefined
   ): Promise<boolean> {
-    let success = false;
+    let success = false
 
     const optionFormKeyMap = {
       disableForceAltText: 'wafrn.disableForceAltText',
@@ -139,64 +133,60 @@ export class LoginService {
       defaultPostEditorPrivacy: 'wafrn.defaultPostEditorPrivacy',
       mutedWords: 'wafrn.mutedWords',
       disableCW: 'wafrn.disableCW'
-    };
+    }
 
     try {
-      const { name, description, manuallyAcceptsFollows, ...form } =
-        updateProfileForm.value;
+      const { name, description, manuallyAcceptsFollows, ...form } = updateProfileForm.value
 
       const payload = this.utils.objectToFormData({
         name,
         description,
-        manuallyAcceptsFollows,
-      });
+        manuallyAcceptsFollows
+      })
 
-      const options = [];
+      const options = []
       for (const key in form) {
         if (form[key] != undefined) {
-          const name = optionFormKeyMap[key as keyof typeof optionFormKeyMap];
-          const value = JSON.stringify(form[key]);
-          options.push({ name, value });
+          const name = optionFormKeyMap[key as keyof typeof optionFormKeyMap]
+          const value = JSON.stringify(form[key])
+          options.push({ name, value })
         }
       }
 
-      payload.append('options', JSON.stringify(options));
+      payload.append('options', JSON.stringify(options))
 
       if (img) {
-        payload.append('avatar', img);
+        payload.append('avatar', img)
       }
       if (headerImg) {
-        payload.append('headerImage', headerImg);
+        payload.append('headerImage', headerImg)
       }
 
       const petition: any = await firstValueFrom(
-        this.http.post(
-          `${EnvironmentService.environment.baseUrl}/editProfile`,
-          payload
-        )
-      );
+        this.http.post(`${EnvironmentService.environment.baseUrl}/editProfile`, payload)
+      )
       if (petition.success) {
-        success = true;
-        await this.postsService.loadFollowers();
+        success = true
+        await this.postsService.loadFollowers()
       }
     } catch (exception) {
-      console.error(exception);
+      console.error(exception)
     }
-    return success;
+    return success
   }
 
   getLoggedUserUUID(): string {
-    const res = this.jwt.getTokenData().userId;
-    return res ? res : '';
+    const res = this.jwt.getTokenData().userId
+    return res ? res : ''
   }
 
   getUserDefaultPostPrivacyLevel(): number {
-    const res = localStorage.getItem('defaultPostEditorPrivacy');
-    return res ? parseInt(res) : 0;
+    const res = localStorage.getItem('defaultPostEditorPrivacy')
+    return res ? parseInt(res) : 0
   }
 
   getForceClassicLogo(): boolean {
-    const res = localStorage.getItem('forceClassicLogo');
-    return res == 'true';
+    const res = localStorage.getItem('forceClassicLogo')
+    return res == 'true'
   }
 }

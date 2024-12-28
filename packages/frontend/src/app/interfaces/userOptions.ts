@@ -1,5 +1,5 @@
 export interface UserOptions {
-  userId: string;
-  optionName: string;
-  optionValue: string;
+  userId: string
+  optionName: string
+  optionValue: string
 }

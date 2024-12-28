@@ -1,22 +1,19 @@
 export interface FederatedHost {
+  id: string
 
-    id: string;
+  displayName: string
 
-    displayName: string;
+  publicInbox: string
 
-    publicInbox: string;
+  publicKey?: any
 
-    publicKey?: any;
+  detail?: any
 
-    detail?: any;
+  blocked: boolean
 
-    blocked: boolean;
+  friendServer: boolean
 
-    friendServer: boolean;
+  createdAt: string
 
-    createdAt: string;
-
-    updatedAt: string;
-
+  updatedAt: string
 }
-

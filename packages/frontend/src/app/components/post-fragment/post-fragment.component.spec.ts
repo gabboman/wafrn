@@ -1,22 +1,17 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing'
 
-import { PostFragmentComponent } from './post-fragment.component';
-import {LoginService} from "../../services/login.service";
-import {HttpClientTestingModule} from "@angular/common/http/testing";
+import { PostFragmentComponent } from './post-fragment.component'
+import { LoginService } from '../../services/login.service'
+import { HttpClientTestingModule } from '@angular/common/http/testing'
 
 describe('PostFragmentComponent', () => {
-  let component: PostFragmentComponent;
-  let fixture: ComponentFixture<PostFragmentComponent>;
+  let component: PostFragmentComponent
+  let fixture: ComponentFixture<PostFragmentComponent>
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [
-        PostFragmentComponent,
-        HttpClientTestingModule,
-      ],
-      declarations: [
-
-      ],
+      imports: [PostFragmentComponent, HttpClientTestingModule],
+      declarations: [],
       providers: [
         {
           provide: LoginService,
@@ -24,21 +19,19 @@ describe('PostFragmentComponent', () => {
             getLoggedUserUUID: () => ''
           }
         }
-      ],
+      ]
+    }).compileComponents()
 
-    })
-    .compileComponents();
-
-    fixture = TestBed.createComponent(PostFragmentComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
-  });
+    fixture = TestBed.createComponent(PostFragmentComponent)
+    component = fixture.componentInstance
+    fixture.detectChanges()
+  })
 
   it('should create', () => {
-    expect(component).toBeTruthy();
-  });
+    expect(component).toBeTruthy()
+  })
 
-  it('should process fragment blocks appropiately',  () => {
+  it('should process fragment blocks appropiately', () => {
     // Initial test, the simple one
     component.fragment = {
       ask: undefined,
@@ -49,68 +42,37 @@ describe('PostFragmentComponent', () => {
       medias: [],
       mentionPost: [],
       notes: 0,
-      parentId: "",
+      parentId: '',
       privacy: 0,
       questionPoll: undefined,
       quotes: [],
-      remotePostId: "",
+      remotePostId: '',
       tags: [],
-      title: "",
+      title: '',
       updatedAt: new Date(),
       user: undefined,
-      userId: "",
+      userId: '',
       userLikesPostRelations: [],
       id: '1',
       content: 'No medias attached and ![media-1] string',
       content_warning: ''
-
-
-    };
-    component.initializeContent();
-    fixture.detectChanges();
-    expect(JSON.stringify(component.wafrnFormattedContent)).toBe(JSON.stringify(['No medias attached and ![media-1] string']))
-    if(component.fragment) {
-      component.fragment.content = "post with one media ![media-1] and a second line";
-      component.fragment.medias = [{
-        id: '1',
-        NSFW: false,
-        description: '',
-        url: '',
-        external: false,
-        mediaOrder: 0
-      }, {
-        id: '2',
-        NSFW: false,
-        description: '',
-        url: '',
-        external: false,
-        mediaOrder: 0
-      }, ];
-      component.initializeContent();
-      fixture.detectChanges();
-      expect(JSON.stringify(component.wafrnFormattedContent)).toBe(JSON.stringify(['post with one media ', {
-        id: '1',
-        NSFW: false,
-        description: '',
-        url: '',
-        external: false,
-        mediaOrder: 0
-      }, ' and a second line' ]));
-      component.fragment.content = 'start ![media-1] middle ![media-2] end';
-      expect(JSON.stringify(component.seenMedia)).toBe(JSON.stringify([0]))
-      component.initializeContent();
-      fixture.detectChanges()
-      expect(JSON.stringify(component.wafrnFormattedContent)).toBe(JSON.stringify([
-          'start ',
+    }
+    component.initializeContent()
+    fixture.detectChanges()
+    expect(JSON.stringify(component.wafrnFormattedContent)).toBe(
+      JSON.stringify(['No medias attached and ![media-1] string'])
+    )
+    if (component.fragment) {
+      component.fragment.content = 'post with one media ![media-1] and a second line'
+      component.fragment.medias = [
         {
-        id: '1',
-        NSFW: false,
-        description: '',
-        url: '',
-        external: false,
-        mediaOrder: 0
+          id: '1',
+          NSFW: false,
+          description: '',
+          url: '',
+          external: false,
+          mediaOrder: 0
         },
-        ' middle ',
         {
           id: '2',
           NSFW: false,
@@ -118,18 +80,56 @@ describe('PostFragmentComponent', () => {
           url: '',
           external: false,
           mediaOrder: 0
-        },
-        ' end'
-      ]));
+        }
+      ]
+      component.initializeContent()
+      fixture.detectChanges()
+      expect(JSON.stringify(component.wafrnFormattedContent)).toBe(
+        JSON.stringify([
+          'post with one media ',
+          {
+            id: '1',
+            NSFW: false,
+            description: '',
+            url: '',
+            external: false,
+            mediaOrder: 0
+          },
+          ' and a second line'
+        ])
+      )
+      component.fragment.content = 'start ![media-1] middle ![media-2] end'
+      expect(JSON.stringify(component.seenMedia)).toBe(JSON.stringify([0]))
+      component.initializeContent()
+      fixture.detectChanges()
+      expect(JSON.stringify(component.wafrnFormattedContent)).toBe(
+        JSON.stringify([
+          'start ',
+          {
+            id: '1',
+            NSFW: false,
+            description: '',
+            url: '',
+            external: false,
+            mediaOrder: 0
+          },
+          ' middle ',
+          {
+            id: '2',
+            NSFW: false,
+            description: '',
+            url: '',
+            external: false,
+            mediaOrder: 0
+          },
+          ' end'
+        ])
+      )
       component.fragment.content = 'start ![media-249] end'
-      component.initializeContent();
+      component.initializeContent()
       fixture.detectChanges()
       // acceptable compromise without more headaches. Your fault for making it like this lol
-      expect(JSON.stringify(component.wafrnFormattedContent)).toBe(JSON.stringify([
-        'start ', '![media-249]', ' end'
-      ]));
-
+      expect(JSON.stringify(component.wafrnFormattedContent)).toBe(JSON.stringify(['start ', '![media-249]', ' end']))
     }
-
   })
-});
+})

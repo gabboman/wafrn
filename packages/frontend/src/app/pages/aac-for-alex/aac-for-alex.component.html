@@ -1,24 +1,26 @@
 <mat-card class="p-3 m-2 mb-6 lg:mx-4 wafrn-container">
-    <h2>{{info}}</h2>
-    <mat-form-field>
-        <mat-label>Language code</mat-label>
-        <mat-select [(ngModel)]="selectedLangIndex">
-          @for (lang of languagesAllowed; track $index) {
-            <mat-option [value]="$index">{{lang}}</mat-option>
-          }
-        </mat-select>
-      </mat-form-field>
-      <mat-form-field>
-        <mat-label>Select voice</mat-label>
-        <mat-select [(ngModel)]="voiceIndex">
-          @for (voice of voices; track $index) {
-            <mat-option *ngIf="voice.lang == languagesAllowed[selectedLangIndex]" [value]="$index">{{voice.name}} - {{voice.lang}}</mat-option>
-          }
-        </mat-select>
-      </mat-form-field>
-    <mat-form-field class="w-full">
-        <mat-label>Text to speech</mat-label>
-        <textarea [(ngModel)]="textToSay" matInput> </textarea>
-      </mat-form-field>
-    <button class="w-full" mat-flat-button (click)="sayStuff()" [disabled]="info !== ''"  >say things</button>
+  <h2>{{ info }}</h2>
+  <mat-form-field>
+    <mat-label>Language code</mat-label>
+    <mat-select [(ngModel)]="selectedLangIndex">
+      @for (lang of languagesAllowed; track $index) {
+        <mat-option [value]="$index">{{ lang }}</mat-option>
+      }
+    </mat-select>
+  </mat-form-field>
+  <mat-form-field>
+    <mat-label>Select voice</mat-label>
+    <mat-select [(ngModel)]="voiceIndex">
+      @for (voice of voices; track $index) {
+        <mat-option *ngIf="voice.lang === languagesAllowed[selectedLangIndex]" [value]="$index"
+          >{{ voice.name }} - {{ voice.lang }}</mat-option
+        >
+      }
+    </mat-select>
+  </mat-form-field>
+  <mat-form-field class="w-full">
+    <mat-label>Text to speech</mat-label>
+    <textarea [(ngModel)]="textToSay" matInput> </textarea>
+  </mat-form-field>
+  <button class="w-full" mat-flat-button (click)="sayStuff()" [disabled]="info !== ''">say things</button>
 </mat-card>

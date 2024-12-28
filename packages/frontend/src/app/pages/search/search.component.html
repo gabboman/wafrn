@@ -4,34 +4,18 @@
     <mat-card>
       <div class="p-3 font-medium line-height-3">
         <p>
-          You can search for users by url and description, and posts by tags. No
-          need to add # to your search. To force the server to search for a
-          remote user in the fediverse, put their full username starting with an
-          &#64;. As example, &#64;torvalds&#64;social.kernel.org
+          You can search for users by url and description, and posts by tags. No need to add # to your search. To force
+          the server to search for a remote user in the Fediverse, put their full username starting with an &#64;. As
+          example, &#64;torvalds&#64;social.kernel.org
         </p>
         <p>You can also force the app to get an external post with the url</p>
       </div>
-      <form
-        class="p-3 flex gap-2"
-        [formGroup]="searchForm"
-        (submit)="submitSearch()"
-      >
+      <form class="p-3 flex gap-2" [formGroup]="searchForm" (submit)="submitSearch()">
         <mat-form-field class="flex-1">
           <mat-label>Search term</mat-label>
-          <input
-            matInput
-            formControlName="search"
-            id="float-input"
-            type="text"
-          />
+          <input matInput formControlName="search" id="float-input" type="text" />
         </mat-form-field>
-        <button
-          mat-flat-button
-          color="primary"
-          extended
-          class="border-round-md search-button"
-          type="submit"
-        >
+        <button mat-flat-button color="primary" extended class="border-round-md search-button" type="submit">
           <fa-icon [icon]="searchIcon"></fa-icon>
           Search
         </button>
@@ -47,51 +31,47 @@
     <mat-tab *ngIf="users && users.length > 0" label="Users">
       <div class="mt-4">
         @for (user of users; track $index) {
-        <mat-card mat-list-item class="user-preview text-center p-4 m-4">
-          <img
-            [alt]="user.name + ' avatar'"
-            [src]="getAvatar(user.url)"
-            loading="lazy"
-            width="80"
-            height="80"
-            class="block mx-auto my-2 border-round-md"
-          />
-          <div class="flex-grow-1 p-2">
-            <button
-              mat-raised-button
-              color="primary"
-              *ngIf="followedUsers.indexOf(user.id) === -1 && userLoggedIn"
-              (mousedown)="followUser(user.id)"
-              class="mb-4"
-            >
-              Follow
-            </button>
-            <button
-              mat-raised-button
-              color="primary"
-              *ngIf="followedUsers.indexOf(user.id) !== -1 && userLoggedIn"
-              (mousedown)="unfollowUser(user.id)"
-            >
-              Unfollow
-            </button>
-            <p>{{ user.name }}</p>
-            <p>
-              <a [routerLink]="'/blog/' + user.url">{{ user.url }}</a>
-            </p>
-            <div class="mb-3" [innerHTML]="user.description"></div>
-          </div>
-        </mat-card>
+          <mat-card mat-list-item class="user-preview text-center p-4 m-4">
+            <img
+              [alt]="user.name + ' avatar'"
+              [src]="getAvatar(user.url)"
+              loading="lazy"
+              width="80"
+              height="80"
+              class="block mx-auto my-2 border-round-md"
+            />
+            <div class="flex-grow-1 p-2">
+              <button
+                mat-raised-button
+                color="primary"
+                *ngIf="followedUsers.indexOf(user.id) === -1 && userLoggedIn"
+                (mousedown)="followUser(user.id)"
+                class="mb-4"
+              >
+                Follow
+              </button>
+              <button
+                mat-raised-button
+                color="primary"
+                *ngIf="followedUsers.indexOf(user.id) !== -1 && userLoggedIn"
+                (mousedown)="unfollowUser(user.id)"
+              >
+                Unfollow
+              </button>
+              <p>{{ user.name }}</p>
+              <p>
+                <a [routerLink]="'/blog/' + user.url">{{ user.url }}</a>
+              </p>
+              <div class="mb-3" [innerHTML]="user.description"></div>
+            </div>
+          </mat-card>
         }
       </div>
     </mat-tab>
   </mat-tab-group>
 </main>
 
-<footer
-  id="if-you-see-this-load-more-posts"
-  *ngIf="atLeastOneSearchDone"
-  class="p-4 flex gap-3 align-items-center"
->
+<footer id="if-you-see-this-load-more-posts" *ngIf="atLeastOneSearchDone" class="p-4 flex gap-3 align-items-center">
   <mat-spinner *ngIf="loading" diameter="24"></mat-spinner>
   <p *ngIf="loading" class="m-0 text-lg">Loading more...</p>
   <p *ngIf="posts.length === 0" class="m-0 text-lg">No new results</p>

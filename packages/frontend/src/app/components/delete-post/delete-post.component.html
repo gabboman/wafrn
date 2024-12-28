@@ -1,16 +1,10 @@
-<p mat-dialog-title>
-  This is a SLOW PROCESS. It will take some time to be deleted off the fediverse.
-</p>
+<p mat-dialog-title>This is a SLOW PROCESS. It will take some time to be deleted off the fediverse.</p>
 <p>
-  Your post will be deleted. If the post has no rewoots, it will be totally
-  deleted. If it has rewoots, the content will be changed to "This post has been
-  deleted."
+  Your post will be deleted. If the post has no rewoots, it will be totally deleted. If it has rewoots, the content will
+  be changed to "This post has been deleted."
 </p>
-@if(deleting){
+@if (deleting) {
   <app-loader></app-loader>
 } @else {
-  <button mat-flat-button (mousedown)="deletePost()" class="w-full">
-    Delete post
-  </button>
+  <button mat-flat-button (mousedown)="deletePost()" class="w-full">Delete post</button>
 }
-
