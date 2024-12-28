@@ -487,8 +487,8 @@ export class NavigationMenuComponent implements OnInit, OnDestroy {
         this.notifications = response.notifications
       }
       this.adminNotifications = response.reports
-      this.usersAwaitingApproval = response.usersAwaitingAproval
-      this.followsAwaitingApproval = response.followsAwaitingAproval
+      this.usersAwaitingApproval = response.usersAwaitingApproval
+      this.followsAwaitingApproval = response.followsAwaitingApproval
       this.awaitingAsks = response.asks
 
       this.drawMenu()
