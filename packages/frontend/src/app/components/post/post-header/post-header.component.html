@@ -4,20 +4,16 @@
       <div class="flex gap-2 min-w-0">
         <div class="flex gap-2 mr-auto min-w-0">
           <app-avatar-small [user]="fragment.user"></app-avatar-small>
-          <div class="flex flex-column min-w-0">
-            <div class="user-name">
-              <a
-                class="subtle-link"
-                [routerLink]="!disableLink ? '/blog/' + fragment.user.url : null"
-                [innerHTML]="fragment.user.name"
-              ></a>
-              {{ headerText }}
-            </div>
-            <span
-              class="text-sm max-w-full white-space-nowrap overflow-hidden text-overflow-ellipsis user-url"
-              [innerText]="fragment.user.url"
-            ></span>
-          </div>
+          <a
+            class="flex flex-column min-w-0 user-link"
+            [routerLink]="!disableLink ? '/blog/' + fragment.user.url : null"
+          >
+            <span class="no-underline user-name"
+              ><span [innerHTML]="fragment.user.name"></span>
+              <span class="text-sm post-action">{{ headerText }}</span></span
+            >
+            <span class="text-sm user-url" [innerText]="fragment.user.url"></span>
+          </a>
         </div>
       </div>
       <div *ngIf="!simplified" class="flex align-items-center date-line">

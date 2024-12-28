@@ -10,33 +10,39 @@
     [card]="false"
     [time]="notification.date"
   >
-    <a [routerLink]="'/blog/' + notification.userUrl" [innerHTML]="notification.userUrl" class="subtle-link"></a>
-    @switch (notification.type) {
-      @case (notificationType.MENTION) {
-        mentioned you in a woot
-      }
-      @case (notificationType.LIKE) {
-        liked one of your woots
-      }
-      @case (notificationType.FOLLOW) {
-        now follows you!
-      }
-      @case (notificationType.REBLOG) {
-        rewooted one of your woots
-      }
-      @case (notificationType.QUOTE) {
-        quoted you in a woot
-      }
-      @case (notificationType.EMOJIREACT) {
-        reacted with
-        @if (emojiUrl) {
-          <img class="post-emoji" [src]="emojiUrl" [alt]="notification.emojiName" />
-        } @else {
-          {{ notification.emojiName }}
+    <a
+      class="user-link user-name"
+      [routerLink]="'/blog/' + notification.userUrl"
+      [innerHTML]="notification.userUrl"
+    ></a>
+    <span class="text-sm post-action">
+      @switch (notification.type) {
+        @case (notificationType.MENTION) {
+          mentioned you in a woot
         }
-        to your woot
+        @case (notificationType.LIKE) {
+          liked one of your woots
+        }
+        @case (notificationType.FOLLOW) {
+          now follows you!
+        }
+        @case (notificationType.REBLOG) {
+          rewooted one of your woots
+        }
+        @case (notificationType.QUOTE) {
+          quoted you in a woot
+        }
+        @case (notificationType.EMOJIREACT) {
+          reacted with
+          @if (emojiUrl) {
+            <img class="post-emoji" [src]="emojiUrl" [alt]="notification.emojiName" />
+          } @else {
+            {{ notification.emojiName }}
+          }
+          to your woot
+        }
       }
-    }
+    </span>
   </app-post-ribbon>
   @if (notification.type !== notificationType.FOLLOW) {
     <hr />

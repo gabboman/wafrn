@@ -6,6 +6,10 @@
           ><b>{{ notes }}</b> notes</a
         >
       </p>
+    } @else {
+      <p class="m-0 text-sm">
+        <a [routerLink]="'/fediverse/post/' + fragment.id" class="subtle-link notes-link">View thread</a>
+      </p>
     }
   </div>
   @if (userLoggedIn) {

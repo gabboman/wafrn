@@ -4,7 +4,7 @@
   --mdc-outlined-button-outline-color: var(--mat-sys-outline-variant);
 }
 
-.notes-link {
+[mat-stroked-button].notes-link {
   padding-inline: 0.75rem;
   margin-left: -0.25rem;
 }

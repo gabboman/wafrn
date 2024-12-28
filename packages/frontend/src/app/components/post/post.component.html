@@ -11,11 +11,11 @@
       [time]="originalPostContent[this.originalPostContent.length - 1].createdAt"
     >
       <a
-        class="subtle-link"
+        class="user-link user-name"
         [routerLink]="'/blog/' + originalPostContent[this.originalPostContent.length - 1].user.url"
         [innerHTML]="originalPostContent[this.originalPostContent.length - 1].user.name"
       ></a>
-      {{ headerText }}
+      <span class="text-sm post-action"> {{ headerText }}</span>
     </app-post-ribbon>
   }
   <div

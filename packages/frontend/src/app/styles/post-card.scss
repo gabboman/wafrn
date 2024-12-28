@@ -16,6 +16,28 @@
 }
 
 // Elements inside cards
+:root .user-link {
+  text-decoration: none;
+  color: unset;
+
+  &:hover.user-name,
+  &:hover .user-url {
+    text-decoration: underline;
+  }
+}
+
+.user-name {
+  font-weight: 500;
+}
+
+.user-url {
+  color: var(--mat-sys-outline);
+}
+
+.post-action {
+  color: var(--mat-sys-outline);
+}
+
 .post-text {
   & > :first-child {
     margin-top: 0;
