@@ -35,11 +35,14 @@
 
   <body class="mat-typography mat-app-background">
     <noscript>
-      <h2 id="script-warn">Please enable scripts to use Wafrn.</h2>
-      <h3>
-        You can check the sourcecode
-        <a href="https://github.com/gabboman/wafrn">here</a>. We no longer use google recaptcha nor youtube's javascript
-      </h3>
+      <div class="flex flex-column align-items-center justify-content-center text-center no-js">
+        <div class="mb-3"><img src="/assets/logo.png" alt="Wafrn logo" width="350" /></div>
+        <p class="text-lg">Please enable scripts to use Wafrn.</p>
+        <p class="text-sm text-muted">
+          You can check the source code <a href="https://github.com/gabboman/wafrn">here</a>.<br />
+          We no longer use Google ReCAPTCHA or YouTube's JavaScript
+        </p>
+      </div>
     </noscript>
     <app-root></app-root>
   </body>

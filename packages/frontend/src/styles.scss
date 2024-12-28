@@ -62,6 +62,17 @@ body {
   max-width: 800px;
 }
 
+// No JavaScript
+.no-js {
+  position: fixed;
+  inset: 0;
+  cursor: wait;
+
+  & .text-muted {
+    color: var(--mat-sys-outline);
+  }
+}
+
 .subtle-link {
   text-decoration: none;
 
