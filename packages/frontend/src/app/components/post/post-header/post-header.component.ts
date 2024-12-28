@@ -48,7 +48,7 @@ import { DateTimeToRelativePipe, LuxonModule, DateTimeFromJsDatePipe } from 'lux
   styleUrl: './post-header.component.scss'
 })
 export class PostHeaderComponent implements OnChanges {
-  @Input() fragment: ProcessedPost | undefined
+  @Input() fragment!: ProcessedPost
   @Input() simplified: boolean = true
   @Input() disableLink: boolean = false
   @Input() headerText: string = ''
@@ -99,7 +99,7 @@ export class PostHeaderComponent implements OnChanges {
   ngOnChanges(changes: SimpleChanges): void {
     //
     this.timeAgo = this.dateTimeToRelative.transform(
-      this.dateTimeFromJsDatePipe.transform(this.fragment?.createdAt),
+      this.dateTimeFromJsDatePipe.transform(this.fragment.createdAt),
       // TODO unhardcode locale
       { style: 'long', locale: 'en' }
     )
