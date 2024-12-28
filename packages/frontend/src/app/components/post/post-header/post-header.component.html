@@ -21,12 +21,12 @@
         </div>
       </div>
       <div *ngIf="!simplified" class="flex align-items-center date-line">
-        <span class="text-sm" matTooltip="{{ fragment.createdAt | date : 'short' }}">
+        <span class="text-sm" matTooltip="{{ fragment.createdAt | date: 'short' }}">
           {{ this.timeAgo }}
         </span>
         <span
           *ngIf="fragment.updatedAt.getTime() - fragment.createdAt.getTime() > 60000"
-          matTooltip="Edited {{ fragment.updatedAt | date : 'short' }}"
+          matTooltip="Edited {{ fragment.updatedAt | date: 'short' }}"
           class="text-xs"
         >
           <fa-icon [icon]="editedIcon"></fa-icon>

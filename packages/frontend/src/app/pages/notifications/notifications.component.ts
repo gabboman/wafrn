@@ -36,7 +36,10 @@ export class NotificationsComponent implements OnInit {
 
   notificationsToShow: UserNotifications[] = []
 
-  constructor(private notificationsService: NotificationsService, private themeService: ThemeService) {
+  constructor(
+    private notificationsService: NotificationsService,
+    private themeService: ThemeService
+  ) {
     this.themeService.setMyTheme()
     this.observer = new IntersectionObserver((intersectionEntries: IntersectionObserverEntry[]) => {
       if (intersectionEntries.some((elem) => elem.isIntersecting)) {

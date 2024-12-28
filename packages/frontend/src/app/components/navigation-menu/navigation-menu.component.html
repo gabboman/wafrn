@@ -47,7 +47,7 @@
       style="position: fixed; z-index: 500; bottom: 1em; right: 0.5em"
       mat-flat-button
       color="primary"
-      [hidden]="!mobile || !jwtService.tokenValid() || currentRoute == '/editor'"
+      [hidden]="!mobile || !jwtService.tokenValid() || currentRoute === '/editor'"
       type="button"
       class="show-sidebar-menu-button"
       (mousedown)="this.hideMenu(); this.openEditor()"

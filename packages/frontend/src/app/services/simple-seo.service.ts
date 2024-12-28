@@ -6,7 +6,10 @@ import { EnvironmentService } from './environment.service'
   providedIn: 'root'
 })
 export class SimpleSeoService {
-  constructor(private titleService: Title, private metaTagService: Meta) {}
+  constructor(
+    private titleService: Title,
+    private metaTagService: Meta
+  ) {}
 
   setSEOTags(title: string, description: string, author: string, image: string): void {
     const sanitizedDescription = description

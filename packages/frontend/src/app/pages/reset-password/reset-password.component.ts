@@ -16,7 +16,10 @@ export class ResetPasswordComponent {
   loading = false
   icon = faLock
 
-  constructor(private loginService: LoginService, private activeRoute: ActivatedRoute) {}
+  constructor(
+    private loginService: LoginService,
+    private activeRoute: ActivatedRoute
+  ) {}
 
   async resetPassword() {
     this.loading = true

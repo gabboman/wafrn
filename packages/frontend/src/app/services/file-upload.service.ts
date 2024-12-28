@@ -8,7 +8,10 @@ import { MessageService } from 'src/app/services/message.service'
   providedIn: 'root'
 })
 export class FileUploadService {
-  constructor(private http: HttpClient, private messageService: MessageService) {}
+  constructor(
+    private http: HttpClient,
+    private messageService: MessageService
+  ) {}
 
   uploadFile(url: string, file: File, formdataName: string) {
     const formData = new FormData()

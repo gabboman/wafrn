@@ -7,7 +7,11 @@ import { JwtService } from './jwt.service'
 })
 export class MediaService {
   disableNSFWFilter = false
-  constructor(private jwt: JwtService, private jwtService: JwtService, private http: HttpClient) {
+  constructor(
+    private jwt: JwtService,
+    private jwtService: JwtService,
+    private http: HttpClient
+  ) {
     if (localStorage.getItem('disableNSFWFilter') === 'true' && this.jwtService.tokenValid() && this.checkAge()) {
       this.disableNSFWFilter = true
     }

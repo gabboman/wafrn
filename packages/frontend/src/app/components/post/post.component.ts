@@ -86,7 +86,10 @@ export class PostComponent implements OnInit, OnChanges, OnDestroy {
   // dismiss cw
   showCw = true
 
-  constructor(public postService: PostsService, private loginService: LoginService) {
+  constructor(
+    public postService: PostsService,
+    private loginService: LoginService
+  ) {
     this.userLoggedIn = loginService.checkUserLoggedIn()
     if (this.userLoggedIn) {
       this.myId = loginService.getLoggedUserUUID()

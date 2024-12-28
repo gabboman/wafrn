@@ -31,7 +31,11 @@ export class EmojiReactComponent {
   isOpen = false
   loading = false
 
-  constructor(private overlay: Overlay, private postsService: PostsService, private messages: MessageService) {
+  constructor(
+    private overlay: Overlay,
+    private postsService: PostsService,
+    private messages: MessageService
+  ) {
     this.scrollStrategy = this.overlay.scrollStrategies.reposition()
   }
 

@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!doctype html>
 <html>
   <head>
     <meta charset="utf-8" />
@@ -69,10 +69,10 @@
         e.requestFullscreen
           ? e.requestFullscreen()
           : e.mozRequestFullScreen
-          ? e.mozRequestFullScreen()
-          : e.webkitRequestFullscreen
-          ? e.webkitRequestFullscreen()
-          : e.msRequestFullscreen && e.msRequestFullscreen()
+            ? e.mozRequestFullScreen()
+            : e.webkitRequestFullscreen
+              ? e.webkitRequestFullscreen()
+              : e.msRequestFullscreen && e.msRequestFullscreen()
       })
     </script>
     <script async src="dosbox.js"></script>

@@ -11,7 +11,10 @@ export class BlocksService {
   baseMediaUrl = EnvironmentService.environment.baseMediaUrl
   baseCacheUrl = EnvironmentService.environment.externalCacheurl
 
-  constructor(private http: HttpClient, private messages: MessageService) {}
+  constructor(
+    private http: HttpClient,
+    private messages: MessageService
+  ) {}
 
   async blockUser(id: string): Promise<boolean> {
     let success = false

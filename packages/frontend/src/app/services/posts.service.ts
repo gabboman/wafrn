@@ -527,8 +527,8 @@ export class PostsService {
         summary: response.message
           ? response.message
           : res
-          ? 'You voted succesfuly. It can take some time to display'
-          : 'Something went wrong'
+            ? 'You voted succesfuly. It can take some time to display'
+            : 'Something went wrong'
       })
     } catch (error) {
       console.error(error)

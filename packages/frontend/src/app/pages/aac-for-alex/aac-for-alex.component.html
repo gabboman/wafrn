@@ -12,7 +12,7 @@
     <mat-label>Select voice</mat-label>
     <mat-select [(ngModel)]="voiceIndex">
       @for (voice of voices; track $index) {
-        <mat-option *ngIf="voice.lang == languagesAllowed[selectedLangIndex]" [value]="$index"
+        <mat-option *ngIf="voice.lang === languagesAllowed[selectedLangIndex]" [value]="$index"
           >{{ voice.name }} - {{ voice.lang }}</mat-option
         >
       }

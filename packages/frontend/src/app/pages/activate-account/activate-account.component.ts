@@ -12,7 +12,10 @@ import { LoginService } from 'src/app/services/login.service'
 export class ActivateAccountComponent implements OnInit {
   logo = EnvironmentService.environment.logo
 
-  constructor(private activeRoute: ActivatedRoute, private loginService: LoginService) {}
+  constructor(
+    private activeRoute: ActivatedRoute,
+    private loginService: LoginService
+  ) {}
 
   ngOnInit(): void {}
 

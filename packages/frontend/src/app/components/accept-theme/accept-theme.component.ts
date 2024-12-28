@@ -11,7 +11,10 @@ import { ThemeService } from 'src/app/services/theme.service'
   styleUrl: './accept-theme.component.scss'
 })
 export class AcceptThemeComponent {
-  constructor(private themeService: ThemeService, private dialogService: MatDialogRef<AcceptThemeComponent>) {}
+  constructor(
+    private themeService: ThemeService,
+    private dialogService: MatDialogRef<AcceptThemeComponent>
+  ) {}
 
   answerCustomThemeModal(response: number) {
     localStorage.setItem('acceptsCustomThemes', response.toString())

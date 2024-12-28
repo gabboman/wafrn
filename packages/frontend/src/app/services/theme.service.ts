@@ -9,7 +9,11 @@ import { EnvironmentService } from './environment.service'
   providedIn: 'root'
 })
 export class ThemeService {
-  constructor(private loginService: LoginService, private http: HttpClient, private utils: UtilsService) {}
+  constructor(
+    private loginService: LoginService,
+    private http: HttpClient,
+    private utils: UtilsService
+  ) {}
 
   setMyTheme() {
     this.setTheme(this.loginService.getLoggedUserUUID())

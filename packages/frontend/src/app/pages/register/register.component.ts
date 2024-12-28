@@ -39,7 +39,10 @@ export class RegisterComponent {
     avatar: new UntypedFormControl('', [])
   })
 
-  constructor(private loginService: LoginService, private messages: MessageService) {
+  constructor(
+    private loginService: LoginService,
+    private messages: MessageService
+  ) {
     // minimum age: 14
     this.minimumRegistrationDate = new Date()
     this.minimumRegistrationDate.setFullYear(this.minimumRegistrationDate.getFullYear() - 18)

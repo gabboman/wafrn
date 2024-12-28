@@ -18,7 +18,10 @@ export class PollComponent implements OnInit {
   userLoggedIn = false
   alreadyVoted = true
 
-  constructor(private loginService: LoginService, private postsService: PostsService) {
+  constructor(
+    private loginService: LoginService,
+    private postsService: PostsService
+  ) {
     this.userLoggedIn = loginService.checkUserLoggedIn()
   }
 

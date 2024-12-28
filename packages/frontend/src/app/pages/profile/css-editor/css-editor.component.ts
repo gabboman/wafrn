@@ -17,7 +17,11 @@ import { ThemeService } from 'src/app/services/theme.service'
 export class CssEditorComponent {
   ready = false
   myCSS = ''
-  constructor(private themeService: ThemeService, private messages: MessageService, private router: Router) {
+  constructor(
+    private themeService: ThemeService,
+    private messages: MessageService,
+    private router: Router
+  ) {
     this.themeService
       .getMyThemeAsSting()
       .then((theme) => {

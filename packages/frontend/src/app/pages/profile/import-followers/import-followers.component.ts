@@ -39,7 +39,11 @@ export class ImportFollowersComponent {
     errors: []
   }
 
-  constructor(private http: HttpClient, private postService: PostsService, private messages: MessageService) {}
+  constructor(
+    private http: HttpClient,
+    private postService: PostsService,
+    private messages: MessageService
+  ) {}
   async onFileSelected(event: Event) {
     this.uploading = true
     const el = event.target as HTMLInputElement

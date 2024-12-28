@@ -9,7 +9,10 @@ import { EnvironmentService } from './environment.service'
   providedIn: 'root'
 })
 export class ForumService {
-  constructor(private http: HttpClient, private postService: PostsService) {}
+  constructor(
+    private http: HttpClient,
+    private postService: PostsService
+  ) {}
 
   async getForumThread(id: string) {
     const response: unlinkedPosts = await firstValueFrom(

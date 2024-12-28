@@ -18,26 +18,31 @@
   </div>
   <div id="scroll-here-on-page-change"></div>
   <ng-container
-    *ngFor="let content of forumPosts | slice : currentPage * itemsPerPage : currentPage * itemsPerPage + itemsPerPage"
+    *ngFor="let content of forumPosts | slice: currentPage * itemsPerPage : currentPage * itemsPerPage + itemsPerPage"
   >
-    @if(content.content !== '' || content.tags.length > 0 || content.quotes.length > 0 ||
-    content.questionPoll?.questionPollQuestions || (content.medias && content.medias.length > 0)) {
-    <mat-card [id]="'post-' + content.id" class="wafrn-container post-card">
-      <app-post-header [fragment]="content" [simplified]="false"></app-post-header>
-      <app-post-fragment [selfManageCw]="true" [fragment]="content"></app-post-fragment>
-      <hr />
-      <app-bottom-reply-bar [fragment]="content"></app-bottom-reply-bar>
-    </mat-card>
+    @if (
+      content.content !== '' ||
+      content.tags.length > 0 ||
+      content.quotes.length > 0 ||
+      content.questionPoll?.questionPollQuestions ||
+      (content.medias && content.medias.length > 0)
+    ) {
+      <mat-card [id]="'post-' + content.id" class="wafrn-container post-card">
+        <app-post-header [fragment]="content" [simplified]="false"></app-post-header>
+        <app-post-fragment [selfManageCw]="true" [fragment]="content"></app-post-fragment>
+        <hr />
+        <app-bottom-reply-bar [fragment]="content"></app-bottom-reply-bar>
+      </mat-card>
     } @else {
-    <app-post-ribbon [user]="content.user" [icon]="rewootIcon">
-      <a class="subtle-link" [routerLink]="'/blog/' + content.user.url" [innerHTML]="content.user.name"></a>
-      rewooted
-      <a
-        [routerLink]="'/fediverse/post/' + content.parentId"
-        class="subtle-link"
-        [innerHTML]="findReply(content.parentId)?.user?.name ?? 'Unknown User'"
-      ></a>
-    </app-post-ribbon>
+      <app-post-ribbon [user]="content.user" [icon]="rewootIcon">
+        <a class="subtle-link" [routerLink]="'/blog/' + content.user.url" [innerHTML]="content.user.name"></a>
+        rewooted
+        <a
+          [routerLink]="'/fediverse/post/' + content.parentId"
+          class="subtle-link"
+          [innerHTML]="findReply(content.parentId)?.user?.name ?? 'Unknown User'"
+        ></a>
+      </app-post-ribbon>
     }
   </ng-container>
 </ng-container>

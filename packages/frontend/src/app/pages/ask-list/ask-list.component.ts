@@ -19,7 +19,11 @@ export class AskListComponent {
   loading = true
   asks: Ask[] = []
 
-  constructor(private dashboard: DashboardService, private editor: EditorService, private blogService: BlogService) {
+  constructor(
+    private dashboard: DashboardService,
+    private editor: EditorService,
+    private blogService: BlogService
+  ) {
     this.dashboard.getMyAsks().then((asks) => {
       this.asks = asks
       this.loading = false

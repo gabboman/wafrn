@@ -32883,7 +32883,14 @@ const emojis = [
     group: 'Activities',
     subgroup: 'game'
   },
-  { codes: '1F579', char: '🕹', name: 'joystick', category: 'Activities (game)', group: 'Activities', subgroup: 'game' },
+  {
+    codes: '1F579',
+    char: '🕹',
+    name: 'joystick',
+    category: 'Activities (game)',
+    group: 'Activities',
+    subgroup: 'game'
+  },
   {
     codes: '1F3B0',
     char: '🎰',
@@ -32989,7 +32996,14 @@ const emojis = [
     group: 'Activities',
     subgroup: 'game'
   },
-  { codes: '2663', char: '♣', name: 'club suit', category: 'Activities (game)', group: 'Activities', subgroup: 'game' },
+  {
+    codes: '2663',
+    char: '♣',
+    name: 'club suit',
+    category: 'Activities (game)',
+    group: 'Activities',
+    subgroup: 'game'
+  },
   {
     codes: '265F FE0F',
     char: '♟️',
@@ -33516,7 +33530,14 @@ const emojis = [
     group: 'Objects',
     subgroup: 'music'
   },
-  { codes: '1F39A', char: '🎚', name: 'level slider', category: 'Objects (music)', group: 'Objects', subgroup: 'music' },
+  {
+    codes: '1F39A',
+    char: '🎚',
+    name: 'level slider',
+    category: 'Objects (music)',
+    group: 'Objects',
+    subgroup: 'music'
+  },
   {
     codes: '1F39B FE0F',
     char: '🎛️',
@@ -34248,7 +34269,14 @@ const emojis = [
     group: 'Objects',
     subgroup: 'writing'
   },
-  { codes: '2712', char: '✒', name: 'black nib', category: 'Objects (writing)', group: 'Objects', subgroup: 'writing' },
+  {
+    codes: '2712',
+    char: '✒',
+    name: 'black nib',
+    category: 'Objects (writing)',
+    group: 'Objects',
+    subgroup: 'writing'
+  },
   {
     codes: '1F58B FE0F',
     char: '🖋️',
@@ -34532,7 +34560,14 @@ const emojis = [
     group: 'Objects',
     subgroup: 'tool'
   },
-  { codes: '2692', char: '⚒', name: 'hammer and pick', category: 'Objects (tool)', group: 'Objects', subgroup: 'tool' },
+  {
+    codes: '2692',
+    char: '⚒',
+    name: 'hammer and pick',
+    category: 'Objects (tool)',
+    group: 'Objects',
+    subgroup: 'tool'
+  },
   {
     codes: '1F6E0 FE0F',
     char: '🛠️',
@@ -35191,7 +35226,14 @@ const emojis = [
     group: 'Symbols',
     subgroup: 'warning'
   },
-  { codes: '2623', char: '☣', name: 'biohazard', category: 'Symbols (warning)', group: 'Symbols', subgroup: 'warning' },
+  {
+    codes: '2623',
+    char: '☣',
+    name: 'biohazard',
+    category: 'Symbols (warning)',
+    group: 'Symbols',
+    subgroup: 'warning'
+  },
   {
     codes: '2B06 FE0F',
     char: '⬆️',
@@ -35284,7 +35326,14 @@ const emojis = [
     group: 'Symbols',
     subgroup: 'arrow'
   },
-  { codes: '2196', char: '↖', name: 'up-left arrow', category: 'Symbols (arrow)', group: 'Symbols', subgroup: 'arrow' },
+  {
+    codes: '2196',
+    char: '↖',
+    name: 'up-left arrow',
+    category: 'Symbols (arrow)',
+    group: 'Symbols',
+    subgroup: 'arrow'
+  },
   {
     codes: '2195 FE0F',
     char: '↕️',
@@ -35293,7 +35342,14 @@ const emojis = [
     group: 'Symbols',
     subgroup: 'arrow'
   },
-  { codes: '2195', char: '↕', name: 'up-down arrow', category: 'Symbols (arrow)', group: 'Symbols', subgroup: 'arrow' },
+  {
+    codes: '2195',
+    char: '↕',
+    name: 'up-down arrow',
+    category: 'Symbols (arrow)',
+    group: 'Symbols',
+    subgroup: 'arrow'
+  },
   {
     codes: '2194 FE0F',
     char: '↔️',
@@ -35556,7 +35612,14 @@ const emojis = [
     group: 'Symbols',
     subgroup: 'religion'
   },
-  { codes: '1FAAF', char: '🪯', name: 'khanda', category: 'Symbols (religion)', group: 'Symbols', subgroup: 'religion' },
+  {
+    codes: '1FAAF',
+    char: '🪯',
+    name: 'khanda',
+    category: 'Symbols (religion)',
+    group: 'Symbols',
+    subgroup: 'religion'
+  },
   { codes: '2648', char: '♈', name: 'Aries', category: 'Symbols (zodiac)', group: 'Symbols', subgroup: 'zodiac' },
   { codes: '2649', char: '♉', name: 'Taurus', category: 'Symbols (zodiac)', group: 'Symbols', subgroup: 'zodiac' },
   { codes: '264A', char: '♊', name: 'Gemini', category: 'Symbols (zodiac)', group: 'Symbols', subgroup: 'zodiac' },
@@ -35857,7 +35920,14 @@ const emojis = [
     group: 'Symbols',
     subgroup: 'gender'
   },
-  { codes: '2640', char: '♀', name: 'female sign', category: 'Symbols (gender)', group: 'Symbols', subgroup: 'gender' },
+  {
+    codes: '2640',
+    char: '♀',
+    name: 'female sign',
+    category: 'Symbols (gender)',
+    group: 'Symbols',
+    subgroup: 'gender'
+  },
   {
     codes: '2642 FE0F',
     char: '♂️',

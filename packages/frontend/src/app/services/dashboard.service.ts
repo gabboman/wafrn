@@ -22,7 +22,11 @@ export class DashboardService {
   public startScrollDate: Date = new Date()
   baseUrl: string
 
-  constructor(private http: HttpClient, private postService: PostsService, private messageService: MessageService) {
+  constructor(
+    private http: HttpClient,
+    private postService: PostsService,
+    private messageService: MessageService
+  ) {
     this.baseUrl = EnvironmentService.environment.baseUrl
   }
 

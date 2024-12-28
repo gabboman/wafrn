@@ -15,7 +15,7 @@
     Share external URL
   </button>
   <button
-    *ngIf="content.user.url.startsWith('@') && content.privacy != 1 && content.privacy != 10"
+    *ngIf="content.user.url.startsWith('@') && content.privacy !== 1 && content.privacy !== 10"
     (mousedown)="viewOriginalPost()"
     mat-menu-item
   >

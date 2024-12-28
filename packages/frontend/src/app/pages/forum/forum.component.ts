@@ -4,16 +4,13 @@ import { MatButtonModule } from '@angular/material/button'
 import { MatCardModule } from '@angular/material/card'
 import { ActivatedRoute, RouterModule } from '@angular/router'
 import { Subscription } from 'rxjs'
-import { AvatarSmallComponent } from 'src/app/components/avatar-small/avatar-small.component'
 import { LoaderComponent } from 'src/app/components/loader/loader.component'
-import { PostActionsComponent } from 'src/app/components/post-actions/post-actions.component'
 import { PostFragmentComponent } from 'src/app/components/post-fragment/post-fragment.component'
 import { ProcessedPost } from 'src/app/interfaces/processed-post'
 import { ForumService } from 'src/app/services/forum.service'
 import { LoginService } from 'src/app/services/login.service'
 import { PostsService } from 'src/app/services/posts.service'
 import { PostHeaderComponent } from '../../components/post/post-header/post-header.component'
-import { PostComponent } from 'src/app/components/post/post.component'
 import { PostModule } from 'src/app/components/post/post.module'
 import { DashboardService } from 'src/app/services/dashboard.service'
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome'
@@ -33,7 +30,6 @@ import { PostRibbonComponent } from 'src/app/components/post-ribbon/post-ribbon.
     LoaderComponent,
     MatCardModule,
     MatButtonModule,
-    AvatarSmallComponent,
     PostHeaderComponent,
     PostModule,
     FontAwesomeModule,

@@ -20,7 +20,10 @@ export class RecoverPasswordComponent {
     email: new UntypedFormControl('', [Validators.required, Validators.email])
   })
 
-  constructor(private loginService: LoginService, private messageService: MessageService) {}
+  constructor(
+    private loginService: LoginService,
+    private messageService: MessageService
+  ) {}
 
   async onSubmit() {
     this.loading = true

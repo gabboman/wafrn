@@ -3,19 +3,19 @@
   class="wafrn-container post-card"
   [ngClass]="{ 'top-bar': post.length > 1 }"
 >
-  @if(post.length > 1) {
-  <app-post-ribbon
-    [user]="originalPostContent[this.originalPostContent.length - 1].user"
-    [icon]="headerText === 'replied' ? replyIcon : reblogIcon"
-    [card]="false"
-  >
-    <a
-      class="subtle-link"
-      [routerLink]="'/blog/' + originalPostContent[this.originalPostContent.length - 1].user.url"
-      [innerHTML]="originalPostContent[this.originalPostContent.length - 1].user.name"
-    ></a>
-    {{ headerText }}
-  </app-post-ribbon>
+  @if (post.length > 1) {
+    <app-post-ribbon
+      [user]="originalPostContent[this.originalPostContent.length - 1].user"
+      [icon]="headerText === 'replied' ? replyIcon : reblogIcon"
+      [card]="false"
+    >
+      <a
+        class="subtle-link"
+        [routerLink]="'/blog/' + originalPostContent[this.originalPostContent.length - 1].user.url"
+        [innerHTML]="originalPostContent[this.originalPostContent.length - 1].user.name"
+      ></a>
+      {{ headerText }}
+    </app-post-ribbon>
   }
   <div
     [ngClass]="{
@@ -23,27 +23,27 @@
     }"
   >
     @for (content of post; track $index; let index = $index) {
-    <hr
-      *ngIf="(post.length > 1 && (content.content !== '' || content.tags.length)) || (post.length > 1 && index === 0)"
-    />
-    <div
-      *ngIf="
-        content.content !== '' ||
-        (content.medias && content.medias.length > 0) ||
-        index === 0 ||
-        content.tags.length > 0 ||
-        content.quotes.length > 0 ||
-        content.questionPoll
-      "
-      id="fragment"
-    >
-      <app-post-header class="w-full" [fragment]="content" [simplified]="false"></app-post-header>
-      <app-post-fragment
-        (dismissCw)="dismissContentWarning()"
-        [showCw]="showCw"
-        [fragment]="content"
-      ></app-post-fragment>
-    </div>
+      <hr
+        *ngIf="(post.length > 1 && (content.content !== '' || content.tags.length)) || (post.length > 1 && index === 0)"
+      />
+      <div
+        *ngIf="
+          content.content !== '' ||
+          (content.medias && content.medias.length > 0) ||
+          index === 0 ||
+          content.tags.length > 0 ||
+          content.quotes.length > 0 ||
+          content.questionPoll
+        "
+        id="fragment"
+      >
+        <app-post-header class="w-full" [fragment]="content" [simplified]="false"></app-post-header>
+        <app-post-fragment
+          (dismissCw)="dismissContentWarning()"
+          [showCw]="showCw"
+          [fragment]="content"
+        ></app-post-fragment>
+      </div>
     }
   </div>
   <button

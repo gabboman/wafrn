@@ -140,7 +140,7 @@
   >As this user is from a remote instance, the shown information may be incomplete.
   <a
     [href]="
-      blogDetails.url.split('@').length == 3
+      blogDetails.url.split('@').length === 3
         ? blogDetails.remoteId
         : 'https://bsky.app/profile/' + blogDetails.url.split('@')[1]
     "

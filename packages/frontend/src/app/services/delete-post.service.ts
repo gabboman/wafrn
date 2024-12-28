@@ -10,7 +10,10 @@ import { EnvironmentService } from './environment.service'
 export class DeletePostService {
   public launchDeleteScreen: ReplaySubject<string> = new ReplaySubject()
 
-  constructor(private http: HttpClient, private dialogService: MatDialog) {}
+  constructor(
+    private http: HttpClient,
+    private dialogService: MatDialog
+  ) {}
 
   public deletePost(id: string): Observable<boolean> {
     let petitionData: HttpParams = new HttpParams()
