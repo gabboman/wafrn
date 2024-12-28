@@ -50,7 +50,7 @@ type EmojiReaction = {
   styleUrl: './post-fragment.component.scss'
 })
 export class PostFragmentComponent implements OnChanges, OnDestroy {
-  @Input() fragment: ProcessedPost | undefined
+  @Input() fragment!: ProcessedPost
   @Input() showCw: boolean = true
   @Input() selfManageCw: boolean = false
   @Output() dismissCw: EventEmitter<void> = new EventEmitter<void>()
@@ -82,12 +82,12 @@ export class PostFragmentComponent implements OnChanges, OnDestroy {
     })
     this.userId = loginService.getLoggedUserUUID()
     this.likeSubscription = postService.postLiked.subscribe((likeEvent) => {
-      if (likeEvent.id === this.fragment?.id) {
+      if (likeEvent.id === this.fragment.id) {
         this.renderLikeDislike(likeEvent)
       }
     })
     this.emojiSubscription = postService.emojiReacted.subscribe((emojiEvent) => {
-      if (emojiEvent.postId === this.fragment?.id) {
+      if (emojiEvent.postId === this.fragment.id) {
         this.renderEmojiReact(emojiEvent)
       }
     })
@@ -105,15 +105,15 @@ export class PostFragmentComponent implements OnChanges, OnDestroy {
   }
 
   initializeContent() {
-    if (this.fragment?.content_warning && this.fragment.muted_words_cw) {
+    if (this.fragment.content_warning && this.fragment.muted_words_cw) {
       const disableCW = localStorage.getItem('disableCW') === 'true'
-    } else if (this.fragment?.content_warning && !this.fragment.muted_words_cw) {
+    } else if (this.fragment.content_warning && !this.fragment.muted_words_cw) {
       const disableCW = localStorage.getItem('disableCW') === 'true'
       this.showCw = this.showCw && !disableCW
     }
     let processedBlock: Array<string | WafrnMedia> = []
-    this.sanitizedContent = this.postService.getPostHtml(this.fragment as ProcessedPost)
-    if (this.fragment && this.fragment.medias && this.fragment?.medias?.length > 0) {
+    this.sanitizedContent = this.postService.getPostHtml(this.fragment)
+    if (this.fragment && this.fragment.medias && this.fragment.medias?.length > 0) {
       const mediaDetectorRegex = /\!\[media\-([0-9]+)]/gm
       const textDivided = this.sanitizedContent.split(mediaDetectorRegex)
       textDivided.forEach((elem, index) => {
@@ -122,7 +122,7 @@ export class PostFragmentComponent implements OnChanges, OnDestroy {
             processedBlock.push(elem)
           }
         } else {
-          const medias = this.fragment?.medias as WafrnMedia[]
+          const medias = this.fragment.medias as WafrnMedia[]
           const mediaToInsert = medias[parseInt(elem) - 1]
           if (mediaToInsert) {
             processedBlock.push(mediaToInsert)
@@ -141,7 +141,7 @@ export class PostFragmentComponent implements OnChanges, OnDestroy {
   initializeEmojis() {
     // using a "map" here for O(1) get operations
     const emojiReactions = {} as Record<string, EmojiReaction>
-    if (!this.fragment?.emojiReactions) {
+    if (!this.fragment.emojiReactions) {
       this.emojiCollection = []
       return
     }
@@ -232,7 +232,7 @@ export class PostFragmentComponent implements OnChanges, OnDestroy {
   renderEmojiReact({ emoji, type }: { postId: string; emoji: Emoji; type: 'react' | 'undo_react' }) {
     const collection = this.emojiCollection.find((e) => e.id === emoji.id)
     if (type === 'react') {
-      this.fragment?.emojiReactions.push({
+      this.fragment.emojiReactions.push({
         emojiId: emoji.id,
         emoji: emoji,
         userId: this.loginService.getLoggedUserUUID(),
@@ -245,7 +245,7 @@ export class PostFragmentComponent implements OnChanges, OnDestroy {
           avatar: ''
         }
       })
-      console.log(this.fragment?.emojiReactions)
+      console.log(this.fragment.emojiReactions)
     } else {
       if (collection) {
         if (collection.users.length === 1) {
@@ -263,14 +263,14 @@ export class PostFragmentComponent implements OnChanges, OnDestroy {
   }
 
   async toggleEmojiReact(emojiReaction: EmojiReaction) {
-    if (this.fragment?.userId === this.userId) {
+    if (this.fragment.userId === this.userId) {
       this.messages.add({
         severity: 'error',
         summary: `You can not emojireact to your own posts`
       })
       return
     }
-    const postId = this.fragment?.id
+    const postId = this.fragment.id
     if (!postId) {
       return
     }
