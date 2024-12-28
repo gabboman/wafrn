@@ -87,8 +87,8 @@ export class NewEditorComponent implements OnDestroy {
   disableImageUploadButton = false
   uploadedMedias: WafrnMedia[] = []
   emojiCollections: EmojiCollection[] = []
-  @ViewChild('suggestionsMenu') sugestionsMenu!: MatMenuTrigger
-  sugestions: { img: string; text: string }[] = []
+  @ViewChild('suggestionsMenu') suggestionsMenu!: MatMenuTrigger
+  suggestions: { img: string; text: string }[] = []
   cursorPosition = {
     x: 0,
     y: 0
@@ -175,15 +175,15 @@ export class NewEditorComponent implements OnDestroy {
         x: Math.min(internalPosition.x + rect.x, screenWidth - 275),
         y: Math.min(
           Math.max(48, internalPosition.y + rect.y),
-          Math.max(screenHeight - 325, screenHeight - 64 * this.sugestions.length)
+          Math.max(screenHeight - 325, screenHeight - 64 * this.suggestions.length)
         )
       }
     }
   }
 
-  updateMentionsSugestions(cursorPosition: number) {
+  updateMentionsSuggestions(cursorPosition: number) {
     this.httpMentionPetitionSubscription?.unsubscribe()
-    this.sugestions = []
+    this.suggestions = []
     this.updateMentionsPanelPosition()
     const textToMatch = (' ' +
       this.postCreatorForm.value.content?.slice(cursorPosition - 250, cursorPosition).replaceAll('\n', ' ')) as string
@@ -194,7 +194,7 @@ export class NewEditorComponent implements OnDestroy {
         this.httpMentionPetitionSubscription = from(
           this.editorService.searchUser(match.toLowerCase().slice(1))
         ).subscribe((res: any) => {
-          this.sugestions = res.users.map((elem: any) => {
+          this.suggestions = res.users.map((elem: any) => {
             return {
               img: elem.avatar,
               text: elem.url
@@ -203,7 +203,7 @@ export class NewEditorComponent implements OnDestroy {
           this.httpMentionPetitionSubscription?.unsubscribe()
         })
       } else {
-        this.sugestions = this.emojiCollections
+        this.suggestions = this.emojiCollections
           .map((elem) => {
             const emojis = elem.emojis.filter(
               (emoji) => emoji.id == emoji.name && emoji.name.toLowerCase().includes(match.toLowerCase())
@@ -225,7 +225,7 @@ export class NewEditorComponent implements OnDestroy {
     initialPart = initialPart.replace(/ [@:][A-Z0-9a-z_.@-]*$/i, ' ' + userUrl)
     let finalPart = this.postCreatorForm.value.content?.slice(this.cursorTextPosition) as string
     this.postCreatorForm.controls['content'].patchValue(initialPart.trim() + ' ' + finalPart.trim())
-    this.sugestions = []
+    this.suggestions = []
   }
 
   ngOnDestroy(): void {
@@ -383,7 +383,7 @@ export class NewEditorComponent implements OnDestroy {
         privacy: 0,
         media: []
       })
-      // wait 500 miliseconds
+      // wait 500 milliseconds
       await new Promise((resolve) => setTimeout(resolve, 500))
     }
     res = await this.editorService.createPost({
@@ -499,7 +499,7 @@ export class NewEditorComponent implements OnDestroy {
     let postCreatorHTMLElement = document.getElementById('postCreatorContent') as HTMLTextAreaElement
     // we only call the event if user is writing to avoid TOOMFOLERY
     if (postCreatorHTMLElement.selectionStart === postCreatorHTMLElement.selectionEnd) {
-      this.updateMentionsSugestions(postCreatorHTMLElement.selectionStart)
+      this.updateMentionsSuggestions(postCreatorHTMLElement.selectionStart)
       this.cursorTextPosition = postCreatorHTMLElement.selectionStart
     }
   }

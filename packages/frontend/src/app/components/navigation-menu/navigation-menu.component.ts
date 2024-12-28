@@ -57,8 +57,8 @@ export class NavigationMenuComponent implements OnInit, OnDestroy {
   menuVisible = false
   notifications = 0
   adminNotifications = 0
-  usersAwaitingAproval = 0
-  followsAwaitingAproval = 0
+  usersAwaitingApproval = 0
+  followsAwaitingApproval = 0
   awaitingAsks = 0
   privateMessagesNotifications = ''
   mobile = false
@@ -237,7 +237,7 @@ export class NavigationMenuComponent implements OnInit, OnDestroy {
         label: 'Admin',
         icon: faPowerOff,
         title: 'Check your notifications',
-        badge: this.adminNotifications + this.usersAwaitingAproval,
+        badge: this.adminNotifications + this.usersAwaitingApproval,
         visible: this.jwtService.adminToken(),
         items: [
           {
@@ -296,9 +296,9 @@ export class NavigationMenuComponent implements OnInit, OnDestroy {
             }
           },
           {
-            label: 'Users awaiting aproval',
-            title: 'User awaiting aproval',
-            badge: this.usersAwaitingAproval,
+            label: 'Users awaiting approval',
+            title: 'User awaiting approval',
+            badge: this.usersAwaitingApproval,
             icon: faUserLock,
             routerLink: '/admin/activate-users',
             command: () => {
@@ -322,12 +322,12 @@ export class NavigationMenuComponent implements OnInit, OnDestroy {
         title: 'Your blog, your profile, blocks, and other stuff',
         visible: this.jwtService.tokenValid(),
         icon: faCog,
-        badge: this.followsAwaitingAproval,
+        badge: this.followsAwaitingApproval,
         items: [
           {
             label: 'Manage followers',
             title: 'Manage followers',
-            badge: this.followsAwaitingAproval,
+            badge: this.followsAwaitingApproval,
             icon: faUser,
             command: () => this.hideMenu(),
             routerLink: '/blog/' + this.jwtService.getTokenData().url + '/followers'
@@ -487,8 +487,8 @@ export class NavigationMenuComponent implements OnInit, OnDestroy {
         this.notifications = response.notifications
       }
       this.adminNotifications = response.reports
-      this.usersAwaitingAproval = response.usersAwaitingAproval
-      this.followsAwaitingAproval = response.followsAwaitingAproval
+      this.usersAwaitingApproval = response.usersAwaitingApproval
+      this.followsAwaitingApproval = response.followsAwaitingApproval
       this.awaitingAsks = response.asks
 
       this.drawMenu()

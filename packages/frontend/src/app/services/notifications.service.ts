@@ -33,21 +33,21 @@ export class NotificationsService {
   async getUnseenNotifications(): Promise<{
     notifications: number
     reports: number
-    usersAwaitingAproval: number
-    followsAwaitingAproval: number
+    usersAwaitingApproval: number
+    followsAwaitingApproval: number
     asks: number
   }> {
     let res: {
       notifications: number
       reports: number
-      usersAwaitingAproval: number
-      followsAwaitingAproval: number
+      usersAwaitingApproval: number
+      followsAwaitingApproval: number
       asks: number
     } = {
       notifications: 0,
       reports: 0,
-      followsAwaitingAproval: 0,
-      usersAwaitingAproval: 0,
+      followsAwaitingApproval: 0,
+      usersAwaitingApproval: 0,
       asks: 0
     }
     try {
@@ -59,8 +59,8 @@ export class NotificationsService {
         this.http.get<{
           notifications: number
           reports: number
-          usersAwaitingAproval: number
-          followsAwaitingAproval: number
+          usersAwaitingApproval: number
+          followsAwaitingApproval: number
           asks: number
         }>(`${EnvironmentService.environment.baseUrl}/v2/notificationsCount`, {
           params: petitionData

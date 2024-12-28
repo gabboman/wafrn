@@ -105,7 +105,7 @@ export class BlogHeaderComponent implements OnChanges, OnDestroy {
     } else {
       this.messages.add({
         severity: 'error',
-        summary: 'Something went wrong! Check your internet conectivity and try again'
+        summary: 'Something went wrong! Check your internet connectivity and try again'
       })
     }
   }
@@ -120,7 +120,7 @@ export class BlogHeaderComponent implements OnChanges, OnDestroy {
     } else {
       this.messages.add({
         severity: 'error',
-        summary: 'Something went wrong! Check your internet conectivity and try again'
+        summary: 'Something went wrong! Check your internet connectivity and try again'
       })
     }
   }

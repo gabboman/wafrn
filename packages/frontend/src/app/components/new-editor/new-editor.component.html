@@ -1,11 +1,11 @@
 <div
   #suggestionsMenu
   class="suggestionsMenu"
-  [hidden]="sugestions.length === 0"
+  [hidden]="suggestions.length === 0"
   [style.left.px]="cursorPosition.x"
   [style.top.px]="cursorPosition.y"
 >
-  <div (click)="insertMention(user)" *ngFor="let user of sugestions" class="flex align-items-center">
+  <div (click)="insertMention(user)" *ngFor="let user of suggestions" class="flex align-items-center">
     <app-avatar-small
       [disabled]="true"
       [user]="{
@@ -51,7 +51,7 @@
       mat-button
       (mousedown)="quoteOpen = !quoteOpen"
       class="input-height-btn"
-      matTooltip="Qoute a post"
+      matTooltip="Quote a post"
     >
       <fa-icon size="lg" [icon]="quoteIcon"></fa-icon>
     </button>

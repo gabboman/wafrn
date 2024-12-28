@@ -35,9 +35,9 @@
       type="button"
       class="show-sidebar-menu-button"
       (mousedown)="showMenu()"
-      [matBadge]="notifications + adminNotifications + usersAwaitingAproval + followsAwaitingAproval + awaitingAsks"
+      [matBadge]="notifications + adminNotifications + usersAwaitingApproval + followsAwaitingApproval + awaitingAsks"
       [matBadgeHidden]="
-        notifications + adminNotifications + usersAwaitingAproval + followsAwaitingAproval + awaitingAsks === 0
+        notifications + adminNotifications + usersAwaitingApproval + followsAwaitingApproval + awaitingAsks === 0
       "
       matBadgePosition="below"
     >

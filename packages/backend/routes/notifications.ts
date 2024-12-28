@@ -176,7 +176,7 @@ export default function notificationRoutes(app: Application) {
       }
     })
     let reports = 0
-    let usersAwaitingAproval = 0
+    let usersAwaitingApproval = 0
 
     if (req.jwtData?.role === 10) {
       // well the user is an admin!
@@ -185,7 +185,7 @@ export default function notificationRoutes(app: Application) {
           resolved: false
         }
       })
-      usersAwaitingAproval = User.count({
+      usersAwaitingApproval = User.count({
         where: {
           activated: false,
           url: {
@@ -208,7 +208,7 @@ export default function notificationRoutes(app: Application) {
       postMentions,
       newLikes,
       reports,
-      usersAwaitingAproval,
+      usersAwaitingApproval,
       newPostReblogs,
       newEmojiReactions,
       newQuotes,
@@ -223,9 +223,9 @@ export default function notificationRoutes(app: Application) {
         (await newPostReblogs) +
         (await newEmojiReactions).length +
         (await newQuotes),
-      followsAwaitingAproval: await pendingFollows,
+      followsAwaitingApproval: await pendingFollows,
       reports: await reports,
-      usersAwaitingAproval: await usersAwaitingAproval,
+      usersAwaitingApproval: await usersAwaitingApproval,
       asks: await unansweredAsks
     })
   })
@@ -235,21 +235,23 @@ export default function notificationRoutes(app: Application) {
     operator: any,
     limit?: boolean
   ): Promise<any[]> {
-    let superMutedIds = await getMutedPosts(userId, true);
+    let superMutedIds = await getMutedPosts(userId, true)
     superMutedIds = superMutedIds ? superMutedIds : []
     const fullyMutedDoNotCountForMentions = superMutedIds.length
       ? (
-        await sequelize.query(
-          isDatabaseMysql()
-            ? `SELECT postsId FROM postsancestors where ancestorId IN (${superMutedIds.map((elem) => '"' + elem + '"')})`
-            : `SELECT "postsId" FROM "postsancestors" where "ancestorId" IN (${superMutedIds.map(
-              (elem) => "'" + elem + "'"
-            )})`,
-          {
-            type: QueryTypes.SELECT
-          }
-        )
-      ).map((elem: any) => elem.postsId)
+          await sequelize.query(
+            isDatabaseMysql()
+              ? `SELECT postsId FROM postsancestors where ancestorId IN (${superMutedIds.map(
+                  (elem) => '"' + elem + '"'
+                )})`
+              : `SELECT "postsId" FROM "postsancestors" where "ancestorId" IN (${superMutedIds.map(
+                  (elem) => "'" + elem + "'"
+                )})`,
+            {
+              type: QueryTypes.SELECT
+            }
+          )
+        ).map((elem: any) => elem.postsId)
       : []
     return await PostMentionsUserRelation.findAll({
       order: [['createdAt', 'DESC']],
