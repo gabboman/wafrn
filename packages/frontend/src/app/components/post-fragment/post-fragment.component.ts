@@ -82,12 +82,12 @@ export class PostFragmentComponent implements OnChanges, OnDestroy {
     })
     this.userId = loginService.getLoggedUserUUID()
     this.likeSubscription = postService.postLiked.subscribe((likeEvent) => {
-      if (likeEvent.id === this.fragment.id) {
+      if (likeEvent.id === this.fragment?.id) {
         this.renderLikeDislike(likeEvent)
       }
     })
     this.emojiSubscription = postService.emojiReacted.subscribe((emojiEvent) => {
-      if (emojiEvent.postId === this.fragment.id) {
+      if (emojiEvent.postId === this.fragment?.id) {
         this.renderEmojiReact(emojiEvent)
       }
     })
