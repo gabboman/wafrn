@@ -14,7 +14,6 @@ import {
   getUnjointedPosts
 } from '../utils/baseQueryNew.js'
 import getFollowedsIds from '../utils/cacheGetters/getFollowedsIds.js'
-import { isDatabaseMysql } from '../utils/isDatabaseMysql.js'
 
 export default function forumRoutes(app: Application) {
   app.get('/api/forum/:id', optionalAuthentication, async (req: AuthorizedRequest, res: Response) => {
@@ -29,9 +28,7 @@ export default function forumRoutes(app: Application) {
     if (postsToGet) {
       let postIds = (
         await sequelize.query(
-          isDatabaseMysql()
-            ? `SELECT DISTINCT postsId FROM postsancestors where ancestorId = "${postsToGet.id}"`
-            : `SELECT DISTINCT "postsId" FROM "postsancestors" where "ancestorId" = '${postsToGet.id}'`,
+          `SELECT DISTINCT "postsId" FROM "postsancestors" where "ancestorId" = '${postsToGet.id}'`,
           {
             type: QueryTypes.SELECT
           }
