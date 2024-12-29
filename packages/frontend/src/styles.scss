@@ -56,6 +56,7 @@ html {
 body {
   min-height: 100%;
   margin: 0;
+  overflow-y: scroll;
 }
 
 .wafrn-container {
@@ -63,15 +64,62 @@ body {
 }
 
 // No JavaScript
-.no-js {
+#no-js {
   position: fixed;
   inset: 0;
   cursor: wait;
+  z-index: 99999999; // Go on top of splash screen!
 
   & .text-muted {
     color: var(--mat-sys-outline);
   }
 }
+
+// Splashscreen
+#splash,
+#splash-icon,
+#splash-text {
+  position: fixed;
+  inset: 0;
+}
+#splash {
+  background: var(--mat-sys-background);
+  cursor: wait;
+  z-index: 2; // Minimum
+  transition: display opacity;
+  transition-duration: 120ms;
+  transition-behavior: allow-discrete;
+  transition-timing-function: ease-in;
+}
+#splash-icon,
+#splash-icon img {
+  margin: auto;
+  pointer-events: none;
+  user-select: none;
+}
+#splash-text {
+  max-width: 40ch;
+  margin-inline: auto;
+  text-align: center;
+  top: 50%;
+  transform: translateY(calc(32px + 1rem));
+  color: var(--mat-sys-outline);
+}
+#splash-content {
+  height: 100%;
+  transition: translate 120ms ease-in;
+}
+
+#splash.loaded {
+  display: none;
+  opacity: 0;
+
+  & #splash-content {
+    translate: 0 -6px;
+  }
+}
+
+// Utility styles
 
 .subtle-link {
   text-decoration: none;

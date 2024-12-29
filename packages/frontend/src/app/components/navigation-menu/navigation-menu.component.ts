@@ -105,6 +105,10 @@ export class NavigationMenuComponent implements OnInit, OnDestroy {
     this.drawMenu()
     this.onResize()
     this.menuVisible = !this.mobile
+
+    // IMPORTANT: HIDE THE SPLASH SCREEN
+    const splashElement = document.getElementById('splash')
+    splashElement?.classList.add('loaded')
   }
 
   ngOnDestroy(): void {
