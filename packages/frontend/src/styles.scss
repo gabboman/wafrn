@@ -68,6 +68,7 @@ body {
   position: fixed;
   inset: 0;
   cursor: wait;
+  z-index: 99999999; // Go on top of splash screen!
 
   & .text-muted {
     color: var(--mat-sys-outline);
