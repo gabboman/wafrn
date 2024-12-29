@@ -34,7 +34,7 @@
   </head>
   <body class="mat-typography mat-app-background">
     <noscript>
-      <div class="flex flex-column align-items-center justify-content-center text-center no-js">
+      <div class="flex flex-column align-items-center justify-content-center text-center" id="no-js">
         <div class="mb-3"><img src="/assets/logo.png" alt="Wafrn logo" width="350" /></div>
         <p class="text-lg">Please enable scripts to use Wafrn.</p>
         <p class="text-sm text-muted">
@@ -43,6 +43,35 @@
         </p>
       </div>
     </noscript>
+    <div id="splash">
+      <div id="splash-content">
+        <img src="/assets/logo_w.png" alt="Wafrn logo" width="64" height="64" id="splash-icon" />
+        <p id="splash-text"></p>
+      </div>
+      <script>
+        const splashTextVariants = [
+          'Hi there!',
+          "Did you know? I didn't.",
+          'Why are you reading this?',
+          'The Mind stat is inversely correlated to your Internet use.',
+          ':3',
+          'Wait, what?',
+          'If this is taking too long, try reloading.',
+          'Switching to your phone is always faster than reloading.',
+          "It's Wafrn'n time!",
+          '[object Object] was here',
+          '[REDACTED]',
+          "We're rich!"
+        ]
+        const splashTextElement = document.getElementById('splash-text')
+
+        const randomSplashText = splashTextVariants[Math.floor(Math.random() * splashTextVariants.length)]
+
+        splashTextElement.innerText = randomSplashText
+
+        // This is hidden by navigation-menu.component.ts on its onInit method!
+      </script>
+    </div>
     <app-root></app-root>
   </body>
 </html>
