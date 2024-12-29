@@ -1,10 +1,19 @@
-# Wafrn
+# Wafrn - Angular
 
-This project is the frontend of [wafrn](https://app.wafrn.net), the social network that respects you.
+This package is the frontend of Wafrn.
 
-This is made with [Angular](https://angular.io/). Have fun doing stuff ;D
+The frontend of Wafrn uses [Angular](https://angular.io/). Have fun doing stuff ;D
+
+- [Installation](#installation)
+  - [Prerequisites](#prerequisites)
+  - [Setup](#setup)
+  - [Local Development](#local-development)
+- [Contributing](#contributing)
+- [License](#license)
 
 ## Installation
+
+<details>
 
 ### Prerequisites
 
@@ -12,21 +21,6 @@ This project uses NPM. You can check that NPM is installed in the terminal by ru
 
 ```bash
 npm -v
-```
-
-If you have Nix installed, you can run the development environment through the provided `shell.nix` file which includes
-Node 20.
-
-```bash
-nix-shell
-
-# Now in nix shell with Node 20 installed
-```
-
-If you want the shell to run the production server and immediately exit upon the command's completion, you can run
-
-```bash
-nix-shell --command "trap 'exit' INT;npm run frontend:develop:prod"
 ```
 
 ### Setup
@@ -51,13 +45,29 @@ npm run frontend:develop      # Point to local backend
 npm run frontend:develop:prod # Point to production backend
 ```
 
-When the server is set up, you should get a success message:
+If you have Nix installed, you can also run the development environment through the provided `shell.nix` file which includes Node 20.
+
+```bash
+nix-shell
+
+# Now in nix shell with Node 20 installed
+```
+
+To run the frontend pointing to the production server and immediately exit upon the command's completion, you can run:
+
+```bash
+nix-shell --command "trap 'exit' INT;npm run frontend:develop:prod"
+```
+
+In either case, when the server is set up, you should get a success message:
 
 ```text
 Watch mode enabled. Watching for file changes...
   ➜  Local:   http://localhost:4200/
   ➜  press h + enter to show help
 ```
+
+</details>
 
 ## Contributing
 

@@ -1,21 +1,30 @@
-# WAFRN backend - Node.js REST API
+# Wafrn backend - Node.js REST API
 
-Wafrn is an open source social network that connects with the Fediverse. The frontend (not included in this repo) is Tumblr-inspired. The "official" wafrn server is [app.wafrn.net](https://app.wafrn.net), but you can host your own if you're unhappy with my moderation style or simply and more probable, you would like to host your own stuff.
+This package is the backend of Wafrn.
 
-- [WAFRN backend - Node.js REST API](#wafrn-backend---nodejs-rest-api)
-  - [What will you need](#what-will-you-need)
-    - [The domains](#the-domains)
+The backend of Wafrn uses [NodeJS](https://nodejs.org/en). Have fun doing stuff ;D
+
+- [Installation](#installation)
+  - [Prerequisites](#prerequisites)
+  - [The domains](#the-domains)
   - [First steps: update and install stuff](#first-steps-update-and-install-stuff)
   - [Create a database](#create-a-database)
   - [Create a user for wafrn and prepare node for the user](#create-a-user-for-wafrn-and-prepare-node-for-the-user)
   - [Configuring Apache](#configuring-apache)
   - [Getting started with node and copying the code](#getting-started-with-node-and-copying-the-code)
   - [Configuring the frontend](#configuring-the-frontend)
+- [Contributing](#contributing)
+- [License](#license)
 
-## What will you need
+## Installation
+
+<details>
 
 Before trying to host your own wafrn, we advise you to please, very please, [join our matrix channel](https://matrix.to/#/!KFbQcLWJSAEcoKGxhl:matrix.org?via=matrix.org&via=t2bot.io) to get support, questions to the team and all those stuffs. Wafrn is an alpha software. Kinda. And you WILL find bugs. Either during the use or while trying to follow this manual. So yet again, [please join our matrix chatroom](https://matrix.to/#/!KFbQcLWJSAEcoKGxhl:matrix.org?via=matrix.org&via=t2bot.io). We recommend the client element if you're new to this.
-Ok let's get started, this is what you will need
+
+### Prerequisites
+
+You will need:
 
 - A few hours
 - A Linux machine with root access. This tutorial will assume Debian or derivates
@@ -28,7 +37,7 @@ Ok let's get started, this is what you will need
 
 The frontend domain is the domain that people will use to find you on Fedi. In the prod instance, it's [app.wafrn.net](https://app.wafrn.net). Then referring to the media URL, we have [media.wafrn.net](https://media.wafrn.net), and finally for cache we have [cache.wafrn.net](https://cache.wafrn.net)
 
-## First steps: update and install stuff
+### First steps: update and install stuff
 
 With the root user, do this command:
 
@@ -37,7 +46,7 @@ sudo apt update && apt dist-upgrade
 sudo apt install curl mysql-server mysql apache2 certbot python3-certbot-apache build-essential redis ffmpeg webp graphicsmagick tmux
 ```
 
-## Create a database
+### Create a database
 
 With the root user, we log in into the database with the command `mysql`. Then we create a db, and a user and a password:
 
@@ -51,7 +60,7 @@ CREATE USER 'wafrn'@'localhost' IDENTIFIED BY 'SAFE_PASSWORD';
 GRANT ALL PRIVILEGES ON wafrn.* TO 'wafrn'@'localhost';
 ```
 
-## Create a user for wafrn and prepare node for the user
+### Create a user for wafrn and prepare node for the user
 
 You could install Node.js on the system level, but we do not recommend that. Instead, we advise you use [`nvm`](https://github.com/nvm-sh/nvm), both in your machine if you ever do something, and in the server.
 Create a new system user. In this case, we are going to call it `wafrn`.
@@ -67,7 +76,7 @@ usermod -aG www-data wafrn
 systemctl restart apache2
 ```
 
-## Configuring Apache
+### Configuring Apache
 
 We first have to enable some Apache modules first, and change some details in the config file
 
@@ -198,7 +207,7 @@ We create the file `/etc/apache2/sites-avaiable/YOUR-FRONTEND-DOMAIN.conf` with 
 </VirtualHost>
 ```
 
-## Getting started with node and copying the code
+### Getting started with node and copying the code
 
 **Log in as the wafrn user**. Once you're there, time to install [`nvm`](https://github.com/nvm-sh/nvm).
 
@@ -229,7 +238,7 @@ Now we have to get into each of the folders and install the dependencies. Just *
 npm install
 ```
 
-## Configuring the frontend
+### Configuring the frontend
 
 In the frontend folder, copy the environment file to environment.custom.ts
 
@@ -242,3 +251,13 @@ Now we will edit the file. The file has annotations,
 ```shell
 npm start
 ```
+
+</details>
+
+## Contributing
+
+TODO: Copy frontend version of this?
+
+## License
+
+[GNU AGPLv3](https://choosealicense.com/licenses/agpl-3.0/)
