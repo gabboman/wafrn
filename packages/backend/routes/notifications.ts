@@ -23,7 +23,6 @@ import AuthorizedRequest from '../interfaces/authorizedRequest.js'
 import { getMutedPosts } from '../utils/cacheGetters/getMutedPosts.js'
 import getBlockedIds from '../utils/cacheGetters/getBlockedIds.js'
 import { getMedias } from '../utils/baseQueryNew.js'
-import { isDatabaseMysql } from '../utils/isDatabaseMysql.js'
 
 export default function notificationRoutes(app: Application) {
   app.get('/api/v2/notificationsScroll', authenticateToken, async (req: AuthorizedRequest, res: Response) => {
@@ -157,6 +156,23 @@ export default function notificationRoutes(app: Application) {
     })
   })
 
+  app.get('/api/v3/notificationsScroll', authenticateToken, async (req: AuthorizedRequest, res: Response) => {
+    const page = req.query?.page ? parseInt(req.query.page as string) : 0
+    /* TMP query
+SELECT "followerId" as "userId", "createdAt", 'FOLLOW' as "type" FROM "follows" WHERE "followedId" = 'bd78a757-b69e-482c-b4a6-dd6ec62eb933' AND "accepted" = TRUE ORDER BY "createdAt" DESC LIMIT 20 OFFSET (0* 20);
+
+SELECT "postId", "createdAt", 'MENTION' as "type" FROM "postMentionsUserRelations" WHERE "userId" = 'bd78a757-b69e-482c-b4a6-dd6ec62eb933' AND "postId" NOT IN (SELECT "postsId" FROM "postsancestors" WHERE "ancestorId" IN (SELECT "postId" FROM "silencedPosts" WHERE "userId" = 'bd78a757-b69e-482c-b4a6-dd6ec62eb933' AND "superMuted" = TRUE)) ORDER BY "createdAt" DESC LIMIT 20 OFFSET (0* 20);
+
+SELECT "createdAt", "quoterPostId" as "postId", 'QUOTE' as "TYPE"  FROM "quotes" WHERE "quotedPostId" IN (SELECT "id" FROM "posts" WHERE "userId" = 'bd78a757-b69e-482c-b4a6-dd6ec62eb933' ) ORDER BY "createdAt" DESC LIMIT 20 OFFSET (0* 20);
+
+SELECT "postId", "userId", "createdAt", 'LIKE' as "type" FROM "userLikesPostRelations" WHERE "postId" IN (SELECT "id" FROM "posts" WHERE "userId" = 'bd78a757-b69e-482c-b4a6-dd6ec62eb933' ) ORDER BY "createdAt" DESC LIMIT 20 OFFSET (0* 20);
+
+SELECT "postId", "userId", "createdAt", "emojiId", "content", 'EMOJIREACT' as "type" FROM "emojiReactions" WHERE "postId" IN (SELECT "id" FROM "posts" WHERE "userId" = 'bd78a757-b69e-482c-b4a6-dd6ec62eb933' ) ORDER BY "createdAt" DESC LIMIT 20 OFFSET (0* 20);
+
+SELECT "parentId" as "postId", "userId", "createdAt", 'REBLOG' as "type" FROM "posts" WHERE "userId" = 'bd78a757-b69e-482c-b4a6-dd6ec62eb933' AND "id" NOT IN (SELECT "postsId" FROM "postsancestors" WHERE "ancestorId" IN (SELECT "postId" FROM "silencedPosts" WHERE "userId" = 'bd78a757-b69e-482c-b4a6-dd6ec62eb933' AND "superMuted" = TRUE)) AND "parentId" IN (SELECT "id" FROM "posts" WHERE "userId" = 'bd78a757-b69e-482c-b4a6-dd6ec62eb933' ) ORDER BY "createdAt" DESC LIMIT 20 OFFSET (0* 20);
+    */
+  })
+
   app.get('/api/v2/notificationsCount', authenticateToken, async (req: AuthorizedRequest, res: Response) => {
     const userId = req.jwtData?.userId ? req.jwtData?.userId : '00000000-0000-0000-0000-000000000000'
 
@@ -240,13 +256,9 @@ export default function notificationRoutes(app: Application) {
     const fullyMutedDoNotCountForMentions = superMutedIds.length
       ? (
           await sequelize.query(
-            isDatabaseMysql()
-              ? `SELECT postsId FROM postsancestors where ancestorId IN (${superMutedIds.map(
-                  (elem) => '"' + elem + '"'
-                )})`
-              : `SELECT "postsId" FROM "postsancestors" where "ancestorId" IN (${superMutedIds.map(
-                  (elem) => "'" + elem + "'"
-                )})`,
+            `SELECT "postsId" FROM "postsancestors" where "ancestorId" IN (${superMutedIds.map(
+              (elem) => "'" + elem + "'"
+            )})`,
             {
               type: QueryTypes.SELECT
             }
@@ -364,9 +376,7 @@ export default function notificationRoutes(app: Application) {
           [Op.notIn]: [userId].concat(await getBlockedIds(userId))
         },
         literal: Sequelize.literal(
-          isDatabaseMysql()
-            ? `posts.id IN (select id from posts where parentId in (select id from posts where userId = "${userId}"))`
-            : `"posts"."id" IN (select "id" from "posts" where "parentId" in (select "id" from "posts" where "userId" = '${userId}'))`
+          `"posts"."id" IN (select "id" from "posts" where "parentId" in (select "id" from "posts" where "userId" = '${userId}'))`
         )
       }
     }
@@ -380,11 +390,7 @@ export default function notificationRoutes(app: Application) {
         createdAt: {
           [operator]: isNaN(startCountDate.getDate()) ? new Date() : startCountDate
         },
-        literal: Sequelize.literal(
-          isDatabaseMysql()
-            ? `quotedPostId IN (SELECT id FROM posts WHERE userId= "${userId}")`
-            : `"quotedPostId" IN (SELECT "id" FROM "posts" WHERE "userId"= '${userId}')`
-        )
+        literal: Sequelize.literal(`"quotedPostId" IN (SELECT "id" FROM "posts" WHERE "userId"= '${userId}')`)
       }
     }
   }
