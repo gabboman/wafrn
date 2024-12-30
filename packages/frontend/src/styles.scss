@@ -38,6 +38,7 @@ $theme: mat.define-theme(
   --wafrn-blue: light-dark(#125e59, #96d8d1);
   --mat-sys-label-small-size: 0.688rem;
 
+  --info-card-info-background: light-dark(#d5e3fe, #3a475d);
   --info-card-warning-background: light-dark(#d7c3b8, #52443c);
 }
 
@@ -52,12 +53,12 @@ html {
   height: 100%;
   background-color: var(--mat-sys-surface);
   overflow-wrap: anywhere;
+  overflow-y: scroll;
 }
 
 body {
   min-height: 100%;
   margin: 0;
-  overflow-y: scroll;
 }
 
 .wafrn-container {
@@ -88,7 +89,7 @@ body {
   background: var(--mat-sys-background);
   cursor: wait;
   z-index: 2; // Minimum
-  transition: display opacity;
+  transition: display, opacity;
   transition-duration: 120ms;
   transition-behavior: allow-discrete;
   transition-timing-function: ease-in;
@@ -147,11 +148,9 @@ body {
   }
 }
 
-// not mobile only styles
-@media (min-width: 992px) {
-  .input-height-btn {
-    height: 56px !important;
-  }
+:root .mat-mdc-dialog-surface {
+  background-color: var(--mat-sys-surface-container);
+  box-shadow: var(--mat-sys-level3);
 }
 
 .mat-mdc-dialog-content {

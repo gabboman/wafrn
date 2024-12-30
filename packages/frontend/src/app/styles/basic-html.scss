@@ -4,6 +4,12 @@ a:visited,
   color: var(--wafrn-blue);
 }
 
+ul,
+ol {
+  padding-inline-start: 0.75rem;
+  margin: 0 0 0.75em;
+}
+
 li {
   list-style-type: inside circle;
   margin-left: 1.5em;

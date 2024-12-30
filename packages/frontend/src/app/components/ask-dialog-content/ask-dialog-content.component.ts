@@ -9,10 +9,19 @@ import { BlogDetails } from 'src/app/interfaces/blogDetails'
 import { BlogService } from 'src/app/services/blog.service'
 import { LoginService } from 'src/app/services/login.service'
 import { MessageService } from 'src/app/services/message.service'
+import { InfoCardComponent } from '../info-card/info-card.component'
 
 @Component({
   selector: 'app-ask-dialog-content',
-  imports: [CommonModule, FormsModule, ReactiveFormsModule, MatInput, MatFormFieldModule, MatButtonModule],
+  imports: [
+    CommonModule,
+    FormsModule,
+    ReactiveFormsModule,
+    MatInput,
+    MatFormFieldModule,
+    MatButtonModule,
+    InfoCardComponent
+  ],
   templateUrl: './ask-dialog-content.component.html',
   styleUrl: './ask-dialog-content.component.scss'
 })

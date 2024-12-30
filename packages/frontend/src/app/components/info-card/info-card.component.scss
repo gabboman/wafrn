@@ -10,4 +10,11 @@
   & fa-icon {
     margin-right: 1ch;
   }
+
+  &.caution {
+    background-color: var(--info-card-warning-background);
+  }
+  &.info {
+    background-color: var(--info-card-info-background);
+  }
 }
