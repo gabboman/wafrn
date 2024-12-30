@@ -9,7 +9,7 @@
     <a [href]="'/'" class="block" (mousedown)="hideMenu()">
       <img
         [src]="logo"
-        class="block mx-auto my-3"
+        class="block mx-auto mt-3"
         alt="instance logo"
         width="200"
         style="aspect-ratio: 3 / 1; object-fit: contain"
@@ -25,6 +25,9 @@
         }
       }
     </mat-nav-list>
+    <div class="drawer-footer">
+      <app-theme-switcher></app-theme-switcher>
+    </div>
   </mat-drawer>
   <mat-drawer-content>
     <button

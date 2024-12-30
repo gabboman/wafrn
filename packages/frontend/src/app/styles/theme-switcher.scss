@@ -1,0 +1,62 @@
+// Theme switcher styles
+html[data-theme='light'] {
+  color-scheme: light;
+}
+html[data-theme='dark'] {
+  color-scheme: dark;
+}
+html[data-theme='auto'] {
+  color-scheme: light dark;
+}
+
+// From toggles.dev
+.theme-toggle.theme-toggle--reversed .theme-toggle__within {
+  transform: scale(-1, 1);
+}
+
+.theme-toggle {
+  --theme-toggle__within--duration: 500ms;
+}
+.theme-toggle__within * {
+  transform-origin: center;
+  transition: transform calc(var(--theme-toggle__within--duration)) cubic-bezier(0, 0, 0, 1.25);
+}
+
+.theme-toggle--toggled:not(label).theme-toggle .theme-toggle__within .theme-toggle__within__circle,
+.theme-toggle input[type='checkbox']:checked ~ .theme-toggle__within .theme-toggle__within__circle {
+  transform: scale(1.5);
+}
+.theme-toggle--toggled:not(label).theme-toggle .theme-toggle__within .theme-toggle__within__inner,
+.theme-toggle input[type='checkbox']:checked ~ .theme-toggle__within .theme-toggle__within__inner {
+  transform: translate3d(3px, -3px, 0) scale(1.2);
+}
+.theme-toggle--toggled:not(label).theme-toggle .theme-toggle__within g path,
+.theme-toggle input[type='checkbox']:checked ~ .theme-toggle__within g path {
+  transform: scale(0.65);
+}
+
+.theme-toggle {
+  border: none;
+  background: none;
+  cursor: pointer;
+}
+.theme-toggle input[type='checkbox'] {
+  display: none;
+}
+.theme-toggle .theme-toggle-sr {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .theme-toggle:not(.theme-toggle--force-motion) * {
+    transition: none !important;
+  }
+}
