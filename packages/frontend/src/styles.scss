@@ -160,6 +160,10 @@ body {
   padding: 20px;
 }
 
+.mat-mdc-tooltip-trigger {
+  touch-action: auto !important;
+}
+
 .force-comic-sans {
   font-family: 'Comic Sans MS', cursive, sans-serif;
 }
