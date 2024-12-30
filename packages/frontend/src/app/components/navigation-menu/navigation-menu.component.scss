@@ -1,11 +1,12 @@
 //app-navigation-menu,
 :root .side-menu {
-  display: block;
   background-color: var(--mat-sys-surface-container-low);
   box-shadow: var(--mat-sys-level2);
 }
 
 .mat-drawer-inner-container {
+  display: flex;
+  flex-direction: column;
   padding: 0.5rem;
   overscroll-behavior-y: contain;
 }
@@ -20,4 +21,10 @@
 
 hr {
   margin: 16px 0;
+}
+
+.drawer-footer {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: auto;
 }

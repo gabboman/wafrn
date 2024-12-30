@@ -2,6 +2,7 @@
 @use './app/styles/quil.scss';
 @use './app/styles/post-card.scss';
 @use './app/styles/basic-html.scss';
+@use './app/styles/theme-switcher.scss';
 
 html {
   color-scheme: light dark;
@@ -67,6 +68,7 @@ body {
 #no-js {
   position: fixed;
   inset: 0;
+  background: var(--mat-sys-background);
   cursor: wait;
   z-index: 99999999; // Go on top of splash screen!
 

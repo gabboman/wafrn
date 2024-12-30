@@ -31,6 +31,17 @@
     <link rel="apple-touch-icon" href="/assets/icons/icon-512x512.png" />
     <link rel="manifest" href="manifest.webmanifest" />
     <meta name="theme-color" content="#20262e" />
+    <script>
+      // Theme switcher bootstrap
+      if (typeof localStorage !== 'undefined') {
+        const localTheme = localStorage.getItem('theme')
+        if (localTheme === 'light' || localTheme === 'dark' || localTheme === 'auto') {
+          document.documentElement.setAttribute('data-theme', localTheme)
+        }
+      } else {
+        document.documentElement.setAttribute('data-theme', 'auto')
+      }
+    </script>
   </head>
   <body class="mat-typography mat-app-background">
     <noscript>
