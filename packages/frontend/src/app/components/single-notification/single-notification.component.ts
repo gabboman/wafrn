@@ -9,15 +9,7 @@ import { PostFragmentComponent } from '../post-fragment/post-fragment.component'
 import { PostHeaderComponent } from '../post/post-header/post-header.component'
 import { EnvironmentService } from 'src/app/services/environment.service'
 import { PostRibbonComponent } from '../post-ribbon/post-ribbon.component'
-import {
-  faCheck,
-  faHeart,
-  faQuoteLeft,
-  faRepeat,
-  faReply,
-  faShareNodes,
-  faUser
-} from '@fortawesome/free-solid-svg-icons'
+import { faAt, faCheck, faHeart, faQuoteLeft, faRepeat, faUser } from '@fortawesome/free-solid-svg-icons'
 import { DateTimeFromJsDatePipe, DateTimeToRelativePipe, LuxonModule } from 'luxon-angular'
 
 @Component({
@@ -41,22 +33,13 @@ export class SingleNotificationComponent implements OnInit {
   notificationType = NotificationType
 
   notificationIcons = {
-    [NotificationType.MENTION]: faShareNodes,
+    [NotificationType.MENTION]: faAt,
     [NotificationType.LIKE]: faHeart,
     [NotificationType.FOLLOW]: faUser,
     [NotificationType.REBLOG]: faRepeat,
     [NotificationType.QUOTE]: faQuoteLeft,
     [NotificationType.EMOJIREACT]: faCheck
   }
-
-  // Icons
-  shareIcon = faShareNodes
-  solidHeartIcon = faHeart
-  replyIcon = faReply
-  reblogIcon = faRepeat
-  quoteIcon = faQuoteLeft
-  userIcon = faUser
-  checkIcon = faCheck
 
   constructor(
     private dateTimeToRelative: DateTimeToRelativePipe,
