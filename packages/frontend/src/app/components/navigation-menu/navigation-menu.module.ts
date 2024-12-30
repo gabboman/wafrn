@@ -9,6 +9,7 @@ import { MatBadgeModule } from '@angular/material/badge'
 import { MatButtonModule } from '@angular/material/button'
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome'
 import { MatDialogModule } from '@angular/material/dialog'
+import { ThemeSwitcherComponent } from '../theme-switcher/theme-switcher.component'
 
 @NgModule({
   declarations: [NavigationMenuComponent],
@@ -21,7 +22,8 @@ import { MatDialogModule } from '@angular/material/dialog'
     MatBadgeModule,
     FontAwesomeModule,
     MatButtonModule,
-    MatDialogModule
+    MatDialogModule,
+    ThemeSwitcherComponent
   ],
   exports: [NavigationMenuComponent]
 })
