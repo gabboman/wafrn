@@ -4,21 +4,12 @@ import { AvatarSmallComponent } from '../avatar-small/avatar-small.component'
 import { IconDefinition } from '@fortawesome/fontawesome-svg-core'
 import { MatCardModule } from '@angular/material/card'
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome'
-import { DatePipe, NgClass, NgTemplateOutlet } from '@angular/common'
-import { MatTooltipModule } from '@angular/material/tooltip'
+import { NgClass, NgTemplateOutlet } from '@angular/common'
 import { DateTimeFromJsDatePipe, DateTimeToRelativePipe } from 'luxon-angular'
 
 @Component({
   selector: 'app-post-ribbon',
-  imports: [
-    MatCardModule,
-    AvatarSmallComponent,
-    FontAwesomeModule,
-    NgTemplateOutlet,
-    NgClass,
-    DatePipe,
-    MatTooltipModule
-  ],
+  imports: [MatCardModule, AvatarSmallComponent, FontAwesomeModule, NgTemplateOutlet, NgClass],
   providers: [DateTimeToRelativePipe, DateTimeFromJsDatePipe],
   templateUrl: './post-ribbon.component.html',
   styleUrl: './post-ribbon.component.scss'

@@ -13,6 +13,6 @@
     </div>
     <app-avatar-small [user]="user()"></app-avatar-small>
     <p class="m-0 min-w-0 white-space-nowrap overflow-hidden text-overflow-ellipsis"><ng-content></ng-content></p>
-    <div class="ml-auto text-sm flex-shrink-0 ribbon-date" matTooltip="{{ time() | date: 'short' }}">{{ timeAgo }}</div>
+    <div class="ml-auto text-sm flex-shrink-0 ribbon-date">{{ timeAgo }}</div>
   </div>
 </ng-template>
