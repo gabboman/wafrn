@@ -44,7 +44,7 @@ export class NotificationsComponent implements OnInit {
     this.observer = new IntersectionObserver((intersectionEntries: IntersectionObserverEntry[]) => {
       if (intersectionEntries.some((elem) => elem.isIntersecting)) {
         this.page = this.page + 1
-        this.loadNotifications(this.page)
+        this.loadNotificationsV2(this.page)
       }
     })
   }
@@ -57,7 +57,7 @@ export class NotificationsComponent implements OnInit {
   async ngOnInit(): Promise<void> {
     window.scrollTo(0, 0)
     localStorage.setItem('lastTimeCheckNotifications', new Date().toISOString())
-    await this.loadNotifications(0)
+    await this.loadNotificationsV2(0)
   }
 
   async loadNotifications(page: number) {
@@ -147,6 +147,12 @@ export class NotificationsComponent implements OnInit {
         console.log('observer not ready')
       }
     })
+  }
+
+  async loadNotificationsV2(page: number) {
+    this.notificationsToShow = this.notificationsToShow.concat(
+      await this.notificationsService.getNotificationsScrollV2(page)
+    )
   }
 
   reblogToNotification(reblog: Reblog, type: NotificationType): UserNotifications {

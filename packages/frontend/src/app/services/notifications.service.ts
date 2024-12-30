@@ -12,17 +12,23 @@ import { NotificationType } from '../enums/notification-type'
 import { ProcessedPost } from '../interfaces/processed-post'
 import { PostsService } from './posts.service'
 import { EnvironmentService } from './environment.service'
+import { Emoji } from '../interfaces/emoji'
 
 @Injectable({
   providedIn: 'root'
 })
 export class NotificationsService {
+  uniqueDate = new Date()
   likesDate = new Date()
   followsDate = new Date()
   reblogsDate = new Date()
   mentionsDate = new Date()
   emojiReactionDate = new Date()
   quotesDate = new Date()
+
+  emojiMap = new Map<string, Emoji>()
+  userMap = new Map<string, SimplifiedUser>()
+  postMap = new Map<string, basicPost>()
 
   constructor(
     private http: HttpClient,
@@ -273,5 +279,89 @@ export class NotificationsService {
           emojiReactions: [],
           quotes: []
         }
+  }
+
+  async getNotificationsScrollV2(page: number): Promise<UserNotifications[]> {
+    if (!this.jwt.tokenValid()) {
+      return []
+    }
+    if (page === 0) {
+      this.uniqueDate = new Date()
+    }
+    let petitionData: HttpParams = new HttpParams()
+    petitionData = petitionData.set('likesDate', this.uniqueDate.getTime())
+    petitionData = petitionData.set('followsDate', this.uniqueDate.getTime())
+    petitionData = petitionData.set('reblogsDate', this.uniqueDate.getTime())
+    petitionData = petitionData.set('mentionsDate', this.uniqueDate.getTime())
+    petitionData = petitionData.set('emojiReactionDate', this.uniqueDate.getTime())
+    petitionData = petitionData.set('quotesDate', this.uniqueDate.getTime())
+    petitionData = petitionData.set('page', page)
+    const petition = await firstValueFrom(
+      this.http.get<{
+        users: SimplifiedUser[]
+        posts: basicPost[]
+        medias: any[]
+        follows: any[]
+        reblogs: any[]
+        mentions: any[]
+        likes: any[]
+        emojiReactions: any[]
+        quotes: any[]
+        userEmojisRelation: any[]
+        emojis: Emoji[]
+      }>(`${EnvironmentService.environment.baseUrl}/v2/notificationsScroll`, {
+        params: petitionData
+      })
+    )
+    if (petition) {
+      console.log(petition)
+      // we load the data
+      petition.emojis.forEach((emoji) => this.emojiMap.set(emoji.id, emoji))
+      petition.users.forEach((usr) => {
+        const userEmojis = petition.userEmojisRelation
+          .filter((elem) => elem.userId === usr.id)
+          .map((elem) => this.emojiMap.get(elem.emojiId))
+        this.userMap.set(usr.id, { ...usr, emojis: userEmojis.filter((elm) => elm) as Emoji[] })
+      })
+      petition.posts.forEach((pst) => {})
+      let res: UserNotifications[] = []
+      const likes = petition.likes
+      const emojireacts = petition.emojiReactions
+      const reblogs = petition.reblogs
+      const quotes = petition.quotes
+      const mentions = petition.mentions
+      const follows = petition.follows
+      console.log(follows)
+      res = follows.map((follow) => {
+        const user = this.userMap.get(follow.followerId) as SimplifiedUser
+        return {
+          type: NotificationType.FOLLOW,
+          url: `/blog/${user.url}`,
+          avatar: user.avatar,
+          date: new Date(follow.createdAt),
+          userUrl: user.url
+        }
+      })
+      console.log(res)
+      return res
+    } else {
+      return []
+    }
+  }
+
+  reblogToNotification(reblog: Reblog, type: NotificationType): UserNotifications {
+    if (!reblog.user) {
+      console.log(`ERROR WITH ${type}`)
+    }
+    return {
+      url: `/fediverse/post/${reblog.id}`,
+      avatar: reblog.user.avatar,
+      date: reblog.createdAt,
+      type: type,
+      userUrl: reblog.user.url,
+      fragment: reblog.content,
+      emojiName: reblog.emojiName,
+      emojiReact: reblog.emojiReact
+    }
   }
 }
