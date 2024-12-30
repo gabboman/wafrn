@@ -68,6 +68,7 @@ body {
 #no-js {
   position: fixed;
   inset: 0;
+  background: var(--mat-sys-background);
   cursor: wait;
   z-index: 99999999; // Go on top of splash screen!
 
