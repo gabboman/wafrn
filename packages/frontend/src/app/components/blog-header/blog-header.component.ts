@@ -8,7 +8,6 @@ import { RouterModule } from '@angular/router'
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome'
 import {
   faChevronDown,
-  faExclamationTriangle,
   faServer,
   faUser,
   faUserSlash,
@@ -54,7 +53,6 @@ export class BlogHeaderComponent implements OnChanges, OnDestroy {
   unblockServerIcon = faServer
   allowAsk = false
   allowRemoteAsk = false
-  infoAlert = faExclamationTriangle
 
   constructor(
     private loginService: LoginService,
