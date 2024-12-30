@@ -152,7 +152,8 @@ export default function notificationRoutes(app: Application) {
       mentions: await mentions,
       follows: await follows,
       medias: await medias,
-      quotes: await newQuotes
+      quotes: await newQuotes,
+      userEmojisRelation: await userEmojis
     })
   })
 
