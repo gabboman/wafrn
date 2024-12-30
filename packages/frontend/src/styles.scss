@@ -51,7 +51,7 @@ $theme: mat.define-theme(
 html {
   height: 100%;
   background-color: var(--mat-sys-surface);
-  overflow-wrap: break-word;
+  overflow-wrap: anywhere;
 }
 
 body {
