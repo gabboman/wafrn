@@ -52,12 +52,12 @@ html {
   height: 100%;
   background-color: var(--mat-sys-surface);
   overflow-wrap: anywhere;
+  overflow-y: scroll;
 }
 
 body {
   min-height: 100%;
   margin: 0;
-  overflow-y: scroll;
 }
 
 .wafrn-container {
