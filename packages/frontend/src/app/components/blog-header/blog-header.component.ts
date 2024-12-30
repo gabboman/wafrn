@@ -131,7 +131,7 @@ export class BlogHeaderComponent implements OnChanges, OnDestroy {
   async openAskDialog() {
     this.dialogService.open(await this.getAskDialogComponent(), {
       data: { details: this.blogDetails },
-      width: '100%'
+      width: '800px'
     })
   }
 
