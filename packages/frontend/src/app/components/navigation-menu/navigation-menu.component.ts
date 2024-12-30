@@ -37,7 +37,8 @@ import {
   faIcons,
   faSkull,
   faFileEdit,
-  faPaintbrush
+  faPaintbrush,
+  IconDefinition
 } from '@fortawesome/free-solid-svg-icons'
 import { MenuItem } from 'src/app/interfaces/menu-item'
 import { MatDialog } from '@angular/material/dialog'
@@ -130,20 +131,20 @@ export class NavigationMenuComponent implements OnInit, OnDestroy {
     this.menuItems = [
       {
         label: 'Log in',
-        title: 'Log in',
         icon: faHouse,
-        routerLink: '/login',
+        title: 'Log in',
         visible: !this.jwtService.tokenValid(),
+        routerLink: '/login',
         command: () => {
           this.hideMenu()
         }
       },
       {
         label: 'Register',
-        title: 'Register',
         icon: faUser,
-        routerLink: '/',
+        title: 'Register',
         visible: !this.jwtService.tokenValid(),
+        routerLink: '/',
         command: () => {
           this.hideMenu()
         }
@@ -152,56 +153,55 @@ export class NavigationMenuComponent implements OnInit, OnDestroy {
         label: 'Explore without an account',
         icon: faCompass,
         title: 'See ALL the posts that are public! Yes, you can be a lurker',
-        routerLink: '/dashboard/exploreLocal',
         visible: !this.jwtService.tokenValid(),
+        routerLink: '/dashboard/exploreLocal',
         command: () => {
           this.hideMenu()
         }
       },
       {
         label: 'Dashboard',
-        title: 'View dashboard',
         icon: faHouse,
-        routerLink: '/dashboard',
+        title: 'View dashboard',
         visible: this.jwtService.tokenValid(),
+        routerLink: '/dashboard',
         command: () => {
           this.hideMenu()
         }
       },
-
       {
         label: 'Write new woot',
-        title: 'Write a woot',
         icon: faPencil,
+        title: 'Write a woot',
+        visible: this.jwtService.tokenValid(),
         command: async () => {
           this.hideMenu()
           this.openEditor()
-        },
-        visible: this.jwtService.tokenValid()
+        }
       },
       {
         label: 'Notifications',
         icon: faBell,
         title: 'Check your notifications',
-        routerLink: '/dashboard/notifications',
-        badge: this.notifications,
         visible: this.jwtService.tokenValid(),
+        badge: this.notifications,
+        routerLink: '/dashboard/notifications',
         command: () => {
           this.hideMenu()
         }
       },
       {
         label: 'Explore',
+        icon: faCompass,
         title: 'See the local posts of the server or the fediverse!',
         visible: this.jwtService.tokenValid(),
-        icon: faCompass,
         items: [
           {
             label: 'Explore WAFRN',
             icon: faServer,
             title: 'See the local posts of the server!',
-            routerLink: '/dashboard/exploreLocal',
             visible: this.jwtService.tokenValid(),
+            routerLink: '/dashboard/exploreLocal',
             command: () => {
               this.hideMenu()
             }
@@ -209,9 +209,9 @@ export class NavigationMenuComponent implements OnInit, OnDestroy {
           {
             label: 'Explore the fediverse',
             icon: faCompass,
-            title: 'Take a look to all the public posts avaiable to us, not only of people in this servers',
-            routerLink: '/dashboard/explore',
+            title: 'Take a look to all the public posts available to us, not only of people in this servers',
             visible: this.jwtService.tokenValid(),
+            routerLink: '/dashboard/explore',
             command: () => {
               this.hideMenu()
             }
@@ -220,34 +220,37 @@ export class NavigationMenuComponent implements OnInit, OnDestroy {
       },
       {
         label: 'Unanswered Asks',
+        icon: faQuestion,
         title: 'Unanswered Asks',
-        badge: this.awaitingAsks,
         visible: this.jwtService.tokenValid(),
-        command: () => this.hideMenu(),
+        badge: this.awaitingAsks,
         routerLink: '/profile/myAsks',
-        icon: faQuestion
+        command: () => {
+          this.hideMenu()
+        }
       },
       {
         label: 'Private messages',
         icon: faEnvelope,
         title: 'Private messages are here!',
+        visible: this.jwtService.tokenValid(),
         routerLink: '/dashboard/private',
         command: () => {
           this.hideMenu()
-        },
-        visible: this.jwtService.tokenValid()
+        }
       },
       {
         label: 'Admin',
         icon: faPowerOff,
         title: 'Check your notifications',
-        badge: this.adminNotifications + this.usersAwaitingApproval,
         visible: this.jwtService.adminToken(),
+        badge: this.adminNotifications + this.usersAwaitingApproval,
         items: [
           {
             label: 'Server list',
             icon: faServer,
             title: 'List of all the servers',
+            visible: true,
             routerLink: '/admin/server-list',
             command: () => {
               this.hideMenu()
@@ -257,6 +260,7 @@ export class NavigationMenuComponent implements OnInit, OnDestroy {
             label: 'Add emojis',
             icon: faIcons,
             title: 'Add emoji collection',
+            visible: true,
             routerLink: '/admin/emojis',
             command: () => {
               this.hideMenu()
@@ -264,8 +268,9 @@ export class NavigationMenuComponent implements OnInit, OnDestroy {
           },
           {
             label: 'User reports',
-            title: 'User reports',
             icon: faExclamationTriangle,
+            title: 'User reports',
+            visible: true,
             badge: this.adminNotifications,
             routerLink: '/admin/user-reports',
             command: () => {
@@ -274,8 +279,9 @@ export class NavigationMenuComponent implements OnInit, OnDestroy {
           },
           {
             label: 'User bans',
-            title: 'User bans',
             icon: faBan,
+            title: 'User bans',
+            visible: true,
             routerLink: '/admin/bans',
             command: () => {
               this.hideMenu()
@@ -283,8 +289,9 @@ export class NavigationMenuComponent implements OnInit, OnDestroy {
           },
           {
             label: 'User blocklists',
-            title: 'User blocklists',
             icon: faHourglass,
+            title: 'User blocklists',
+            visible: true,
             routerLink: '/admin/user-blocks',
             command: () => {
               this.hideMenu()
@@ -292,8 +299,9 @@ export class NavigationMenuComponent implements OnInit, OnDestroy {
           },
           {
             label: 'Stats',
-            title: 'Stats',
             icon: faChartSimple,
+            title: 'Stats',
+            visible: true,
             routerLink: '/admin/stats',
             command: () => {
               this.hideMenu()
@@ -301,9 +309,10 @@ export class NavigationMenuComponent implements OnInit, OnDestroy {
           },
           {
             label: 'Users awaiting approval',
-            title: 'User awaiting approval',
-            badge: this.usersAwaitingApproval,
             icon: faUserLock,
+            title: 'User awaiting approval',
+            visible: true,
+            badge: this.usersAwaitingApproval,
             routerLink: '/admin/activate-users',
             command: () => {
               this.hideMenu()
@@ -313,130 +322,135 @@ export class NavigationMenuComponent implements OnInit, OnDestroy {
       },
       {
         label: 'Search',
-        title: 'Search',
         icon: faSearch,
+        title: 'Search',
         visible: this.jwtService.tokenValid(),
+        routerLink: '/dashboard/search',
         command: () => {
           this.hideMenu()
-        },
-        routerLink: '/dashboard/search'
+        }
       },
       {
         label: 'Settings',
+        icon: faCog,
         title: 'Your blog, your profile, blocks, and other stuff',
         visible: this.jwtService.tokenValid(),
-        icon: faCog,
         badge: this.followsAwaitingApproval,
         items: [
           {
             label: 'Manage followers',
-            title: 'Manage followers',
-            badge: this.followsAwaitingApproval,
             icon: faUser,
-            command: () => this.hideMenu(),
-            routerLink: '/blog/' + this.jwtService.getTokenData().url + '/followers'
+            title: 'Manage followers',
+            visible: true,
+            badge: this.followsAwaitingApproval,
+            routerLink: '/blog/' + this.jwtService.getTokenData().url + '/followers',
+            command: () => {
+              this.hideMenu()
+            }
           },
           {
             label: 'Profile options',
-            title: 'Profile options',
             icon: faUserEdit,
+            title: 'Profile options',
+            visible: this.jwtService.tokenValid(),
+            routerLink: '/profile/edit',
             command: () => {
               this.hideMenu()
-            },
-            routerLink: '/profile/edit',
-            visible: this.jwtService.tokenValid()
+            }
           },
           {
             label: 'Edit my theme',
-            title: 'Edit my theme',
             icon: faPaintbrush,
+            title: 'Edit my theme',
+            visible: this.jwtService.tokenValid(),
+            routerLink: '/profile/css',
             command: () => {
               this.hideMenu()
-            },
-            routerLink: '/profile/css',
-            visible: this.jwtService.tokenValid()
+            }
           },
           {
             label: 'Manage muted users',
-            title: 'Manage muted users',
             icon: faVolumeMute,
+            title: 'Manage muted users',
+            visible: this.jwtService.tokenValid(),
+            routerLink: '/profile/mutes',
             command: () => {
               this.hideMenu()
-            },
-            routerLink: '/profile/mutes',
-            visible: this.jwtService.tokenValid()
+            }
           },
           {
             label: 'Manage muted posts',
-            title: 'Manage muted posts',
             icon: faBellSlash,
+            title: 'Manage muted posts',
+            visible: this.jwtService.tokenValid(),
+            routerLink: '/profile/silencedPosts',
             command: () => {
               this.hideMenu()
-            },
-            routerLink: '/profile/silencedPosts',
-            visible: this.jwtService.tokenValid()
+            }
           },
           {
             label: 'Manage blocked users',
-            title: 'Manage blocked users',
             icon: faBan,
+            title: 'Manage blocked users',
+            visible: this.jwtService.tokenValid(),
+            routerLink: '/profile/blocks',
             command: () => {
               this.hideMenu()
-            },
-            routerLink: '/profile/blocks',
-            visible: this.jwtService.tokenValid()
+            }
           },
           {
             label: 'Manage blocked servers',
-            title: 'Manage blocked servers',
             icon: faServer,
+            title: 'Manage blocked servers',
+            visible: this.jwtService.tokenValid(),
+            routerLink: '/profile/serverBlocks',
             command: () => {
               this.hideMenu()
-            },
-            routerLink: '/profile/serverBlocks',
-            visible: this.jwtService.tokenValid()
+            }
           },
           {
             label: 'Import follows',
-            title: 'Import follows',
             icon: faUserEdit,
+            title: 'Import follows',
+            visible: this.jwtService.tokenValid(),
+            routerLink: '/profile/importFollows',
             command: () => {
               this.hideMenu()
-            },
-            routerLink: '/profile/importFollows',
-            visible: this.jwtService.tokenValid()
+            }
           },
           {
             label: 'Special secret menu',
-            title: 'Special secret menu',
             icon: faSkull,
+            title: 'Special secret menu',
             visible: this.jwtService.tokenValid(),
+            routerLink: '/doom',
             command: () => {
               this.hideMenu()
-            },
-            routerLink: '/doom'
+            }
           }
         ]
       },
       {
         label: 'My blog',
-        title: 'View your own blog',
         icon: faUser,
+        title: 'View your own blog',
+        visible: this.jwtService.tokenValid(),
+        routerLink: '/blog/' + (this.jwtService.tokenValid() ? this.jwtService.getTokenData()['url'] : ''),
         command: () => {
           this.hideMenu()
-        },
-        routerLink: '/blog/' + (this.jwtService.tokenValid() ? this.jwtService.getTokenData()['url'] : ''),
-        visible: this.jwtService.tokenValid()
+        }
       },
       {
         label: '',
         title: '',
+        visible: true,
         divider: true
       },
       {
         label: 'Privacy policy & rules',
-        title: 'Privacy policy & rules',
         icon: faEyeSlash,
+        title: 'Privacy policy & rules',
+        visible: true,
         routerLink: '/privacy',
         command: () => {
           this.hideMenu()
@@ -446,6 +460,7 @@ export class NavigationMenuComponent implements OnInit, OnDestroy {
         label: 'Check the source code!',
         icon: faCode,
         title: 'The frontend is made in angular, and the backend in typescript. you can check the code here',
+        visible: true,
         url: 'https://github.com/gabboman/wafrn',
         command: () => {
           this.hideMenu()
@@ -453,8 +468,9 @@ export class NavigationMenuComponent implements OnInit, OnDestroy {
       },
       {
         label: 'Patreon',
-        title: 'Give us some money through patreon',
         icon: faEuro,
+        title: 'Give us some money through patreon',
+        visible: true,
         url: 'https://patreon.com/wafrn',
         command: () => {
           this.hideMenu()
@@ -462,8 +478,9 @@ export class NavigationMenuComponent implements OnInit, OnDestroy {
       },
       {
         label: 'Ko-fi',
-        title: 'Give us some money through ko-fi',
         icon: faEuro,
+        title: 'Give us some money through ko-fi',
+        visible: true,
         url: 'https://ko-fi.com/wafrn',
         command: () => {
           this.hideMenu()
@@ -473,11 +490,11 @@ export class NavigationMenuComponent implements OnInit, OnDestroy {
         label: 'Log out',
         icon: faSignOut,
         title: 'nintendo this button is for you, and your 25000000 alt accounts',
+        visible: this.jwtService.tokenValid(),
         command: () => {
           this.loginService.logOut()
           this.hideMenu()
-        },
-        visible: this.jwtService.tokenValid()
+        }
       }
     ]
   }
