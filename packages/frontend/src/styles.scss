@@ -89,7 +89,7 @@ body {
   background: var(--mat-sys-background);
   cursor: wait;
   z-index: 2; // Minimum
-  transition: display opacity;
+  transition: display, opacity;
   transition-duration: 120ms;
   transition-behavior: allow-discrete;
   transition-timing-function: ease-in;
@@ -148,11 +148,9 @@ body {
   }
 }
 
-// not mobile only styles
-@media (min-width: 992px) {
-  .input-height-btn {
-    height: 56px !important;
-  }
+:root .mat-mdc-dialog-surface {
+  background-color: var(--mat-sys-surface-container);
+  box-shadow: var(--mat-sys-level3);
 }
 
 .mat-mdc-dialog-content {
