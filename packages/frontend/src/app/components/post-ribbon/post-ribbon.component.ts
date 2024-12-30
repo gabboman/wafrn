@@ -1,4 +1,4 @@
-import { Component, input, SimpleChanges } from '@angular/core'
+import { Component, Input, input, SimpleChanges } from '@angular/core'
 import { SimplifiedUser } from 'src/app/interfaces/simplified-user'
 import { AvatarSmallComponent } from '../avatar-small/avatar-small.component'
 import { IconDefinition } from '@fortawesome/fontawesome-svg-core'
@@ -24,10 +24,10 @@ import { DateTimeFromJsDatePipe, DateTimeToRelativePipe } from 'luxon-angular'
   styleUrl: './post-ribbon.component.scss'
 })
 export class PostRibbonComponent {
-  user = input.required<SimplifiedUser>()
-  icon = input.required<IconDefinition>()
-  time = input.required<Date>()
-  card = input<boolean>(true)
+  @Input({ required: true }) user!: SimplifiedUser
+  @Input({ required: true }) icon!: IconDefinition
+  @Input({ required: true }) time!: Date
+  @Input() card = true
 
   timeAgo = ''
 
@@ -38,7 +38,7 @@ export class PostRibbonComponent {
 
   ngOnChanges(changes: SimpleChanges): void {
     this.timeAgo = this.dateTimeToRelative.transform(
-      this.dateTimeFromJsDatePipe.transform(this.time()),
+      this.dateTimeFromJsDatePipe.transform(this.time),
       // TODO unhardcode locale
       { style: 'long', locale: 'en' }
     )
