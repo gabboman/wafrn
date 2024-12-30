@@ -3,6 +3,7 @@
 @use './app/styles/post-card.scss';
 @use './app/styles/basic-html.scss';
 @use './app/styles/theme-switcher.scss';
+@use './assets/themes/default.css';
 
 html {
   color-scheme: light dark;

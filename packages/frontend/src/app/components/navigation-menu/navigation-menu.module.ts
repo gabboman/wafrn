@@ -10,6 +10,7 @@ import { MatButtonModule } from '@angular/material/button'
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome'
 import { MatDialogModule } from '@angular/material/dialog'
 import { ThemeSwitcherComponent } from '../theme-switcher/theme-switcher.component'
+import { ColorSchemeSwitcherComponent } from '../color-scheme-switcher/color-scheme-switcher.component'
 
 @NgModule({
   declarations: [NavigationMenuComponent],
@@ -23,7 +24,8 @@ import { ThemeSwitcherComponent } from '../theme-switcher/theme-switcher.compone
     FontAwesomeModule,
     MatButtonModule,
     MatDialogModule,
-    ThemeSwitcherComponent
+    ThemeSwitcherComponent,
+    ColorSchemeSwitcherComponent
   ],
   exports: [NavigationMenuComponent]
 })
