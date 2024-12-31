@@ -1,15 +1,15 @@
 <div class="mx-2 lg:mx-4 wafrn-container">
   <h3 class="flex-grow-1 m-0 mb-2 text-2xl">Notifications</h3>
 </div>
-<app-loader *ngIf="notificationsToShow.length === 0">notifications</app-loader>
 
 @for (notification of notificationsToShow; track $index) {
   <app-single-notification [notification]="notification"></app-single-notification>
   @if ($index % 19 === 0 && $index > 0) {
     <!--This element is the one that says NOTIFICATION LOAD TIME-->
-    <div *ngIf="$index > page * 20" class="load-more-notifications-intersector"></div>
   }
 }
+
+<div class="load-more-notifications-intersector"><app-loader>notifications</app-loader></div>
 
 <button
   (mousedown)="reload()"

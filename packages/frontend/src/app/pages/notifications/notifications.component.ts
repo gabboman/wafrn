@@ -140,7 +140,6 @@ export class NotificationsComponent implements OnInit {
     setTimeout(() => {
       const elements = document.querySelectorAll('.load-more-notifications-intersector')
       if (elements) {
-        //this.observer.observe(element);
         elements.forEach((element) => {
           this.observer.observe(element)
         })
@@ -151,9 +150,19 @@ export class NotificationsComponent implements OnInit {
   }
 
   async loadNotificationsV2(page: number) {
-    this.notificationsToShow = this.notificationsToShow.concat(
-      await this.notificationsService.getNotificationsScrollV2(page)
-    )
+    const notifications = await this.notificationsService.getNotificationsScrollV2(page)
+    // this waythe whole object is not recreated from scratch
+    notifications.forEach((notif) => this.notificationsToShow.push(notif))
+    setTimeout(() => {
+      const elements = document.querySelectorAll('.load-more-notifications-intersector')
+      if (elements) {
+        elements.forEach((element) => {
+          this.observer.observe(element)
+        })
+      } else {
+        console.log('observer not ready')
+      }
+    })
   }
 
   reblogToNotification(reblog: Reblog, type: NotificationType): UserNotifications {
