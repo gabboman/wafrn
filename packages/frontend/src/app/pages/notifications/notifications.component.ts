@@ -91,7 +91,8 @@ export class NotificationsComponent implements OnInit {
         url: `/blog/${follow.url}`,
         avatar: follow.avatar,
         date: follow.createdAt,
-        userUrl: follow.url
+        userUrl: follow.url,
+        userName: ''
       }
     })
     processedNotifications = processedNotifications.concat(
@@ -167,7 +168,8 @@ export class NotificationsComponent implements OnInit {
       userUrl: reblog.user.url,
       fragment: reblog.content,
       emojiName: reblog.emojiName,
-      emojiReact: reblog.emojiReact
+      emojiReact: reblog.emojiReact,
+      userName: reblog.user.name
     }
   }
 }
