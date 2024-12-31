@@ -61,7 +61,7 @@ export class WafrnMediaComponent implements OnChanges, AfterViewInit {
   }
 
   private getMimeType() {
-    if (this.data().mediaType !== undefined) {
+    if (typeof this.data()?.mediaType === 'string') {
       return this.data().mediaType as string
     }
     switch (this.extension()) {
