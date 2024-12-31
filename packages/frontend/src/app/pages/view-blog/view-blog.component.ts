@@ -62,7 +62,6 @@ export class ViewBlogComponent implements OnInit, OnDestroy {
   quickReblogIcon = faClockRotateLeft
   reportIcon = faTriangleExclamation
   homeIcon = faHome
-  infoAlert = faExclamationTriangle
 
   constructor(
     private activatedRoute: ActivatedRoute,

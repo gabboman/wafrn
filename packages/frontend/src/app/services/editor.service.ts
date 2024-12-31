@@ -133,8 +133,8 @@ export class EditorService implements OnDestroy {
         path: window.location.pathname
       }
       this.dialogService.open(await this.getEditorComponent(), {
-        height: mobile ? '100vh' : 'min(600px, calc(100% - 30px))',
-        width: mobile ? '100vw' : 'min(960px, calc(100% - 30px))',
+        height: mobile ? '100vh' : '',
+        width: mobile ? '100vw' : '960px',
         maxWidth: '100%',
         maxHeight: '100%'
       })

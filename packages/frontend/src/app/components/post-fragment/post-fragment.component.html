@@ -24,14 +24,17 @@
     'mt-3': fragment.content_warning || fragment.muted_words_cw
   }"
 >
-  <div
-    *ngFor="let block of wafrnFormattedContent"
-    class="fragment-content overflow-hidden"
-    [ngClass]="{ blurry: (fragment.content_warning || fragment.muted_words_cw) && showCw }"
-  >
-    <div [injectHTML]="block" class="post-text"></div>
-    <app-wafrn-media [mediaOrString]="block"></app-wafrn-media>
-  </div>
+  @for (block of wafrnFormattedContent; track $index) {
+    <div
+      class="fragment-content overflow-hidden"
+      [ngClass]="{ blurry: (fragment.content_warning || fragment.muted_words_cw) && showCw }"
+    >
+      <div [injectHTML]="block" class="post-text"></div>
+      @if (typeof block !== 'string') {
+        <app-wafrn-media [data]="$any(block)"></app-wafrn-media>
+      }
+    </div>
+  }
 
   <div
     *ngIf="fragment.questionPoll"
