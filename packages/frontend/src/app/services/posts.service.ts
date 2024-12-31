@@ -403,6 +403,7 @@ export class PostsService {
           if (mentionedUser) {
             link.href = `${EnvironmentService.environment.frontUrl}/blog/${mentionedUser.url}`
             link.classList.add('mention')
+            link.classList.add('remote-mention')
           }
         }
       }
@@ -417,6 +418,7 @@ export class PostsService {
         ) {
           link.href = `/blog/${sanitizedContent}@${linkAsUrl.hostname}`
           link.classList.add('mention')
+          link.classList.add('remote-mention')
         }
         if (
           (sanitizedContent.startsWith('@') && mentionRemoteUrls.includes(`${sanitizedContent}`)) ||
@@ -424,6 +426,7 @@ export class PostsService {
         ) {
           link.href = `/blog/${sanitizedContent}`
           link.classList.add('mention')
+          link.classList.add('local-mention')
         }
       }
       link.target = '_blank'
