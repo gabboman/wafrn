@@ -1,6 +1,8 @@
-<div *ngIf="title" class="wafrn-container mx-1 md:mx-4 flex align-items-center">
-  <h3 class="flex-grow-1 m-0 text-2xl">{{ title }}</h3>
-</div>
+@if (title) {
+  <div class="mx-3 lg:mx-4 wafrn-container">
+    <h3 class="mb-2 text-3xl">{{ title }}</h3>
+  </div>
+}
 @for (post of posts; track $index) {
   <app-post [post]="post"></app-post>
 }

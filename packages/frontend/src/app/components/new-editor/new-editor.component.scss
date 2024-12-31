@@ -1,7 +1,3 @@
-:host {
-  --fa-display: block;
-}
-
 .taglist {
   margin-top: -8px;
   margin-bottom: 8px;
@@ -87,4 +83,8 @@ app-media-preview {
   border-radius: var(--mat-sys-corner-small);
   border: 1px solid var(--mat-sys-outline);
   padding: 0.5rem;
+}
+
+svg {
+  display: block;
 }

@@ -43,8 +43,7 @@ export class ReportService {
 
   async openReportPostDialog(post: ProcessedPost) {
     this.dialogService.open(await this.getReportComponent(), {
-      data: { post },
-      width: '100%'
+      data: { post }
     })
   }
 }
