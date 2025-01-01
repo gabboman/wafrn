@@ -424,7 +424,7 @@ export class PostsService {
           (sanitizedContent.startsWith('@') && mentionRemoteUrls.includes(`${sanitizedContent}`)) ||
           linkAsUrl.hostname === hostUrl
         ) {
-          link.href = `/blog/${sanitizedContent}`
+          //link.href = `/blog/${sanitizedContent}`
           link.classList.add('mention')
           link.classList.add('local-mention')
         }
