@@ -40,6 +40,7 @@
     "quill-mention-wafrn": "^0.0.3",
     "rxjs": "~7.8.0",
     "sanitize-html": "^2.13.1",
+    "viewerjs": "^1.11.7",
     "zone.js": "~0.15.0"
   },
   "devDependencies": {
