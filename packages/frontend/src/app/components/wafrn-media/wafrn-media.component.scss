@@ -60,10 +60,13 @@ video {
   left: 0;
   right: 0;
   opacity: 0;
+  visibility: hidden;
   overflow-y: auto;
 
   &.visible {
     opacity: 0.75;
+    visibility: visible;
+
     .media-container:hover & {
       opacity: 1;
     }
@@ -73,7 +76,7 @@ video {
     position: static;
     opacity: 1;
 
-    & > P {
+    & > p {
       max-height: unset;
     }
   }
