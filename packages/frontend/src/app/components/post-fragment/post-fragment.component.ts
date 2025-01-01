@@ -363,7 +363,8 @@ export class PostFragmentComponent implements OnChanges, OnDestroy {
         flipVertical: false
       },
       title: false,
-      className: 'viewer'
+      className: 'viewer',
+      toggleOnDblclick: false
     })
   }
 }
