@@ -42,12 +42,13 @@
   >
     <app-poll [poll]="fragment.questionPoll"></app-poll>
   </div>
-  <div
-    *ngFor="let media of fragment.medias; index as i"
-    [ngClass]="{ blurry: (fragment.content_warning || fragment.muted_words_cw) && showCw }"
-  >
-    <app-wafrn-media *ngIf="!seenMedia.includes(i)" [data]="media"></app-wafrn-media>
-  </div>
+  <section #media class="flex flex-column gap-3">
+    @for (media of fragment.medias; track $index) {
+      <div [ngClass]="{ blurry: (fragment.content_warning || fragment.muted_words_cw) && showCw }">
+        <app-wafrn-media *ngIf="!seenMedia.includes($index)" [data]="media"></app-wafrn-media>
+      </div>
+    }
+  </section>
   <div
     class="flex flex-wrap gap-2 tag-list"
     *ngIf="fragment.tags && fragment.tags.length"
