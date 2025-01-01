@@ -62,6 +62,7 @@ video {
   opacity: 0;
   visibility: hidden;
   overflow-y: auto;
+  max-height: 75%;
 
   &.visible {
     opacity: 0.75;
@@ -75,14 +76,6 @@ video {
   .always-show-alt & {
     position: static;
     opacity: 1;
-
-    & > p {
-      max-height: unset;
-    }
-  }
-
-  & > p {
-    max-height: 50%;
   }
 }
 
