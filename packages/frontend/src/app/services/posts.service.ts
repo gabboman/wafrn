@@ -384,6 +384,7 @@ export class PostsService {
           (elem) => this.getURL(elem.remoteId ? elem.remoteId : 'https://adomainthatdoesnotexist.google.com').hostname
         )
       : []
+    const hostUrl = this.getURL(EnvironmentService.environment.frontUrl).hostname
     Array.from(links).forEach((link) => {
       const youtubeMatch = link.href.matchAll(this.youtubeRegex)
       if (link.innerText === link.href && youtubeMatch) {
@@ -401,11 +402,13 @@ export class PostsService {
           const mentionedUser = post.mentionPost.find((elem) => elem.remoteId === link.href)
           if (mentionedUser) {
             link.href = `${EnvironmentService.environment.frontUrl}/blog/${mentionedUser.url}`
+            link.classList.add('mention')
+            link.classList.add('remote-mention')
           }
         }
       }
       const linkAsUrl: URL = this.getURL(link.href)
-      if (mentionedHosts.includes(linkAsUrl.hostname)) {
+      if (mentionedHosts.includes(linkAsUrl.hostname) || linkAsUrl.hostname === hostUrl) {
         const sanitizedContent = sanitizeHtml(link.innerHTML, {
           allowedTags: []
         })
@@ -414,9 +417,16 @@ export class PostsService {
           mentionRemoteUrls.includes(`${sanitizedContent}@${linkAsUrl.hostname}`)
         ) {
           link.href = `/blog/${sanitizedContent}@${linkAsUrl.hostname}`
+          link.classList.add('mention')
+          link.classList.add('remote-mention')
         }
-        if (sanitizedContent.startsWith('@') && mentionRemoteUrls.includes(`${sanitizedContent}`)) {
+        if (
+          (sanitizedContent.startsWith('@') && mentionRemoteUrls.includes(`${sanitizedContent}`)) ||
+          linkAsUrl.hostname === hostUrl
+        ) {
           link.href = `/blog/${sanitizedContent}`
+          link.classList.add('mention')
+          link.classList.add('local-mention')
         }
       }
       link.target = '_blank'

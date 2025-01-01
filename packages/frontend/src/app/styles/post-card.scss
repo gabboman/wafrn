@@ -88,6 +88,20 @@
   margin: 0;
 }
 
+:root .mention {
+  display: inline-block;
+  padding: 0 4px 0 4px;
+  color: var(--mat-sys-on-surface);
+  background-color: var(--mat-sys-secondary-container);
+  font-weight: 500;
+  text-decoration: none;
+  border-radius: var(--mat-sys-corner-small);
+
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
 .tag {
   padding: 0 0.75ch;
   cursor: pointer;
