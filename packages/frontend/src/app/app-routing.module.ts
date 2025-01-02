@@ -1,9 +1,10 @@
 import { NgModule } from '@angular/core'
-import { PreloadAllModules, RouterModule, Routes } from '@angular/router'
+import { PreloadAllModules, RouteReuseStrategy, RouterModule, Routes } from '@angular/router'
 import { NavigationMenuComponent } from './components/navigation-menu/navigation-menu.component'
 import { NavigationMenuModule } from './components/navigation-menu/navigation-menu.module'
 import { isAdminGuard } from './guards/is-admin.guard'
 import { loginRequiredGuard } from './guards/login-required.guard'
+import { CustomReuseStrategy } from './services/routing.service'
 
 const routes: Routes = [
   {
@@ -33,7 +34,8 @@ const routes: Routes = [
       },
       {
         path: 'dashboard',
-        loadChildren: () => import('./pages/dashboard/dashboard.module').then((m) => m.DashboardModule)
+        loadChildren: () => import('./pages/dashboard/dashboard.module').then((m) => m.DashboardModule),
+        data: { reuseRoute: true }
       },
       {
         path: 'activate',
@@ -58,7 +60,8 @@ const routes: Routes = [
       },
       {
         path: 'blog',
-        loadChildren: () => import('./pages/view-blog/view-blog.module').then((m) => m.ViewBlogModule)
+        loadChildren: () => import('./pages/view-blog/view-blog.module').then((m) => m.ViewBlogModule),
+        data: { reuseRoute: true }
       },
       {
         path: 'profile',
@@ -101,6 +104,7 @@ const routes: Routes = [
     }),
     NavigationMenuModule
   ],
+  providers: [{ provide: RouteReuseStrategy, useClass: CustomReuseStrategy }],
   exports: [RouterModule]
 })
 export class AppRoutingModule {}
