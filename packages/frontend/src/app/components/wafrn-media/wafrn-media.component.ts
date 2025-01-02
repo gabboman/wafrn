@@ -1,9 +1,20 @@
-import { AfterViewInit, ChangeDetectorRef, Component, computed, input, OnChanges } from '@angular/core'
+import {
+  AfterViewInit,
+  ChangeDetectorRef,
+  Component,
+  computed,
+  ElementRef,
+  input,
+  OnChanges,
+  ViewChild
+} from '@angular/core'
 import { WafrnMedia } from '../../interfaces/wafrn-media'
 import { EnvironmentService } from '../../services/environment.service'
 import { MediaService } from '../../services/media.service'
 import { MessageService } from '../../services/message.service'
 import { faEyeSlash } from '@fortawesome/free-solid-svg-icons'
+//@ts-ignore
+import Vlitejs from 'vlitejs'
 
 @Component({
   selector: 'app-wafrn-media',
@@ -13,6 +24,9 @@ import { faEyeSlash } from '@fortawesome/free-solid-svg-icons'
 })
 export class WafrnMediaComponent implements OnChanges, AfterViewInit {
   data = input.required<WafrnMedia>()
+
+  @ViewChild('videoelement') videoElement: ElementRef<HTMLVideoElement> | undefined
+  @ViewChild('audioelement') audioElement: ElementRef<HTMLAudioElement> | undefined
 
   readonly extensionsToHideImgTag = ['mp4', 'aac', 'mp3', 'ogg', 'webm', 'weba', 'svg', 'ogg', 'oga']
   readonly tmpUrl = computed<string>(() =>
@@ -26,6 +40,15 @@ export class WafrnMediaComponent implements OnChanges, AfterViewInit {
   readonly mimeType = computed<string>(() => this.getMimeType())
   readonly width = computed<number | ''>(() => this.data().width ?? '')
   readonly height = computed<number | ''>(() => this.data().height ?? '')
+
+  private readonly alwaysAltMedia = ['audio', 'video']
+  readonly alwaysShowAlt = computed<boolean>(() => this.alwaysAltMedia.includes(this.mimeType()?.split('/')[0]))
+
+  private readonly nonsentitiveMedia = ['audio', 'video']
+  readonly hideSensitiveButton = computed<boolean>(() =>
+    this.nonsentitiveMedia.includes(this.mimeType()?.split('/')[0])
+  )
+
   disableNSFWFilter = true
 
   nsfw = true
@@ -48,7 +71,21 @@ export class WafrnMediaComponent implements OnChanges, AfterViewInit {
     this.cdr.markForCheck()
   }
 
-  ngAfterViewInit(): void {}
+  ngAfterViewInit(): void {
+    const videoElement = this.videoElement?.nativeElement
+    if (videoElement) {
+      new Vlitejs(videoElement, {
+        options: {
+          autoHide: true,
+          autoHideDelay: 500
+        }
+      })
+    }
+    const audioElement = this.audioElement?.nativeElement
+    if (audioElement) {
+      new Vlitejs(audioElement, {})
+    }
+  }
 
   showPicture() {
     this.nsfw = false
