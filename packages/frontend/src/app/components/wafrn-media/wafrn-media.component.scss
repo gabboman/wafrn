@@ -76,6 +76,8 @@ video {
   .always-show-alt & {
     position: static;
     opacity: 1;
+    max-height: 10rem;
+    visibility: visible;
   }
 }
 
