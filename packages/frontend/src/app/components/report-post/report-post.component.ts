@@ -5,13 +5,7 @@ import { ProcessedPost } from 'src/app/interfaces/processed-post'
 import { BlocksService } from 'src/app/services/blocks.service'
 import { MessageService } from 'src/app/services/message.service'
 import { CommonModule } from '@angular/common'
-import {
-  MatDialogContent,
-  MatDialogTitle,
-  MatDialogActions,
-  MatDialogRef,
-  MAT_DIALOG_DATA
-} from '@angular/material/dialog'
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog'
 import { MatInputModule } from '@angular/material/input'
 import { MatSelectModule } from '@angular/material/select'
 import { MatCheckboxModule } from '@angular/material/checkbox'
@@ -24,7 +18,6 @@ import { MatButtonModule } from '@angular/material/button'
     CommonModule,
     FormsModule,
     ReactiveFormsModule,
-    MatDialogTitle,
     MatInputModule,
     MatSelectModule,
     MatCheckboxModule,

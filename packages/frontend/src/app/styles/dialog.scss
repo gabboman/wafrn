@@ -1,0 +1,18 @@
+:root {
+  --mat-dialog-container-min-width: min(100%, 960px);
+  --mat-dialog-container-max-width: 1200px;
+  --mdc-dialog-container-shape: var(--mat-sys-corner-large);
+}
+
+:root .mat-mdc-dialog-surface {
+  background-color: var(--mat-sys-surface-container);
+  box-shadow: var(--mat-sys-level3);
+}
+
+:root .mat-mdc-dialog-container {
+  max-height: calc(100vh - 2rem);
+}
+
+.mat-mdc-dialog-inner-container > .mat-mdc-dialog-surface {
+  padding: 1rem;
+}

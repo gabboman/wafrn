@@ -13,7 +13,7 @@
     <div [hidden]="loading || noMorePosts" id="if-you-see-this-load-more-posts"></div>
     <div *ngIf="noMorePosts">
       <p class="mb-4 text-lg">No more posts...</p>
-      <app-info-card *ngIf="blogDetails.url.startsWith('@')" [type]="'info'"
+      <app-info-card *ngIf="blogDetails.url.startsWith('@')" type="info"
         >As this user is from a remote instance, the shown information may be incomplete.
         <a
           [href]="

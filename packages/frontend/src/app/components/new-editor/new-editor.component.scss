@@ -1,7 +1,3 @@
-:host {
-  --fa-display: block;
-}
-
 .taglist {
   margin-top: -8px;
   margin-bottom: 8px;
@@ -15,7 +11,7 @@
 }
 
 .grid > div {
-  border: 1px solid #999;
+  border: 1px solid var(--mat-sys-outline);
   border-radius: 8px;
 }
 
@@ -26,11 +22,10 @@
   justify-content: flex-start;
   gap: 0.5rem;
   margin-bottom: 0.5rem;
+  --mdc-icon-button-icon-color: var(--mat-sys-primary);
 
   & button {
-    padding: 0;
-    height: 2.75rem;
-    aspect-ratio: 1 / 1;
+    --fa-display: block;
   }
 }
 
@@ -87,4 +82,8 @@ app-media-preview {
   border-radius: var(--mat-sys-corner-small);
   border: 1px solid var(--mat-sys-outline);
   padding: 0.5rem;
+}
+
+svg {
+  display: block;
 }
