@@ -5,6 +5,8 @@
 @use './app/styles/post-card.scss';
 @use './app/styles/quil.scss';
 @use './app/styles/theme-switcher.scss';
+@use './app/styles/viewer.min.css';
+@use './app/styles/viewer-overrides.scss';
 
 html {
   color-scheme: light dark;

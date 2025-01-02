@@ -11,9 +11,9 @@
   </div>
   <button mat-raised-button color="primary" (mousedown)="cwClick()" class="w-full mt-3">
     @if (!showCw) {
-      Hide again
+      Hide sensitive content
     } @else {
-      I understand this and I want to see this woot
+      Show sensitive content
     }
   </button>
 }
@@ -24,14 +24,17 @@
     'mt-3': fragment.content_warning || fragment.muted_words_cw
   }"
 >
-  <div
-    *ngFor="let block of wafrnFormattedContent"
-    class="fragment-content overflow-hidden"
-    [ngClass]="{ blurry: (fragment.content_warning || fragment.muted_words_cw) && showCw }"
-  >
-    <div [injectHTML]="block" class="post-text"></div>
-    <app-wafrn-media [mediaOrString]="block"></app-wafrn-media>
-  </div>
+  @for (block of wafrnFormattedContent; track $index) {
+    <div
+      class="fragment-content overflow-hidden"
+      [ngClass]="{ blurry: (fragment.content_warning || fragment.muted_words_cw) && showCw }"
+    >
+      <div [injectHTML]="block" class="post-text"></div>
+      @if (typeof block !== 'string') {
+        <app-wafrn-media [data]="$any(block)"></app-wafrn-media>
+      }
+    </div>
+  }
 
   <div
     *ngIf="fragment.questionPoll"
@@ -39,12 +42,13 @@
   >
     <app-poll [poll]="fragment.questionPoll"></app-poll>
   </div>
-  <div
-    *ngFor="let media of fragment.medias; index as i"
-    [ngClass]="{ blurry: (fragment.content_warning || fragment.muted_words_cw) && showCw }"
-  >
-    <app-wafrn-media *ngIf="!seenMedia.includes(i)" [data]="media"></app-wafrn-media>
-  </div>
+  <section #media class="flex flex-column gap-3">
+    @for (media of fragment.medias; track $index) {
+      <div [ngClass]="{ blurry: (fragment.content_warning || fragment.muted_words_cw) && showCw }">
+        <app-wafrn-media *ngIf="!seenMedia.includes($index)" [data]="media"></app-wafrn-media>
+      </div>
+    }
+  </section>
   <div
     class="flex flex-wrap gap-2 tag-list"
     *ngIf="fragment.tags && fragment.tags.length"

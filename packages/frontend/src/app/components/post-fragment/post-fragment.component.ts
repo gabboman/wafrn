@@ -1,5 +1,15 @@
 import { CommonModule } from '@angular/common'
-import { Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output } from '@angular/core'
+import {
+  Component,
+  ElementRef,
+  EventEmitter,
+  Input,
+  OnChanges,
+  OnDestroy,
+  OnInit,
+  Output,
+  viewChild
+} from '@angular/core'
 import { ProcessedPost } from '../../interfaces/processed-post'
 import { PollModule } from '../poll/poll.module'
 import { WafrnMediaModule } from '../wafrn-media/wafrn-media.module'
@@ -20,6 +30,8 @@ import { PostHeaderComponent } from '../post/post-header/post-header.component'
 import { SingleAskComponent } from '../single-ask/single-ask.component'
 import { EnvironmentService } from '../../services/environment.service'
 import { WafrnMedia } from '../../interfaces/wafrn-media'
+
+import Viewer from 'viewerjs'
 
 type EmojiReaction = {
   id: string
@@ -65,6 +77,9 @@ export class PostFragmentComponent implements OnChanges, OnDestroy {
   sanitizedContent = ''
   wafrnFormattedContent: Array<string | WafrnMedia> = []
   seenMedia: number[] = []
+
+  readonly mediaElement = viewChild<ElementRef<HTMLImageElement>>('media')
+  viewer: Viewer | undefined
 
   constructor(
     private postService: PostsService,
@@ -325,5 +340,31 @@ export class PostFragmentComponent implements OnChanges, OnDestroy {
     if (this.selfManageCw) {
       this.showCw = !this.showCw
     }
+  }
+
+  ngAfterViewInit(): void {
+    const media = this.mediaElement()
+    if (!media) return
+
+    this.viewer = new Viewer(media.nativeElement, {
+      button: true,
+      navbar: true,
+      toolbar: {
+        zoomIn: true,
+        zoomOut: true,
+        oneToOne: true,
+        reset: true,
+        prev: true,
+        play: false,
+        next: true,
+        rotateLeft: false,
+        rotateRight: false,
+        flipHorizontal: false,
+        flipVertical: false
+      },
+      title: false,
+      className: 'viewer',
+      toggleOnDblclick: false
+    })
   }
 }

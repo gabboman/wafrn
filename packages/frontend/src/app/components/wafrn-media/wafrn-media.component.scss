@@ -1,5 +1,13 @@
-mat-card {
+.media-container {
   background: var(--mat-sys-surface-container);
+  position: relative;
+  display: grid;
+  border-radius: var(--mat-sys-corner-extra-small);
+  overflow: clip;
+
+  &:hover .toggle-button {
+    opacity: 1;
+  }
 }
 
 .image-description {
@@ -8,44 +16,87 @@ mat-card {
 
 img,
 video {
+  margin-inline: auto;
   max-width: 100%;
-  max-height: 90vh;
+  height: auto;
+  transition: filter 120ms ease-out;
 }
 
 .nsfw {
   filter: grayscale(1) contrast(0%);
-  background-color: grey;
+  background: gray;
 }
 
-.displayed-image {
-  animation: slideIn 0.3s ease-in;
+.toggle-description,
+.toggle-nsfw,
+.media-content-container,
+.image-cw-text {
+  grid-column: 1/2;
+  grid-row: 1/2;
 }
 
-@keyframes slideIn {
-  from {
-    filter: grayscale(1) contrast(0%);
-    background-color: grey;
+.toggle-button {
+  width: fit-content;
+  height: fit-content;
+  padding-inline: 0.75ch;
+  opacity: 0.25;
+
+  &:hover {
+    opacity: 1;
   }
 }
 
-.img-video-container {
-  position: relative;
+.toggle-description {
+  .always-show-alt & {
+    display: none;
+  }
 }
 
-.img-cw-text {
+// Has to be absolute to get height correctly
+.image-description {
   position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  z-index: 69;
-  color: white;
+  transition: opacity 120ms ease-out;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  opacity: 0;
+  visibility: hidden;
+  overflow-y: auto;
+  max-height: 75%;
+
+  &.visible {
+    opacity: 0.75;
+    visibility: visible;
+
+    .media-container:hover & {
+      opacity: 1;
+    }
+  }
+
+  .always-show-alt & {
+    position: static;
+    opacity: 1;
+  }
 }
 
-.img-container {
-  position: relative;
+.toggle-nsfw {
+  padding-left: 0.85ch; // weird icon issue
+  justify-self: end;
+}
 
-  & img,
-  & video {
-    margin-inline: auto;
+.image-cw-text {
+  background-color: #0004;
+  z-index: 1;
+}
+
+@media screen and (max-width: 992px) {
+  .toggle-description,
+  .toggle-nsfw {
+    align-self: end;
+    z-index: 2;
+  }
+
+  .image-description {
+    bottom: unset;
   }
 }

@@ -6,6 +6,7 @@ export interface UserNotifications {
   url: string
   avatar: string
   userUrl: string
+  userName: string
   date: Date
   type: NotificationType
   emojiReact?: Emoji
