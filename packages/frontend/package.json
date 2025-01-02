@@ -65,6 +65,7 @@
     "prettier": "^3.4.2",
     "prettier-eslint": "^16.3.0",
     "tslib": "^2.6.3",
-    "typescript-eslint": "8.0.0-alpha.38"
+    "typescript-eslint": "8.0.0-alpha.38",
+    "vlitejs": "^7.0.0"
   }
 }

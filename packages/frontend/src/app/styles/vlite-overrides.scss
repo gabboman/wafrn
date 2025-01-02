@@ -1,0 +1,14 @@
+.v-vlite {
+  --vlite-colorPrimary: var(--mat-sys-primary);
+}
+.v-vlite.v-video {
+  aspect-ratio: unset;
+}
+.v-vlite.v-audio {
+  --vlite-controlsColor: var(--mat-sys-on-surface);
+  background: var(--mat-sys-surface-container-highest);
+  border-radius: unset;
+}
+.v-time {
+  white-space: nowrap;
+}

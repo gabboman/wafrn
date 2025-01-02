@@ -1,7 +1,4 @@
-<div
-  class="media-container"
-  [ngClass]="{ 'always-show-alt': mimeType().startsWith('audio') || mimeType().startsWith('video') }"
->
+<div class="media-container" [ngClass]="{ 'always-show-alt': alwaysShowAlt() }">
   <div class="media-content-container">
     @if (
       (!extensionsToHideImgTag.includes(extension()) || mimeType() === 'UNKNOWN') && !mimeType().startsWith('video')
@@ -21,13 +18,15 @@
 
     @if (mimeType().startsWith('video')) {
       <video
+        #videoelement
         (play)="showPicture()"
         preload="metadata"
         [ngClass]="{
           nsfw: nsfw,
           'displayed-image': !nsfw
         }"
-        controls
+        width="{{ width() }}"
+        height="{{ height() }}"
       >
         <source [src]="displayUrl()" [type]="mimeType()" />
       </video>
@@ -44,34 +43,38 @@
       <a [href]="displayUrl()" target="_blank">Click here to see the PDF file that is embedded in this post</a>
     }
     @if (mimeType().startsWith('audio')) {
-      <audio controls>
+      <audio #audioelement>
         <source [src]="displayUrl()" [type]="mimeType()" />
       </audio>
     }
 
     @if (data().description) {
-      <button
-        class="m-2 toggle-button toggle-description"
-        mat-raised-button
-        (mousedown)="descriptionVisible = !descriptionVisible"
-        title="Show alt text"
-        [ariaDescription]="'Show alt text'"
-      >
-        ALT
-      </button>
+      @if (!alwaysShowAlt()) {
+        <button
+          class="m-2 toggle-button toggle-description"
+          mat-raised-button
+          (mousedown)="descriptionVisible = !descriptionVisible"
+          title="Show alt text"
+          [ariaDescription]="'Show alt text'"
+        >
+          ALT
+        </button>
+      }
       <div class="px-2 py-1 image-description" [ngClass]="{ visible: descriptionVisible }">
         <p class="m-0" [innerText]="data().description"></p>
       </div>
     }
 
-    <button
-      class="m-2 toggle-button toggle-nsfw"
-      mat-raised-button
-      (mousedown)="$event.stopPropagation(); nsfw = !nsfw"
-      title="Hide image"
-      [ariaDescription]="'Hide image'"
-    >
-      <fa-icon [icon]="hideIcon"></fa-icon>
-    </button>
+    @if (!hideSensitiveButton()) {
+      <button
+        class="m-2 toggle-button toggle-nsfw"
+        mat-raised-button
+        (mousedown)="$event.stopPropagation(); nsfw = !nsfw"
+        title="Hide image"
+        [ariaDescription]="'Hide image'"
+      >
+        <fa-icon [icon]="hideIcon"></fa-icon>
+      </button>
+    }
   }
 </div>
