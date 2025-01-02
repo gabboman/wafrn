@@ -16,7 +16,7 @@
 
 <div class="below-editor-toolbar">
   <button
-    mat-button
+    mat-icon-button
     [matMenuTriggerFor]="menu"
     aria-label="Edit privacy of post"
     class="input-height-btn"
@@ -26,7 +26,7 @@
   </button>
   <button
     aria-label="Enable the quote setter"
-    mat-button
+    mat-icon-button
     (mousedown)="quoteOpen = !quoteOpen"
     class="input-height-btn"
     matTooltip="Quote a post"
@@ -40,11 +40,15 @@
   }
   <button
     class="input-height-btn"
-    mat-button
+    mat-icon-button
     (mousedown)="showContentWarning = !showContentWarning"
     matTooltip="Content Warning"
   >
-    CW
+    @if (contentWarning.split(' ').includes('meta')) {
+      <fa-icon size="lg" [icon]="landMineIcon"></fa-icon>
+    } @else {
+      <fa-icon size="lg" [icon]="contentWarningIcon"></fa-icon>
+    }
   </button>
 </div>
 

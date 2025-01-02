@@ -11,7 +11,7 @@
 }
 
 .grid > div {
-  border: 1px solid #999;
+  border: 1px solid var(--mat-sys-outline);
   border-radius: 8px;
 }
 
@@ -22,11 +22,10 @@
   justify-content: flex-start;
   gap: 0.5rem;
   margin-bottom: 0.5rem;
+  --mdc-icon-button-icon-color: var(--mat-sys-primary);
 
   & button {
-    padding: 0;
-    height: 2.75rem;
-    aspect-ratio: 1 / 1;
+    --fa-display: block;
   }
 }
 
