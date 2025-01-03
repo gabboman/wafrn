@@ -25,7 +25,6 @@ export default function cacheRoutes(app: Application) {
             res.sendFile(localFileName, { root: '.' })
             return
           } else {
-            logger.info(`[remoteCache] local file ${localFileName} not found`)
             res.sendStatus(404)
             return
           }
