@@ -32,7 +32,6 @@ export class MenuItemComponent {
     }
     if (this.item.routerLink) {
       this.router.navigate([this.item.routerLink])
-      console.log('navigationg to... ' + this.item.routerLink)
     }
     if (this.item.command) {
       this.item.command()
