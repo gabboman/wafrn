@@ -18,6 +18,7 @@
   </button>
 }
 <div
+  #media
   class="flex flex-column gap-3 post-content"
   [ngClass]="{
     'post-danger': (fragment.content_warning || fragment.muted_words_cw) && showCw,
@@ -42,7 +43,7 @@
   >
     <app-poll [poll]="fragment.questionPoll"></app-poll>
   </div>
-  <section #media class="flex flex-column gap-3">
+  <section class="flex flex-column gap-3">
     @for (media of fragment.medias; track $index) {
       <div [ngClass]="{ blurry: (fragment.content_warning || fragment.muted_words_cw) && showCw }">
         <app-wafrn-media *ngIf="!seenMedia.includes($index)" [data]="media"></app-wafrn-media>

@@ -1,10 +1,14 @@
 @use '@angular/material' as mat;
-@use './app/styles/quil.scss';
-@use './app/styles/post-card.scss';
 @use './app/styles/basic-html.scss';
+@use './app/styles/dialog.scss';
+@use './app/styles/material-overrides.scss';
+@use './app/styles/post-card.scss';
+@use './app/styles/quil.scss';
 @use './app/styles/theme-switcher.scss';
 @use './app/styles/viewer.min.css';
 @use './app/styles/viewer-overrides.scss';
+@use './app/styles/vlite.css';
+@use './app/styles/vlite-overrides.scss';
 
 html {
   color-scheme: light dark;
@@ -125,42 +129,12 @@ body {
 }
 
 // Utility styles
-
 .subtle-link {
   text-decoration: none;
 
   &:hover {
     text-decoration: underline;
   }
-}
-
-// dirty hack because bug regarding the editor
-.cdk-overlay-pane.mat-mdc-dialog-panel {
-  max-width: 100% !important;
-}
-
-.mdc-button {
-  min-width: unset !important;
-}
-
-// mobile only styles
-@media (max-width: 992px) {
-  .w-full-mobile {
-    width: 100%;
-  }
-}
-
-:root .mat-mdc-dialog-surface {
-  background-color: var(--mat-sys-surface-container);
-  box-shadow: var(--mat-sys-level3);
-}
-
-.mat-mdc-dialog-content {
-  max-height: unset !important;
-}
-
-.mat-mdc-dialog-inner-container > .mat-mdc-dialog-surface {
-  padding: 20px;
 }
 
 .force-comic-sans {

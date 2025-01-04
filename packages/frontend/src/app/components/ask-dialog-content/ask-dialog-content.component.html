@@ -1,14 +1,12 @@
-<form [formGroup]="askForm" (ngSubmit)="onSubmit()" class="wafrn-container">
+<form [formGroup]="askForm" (ngSubmit)="onSubmit()">
   <mat-form-field class="w-full">
     <mat-label>Question</mat-label>
     <textarea formControlName="content" type="textarea" matNativeControl rows="4"></textarea>
   </mat-form-field>
 
   @if (loggedIn) {
-    <div class="mb-3">
-      <app-info-card [type]="'info'">You are logged in, this question is not anonymous</app-info-card>
-    </div>
+    <app-info-card type="info" class="mb-3">You are logged in, this question is not anonymous</app-info-card>
   }
 
-  <button [disabled]="!askForm.valid" mat-flat-button class="w-full" type="submit">Ask</button>
+  <button [disabled]="!askForm.valid" mat-flat-button class="w-full my-2" type="submit">Ask</button>
 </form>

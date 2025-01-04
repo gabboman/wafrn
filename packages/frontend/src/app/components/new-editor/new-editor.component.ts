@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common'
-import { Component, ElementRef, HostListener, OnDestroy, ViewChild, ViewChildren } from '@angular/core'
+import { Component, computed, ElementRef, HostListener, OnDestroy, ViewChild, ViewChildren } from '@angular/core'
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms'
 import { MatButtonModule } from '@angular/material/button'
 import { MatCardModule } from '@angular/material/card'
@@ -13,6 +13,7 @@ import {
   faEnvelope,
   faExclamationTriangle,
   faGlobe,
+  faLandMineOn,
   faQuestionCircle,
   faQuoteLeft,
   faServer,
@@ -114,6 +115,8 @@ export class NewEditorComponent implements OnDestroy {
 
   closeIcon = faClose
   quoteIcon = faQuoteLeft
+  contentWarningIcon = faExclamationTriangle
+  landMineIcon = faLandMineOn
   infoIcon = faQuestionCircle
   alertIcon = faExclamationTriangle
   emojiSubscription: Subscription

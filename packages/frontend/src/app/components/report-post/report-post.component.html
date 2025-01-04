@@ -1,43 +1,7 @@
-<!--
-<p-dialog [(visible)]="visible" header="Report a post" [modal]="true">
-  <div class="p-grid pt-4">
-    <form [formGroup]="reportForm" (submit)="submit()">
-      <span class="p-float-label mb-4">
-        <input formControlName="description" id="float-input" type="text" pInputText class="w-full">
-        <label for="float-input">We need some extra details</label>
-      </span>
-      <p-listbox
-        [options]="reportOptions"
-        optionLabel="label"
-        formControlName="severity"></p-listbox>
-      <p-checkbox
-        class="py-4"
-        [formControl]="$any(reportForm).controls['block']"
-        value="block"
-        label="Block this user"></p-checkbox>
-      <div class="flex items-center" style="gap: 8px">
-        <button
-          [disabled]="!reportForm.valid"
-          pButton
-          pRipple
-          label="Report"
-          icon="pi pi-exclamation-triangle"
-          type="submit"></button>
-        <button
-          (mousedown)="cancelReport()"
-          pButton
-          pRipple
-          label="Cancel"
-          class="p-button-secondary"></button>
-      </div>
-    </form>
-  </div>
-</p-dialog>
--->
-<h2 mat-dialog-title>Ok let's report the post but first we need more information</h2>
+<p class="text-2xl">Before we can report the post we need more information</p>
 <form [formGroup]="reportForm" (submit)="submit()">
   <mat-form-field class="w-full">
-    <mat-label>Severity</mat-label>
+    <mat-label>Type of post</mat-label>
     <mat-select [required]="true" formControlName="severity">
       @for (option of reportOptions; track $index) {
         <mat-option [value]="option.value">{{ option.label }}</mat-option>
@@ -48,6 +12,6 @@
     <mat-label>Description</mat-label>
     <textarea required matNativeControl formControlName="description"></textarea>
   </mat-form-field>
-  <mat-checkbox class="w-full" formControlName="block">Block this user</mat-checkbox>
-  <button mat-flat-button color="warn" class="w-full" type="submit">Report</button>
+  <mat-checkbox class="w-full mb-3" formControlName="block">Block this user</mat-checkbox>
+  <button mat-flat-button class="w-full" type="submit" [disabled]="!reportForm.valid">Report</button>
 </form>

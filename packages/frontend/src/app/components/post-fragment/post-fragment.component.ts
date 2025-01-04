@@ -78,7 +78,7 @@ export class PostFragmentComponent implements OnChanges, OnDestroy {
   wafrnFormattedContent: Array<string | WafrnMedia> = []
   seenMedia: number[] = []
 
-  readonly mediaElement = viewChild<ElementRef<HTMLImageElement>>('media')
+  readonly mediaElement = viewChild<ElementRef<HTMLElement>>('media')
   viewer: Viewer | undefined
 
   constructor(

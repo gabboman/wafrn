@@ -8,7 +8,6 @@ import { environment } from '../environment.js'
 import { Resolver, ServiceEndpoint } from 'did-resolver'
 import { getResolver } from 'plc-did-resolver'
 
-
 export default function cacheRoutes(app: Application) {
   app.get('/api/cache', async (req: Request, res: Response) => {
     try {
@@ -26,7 +25,6 @@ export default function cacheRoutes(app: Application) {
             res.sendFile(localFileName, { root: '.' })
             return
           } else {
-            logger.info(`[remoteCache] local file ${localFileName} not found`)
             res.sendStatus(404)
             return
           }
@@ -63,7 +61,6 @@ export default function cacheRoutes(app: Application) {
             res.sendFile(localFileName, { root: '.' })
           }
         } else {
-          logger.info(`[remoteCache] trying to fetch URL ${mediaLink}`)
           const remoteResponse = await axios.get(mediaLink, {
             responseType: 'stream',
             headers: { 'User-Agent': environment.instanceUrl }
@@ -92,12 +89,12 @@ export default function cacheRoutes(app: Application) {
       }
     } catch (error) {
       // HACK this is DIRTY I should fix this
-      const url = req.query.media ? req.query.media as string : ''
+      const url = req.query.media ? (req.query.media as string) : ''
       if (url.startsWith('?cid=')) {
         try {
-          const did = decodeURIComponent(url.split('&did=')[1]);
+          const did = decodeURIComponent(url.split('&did=')[1])
 
-          const cid = decodeURIComponent(url.split('&did=')[0].split('?cid=')[1]);
+          const cid = decodeURIComponent(url.split('&did=')[0].split('?cid=')[1])
           if (did && cid) {
             const fileName = `cache/bsky_${cid}`
             if (fs.existsSync(fileName)) {
@@ -105,19 +102,24 @@ export default function cacheRoutes(app: Application) {
               // We have the image! we just serve it
               res.sendFile(fileName, { root: '.' })
             } else {
-              let url: string;
-              let remoteResponse;
+              let url: string
+              let remoteResponse
               const plcResolver = getResolver()
               const didResolver = new Resolver({
                 ...plcResolver
               })
-              const didData = await didResolver.resolve(did);
+              const didData = await didResolver.resolve(did)
               if (didData?.didDocument?.service) {
-                url = didData.didDocument.service[0].serviceEndpoint + "/xrpc/com.atproto.sync.getBlob?did=" + encodeURIComponent(did) + "&cid=" + encodeURIComponent(cid)
+                url =
+                  didData.didDocument.service[0].serviceEndpoint +
+                  '/xrpc/com.atproto.sync.getBlob?did=' +
+                  encodeURIComponent(did) +
+                  '&cid=' +
+                  encodeURIComponent(cid)
                 remoteResponse = await axios.get(url, {
                   responseType: 'stream',
                   headers: { 'User-Agent': environment.instanceUrl }
-                });
+                })
                 const path = fileName
                 const filePath = fs.createWriteStream(path)
                 filePath.on('finish', async () => {
@@ -126,12 +128,10 @@ export default function cacheRoutes(app: Application) {
                   filePath.close()
 
                   res.sendFile(fileName, { root: '.' })
-
                 })
                 remoteResponse.data.pipe(filePath)
               }
             }
-
           } else {
             res.sendStatus(400)
           }
@@ -143,8 +143,6 @@ export default function cacheRoutes(app: Application) {
           })
           res.sendStatus(500)
         }
-
-
       } else {
         logger.trace({
           message: 'error on cache',
@@ -153,7 +151,6 @@ export default function cacheRoutes(app: Application) {
         })
         res.sendStatus(500)
       }
-
     }
   })
 }

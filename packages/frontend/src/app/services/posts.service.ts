@@ -412,21 +412,31 @@ export class PostsService {
         const sanitizedContent = sanitizeHtml(link.innerHTML, {
           allowedTags: []
         })
-        if (
-          sanitizedContent.startsWith('@') &&
-          mentionRemoteUrls.includes(`${sanitizedContent}@${linkAsUrl.hostname}`)
-        ) {
-          link.href = `/blog/${sanitizedContent}@${linkAsUrl.hostname}`
+        const isUserTag = sanitizedContent.startsWith('@')
+        const isRemoteUser = mentionRemoteUrls.includes(`${sanitizedContent}@${linkAsUrl.hostname}`)
+        const isLocalUser = mentionRemoteUrls.includes(`${sanitizedContent}`)
+        const isLocalUserLink =
+          linkAsUrl.hostname === hostUrl &&
+          (linkAsUrl.pathname.startsWith('/blog') || linkAsUrl.pathname.startsWith('/fediverse/blog'))
+
+        if (isUserTag) {
           link.classList.add('mention')
-          link.classList.add('remote-mention')
+
+          if (isRemoteUser) {
+            // Remote blog, mirror to local blog
+            link.href = `/blog/${sanitizedContent}@${linkAsUrl.hostname}`
+            link.classList.add('remote-mention')
+          }
+
+          if (isLocalUser) {
+            //link.href = `/blog/${sanitizedContent}`
+            link.classList.add('mention')
+            link.classList.add('local-mention')
+          }
         }
-        if (
-          (sanitizedContent.startsWith('@') && mentionRemoteUrls.includes(`${sanitizedContent}`)) ||
-          linkAsUrl.hostname === hostUrl
-        ) {
-          //link.href = `/blog/${sanitizedContent}`
-          link.classList.add('mention')
-          link.classList.add('local-mention')
+        // Also tag local user links for user styles
+        if (isLocalUserLink) {
+          link.classList.add('local-user-link')
         }
       }
       link.target = '_blank'

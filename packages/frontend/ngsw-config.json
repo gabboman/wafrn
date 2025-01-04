@@ -5,11 +5,14 @@
     "/dashboard",
     "/dashboard/**",
     "/profile",
-    "profile/**",
+    "/profile/**",
     "/blog/**",
     "/fediverse/post/**",
     "/search",
-    "/search/**"
+    "/search/**",
+    "/admin",
+    "/admin/**",
+    "/privacy"
   ],
   "assetGroups": [
     {
