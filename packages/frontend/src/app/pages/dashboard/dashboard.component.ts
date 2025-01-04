@@ -57,7 +57,6 @@ export class DashboardComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    window.scrollTo(0, 0)
     const purePath = this.router.url.split('?')[0]
     if (purePath.endsWith('explore')) {
       this.level = 0
@@ -112,7 +111,6 @@ export class DashboardComponent implements OnInit, OnDestroy {
     this.viewedPostsIds = []
     this.timestamp = new Date().getTime()
     this.loadPosts(this.currentPage)
-    window.scrollTo(0, 0)
   }
 
   async countViewedPost() {

@@ -4,7 +4,7 @@ import { NavigationMenuComponent } from './components/navigation-menu/navigation
 import { NavigationMenuModule } from './components/navigation-menu/navigation-menu.module'
 import { isAdminGuard } from './guards/is-admin.guard'
 import { loginRequiredGuard } from './guards/login-required.guard'
-import { CustomReuseStrategy } from './services/routing.service'
+import { DashboardReuseStrategy } from './strategies/dashboard.strategy'
 
 const routes: Routes = [
   {
@@ -61,7 +61,7 @@ const routes: Routes = [
       {
         path: 'blog',
         loadChildren: () => import('./pages/view-blog/view-blog.module').then((m) => m.ViewBlogModule),
-        data: { reuseRoute: true }
+        data: { reuseRoute: false }
       },
       {
         path: 'profile',
@@ -100,11 +100,12 @@ const routes: Routes = [
 @NgModule({
   imports: [
     RouterModule.forRoot(routes, {
-      preloadingStrategy: PreloadAllModules
+      preloadingStrategy: PreloadAllModules,
+      scrollPositionRestoration: 'enabled'
     }),
     NavigationMenuModule
   ],
-  providers: [{ provide: RouteReuseStrategy, useClass: CustomReuseStrategy }],
+  providers: [{ provide: RouteReuseStrategy, useClass: DashboardReuseStrategy }],
   exports: [RouterModule]
 })
 export class AppRoutingModule {}

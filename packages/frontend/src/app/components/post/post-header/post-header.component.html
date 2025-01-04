@@ -16,11 +16,7 @@
       <span class="text-sm" matTooltip="{{ fragment.createdAt | date: 'short' }}">
         {{ this.timeAgo }}
       </span>
-      <span
-        *ngIf="fragment.updatedAt.getTime() - fragment.createdAt.getTime() > 60000"
-        matTooltip="Edited {{ fragment.updatedAt | date: 'short' }}"
-        class="text-xs"
-      >
+      <span *ngIf="false" matTooltip="Edited {{ fragment.updatedAt | date: 'short' }}" class="text-xs">
         <fa-icon [icon]="editedIcon"></fa-icon>
       </span>
       <span class="text-xs" matTooltip="{{ privacyOptions[fragment.privacy].name }}">

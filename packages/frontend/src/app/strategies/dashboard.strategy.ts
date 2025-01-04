@@ -1,6 +1,6 @@
 import { ActivatedRouteSnapshot, DetachedRouteHandle, Route, RouteReuseStrategy, UrlSegment } from '@angular/router'
 
-export class CustomReuseStrategy implements RouteReuseStrategy {
+export class DashboardReuseStrategy implements RouteReuseStrategy {
   readonly storedRouteHandles = new Map<string, DetachedRouteHandle>()
 
   // Decides if the route should be stored
