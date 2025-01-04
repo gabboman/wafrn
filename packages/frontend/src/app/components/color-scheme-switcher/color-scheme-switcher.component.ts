@@ -5,6 +5,13 @@ import { MatTooltipModule } from '@angular/material/tooltip'
 import { FaIconComponent } from '@fortawesome/angular-fontawesome'
 import { faPalette } from '@fortawesome/free-solid-svg-icons'
 
+// !! NOTE FOR ADDING THEMES !! //
+//
+// If you want to add a theme, you must:
+// - Update this type
+// - Add the theme as a CSS file in `/assets/themes/name.css`
+// - Add a link file to it in this component's HTML file
+
 const colorSchemeVariants = ['default', 'tan', 'green', 'gold'] as const
 type ColorSchemeTuple = typeof colorSchemeVariants
 type ColorScheme = ColorSchemeTuple[number]
