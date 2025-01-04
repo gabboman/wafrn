@@ -2,16 +2,19 @@ import {
   AfterViewInit,
   ChangeDetectorRef,
   Component,
+  computed,
   ElementRef,
-  Input,
+  input,
   OnChanges,
-  OnInit,
   ViewChild
 } from '@angular/core'
 import { WafrnMedia } from '../../interfaces/wafrn-media'
 import { EnvironmentService } from '../../services/environment.service'
 import { MediaService } from '../../services/media.service'
 import { MessageService } from '../../services/message.service'
+import { faEyeSlash } from '@fortawesome/free-solid-svg-icons'
+//@ts-ignore
+import Vlitejs from 'vlitejs'
 
 @Component({
   selector: 'app-wafrn-media',
@@ -20,19 +23,41 @@ import { MessageService } from '../../services/message.service'
   standalone: false
 })
 export class WafrnMediaComponent implements OnChanges, AfterViewInit {
-  nsfw = true
-  @Input() data!: WafrnMedia
-  @Input() mediaOrString!: WafrnMedia | string
-  tmpUrl = ''
-  displayUrl: string = ''
+  data = input.required<WafrnMedia>()
+
+  @ViewChild('videoelement') videoElement: ElementRef<HTMLVideoElement> | undefined
+  @ViewChild('audioelement') audioElement: ElementRef<HTMLAudioElement> | undefined
+
+  readonly extensionsToHideImgTag = ['mp4', 'aac', 'mp3', 'ogg', 'webm', 'weba', 'svg', 'ogg', 'oga']
+  readonly tmpUrl = computed<string>(() =>
+    this.data().external
+      ? EnvironmentService.environment.externalCacheurl + encodeURIComponent(this.data().url)
+      : EnvironmentService.environment.externalCacheurl +
+        encodeURIComponent(EnvironmentService.environment.baseMediaUrl + this.data().url)
+  )
+  readonly displayUrl = computed<string>(() => this.tmpUrl())
+  readonly extension = computed<string>(() => this.getExtension())
+  readonly mimeType = computed<string>(() => this.getMimeType())
+  readonly width = computed<number | ''>(() => this.data().width ?? '')
+  readonly height = computed<number | ''>(() => this.data().height ?? '')
+
+  private readonly alwaysAltMedia = ['audio', 'video']
+  readonly alwaysShowAlt = computed<boolean>(() => this.alwaysAltMedia.includes(this.mimeType()?.split('/')[0]))
+
+  private readonly nonsentitiveMedia = ['audio', 'video']
+  readonly hideSensitiveButton = computed<boolean>(() =>
+    this.nonsentitiveMedia.includes(this.mimeType()?.split('/')[0])
+  )
+
   disableNSFWFilter = true
-  @ViewChild('media', { read: ElementRef }) wafrnMedia!: ElementRef
-  extension = ''
+
+  nsfw = true
   viewLongImage = false
-  extensionsToHideImgTag = ['mp4', 'aac', 'mp3', 'ogg', 'webm', 'weba', 'svg', 'ogg', 'oga']
-  mimeType = ''
-  height = 1
-  width = 1
+  descriptionVisible = false
+
+  // Icons
+  readonly hideIcon = faEyeSlash
+
   constructor(
     private mediaService: MediaService,
     private messagesService: MessageService,
@@ -42,79 +67,72 @@ export class WafrnMediaComponent implements OnChanges, AfterViewInit {
   }
 
   ngOnChanges(): void {
-    if (this.mediaOrString && typeof this.mediaOrString != 'string') {
-      this.data = this.mediaOrString as WafrnMedia
-    }
-    if (this.data) {
-      this.extension = this.getExtension()
-      this.tmpUrl = this.data.external
-        ? EnvironmentService.environment.externalCacheurl + encodeURIComponent(this.data.url)
-        : EnvironmentService.environment.externalCacheurl +
-          encodeURIComponent(EnvironmentService.environment.baseMediaUrl + this.data.url)
-      this.nsfw = this.data.NSFW && !this.disableNSFWFilter
-      this.displayUrl = this.tmpUrl //this.nsfw ? '/assets/img/nsfw_image.webp' : this.tmpUrl;
-      if (this.data.mediaType) {
-        this.mimeType = this.data.mediaType
-      } else {
-        switch (this.extension) {
-          case 'mp4': {
-            this.mimeType = 'video/mp4'
-            break
-          }
-          case 'webm': {
-            this.mimeType = 'video/webm'
-            break
-          }
-          case 'mp3': {
-            this.mimeType = 'audio/mpeg'
-            break
-          }
-          case 'wav': {
-            this.mimeType = 'audio/wav'
-            break
-          }
-          case 'ogg':
-          case 'oga': {
-            this.mimeType = 'audio/ogg'
-            break
-          }
-          case 'opus': {
-            this.mimeType = 'audio/opus'
-            break
-          }
-          case 'aac': {
-            this.mimeType = 'audio/aac'
-            break
-          }
-          case 'm4a': {
-            this.mimeType = 'audio/mp4'
-            break
-          }
-          case 'pdf': {
-            this.mimeType = 'pdf'
-            break
-          }
-          default: {
-            this.mimeType = 'UNKNOWN'
-          }
-        }
-      }
-      this.cdr.markForCheck()
-    }
+    this.nsfw = this.data().NSFW && !this.disableNSFWFilter
+    this.cdr.markForCheck()
   }
 
   ngAfterViewInit(): void {
-    // console.log(this.wafrnMedia.nativeElement)
+    const videoElement = this.videoElement?.nativeElement
+    if (videoElement) {
+      new Vlitejs(videoElement, {
+        options: {
+          autoHide: true,
+          autoHideDelay: 500
+        }
+      })
+    }
+    const audioElement = this.audioElement?.nativeElement
+    if (audioElement) {
+      new Vlitejs(audioElement, {})
+    }
   }
 
   showPicture() {
     this.nsfw = false
-    this.displayUrl = this.tmpUrl
     this.viewLongImage = true
   }
 
   private getExtension() {
-    const mediaUrl = this.data.url.split('.')
+    const mediaUrl = this.data().url.split('.')
     return mediaUrl[mediaUrl.length - 1].toLowerCase()
+  }
+
+  private getMimeType() {
+    if (typeof this.data()?.mediaType === 'string') {
+      return this.data().mediaType as string
+    }
+    switch (this.extension()) {
+      case 'mp4': {
+        return 'video/mp4'
+      }
+      case 'webm': {
+        return 'video/webm'
+      }
+      case 'mp3': {
+        return 'audio/mpeg'
+      }
+      case 'wav': {
+        return 'audio/wav'
+      }
+      case 'ogg':
+      case 'oga': {
+        return 'audio/ogg'
+      }
+      case 'opus': {
+        return 'audio/opus'
+      }
+      case 'aac': {
+        return 'audio/aac'
+      }
+      case 'm4a': {
+        return 'audio/mp4'
+      }
+      case 'pdf': {
+        return 'pdf'
+      }
+      default: {
+        return 'UNKNOWN'
+      }
+    }
   }
 }

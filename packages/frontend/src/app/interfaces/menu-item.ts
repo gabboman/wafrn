@@ -4,7 +4,7 @@ export interface MenuItem {
   label: string
   icon?: IconDefinition
   title: string
-  visible?: boolean
+  visible: boolean
   badge?: number
   items?: MenuItem[]
   routerLink?: string

@@ -8,7 +8,6 @@ import { RouterModule } from '@angular/router'
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome'
 import {
   faChevronDown,
-  faExclamationTriangle,
   faServer,
   faUser,
   faUserSlash,
@@ -54,7 +53,6 @@ export class BlogHeaderComponent implements OnChanges, OnDestroy {
   unblockServerIcon = faServer
   allowAsk = false
   allowRemoteAsk = false
-  infoAlert = faExclamationTriangle
 
   constructor(
     private loginService: LoginService,
@@ -133,7 +131,7 @@ export class BlogHeaderComponent implements OnChanges, OnDestroy {
   async openAskDialog() {
     this.dialogService.open(await this.getAskDialogComponent(), {
       data: { details: this.blogDetails },
-      width: '100%'
+      width: '800px'
     })
   }
 

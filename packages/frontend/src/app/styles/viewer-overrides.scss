@@ -1,0 +1,24 @@
+body {
+  padding-right: 0 !important; // evil
+}
+.viewer-transition {
+  transition: all 120ms ease-out;
+}
+
+// CSP issue
+.viewer-close:before,
+.viewer-flip-horizontal:before,
+.viewer-flip-vertical:before,
+.viewer-fullscreen-exit:before,
+.viewer-fullscreen:before,
+.viewer-next:before,
+.viewer-one-to-one:before,
+.viewer-play:before,
+.viewer-prev:before,
+.viewer-reset:before,
+.viewer-rotate-left:before,
+.viewer-rotate-right:before,
+.viewer-zoom-in:before,
+.viewer-zoom-out:before {
+  background-image: url('/assets/img/image_viewer_icons.svg');
+}

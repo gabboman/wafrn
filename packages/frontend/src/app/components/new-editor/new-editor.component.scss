@@ -11,7 +11,7 @@
 }
 
 .grid > div {
-  border: 1px solid #999;
+  border: 1px solid var(--mat-sys-outline);
   border-radius: 8px;
 }
 
@@ -20,8 +20,13 @@
   flex-wrap: wrap;
   align-items: flex-start;
   justify-content: flex-start;
-  gap: 8px;
-  margin-top: 8px;
+  gap: 0.5rem;
+  margin-bottom: 0.5rem;
+  --mdc-icon-button-icon-color: var(--mat-sys-primary);
+
+  & button {
+    --fa-display: block;
+  }
 }
 
 .cw-wrapper {
@@ -33,10 +38,6 @@
   flex-shrink: 0;
   margin: 3px 0;
   margin-left: -2px;
-}
-
-p {
-  margin: 0;
 }
 
 app-media-preview {
@@ -70,30 +71,19 @@ app-media-preview {
   left: 0px;
 }
 
-.suggestionsMenu {
-  max-height: 300px;
-  max-width: 250px;
+.suggestions-menu {
+  max-height: 24rem;
+  max-width: 16rem;
   position: fixed;
   z-index: 999;
   overflow-x: hidden;
   overflow-y: scroll;
-  background-color: #1d1b1e;
-  border-radius: 8px;
-  border: 1px solid #888;
-  padding: 8px;
+  background-color: var(--mat-sys-surface-container);
+  border-radius: var(--mat-sys-corner-small);
+  border: 1px solid var(--mat-sys-outline);
+  padding: 0.5rem;
 }
 
-/* Not sure if this is how to do it but lmao */
-.suggestionsMenu > div {
-  margin-block: 4px;
+svg {
+  display: block;
 }
-
-.suggestionsMenu > div > app-avatar-small {
-  margin-right: 4px;
-}
-
-/* This doesn't work and I cannot figure out the correct class to target */
-/* see frontend/src/styles.scss L387 instead */
-/* .mat-mdc-dialog-inner-container > .mat-mdc-dialog-surface { */
-/*     padding: 20px; */
-/* } */

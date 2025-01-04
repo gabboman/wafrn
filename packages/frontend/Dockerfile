@@ -4,23 +4,23 @@ FROM node:20-alpine AS builder
 WORKDIR /wafrn
 
 # copy package.json and package-lock.json
-COPY packages/frontend/package*.json ./
+COPY . ./
+
+# copy the frontend environment file
+RUN rm -rf packages/backend packages/frontend/src/environments/environment.prod.ts && mv packages/frontend/src/environments/environment.example.ts packages/frontend/src/environments/environment.prod.ts
+
 
 # install dependencies
 RUN npm install
 
-# copy the rest of the files
-COPY packages/frontend .
 
-# copy the frontend environment file
-RUN rm -f src/environments/environment.prod.ts && mv src/environments/environment.example.ts src/environments/environment.prod.ts
 
 # set node_env as production for the build command
 ENV NODE_ENV=production
 
-RUN npm run build
+RUN npm run frontend:build
 
-RUN mv dist/wafrn/browser/ /wafrn/frontend/
+RUN mv packages/frontend/dist/wafrn/browser/ /wafrn/frontend/
 
 # apache proxy stage
 FROM debian:12-slim

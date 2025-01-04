@@ -384,6 +384,7 @@ export class PostsService {
           (elem) => this.getURL(elem.remoteId ? elem.remoteId : 'https://adomainthatdoesnotexist.google.com').hostname
         )
       : []
+    const hostUrl = this.getURL(EnvironmentService.environment.frontUrl).hostname
     Array.from(links).forEach((link) => {
       const youtubeMatch = link.href.matchAll(this.youtubeRegex)
       if (link.innerText === link.href && youtubeMatch) {
@@ -401,22 +402,41 @@ export class PostsService {
           const mentionedUser = post.mentionPost.find((elem) => elem.remoteId === link.href)
           if (mentionedUser) {
             link.href = `${EnvironmentService.environment.frontUrl}/blog/${mentionedUser.url}`
+            link.classList.add('mention')
+            link.classList.add('remote-mention')
           }
         }
       }
       const linkAsUrl: URL = this.getURL(link.href)
-      if (mentionedHosts.includes(linkAsUrl.hostname)) {
+      if (mentionedHosts.includes(linkAsUrl.hostname) || linkAsUrl.hostname === hostUrl) {
         const sanitizedContent = sanitizeHtml(link.innerHTML, {
           allowedTags: []
         })
-        if (
-          sanitizedContent.startsWith('@') &&
-          mentionRemoteUrls.includes(`${sanitizedContent}@${linkAsUrl.hostname}`)
-        ) {
-          link.href = `/blog/${sanitizedContent}@${linkAsUrl.hostname}`
+        const isUserTag = sanitizedContent.startsWith('@')
+        const isRemoteUser = mentionRemoteUrls.includes(`${sanitizedContent}@${linkAsUrl.hostname}`)
+        const isLocalUser = mentionRemoteUrls.includes(`${sanitizedContent}`)
+        const isLocalUserLink =
+          linkAsUrl.hostname === hostUrl &&
+          (linkAsUrl.pathname.startsWith('/blog') || linkAsUrl.pathname.startsWith('/fediverse/blog'))
+
+        if (isUserTag) {
+          link.classList.add('mention')
+
+          if (isRemoteUser) {
+            // Remote blog, mirror to local blog
+            link.href = `/blog/${sanitizedContent}@${linkAsUrl.hostname}`
+            link.classList.add('remote-mention')
+          }
+
+          if (isLocalUser) {
+            //link.href = `/blog/${sanitizedContent}`
+            link.classList.add('mention')
+            link.classList.add('local-mention')
+          }
         }
-        if (sanitizedContent.startsWith('@') && mentionRemoteUrls.includes(`${sanitizedContent}`)) {
-          link.href = `/blog/${sanitizedContent}`
+        // Also tag local user links for user styles
+        if (isLocalUserLink) {
+          link.classList.add('local-user-link')
         }
       }
       link.target = '_blank'

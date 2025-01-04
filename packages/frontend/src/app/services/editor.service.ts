@@ -132,12 +132,7 @@ export class EditorService implements OnDestroy {
         scrollDate: this.dashboardService.startScrollDate,
         path: window.location.pathname
       }
-      this.dialogService.open(await this.getEditorComponent(), {
-        height: mobile ? '100vh' : 'min(600px, calc(100% - 30px))',
-        width: mobile ? '100vw' : 'min(960px, calc(100% - 30px))',
-        maxWidth: '100%',
-        maxHeight: '100%'
-      })
+      this.dialogService.open(await this.getEditorComponent())
     }
   }
 

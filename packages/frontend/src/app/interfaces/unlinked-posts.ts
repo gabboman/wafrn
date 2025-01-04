@@ -11,7 +11,7 @@ export interface unlinkedPosts {
   medias: Media[]
   tags: Tag[]
   likes: Like[]
-  lastPostDate: Date
+  //lastPostDate: Date
   quotes: Quote[]
   quotedPosts: basicPost[]
   rewootIds: string[]

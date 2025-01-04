@@ -1,46 +1,80 @@
-<div #media>
-  <mat-card *ngIf="data" class="m-0 overflow-hidden" (click)="showPicture()">
-    <div (keyup)="showPicture()" class="img-container media-description">
-      <div class="img-video-container">
-        <b class="img-cw-text" *ngIf="nsfw">This contains sensitive content. Click to display</b>
+<div class="media-container" [ngClass]="{ 'always-show-alt': alwaysShowAlt() }">
+  <div class="media-content-container">
+    @if (
+      (!extensionsToHideImgTag.includes(extension()) || mimeType() === 'UNKNOWN') && !mimeType().startsWith('video')
+    ) {
+      <img
+        [src]="displayUrl()"
+        [alt]="data().description"
+        width="{{ width() }}"
+        height="{{ height() }}"
+        loading="lazy"
+        [ngClass]="{
+          nsfw: nsfw,
+          'displayed-image': !nsfw
+        }"
+      />
+    }
 
-        <img
-          *ngIf="
-            (!extensionsToHideImgTag.includes(extension) || mimeType === 'UNKNOWN') && !mimeType.startsWith('video')
-          "
-          [src]="displayUrl"
-          [alt]="data.description"
-          role="none"
-          loading="lazy"
-          [ngClass]="{
-            nsfw: nsfw,
-            'displayed-image': !nsfw
-          }"
-        />
+    @if (mimeType().startsWith('video')) {
+      <video
+        #videoelement
+        (play)="showPicture()"
+        preload="metadata"
+        [ngClass]="{
+          nsfw: nsfw,
+          'displayed-image': !nsfw
+        }"
+        width="{{ width() }}"
+        height="{{ height() }}"
+      >
+        <source [src]="displayUrl()" [type]="mimeType()" />
+      </video>
+    }
+  </div>
 
-        <video
-          (play)="showPicture()"
-          preload="metadata"
-          [ngClass]="{
-            nsfw: nsfw,
-            'displayed-image': !nsfw
-          }"
-          *ngIf="mimeType.startsWith('video')"
-          controls
-        >
-          <source [src]="displayUrl" [type]="mimeType" />
-        </video>
-      </div>
-
-      <div *ngIf="!nsfw && mimeType.startsWith('pdf')">
-        <a [href]="displayUrl" target="_blank">Click here to see the PDF file that is embedded in this post</a>
-      </div>
-
-      <audio *ngIf="!nsfw && mimeType.startsWith('audio')" controls>
-        <source [src]="displayUrl" [type]="mimeType" />
-      </audio>
-
-      <div *ngIf="data.description" class="px-2 py-1 image-description" [innerText]="data.description"></div>
+  @if (nsfw) {
+    <div class="flex flex-column justify-content-center align-items-center image-cw-text">
+      <p>This media contains sensitive content</p>
+      <button mat-raised-button (click)="showPicture()">Show media</button>
     </div>
-  </mat-card>
+  } @else {
+    @if (mimeType().startsWith('pdf')) {
+      <a [href]="displayUrl()" target="_blank">Click here to see the PDF file that is embedded in this post</a>
+    }
+    @if (mimeType().startsWith('audio')) {
+      <audio #audioelement>
+        <source [src]="displayUrl()" [type]="mimeType()" />
+      </audio>
+    }
+
+    @if (data().description) {
+      @if (!alwaysShowAlt()) {
+        <button
+          class="m-2 toggle-button toggle-description"
+          mat-raised-button
+          (mousedown)="descriptionVisible = !descriptionVisible"
+          title="Show alt text"
+          [ariaDescription]="'Show alt text'"
+        >
+          ALT
+        </button>
+      }
+      <div class="px-2 py-1 image-description" [ngClass]="{ visible: descriptionVisible }">
+        <p class="m-0" [innerText]="data().description"></p>
+      </div>
+    }
+
+    @if (!hideSensitiveButton()) {
+      <button
+        class="m-2 toggle-button toggle-nsfw"
+        mat-raised-button
+        (mousedown)="$event.stopPropagation(); nsfw = !nsfw"
+        title="Hide image"
+        [ariaDescription]="'Hide image'"
+      >
+        <fa-icon [icon]="hideIcon"></fa-icon>
+      </button>
+    }
+  }
 </div>

@@ -44,7 +44,7 @@ export class NotificationsComponent implements OnInit {
     this.observer = new IntersectionObserver((intersectionEntries: IntersectionObserverEntry[]) => {
       if (intersectionEntries.some((elem) => elem.isIntersecting)) {
         this.page = this.page + 1
-        this.loadNotifications(this.page)
+        this.loadNotificationsV2(this.page)
       }
     })
   }
@@ -57,7 +57,7 @@ export class NotificationsComponent implements OnInit {
   async ngOnInit(): Promise<void> {
     window.scrollTo(0, 0)
     localStorage.setItem('lastTimeCheckNotifications', new Date().toISOString())
-    await this.loadNotifications(0)
+    await this.loadNotificationsV2(0)
   }
 
   async loadNotifications(page: number) {
@@ -91,7 +91,8 @@ export class NotificationsComponent implements OnInit {
         url: `/blog/${follow.url}`,
         avatar: follow.avatar,
         date: follow.createdAt,
-        userUrl: follow.url
+        userUrl: follow.url,
+        userName: ''
       }
     })
     processedNotifications = processedNotifications.concat(
@@ -139,7 +140,22 @@ export class NotificationsComponent implements OnInit {
     setTimeout(() => {
       const elements = document.querySelectorAll('.load-more-notifications-intersector')
       if (elements) {
-        //this.observer.observe(element);
+        elements.forEach((element) => {
+          this.observer.observe(element)
+        })
+      } else {
+        console.log('observer not ready')
+      }
+    })
+  }
+
+  async loadNotificationsV2(page: number) {
+    const notifications = await this.notificationsService.getNotificationsScrollV2(page)
+    // this waythe whole object is not recreated from scratch
+    notifications.forEach((notif) => this.notificationsToShow.push(notif))
+    setTimeout(() => {
+      const elements = document.querySelectorAll('.load-more-notifications-intersector')
+      if (elements) {
         elements.forEach((element) => {
           this.observer.observe(element)
         })
@@ -161,7 +177,8 @@ export class NotificationsComponent implements OnInit {
       userUrl: reblog.user.url,
       fragment: reblog.content,
       emojiName: reblog.emojiName,
-      emojiReact: reblog.emojiReact
+      emojiReact: reblog.emojiReact,
+      userName: reblog.user.name
     }
   }
 }
