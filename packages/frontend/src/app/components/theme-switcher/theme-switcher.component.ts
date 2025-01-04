@@ -4,7 +4,13 @@ import { MatButtonModule } from '@angular/material/button'
 import { NgClass } from '@angular/common'
 import { MatTooltipModule } from '@angular/material/tooltip'
 
-type ColorTheme = 'light' | 'dark' | 'auto'
+const colorThemeVariants = ['light', 'dark', 'auto'] as const
+type ColorThemeTuple = typeof colorThemeVariants
+type ColorTheme = ColorThemeTuple[number]
+
+function isColorTheme(value: string): value is ColorTheme {
+  return colorThemeVariants.includes(value as ColorTheme)
+}
 
 function capitalize(text: string) {
   text = text[0].toUpperCase() + text.slice(1)
@@ -31,7 +37,7 @@ export class ThemeSwitcherComponent {
   getTheme(): ColorTheme {
     if (typeof localStorage !== 'undefined') {
       const localTheme = localStorage.getItem('theme')
-      if (localTheme === 'light' || localTheme === 'dark' || localTheme === 'auto') {
+      if (localTheme !== null && isColorTheme(localTheme)) {
         return localTheme
       }
     }

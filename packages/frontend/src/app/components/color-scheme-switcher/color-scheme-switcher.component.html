@@ -1,0 +1,29 @@
+<button
+  mat-button
+  [matMenuTriggerFor]="colorSchemeMenu"
+  class="theme-toggle"
+  title="Toggle theme"
+  aria-label="Toggle theme"
+  matTooltip="{{ colorSchemeText() }} theme"
+>
+  <fa-icon [icon]="paletteIcon"></fa-icon>
+</button>
+<mat-menu #colorSchemeMenu="matMenu">
+  <button mat-menu-item (click)="setColorScheme('default')">Default</button>
+  <button mat-menu-item (click)="setColorScheme('tan')">Tan</button>
+  <button mat-menu-item (click)="setColorScheme('green')">Green</button>
+  <button mat-menu-item (click)="setColorScheme('gold')">Gold</button>
+</mat-menu>
+
+@switch (colorScheme()) {
+  @case ('default') {}
+  @case ('tan') {
+    <link href="/assets/themes/tan.css" rel="stylesheet" />
+  }
+  @case ('green') {
+    <link href="/assets/themes/green.css" rel="stylesheet" />
+  }
+  @case ('gold') {
+    <link href="/assets/themes/gold.css" rel="stylesheet" />
+  }
+}

@@ -10,6 +10,9 @@
 @use './app/styles/vlite.css';
 @use './app/styles/vlite-overrides.scss';
 
+// Color scheme default
+@import './assets/themes/default.css';
+
 html {
   color-scheme: light dark;
   @include mat.theme(
