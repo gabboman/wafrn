@@ -9,7 +9,6 @@ import { ThemeService } from 'src/app/services/theme.service'
 import { MessageService } from 'src/app/services/message.service'
 import { faArrowsRotate } from '@fortawesome/free-solid-svg-icons'
 import { Subscription } from 'rxjs'
-import { LoaderComponent } from 'src/app/components/loader/loader.component'
 
 @Component({
   selector: 'app-dashboard',
@@ -127,20 +126,17 @@ export class DashboardComponent implements OnInit, OnDestroy {
   async loadPosts(page: number) {
     this.loadingPosts = true
     let scrollDate = new Date(this.timestamp)
-    /*
-    // diable this part of ignoring the start date when closing post editor
-    if(page === 0 && EditorService.editorData) {
-      scrollDate = EditorService.editorData.scrollDate;
-      EditorService.editorData = undefined;
-    }
-    */
-    if (page !== 0) {
-      const lastPostBlock = this.posts[this.posts.length - 1]
-      scrollDate = new Date(lastPostBlock[lastPostBlock.length - 1].createdAt)
+    if (page == 0) {
+      scrollDate = new Date()
+      this.timestamp = scrollDate.getTime()
     }
     const tmpPosts = await this.dashboardService.getDashboardPage(scrollDate, this.level)
     this.noMorePosts = tmpPosts.length === 0
+    // we do the filtering here to avoid repeating posts. Also by doing it here we avoid flickering
     const filteredPosts = tmpPosts.filter((post: ProcessedPost[]) => {
+      // we set the scroll date to the oldest post we got here
+      const postDate = new Date(post[post.length - 1].createdAt).getTime()
+      this.timestamp = postDate < this.timestamp ? postDate : this.timestamp
       let allFragmentsSeen = true
       post.forEach((component) => {
         const thisFragmentSeen =
@@ -153,8 +149,6 @@ export class DashboardComponent implements OnInit, OnDestroy {
       })
       return !allFragmentsSeen
     })
-
-    // we do the filtering here to avoid repeating posts. Also by doing it here we avoid flickering
 
     // internal posts, and stuff could be added here.
     // also some ads for RAID SHADOW LEGENDS. This is a joke.
@@ -195,6 +189,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
     // if we get a lot of filtered posts, we might want to load the next page
     if (tmpPosts.length > 5 && filteredPosts.length < 5) {
       this.currentPage = this.currentPage + 1
+      this.timestamp = this.timestamp - 1
       await this.loadPosts(this.currentPage)
     }
     this.loadingPosts = false
