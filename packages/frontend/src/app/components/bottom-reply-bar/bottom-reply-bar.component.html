@@ -3,12 +3,12 @@
     @if (notes) {
       <p class="m-0 text-sm">
         <a [routerLink]="'/fediverse/post/' + fragment.id" class="subtle-link notes-link" mat-stroked-button
-          ><b>{{ notes }}</b> notes</a
+          ><b>{{ notes }}</b> notek</a
         >
       </p>
     } @else {
       <p class="m-0 text-sm">
-        <a [routerLink]="'/fediverse/post/' + fragment.id" class="subtle-link notes-link">View thread</a>
+        <a [routerLink]="'/fediverse/post/' + fragment.id" class="subtle-link notes-link">Zobacz wątek</a>
       </p>
     }
   </div>
@@ -16,7 +16,7 @@
     <div class="flex gap-1 action-list">
       @if (fragment.privacy !== 10 && fragment.privacy !== 1 && fragment.privacy !== 2) {
         <button mat-button color="accent" (mousedown)="quotePost(fragment)" class="cursor-pointer quote-icon">
-          <fa-icon size="lg" [icon]="quoteIcon" matTooltip="Quote woot"></fa-icon>
+          <fa-icon size="lg" [icon]="quoteIcon" matTooltip="Zacytuj woota"></fa-icon>
         </button>
       }
       @if (myRewootsIncludePost) {
@@ -27,7 +27,7 @@
           class="cursor-pointer delete-rewoot-icon"
           [disabled]="loadingAction"
         >
-          <fa-icon size="lg" [icon]="closeIcon" matTooltip="Delete rewoot"></fa-icon>
+          <fa-icon size="lg" [icon]="closeIcon" matTooltip="Usuń rewoota"></fa-icon>
         </button>
       }
       @if (!myRewootsIncludePost && fragment.privacy !== 10 && fragment.privacy !== 1) {
@@ -38,28 +38,28 @@
           class="cursor-pointer rewoot-icon"
           [disabled]="loadingAction"
         >
-          <fa-icon size="lg" [icon]="quickReblogIcon" matTooltip="Rewoot"></fa-icon>
+          <fa-icon size="lg" [icon]="quickReblogIcon" matTooltip="Rewootnij"></fa-icon>
         </button>
       }
       <button mat-button color="accent" (mousedown)="replyPost(fragment)" class="cursor-pointer reply-icon">
-        <fa-icon size="lg" [icon]="reblogIcon" matTooltip="Reply woot"></fa-icon>
+        <fa-icon size="lg" [icon]="reblogIcon" matTooltip="Odpowiedz na woota"></fa-icon>
       </button>
       @if (fragment.userId !== myId) {
         @if (fragment.userLikesPostRelations.includes(myId)) {
           <button mat-button color="accent" (mousedown)="unlikePost(fragment)" class="cursor-pointer unlike-icon">
-            <fa-icon size="lg" [icon]="clearHeartIcon" matTooltip="Remove like"></fa-icon>
+            <fa-icon size="lg" [icon]="clearHeartIcon" matTooltip="Usuń lajka"></fa-icon>
           </button>
         } @else {
           <button mat-button color="accent" (mousedown)="likePost(fragment)" class="cursor-pointer like-icon">
-            <fa-icon size="lg" [icon]="solidHeartIcon" matTooltip="Like woot"></fa-icon>
+            <fa-icon size="lg" [icon]="solidHeartIcon" matTooltip="Polub woota"></fa-icon>
           </button>
         }
       } @else {
         <button mat-button color="accent" (mousedown)="editPost(fragment)" class="cursor-pointer">
-          <fa-icon size="lg" [icon]="editedIcon" matTooltip="Edit woot"></fa-icon>
+          <fa-icon size="lg" [icon]="editedIcon" matTooltip="Zedytuj woota"></fa-icon>
         </button>
         <button mat-button color="accent" (mousedown)="deletePost(fragment.id)" class="cursor-pointer delete-woot-icon">
-          <fa-icon size="lg" [icon]="deleteIcon" matTooltip="Delete woot"></fa-icon>
+          <fa-icon size="lg" [icon]="deleteIcon" matTooltip="Usuń woota"></fa-icon>
         </button>
       }
     </div>

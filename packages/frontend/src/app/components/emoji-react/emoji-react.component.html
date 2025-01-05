@@ -4,7 +4,7 @@
   type="button"
   cdkOverlayOrigin
   #trigger="cdkOverlayOrigin"
-  matTooltip="React with an emoji"
+  matTooltip="Zareaguj emotką"
   class="line-height-1"
 >
   <!-- <fa-icon [icon]="isOpen ? minusIcon : plusIcon"></fa-icon> -->
@@ -23,7 +23,7 @@
   [cdkConnectedOverlayScrollStrategy]="scrollStrategy"
 >
   <div class="p-3 emojireact-overlay">
-    <p class="text-xs">Mastodon does not support emojireacts yet</p>
+    <p class="text-xs">Mastodon nie obsługuje emotek jako reakcji. lol lmao</p>
     <app-emoji-collections *ngIf="!loading" (emoji)="reactToPost($event)"></app-emoji-collections>
     <app-loader *ngIf="loading"></app-loader>
   </div>

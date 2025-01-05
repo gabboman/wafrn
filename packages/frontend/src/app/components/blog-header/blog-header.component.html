@@ -18,7 +18,7 @@
                 : unfollowUser(blogDetails.id)
             "
           >
-            {{ postService.followedUserIds.indexOf(blogDetails.id) === -1 ? 'Follow' : 'Unfollow' }}
+            {{ postService.followedUserIds.indexOf(blogDetails.id) === -1 ? 'śledź' : 'Odśledź' }}
           </button>
           <button
             mat-stroked-button
@@ -27,7 +27,7 @@
             class="split-button-left"
             (mousedown)="unfollowUser(blogDetails.id)"
           >
-            Awaiting approval
+            Oczekiwanie na akceptację
           </button>
           <button
             [matMenuTriggerFor]="menu"
@@ -41,26 +41,26 @@
         <mat-menu #menu="matMenu" xPosition="before">
           @if (!blogDetails.muted) {
             <button mat-menu-item (mousedown)="blockService.muteUser(this.blogDetails.id)">
-              <fa-icon class="mr-2" [icon]="muteUserIcon"></fa-icon>Mute user
+              <fa-icon class="mr-2" [icon]="muteUserIcon"></fa-icon>Ucisz użyszkodnika
             </button>
           } @else {
             <button (mousedown)="blockService.unmuteUser(this.blogDetails.id)" mat-menu-item>
-              <fa-icon class="mr-2" [icon]="unmuteUserIcon"></fa-icon>Unmute user
+              <fa-icon class="mr-2" [icon]="unmuteUserIcon"></fa-icon>Odcisz użytkownika
             </button>
           }
           @if (!blogDetails.blocked) {
             <button mat-menu-item (mousedown)="blockService.blockUser(this.blogDetails.id)">
-              <fa-icon class="mr-2" [icon]="blockUserIcon"></fa-icon>Block user
+              <fa-icon class="mr-2" [icon]="blockUserIcon"></fa-icon>Zablokuj użyszkodnika
             </button>
           } @else {
             <button mat-menu-item (mousedown)="blockService.unblockUser(this.blogDetails.id)">
-              <fa-icon class="mr-2" [icon]="userIcon"></fa-icon>Unblock user
+              <fa-icon class="mr-2" [icon]="userIcon"></fa-icon>Odblokuj użytkownika
             </button>
           }
           @if (blogDetails.url.startsWith('@')) {
             @if (!blogDetails.serverBlocked) {
               <button mat-menu-item (mousedown)="blockService.blockServer(this.blogDetails.id)">
-                <fa-icon class="mr-2" [icon]="unblockServerIcon"></fa-icon>Block server
+                <fa-icon class="mr-2" [icon]="unblockServerIcon"></fa-icon>Ucisz serwer
               </button>
             } @else {
               <button
@@ -68,7 +68,7 @@
                 mat-menu-item
                 (mousedown)="blockService.unblockServer(this.blogDetails.federatedHost.id)"
               >
-                <fa-icon class="mr-2" [icon]="unblockServerIcon"></fa-icon>Unblock server
+                <fa-icon class="mr-2" [icon]="unblockServerIcon"></fa-icon>Odcisz serwer
               </button>
             }
           }
@@ -84,7 +84,7 @@
   @if (fediAttachment.length !== 0) {
     <hr class="my-3" />
     <div class="w-full overflow-hidden flex flex-column gap-2">
-      <p class="m-0 text-sm subtle-title">Fediverse Attachments</p>
+      <p class="m-0 text-sm subtle-title">Załączniki Fediwersum</p>
       <dl *ngFor="let fediAt of fediAttachment" class="flex m-0">
         <dt [innerHTML]="fediAt.name" class="w-3 font-bold"></dt>
         <dd [innerHTML]="fediAt.value" class="w-8 ml-2"></dd>
@@ -94,19 +94,19 @@
   @if (allowAsk) {
     <hr class="my-4" />
     <div class="flex flex-wrap justify-content-center gap-3">
-      <button mat-stroked-button color="accent" (mousedown)="openAskDialog()">Ask a question</button>
+      <button mat-stroked-button color="accent" (mousedown)="openAskDialog()">Zapytaj</button>
     </div>
   }
   @if (allowRemoteAsk) {
     <details class="mt-2">
-      <summary class="text-center">Send ask from outside Wafrn</summary>
+      <summary class="text-center">Wyślij pytanie spoza Gofra</summary>
       <p class="m-0">
-        You can send this user a non-anonymous ask from your fedi instance with the following structure: " !ask &#64;{{
+        Możesz wysłać temu użytkownikowi nieanonimowe pytanie ze swojej instancji w ten sposób: " !ask &#64;{{
           blogDetails.url
         }}
-        YOUR QUESTION HERE". The medias and emojis you attach will be ignored, and you can only send one mention on the
-        post. If it goes wrong, the user will receive it as a regular DM. Also, the content of the DM will be published
-        as the AP object to verify the ask as genuine
+        TWOJE PYTANIE TUTAJ". Załączniki i emotki, jakie wyślesz zostaną zignorowane, i możesz tylko otagować
+        jedną osobę w poście. Jak coś spierdolisz, to odbiorca to dostanie jako zwykłego DMa. A, i ten DM będzie wysłany jak objekt AP
+        by zweryfikować, czy jest wszystko git.
       </p>
     </details>
   }
@@ -114,21 +114,21 @@
     <footer class="mt-4 py-3 flex justify-content-evenly follow-counts">
       <div class="flex flex-column justify-content-center">
         <b class="m-0 text-lg text-center">{{ formatBigNumber(blogDetails.postCount) }}</b>
-        <p class="m-0 text-xs">Post Count</p>
+        <p class="m-0 text-xs">Liczba postów</p>
       </div>
       <a
         [routerLink]="['/blog', blogDetails.url, 'following']"
         class="flex flex-column justify-content-center subtle-link"
       >
         <b class="m-0 text-lg text-center">{{ formatBigNumber(blogDetails.followed) }}</b>
-        <p class="m-0 text-xs">Following</p>
+        <p class="m-0 text-xs">Śledzi</p>
       </a>
       <a
         [routerLink]="['/blog', blogDetails.url, 'followers']"
         class="flex flex-column justify-content-center subtle-link"
       >
         <b class="m-0 text-lg text-center">{{ formatBigNumber(blogDetails.followers) }}</b>
-        <p class="m-0 text-xs">Followers</p>
+        <p class="m-0 text-xs">Śledzący</p>
       </a>
     </footer>
   }
@@ -137,7 +137,7 @@
   type="info"
   class="block pt-3 pb-6 mx-2 lg:mx-4 wafrn-container notification"
   *ngIf="blogDetails.url.startsWith('@')"
-  >As this user is from a remote instance, the shown information may be incomplete.
+  >Użyszkodnik pochodzi spoza serwera, informacje mogą być nieaktualne.
   <a
     [href]="
       blogDetails.url.split('@').length === 3
@@ -145,6 +145,6 @@
         : 'https://bsky.app/profile/' + blogDetails.url.split('@')[1]
     "
     target="_blank"
-    >View on remote instance</a
+    >Zobacz na zewnętrznym serwerze</a
   >
 </app-info-card>

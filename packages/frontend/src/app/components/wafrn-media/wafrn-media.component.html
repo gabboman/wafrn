@@ -35,12 +35,12 @@
 
   @if (nsfw) {
     <div class="flex flex-column justify-content-center align-items-center image-cw-text">
-      <p>This media contains sensitive content</p>
-      <button mat-raised-button (click)="showPicture()">Show media</button>
+      <p>Ten załącznik zawiera treści wrażliwe</p>
+      <button mat-raised-button (click)="showPicture()">Pokaż kotku, co masz w środku</button>
     </div>
   } @else {
     @if (mimeType().startsWith('pdf')) {
-      <a [href]="displayUrl()" target="_blank">Click here to see the PDF file that is embedded in this post</a>
+      <a [href]="displayUrl()" target="_blank">Kliknij tutaj, by zobaczyć PDFa załączonego do woota</a>
     }
     @if (mimeType().startsWith('audio')) {
       <audio #audioelement>
@@ -55,7 +55,7 @@
           mat-raised-button
           (mousedown)="descriptionVisible = !descriptionVisible"
           title="Show alt text"
-          [ariaDescription]="'Show alt text'"
+          [ariaDescription]="'Pokaż opis załącznika'"
         >
           ALT
         </button>
@@ -70,8 +70,8 @@
         class="m-2 toggle-button toggle-nsfw"
         mat-raised-button
         (mousedown)="$event.stopPropagation(); nsfw = !nsfw"
-        title="Hide image"
-        [ariaDescription]="'Hide image'"
+        title="Schowaj obrazek"
+        [ariaDescription]="'Schowaj obrazek'"
       >
         <fa-icon [icon]="hideIcon"></fa-icon>
       </button>

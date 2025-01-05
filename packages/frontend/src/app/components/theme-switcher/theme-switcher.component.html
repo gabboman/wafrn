@@ -2,8 +2,8 @@
   mat-button
   [matMenuTriggerFor]="themeMenu"
   class="theme-toggle"
-  title="Change color scheme"
-  aria-label="Change color scheme"
+  title="Zmień motyw"
+  aria-label="Zmień motyw"
   [ngClass]="iconClass"
   matTooltip="{{ themeText() }} mode"
 >
@@ -35,7 +35,7 @@
   </svg>
 </button>
 <mat-menu #themeMenu="matMenu">
-  <button mat-menu-item (click)="setTheme('light')">Light</button>
-  <button mat-menu-item (click)="setTheme('dark')">Dark</button>
-  <button mat-menu-item (click)="setTheme('auto')">Auto</button>
+  <button mat-menu-item (click)="setTheme('light')">Tryb Oświecenia</button>
+  <button mat-menu-item (click)="setTheme('dark')">Tryb Jaskiniowca</button>
+  <button mat-menu-item (click)="setTheme('auto')">Tryb Automatyczny</button>
 </mat-menu>

@@ -18,28 +18,28 @@
     <span class="text-sm post-action">
       @switch (notification.type) {
         @case (notificationType.MENTION) {
-          mentioned you in a woot
+          wspomniało o tobie w woocie
         }
         @case (notificationType.LIKE) {
-          liked one of your woots
+          polubiło twojego woota
         }
         @case (notificationType.FOLLOW) {
-          now follows you!
+          śledzi cię!
         }
         @case (notificationType.REBLOG) {
-          rewooted one of your woots
+          zrewootowało twojego woota
         }
         @case (notificationType.QUOTE) {
-          quoted you in a woot
+          zacytowało ciebie w woocie
         }
         @case (notificationType.EMOJIREACT) {
-          reacted with
+          zareagowało następująco:
           @if (emojiUrl) {
             <img class="post-emoji" [src]="emojiUrl" [alt]="notification.emojiName" />
           } @else {
             {{ notification.emojiName }}
           }
-          to your woot
+          na twojego woota
         }
       }
     </span>
@@ -48,7 +48,7 @@
     <hr />
     <div class="relative notification-content-shortened">
       <a [routerLink]="notification.url" class="absolute inset-0">
-        <span class="opacity-0">direct link to the post</span>
+        <span class="opacity-0">bezpośredni link do woota</span>
       </a>
       @if (notification.fragment) {
         <app-post-header [fragment]="notification.fragment"></app-post-header>

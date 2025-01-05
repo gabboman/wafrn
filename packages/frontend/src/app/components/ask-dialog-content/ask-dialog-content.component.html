@@ -1,12 +1,12 @@
 <form [formGroup]="askForm" (ngSubmit)="onSubmit()">
   <mat-form-field class="w-full">
-    <mat-label>Question</mat-label>
+    <mat-label>Pytanie</mat-label>
     <textarea formControlName="content" type="textarea" matNativeControl rows="4"></textarea>
   </mat-form-field>
 
   @if (loggedIn) {
-    <app-info-card type="info" class="mb-3">You are logged in, this question is not anonymous</app-info-card>
+    <app-info-card type="info" class="mb-3">Jesteś zalogowane, twoje pytanie nie będzie anonimowe</app-info-card>
   }
 
-  <button [disabled]="!askForm.valid" mat-flat-button class="w-full my-2" type="submit">Ask</button>
+  <button [disabled]="!askForm.valid" mat-flat-button class="w-full my-2" type="submit">Zapytaj</button>
 </form>

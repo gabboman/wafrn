@@ -129,9 +129,9 @@ export class NavigationMenuComponent implements OnInit, OnDestroy {
   drawMenu() {
     this.menuItems = [
       {
-        label: 'Log in',
+        label: 'Zaloguj się',
         icon: faHouse,
-        title: 'Log in',
+        title: 'Zaloguj się',
         visible: !this.jwtService.tokenValid(),
         routerLink: '/login',
         command: () => {
@@ -139,9 +139,9 @@ export class NavigationMenuComponent implements OnInit, OnDestroy {
         }
       },
       {
-        label: 'Register',
+        label: 'Zarejestruj się',
         icon: faUser,
-        title: 'Register',
+        title: 'Zarejestruj się',
         visible: !this.jwtService.tokenValid(),
         routerLink: '/',
         command: () => {
@@ -149,9 +149,9 @@ export class NavigationMenuComponent implements OnInit, OnDestroy {
         }
       },
       {
-        label: 'Explore without an account',
+        label: 'Przeglądaj bez konta',
         icon: faCompass,
-        title: 'See ALL the posts that are public! Yes, you can be a lurker',
+        title: 'Zobacz WSZYSTKIE posty na Gofrze, które są publiczne!',
         visible: !this.jwtService.tokenValid(),
         routerLink: '/dashboard/exploreLocal',
         command: () => {
@@ -159,9 +159,9 @@ export class NavigationMenuComponent implements OnInit, OnDestroy {
         }
       },
       {
-        label: 'Dashboard',
+        label: 'Lokalna oś czasu',
         icon: faHouse,
-        title: 'View dashboard',
+        title: 'Zobacz, co u sąsiada',
         visible: this.jwtService.tokenValid(),
         routerLink: '/dashboard',
         command: () => {
@@ -169,9 +169,9 @@ export class NavigationMenuComponent implements OnInit, OnDestroy {
         }
       },
       {
-        label: 'Write new woot',
+        label: 'Wstaw nowego woota',
         icon: faPencil,
-        title: 'Write a woot',
+        title: 'Co słychać?',
         visible: this.jwtService.tokenValid(),
         command: async () => {
           this.hideMenu()
@@ -179,9 +179,9 @@ export class NavigationMenuComponent implements OnInit, OnDestroy {
         }
       },
       {
-        label: 'Notifications',
+        label: 'Powiadomienia',
         icon: faBell,
-        title: 'Check your notifications',
+        title: 'Samotne kocice na twojej instancji',
         visible: this.jwtService.tokenValid(),
         badge: this.notifications,
         routerLink: '/dashboard/notifications',
@@ -190,15 +190,15 @@ export class NavigationMenuComponent implements OnInit, OnDestroy {
         }
       },
       {
-        label: 'Explore',
+        label: 'Eksploruj',
         icon: faCompass,
-        title: 'See the local posts of the server or the fediverse!',
+        title: 'Zobacz, co słychać na serwerze (lub na całym Fedi)!',
         visible: this.jwtService.tokenValid(),
         items: [
           {
-            label: 'Explore WAFRN',
+            label: 'Eksploruj Gofra',
             icon: faServer,
-            title: 'See the local posts of the server!',
+            title: 'Jak się mają koledzy z serwera?',
             visible: this.jwtService.tokenValid(),
             routerLink: '/dashboard/exploreLocal',
             command: () => {
@@ -206,9 +206,9 @@ export class NavigationMenuComponent implements OnInit, OnDestroy {
             }
           },
           {
-            label: 'Explore the fediverse',
+            label: 'Eksploruj Fediwersum',
             icon: faCompass,
-            title: 'Take a look to all the public posts available to us, not only of people in this servers',
+            title: 'Co w szerokim świecie?',
             visible: this.jwtService.tokenValid(),
             routerLink: '/dashboard/explore',
             command: () => {
@@ -218,9 +218,9 @@ export class NavigationMenuComponent implements OnInit, OnDestroy {
         ]
       },
       {
-        label: 'Unanswered Asks',
+        label: 'Archiwum X',
         icon: faQuestion,
-        title: 'Unanswered Asks',
+        title: 'Pytania, na które nie odpowiedziałoś',
         visible: this.jwtService.tokenValid(),
         badge: this.awaitingAsks,
         routerLink: '/profile/myAsks',
@@ -229,9 +229,9 @@ export class NavigationMenuComponent implements OnInit, OnDestroy {
         }
       },
       {
-        label: 'Private messages',
+        label: 'DMy',
         icon: faEnvelope,
-        title: 'Private messages are here!',
+        title: 'Mamy tutaj takie coś!',
         visible: this.jwtService.tokenValid(),
         routerLink: '/dashboard/private',
         command: () => {
@@ -239,16 +239,16 @@ export class NavigationMenuComponent implements OnInit, OnDestroy {
         }
       },
       {
-        label: 'Admin',
+        label: 'Kabinet Prezydenta',
         icon: faPowerOff,
-        title: 'Check your notifications',
+        title: 'Zobacz swoje powiadomienia',
         visible: this.jwtService.adminToken(),
         badge: this.adminNotifications + this.usersAwaitingApproval,
         items: [
           {
-            label: 'Server list',
+            label: 'Lista serwerów',
             icon: faServer,
-            title: 'List of all the servers',
+            title: 'Lista wszystkich serwerów',
             visible: true,
             routerLink: '/admin/server-list',
             command: () => {
@@ -256,9 +256,9 @@ export class NavigationMenuComponent implements OnInit, OnDestroy {
             }
           },
           {
-            label: 'Add emojis',
+            label: 'Dodaj emotki',
             icon: faIcons,
-            title: 'Add emoji collection',
+            title: 'Dodaj emotkę, albo dwie, Albo całą kolekcję.',
             visible: true,
             routerLink: '/admin/emojis',
             command: () => {
@@ -266,9 +266,9 @@ export class NavigationMenuComponent implements OnInit, OnDestroy {
             }
           },
           {
-            label: 'User reports',
+            label: 'Zgłoszenia',
             icon: faExclamationTriangle,
-            title: 'User reports',
+            title: 'Zobacz zgłoszenia od użytkowników',
             visible: true,
             badge: this.adminNotifications,
             routerLink: '/admin/user-reports',
@@ -277,9 +277,9 @@ export class NavigationMenuComponent implements OnInit, OnDestroy {
             }
           },
           {
-            label: 'User bans',
+            label: 'Bany',
             icon: faBan,
-            title: 'User bans',
+            title: 'Bany',
             visible: true,
             routerLink: '/admin/bans',
             command: () => {
@@ -287,9 +287,9 @@ export class NavigationMenuComponent implements OnInit, OnDestroy {
             }
           },
           {
-            label: 'User blocklists',
+            label: 'Blokady',
             icon: faHourglass,
-            title: 'User blocklists',
+            title: 'Blokady',
             visible: true,
             routerLink: '/admin/user-blocks',
             command: () => {
@@ -297,9 +297,9 @@ export class NavigationMenuComponent implements OnInit, OnDestroy {
             }
           },
           {
-            label: 'Stats',
+            label: 'Statystyki',
             icon: faChartSimple,
-            title: 'Stats',
+            title: 'Tak zwane fakty i logika',
             visible: true,
             routerLink: '/admin/stats',
             command: () => {
@@ -307,9 +307,9 @@ export class NavigationMenuComponent implements OnInit, OnDestroy {
             }
           },
           {
-            label: 'Users awaiting approval',
+            label: 'Użytkownicy oczekujący na wejście',
             icon: faUserLock,
-            title: 'User awaiting approval',
+            title: 'Użytkownicy czekający na wizę do Gofra',
             visible: true,
             badge: this.usersAwaitingApproval,
             routerLink: '/admin/activate-users',
@@ -320,9 +320,9 @@ export class NavigationMenuComponent implements OnInit, OnDestroy {
         ]
       },
       {
-        label: 'Search',
+        label: 'Szukaj',
         icon: faSearch,
-        title: 'Search',
+        title: 'Szukaj',
         visible: this.jwtService.tokenValid(),
         routerLink: '/dashboard/search',
         command: () => {
@@ -330,16 +330,16 @@ export class NavigationMenuComponent implements OnInit, OnDestroy {
         }
       },
       {
-        label: 'Settings',
+        label: 'Ustawienia',
         icon: faCog,
-        title: 'Your blog, your profile, blocks, and other stuff',
+        title: 'Profil, stylówka, i takie tam',
         visible: this.jwtService.tokenValid(),
         badge: this.followsAwaitingApproval,
         items: [
           {
-            label: 'Manage followers',
+            label: 'Zarządzaj śledziami',
             icon: faUser,
-            title: 'Manage followers',
+            title: 'Zarządzaj śledziami',
             visible: true,
             badge: this.followsAwaitingApproval,
             routerLink: '/blog/' + this.jwtService.getTokenData().url + '/followers',
@@ -348,9 +348,9 @@ export class NavigationMenuComponent implements OnInit, OnDestroy {
             }
           },
           {
-            label: 'Profile options',
+            label: 'Opcje profilu',
             icon: faUserEdit,
-            title: 'Profile options',
+            title: 'Opcje profilu',
             visible: this.jwtService.tokenValid(),
             routerLink: '/profile/edit',
             command: () => {
@@ -358,9 +358,9 @@ export class NavigationMenuComponent implements OnInit, OnDestroy {
             }
           },
           {
-            label: 'Edit my theme',
+            label: 'Zmień stylówkę',
             icon: faPaintbrush,
-            title: 'Edit my theme',
+            title: 'Ubierz się i oślep innych',
             visible: this.jwtService.tokenValid(),
             routerLink: '/profile/css',
             command: () => {
@@ -368,9 +368,9 @@ export class NavigationMenuComponent implements OnInit, OnDestroy {
             }
           },
           {
-            label: 'Manage muted users',
+            label: 'Zarządzaj uciszonymi użyszkodnikami',
             icon: faVolumeMute,
-            title: 'Manage muted users',
+            title: 'Zarządzaj uciszonymi użyszkodnikami',
             visible: this.jwtService.tokenValid(),
             routerLink: '/profile/mutes',
             command: () => {
@@ -378,9 +378,9 @@ export class NavigationMenuComponent implements OnInit, OnDestroy {
             }
           },
           {
-            label: 'Manage muted posts',
+            label: 'Zarządzaj wyciszonymi postami',
             icon: faBellSlash,
-            title: 'Manage muted posts',
+            title: 'Zarządzaj wyciszonymi postami',
             visible: this.jwtService.tokenValid(),
             routerLink: '/profile/silencedPosts',
             command: () => {
@@ -388,9 +388,9 @@ export class NavigationMenuComponent implements OnInit, OnDestroy {
             }
           },
           {
-            label: 'Manage blocked users',
+            label: 'Zarządzaj zablokowanymi użyszkodnikami',
             icon: faBan,
-            title: 'Manage blocked users',
+            title: 'Zarządzaj zablokowanymi użyszkodnikami',
             visible: this.jwtService.tokenValid(),
             routerLink: '/profile/blocks',
             command: () => {
@@ -398,9 +398,9 @@ export class NavigationMenuComponent implements OnInit, OnDestroy {
             }
           },
           {
-            label: 'Manage blocked servers',
+            label: 'Zarządzaj zablokowanymi serwerami',
             icon: faServer,
-            title: 'Manage blocked servers',
+            title: 'Zarządzaj zablokowanymi serwerami',
             visible: this.jwtService.tokenValid(),
             routerLink: '/profile/serverBlocks',
             command: () => {
@@ -408,9 +408,9 @@ export class NavigationMenuComponent implements OnInit, OnDestroy {
             }
           },
           {
-            label: 'Import follows',
+            label: 'Importuj śledzie',
             icon: faUserEdit,
-            title: 'Import follows',
+            title: 'Importuj swoje śledzie',
             visible: this.jwtService.tokenValid(),
             routerLink: '/profile/importFollows',
             command: () => {
@@ -418,9 +418,9 @@ export class NavigationMenuComponent implements OnInit, OnDestroy {
             }
           },
           {
-            label: 'Special secret menu',
+            label: 'Seekretne Menu',
             icon: faSkull,
-            title: 'Special secret menu',
+            title: 'Seekretne Menu',
             visible: this.jwtService.tokenValid(),
             routerLink: '/doom',
             command: () => {
@@ -430,9 +430,9 @@ export class NavigationMenuComponent implements OnInit, OnDestroy {
         ]
       },
       {
-        label: 'My blog',
+        label: 'Mój blog',
         icon: faUser,
-        title: 'View your own blog',
+        title: 'Zobacz swojego bloga',
         visible: this.jwtService.tokenValid(),
         routerLink: '/blog/' + (this.jwtService.tokenValid() ? this.jwtService.getTokenData()['url'] : ''),
         command: () => {
@@ -446,9 +446,9 @@ export class NavigationMenuComponent implements OnInit, OnDestroy {
         divider: true
       },
       {
-        label: 'Privacy policy & rules',
+        label: 'Polityka Prywatności i Zasady',
         icon: faEyeSlash,
-        title: 'Privacy policy & rules',
+        title: 'Polityka Prywatności i Zasady',
         visible: true,
         routerLink: '/privacy',
         command: () => {
@@ -456,9 +456,9 @@ export class NavigationMenuComponent implements OnInit, OnDestroy {
         }
       },
       {
-        label: 'Check the source code!',
+        label: 'Zobacz kod źródłowy!',
         icon: faCode,
-        title: 'The frontend is made in angular, and the backend in typescript. you can check the code here',
+        title: 'Frontend jest napisany w Angular, a backend w TypeScripcie.',
         visible: true,
         url: 'https://github.com/gabboman/wafrn',
         command: () => {
@@ -468,7 +468,7 @@ export class NavigationMenuComponent implements OnInit, OnDestroy {
       {
         label: 'Patreon',
         icon: faEuro,
-        title: 'Give us some money through patreon',
+        title: 'Wspomóż nas na Patronite',
         visible: true,
         url: 'https://patreon.com/wafrn',
         command: () => {
@@ -478,7 +478,7 @@ export class NavigationMenuComponent implements OnInit, OnDestroy {
       {
         label: 'Ko-fi',
         icon: faEuro,
-        title: 'Give us some money through ko-fi',
+        title: 'Wspomóż nas na Ko-Fi',
         visible: true,
         url: 'https://ko-fi.com/wafrn',
         command: () => {
@@ -486,9 +486,9 @@ export class NavigationMenuComponent implements OnInit, OnDestroy {
         }
       },
       {
-        label: 'Log out',
+        label: 'Wyloguj',
         icon: faSignOut,
-        title: 'nintendo this button is for you, and your 25000000 alt accounts',
+        title: 'Pierdolę to, dość Fedi na dziś',
         visible: this.jwtService.tokenValid(),
         command: () => {
           this.loginService.logOut()
