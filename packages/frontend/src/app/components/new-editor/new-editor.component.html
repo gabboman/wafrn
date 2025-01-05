@@ -8,7 +8,7 @@
     <app-post-fragment [fragment]="data.post"></app-post-fragment>
   </div>
 }
-<h2 class="mt-3" *ngIf="editing">You are editing your woot</h2>
+<h2 class="mt-3" *ngIf="editing">Właśnie edytujesz woota</h2>
 <ng-container *ngIf="data && data.ask">
   <h2 class="mt-3">Replying ask</h2>
   <app-single-ask [ask]="data.ask"></app-single-ask>
@@ -29,7 +29,7 @@
     mat-icon-button
     (mousedown)="quoteOpen = !quoteOpen"
     class="input-height-btn"
-    matTooltip="Quote a post"
+    matTooltip="Zacytuj woota"
   >
     <fa-icon size="lg" [icon]="quoteIcon"></fa-icon>
   </button>
@@ -42,7 +42,7 @@
     class="input-height-btn"
     mat-icon-button
     (mousedown)="showContentWarning = !showContentWarning"
-    matTooltip="Content Warning"
+    matTooltip="Ostrzeżenie o treści"
   >
     @if (contentWarning.split(' ').includes('meta')) {
       <fa-icon size="lg" [icon]="landMineIcon"></fa-icon>
@@ -54,16 +54,16 @@
 
 @if (showContentWarning || contentWarning) {
   <mat-form-field class="w-full transition-size" appearance="outline">
-    <mat-label>Content warning</mat-label>
-    <input [(ngModel)]="contentWarning" placeholder="What is sensitive about this post?" matNativeControl />
+    <mat-label>Ostrzeżenie o treści</mat-label>
+    <input [(ngModel)]="contentWarning" placeholder="Czego nie chciałobyś widzieć na pierwszej stronie Gofra?" matNativeControl />
   </mat-form-field>
 }
 
 @if (quoteOpen && !data?.quote) {
   <mat-card class="p-2 my-4" *ngIf="!quoteLoading">
     <mat-form-field class="w-full">
-      <mat-label> Paste the URL of a post to quote it. Can be the external url or the wafrn url </mat-label>
-      <input [(ngModel)]="urlPostToQuote" placeholder="Just paste the post url" matNativeControl />
+      <mat-label> Wklej URL woota, jakiego chcesz zacytować. Może to być link z innego serwera lub URL Gofrowski </mat-label>
+      <input [(ngModel)]="urlPostToQuote" placeholder="Poprostu wklej to tu" matNativeControl />
     </mat-form-field>
     <button
       (mousedown)="loadQuote()"
@@ -72,14 +72,14 @@
       class="w-full"
       [disabled]="urlPostToQuote === ''"
     >
-      Add post as quote
+      Dodaj woota jako cytat
     </button>
   </mat-card>
 }
 
 <form [formGroup]="postCreatorForm">
   <mat-form-field class="w-full">
-    <mat-label>Post text</mat-label>
+    <mat-label>Zawartość woota</mat-label>
     <textarea
       id="postCreatorContent"
       formControlName="content"
@@ -87,7 +87,7 @@
       (blur)="editorFocusedOut()"
       (focus)="editorFocusedIn()"
       rows="4"
-      placeholder="Start writing..."
+      placeholder="Do boju, wojowniku klawiatury!"
       matNativeControl
     ></textarea>
   </mat-form-field>
@@ -96,7 +96,7 @@
 @if (false && uploadedMedias.length === 0) {
   <!-- Polls are not available yet :( -->
   <section class="mt-3" id="pollControls">
-    <button class="w-full" mat-button (mousedown)="quoteOpen = true" mat-flat-button>add poll</button>
+    <button class="w-full" mat-button (mousedown)="quoteOpen = true" mat-flat-button>Dodaj sondę</button>
   </section>
 }
 
@@ -106,9 +106,9 @@
       <div class="col-12 md:col-6 my-2 relative">
         <app-media-preview [media]="media"></app-media-preview>
         <mat-form-field class="w-full">
-          <mat-label>Image Description</mat-label>
+          <mat-label>Opis załącznika</mat-label>
           <input
-            placeholder="Description. Please FILL THIS"
+            placeholder="Opis załącznika. NAPISZ TU, ALBO O 3 W NOCY PRZYJDZIE STARY PAN I CIĘ ZABIERZE."
             [(ngModel)]="media.description"
             type="text"
             matNativeControl
@@ -117,7 +117,7 @@
           />
         </mat-form-field>
         <div>
-          <mat-checkbox [(ngModel)]="media.NSFW" class="w-full">NSFW</mat-checkbox>
+          <mat-checkbox [(ngModel)]="media.NSFW" class="w-full">Treści wrażliwe</mat-checkbox>
           <button mat-mini-fab class="delete-btn" (mousedown)="deleteImage(i)">
             <fa-icon size="lg" [icon]="closeIcon"></fa-icon>
           </button>
@@ -126,11 +126,10 @@
     </ng-container>
   </div>
   <p class="my-2" *ngIf="uploadedMedias.length >= 4">
-    ATTENTION! ANY FURTHER MEDIA UPLOADED WILL NOT BE DISPLAYED ON MASTODON
+    UWAGA! KOLEJNE ZAŁĄCZNIKI NIE WYŚWIETLĄ SIĘ UŻYTKOWNIKOM MASTODONA!
   </p>
   <p class="my-2" *ngIf="!allDescriptionsFilled()">
-    Please fill in the media descriptions. If you want to disable this check, there is an option in the profile that you
-    can disable.
+    Opisz załączniki, to rozkaz. Możesz to wyłączyć w ustawieniach, ale czy napewno chcesz?
   </p>
 </section>
 
@@ -139,7 +138,7 @@
     <mat-spinner *ngIf="quoteLoading" class="my-4" color="accent" diameter="24"></mat-spinner>
   </div>
   <div *ngIf="data && data.quote" class="my-4">
-    <p class="mb-1">QUOTING:</p>
+    <p class="mb-1">CYTOWANE::</p>
     <div class="quoted-post">
       <button mat-mini-fab class="delete-btn" color="warn" (mousedown)="data ? (data.quote = undefined) : null">
         <fa-icon size="lg" [icon]="closeIcon"></fa-icon>
@@ -154,7 +153,7 @@
 <section id="tags" class="mt-2 w-full flex-row">
   <mat-form-field class="w-full">
     <mat-label>Tags</mat-label>
-    <input [(ngModel)]="tags" placeholder="Separated by commas" matNativeControl />
+    <input [(ngModel)]="tags" placeholder="Oddzielone przecinkami" matNativeControl />
   </mat-form-field>
   <div class="taglist">
     @for (tag of tags.split(','); track $index) {
@@ -165,13 +164,13 @@
 
 @if (privacy === 10) {
   <app-info-card [type]="'caution'" [class]="'mb-3'">
-    Admins of both your instance, and the external instance can read these messages.
+    Admini twojego serwera oraz serwera odbiorcy mogą mieć wgląd w DMy.
   </app-info-card>
 }
 @if (privacy === 3) {
   <app-info-card type="info" class="mb-3">
-    This post is set as unlisted. It opts out of search, hashtags and other features. This is not recommended for
-    anything you want discoverable.
+    Ten woot jest oznaczony jako delistowany. Nie będzie on widoczny w tagach oraz wynikach wyszukiwania. Jeśli chcesz atencję
+    z tego woota, zmień ustawienia na "Publiczny".
   </app-info-card>
 }
 
@@ -185,7 +184,7 @@
   "
   (mousedown)="submitPost()"
 >
-  {{ editing ? 'Save woot' : idPostToReblog ? 'Publish reply to woot' : 'Publish woot' }}
+  {{ editing ? 'Zapisać woota?' : idPostToReblog ? 'Opublikuj odpowiedź na woota' : 'Opublikuj woota' }}
 </button>
 
 <!-- Popup Menus -->
