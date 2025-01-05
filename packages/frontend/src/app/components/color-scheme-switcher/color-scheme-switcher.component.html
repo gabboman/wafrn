@@ -9,10 +9,10 @@
   <fa-icon [icon]="paletteIcon"></fa-icon>
 </button>
 <mat-menu #colorSchemeMenu="matMenu">
-  <button mat-menu-item (click)="setColorScheme('default')">Default</button>
-  <button mat-menu-item (click)="setColorScheme('tan')">Tan</button>
-  <button mat-menu-item (click)="setColorScheme('green')">Green</button>
-  <button mat-menu-item (click)="setColorScheme('gold')">Gold</button>
+  <button mat-menu-item (click)="setColorScheme('default')">Domyślny</button>
+  <button mat-menu-item (click)="setColorScheme('tan')">Wizyta w solarium</button>
+  <button mat-menu-item (click)="setColorScheme('green')">Uranowa Zieleń</button>
+  <button mat-menu-item (click)="setColorScheme('gold')">Złoto Midasa</button>
 </mat-menu>
 
 @switch (colorScheme()) {
