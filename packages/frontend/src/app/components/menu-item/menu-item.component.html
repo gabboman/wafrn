@@ -1,6 +1,6 @@
 @if (item.visible) {
   @if (item.items) {
-    <a mat-list-item (mousedown)="expanded = !expanded">
+    <a mat-list-item (mousedown)="expanded = !expanded" (keydown)="handleKey($event)" tabIndex="0">
       <div class="h-3rem flex align-items-center justify-content-start">
         <span
           [matBadge]="item.badge"
@@ -25,7 +25,13 @@
       </div>
     }
   } @else {
-    <a mat-list-item [routerLink]="item.routerLink ? item.routerLink : null" (mousedown)="doCommand()">
+    <a
+      mat-list-item
+      [routerLink]="item.routerLink ? item.routerLink : null"
+      (mousedown)="doCommand()"
+      (keydown)="handleKey($event)"
+      tabIndex="0"
+    >
       <div class="h-3rem flex align-items-center justify-content-start">
         <span
           [matBadge]="item.badge"
