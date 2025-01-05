@@ -1,7 +1,7 @@
-<p class="text-2xl">Before we can report the post we need more information</p>
+<p class="text-2xl">Zanim zgłosisz woota, podaj więcej informacji</p>
 <form [formGroup]="reportForm" (submit)="submit()">
   <mat-form-field class="w-full">
-    <mat-label>Type of post</mat-label>
+    <mat-label>Rodzaj woota</mat-label>
     <mat-select [required]="true" formControlName="severity">
       @for (option of reportOptions; track $index) {
         <mat-option [value]="option.value">{{ option.label }}</mat-option>
@@ -9,9 +9,9 @@
     </mat-select>
   </mat-form-field>
   <mat-form-field class="w-full">
-    <mat-label>Description</mat-label>
+    <mat-label>Opis</mat-label>
     <textarea required matNativeControl formControlName="description"></textarea>
   </mat-form-field>
-  <mat-checkbox class="w-full mb-3" formControlName="block">Block this user</mat-checkbox>
-  <button mat-flat-button class="w-full" type="submit" [disabled]="!reportForm.valid">Report</button>
+  <mat-checkbox class="w-full mb-3" formControlName="block">Zablokuj użyszkodnika</mat-checkbox>
+  <button mat-flat-button class="w-full" type="submit" [disabled]="!reportForm.valid">Zgłoś</button>
 </form>
