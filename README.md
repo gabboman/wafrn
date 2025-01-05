@@ -1,3 +1,15 @@
+# Gofer
+
+Gofer is a shitpost-y Polish translation of WAFRN's frontend.
+
+Feel free to use this, but it was done in like, two hours so it's obviously of bad quality.
+
+I don't accept PRs or improvements.
+
+See below for original README of WAFRN
+
+---
+
 <!-- markdownlint-disable first-line-h1 -->
 <div align="center">
 
