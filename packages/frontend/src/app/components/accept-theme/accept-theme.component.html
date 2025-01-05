@@ -1,17 +1,16 @@
-<p>This user has custom styles! Would you like to enable custom themes from users?</p>
+<p>Ten użyszkodnik ma własną stylówkę! Chcesz zobaczyć?</p>
 <ul>
-  <li>Select 'GLOW UP' to allow custom themes from the users.</li>
+  <li>Wybierz 'Dawaj', jeśli chcesz widzieć stylówki użytkowników.</li>
   <li>
-    Select 'No thanks' if you'd rather use the default wafrn theme for everything (Recommended if you suffer from
-    epilepsy).
+    Wybierz 'Nie', jeśli chcesz używać domyślnego motywu Gofra (Zalecane, jeśli cierpisz na epilepsję).
   </li>
 </ul>
 <app-info-card type="info"
-  >If you would like to change your mind about this, just log out and log in again!</app-info-card
+  >Zmieniłoś zdanie? Wyloguj się i zaloguj jeszcze raz.</app-info-card
 >
 <div class="mt-3 flex flex-wrap gap-3">
   <button mat-stroked-button color="accent" (mousedown)="answerCustomThemeModal(1)" class="flex-grow-1">
-    No thanks
+    Nie
   </button>
-  <button mat-flat-button color="primary" (mousedown)="answerCustomThemeModal(2)" class="flex-grow-1">GLOW UP</button>
+  <button mat-flat-button color="primary" (mousedown)="answerCustomThemeModal(2)" class="flex-grow-1">Dawaj</button>
 </div>
