@@ -29,7 +29,7 @@ export class AppComponent implements OnInit {
 
     if (this.swUpdate.isEnabled) {
       this.swUpdate.checkForUpdate().then((updateAvaiable) => {
-        if (updateAvaiable && confirm("You're using an old version of wafrn, do you want to update?")) {
+        if (updateAvaiable && confirm("Używasz starego Gofra, może czas na aktualizację?")) {
           window.location.reload()
         }
         if (EnvironmentService.environment.disablePWA) {
