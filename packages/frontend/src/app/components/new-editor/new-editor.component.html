@@ -18,7 +18,7 @@
   <button
     mat-icon-button
     [matMenuTriggerFor]="menu"
-    aria-label="Edit privacy of post"
+    aria-label="Edit privacy of woot"
     class="input-height-btn"
     [matTooltip]="getPrivacyIconName()"
   >
@@ -29,7 +29,7 @@
     mat-icon-button
     (mousedown)="quoteOpen = !quoteOpen"
     class="input-height-btn"
-    matTooltip="Quote a post"
+    matTooltip="Quote a woot"
   >
     <fa-icon size="lg" [icon]="quoteIcon"></fa-icon>
   </button>
@@ -55,15 +55,15 @@
 @if (showContentWarning || contentWarning) {
   <mat-form-field class="w-full transition-size" appearance="outline">
     <mat-label>Content warning</mat-label>
-    <input [(ngModel)]="contentWarning" placeholder="What is sensitive about this post?" matNativeControl />
+    <input [(ngModel)]="contentWarning" placeholder="What is sensitive about this woot?" matNativeControl />
   </mat-form-field>
 }
 
 @if (quoteOpen && !data?.quote) {
   <mat-card class="p-2 my-4" *ngIf="!quoteLoading">
     <mat-form-field class="w-full">
-      <mat-label> Paste the URL of a post to quote it. Can be the external url or the wafrn url </mat-label>
-      <input [(ngModel)]="urlPostToQuote" placeholder="Just paste the post url" matNativeControl />
+      <mat-label> Paste the URL of a woot to quote it. Can be the external url or the wafrn url </mat-label>
+      <input [(ngModel)]="urlPostToQuote" placeholder="Just paste the woot url" matNativeControl />
     </mat-form-field>
     <button
       (mousedown)="loadQuote()"
@@ -72,14 +72,14 @@
       class="w-full"
       [disabled]="urlPostToQuote === ''"
     >
-      Add post as quote
+      Add woot as quote
     </button>
   </mat-card>
 }
 
 <form [formGroup]="postCreatorForm">
   <mat-form-field class="w-full">
-    <mat-label>Post text</mat-label>
+    <mat-label>Woot text</mat-label>
     <textarea
       id="postCreatorContent"
       formControlName="content"
@@ -170,7 +170,7 @@
 }
 @if (privacy === 3) {
   <app-info-card type="info" class="mb-3">
-    This post is set as unlisted. It opts out of search, hashtags and other features. This is not recommended for
+    This woot is set as unlisted. It opts out of search, hashtags and other features. This is not recommended for
     anything you want discoverable.
   </app-info-card>
 }
