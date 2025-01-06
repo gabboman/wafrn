@@ -244,12 +244,17 @@ export class PostsService {
   processSinglePost(unlinked: unlinkedPosts): ProcessedPost {
     const mutedWordsRaw = localStorage.getItem('mutedWords')
     let mutedWords: string[] = []
-    if (mutedWordsRaw && mutedWordsRaw.trim().length > 0) {
-      mutedWords = JSON.parse(mutedWordsRaw)
-        .split(',')
-        .map((word: string) => word.trim())
-        .filter((word: string) => word.length > 0)
+    try {
+      if (mutedWordsRaw && mutedWordsRaw.trim().length > 0) {
+        mutedWords = JSON.parse(mutedWordsRaw)
+          .split(',')
+          .map((word: string) => word.trim())
+          .filter((word: string) => word.length > 0)
+      }
+    } catch (error) {
+      this.messageService.add({ severity: 'error', summary: 'Something wrong with your muted words!' })
     }
+
     const elem = unlinked.posts[0]
     this.rewootedPosts = this.rewootedPosts.concat(unlinked.rewootIds)
     const user = unlinked.users.find((usr) => usr.id === elem.userId)

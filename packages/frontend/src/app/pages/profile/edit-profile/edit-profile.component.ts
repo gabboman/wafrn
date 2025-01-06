@@ -78,7 +78,11 @@ export class EditProfileComponent implements OnInit {
       this.editProfileForm.controls['asksLevel'].patchValue(askLevel ? parseInt(askLevel.optionValue) : 2)
       const mutedWords = localStorage.getItem('mutedWords')
       if (mutedWords && mutedWords.trim().length) {
-        this.editProfileForm.controls['mutedWords'].patchValue(JSON.parse(mutedWords))
+        try {
+          this.editProfileForm.controls['mutedWords'].patchValue(JSON.parse(mutedWords))
+        } catch (error) {
+          this.messages.add({ severity: 'error', summary: 'Something wrong with your muted words!' })
+        }
       }
       const disableCW = localStorage.getItem('disableCW') == 'true'
       this.editProfileForm.controls['disableCW'].patchValue(disableCW)
