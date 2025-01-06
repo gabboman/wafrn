@@ -164,12 +164,12 @@
 </section>
 
 @if (privacy === 10) {
-  <app-info-card [type]="'caution'" [class]="'mb-3'">
+  <app-info-card [type]="'caution'" addClass="mb-3">
     Admins of both your instance, and the external instance can read these messages.
   </app-info-card>
 }
 @if (privacy === 3) {
-  <app-info-card type="info" class="mb-3">
+  <app-info-card type="info" addClass="mb-3">
     This post is set as unlisted. It opts out of search, hashtags and other features. This is not recommended for
     anything you want discoverable.
   </app-info-card>
