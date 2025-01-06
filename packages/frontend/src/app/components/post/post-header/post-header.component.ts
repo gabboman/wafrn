@@ -62,9 +62,6 @@ export class PostHeaderComponent implements OnChanges {
     { level: 3, name: 'Unlisted', icon: faUnlock }
   ]
 
-  // DO NOT COMMIT THIS
-  getPrivacy = (level: number) => this.privacyOptions.find((elem) => elem.level === level) ?? this.privacyOptions[0]
-
   // icons
   shareIcon = faShareNodes
   expandDownIcon = faChevronDown
@@ -82,6 +79,7 @@ export class PostHeaderComponent implements OnChanges {
   serverIcon = faServer
   userIcon = faUser
   editedIcon = faPen
+  edited = false
 
   timeAgo = ''
 
@@ -103,6 +101,7 @@ export class PostHeaderComponent implements OnChanges {
       // TODO unhardcode locale
       { style: 'long', locale: 'en' }
     )
+    this.edited = this.fragment.updatedAt.getTime() - this.fragment.createdAt.getTime() > 6000
   }
 
   async followUser(id: string) {
