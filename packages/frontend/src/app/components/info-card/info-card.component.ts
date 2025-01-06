@@ -19,5 +19,5 @@ const iconMap: Record<InfoType, IconDefinition> = {
 export class InfoCardComponent {
   type = input.required<InfoType>()
   icon = computed<IconDefinition>(() => iconMap[this.type()])
-  class = input<string>('')
+  addClass = input<string>('')
 }
