@@ -1,3 +1,8 @@
+// Colors
+:root {
+  --mat-menu-container-color: var(--mat-sys-surface-container-high);
+}
+
 // Allow tiny buttons
 .mdc-button {
   min-width: unset !important;
