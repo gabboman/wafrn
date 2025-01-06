@@ -37,4 +37,15 @@ export class MenuItemComponent {
       this.item.command()
     }
   }
+
+  handleKey(event: KeyboardEvent) {
+    if (event.key !== 'Enter') return
+
+    // Run the associated event
+    if (this.item.items) {
+      this.expanded = !this.expanded
+    } else {
+      this.doCommand()
+    }
+  }
 }
