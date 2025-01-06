@@ -28,7 +28,7 @@ import {
   faPen
 } from '@fortawesome/free-solid-svg-icons'
 import { MatButtonModule } from '@angular/material/button'
-import { DateTimeToRelativePipe, LuxonModule, DateTimeFromJsDatePipe } from 'luxon-angular'
+import { DateTime } from 'luxon'
 
 @Component({
   selector: 'app-post-header',
@@ -40,10 +40,8 @@ import { DateTimeToRelativePipe, LuxonModule, DateTimeFromJsDatePipe } from 'lux
     MatTooltipModule,
     FontAwesomeModule,
     MatButtonModule,
-    MatTooltipModule,
-    LuxonModule
+    MatTooltipModule
   ],
-  providers: [DateTimeToRelativePipe, DateTimeFromJsDatePipe],
   templateUrl: './post-header.component.html',
   styleUrl: './post-header.component.scss'
 })
@@ -86,21 +84,15 @@ export class PostHeaderComponent implements OnChanges {
   constructor(
     public postService: PostsService,
     private messages: MessageService,
-    private loginService: LoginService,
-    private dateTimeToRelative: DateTimeToRelativePipe,
-    private dateTimeFromJsDatePipe: DateTimeFromJsDatePipe
+    private loginService: LoginService
   ) {
     // its an array
     ;(this.privacyOptions[10] = { level: 10, name: 'Direct Message', icon: faEnvelope }),
       (this.userLoggedIn = loginService.checkUserLoggedIn())
   }
   ngOnChanges(changes: SimpleChanges): void {
-    //
-    this.timeAgo = this.dateTimeToRelative.transform(
-      this.dateTimeFromJsDatePipe.transform(this.fragment.createdAt),
-      // TODO unhardcode locale
-      { style: 'long', locale: 'en' }
-    )
+    const relative = DateTime.fromJSDate(this.fragment.createdAt).setLocale('en').toRelative()
+    this.timeAgo = relative ? relative : 'Error with date'
     this.edited = this.fragment.updatedAt.getTime() - this.fragment.createdAt.getTime() > 6000
   }
 

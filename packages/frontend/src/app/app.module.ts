@@ -11,7 +11,6 @@ import { ServiceWorkerModule } from '@angular/service-worker'
 import { MAT_RIPPLE_GLOBAL_OPTIONS, MatNativeDateModule, RippleGlobalOptions } from '@angular/material/core'
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome'
 import { MatSnackBarModule } from '@angular/material/snack-bar'
-import { LuxonModule } from 'luxon-angular'
 
 const globalRippleConfig: RippleGlobalOptions = {
   disabled: true,

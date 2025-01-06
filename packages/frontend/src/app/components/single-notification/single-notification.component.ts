@@ -10,22 +10,13 @@ import { PostHeaderComponent } from '../post/post-header/post-header.component'
 import { EnvironmentService } from 'src/app/services/environment.service'
 import { PostRibbonComponent } from '../post-ribbon/post-ribbon.component'
 import { faAt, faCheck, faHeart, faQuoteLeft, faRepeat, faUser } from '@fortawesome/free-solid-svg-icons'
-import { DateTimeFromJsDatePipe, DateTimeToRelativePipe, LuxonModule } from 'luxon-angular'
 
 @Component({
   selector: 'app-single-notification',
   templateUrl: './single-notification.component.html',
   styleUrls: ['./single-notification.component.scss'],
-  imports: [
-    CommonModule,
-    RouterModule,
-    MatCardModule,
-    PostFragmentComponent,
-    PostHeaderComponent,
-    PostRibbonComponent,
-    LuxonModule
-  ],
-  providers: [DateTimeToRelativePipe, DateTimeFromJsDatePipe]
+  imports: [CommonModule, RouterModule, MatCardModule, PostFragmentComponent, PostHeaderComponent, PostRibbonComponent]
+  //providers: [DateTimeToRelativePipe, DateTimeFromJsDatePipe]
 })
 export class SingleNotificationComponent implements OnInit {
   emojiUrl: string = ''
@@ -41,10 +32,7 @@ export class SingleNotificationComponent implements OnInit {
     [NotificationType.EMOJIREACT]: faCheck
   }
 
-  constructor(
-    private dateTimeToRelative: DateTimeToRelativePipe,
-    private dateTimeFromJsDatePipe: DateTimeFromJsDatePipe
-  ) {}
+  constructor() {}
 
   ngOnInit(): void {
     if (this.notification.emojiReact) {

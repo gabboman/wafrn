@@ -148,6 +148,9 @@ export class PostComponent implements OnInit, OnChanges, OnDestroy, AfterViewIni
         this.showFull = true
       }
     }
+    this.ribbonUser = this.originalPostContent[this.originalPostContent.length - 1].user
+    this.ribbonIcon = this.headerText === 'replied' ? this.replyIcon : this.reblogIcon
+    this.ribbonTime = this.originalPostContent[this.originalPostContent.length - 1].createdAt
   }
 
   isEmptyReblog() {
@@ -178,9 +181,6 @@ export class PostComponent implements OnInit, OnChanges, OnDestroy, AfterViewIni
     if (postToEvaluate.userId === this.myId) {
       this.showLikeFinalPost = 0
     }
-    this.ribbonUser = this.originalPostContent[this.originalPostContent.length - 1].user
-    this.ribbonIcon = this.headerText === 'replied' ? this.replyIcon : this.reblogIcon
-    this.ribbonTime = this.originalPostContent[this.originalPostContent.length - 1].createdAt
   }
 
   expandPost() {
