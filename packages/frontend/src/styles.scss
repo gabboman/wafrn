@@ -107,6 +107,7 @@ body {
   user-select: none;
 }
 #splash-text {
+  margin: 0;
   height: 0; // Do not shift image based on text height
   max-width: 40ch;
   text-align: center;
