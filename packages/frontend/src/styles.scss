@@ -88,9 +88,7 @@ body {
 }
 
 // Splashscreen
-#splash,
-#splash-icon,
-#splash-text {
+#splash {
   position: fixed;
   inset: 0;
 }
@@ -105,20 +103,22 @@ body {
 }
 #splash-icon,
 #splash-icon img {
-  margin: auto;
   pointer-events: none;
   user-select: none;
 }
 #splash-text {
+  height: 0; // Do not shift image based on text height
   max-width: 40ch;
-  margin-inline: auto;
   text-align: center;
-  top: 50%;
-  transform: translateY(calc(32px + 1rem));
   color: var(--mat-sys-outline);
 }
 #splash-content {
   height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
   transition: translate 120ms ease-in;
 }
 
