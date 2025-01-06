@@ -347,6 +347,7 @@ export class PostFragmentComponent implements OnChanges, OnDestroy {
     if (!media) return
 
     this.viewer = new Viewer(media.nativeElement, {
+      slideOnTouch: false,
       button: true,
       navbar: true,
       toolbar: {
