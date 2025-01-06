@@ -27,6 +27,14 @@ hr {
 
 .drawer-footer {
   display: flex;
+  justify-content: center;
   gap: 0.5rem;
   margin-top: auto;
+  padding-top: 1rem;
+}
+
+@media (min-width: 992px) {
+  .drawer-footer {
+    justify-content: normal;
+  }
 }
