@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output } from '@angular/core'
+import { AfterViewInit, Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output } from '@angular/core'
 import { ProcessedPost } from 'src/app/interfaces/processed-post'
 import { EditorService } from 'src/app/services/editor.service'
 import { LoginService } from 'src/app/services/login.service'
@@ -27,6 +27,7 @@ import {
   faCheck
 } from '@fortawesome/free-solid-svg-icons'
 import { EnvironmentService } from 'src/app/services/environment.service'
+import { SimplifiedUser } from 'src/app/interfaces/simplified-user'
 
 @Component({
   selector: 'app-post',
@@ -34,7 +35,7 @@ import { EnvironmentService } from 'src/app/services/environment.service'
   styleUrls: ['./post.component.scss'],
   standalone: false
 })
-export class PostComponent implements OnInit, OnChanges, OnDestroy {
+export class PostComponent implements OnInit, OnChanges, OnDestroy, AfterViewInit {
   @Input() post!: ProcessedPost[]
   @Input() showFull: boolean = false
   originalPostContent: ProcessedPost[] = []
@@ -86,6 +87,11 @@ export class PostComponent implements OnInit, OnChanges, OnDestroy {
   // dismiss cw
   showCw = true
 
+  // VARIABLES FOR TEMPLATE RENDERING
+  ribbonUser: SimplifiedUser | undefined
+  ribbonIcon = this.replyIcon
+  ribbonTime = new Date(0)
+
   constructor(
     public postService: PostsService,
     private loginService: LoginService
@@ -111,6 +117,21 @@ export class PostComponent implements OnInit, OnChanges, OnDestroy {
       }
     })
   }
+  ngAfterViewInit(): void {
+    const postHtmlId = 'post-element-' + this.finalPost.id
+    const postHtmlElement = document.getElementById(postHtmlId)
+    if (postHtmlElement) {
+      const mediaHeight = this.post
+        .map((pst) => pst.medias)
+        .flat()
+        .filter((elem) => !!elem)
+        .map((media) => media.height)
+        .reduce((accumulator, current) => (accumulator ? accumulator : 256) + (current ? current : 256), 0)
+      const postHeight = postHtmlElement.getBoundingClientRect().height + (mediaHeight ? mediaHeight : 0)
+      this.veryLongPost = postHeight > 1250
+      this.showFull = this.showFull || this.veryLongPost
+    }
+  }
   ngOnDestroy(): void {
     this.updateFollowersSubscription.unsubscribe()
     this.updateLikesSubscription.unsubscribe()
@@ -127,15 +148,6 @@ export class PostComponent implements OnInit, OnChanges, OnDestroy {
         this.showFull = true
       }
     }
-    setTimeout(() => {
-      const postHtmlId = 'post-element-' + this.finalPost.id
-      const postHtmlElement = document.getElementById(postHtmlId)
-      if (postHtmlElement) {
-        const postHeight = postHtmlElement.getBoundingClientRect().height
-        this.veryLongPost = postHeight > 1250
-        this.showFull = this.showFull || this.veryLongPost
-      }
-    }, 150)
   }
 
   isEmptyReblog() {
@@ -166,6 +178,9 @@ export class PostComponent implements OnInit, OnChanges, OnDestroy {
     if (postToEvaluate.userId === this.myId) {
       this.showLikeFinalPost = 0
     }
+    this.ribbonUser = this.originalPostContent[this.originalPostContent.length - 1].user
+    this.ribbonIcon = this.headerText === 'replied' ? this.replyIcon : this.reblogIcon
+    this.ribbonTime = this.originalPostContent[this.originalPostContent.length - 1].createdAt
   }
 
   expandPost() {
