@@ -80,7 +80,8 @@ export class PostFragmentComponent implements OnChanges, OnDestroy {
 
   readonly inlineMediaElement = viewChild<ElementRef<HTMLElement>>('mediaInline')
   readonly endMediaElement = viewChild<ElementRef<HTMLElement>>('mediaEnd')
-  viewer: Viewer | undefined
+  viewerInline: Viewer | undefined
+  viewerEnd: Viewer | undefined
 
   constructor(
     private postService: PostsService,
@@ -344,14 +345,14 @@ export class PostFragmentComponent implements OnChanges, OnDestroy {
   }
 
   ngAfterViewInit(): void {
-    this.attachViewer(this.inlineMediaElement())
-    this.attachViewer(this.endMediaElement())
+    this.viewerInline = this.attachViewer(this.inlineMediaElement())
+    this.viewerEnd = this.attachViewer(this.endMediaElement())
   }
 
   attachViewer(container: ElementRef<HTMLElement> | undefined) {
     if (!container) return
 
-    this.viewer = new Viewer(container.nativeElement, {
+    return new Viewer(container.nativeElement, {
       button: true,
       navbar: true,
       toolbar: {
