@@ -35,10 +35,13 @@ export class PollComponent implements OnInit {
       this.poll.questionPollQuestions.forEach((question) => {
         this.form.addControl(
           question.id.toString(),
-          new FormControl({
-            value: question.questionPollAnswers.length > 0,
-            disabled: this.alreadyVoted || !this.userLoggedIn || !this.openPoll
-          })
+          new FormControl(
+            {
+              value: question.questionPollAnswers.length > 0,
+              disabled: this.alreadyVoted || !this.userLoggedIn || !this.openPoll
+            },
+            Validators.required
+          )
         )
       })
     }
@@ -73,9 +76,5 @@ export class PollComponent implements OnInit {
     if (voteSuccess) {
       this.alreadyVoted = true
     }
-  }
-
-  isFormValid(): boolean {
-    return Object.keys(this.form.value).some((key: string) => this.form.value[key])
   }
 }

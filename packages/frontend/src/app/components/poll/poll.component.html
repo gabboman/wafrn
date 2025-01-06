@@ -35,7 +35,7 @@
   mat-flat-button
   color="primary"
   class="w-full mt-2"
-  [disabled]="!isFormValid()"
+  [disabled]="!form.valid"
   (mousedown)="vote()"
 >
   Vote
