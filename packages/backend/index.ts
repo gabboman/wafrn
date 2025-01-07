@@ -10,7 +10,9 @@ import {
   workerGetUser,
   workerSendPostChunk,
   workerProcessFirehose,
-  workerDeletePost, workerProcessRemotePostView, workerProcessRemoteMediaData
+  workerDeletePost,
+  workerProcessRemotePostView,
+  workerProcessRemoteMediaData
 } from './utils/workers.js'
 
 import { SignedRequest } from './interfaces/fediverse/signedRequest.js'
@@ -42,13 +44,18 @@ import checkIpBlocked from './utils/checkIpBlocked.js'
 import overrideContentType from './utils/overrideContentType.js'
 import swagger from 'swagger-ui-express'
 import { readFile } from 'fs/promises'
-import {Worker} from "bullmq";
+import { Worker } from 'bullmq'
+
+function errorHandler(err: Error, req: Request, res: Response, next: Function) {
+  console.error(err.stack)
+  res.send(500).json({ error: 'Internal Server Error' })
+}
 
 const swaggerJSON = JSON.parse(await readFile(new URL('./swagger.json', import.meta.url), 'utf-8'))
 // rest of the code remains same
 const app = express()
 const PORT = environment.port
-
+app.use(errorHandler)
 app.use(overrideContentType)
 app.use(checkIpBlocked)
 app.use(
@@ -117,22 +124,26 @@ frontend(app)
 app.listen(PORT, environment.listenIp, () => {
   logger.info('Started app')
   const workers = [
-    workerInbox, workerSendPostChunk, workerPrepareSendPost, workerGetUser, workerDeletePost, workerProcessRemotePostView, workerProcessRemoteMediaData
+    workerInbox,
+    workerSendPostChunk,
+    workerPrepareSendPost,
+    workerGetUser,
+    workerDeletePost,
+    workerProcessRemotePostView,
+    workerProcessRemoteMediaData
   ]
-  if(environment.enableBsky) {
+  if (environment.enableBsky) {
     workers.push(workerProcessFirehose as Worker)
   }
   if (environment.workers.mainThread) {
-    workers.forEach(
-      (worker) => {
-        worker.on('error', (err) => {
-          logger.warn({
-            message: `worker ${worker.name} failed`,
-            error: err
-          })
+    workers.forEach((worker) => {
+      worker.on('error', (err) => {
+        logger.warn({
+          message: `worker ${worker.name} failed`,
+          error: err
         })
-      }
-    )
+      })
+    })
   } else {
     workers.forEach(async (worker) => {
       await worker.pause()
