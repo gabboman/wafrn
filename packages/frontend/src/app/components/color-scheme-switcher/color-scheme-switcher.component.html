@@ -13,6 +13,10 @@
   <button mat-menu-item (click)="setColorScheme('tan')">Tan</button>
   <button mat-menu-item (click)="setColorScheme('green')">Green</button>
   <button mat-menu-item (click)="setColorScheme('gold')">Gold</button>
+  <hr />
+  <button mat-menu-item>
+    <mat-checkbox [checked]="centerLayoutMode" (click)="updateCenterLayout()">Center layout</mat-checkbox>
+  </button>
 </mat-menu>
 
 @switch (colorScheme()) {
@@ -26,4 +30,8 @@
   @case ('gold') {
     <link href="/assets/themes/gold.css" rel="stylesheet" />
   }
+}
+
+@if (centerLayoutMode) {
+  <link href="/assets/themes/center-column.css" rel="stylesheet" />
 }

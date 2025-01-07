@@ -1,5 +1,6 @@
 import { Component, linkedSignal, signal } from '@angular/core'
 import { MatButtonModule } from '@angular/material/button'
+import { MatCheckboxModule } from '@angular/material/checkbox'
 import { MatMenuModule } from '@angular/material/menu'
 import { MatTooltipModule } from '@angular/material/tooltip'
 import { FaIconComponent } from '@fortawesome/angular-fontawesome'
@@ -27,7 +28,7 @@ function capitalize(text: string) {
 
 @Component({
   selector: 'app-color-scheme-switcher',
-  imports: [MatMenuModule, MatButtonModule, MatTooltipModule, FaIconComponent],
+  imports: [MatMenuModule, MatButtonModule, MatTooltipModule, FaIconComponent, MatCheckboxModule],
   templateUrl: './color-scheme-switcher.component.html',
   styleUrl: './color-scheme-switcher.component.scss'
 })
@@ -35,6 +36,9 @@ export class ColorSchemeSwitcherComponent {
   // Color scheme
   colorScheme = signal<ColorScheme>('default')
   colorSchemeText = linkedSignal(() => capitalize(this.colorScheme()))
+
+  // Options
+  centerLayoutMode = localStorage.getItem('centerLayout') === 'true'
 
   // Icons
   paletteIcon = faPalette
@@ -59,5 +63,10 @@ export class ColorSchemeSwitcherComponent {
   setColorScheme(scheme: ColorScheme) {
     this.colorScheme.set(scheme)
     localStorage.setItem('colorScheme', scheme)
+  }
+
+  updateCenterLayout() {
+    this.centerLayoutMode = !this.centerLayoutMode
+    localStorage.setItem('centerLayout', this.centerLayoutMode.toString())
   }
 }
