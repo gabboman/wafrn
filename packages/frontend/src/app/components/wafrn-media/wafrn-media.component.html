@@ -4,11 +4,13 @@
       (!extensionsToHideImgTag.includes(extension()) || mimeType() === 'UNKNOWN') && !mimeType().startsWith('video')
     ) {
       <img
+        *ngIf="!errorMode"
         [src]="displayUrl()"
         [alt]="data().description"
         width="{{ width() }}"
         height="{{ height() }}"
         loading="lazy"
+        (error)="handleError()"
         [ngClass]="{
           nsfw: nsfw,
           'displayed-image': !nsfw
@@ -77,4 +79,5 @@
       </button>
     }
   }
+  <a *ngIf="errorMode" [href]="data().url" target="_blank"> {{ data().description + ': ' + data().url }}</a>
 </div>

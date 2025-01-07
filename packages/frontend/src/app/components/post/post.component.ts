@@ -121,14 +121,14 @@ export class PostComponent implements OnInit, OnChanges, OnDestroy, AfterViewIni
     const postHtmlId = 'post-element-' + this.finalPost.id
     const postHtmlElement = document.getElementById(postHtmlId)
     if (postHtmlElement) {
-      const mediaHeight = this.post
+      const medias = this.post
         .map((pst) => pst.medias)
         .flat()
         .filter((elem) => !!elem)
         .map((media) => media.height)
-        .reduce((accumulator, current) => (accumulator ? accumulator : 256) + (current ? current : 256), 0)
-      const postHeight = postHtmlElement.getBoundingClientRect().height + (mediaHeight ? mediaHeight : 0)
-      this.veryLongPost = postHeight > 1250
+      const postHeight = postHtmlElement.getBoundingClientRect().height
+      const numberOfMedias = medias.length
+      this.veryLongPost = postHeight > 1250 || numberOfMedias > 2
       this.showFull = this.showFull || this.veryLongPost
     }
   }

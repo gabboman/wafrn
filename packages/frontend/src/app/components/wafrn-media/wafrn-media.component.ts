@@ -58,6 +58,7 @@ export class WafrnMediaComponent implements OnChanges, AfterViewInit {
   // Icons
   readonly hideIcon = faEyeSlash
 
+  errorMode = false
   constructor(
     private mediaService: MediaService,
     private messagesService: MessageService,
@@ -134,5 +135,9 @@ export class WafrnMediaComponent implements OnChanges, AfterViewInit {
         return 'UNKNOWN'
       }
     }
+  }
+
+  handleError() {
+    this.errorMode = true
   }
 }
