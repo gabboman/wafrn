@@ -1,4 +1,4 @@
-import express, { Response } from 'express'
+import express, { Response, Request } from 'express'
 import cors from 'cors'
 import { activityPubRoutes } from './routes/activitypub/activitypub.js'
 import { wellKnownRoutes } from './routes/activitypub/well-known.js'
@@ -11,6 +11,11 @@ import checkIpBlocked from './utils/checkIpBlocked.js'
 
 const PORT = environment.fediPort
 const app = express()
+function errorHandler(err: Error, req: Request, res: Response, next: Function) {
+  console.error(err.stack)
+  res.send(500).json({ error: 'Internal Server Error' })
+}
+app.use(errorHandler)
 app.use(cors())
 app.use(checkIpBlocked)
 app.use(overrideContentType)
