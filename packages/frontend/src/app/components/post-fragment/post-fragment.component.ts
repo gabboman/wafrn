@@ -355,6 +355,7 @@ export class PostFragmentComponent implements OnChanges, OnDestroy {
     return new Viewer(container.nativeElement, {
       button: true,
       navbar: true,
+      slideOnTouch: false,
       toolbar: {
         zoomIn: true,
         zoomOut: true,
