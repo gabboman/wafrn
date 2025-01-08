@@ -51,6 +51,7 @@ export class NotificationsComponent implements OnInit {
 
   reload() {
     this.page = 0
+    this.notificationsToShow = []
     this.ngOnInit()
   }
 
