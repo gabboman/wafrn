@@ -65,7 +65,7 @@ export default function postsRoutes(app: Application) {
     optionalAuthentication,
     navigationRateLimiter,
     async (req: AuthorizedRequest, res: Response) => {
-      const userUrl = req.params?.user;
+      const userUrl = req.params?.user
       const postTitle = req.params?.title.replaceAll('-', ' ')
       const user = await User.findOne({
         where: {
@@ -91,7 +91,8 @@ export default function postsRoutes(app: Application) {
           res.sendStatus(404)
         }
       }
-    })
+    }
+  )
   app.get(
     '/api/v2/post/:id',
     optionalAuthentication,
@@ -180,13 +181,13 @@ export default function postsRoutes(app: Application) {
         })
         const users = posts?.descendents?.length
           ? await User.findAll({
-            attributes: ['url', 'avatar', 'name', 'id'],
-            where: {
-              id: {
-                [Op.in]: posts?.descendents.map((elem: any) => elem.userId)
+              attributes: ['url', 'avatar', 'name', 'id'],
+              where: {
+                id: {
+                  [Op.in]: posts?.descendents.map((elem: any) => elem.userId)
+                }
               }
-            }
-          })
+            })
           : []
         res.send({
           posts: posts?.descendents?.length ? posts.descendents : [],
@@ -266,6 +267,7 @@ export default function postsRoutes(app: Application) {
     createPostLimiter,
     async (req: AuthorizedRequest, res: Response) => {
       let success = false
+      let mentionsToAdd: string[] = []
       const posterId = req.jwtData?.userId ? req.jwtData.userId : environment.deletedUser
       const posterUser = await User.findByPk(posterId)
       const postToBeQuoted = await Post.findByPk(req.body.postToQuote)
@@ -292,6 +294,19 @@ export default function postsRoutes(app: Application) {
         bodyPrivacy = Math.max(parentPrivacy, bodyPrivacy, quotedPostPrivacy)
         // we check that the user is not reblogging a post by someone who blocked them or the other way arround
         if (parent) {
+          // we check to add user mention if bsky id
+          const ancestors = await parent.getAncestors({
+            attributes: ['userId'],
+            where: {
+              bskyUri: {
+                [Op.ne]: null
+              },
+              hierarchyLevel: {
+                [Op.gt]: postToProcess.hierarchyLevel - 4
+              }
+            }
+          })
+          mentionsToAdd = mentionsToAdd.concat(ancestors.map((elem) => elem.userId))
           const postParentsUsers: string[] = parent.ancestors.map((elem: any) => elem.userId)
           postParentsUsers.push(parent.userId)
           // we then check if the user has threads federation enabled and if not we check that no threads user is in the thread
@@ -353,9 +368,8 @@ export default function postsRoutes(app: Application) {
         const content_warning = req.body.content_warning
           ? req.body.content_warning.trim()
           : posterUser?.NSFW
-            ? 'This user has been marked as NSFW and the post has been labeled automatically as NSFW'
-            : ''
-        let mentionsToAdd: string[] = []
+          ? 'This user has been marked as NSFW and the post has been labeled automatically as NSFW'
+          : ''
         let mediaToAdd: any[] = []
         const avaiableEmojis = await getAvaiableEmojis()
         // we parse the content and we search emojis:
@@ -419,7 +433,7 @@ export default function postsRoutes(app: Application) {
         }
 
         if (dbFoundMentions.length > 0) {
-          mentionsToAdd = dbFoundMentions.map((usr: any) => usr.id)
+          mentionsToAdd = mentionsToAdd.concat(dbFoundMentions.map((usr: any) => usr.id))
 
           // we check if user federates with threads and if not we check they are not mentioning anyone from threads
           const options = await getUserOptions(posterId)
@@ -508,7 +522,7 @@ export default function postsRoutes(app: Application) {
             userId: posterId,
             privacy: bodyPrivacy,
             parentId: req.body.parent,
-            markdownContent: req.body.content,
+            markdownContent: req.body.content
           })
         }
         if (postToBeQuoted) {
@@ -531,6 +545,7 @@ export default function postsRoutes(app: Application) {
             await ask.save()
           }
         }
+        mentionsToAdd = [...new Set(mentionsToAdd)]
         post.setMedias(mediaToAdd.map((media: any) => media.id))
         post.setMentionPost(mentionsToAdd)
         post.setEmojis(emojisToAdd)
