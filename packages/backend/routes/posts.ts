@@ -307,6 +307,9 @@ export default function postsRoutes(app: Application) {
             }
           })
           mentionsToAdd = mentionsToAdd.concat(ancestors.map((elem) => elem.userId))
+          if (parent.bskyUri && parent.userId != posterId) {
+            mentionsToAdd.push(parent.userId)
+          }
           const postParentsUsers: string[] = parent.ancestors.map((elem: any) => elem.userId)
           postParentsUsers.push(parent.userId)
           // we then check if the user has threads federation enabled and if not we check that no threads user is in the thread
@@ -545,7 +548,7 @@ export default function postsRoutes(app: Application) {
             await ask.save()
           }
         }
-        mentionsToAdd = [...new Set(mentionsToAdd)]
+        mentionsToAdd = [...new Set(mentionsToAdd)].filter((elem) => elem != posterId)
         post.setMedias(mediaToAdd.map((media: any) => media.id))
         post.setMentionPost(mentionsToAdd)
         post.setEmojis(emojisToAdd)
