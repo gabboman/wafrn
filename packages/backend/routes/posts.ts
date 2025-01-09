@@ -302,7 +302,7 @@ export default function postsRoutes(app: Application) {
                 [Op.ne]: null
               },
               hierarchyLevel: {
-                [Op.gt]: postToProcess.hierarchyLevel - 4
+                [Op.gt]: parent.hierarchyLevel - 3
               }
             }
           })
