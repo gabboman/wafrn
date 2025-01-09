@@ -6,7 +6,7 @@ import { MatCardModule } from '@angular/material/card'
 import { MatFormFieldModule } from '@angular/material/form-field'
 import { MatInputModule } from '@angular/material/input'
 import { Router } from '@angular/router'
-import { MatDialogRef } from '@angular/material/dialog'
+import { MatDialogModule, MatDialogRef } from '@angular/material/dialog'
 import { FontAwesomeModule, IconDefinition } from '@fortawesome/angular-fontawesome'
 import {
   faClose,
@@ -67,7 +67,8 @@ import { InfoCardComponent } from '../info-card/info-card.component'
     AvatarSmallComponent,
     MatCheckboxModule,
     MatTooltipModule,
-    InfoCardComponent
+    InfoCardComponent,
+    MatDialogModule
   ],
   templateUrl: './new-editor.component.html',
   styleUrl: './new-editor.component.scss'

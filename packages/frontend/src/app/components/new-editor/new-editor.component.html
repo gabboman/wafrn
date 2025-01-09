@@ -1,223 +1,225 @@
-<button mat-mini-fab class="delete-btn" (mousedown)="closeEditor()">
-  <fa-icon size="lg" [icon]="closeIcon"></fa-icon>
-</button>
-@if (data && data.post && !editing) {
-  <p class="text-2xl mt-2 mb-4">In reply to:</p>
-  <div class="mb-3 quoted-post">
-    <app-post-header [fragment]="data.post" [disableLink]="true"></app-post-header>
-    <app-post-fragment [fragment]="data.post"></app-post-fragment>
-  </div>
-}
-<h2 class="mt-3" *ngIf="editing">You are editing your woot</h2>
-<ng-container *ngIf="data && data.ask">
-  <h2 class="mt-3">Replying ask</h2>
-  <app-single-ask [ask]="data.ask"></app-single-ask>
-</ng-container>
-
-<div class="below-editor-toolbar">
-  <button
-    mat-icon-button
-    [matMenuTriggerFor]="menu"
-    aria-label="Edit privacy of woot"
-    class="input-height-btn"
-    [matTooltip]="getPrivacyIconName()"
-  >
-    <fa-icon size="lg" [icon]="getPrivacyIcon()"></fa-icon>
+<mat-dialog-content>
+  <button mat-mini-fab class="delete-btn" (mousedown)="closeEditor()">
+    <fa-icon size="lg" [icon]="closeIcon"></fa-icon>
   </button>
-  <button
-    aria-label="Enable the quote setter"
-    mat-icon-button
-    (mousedown)="quoteOpen = !quoteOpen"
-    class="input-height-btn"
-    matTooltip="Quote a woot"
-  >
-    <fa-icon size="lg" [icon]="quoteIcon"></fa-icon>
-  </button>
-  @if (pollQuestions.length === 0) {
-    <div matTooltip="Upload Media">
-      <app-file-upload (fileUpload)="uploadImage($event)"></app-file-upload>
+  @if (data && data.post && !editing) {
+    <p class="text-2xl mt-2 mb-4">In reply to:</p>
+    <div class="mb-3 quoted-post">
+      <app-post-header [fragment]="data.post" [disableLink]="true"></app-post-header>
+      <app-post-fragment [fragment]="data.post"></app-post-fragment>
     </div>
   }
-  <button
-    class="input-height-btn"
-    mat-icon-button
-    (mousedown)="showContentWarning = !showContentWarning"
-    matTooltip="Content Warning"
-  >
-    @if (contentWarning.split(' ').includes('meta')) {
-      <fa-icon size="lg" [icon]="landMineIcon"></fa-icon>
-    } @else {
-      <fa-icon size="lg" [icon]="contentWarningIcon"></fa-icon>
-    }
-  </button>
-</div>
+  <h2 class="mt-3" *ngIf="editing">You are editing your woot</h2>
+  <ng-container *ngIf="data && data.ask">
+    <h2 class="mt-3">Replying ask</h2>
+    <app-single-ask [ask]="data.ask"></app-single-ask>
+  </ng-container>
 
-@if (showContentWarning || contentWarning) {
-  <mat-form-field class="w-full transition-size" appearance="outline">
-    <mat-label>Content warning</mat-label>
-    <input [(ngModel)]="contentWarning" placeholder="What is sensitive about this woot?" matNativeControl />
-  </mat-form-field>
-}
-
-@if (quoteOpen && !data?.quote) {
-  <mat-card class="p-2 my-4" *ngIf="!quoteLoading">
-    <mat-form-field class="w-full">
-      <mat-label> Paste the URL of a woot to quote it. Can be the external url or the wafrn url </mat-label>
-      <input [(ngModel)]="urlPostToQuote" placeholder="Just paste the woot url" matNativeControl />
-    </mat-form-field>
+  <div class="below-editor-toolbar">
     <button
-      (mousedown)="loadQuote()"
-      mat-stroked-button
-      color="primary"
-      class="w-full"
-      [disabled]="urlPostToQuote === ''"
+      mat-icon-button
+      [matMenuTriggerFor]="menu"
+      aria-label="Edit privacy of woot"
+      class="input-height-btn"
+      [matTooltip]="getPrivacyIconName()"
     >
-      Add woot as quote
+      <fa-icon size="lg" [icon]="getPrivacyIcon()"></fa-icon>
     </button>
-  </mat-card>
-}
-
-<form [formGroup]="postCreatorForm">
-  <mat-form-field class="w-full">
-    <mat-label>Woot text</mat-label>
-    <textarea
-      id="postCreatorContent"
-      formControlName="content"
-      class="w-full"
-      (blur)="editorFocusedOut()"
-      (focus)="editorFocusedIn()"
-      rows="4"
-      placeholder="Start writing..."
-      matNativeControl
-    ></textarea>
-  </mat-form-field>
-</form>
-
-@if (false && uploadedMedias.length === 0) {
-  <!-- Polls are not available yet :( -->
-  <section class="mt-3" id="pollControls">
-    <button class="w-full" mat-button (mousedown)="quoteOpen = true" mat-flat-button>add poll</button>
-  </section>
-}
-
-<section id="uploaded-media">
-  <div class="grid">
-    <ng-container *ngFor="let media of uploadedMedias; let i = index">
-      <div class="col-12 md:col-6 my-2 relative">
-        <app-media-preview [media]="media"></app-media-preview>
-        <mat-form-field class="w-full">
-          <mat-label>Image Description</mat-label>
-          <input
-            placeholder="Description. Please FILL THIS"
-            [(ngModel)]="media.description"
-            type="text"
-            matNativeControl
-            required
-            class="w-full"
-          />
-        </mat-form-field>
-        <div>
-          <mat-checkbox [(ngModel)]="media.NSFW" class="w-full">NSFW</mat-checkbox>
-          <button mat-mini-fab class="delete-btn" (mousedown)="deleteImage(i)">
-            <fa-icon size="lg" [icon]="closeIcon"></fa-icon>
-          </button>
-        </div>
+    <button
+      aria-label="Enable the quote setter"
+      mat-icon-button
+      (mousedown)="quoteOpen = !quoteOpen"
+      class="input-height-btn"
+      matTooltip="Quote a woot"
+    >
+      <fa-icon size="lg" [icon]="quoteIcon"></fa-icon>
+    </button>
+    @if (pollQuestions.length === 0) {
+      <div matTooltip="Upload Media">
+        <app-file-upload (fileUpload)="uploadImage($event)"></app-file-upload>
       </div>
-    </ng-container>
+    }
+    <button
+      class="input-height-btn"
+      mat-icon-button
+      (mousedown)="showContentWarning = !showContentWarning"
+      matTooltip="Content Warning"
+    >
+      @if (contentWarning.split(' ').includes('meta')) {
+        <fa-icon size="lg" [icon]="landMineIcon"></fa-icon>
+      } @else {
+        <fa-icon size="lg" [icon]="contentWarningIcon"></fa-icon>
+      }
+    </button>
   </div>
-  <p class="my-2" *ngIf="uploadedMedias.length >= 4">
-    ATTENTION! ANY FURTHER MEDIA UPLOADED WILL NOT BE DISPLAYED ON MASTODON
-  </p>
-  <p class="my-2" *ngIf="!allDescriptionsFilled()">
-    Please fill in the media descriptions. If you want to disable this check, there is an option in the profile that you
-    can disable.
-  </p>
-</section>
 
-<section id="quote">
-  <div *ngIf="!data?.quote">
-    <mat-spinner *ngIf="quoteLoading" class="my-4" color="accent" diameter="24"></mat-spinner>
-  </div>
-  <div *ngIf="data && data.quote" class="my-4">
-    <p class="mb-1">QUOTING:</p>
-    <div class="quoted-post">
-      <button mat-mini-fab class="delete-btn" color="warn" (mousedown)="data ? (data.quote = undefined) : null">
-        <fa-icon size="lg" [icon]="closeIcon"></fa-icon>
+  @if (showContentWarning || contentWarning) {
+    <mat-form-field class="w-full transition-size" appearance="outline">
+      <mat-label>Content warning</mat-label>
+      <input [(ngModel)]="contentWarning" placeholder="What is sensitive about this woot?" matNativeControl />
+    </mat-form-field>
+  }
+
+  @if (quoteOpen && !data?.quote) {
+    <mat-card class="p-2 my-4" *ngIf="!quoteLoading">
+      <mat-form-field class="w-full">
+        <mat-label> Paste the URL of a woot to quote it. Can be the external url or the wafrn url </mat-label>
+        <input [(ngModel)]="urlPostToQuote" placeholder="Just paste the woot url" matNativeControl />
+      </mat-form-field>
+      <button
+        (mousedown)="loadQuote()"
+        mat-stroked-button
+        color="primary"
+        class="w-full"
+        [disabled]="urlPostToQuote === ''"
+      >
+        Add woot as quote
       </button>
-      <div class="flex">
-        <app-post-header [fragment]="data.quote"></app-post-header>
+    </mat-card>
+  }
+
+  <form [formGroup]="postCreatorForm">
+    <mat-form-field class="w-full">
+      <mat-label>Woot text</mat-label>
+      <textarea
+        id="postCreatorContent"
+        formControlName="content"
+        class="w-full"
+        (blur)="editorFocusedOut()"
+        (focus)="editorFocusedIn()"
+        rows="4"
+        placeholder="Start writing..."
+        matNativeControl
+      ></textarea>
+    </mat-form-field>
+  </form>
+
+  @if (false && uploadedMedias.length === 0) {
+    <!-- Polls are not available yet :( -->
+    <section class="mt-3" id="pollControls">
+      <button class="w-full" mat-button (mousedown)="quoteOpen = true" mat-flat-button>add poll</button>
+    </section>
+  }
+
+  <section id="uploaded-media">
+    <div class="grid">
+      <ng-container *ngFor="let media of uploadedMedias; let i = index">
+        <div class="col-12 md:col-6 my-2 relative">
+          <app-media-preview [media]="media"></app-media-preview>
+          <mat-form-field class="w-full">
+            <mat-label>Image Description</mat-label>
+            <input
+              placeholder="Description. Please FILL THIS"
+              [(ngModel)]="media.description"
+              type="text"
+              matNativeControl
+              required
+              class="w-full"
+            />
+          </mat-form-field>
+          <div>
+            <mat-checkbox [(ngModel)]="media.NSFW" class="w-full">NSFW</mat-checkbox>
+            <button mat-mini-fab class="delete-btn" (mousedown)="deleteImage(i)">
+              <fa-icon size="lg" [icon]="closeIcon"></fa-icon>
+            </button>
+          </div>
+        </div>
+      </ng-container>
+    </div>
+    <p class="my-2" *ngIf="uploadedMedias.length >= 4">
+      ATTENTION! ANY FURTHER MEDIA UPLOADED WILL NOT BE DISPLAYED ON MASTODON
+    </p>
+    <p class="my-2" *ngIf="!allDescriptionsFilled()">
+      Please fill in the media descriptions. If you want to disable this check, there is an option in the profile that
+      you can disable.
+    </p>
+  </section>
+
+  <section id="quote">
+    <div *ngIf="!data?.quote">
+      <mat-spinner *ngIf="quoteLoading" class="my-4" color="accent" diameter="24"></mat-spinner>
+    </div>
+    <div *ngIf="data && data.quote" class="my-4">
+      <p class="mb-1">QUOTING:</p>
+      <div class="quoted-post">
+        <button mat-mini-fab class="delete-btn" color="warn" (mousedown)="data ? (data.quote = undefined) : null">
+          <fa-icon size="lg" [icon]="closeIcon"></fa-icon>
+        </button>
+        <div class="flex">
+          <app-post-header [fragment]="data.quote"></app-post-header>
+        </div>
+        <app-post-fragment [fragment]="data.quote"></app-post-fragment>
       </div>
-      <app-post-fragment [fragment]="data.quote"></app-post-fragment>
+    </div>
+  </section>
+  <section id="tags" class="mt-2 w-full flex-row">
+    <mat-form-field class="w-full">
+      <mat-label>Tags</mat-label>
+      <input [(ngModel)]="tags" placeholder="Separated by commas" matNativeControl />
+    </mat-form-field>
+    <div class="taglist">
+      @for (tag of tags.split(','); track $index) {
+        <span *ngIf="tag && tag !== '' && tag.trim() !== ''" class="tag"> #{{ tag.trim() }} </span>
+      }
+    </div>
+  </section>
+
+  @if (privacy === 10) {
+    <app-info-card [type]="'caution'" addClass="mb-3">
+      Admins of both your instance, and the external instance can read these messages.
+    </app-info-card>
+  }
+  @if (privacy === 3) {
+    <app-info-card type="info" class="mb-3">
+      This woot is set as unlisted. It opts out of search, hashtags and other features. This is not recommended for
+      anything you want discoverable.
+    </app-info-card>
+  }
+
+  <button
+    mat-flat-button
+    class="w-full my-2"
+    [disabled]="
+      !allDescriptionsFilled() ||
+      postBeingSubmitted ||
+      (postCreatorForm.value.content === initialContent && tags.length === 0 && uploadedMedias.length === 0)
+    "
+    (click)="submitPost()"
+  >
+    {{ editing ? 'Save woot' : idPostToReblog ? 'Publish reply to woot' : 'Publish woot' }}
+  </button>
+
+  <!-- Popup Menus -->
+  <mat-menu #menu="matMenu">
+    @for (option of privacyOptions; track $index) {
+      <button (click)="this.privacy = option.level" mat-menu-item>
+        <fa-icon [icon]="option.icon"></fa-icon>
+        {{ option.name }}
+      </button>
+    }
+  </mat-menu>
+  <div
+    #suggestionsMenu
+    class="suggestions-menu"
+    [hidden]="suggestions.length === 0"
+    [style.left.px]="cursorPosition.x"
+    [style.top.px]="cursorPosition.y"
+  >
+    <div class="flex flex-column gap-2">
+      @for (user of suggestions; track $index) {
+        <div (click)="insertMention(user)" class="flex gap-2 align-items-center suggestion-item">
+          <app-avatar-small
+            [disabled]="true"
+            [user]="{
+              avatar: user.img,
+              url: user.text,
+              name: user.text,
+              id: ''
+            }"
+          ></app-avatar-small>
+          {{ user.text }}
+        </div>
+      }
     </div>
   </div>
-</section>
-<section id="tags" class="mt-2 w-full flex-row">
-  <mat-form-field class="w-full">
-    <mat-label>Tags</mat-label>
-    <input [(ngModel)]="tags" placeholder="Separated by commas" matNativeControl />
-  </mat-form-field>
-  <div class="taglist">
-    @for (tag of tags.split(','); track $index) {
-      <span *ngIf="tag && tag !== '' && tag.trim() !== ''" class="tag"> #{{ tag.trim() }} </span>
-    }
-  </div>
-</section>
-
-@if (privacy === 10) {
-  <app-info-card [type]="'caution'" addClass="mb-3">
-    Admins of both your instance, and the external instance can read these messages.
-  </app-info-card>
-}
-@if (privacy === 3) {
-  <app-info-card type="info" class="mb-3">
-    This woot is set as unlisted. It opts out of search, hashtags and other features. This is not recommended for
-    anything you want discoverable.
-  </app-info-card>
-}
-
-<button
-  mat-flat-button
-  class="w-full my-2"
-  [disabled]="
-    !allDescriptionsFilled() ||
-    postBeingSubmitted ||
-    (postCreatorForm.value.content === initialContent && tags.length === 0 && uploadedMedias.length === 0)
-  "
-  (mousedown)="submitPost()"
->
-  {{ editing ? 'Save woot' : idPostToReblog ? 'Publish reply to woot' : 'Publish woot' }}
-</button>
-
-<!-- Popup Menus -->
-<mat-menu #menu="matMenu">
-  @for (option of privacyOptions; track $index) {
-    <button (click)="this.privacy = option.level" mat-menu-item>
-      <fa-icon [icon]="option.icon"></fa-icon>
-      {{ option.name }}
-    </button>
-  }
-</mat-menu>
-<div
-  #suggestionsMenu
-  class="suggestions-menu"
-  [hidden]="suggestions.length === 0"
-  [style.left.px]="cursorPosition.x"
-  [style.top.px]="cursorPosition.y"
->
-  <div class="flex flex-column gap-2">
-    @for (user of suggestions; track $index) {
-      <div (click)="insertMention(user)" class="flex gap-2 align-items-center suggestion-item">
-        <app-avatar-small
-          [disabled]="true"
-          [user]="{
-            avatar: user.img,
-            url: user.text,
-            name: user.text,
-            id: ''
-          }"
-        ></app-avatar-small>
-        {{ user.text }}
-      </div>
-    }
-  </div>
-</div>
+</mat-dialog-content>
