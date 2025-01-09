@@ -1,18 +1,19 @@
-import { Model } from "sequelize";
-import { BskyAgent, RichText } from "@atproto/api";
-import { Media, Post, Quotes, User } from "../../db.js";
-import { environment } from "../../environment.js";
-import fs from "fs/promises";
-import { getPostUrlForQuote } from "../../utils/activitypub/postToJSONLD.js";
+import { Model } from 'sequelize'
+import { BskyAgent, RichText } from '@atproto/api'
+import { Media, Post, Quotes, User } from '../../db.js'
+import { environment } from '../../environment.js'
+import fs from 'fs/promises'
+import { getPostUrlForQuote } from '../../utils/activitypub/postToJSONLD.js'
 
 async function postToAtproto(post: Model<any, any>, agent: BskyAgent) {
-  const quotedPostId = await Quotes.findOne({
+  let labels: any = undefined
+  const quotedPostId = (await Quotes.findOne({
     where: {
       quoterPostId: post.id
     }
-  }) as Model<any, any>
-  let bskyQuote;
-  let quotedPost;
+  })) as Model<any, any>
+  let bskyQuote
+  let quotedPost
   if (quotedPostId) {
     quotedPost = await Post.findByPk(quotedPostId.quotedPostId, {
       include: [
@@ -21,59 +22,72 @@ async function postToAtproto(post: Model<any, any>, agent: BskyAgent) {
           as: 'user'
         }
       ]
-    });
+    })
     if (quotedPost.bskyUri) {
       bskyQuote = {
-        "$type": "app.bsky.embed.record",
-        "record": {
-          "uri": quotedPost.bskyUri,
-          "cid": quotedPost.bskyCid
+        $type: 'app.bsky.embed.record',
+        record: {
+          uri: quotedPost.bskyUri,
+          cid: quotedPost.bskyCid
         }
       }
     }
   }
   const contentWarning = post.content_warning ? `[${post.content_warning.trim()}]\n` : ''
-  const tags = (await post.getPostTags()).map(elem => `#${elem.tagName.trim().replaceAll(' ', '-')}`).join(' ')
+
+  const tags = (await post.getPostTags()).map((elem) => `#${elem.tagName.trim().replaceAll(' ', '-')}`).join(' ')
   let postText: string = (contentWarning + post.markdownContent.trim() + ' ' + tags).trim()
   if (quotedPost && !bskyQuote) {
-    const remoteId = getPostUrlForQuote(quotedPost);
-    postText = postText + "\nRE: " + remoteId
+    const remoteId = getPostUrlForQuote(quotedPost)
+    postText = postText + '\nRE: ' + remoteId
   }
   const medias = await Media.findAll({
     where: {
       postId: post.id
     }
-  });
-  let maxMediaSize = 0;
+  })
+
+  if (contentWarning != '' || medias.some((media) => media.NSFW)) {
+    labels = {
+      $type: 'com.atproto.label.defs#selfLabels',
+      values: [{ val: 'graphic-media' }]
+    }
+  }
+
+  let maxMediaSize = 0
   const mediasToNotSend: number[] = []
   for await (const [index, media] of medias.entries()) {
-    const data = await fs.stat('uploads/' + media.url);
-    maxMediaSize = maxMediaSize > data.size ? maxMediaSize : data.size;
+    const data = await fs.stat('uploads/' + media.url)
+    maxMediaSize = maxMediaSize > data.size ? maxMediaSize : data.size
     if (data.size > 1000000 || media.url.endsWith('mp4')) {
       mediasToNotSend.push(index)
     }
   }
   const tmpRichText = new RichText({ text: postText })
   if (tmpRichText.length > 300 || medias.length > 4 || maxMediaSize > 1000000) {
-    postText = postText.slice(0, 150) + `... see complete post at https://${environment.instanceUrl}/fediverse/post/${post.id}`
+    postText =
+      postText.slice(0, 150) + `... see complete post at https://${environment.instanceUrl}/fediverse/post/${post.id}`
   }
-  const bskyMedias = medias.filter((elem: any, index) => !mediasToNotSend.includes(index)).map(async (media) => {
-    const file = await fs.readFile('uploads/' + media.url);
-    const image = Buffer.from(file);
-    const { data } = await agent.uploadBlob(image, { encoding: media.mediaType })
-    return {
-      alt: media.description,
-      image: data.blob,
-      aspectRatio: {
-        width: media.width,
-        height: media.height,
+  const bskyMedias = medias
+    .filter((elem: any, index) => !mediasToNotSend.includes(index))
+    .map(async (media) => {
+      const file = await fs.readFile('uploads/' + media.url)
+      const image = Buffer.from(file)
+      const { data } = await agent.uploadBlob(image, { encoding: media.mediaType })
+      return {
+        alt: media.description,
+        image: data.blob,
+        labels: labels ? labels : undefined,
+        aspectRatio: {
+          width: media.width,
+          height: media.height
+        }
       }
-    }
-  })
+    })
   const rt = new RichText({
     text: postText
-  });
-  await rt.detectFacets(agent);
+  })
+  await rt.detectFacets(agent)
   let res: any = {
     text: rt.text,
     facets: rt.facets,
@@ -87,7 +101,7 @@ async function postToAtproto(post: Model<any, any>, agent: BskyAgent) {
   }
   if (post.parentId) {
     // ok this post is in reply to something
-    const parent = await Post.findByPk(post.parentId) as Model<any, any>
+    const parent = (await Post.findByPk(post.parentId)) as Model<any, any>
     const ancestors = await post.getAncestors({
       where: {
         hierarchyLevel: 1
@@ -97,11 +111,11 @@ async function postToAtproto(post: Model<any, any>, agent: BskyAgent) {
     res.reply = {
       root: {
         uri: rootPost.bskyUri,
-        cid: rootPost.bskyCid,
+        cid: rootPost.bskyCid
       },
       parent: {
         uri: parent.bskyUri,
-        cid: parent.bskyCid,
+        cid: parent.bskyCid
       }
     }
   }
@@ -109,8 +123,10 @@ async function postToAtproto(post: Model<any, any>, agent: BskyAgent) {
   if (bskyQuote) {
     res.embed = bskyQuote
   }
-
-  return res;
+  if (labels) {
+    res.labels = labels
+  }
+  return res
 }
 
 export { postToAtproto }
