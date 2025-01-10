@@ -306,10 +306,13 @@ export default function postsRoutes(app: Application) {
               }
             }
           })
-          mentionsToAdd = mentionsToAdd.concat(ancestors.map((elem) => elem.userId))
-          if (parent.bskyUri && parent.userId != posterId) {
-            mentionsToAdd.push(parent.userId)
+          if (req.body.content != '') {
+            mentionsToAdd = mentionsToAdd.concat(ancestors.map((elem) => elem.userId))
+            if (parent.bskyUri && parent.userId != posterId) {
+              mentionsToAdd.push(parent.userId)
+            }
           }
+
           const postParentsUsers: string[] = parent.ancestors.map((elem: any) => elem.userId)
           postParentsUsers.push(parent.userId)
           // we then check if the user has threads federation enabled and if not we check that no threads user is in the thread
