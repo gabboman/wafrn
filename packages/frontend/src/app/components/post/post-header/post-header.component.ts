@@ -1,4 +1,4 @@
-import { Component, Input, OnChanges, SimpleChanges } from '@angular/core'
+import { Component, Input, OnChanges, SimpleChanges, input } from '@angular/core'
 import { AvatarSmallComponent } from '../../avatar-small/avatar-small.component'
 import { ProcessedPost } from '../../../interfaces/processed-post'
 import { CommonModule } from '@angular/common'
@@ -47,9 +47,9 @@ import { DateTime } from 'luxon'
 })
 export class PostHeaderComponent implements OnChanges {
   @Input() fragment!: ProcessedPost
-  @Input() simplified: boolean = true
-  @Input() disableLink: boolean = false
-  @Input() headerText: string = ''
+  readonly simplified = input<boolean>(true);
+  readonly disableLink = input<boolean>(false);
+  readonly headerText = input<string>('');
   userLoggedIn = false
 
   // table for the icons. ATTENTION, PRIVACY 10 IS SET ON CONSTRUCTOR

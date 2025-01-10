@@ -8,7 +8,8 @@ import {
   OnDestroy,
   OnInit,
   Output,
-  viewChild
+  viewChild,
+  input
 } from '@angular/core'
 import { ProcessedPost } from '../../interfaces/processed-post'
 import { PollModule } from '../poll/poll.module'
@@ -64,7 +65,7 @@ type EmojiReaction = {
 export class PostFragmentComponent implements OnChanges, OnDestroy {
   @Input() fragment!: ProcessedPost
   @Input() showCw: boolean = true
-  @Input() selfManageCw: boolean = false
+  readonly selfManageCw = input<boolean>(false);
   @Output() dismissCw: EventEmitter<void> = new EventEmitter<void>()
   emojiCollection: EmojiReaction[] = []
   likeSubscription
@@ -339,7 +340,7 @@ export class PostFragmentComponent implements OnChanges, OnDestroy {
 
   cwClick() {
     this.dismissCw.emit()
-    if (this.selfManageCw) {
+    if (this.selfManageCw()) {
       this.showCw = !this.showCw
     }
   }

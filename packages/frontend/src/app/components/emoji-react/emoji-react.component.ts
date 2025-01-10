@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common'
-import { Component, Input } from '@angular/core'
+import { Component, input } from '@angular/core'
 import { EmojiCollectionsComponent } from '../emoji-collections/emoji-collections.component'
 import { Overlay, OverlayModule } from '@angular/cdk/overlay'
 import { MatButtonModule } from '@angular/material/button'
@@ -27,7 +27,7 @@ import { Emoji } from '../../interfaces/emoji'
 export class EmojiReactComponent {
   scrollStrategy
 
-  @Input() postId: string = ''
+  readonly postId = input<string>('');
   isOpen = false
   loading = false
 
@@ -41,7 +41,7 @@ export class EmojiReactComponent {
 
   async reactToPost(emoji: Emoji) {
     this.loading = true
-    const response = await this.postsService.emojiReactPost(this.postId, emoji.name)
+    const response = await this.postsService.emojiReactPost(this.postId(), emoji.name)
     if (response) {
       this.messages.add({
         severity: 'success',

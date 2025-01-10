@@ -1,4 +1,4 @@
-import { Component, Input, input, OnInit, SimpleChanges } from '@angular/core'
+import { Component, input, OnInit, SimpleChanges } from '@angular/core'
 import { SimplifiedUser } from 'src/app/interfaces/simplified-user'
 import { AvatarSmallComponent } from '../avatar-small/avatar-small.component'
 import { IconDefinition } from '@fortawesome/fontawesome-svg-core'
@@ -14,17 +14,17 @@ import { DateTime } from 'luxon'
   styleUrl: './post-ribbon.component.scss'
 })
 export class PostRibbonComponent implements OnInit {
-  @Input({ required: true }) user!: SimplifiedUser
-  @Input({ required: true }) icon!: IconDefinition
-  @Input({ required: true }) time!: Date
-  @Input() card = true
+  readonly user = input.required<SimplifiedUser>();
+  readonly icon = input.required<IconDefinition>();
+  readonly time = input.required<Date>();
+  readonly card = input(true);
 
   timeAgo = ''
 
   constructor() {}
   ngOnInit(): void {
     // TODO unhardcode
-    const relative = DateTime.fromJSDate(this.time).setLocale('en').toRelative()
+    const relative = DateTime.fromJSDate(this.time()).setLocale('en').toRelative()
     this.timeAgo = relative ? relative : 'ERROR GETING TIME'
   }
 
