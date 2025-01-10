@@ -17,6 +17,7 @@ import {
   faQuestionCircle,
   faQuoteLeft,
   faServer,
+  faSkullCrossbones,
   faUnlock,
   faUser
 } from '@fortawesome/free-solid-svg-icons'
@@ -118,6 +119,7 @@ export class NewEditorComponent implements OnDestroy {
   quoteIcon = faQuoteLeft
   contentWarningIcon = faExclamationTriangle
   landMineIcon = faLandMineOn
+  skull = faSkullCrossbones
   infoIcon = faQuestionCircle
   alertIcon = faExclamationTriangle
   emojiSubscription: Subscription
