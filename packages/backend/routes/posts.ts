@@ -350,7 +350,7 @@ export default function postsRoutes(app: Application) {
           })
           // only count on reblogs
           const blocksExistingOnParents =
-            content == ''
+            req.body.content == ''
               ? await Blocks.count({
                   where: {
                     [Op.or]: [
