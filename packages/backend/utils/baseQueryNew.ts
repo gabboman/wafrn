@@ -21,7 +21,6 @@ import getFollowedsIds from './cacheGetters/getFollowedsIds.js'
 import { Queue } from 'bullmq'
 import { environment } from '../environment.js'
 
-
 const updateMediaDataQueue = new Queue('processRemoteMediaData', {
   connection: environment.bullmqConnection,
   defaultJobOptions: {
@@ -34,7 +33,6 @@ const updateMediaDataQueue = new Queue('processRemoteMediaData', {
     removeOnFail: 25000
   }
 })
-
 
 async function getQuotes(
   postIds: string[]
@@ -50,7 +48,19 @@ async function getQuotes(
 
 async function getMedias(postIds: string[]) {
   const medias = await Media.findAll({
-    attributes: ['id', 'NSFW', 'description', 'url', 'external', 'mediaOrder', 'mediaType', 'postId', 'blurhash', 'width', 'height'],
+    attributes: [
+      'id',
+      'NSFW',
+      'description',
+      'url',
+      'external',
+      'mediaOrder',
+      'mediaType',
+      'postId',
+      'blurhash',
+      'width',
+      'height'
+    ],
     where: {
       postId: {
         [Op.in]: postIds
@@ -58,7 +68,9 @@ async function getMedias(postIds: string[]) {
     }
   })
 
-  let mediasToProcess = medias.filter((elem: any) => !elem.mediaType || (elem.mediaType?.startsWith('image') && !elem.width))
+  let mediasToProcess = medias.filter(
+    (elem: any) => !elem.mediaType || (elem.mediaType?.startsWith('image') && !elem.width)
+  )
   if (mediasToProcess && mediasToProcess.length > 0) {
     updateMediaDataQueue.addBulk(
       mediasToProcess.map((media: any) => {
@@ -69,7 +81,7 @@ async function getMedias(postIds: string[]) {
       })
     )
   }
-  return medias;
+  return medias
 }
 async function getMentionedUserIds(
   postIds: string[]
@@ -330,14 +342,14 @@ async function getUnjointedPosts(postIdsInput: string[], posterId: string) {
 }
 
 function filterPost(postToBeFilter: any, postIdsToFullySend: string[]): any {
-  const res = postToBeFilter
-  if (!postIdsToFullySend.includes(res.id)) {
-    res.content =
-      res.privacy === 10
-        ? 'This post is marked as private and you do not have access to it'
-        : 'You do not follow this user and this post is marked as followers only.'
-  }
+  let res = postToBeFilter
   res.ancestors = res.ancestors ? res.ancestors.map((elem: any) => filterPost(elem, postIdsToFullySend)) : []
+  if (!postIdsToFullySend.includes(res.id)) {
+    res = undefined
+  }
+  if (res) {
+    res.ancestors = res.ancestors.filter((elem: any) => !elem == undefined)
+  }
   return res
 }
 
