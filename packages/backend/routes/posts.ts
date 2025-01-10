@@ -349,23 +349,22 @@ export default function postsRoutes(app: Application) {
             }
           })
           // only count on reblogs
-          const blocksExistingOnParents =
-            req.body.content == ''
-              ? await Blocks.count({
-                  where: {
-                    [Op.or]: [
-                      {
-                        blockerId: posterId,
-                        blockedId: parent.userId
-                      },
-                      {
-                        blockedId: posterId,
-                        blockerId: parent.userId
-                      }
-                    ]
-                  }
-                })
-              : 0
+          const blocksExistingOnParents = parent
+            ? await Blocks.count({
+                where: {
+                  [Op.or]: [
+                    {
+                      blockerId: posterId,
+                      blockedId: parent.userId
+                    },
+                    {
+                      blockedId: posterId,
+                      blockerId: parent.userId
+                    }
+                  ]
+                }
+              })
+            : 0
           if (blocksExistingOnParents + bannedUsers > 0) {
             success = false
             res.status(500)
