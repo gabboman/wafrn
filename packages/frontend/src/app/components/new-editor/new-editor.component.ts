@@ -137,7 +137,7 @@ export class NewEditorComponent implements OnDestroy {
     this.editing = this.data?.edit == true
     this.privacy = this.loginService.getUserDefaultPostPrivacyLevel()
     if (this.data?.post) {
-      this.contentWarning = this.data.post.content_warning
+      this.contentWarning = this.data.post.content_warning ? this.data.post.content_warning : ''
       this.privacy = Math.max(this.data.post.privacy, this.privacy)
     }
     this.emojiSubscription = this.postService.updateFollowers.subscribe(() => {
