@@ -343,12 +343,12 @@ async function getUnjointedPosts(postIdsInput: string[], posterId: string) {
 
 function filterPost(postToBeFilter: any, postIdsToFullySend: string[]): any {
   let res = postToBeFilter
-  res.ancestors = res.ancestors ? res.ancestors.map((elem: any) => filterPost(elem, postIdsToFullySend)) : []
   if (!postIdsToFullySend.includes(res.id)) {
     res = undefined
   }
   if (res) {
-    res.ancestors = res.ancestors.filter((elem: any) => !elem == undefined)
+    res.ancestors = res.ancestors ? res.ancestors.map((elem: any) => filterPost(elem, postIdsToFullySend)) : []
+    res.ancestors = res.ancestors.filter((elem: any) => !(elem == undefined))
   }
   return res
 }
