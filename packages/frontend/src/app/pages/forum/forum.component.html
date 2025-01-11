@@ -1,6 +1,6 @@
 <app-loader *ngIf="loading"></app-loader>
 <ng-container *ngIf="!loading">
-  <app-post [post]="post" class="initial-post"></app-post>
+  <app-post [post]="post" [showFull]="true" class="initial-post"></app-post>
   <div
     *ngIf="(!post[post.length - 1].remotePostId.startsWith(localUrl) && userLoggedIn) || post.length > 1"
     class="px-3 mt-3 mb-6 lg:mx-4 wafrn-container flex flex-column gap-2 reply-loader"
@@ -29,7 +29,7 @@
     ) {
       <mat-card [id]="'post-' + content.id" class="wafrn-container post-card">
         <app-post-header [fragment]="content" [simplified]="false"></app-post-header>
-        <app-post-fragment [selfManageCw]="true" [fragment]="content"></app-post-fragment>
+        <app-post-fragment [fragment]="content"></app-post-fragment>
         <hr />
         <app-bottom-reply-bar [fragment]="content"></app-bottom-reply-bar>
       </mat-card>
