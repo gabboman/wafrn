@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common'
-import { Component, ElementRef, Input, OnChanges, OnDestroy, viewChild } from '@angular/core'
+import { Component, computed, ElementRef, Input, OnChanges, OnDestroy, viewChild } from '@angular/core'
 import { ProcessedPost } from '../../interfaces/processed-post'
 import { PollModule } from '../poll/poll.module'
 import { WafrnMediaModule } from '../wafrn-media/wafrn-media.module'
@@ -63,6 +63,7 @@ export class PostFragmentComponent implements OnChanges, OnDestroy {
   reactionLoading = false
   sanitizedContent = ''
   wafrnFormattedContent: Array<string | WafrnMedia> = []
+  contentLineCount = computed(() => this.sanitizedContent.split('\n').length)
   seenMedia: number[] = []
 
   readonly inlineMediaElement = viewChild<ElementRef<HTMLElement>>('mediaInline')

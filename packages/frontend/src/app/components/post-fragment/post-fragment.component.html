@@ -11,9 +11,10 @@
   </div>
   <button mat-raised-button color="primary" (mousedown)="cwClick()" class="w-full my-2">
     @if (showSensitiveContent) {
-      Hide sensitive content
+      Hide
     } @else {
       Show sensitive content
+      <span class="text-xs">({{ contentLineCount() }} line{{ contentLineCount() === 1 ? '' : 's' }})</span>
     }
   </button>
 }

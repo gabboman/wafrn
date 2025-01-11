@@ -20,7 +20,7 @@
   }
   <div
     [ngClass]="{
-      'shortened-post': veryLongPost || !showFull
+      'shortened-post': postCanExpand() && !postExpanded
     }"
   >
     @for (content of post; track $index; let index = $index) {
@@ -39,12 +39,12 @@
         id="fragment"
       >
         <app-post-header class="w-full" [fragment]="content" [simplified]="false"></app-post-header>
-        <app-post-fragment [showCw]="showCw" [fragment]="content"></app-post-fragment>
+        <app-post-fragment [fragment]="content"></app-post-fragment>
       </div>
     }
   </div>
   <button
-    *ngIf="veryLongPost || !showFull"
+    *ngIf="postCanExpand() && !postExpanded"
     color="accent"
     class="w-full mb-3 mt-2 w-full"
     mat-stroked-button

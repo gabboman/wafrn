@@ -1,4 +1,14 @@
-import { AfterViewInit, Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output } from '@angular/core'
+import {
+  AfterViewInit,
+  Component,
+  computed,
+  EventEmitter,
+  Input,
+  OnChanges,
+  OnDestroy,
+  OnInit,
+  Output
+} from '@angular/core'
 import { ProcessedPost } from 'src/app/interfaces/processed-post'
 import { EditorService } from 'src/app/services/editor.service'
 import { LoginService } from 'src/app/services/login.service'
@@ -38,6 +48,8 @@ import { SimplifiedUser } from 'src/app/interfaces/simplified-user'
 export class PostComponent implements OnInit, OnChanges, OnDestroy, AfterViewInit {
   @Input() post!: ProcessedPost[]
   @Input() showFull: boolean = false
+  postCanExpand = computed(() => this.veryLongPost || !this.showFull)
+  postExpanded = false
   originalPostContent: ProcessedPost[] = []
   ready = false
   mediaBaseUrl = EnvironmentService.environment.baseMediaUrl
@@ -185,7 +197,6 @@ export class PostComponent implements OnInit, OnChanges, OnDestroy, AfterViewIni
 
   expandPost() {
     this.post = this.originalPostContent
-    this.veryLongPost = false
-    this.showFull = true
+    this.postExpanded = true
   }
 }
