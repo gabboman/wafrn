@@ -19,6 +19,7 @@ import { getAtProtoSession } from '../atproto/utils/getAtProtoSession.js'
 import { getCacheAtDids } from '../atproto/cache/getCacheAtDids.js'
 
 export default function followsRoutes(app: Application) {
+  // TODO refactor? It works, but I have a few res.send and thats not nice!
   app.post('/api/follow', authenticateToken, async (req: AuthorizedRequest, res: Response) => {
     let success = false
     try {
@@ -50,10 +51,10 @@ export default function followsRoutes(app: Application) {
             await getCacheAtDids(true)
             return res.send({ success: true })
           } else {
-            res.sendStatus(500)
+            return res.sendStatus(500)
           }
         } else {
-          res.status(500).send({
+          return res.status(500).send({
             error: true,
             message: 'You are trying to follow a bsky user. You need to enable this on your profile'
           })
