@@ -188,8 +188,4 @@ export class PostComponent implements OnInit, OnChanges, OnDestroy, AfterViewIni
     this.veryLongPost = false
     this.showFull = true
   }
-
-  dismissContentWarning() {
-    this.showCw = !this.showCw
-  }
 }

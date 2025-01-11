@@ -65,8 +65,6 @@ type EmojiReaction = {
 export class PostFragmentComponent implements OnChanges, OnDestroy {
   @Input() fragment!: ProcessedPost
   @Input() showCw: boolean = true
-  readonly selfManageCw = input<boolean>(false);
-  @Output() dismissCw: EventEmitter<void> = new EventEmitter<void>()
   emojiCollection: EmojiReaction[] = []
   likeSubscription
   emojiSubscription
@@ -339,10 +337,7 @@ export class PostFragmentComponent implements OnChanges, OnDestroy {
   }
 
   cwClick() {
-    this.dismissCw.emit()
-    if (this.selfManageCw()) {
-      this.showCw = !this.showCw
-    }
+    this.showCw = !this.showCw
   }
 
   ngAfterViewInit(): void {
