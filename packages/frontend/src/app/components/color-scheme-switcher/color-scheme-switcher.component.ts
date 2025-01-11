@@ -1,3 +1,4 @@
+import { NgClass } from '@angular/common'
 import { Component, linkedSignal, signal } from '@angular/core'
 import { MatButtonModule } from '@angular/material/button'
 import { MatCheckboxModule } from '@angular/material/checkbox'
@@ -28,11 +29,15 @@ function capitalize(text: string) {
 
 @Component({
   selector: 'app-color-scheme-switcher',
-  imports: [MatMenuModule, MatButtonModule, MatTooltipModule, FaIconComponent, MatCheckboxModule],
+  imports: [MatMenuModule, MatButtonModule, MatTooltipModule, FaIconComponent, MatCheckboxModule, NgClass],
   templateUrl: './color-scheme-switcher.component.html',
   styleUrl: './color-scheme-switcher.component.scss'
 })
 export class ColorSchemeSwitcherComponent {
+  // Utility
+  readonly variants = colorSchemeVariants
+  readonly capitalize = capitalize
+
   // Color scheme
   colorScheme = signal<ColorScheme>('default')
   colorSchemeText = linkedSignal(() => capitalize(this.colorScheme()))
