@@ -56,9 +56,9 @@ export class PostFragmentComponent implements OnChanges, OnDestroy {
   emojiCollection: EmojiReaction[] = []
   likeSubscription
   emojiSubscription
-  folowsSubscription
+  followsSubscription
   userId
-  avaiableEmojiNames: string[] = []
+  availableEmojiNames: string[] = []
 
   reactionLoading = false
   sanitizedContent = ''
@@ -77,13 +77,13 @@ export class PostFragmentComponent implements OnChanges, OnDestroy {
     private jwtService: JwtService,
     private messages: MessageService
   ) {
-    this.folowsSubscription = this.postService.updateFollowers.subscribe((data) => {
-      this.avaiableEmojiNames = []
+    this.followsSubscription = this.postService.updateFollowers.subscribe(() => {
+      this.availableEmojiNames = []
       this.postService.emojiCollections.forEach(
         (collection) =>
-          (this.avaiableEmojiNames = this.avaiableEmojiNames.concat(collection.emojis.map((elem) => elem.name)))
+          (this.availableEmojiNames = this.availableEmojiNames.concat(collection.emojis.map((elem) => elem.name)))
       )
-      this.avaiableEmojiNames.push('❤️')
+      this.availableEmojiNames.push('❤️')
     })
     this.userId = loginService.getLoggedUserUUID()
     this.likeSubscription = postService.postLiked.subscribe((likeEvent) => {
@@ -101,7 +101,7 @@ export class PostFragmentComponent implements OnChanges, OnDestroy {
   ngOnDestroy(): void {
     this.likeSubscription.unsubscribe()
     this.emojiSubscription.unsubscribe()
-    this.folowsSubscription.unsubscribe()
+    this.followsSubscription.unsubscribe()
   }
 
   ngOnChanges(): void {
@@ -181,7 +181,8 @@ export class PostFragmentComponent implements OnChanges, OnDestroy {
     this.emojiCollection = Object.values(emojiReactions)
       .sort(
         (a, b) =>
-          +(this.avaiableEmojiNames.includes(b.name) || !b.img) - +(this.avaiableEmojiNames.includes(a.name) || !a.img)
+          +(this.availableEmojiNames.includes(b.name) || !b.img) -
+          +(this.availableEmojiNames.includes(a.name) || !a.img)
       )
       .sort((a, b) => b.users.length - a.users.length)
     for (let emoji of this.emojiCollection) {
@@ -294,7 +295,7 @@ export class PostFragmentComponent implements OnChanges, OnDestroy {
         if (response) {
           this.messages.add({
             severity: 'success',
-            summary: `Reaction removed succesfully`
+            summary: `Reaction removed successfully`
           })
         }
       } else {
@@ -302,7 +303,7 @@ export class PostFragmentComponent implements OnChanges, OnDestroy {
         if (response) {
           this.messages.add({
             severity: 'success',
-            summary: `Reacted with ${emojiReaction.name} succesfully`
+            summary: `Reacted with ${emojiReaction.name} successfully`
           })
         }
       }
