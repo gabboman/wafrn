@@ -1,16 +1,5 @@
 import { CommonModule } from '@angular/common'
-import {
-  Component,
-  ElementRef,
-  EventEmitter,
-  Input,
-  OnChanges,
-  OnDestroy,
-  OnInit,
-  Output,
-  viewChild,
-  input
-} from '@angular/core'
+import { Component, ElementRef, Input, OnChanges, OnDestroy, viewChild } from '@angular/core'
 import { ProcessedPost } from '../../interfaces/processed-post'
 import { PollModule } from '../poll/poll.module'
 import { WafrnMediaModule } from '../wafrn-media/wafrn-media.module'
@@ -26,7 +15,6 @@ import { EmojiReactComponent } from '../emoji-react/emoji-react.component'
 import { MessageService } from '../../services/message.service'
 import { Emoji } from '../../interfaces/emoji'
 import { InjectHtmlModule } from '../../directives/inject-html/inject-html.module'
-import { AvatarSmallComponent } from '../avatar-small/avatar-small.component'
 import { PostHeaderComponent } from '../post/post-header/post-header.component'
 import { SingleAskComponent } from '../single-ask/single-ask.component'
 import { EnvironmentService } from '../../services/environment.service'
@@ -64,7 +52,7 @@ type EmojiReaction = {
 })
 export class PostFragmentComponent implements OnChanges, OnDestroy {
   @Input() fragment!: ProcessedPost
-  @Input() showCw: boolean = true
+  showSensitiveContent = false
   emojiCollection: EmojiReaction[] = []
   likeSubscription
   emojiSubscription
@@ -121,12 +109,9 @@ export class PostFragmentComponent implements OnChanges, OnDestroy {
   }
 
   initializeContent() {
-    if (this.fragment.content_warning && this.fragment.muted_words_cw) {
-      const disableCW = localStorage.getItem('disableCW') === 'true'
-    } else if (this.fragment.content_warning && !this.fragment.muted_words_cw) {
-      const disableCW = localStorage.getItem('disableCW') === 'true'
-      this.showCw = this.showCw && !disableCW
-    }
+    const disableCW = localStorage.getItem('disableCW') === 'true'
+    this.showSensitiveContent = disableCW
+
     let processedBlock: Array<string | WafrnMedia> = []
     this.sanitizedContent = this.postService.getPostHtml(this.fragment)
     if (this.fragment && this.fragment.medias && this.fragment.medias?.length > 0) {
@@ -337,7 +322,7 @@ export class PostFragmentComponent implements OnChanges, OnDestroy {
   }
 
   cwClick() {
-    this.showCw = !this.showCw
+    this.showSensitiveContent = !this.showSensitiveContent
   }
 
   ngAfterViewInit(): void {

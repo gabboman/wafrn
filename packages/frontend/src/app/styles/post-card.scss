@@ -115,18 +115,6 @@
   word-break: break-all;
 }
 
-// Post styles (legacy?)
-.post-danger {
-  background: repeating-linear-gradient(
-    45deg,
-    var(--mat-sys-surface),
-    var(--mat-sys-surface) 10px,
-    var(--mat-sys-surface-container-low) 10px,
-    var(--mat-sys-surface-container-low) 20px
-  );
-  border-radius: var(--mat-sys-corner-small);
-}
-
 .shortened-post {
   max-height: 350px;
   overflow: hidden;

@@ -5,8 +5,8 @@
   --mdc-protected-button-container-color: var(--mat-sys-surface-container-high);
 }
 
-.blurry {
-  visibility: hidden;
+.hidden {
+  display: none !important;
 }
 
 .reacted {
