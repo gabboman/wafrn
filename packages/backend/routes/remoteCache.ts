@@ -40,6 +40,12 @@ export default function cacheRoutes(app: Application) {
         const mediaLinkHash = crypto.createHash('sha256').update(mediaLink).digest('hex')
         const avatarFileName = 'cache/avatars_' + mediaLinkHash + '.avif'
         const localFileName = linkExtension ? `cache/${mediaLinkHash}.${linkExtension}` : `cache/${mediaLinkHash}`
+        if (!fs.existsSync(localFileName) && req.query.avatar) {
+          // HACK this is SO DIRTY.
+          // we make sure we have the file localy to convert it
+          await axios.get(environment.externalCacheurl + encodeURIComponent(mediaLink))
+        }
+
         if (fs.existsSync(localFileName)) {
           if (req.query.avatar) {
             if (fs.existsSync(avatarFileName)) {
