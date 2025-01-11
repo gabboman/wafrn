@@ -35,7 +35,7 @@ const routes: Routes = [
       {
         path: 'dashboard',
         loadChildren: () => import('./pages/dashboard/dashboard.module').then((m) => m.DashboardModule),
-        data: { reuseRoute: true }
+        data: { reuseRoute: false }
       },
       {
         path: 'activate',
@@ -61,7 +61,7 @@ const routes: Routes = [
       {
         path: 'blog',
         loadChildren: () => import('./pages/view-blog/view-blog.module').then((m) => m.ViewBlogModule),
-        data: { reuseRoute: true }
+        data: { reuseRoute: false } // BUG ON THIS ONE. THIS ONE GOES INTO A LOOP
       },
       {
         path: 'profile',
