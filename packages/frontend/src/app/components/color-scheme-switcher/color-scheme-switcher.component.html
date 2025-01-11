@@ -9,12 +9,13 @@
   <fa-icon [icon]="paletteIcon"></fa-icon>
 </button>
 <mat-menu #colorSchemeMenu="matMenu">
-  <button mat-menu-item (click)="setColorScheme('default')">Default</button>
-  <button mat-menu-item (click)="setColorScheme('tan')">Tan</button>
-  <button mat-menu-item (click)="setColorScheme('green')">Green</button>
-  <button mat-menu-item (click)="setColorScheme('gold')">Gold</button>
-  <hr />
-  <button mat-menu-item>
+  @for (variant of variants; track $index) {
+    <button mat-menu-item (click)="setColorScheme(variant)" [ngClass]="{ selected: variant == colorScheme() }">
+      {{ capitalize(variant) }}
+    </button>
+  }
+  <hr class="my-2" />
+  <button mat-menu-item class="pl-1">
     <mat-checkbox [checked]="centerLayoutMode" (click)="updateCenterLayout()">Center layout</mat-checkbox>
   </button>
 </mat-menu>
