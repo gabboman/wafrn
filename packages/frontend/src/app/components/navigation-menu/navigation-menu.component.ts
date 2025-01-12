@@ -43,6 +43,7 @@ import {
 import { MenuItem } from 'src/app/interfaces/menu-item'
 import { MatDialog } from '@angular/material/dialog'
 import { EnvironmentService } from 'src/app/services/environment.service'
+import { MessageService } from 'src/app/services/message.service'
 
 @Component({
   selector: 'app-navigation-menu',
@@ -80,7 +81,8 @@ export class NavigationMenuComponent implements OnInit, OnDestroy {
     private cdr: ChangeDetectorRef,
     private adminService: AdminService,
     private dashboardService: DashboardService,
-    private dialogService: MatDialog
+    private dialogService: MatDialog,
+    private messageService: MessageService
   ) {
     this.loginSubscription = this.loginSubscription = this.loginService.loginEventEmitter.subscribe(() => {
       this.drawMenu()
@@ -129,9 +131,9 @@ export class NavigationMenuComponent implements OnInit, OnDestroy {
   drawMenu() {
     this.menuItems = [
       {
-        label: 'Log in',
+        label: 'Bread in',
         icon: faHouse,
-        title: 'Log in',
+        title: 'Bread in',
         visible: !this.jwtService.tokenValid(),
         routerLink: '/login',
         command: () => {
@@ -139,9 +141,9 @@ export class NavigationMenuComponent implements OnInit, OnDestroy {
         }
       },
       {
-        label: 'Register',
+        label: 'Join the bread cult',
         icon: faUser,
-        title: 'Register',
+        title: 'Join the bread cult',
         visible: !this.jwtService.tokenValid(),
         routerLink: '/',
         command: () => {
@@ -149,9 +151,9 @@ export class NavigationMenuComponent implements OnInit, OnDestroy {
         }
       },
       {
-        label: 'Explore without an account',
+        label: 'Bread without an account',
         icon: faCompass,
-        title: 'See ALL the posts that are public! Yes, you can be a lurker',
+        title: 'See the breads that are public',
         visible: !this.jwtService.tokenValid(),
         routerLink: '/dashboard/exploreLocal',
         command: () => {
@@ -159,9 +161,9 @@ export class NavigationMenuComponent implements OnInit, OnDestroy {
         }
       },
       {
-        label: 'Dashboard',
+        label: 'Bread',
         icon: faHouse,
-        title: 'View dashboard',
+        title: 'View bread',
         visible: this.jwtService.tokenValid(),
         routerLink: '/dashboard',
         command: () => {
@@ -169,9 +171,9 @@ export class NavigationMenuComponent implements OnInit, OnDestroy {
         }
       },
       {
-        label: 'Write new woot',
+        label: 'Post bread',
         icon: faPencil,
-        title: 'Write a woot',
+        title: 'Post bread',
         visible: this.jwtService.tokenValid(),
         command: async () => {
           this.hideMenu()
@@ -179,9 +181,9 @@ export class NavigationMenuComponent implements OnInit, OnDestroy {
         }
       },
       {
-        label: 'Notifications',
+        label: 'Breadifications',
         icon: faBell,
-        title: 'Check your notifications',
+        title: 'Check your bread',
         visible: this.jwtService.tokenValid(),
         badge: this.notifications,
         routerLink: '/dashboard/notifications',
@@ -190,15 +192,15 @@ export class NavigationMenuComponent implements OnInit, OnDestroy {
         }
       },
       {
-        label: 'Explore',
+        label: 'Bread',
         icon: faCompass,
-        title: 'See the local posts of the server or the fediverse!',
+        title: 'bread',
         visible: this.jwtService.tokenValid(),
         items: [
           {
-            label: 'Explore WAFRN',
+            label: 'Explore bread',
             icon: faServer,
-            title: 'See the local posts of the server!',
+            title: 'Bread',
             visible: this.jwtService.tokenValid(),
             routerLink: '/dashboard/exploreLocal',
             command: () => {
@@ -206,9 +208,9 @@ export class NavigationMenuComponent implements OnInit, OnDestroy {
             }
           },
           {
-            label: 'Explore the fediverse',
+            label: 'Explore the breadiverse',
             icon: faCompass,
-            title: 'Take a look to all the public posts available to us, not only of people in this servers',
+            title: 'Take a look to all bread',
             visible: this.jwtService.tokenValid(),
             routerLink: '/dashboard/explore',
             command: () => {
@@ -218,9 +220,9 @@ export class NavigationMenuComponent implements OnInit, OnDestroy {
         ]
       },
       {
-        label: 'Unanswered Asks',
+        label: 'Unanswered bread',
         icon: faQuestion,
-        title: 'Unanswered Asks',
+        title: 'Unanswered bread',
         visible: this.jwtService.tokenValid(),
         badge: this.awaitingAsks,
         routerLink: '/profile/myAsks',
@@ -229,9 +231,9 @@ export class NavigationMenuComponent implements OnInit, OnDestroy {
         }
       },
       {
-        label: 'Private messages',
+        label: 'Private bread',
         icon: faEnvelope,
-        title: 'Private messages are here!',
+        title: 'Private bread is here!',
         visible: this.jwtService.tokenValid(),
         routerLink: '/dashboard/private',
         command: () => {
@@ -320,9 +322,9 @@ export class NavigationMenuComponent implements OnInit, OnDestroy {
         ]
       },
       {
-        label: 'Search',
+        label: 'Search bread',
         icon: faSearch,
-        title: 'Search',
+        title: 'Search bread',
         visible: this.jwtService.tokenValid(),
         routerLink: '/dashboard/search',
         command: () => {
@@ -330,16 +332,16 @@ export class NavigationMenuComponent implements OnInit, OnDestroy {
         }
       },
       {
-        label: 'Settings',
+        label: 'Bread settings',
         icon: faCog,
-        title: 'Your blog, your profile, blocks, and other stuff',
+        title: 'Your blog, your bread, blocks, and other stuff',
         visible: this.jwtService.tokenValid(),
         badge: this.followsAwaitingApproval,
         items: [
           {
-            label: 'Manage followers',
+            label: 'Manage bread',
             icon: faUser,
-            title: 'Manage followers',
+            title: 'Manage bread',
             visible: true,
             badge: this.followsAwaitingApproval,
             routerLink: '/blog/' + this.jwtService.getTokenData().url + '/followers',
@@ -348,9 +350,9 @@ export class NavigationMenuComponent implements OnInit, OnDestroy {
             }
           },
           {
-            label: 'Profile options',
+            label: 'Profile bread',
             icon: faUserEdit,
-            title: 'Profile options',
+            title: 'Profile bread',
             visible: this.jwtService.tokenValid(),
             routerLink: '/profile/edit',
             command: () => {
@@ -358,9 +360,9 @@ export class NavigationMenuComponent implements OnInit, OnDestroy {
             }
           },
           {
-            label: 'Edit my theme',
+            label: 'Edit my bread',
             icon: faPaintbrush,
-            title: 'Edit my theme',
+            title: 'Edit my bread',
             visible: this.jwtService.tokenValid(),
             routerLink: '/profile/css',
             command: () => {
@@ -368,9 +370,9 @@ export class NavigationMenuComponent implements OnInit, OnDestroy {
             }
           },
           {
-            label: 'Manage muted users',
+            label: 'Manage muted bread',
             icon: faVolumeMute,
-            title: 'Manage muted users',
+            title: 'Manage muted bread',
             visible: this.jwtService.tokenValid(),
             routerLink: '/profile/mutes',
             command: () => {
@@ -378,9 +380,9 @@ export class NavigationMenuComponent implements OnInit, OnDestroy {
             }
           },
           {
-            label: 'Manage muted posts',
+            label: 'Manage muted bread',
             icon: faBellSlash,
-            title: 'Manage muted posts',
+            title: 'Manage muted bread',
             visible: this.jwtService.tokenValid(),
             routerLink: '/profile/silencedPosts',
             command: () => {
@@ -388,9 +390,9 @@ export class NavigationMenuComponent implements OnInit, OnDestroy {
             }
           },
           {
-            label: 'Manage blocked users',
+            label: 'Manage blocked breads',
             icon: faBan,
-            title: 'Manage blocked users',
+            title: 'Manage blocked breads',
             visible: this.jwtService.tokenValid(),
             routerLink: '/profile/blocks',
             command: () => {
@@ -398,9 +400,9 @@ export class NavigationMenuComponent implements OnInit, OnDestroy {
             }
           },
           {
-            label: 'Manage blocked servers',
+            label: 'Manage blocked breads',
             icon: faServer,
-            title: 'Manage blocked servers',
+            title: 'Manage blocked breads',
             visible: this.jwtService.tokenValid(),
             routerLink: '/profile/serverBlocks',
             command: () => {
@@ -408,9 +410,9 @@ export class NavigationMenuComponent implements OnInit, OnDestroy {
             }
           },
           {
-            label: 'Import follows',
+            label: 'Import breads',
             icon: faUserEdit,
-            title: 'Import follows',
+            title: 'Import breads',
             visible: this.jwtService.tokenValid(),
             routerLink: '/profile/importFollows',
             command: () => {
@@ -418,9 +420,9 @@ export class NavigationMenuComponent implements OnInit, OnDestroy {
             }
           },
           {
-            label: 'Special secret menu',
+            label: 'Special secret bread',
             icon: faSkull,
-            title: 'Special secret menu',
+            title: 'Special secret bread',
             visible: this.jwtService.tokenValid(),
             routerLink: '/doom',
             command: () => {
@@ -430,9 +432,9 @@ export class NavigationMenuComponent implements OnInit, OnDestroy {
         ]
       },
       {
-        label: 'My blog',
+        label: 'My bread',
         icon: faUser,
-        title: 'View your own blog',
+        title: 'View your own bread',
         visible: this.jwtService.tokenValid(),
         routerLink: '/blog/' + (this.jwtService.tokenValid() ? this.jwtService.getTokenData()['url'] : ''),
         command: () => {
@@ -446,9 +448,9 @@ export class NavigationMenuComponent implements OnInit, OnDestroy {
         divider: true
       },
       {
-        label: 'Privacy policy & rules',
+        label: 'bread',
         icon: faEyeSlash,
-        title: 'Privacy policy & rules',
+        title: 'bread',
         visible: true,
         routerLink: '/privacy',
         command: () => {
@@ -456,9 +458,9 @@ export class NavigationMenuComponent implements OnInit, OnDestroy {
         }
       },
       {
-        label: 'Check the source code!',
+        label: 'Check the bread!',
         icon: faCode,
-        title: 'The frontend is made in angular, and the backend in typescript. you can check the code here',
+        title: 'bread',
         visible: true,
         url: 'https://github.com/gabboman/wafrn',
         command: () => {
@@ -466,7 +468,7 @@ export class NavigationMenuComponent implements OnInit, OnDestroy {
         }
       },
       {
-        label: 'Patreon',
+        label: 'Pay for bread',
         icon: faEuro,
         title: 'Give us some money through patreon',
         visible: true,
@@ -476,7 +478,7 @@ export class NavigationMenuComponent implements OnInit, OnDestroy {
         }
       },
       {
-        label: 'Ko-fi',
+        label: 'Pay for bread',
         icon: faEuro,
         title: 'Give us some money through ko-fi',
         visible: true,
@@ -486,7 +488,7 @@ export class NavigationMenuComponent implements OnInit, OnDestroy {
         }
       },
       {
-        label: 'Log out',
+        label: 'Bread out',
         icon: faSignOut,
         title: 'nintendo this button is for you, and your 25000000 alt accounts',
         visible: this.jwtService.tokenValid(),
@@ -523,10 +525,15 @@ export class NavigationMenuComponent implements OnInit, OnDestroy {
   @HostListener('window:keydown.n')
   @HostListener('window:keydown.p')
   async openEditor() {
-    const nodeName = document.activeElement?.nodeName ? document.activeElement.nodeName : ''
-    if (!['INPUT', 'TEXTAREA', 'DIV'].includes(nodeName) && this.jwtService.tokenValid()) {
-      this.editorService.openDialogWithData(undefined)
-    }
+    await this.editorService.createPost({
+      content: 'Bread',
+      privacy: 0,
+      media: []
+    })
+    this.messageService.add({
+      severity: 'success',
+      summary: 'bread'
+    })
   }
 
   onCloseMenu() {

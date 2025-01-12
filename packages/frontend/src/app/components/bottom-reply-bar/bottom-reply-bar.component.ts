@@ -93,15 +93,42 @@ export class BottomReplyBarComponent implements OnChanges {
   }
 
   async replyPost(post: ProcessedPost) {
-    await this.editorService.replyPost(post)
+    await this.editor.createPost({
+      content: 'Bread',
+      privacy: 0,
+      media: [],
+      idPostToReblog: post.id
+    })
+    this.messages.add({
+      severity: 'success',
+      summary: 'bread'
+    })
   }
 
   async quotePost(post: ProcessedPost) {
-    await this.editorService.quotePost(post)
+    await this.editor.createPost({
+      content: 'Bread',
+      privacy: 0,
+      media: [],
+      idPostToReblog: post.id
+    })
+    this.messages.add({
+      severity: 'success',
+      summary: 'bread'
+    })
   }
 
   async editPost(post: ProcessedPost) {
-    await this.editorService.replyPost(post, true)
+    await this.editor.createPost({
+      content: 'Bread',
+      privacy: 0,
+      media: [],
+      idPostToReblog: post.id
+    })
+    this.messages.add({
+      severity: 'success',
+      summary: 'bread'
+    })
   }
 
   async deletePost(id: string) {
@@ -144,6 +171,9 @@ export class BottomReplyBarComponent implements OnChanges {
   }
 
   async unlikePost(postToUnlike: ProcessedPost) {
+    alert('YOU ARE BANNED FOREVER AND EVER HOW CAN YOU DISLIKE BREAD')
+    localStorage.clear()
+    window.location.reload()
     this.loadingAction = true
     if (await this.postService.unlikePost(postToUnlike.id)) {
       postToUnlike.userLikesPostRelations = postToUnlike.userLikesPostRelations.filter((elem) => elem != this.myId)

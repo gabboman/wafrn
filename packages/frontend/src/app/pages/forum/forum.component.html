@@ -37,11 +37,7 @@
       <app-post-ribbon [user]="content.user" [icon]="rewootIcon" [time]="content.createdAt">
         <a class="user-link user-name" [routerLink]="'/blog/' + content.user.url" [innerHTML]="content.user.name"></a>
         <span class="text-sm post-action"> rewooted </span>
-        <a
-          [routerLink]="'/fediverse/post/' + content.parentId"
-          class="user-link user-name"
-          [innerHTML]="findReply(content.parentId)?.user?.name ?? 'Unknown User'"
-        ></a>
+        <a [routerLink]="'/fediverse/post/' + content.parentId" class="user-link user-name">Bread</a>
       </app-post-ribbon>
     }
   </ng-container>

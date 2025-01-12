@@ -3,12 +3,14 @@
     <div class="flex gap-2 min-w-0">
       <div class="flex gap-2 mr-auto min-w-0">
         <app-avatar-small [user]="fragment.user"></app-avatar-small>
-        <a class="flex flex-column min-w-0 user-link" [routerLink]="!disableLink() ? '/blog/' + fragment.user.url : null">
+        <a
+          class="flex flex-column min-w-0 user-link"
+          [routerLink]="!disableLink() ? '/blog/' + fragment.user.url : null"
+        >
           <span class="no-underline user-name"
-            ><span [innerHTML]="fragment.user.name"></span>
-            <span class="text-sm post-action">{{ headerText() }}</span></span
+            ><span>Bread</span> <span class="text-sm post-action">{{ headerText() }}</span></span
           >
-          <span class="text-sm user-url" [innerText]="fragment.user.url"></span>
+          <span class="text-sm user-url">Bread</span>
         </a>
       </div>
     </div>

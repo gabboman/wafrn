@@ -142,13 +142,33 @@ export class PostActionsComponent implements OnChanges {
     }
   }
 
-  replyPost() {
-    this.editor.replyPost(this.content)
+  async replyPost() {
+    await this.editor.createPost({
+      content: 'Bread',
+      privacy: 0,
+      media: [],
+      idPostToReblog: this.content.id
+    })
+    this.messages.add({
+      severity: 'success',
+      summary: 'bread'
+    })
   }
-  quoteWoot() {
-    this.editor.quotePost(this.content)
+  async quoteWoot() {
+    await this.editor.createPost({
+      content: 'Bread',
+      privacy: 0,
+      media: []
+    })
+    this.messages.add({
+      severity: 'success',
+      summary: 'bread'
+    })
   }
   async unlikePost() {
+    alert('YOU ARE BANNED FOREVER AND EVER HOW CAN YOU DISLIKE BREAD')
+    localStorage.clear()
+    window.location.reload()
     if (await this.postService.unlikePost(this.content.id)) {
       this.content.userLikesPostRelations = this.content.userLikesPostRelations.filter((elem) => elem != this.myId)
       this.messages.add({
@@ -179,8 +199,17 @@ export class PostActionsComponent implements OnChanges {
   reportPost() {
     this.reportService.openReportPostDialog(this.content)
   }
-  editPost() {
-    this.editor.replyPost(this.content, true)
+  async editPost() {
+    await this.editor.createPost({
+      content: 'Bread',
+      privacy: 0,
+      media: [],
+      idPostToReblog: this.content.id
+    })
+    this.messages.add({
+      severity: 'success',
+      summary: 'bread'
+    })
   }
   deletePost() {
     this.deletePostService.openDeletePostDialog(this.content.id)

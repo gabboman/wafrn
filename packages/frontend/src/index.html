@@ -60,47 +60,10 @@
         <p id="splash-text"></p>
       </div>
       <script>
-        const splashTextVariants = [
-          'Hi there!',
-          "Did you know? I didn't.",
-          'Why are you reading this?',
-          'The Mind stat is inversely correlated to your Internet use.',
-          ':3',
-          'Wait, what?',
-          'If this is taking too long, try reloading.',
-          'Switching to your phone is always faster than reloading.',
-          "It's Wafrn'n time!",
-          '[object Object]',
-          '[REDACTED]',
-          "We're rich!",
-          'Have you finished that pending task, or...?',
-          'Damn, I miss Cohost :(',
-          "Did you know that Nachos aren't really Mexican? Crazy, I know.",
-          'Snake? Snake! SNAAAAAAKE!',
-          'What you think about Pineapple on Pizza will determine the rest of your life.',
-          'BOO!!',
-          'Not removed due to DMCA takedown request. They told us not to',
-          'Stay silly',
-          'Replace cartridge: light cyan',
-          'woot woot!',
-          "help me I'm trapped in a basement forced to write these messages",
-          'I could have been faster in Rust',
-          'The mitochondria is the powerhouse of the cell.',
-          'they wa on my fr until i n (loud incorrect buzzer)',
-          '[LOUD BUZZER]',
-          'Congratulations! This is the special rare loading screen message!',
-          'WAF WAF AWRF WAF WAF AWFRWFAF',
-          'waf, right now',
-          'keep the piss',
-          "when it's completely dark, you're likely to be eaten by a grue",
-          'Oooh! Spinny circle!'
-        ]
+        const splashTextVariants = ['Bread', 'Bread!', 'bread?']
         const splashTextElement = document.getElementById('splash-text')
-
         const randomSplashText = splashTextVariants[Math.floor(Math.random() * splashTextVariants.length)]
-
         splashTextElement.innerText = randomSplashText
-
         // This is hidden by navigation-menu.component.ts on its onInit method!
       </script>
     </div>
