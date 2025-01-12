@@ -9,4 +9,5 @@ export interface SimplifiedUser {
   description?: string
   emojis?: Emoji[]
   email?: string
+  registerIp?: string
 }

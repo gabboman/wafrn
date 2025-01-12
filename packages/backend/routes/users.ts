@@ -532,11 +532,13 @@ export default function userRoutes(app: Application) {
         await Promise.all([followed, followers])
       }
 
-      const postCount = blog ? await Post.count({
-        where: {
-          userId: blog.id
-        }
-      }) : 0
+      const postCount = blog
+        ? await Post.count({
+            where: {
+              userId: blog.id
+            }
+          })
+        : 0
 
       followed = await followed
       followers = await followers

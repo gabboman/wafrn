@@ -16,8 +16,12 @@
     <div [innerText]="user.email" class="line-height-3"></div>
   </div>
   <div class="flex justify-content-center flex-wrap mt-3 mb-2">
+    <div style="word-wrap: anywhere" [innerHtml]="user.registerIp"></div>
+  </div>
+  <div class="flex justify-content-center flex-wrap mt-3 mb-2">
     <div style="word-wrap: anywhere" [innerHtml]="user.description"></div>
   </div>
+
   <button (mousedown)="activateUser(user.id)" mat-flat-button color="primary">Activate user</button>
   <button (mousedown)="requireExtra(user.id)" mat-flat-button color="warn">Require extra steps</button>
 </mat-card>

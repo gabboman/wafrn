@@ -246,7 +246,7 @@ export default function adminRoutes(app: Application) {
           },
           banned: false
         },
-        attributes: ['id', 'url', 'avatar', 'description', 'email']
+        attributes: ['id', 'url', 'avatar', 'description', 'email', 'registerIp']
       })
       res.send(notActiveUsers)
     }
