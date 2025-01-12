@@ -110,7 +110,7 @@ export default function userRoutes(app: Application) {
               birthDate: new Date(req.body.birthDate),
               avatar: avatarURL,
               activated: false,
-              registerIp: getIp(req),
+              registerIp: getIp(req, true),
               lastLoginIp: 'ACCOUNT_NOT_ACTIVATED',
               banned: false,
               activationCode,
@@ -412,7 +412,7 @@ export default function userRoutes(app: Application) {
                   { expiresIn: '31536000s' }
                 )
               })
-              userWithEmail.lastLoginIp = getIp(req)
+              userWithEmail.lastLoginIp = getIp(req, true)
               userWithEmail.save()
             } else {
               res.send({
