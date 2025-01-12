@@ -31,6 +31,7 @@ import { PostsService } from '../../services/posts.service'
 import { UtilsService } from '../../services/utils.service'
 import { EnvironmentService } from '../../services/environment.service'
 import { firstValueFrom } from 'rxjs'
+import { faBluesky } from '@fortawesome/free-brands-svg-icons'
 @Component({
   selector: 'app-post-actions',
   imports: [CommonModule, MatButtonModule, MatMenuModule, FontAwesomeModule],
@@ -52,6 +53,7 @@ export class PostActionsComponent implements OnChanges {
   reblogIcon = faReply
   quickReblogIcon = faRepeat
   shareExternalIcon = faArrowUpRightFromSquare
+  bskyIcon = faBluesky
   goExternalPost = faGlobe
   reportIcon = faTriangleExclamation
   deleteIcon = faTrash
@@ -106,12 +108,19 @@ export class PostActionsComponent implements OnChanges {
   viewOriginalPost() {
     let remoteId = this.content.remotePostId
     if (this.content.bskyUri) {
-      console.log(this.content.bskyUri)
       const parts = this.content.bskyUri.split('/app.bsky.feed.post/')
       const userDid = parts[0].split('at://')[1]
       remoteId = `https://bsky.app/profile/${userDid}/post/${parts[1]}`
     }
     window.open(remoteId, '_blank')
+  }
+
+  viewOnBsky() {
+    if (this.content.bskyUri) {
+      const parts = this.content.bskyUri.split('/app.bsky.feed.post/')
+      const userDid = parts[0].split('at://')[1]
+      window.open(`https://bsky.app/profile/${userDid}/post/${parts[1]}`, '_blank')
+    }
   }
 
   async quickReblog() {
