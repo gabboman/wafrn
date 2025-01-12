@@ -32,7 +32,7 @@ async function sendMail() {
     `
     console.log(`mailing ${user.url}`)
     await sendActivationEmail(user.email, '', subject, body)
-    await wait(2000)
+    await wait(1500)
   }
 }
 
