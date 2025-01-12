@@ -93,7 +93,8 @@ async function postToAtproto(post: Model<any, any>, agent: BskyAgent) {
     facets: rt.facets,
     createdAt: new Date(post.createdAt).toISOString(),
     fullTexk: post.content,
-    fullTags: tags
+    fullTags: tags,
+    fediverseId: `${environment.frontendUrl}/fediverse/post/${post.id}`
   }
   if (bskyMedias.length) {
     res.embed = {
