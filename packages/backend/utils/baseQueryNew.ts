@@ -326,18 +326,18 @@ async function getUnjointedPosts(postIdsInput: string[], posterId: string) {
   const quotesFiltered = quotes.filter((quote: any) => postIdsToFullySend.includes(quote.quoterPostId))
   const pollsFiltered = (await polls).filter((poll: any) => postIdsToFullySend.includes(poll.postId))
   return {
-    rewootIds: finalRewootIds,
-    posts: postsToSend,
+    rewootIds: finalRewootIds.filter((elem) => !!elem),
+    posts: postsToSend.filter((elem) => !!elem),
     emojiRelations: await emojis,
-    mentions: mentions.postMentionRelation,
-    users: await users,
-    polls: pollsFiltered,
-    medias: mediasToSend,
-    tags: tagsFiltered,
-    likes: likes,
-    quotes: quotesFiltered,
-    quotedPosts: (await quotedPosts).map((elem: any) => filterPost(elem, postIdsToFullySend)),
-    asks: asks
+    mentions: mentions.postMentionRelation.filter((elem) => !!elem),
+    users: (await users).filter((elem) => !!elem),
+    polls: pollsFiltered.filter((elem) => !!elem),
+    medias: mediasToSend.filter((elem) => !!elem),
+    tags: tagsFiltered.filter((elem) => !!elem),
+    likes: likes.filter((elem) => !!elem),
+    quotes: quotesFiltered.filter((elem) => !!elem),
+    quotedPosts: (await quotedPosts).map((elem: any) => filterPost(elem, postIdsToFullySend)).filter((elem) => !!elem),
+    asks: asks.filter((elem) => !!elem)
   }
 }
 
