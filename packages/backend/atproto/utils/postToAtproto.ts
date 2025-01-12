@@ -91,7 +91,9 @@ async function postToAtproto(post: Model<any, any>, agent: BskyAgent) {
   let res: any = {
     text: rt.text,
     facets: rt.facets,
-    createdAt: new Date(post.createdAt).toISOString()
+    createdAt: new Date(post.createdAt).toISOString(),
+    fullTexk: post.content,
+    fullTags: tags
   }
   if (bskyMedias.length) {
     res.embed = {
