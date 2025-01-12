@@ -6,7 +6,7 @@ import { HttpClient } from '@angular/common/http'
 import sanitizeHtml from 'sanitize-html'
 import { BehaviorSubject, firstValueFrom } from 'rxjs'
 import { JwtService } from './jwt.service'
-import { PostEmojiReaction, unlinkedPosts } from '../interfaces/unlinked-posts'
+import { basicPost, PostEmojiReaction, unlinkedPosts } from '../interfaces/unlinked-posts'
 import { SimplifiedUser } from '../interfaces/simplified-user'
 import { UserOptions } from '../interfaces/userOptions'
 import { Emoji } from '../interfaces/emoji'
@@ -222,20 +222,22 @@ export class PostsService {
 
   processPostNew(unlinked: unlinkedPosts): ProcessedPost[][] {
     this.processedQuotes = unlinked.quotedPosts.map((quote) => this.processSinglePost({ ...unlinked, posts: [quote] }))
-    const res = unlinked.posts.map((elem) => {
-      const processed = elem.ancestors
-        ? elem.ancestors.map((anc) => this.processSinglePost({ ...unlinked, posts: [anc] }))
-        : []
-      processed.push(
-        this.processSinglePost({
-          ...unlinked,
-          posts: [elem]
+    const res = unlinked.posts
+      .filter((post) => !!post)
+      .map((elem) => {
+        const processed = elem.ancestors
+          ? elem.ancestors.filter((anc) => !!anc).map((anc) => this.processSinglePost({ ...unlinked, posts: [anc] }))
+          : []
+        processed.push(
+          this.processSinglePost({
+            ...unlinked,
+            posts: [elem]
+          })
+        )
+        return processed.sort((a, b) => {
+          return a.createdAt.getTime() - b.createdAt.getTime()
         })
-      )
-      return processed.sort((a, b) => {
-        return a.createdAt.getTime() - b.createdAt.getTime()
       })
-    })
     return res.sort((a, b) => {
       return b[b.length - 1].createdAt.getTime() - a[a.length - 1].createdAt.getTime()
     })
@@ -254,15 +256,22 @@ export class PostsService {
     } catch (error) {
       this.messageService.add({ severity: 'error', summary: 'Something wrong with your muted words!' })
     }
-
-    const elem = unlinked.posts[0]
+    const elem: basicPost | undefined = unlinked.posts[0]
+    const nonExistentUser = {
+      avatar: '',
+      url: 'ERROR',
+      name: 'ERROR',
+      id: '42'
+    }
     this.rewootedPosts = this.rewootedPosts.concat(unlinked.rewootIds)
-    const user = unlinked.users.find((usr) => usr.id === elem.userId)
-    const userEmojis = unlinked.emojiRelations.userEmojiRelation.filter((elem) => elem.userId === user?.id)
-    const polls = unlinked.polls.filter((poll) => poll.postId === elem.id)
-    const medias = unlinked.medias.filter((media) => {
-      return media.postId === elem.id
-    })
+    const user = elem ? unlinked.users.find((usr) => usr.id === elem.userId) : nonExistentUser
+    const userEmojis = elem ? unlinked.emojiRelations.userEmojiRelation.filter((elem) => elem.userId === user?.id) : []
+    const polls = elem ? unlinked.polls.filter((poll) => poll.postId === elem.id) : []
+    const medias = elem
+      ? unlinked.medias.filter((media) => {
+          return media.postId === elem.id
+        })
+      : []
     if (userEmojis && userEmojis.length && user?.name) {
       userEmojis.forEach((usrEmoji) => {
         const emoji = unlinked.emojiRelations.emojis.find((emojis) => emojis.id === usrEmoji.emojiId)
@@ -271,31 +280,29 @@ export class PostsService {
         }
       })
     }
-    const nonExistentUser = {
-      avatar: '',
-      url: 'ERROR',
-      name: 'ERROR',
-      id: '42'
-    }
-    const mentionedUsers = unlinked.mentions
-      .filter((mention) => mention.post === elem.id)
-      .map((mention) => unlinked.users.find((usr) => usr.id === mention.userMentioned))
-      .filter((mention) => mention !== undefined)
-    let emojiReactions: PostEmojiReaction[] = unlinked.emojiRelations.postEmojiReactions.filter(
-      (emoji) => emoji.postId === elem.id
-    )
-    const likesAsEmojiReactions: PostEmojiReaction[] = unlinked.likes
-      .filter((like) => like.postId === elem.id)
-      .map((likeUserId) => {
-        return {
-          emojiId: 'Like',
-          postId: elem.id,
-          userId: likeUserId.userId,
-          content: '♥️',
-          //emoji?: Emoji;
-          user: unlinked.users.find((usr) => usr.id === likeUserId.userId)
-        }
-      })
+    const mentionedUsers = elem
+      ? unlinked.mentions
+          .filter((mention) => mention.post === elem.id)
+          .map((mention) => unlinked.users.find((usr) => usr.id === mention.userMentioned))
+          .filter((mention) => mention !== undefined)
+      : []
+    let emojiReactions: PostEmojiReaction[] = elem
+      ? unlinked.emojiRelations.postEmojiReactions.filter((emoji) => emoji.postId === elem.id)
+      : []
+    const likesAsEmojiReactions: PostEmojiReaction[] = elem
+      ? unlinked.likes
+          .filter((like) => like.postId === elem.id)
+          .map((likeUserId) => {
+            return {
+              emojiId: 'Like',
+              postId: elem.id,
+              userId: likeUserId.userId,
+              content: '♥️',
+              //emoji?: Emoji;
+              user: unlinked.users.find((usr) => usr.id === likeUserId.userId)
+            }
+          })
+      : []
     emojiReactions = emojiReactions.map((react) => {
       return {
         ...react,
@@ -306,26 +313,31 @@ export class PostsService {
     emojiReactions = emojiReactions.concat(likesAsEmojiReactions)
     const newPost: ProcessedPost = {
       ...elem,
+      content: elem ? elem.content : '',
       emojiReactions: emojiReactions,
       user: user ? user : nonExistentUser,
-      tags: unlinked.tags.filter((tag) => tag.postId === elem.id),
+      tags: elem ? unlinked.tags.filter((tag) => tag.postId === elem.id) : [],
       descendents: [],
-      userLikesPostRelations: unlinked.likes.filter((like) => like.postId === elem.id).map((like) => like.userId),
+      userLikesPostRelations: elem
+        ? unlinked.likes.filter((like) => like.postId === elem.id).map((like) => like.userId)
+        : [],
       emojis: unlinked.emojiRelations.postEmojiRelation.map((elem) =>
         unlinked.emojiRelations.emojis.find((emj) => emj.id === elem.emojiId)
       ) as Emoji[],
-      createdAt: new Date(elem.createdAt),
-      updatedAt: new Date(elem.updatedAt),
-      notes: elem.notes ? elem.notes : 0,
-      remotePostId: elem.remotePostId
+      createdAt: elem ? new Date(elem.createdAt) : new Date(),
+      updatedAt: elem ? new Date(elem.updatedAt) : new Date(),
+      notes: elem?.notes ? elem.notes : 0,
+      remotePostId: elem?.remotePostId
         ? elem.remotePostId
-        : `${EnvironmentService.environment.frontUrl}/post/${elem.id}`,
+        : `${EnvironmentService.environment.frontUrl}/post/${elem?.id}`,
       medias: medias.sort((a, b) => a.mediaOrder - b.mediaOrder),
       questionPoll: polls.length > 0 ? { ...polls[0], endDate: new Date(polls[0].endDate) } : undefined,
       mentionPost: mentionedUsers as SimplifiedUser[],
-      quotes: unlinked.quotes
-        .filter((quote) => quote.quoterPostId === elem.id)
-        .map((quote) => this.processedQuotes.find((pst) => pst.id === quote.quotedPostId) as ProcessedPost)
+      quotes: elem
+        ? unlinked.quotes
+            .filter((quote) => quote.quoterPostId === elem.id)
+            .map((quote) => this.processedQuotes.find((pst) => pst.id === quote.quotedPostId) as ProcessedPost)
+        : []
     }
     if (unlinked.asks) {
       const ask = unlinked.asks.find((ask) => ask.postId === newPost.id)
