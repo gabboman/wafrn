@@ -105,7 +105,8 @@ video {
 
 /* Limit the height AGAIN */
 /* Seriously when and why did we undo this */
-.media-content-container {
+.media-content-container:has(img),
+.media-content-container video {
   max-height: 80vh;
 }
 
