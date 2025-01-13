@@ -1,5 +1,15 @@
 import { CommonModule } from '@angular/common'
-import { Component, computed, ElementRef, Input, OnChanges, OnDestroy, viewChild } from '@angular/core'
+import {
+  Component,
+  computed,
+  ElementRef,
+  EventEmitter,
+  Input,
+  OnChanges,
+  OnDestroy,
+  Output,
+  viewChild
+} from '@angular/core'
 import { ProcessedPost } from '../../interfaces/processed-post'
 import { PollModule } from '../poll/poll.module'
 import { WafrnMediaModule } from '../wafrn-media/wafrn-media.module'
@@ -52,6 +62,7 @@ type EmojiReaction = {
 })
 export class PostFragmentComponent implements OnChanges, OnDestroy {
   @Input() fragment!: ProcessedPost
+  @Output() forceExpand = new EventEmitter<boolean>()
   showSensitiveContent = false
   emojiCollection: EmojiReaction[] = []
   likeSubscription
@@ -328,6 +339,7 @@ export class PostFragmentComponent implements OnChanges, OnDestroy {
   }
 
   cwClick() {
+    this.forceExpand.emit(true)
     this.showSensitiveContent = !this.showSensitiveContent
   }
 

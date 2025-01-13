@@ -39,7 +39,7 @@
         id="fragment"
       >
         <app-post-header class="w-full" [fragment]="content" [simplified]="false"></app-post-header>
-        <app-post-fragment [fragment]="content"></app-post-fragment>
+        <app-post-fragment (forceExpand)="expanded = true" [fragment]="content"></app-post-fragment>
       </div>
     }
   </div>
