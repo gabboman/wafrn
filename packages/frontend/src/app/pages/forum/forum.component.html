@@ -1,6 +1,6 @@
 <app-loader *ngIf="loading"></app-loader>
 <ng-container *ngIf="!loading">
-  <app-post [post]="post" [showFull]="true" class="initial-post"></app-post>
+  <app-post [post]="post" class="initial-post"></app-post>
   <div
     *ngIf="(!post[post.length - 1].remotePostId.startsWith(localUrl) && userLoggedIn) || post.length > 1"
     class="px-3 mt-3 mb-6 lg:mx-4 wafrn-container flex flex-column gap-2 reply-loader"

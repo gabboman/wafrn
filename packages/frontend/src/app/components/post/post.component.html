@@ -20,7 +20,7 @@
   }
   <div
     [ngClass]="{
-      'shortened-post': postCanExpand() && !postExpanded
+      'shortened-post': postCanExpand() && !expanded
     }"
   >
     @for (content of post; track $index; let index = $index) {
@@ -44,13 +44,13 @@
     }
   </div>
   <button
-    *ngIf="postCanExpand() && !postExpanded"
+    *ngIf="postCanExpand() && !(post.length === originalPostContent.length)"
     color="accent"
     class="w-full mb-3 mt-2 w-full"
     mat-stroked-button
     (mousedown)="expandPost()"
   >
-    Expand woot ({{ originalPostContent.length }} posts)
+    Expand woot ({{ originalPostContent.length - postsExpanded }} posts)
   </button>
   <hr />
   <app-bottom-reply-bar [fragment]="finalPost" [notes]="notes"></app-bottom-reply-bar>

@@ -38,6 +38,7 @@ import {
 } from '@fortawesome/free-solid-svg-icons'
 import { EnvironmentService } from 'src/app/services/environment.service'
 import { SimplifiedUser } from 'src/app/interfaces/simplified-user'
+import { environment } from 'src/environments/environment'
 
 @Component({
   selector: 'app-post',
@@ -48,8 +49,9 @@ import { SimplifiedUser } from 'src/app/interfaces/simplified-user'
 export class PostComponent implements OnInit, OnChanges, OnDestroy, AfterViewInit {
   @Input() post!: ProcessedPost[]
   @Input() showFull: boolean = false
-  postCanExpand = computed(() => this.veryLongPost || !this.showFull)
-  postExpanded = false
+  postCanExpand = computed(() => this.veryLongPost || !this.showFull || !this.expanded)
+  postsExpanded = EnvironmentService.environment.shortenPosts
+  expanded = false
   originalPostContent: ProcessedPost[] = []
   ready = false
   mediaBaseUrl = EnvironmentService.environment.baseMediaUrl
@@ -196,7 +198,8 @@ export class PostComponent implements OnInit, OnChanges, OnDestroy, AfterViewIni
   }
 
   expandPost() {
-    this.post = this.originalPostContent
-    this.postExpanded = true
+    this.expanded = true
+    this.postsExpanded = this.postsExpanded + 100
+    this.post = this.originalPostContent.slice(0, this.postsExpanded)
   }
 }
