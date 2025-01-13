@@ -102,3 +102,16 @@ video {
     bottom: unset;
   }
 }
+
+/* Limit the height AGAIN */
+/* Seriously when and why did we undo this */
+.media-content-container {
+  max-height: 80vh;
+}
+
+/* fix aspect ratio/stretch */
+.media-content-container .displayed-image {
+  width: auto;
+  height: auto;
+  aspect-ratio: auto;
+}
