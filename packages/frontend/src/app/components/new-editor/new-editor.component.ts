@@ -199,7 +199,7 @@ export class NewEditorComponent implements OnDestroy {
     this.updateMentionsPanelPosition()
     const textToMatch = (' ' +
       this.postCreatorForm.value.content?.slice(cursorPosition - 250, cursorPosition).replaceAll('\n', ' ')) as string
-    const matches = textToMatch.match(/ [@:][\w-\.]+@?[\w-\.]*$/)
+    const matches = textToMatch.match(/[\n\r\s]?[@:][\w-\.]+@?[\w-\.]*$/)
     if (matches && matches.length > 0) {
       const match = matches[0].trim()
       if (match.startsWith('@')) {
@@ -234,7 +234,7 @@ export class NewEditorComponent implements OnDestroy {
   insertMention(user: { img: string; text: string }) {
     let initialPart = (' ' + this.postCreatorForm.value.content?.slice(0, this.cursorTextPosition)) as string
     const userUrl = user.text.startsWith(':') ? user.text : user.text.startsWith('@') ? user.text : '@' + user.text
-    initialPart = initialPart.replace(/ [@:][A-Z0-9a-z_.@-]*$/i, ' ' + userUrl)
+    initialPart = initialPart.replace(/[[@:][A-Z0-9a-z_.@-]*$/i, userUrl)
     let finalPart = this.postCreatorForm.value.content?.slice(this.cursorTextPosition) as string
     this.postCreatorForm.controls['content'].patchValue(initialPart.trim() + ' ' + finalPart.trim())
     this.suggestions = []
