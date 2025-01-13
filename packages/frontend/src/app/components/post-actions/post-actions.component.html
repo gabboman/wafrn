@@ -11,7 +11,7 @@
     <fa-icon class="mr-2" [icon]="shareIcon"></fa-icon>Share with wafrn
   </button>
   <button
-    *ngIf="content.remotePostId && !content.bskyUri && content.user.url.startsWith('@')"
+    *ngIf="content.remotePostId && content.user.url.startsWith('@')"
     (mousedown)="shareOriginalPost()"
     mat-menu-item
   >
