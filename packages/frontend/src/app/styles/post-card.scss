@@ -120,19 +120,16 @@
   overflow: hidden;
 }
 
-.quoted-post {
-  position: relative;
-  padding: 0.5em;
-  -webkit-box-shadow: 0px 0px 5px 2px rgba(0, 0, 0, 0.3);
-  -moz-box-shadow: 0px 0px 5px 2px rgba(0, 0, 0, 0.3);
-  box-shadow: 0px 0px 5px 2px rgba(0, 0, 0, 0.3);
-  border-radius: 0.25em;
-  cursor: pointer !important;
-  margin-bottom: 4px;
-  border: 1px solid var(--mat-sys-outline);
-  overflow: hidden;
+.quoted-post, .ask-container {
+	padding: 0.5em;	
+	cursor: pointer !important;
+  border-radius: 12px;
+  border: 1px solid var(--mat-sys-outline-variant);
+  max-height: 256px;
   flex-shrink: 0;
-  max-height: 128px;
+  overflow: hidden;
+  margin-bottom: 4px;
+  position: relative;
 }
 
 // youtube player
