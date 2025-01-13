@@ -14,7 +14,11 @@
       Hide
     } @else {
       Show sensitive content
-      <span class="text-xs">({{ contentLineCount() }} line{{ contentLineCount() === 1 ? '' : 's' }})</span>
+      <span class="text-xs"
+        >({{ wordCount() }} word{{ wordCount() === 1 ? '' : 's' }}, {{ characterCount() }} character{{
+          characterCount() === 1 ? '' : 's'
+        }})</span
+      >
     }
   </button>
 }

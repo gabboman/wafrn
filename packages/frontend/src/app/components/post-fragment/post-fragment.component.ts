@@ -62,8 +62,11 @@ export class PostFragmentComponent implements OnChanges, OnDestroy {
 
   reactionLoading = false
   sanitizedContent = ''
+  noTagsContent = ''
   wafrnFormattedContent: Array<string | WafrnMedia> = []
-  contentLineCount = computed(() => this.sanitizedContent.split('\n').length)
+  characterCount = computed(() => this.noTagsContent.length)
+  wordCount = computed(() => this.noTagsContent.split(' ').length)
+
   seenMedia: number[] = []
 
   readonly inlineMediaElement = viewChild<ElementRef<HTMLElement>>('mediaInline')
@@ -115,6 +118,7 @@ export class PostFragmentComponent implements OnChanges, OnDestroy {
 
     let processedBlock: Array<string | WafrnMedia> = []
     this.sanitizedContent = this.postService.getPostHtml(this.fragment)
+    this.noTagsContent = this.postService.getPostHtml(this.fragment, [])
     if (this.fragment && this.fragment.medias && this.fragment.medias?.length > 0) {
       const mediaDetectorRegex = /\!\[media\-([0-9]+)]/gm
       const textDivided = this.sanitizedContent.split(mediaDetectorRegex)

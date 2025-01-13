@@ -359,34 +359,37 @@ export class PostsService {
     return newPost
   }
 
-  getPostHtml(post: ProcessedPost): string {
+  getPostHtml(
+    post: ProcessedPost,
+    tags: string[] = [
+      'b',
+      'i',
+      'u',
+      'a',
+      's',
+      'del',
+      'span',
+      'br',
+      'p',
+      'h1',
+      'h2',
+      'h3',
+      'h4',
+      'h5',
+      'h6',
+      'pre',
+      'strong',
+      'em',
+      'ul',
+      'li',
+      'marquee',
+      'font',
+      'blockquote'
+    ]
+  ): string {
     const content = post.content
     let sanitized = sanitizeHtml(content, {
-      allowedTags: [
-        'b',
-        'i',
-        'u',
-        'a',
-        's',
-        'del',
-        'span',
-        'br',
-        'p',
-        'h1',
-        'h2',
-        'h3',
-        'h4',
-        'h5',
-        'h6',
-        'pre',
-        'strong',
-        'em',
-        'ul',
-        'li',
-        'marquee',
-        'font',
-        'blockquote'
-      ],
+      allowedTags: tags,
       allowedAttributes: {
         a: ['href']
       }
