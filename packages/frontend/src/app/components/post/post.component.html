@@ -20,7 +20,7 @@
   }
   <div
     [ngClass]="{
-      'shortened-post': postCanExpand() && !expanded
+      'shortened-post': veryLongPost && !expanded
     }"
   >
     @for (content of post; track $index; let index = $index) {
@@ -46,7 +46,7 @@
   <hr />
 
   <button
-    *ngIf="postCanExpand() && !(post.length === originalPostContent.length)"
+    *ngIf="(postCanExpand() && !(post.length === originalPostContent.length)) || (!expanded && veryLongPost)"
     color="accent"
     class="w-full mb-3 mt-2 w-full"
     mat-flat-button
