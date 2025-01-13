@@ -53,6 +53,7 @@ export class PostComponent implements OnInit, OnChanges, OnDestroy, AfterViewIni
   postsExpanded = EnvironmentService.environment.shortenPosts
   expanded = false
   originalPostContent: ProcessedPost[] = []
+  finalPosts: ProcessedPost[] = []
   ready = false
   mediaBaseUrl = EnvironmentService.environment.baseMediaUrl
   cacheurl = EnvironmentService.environment.externalCacheurl
@@ -155,6 +156,7 @@ export class PostComponent implements OnInit, OnChanges, OnDestroy, AfterViewIni
     this.followedUsers = this.postService.followedUserIds
     this.notYetAcceptedFollows = this.postService.notYetAcceptedFollowedUsersIds
     this.originalPostContent = this.post
+    this.finalPosts = this.originalPostContent.slice(-5)
     if (!this.showFull) {
       this.post = this.post.slice(0, EnvironmentService.environment.shortenPosts)
 
