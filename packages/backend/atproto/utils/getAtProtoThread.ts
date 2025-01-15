@@ -155,15 +155,16 @@ async function processSinglePost(
         if (segment.isLink()) {
           text += `<a href="${segment.link?.uri}" target="_blank">${segment.text}</a>`
         } else if (segment.isMention()) {
-          text += `<a href="${environment.frontendUrl}/blog/${segment.mention?.did}" target="_blank>${segment.text}</a>`
+          text += `<a href="${environment.frontendUrl}/blog/${segment.mention?.did}" target="_blank">${segment.text}</a>`
         } else if (segment.isTag()) {
-          text += `<a href="${environment.frontendUrl}/search/${segment.text}" target="_blank>${segment.text}</a>`
+          text += `<a href="${environment.frontendUrl}/search/${segment.text}" target="_blank">${segment.text}</a>`
         } else {
           text += segment.text
         }
       }
       postText = text
     }
+    postText = postText.replaceAll('\n', '<br>')
     const newData = {
       userId: postCreator.id,
       bskyCid: post.cid,
