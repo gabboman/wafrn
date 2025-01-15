@@ -156,6 +156,8 @@ async function processSinglePost(
           text += `<a href="${segment.link?.uri}" target="_blank">${segment.text}</a>`
         } else if (segment.isMention()) {
           text += `<a href="${environment.frontendUrl}/blog/${segment.mention?.did}" target="_blank>${segment.text}</a>`
+        } else if (segment.isTag()) {
+          text += `<a href="${environment.frontendUrl}/search/${segment.tag?.tag}" target="_blank>${segment.tag?.tag}</a>`
         } else {
           text += segment.text
         }
