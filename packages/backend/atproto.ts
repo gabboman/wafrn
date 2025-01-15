@@ -25,7 +25,20 @@ const firehoseQueue = new Queue('firehoseQueue', {
 
 firehose.on('commit', async (commit) => {
   const cacheData = await getCacheAtDids()
-  if (cacheData.followedDids.includes(commit.repo) || (await checkCommitMentions(commit, cacheData)))
+  let forceProcess = false
+  // we force all deletes to be processed
+  for await (const op of commit.ops) {
+    if (op.action === 'delete') {
+      forceProcess = true
+      const data = {
+        repo: commit.repo,
+        operation: op
+      }
+      await firehoseQueue.add('processFirehoseQueue', data)
+    }
+  }
+
+  if ((cacheData.followedDids.includes(commit.repo) || (await checkCommitMentions(commit, cacheData))) && !forceProcess)
     for await (const op of commit.ops) {
       const data = {
         repo: commit.repo,
