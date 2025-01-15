@@ -40,6 +40,8 @@ export class WafrnMediaComponent implements OnChanges, AfterViewInit {
   readonly mimeType = computed<string>(() => this.getMimeType())
   readonly width = computed<number | ''>(() => this.data().width ?? '')
   readonly height = computed<number | ''>(() => this.data().height ?? '')
+  readonly enableVideoControls = computed<boolean | ''>(() => this.mediaService.checkForceClassicVideoPlayer() ?? false)
+  readonly enableAudioControls = computed<boolean | ''>(() => this.mediaService.checkForceClassicAudioPlayer() ?? false)
 
   private readonly alwaysAltMedia = ['audio', 'video']
   readonly alwaysShowAlt = computed<boolean>(() => this.alwaysAltMedia.includes(this.mimeType()?.split('/')[0]))
@@ -74,7 +76,7 @@ export class WafrnMediaComponent implements OnChanges, AfterViewInit {
 
   ngAfterViewInit(): void {
     const videoElement = this.videoElement?.nativeElement
-    if (videoElement) {
+    if (videoElement && !this.mediaService.checkForceClassicVideoPlayer()) {
       new Vlitejs(videoElement, {
         options: {
           autoHide: true,
@@ -83,7 +85,7 @@ export class WafrnMediaComponent implements OnChanges, AfterViewInit {
       })
     }
     const audioElement = this.audioElement?.nativeElement
-    if (audioElement) {
+    if (audioElement && !this.mediaService.checkForceClassicAudioPlayer()) {
       new Vlitejs(audioElement, {})
     }
   }

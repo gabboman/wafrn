@@ -29,6 +29,7 @@
         }"
         width="{{ width() }}"
         height="{{ height() }}"
+        [controls]="enableVideoControls()"
       >
         <source [src]="displayUrl()" [type]="mimeType()" />
       </video>
@@ -45,7 +46,7 @@
       <a [href]="displayUrl()" target="_blank">Click here to see the PDF file that is embedded in this post</a>
     }
     @if (mimeType().startsWith('audio')) {
-      <audio #audioelement>
+      <audio #audioelement [controls]="enableAudioControls()">
         <source [src]="displayUrl()" [type]="mimeType()" />
       </audio>
     }

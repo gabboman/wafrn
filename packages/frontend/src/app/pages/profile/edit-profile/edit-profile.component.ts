@@ -44,7 +44,9 @@ export class EditProfileComponent implements OnInit {
     manuallyAcceptsFollows: new FormControl(false),
     forceOldEditor: new FormControl(false),
     mutedWords: new FormControl(''),
-    disableCW: new FormControl(false)
+    disableCW: new FormControl(false),
+    forceClassicAudioPlayer: new FormControl(false),
+    forceClassicVideoPlayer: new FormControl(false)
   })
 
   constructor(
@@ -76,6 +78,13 @@ export class EditProfileComponent implements OnInit {
       const publicOptions = blogDetails.publicOptions
       const askLevel = publicOptions.find((elem) => elem.optionName == 'wafrn.public.asks')
       this.editProfileForm.controls['asksLevel'].patchValue(askLevel ? parseInt(askLevel.optionValue) : 2)
+      this.editProfileForm.controls['forceClassicAudioPlayer'].patchValue(
+        this.mediaService.checkForceClassicAudioPlayer()
+      )
+      this.editProfileForm.controls['forceClassicVideoPlayer'].patchValue(
+        this.mediaService.checkForceClassicVideoPlayer()
+      )
+
       const mutedWords = localStorage.getItem('mutedWords')
       if (mutedWords && mutedWords.trim().length) {
         try {

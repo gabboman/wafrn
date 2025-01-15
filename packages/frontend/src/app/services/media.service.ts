@@ -25,6 +25,15 @@ export class MediaService {
   checkNSFWFilterDisabled(): boolean {
     return this.disableNSFWFilter
   }
+
+  checkForceClassicAudioPlayer(): boolean {
+    return localStorage.getItem('forceClassicAudioPlayer') === 'true'
+  }
+
+  checkForceClassicVideoPlayer(): boolean {
+    return localStorage.getItem('forceClassicVideoPlayer') === 'true'
+  }
+
   checkAge(): boolean {
     const tokenData = this.jwt.getTokenData()
     const birthDate = new Date(tokenData.birthDate)
