@@ -150,17 +150,17 @@ async function processSinglePost(
         text: postText
       })
       await rt.detectFacets(agent)
-      let markdown = ''
+      let text = ''
       for (const segment of rt.segments()) {
         if (segment.isLink()) {
-          markdown += `[${segment.text}](${segment.link?.uri})`
+          text += `<a href="${segment.link?.uri}" target="_blank">${segment.text}</a>`
         } else if (segment.isMention()) {
-          markdown += `[${segment.text}](${environment.frontendUrl}/blog/${segment.mention?.did})`
+          text += `<a href="${environment.frontendUrl}/blog/${segment.mention?.did}" target="_blank>${segment.text}</a>`
         } else {
-          markdown += segment.text
+          text += segment.text
         }
       }
-      postText = markdownConverter.makeHtml(markdown)
+      postText = text
     }
     const newData = {
       userId: postCreator.id,
