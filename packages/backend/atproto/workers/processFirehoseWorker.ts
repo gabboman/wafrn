@@ -1,12 +1,15 @@
 import { Job } from "bullmq";
 import { getAtprotoUser } from "../utils/getAtprotoUser.js";
-import { Follows, Post, User, UserLikesPostRelations } from "../../db.js";
+import { Follows, Post, User, UserLikesPostRelations, PostTag, Media } from "../../db.js";
 import { environment } from "../../environment.js";
-import { Model } from "sequelize";
+import { Op, Model } from "sequelize";
 import { logger } from "../../utils/logger.js";
 import { DeleteOp, RepoOp } from "@skyware/firehose";
 import { getAtProtoThread } from "../utils/getAtProtoThread.js";
 import { getCacheAtDids } from "../cache/getCacheAtDids.js";
+import { deletePostCommon } from '../../utils/deletePost.js'
+import { redisCache } from '../../utils/redis.js'
+import { likePostRemote } from '../../utils/activitypub/likePost.js'
 
 const adminUser = User.findOne({
   where: {
@@ -88,7 +91,6 @@ async function processFirehose(job: Job) {
           default: {
             logger.warn({ message: `Bsky create type not implemented: ${record['$type']}`, record: record })
           }
-
         }
         break;
       }
@@ -96,9 +98,9 @@ async function processFirehose(job: Job) {
         // you need to check the path and do a deleete based on that.
         const deleteOperation = operation as DeleteOp;
         try {
-          const opName = deleteOperation.path.split('app.bsky.graph.')[0].split('/')[0];
+          const opName = deleteOperation.path.split('app.bsky.')[1].split('/')[0];
           switch (opName) {
-            case 'follow': {
+            case 'graph.follow': {
               await Follows.destroy({
                 where: {
                   bskyPath: operation.path
@@ -106,6 +108,80 @@ async function processFirehose(job: Job) {
               })
               break;
             }
+
+            case 'feed.post': {
+              const post = await Post.findOne({
+                where: {
+                  bskyUri: {
+                    [Op.like]: `%${operation.path}`
+                  }
+                }
+              });
+              await redisCache.del('postAndUser:' + post.id)
+              await deletePostCommon(post.id)
+
+              const id = post.id as string
+              if (id) {
+                let postsToDeleteUnfiltered = await Post.findAll({
+                  where: {
+                    parentId: id,
+                    content: ''
+                  }
+                })
+
+                const unfilteredPostIds: string[] = postsToDeleteUnfiltered.map((elem: any) => elem.id)
+                const tags = await PostTag.findAll({
+                  where: {
+                    postId: {
+                      [Op.in]: unfilteredPostIds
+                    }
+                  }
+                })
+
+                const medias = await Media.findAll({
+                  where: {
+                    postId: {
+                      [Op.in]: unfilteredPostIds
+                    }
+                  }
+                })
+
+                const postsThatAreNotReblogs = tags
+                  .map((tag: any) => tag.postId)
+                  .concat(medias.map((media: any) => media.postId))
+                const reblogsToDelete = unfilteredPostIds.filter((elem) => !postsThatAreNotReblogs.includes(elem))
+
+                if (reblogsToDelete) {
+                  reblogsToDelete.forEach(async (elem) => {
+                    await redisCache.del('postAndUser:' + elem)
+                  })
+
+                  await Post.destroy({
+                    where: {
+                      id: {
+                        [Op.in]: reblogsToDelete
+                      }
+                    }
+                  })
+                }
+              }
+              break;
+            }
+
+            case 'feed.like': {
+              const like = await UserLikesPostRelations.findOne({
+                where: {
+                  bskyPath: operation.path
+                }
+              })
+
+              if (like) {
+                likePostRemote(like, true)
+                await like.destroy()
+              }
+              break;
+            }
+
             default: {
               logger.info({ message: `Bsky deleted type not implemented: ${deleteOperation.path}` })
             }
