@@ -11,6 +11,17 @@ import { getAllLocalUserIds } from '../../utils/cacheGetters/getAllLocalUserIds.
 import { wait } from '../../utils/wait.js'
 import { isArray } from 'underscore'
 import { logger } from '../../utils/logger.js'
+import { RichText } from '@atproto/api'
+import showdown from 'showdown'
+const markdownConverter = new showdown.Converter({
+  simplifiedAutoLink: true,
+  literalMidWordUnderscores: true,
+  strikethrough: true,
+  simpleLineBreaks: true,
+  openLinksInNewWindow: true,
+  emoji: true
+})
+
 const adminUser = User.findOne({
   where: {
     url: environment.adminUser
@@ -134,43 +145,22 @@ async function processSinglePost(
     let tags: string[] = []
     let mentions: string[] = []
     let postText = post.record.text
-    if (post.record.facets && post.record.facets.length > 0) {
-      const facets = post.record.facets
-      const tagFacets = facets.filter((elem) =>
-        elem.features.some((feature) => feature['$type'] == 'app.bsky.richtext.facet#tag')
-      )
-      const mentionFacets = facets.filter((elem) =>
-        elem.features.some((feature) => feature['$type'] == 'app.bsky.richtext.facet#mention')
-      )
-      const linkFacets = facets.filter((elem) =>
-        elem.features.some((feature) => feature['$type'] == 'app.bsky.richtext.facet#link')
-      )
-      mentionFacets.forEach(async (bskyMention) => {
-        const userMentioned = await getAtprotoUser(bskyMention.features[0].did, (await adminUser) as Model<any, any>)
-        mentions.push(userMentioned.id)
+    if (post.record.facets && post.record.facets.length > 0 && agent) {
+      const rt = new RichText({
+        text: postText
       })
-      tags = tagFacets.map((elem) => elem.features[0].tag)
-      if (tagFacets.length > 0 || mentionFacets.length > 0 || linkFacets.length > 0) {
-        const postRichTextBase = postText.split('')
-        tagFacets.forEach((tag) => {
-          postRichTextBase[tag.index.byteStart] =
-            `<a target="blank" href="/dashboard/search/${tag.features[0].tag}">` + postRichTextBase[tag.index.byteStart]
-          postRichTextBase[tag.index.byteEnd - 1] = postRichTextBase[tag.index.byteEnd - 1] + '</a>'
-        })
-        linkFacets.forEach((linkFacet) => {
-          postRichTextBase[linkFacet.index.byteStart] =
-            `<a target="blank" href="${linkFacet.features[0].uri}">` + postRichTextBase[linkFacet.index.byteStart]
-          postRichTextBase[linkFacet.index.byteEnd - 1] = postRichTextBase[linkFacet.index.byteEnd - 1] + '</a>'
-        })
-        mentionFacets.forEach((mentionFacet) => {
-          postRichTextBase[mentionFacet.index.byteStart] =
-            `<a class="mention remote-mention" target="blank" href="/blog/${mentionFacet.features[0].did}">` +
-            postRichTextBase[mentionFacet.index.byteStart]
-          postRichTextBase[mentionFacet.index.byteEnd - 1] = postRichTextBase[mentionFacet.index.byteEnd - 1] + '</a>'
-        })
-
-        postText = postRichTextBase.join('')
+      await rt.detectFacets(agent)
+      let markdown = ''
+      for (const segment of rt.segments()) {
+        if (segment.isLink()) {
+          markdown += `[${segment.text}](${segment.link?.uri})`
+        } else if (segment.isMention()) {
+          markdown += `[${segment.text}](${environment.frontendUrl}/blog/${segment.mention?.did})`
+        } else {
+          markdown += segment.text
+        }
       }
+      postText = markdownConverter.makeHtml(markdown)
     }
     const newData = {
       userId: postCreator.id,
