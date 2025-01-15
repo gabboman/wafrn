@@ -1,3 +1,3 @@
-import { getAtProtoThread } from "./atproto/utils/getAtProtoThread.js";
+import { getAtProtoThread } from './atproto/utils/getAtProtoThread.js'
 
-await getAtProtoThread('at://did:plc:tmalyobuse3e2zri4zoy6qgw/app.bsky.feed.post/3ld2kza5jlc2o', undefined, true)
+await getAtProtoThread('at://did:plc:zmgp4bhcck7kdxs5og7qo5rm/app.bsky.feed.post/3lfskv66r4s2d', undefined, true)
