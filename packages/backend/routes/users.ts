@@ -252,7 +252,7 @@ export default function userRoutes(app: Application) {
                   ...opt,
                   // NOTE: opt.value should be a string result of JSON.stringify, adding this to prevent any potential security issues
                   value: String(opt.value),
-                  public: opt.name.startsWith('wafrn.public')
+                  public: opt.name.startsWith('wafrn.public') || opt.name.startsWith('fediverse.public')
                 }
               })
 
