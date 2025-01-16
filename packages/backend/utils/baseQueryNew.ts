@@ -275,7 +275,7 @@ async function getUnjointedPosts(postIdsInput: string[], posterId: string) {
   const likes = await getLikes(postIds)
   userIds = userIds.concat(likes.map((like: any) => like.userId))
   const users = User.findAll({
-    attributes: ['url', 'avatar', 'id', 'name', 'remoteId'],
+    attributes: ['url', 'avatar', 'id', 'name', 'remoteId', 'banned'],
     where: {
       id: {
         [Op.in]: userIds
@@ -284,6 +284,7 @@ async function getUnjointedPosts(postIdsInput: string[], posterId: string) {
   })
   const postWithNotes = getPosstGroupDetails(posts)
   await Promise.all([emojis, users, polls, medias, tags, postWithNotes])
+  const bannedUserIds = (await users).filter((elem) => elem.banned).map((elem) => elem.id)
   const usersFollowedByPoster = await getFollowedsIds(posterId)
   const tagsAwaited = await tags
   const mediasAwaited = await medias
@@ -315,7 +316,10 @@ async function getUnjointedPosts(postIdsInput: string[], posterId: string) {
     const validPrivacy = [0, 2, 3].includes(post.privacy)
     const userFollowsPoster = usersFollowedByPoster.includes(post.userId) && post.privacy === 1
     const userIsMentioned = postsMentioningUser.includes(post.id)
-    return postIsPostedByUser || validPrivacy || userFollowsPoster || userIsMentioned || isReblog
+    return (
+      !bannedUserIds.includes(post.userId) &&
+      (postIsPostedByUser || validPrivacy || userFollowsPoster || userIsMentioned || isReblog)
+    )
   })
   const postIdsToFullySend: string[] = postsToFullySend.map((post: any) => post.id)
   const postsToSend = (await postWithNotes).map((post: any) => filterPost(post, postIdsToFullySend))
