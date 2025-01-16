@@ -14,7 +14,7 @@ import { faPalette } from '@fortawesome/free-solid-svg-icons'
 // - Add the theme as a CSS file in `/assets/themes/name.css`
 // - Add a link file to it in this component's HTML file
 
-const colorSchemeVariants = ['default', 'tan', 'green', 'gold'] as const
+const colorSchemeVariants = ['default', 'tan', 'green', 'gold', 'red', 'pink'] as const
 type ColorSchemeTuple = typeof colorSchemeVariants
 type ColorScheme = ColorSchemeTuple[number]
 
