@@ -3,6 +3,7 @@ import {
   Ask,
   Emoji,
   EmojiReaction,
+  FederatedHost,
   Media,
   Post,
   PostEmojiRelations,
@@ -284,7 +285,19 @@ async function getUnjointedPosts(postIdsInput: string[], posterId: string) {
   })
   const postWithNotes = getPosstGroupDetails(posts)
   await Promise.all([emojis, users, polls, medias, tags, postWithNotes])
-  const bannedUserIds = (await users).filter((elem) => elem.banned).map((elem) => elem.id)
+  const hostsIds = (await users).filter((elem) => elem.federatedHostId).map((elem) => federatedHostId)
+  const blockedHosts = await FederatedHost.findAll({
+    where: {
+      id: {
+        [Op.in]: hostsIds
+      },
+      blocked: true
+    }
+  })
+  const blockedHostsIds = blockedHosts.map((elem) => elem.id)
+  const bannedUserIds = (await users)
+    .filter((elem) => elem.banned || blockedHostsIds.includes(elem.federatedHostId))
+    .map((elem) => elem.id)
   const usersFollowedByPoster = await getFollowedsIds(posterId)
   const tagsAwaited = await tags
   const mediasAwaited = await medias
