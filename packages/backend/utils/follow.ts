@@ -5,7 +5,12 @@ import { Response } from 'express'
 import { remoteFollow } from './activitypub/remoteFollow.js'
 import { redisCache } from './redis.js'
 
-async function follow(followerId: string, followedId: string, petition?: Response, bskyResult?: {uri: string, cid: string}): Promise<boolean> {
+async function follow(
+  followerId: string,
+  followedId: string,
+  petition?: Response,
+  bskyResult?: { uri: string; cid: string }
+): Promise<boolean> {
   let res = false
   try {
     const userFollowed = await User.findOne({
@@ -48,7 +53,9 @@ async function follow(followerId: string, followedId: string, petition?: Respons
       const follow = await Follows.create({
         followerId: followerId,
         followedId: userFollowed.id,
-        accepted: (!!userFollowed.bskyDid) ||  (userFollowed.url.startsWith('@') ? false : !userFollowed.manuallyAcceptsFollows),
+        accepted:
+          (!!userFollowed.bskyDid && userFollowed.url.startsWith('@')) ||
+          (userFollowed.url.startsWith('@') ? false : !userFollowed.manuallyAcceptsFollows),
         bskyUri: bskyResult?.uri
       })
       if (userFollowed.remoteId) {
