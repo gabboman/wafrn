@@ -1,8 +1,20 @@
 <div class="flex gap-0 flex-nowrap" id="post-actions">
-  <button mat-button class="split-button-left" (mousedown)="sharePost()" matTooltip="Copy Wafrn link">
+  <button
+    aria-label="Share post"
+    mat-button
+    class="split-button-left"
+    (mousedown)="sharePost()"
+    matTooltip="Copy Wafrn link"
+  >
     <fa-icon [icon]="shareIcon"></fa-icon>
   </button>
-  <button mat-button class="split-button-right" [matMenuTriggerFor]="menu" matTooltip="Post actions">
+  <button
+    aria-label="Post actions"
+    mat-button
+    class="split-button-right"
+    [matMenuTriggerFor]="menu"
+    matTooltip="Post actions"
+  >
     <fa-icon [icon]="expandDownIcon"></fa-icon>
   </button>
 </div>
@@ -23,13 +35,7 @@
     View on bluesky
   </button>
   <button
-    *ngIf="
-      content.remotePostId &&
-      !content.bskyUri &&
-      content.user.url.startsWith('@') &&
-      content.privacy !== 1 &&
-      content.privacy !== 10
-    "
+    *ngIf="content.user.url.startsWith('@') && content.privacy !== 1 && content.privacy !== 10"
     (mousedown)="viewOriginalPost()"
     mat-menu-item
   >
