@@ -473,7 +473,10 @@ export default function userRoutes(app: Application) {
               bskyDid: blogId
             }
           ],
-          banned: false
+          banned: false,
+          literal: Sequelize.literal(
+            `"federatedHostId" NOT IN (SELECT "id" FROM "federatedHosts" WHERE "blocked" = True)`
+          )
         }
       })
       if (!blog) {
