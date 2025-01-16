@@ -487,13 +487,10 @@ export default function userRoutes(app: Application) {
           ],
           banned: {
             [Op.ne]: true
-          },
-          literal: Sequelize.literal(
-            `"federatedHostId" IS NULL OR "federatedHostId" NOT IN (SELECT "id" FROM "federatedHosts" WHERE "blocked" = True)`
-          )
+          }
         }
       })
-      if (!blog) {
+      if (!blog || blog.federatedHost?.blocked) {
         res.sendStatus(404)
         return
       }
