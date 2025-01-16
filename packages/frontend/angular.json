@@ -36,8 +36,7 @@
             "tsConfig": "tsconfig.app.json",
             "inlineStyleLanguage": "scss",
             "allowedCommonJsDependencies": [
-              "quill",
-              "quill-delta"
+
             ],
             "assets": [
               "src/favicon.ico",
@@ -48,8 +47,6 @@
             ],
             "styles": [
               "../../node_modules/primeflex/primeflex.css",
-              "../../node_modules/quill/dist/quill.snow.css",
-              "../../node_modules/quill/dist/quill.core.css",
               "src/styles.scss"
             ],
             "scripts": [],

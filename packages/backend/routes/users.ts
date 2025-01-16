@@ -45,7 +45,15 @@ import { getMutedUsers } from '../utils/cacheGetters/getMutedUsers.js'
 import { getAvaiableEmojisCache } from '../utils/cacheGetters/getAvaiableEmojis.js'
 import { rejectremoteFollow } from '../utils/activitypub/rejectRemoteFollow.js'
 import { acceptRemoteFollow } from '../utils/activitypub/acceptRemoteFollow.js'
-
+import showdown from 'showdown'
+const markdownConverter = new showdown.Converter({
+  simplifiedAutoLink: true,
+  literalMidWordUnderscores: true,
+  strikethrough: true,
+  simpleLineBreaks: true,
+  openLinksInNewWindow: true,
+  emoji: true
+})
 const forbiddenCharacters = [':', '@', '/', '<', '>', '"', '&', '?']
 
 export default function userRoutes(app: Application) {
@@ -103,6 +111,7 @@ export default function userRoutes(app: Application) {
             const user = {
               email: req.body.email.toLowerCase(),
               description: req.body.description.trim(),
+              descriptionMarkdown: markdownConverter.makeHtml(req.body.description.trim()),
               url: req.body.url.trim().replace(' ', '_'),
               name: req.body.name ? req.body.name : req.body.url.trim().replace(' ', '_'),
               NSFW: req.body.nsfw === 'true',
@@ -206,7 +215,9 @@ export default function userRoutes(app: Application) {
             user.manuallyAcceptsFollows = manuallyAcceptsFollows
           }
           if (description) {
-            user.description = description
+            const descriptionHtml = markdownConverter.makeHtml(description)
+            user.description = descriptionHtml
+            user.descriptionMarkdown = description
             userEmojis = userEmojis.concat(avaiableEmojis?.filter((emoji: any) => description.includes(emoji.name)))
           }
 
@@ -447,6 +458,7 @@ export default function userRoutes(app: Application) {
           'name',
           'createdAt',
           'description',
+          'descriptionMarkdown',
           'remoteId',
           'avatar',
           'federatedHostId',
@@ -473,9 +485,11 @@ export default function userRoutes(app: Application) {
               bskyDid: blogId
             }
           ],
-          banned: false,
+          banned: {
+            [Op.ne]: true
+          },
           literal: Sequelize.literal(
-            `"federatedHostId" NOT IN (SELECT "id" FROM "federatedHosts" WHERE "blocked" = True)`
+            `"federatedHostId" IS NULL OR "federatedHostId" NOT IN (SELECT "id" FROM "federatedHosts" WHERE "blocked" = True)`
           )
         }
       })

@@ -8,6 +8,7 @@ export interface BlogDetails {
   name: string
   createdAt: string
   description: string
+  descriptionMarkdown: string
   remoteId: string
   avatar: string
   federatedHostId: string

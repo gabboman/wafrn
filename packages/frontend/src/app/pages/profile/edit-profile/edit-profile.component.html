@@ -27,16 +27,10 @@
       <mat-label>Display name (can contain emoji codes)</mat-label>
       <input formControlName="name" matInput />
     </mat-form-field>
-    <span>Your bio/description. You can put emoji codes here too</span>
-    <quill-editor #quill formControlName="description" class="w-full" [modules]="{ toolbar: [], theme: 'bubble' }">
-      <div quill-editor-toolbar style="border-top-left-radius: 5px; border-top-right-radius: 5px">
-        <button pButton type="button" class="ql-bold" aria-label="Bold" title="Bold"></button>
-        <button pButton type="button" class="ql-italic" aria-label="Italic" title="Italic"></button>
-        <button pButton type="button" class="ql-underline" aria-label="Underline" title="Underline"></button>
-        <button pButton type="button" class="ql-strike" aria-label="Strike" title="Strike"></button>
-        <button pButton type="button" class="ql-link" aria-label="Insert Link" title="Insert Link"></button>
-      </div>
-    </quill-editor>
+    <mat-form-field class="w-full">
+      <mat-label>Your bio/description. You can put emoji codes here too. You can use markdown here</mat-label>
+      <textarea matInput placeholder="Description" style="min-height: 20vh" formControlName="description"></textarea>
+    </mat-form-field>
     <hr />
     <span>Options</span>
     <mat-form-field class="w-full">

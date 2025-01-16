@@ -87,6 +87,7 @@ const User = sequelize.define(
       unique: true
     },
     description: Sequelize.TEXT,
+    descriptionMarkdown: Sequelize.TEXT,
     name: Sequelize.TEXT,
     url: {
       type: Sequelize.STRING(768),
@@ -170,7 +171,6 @@ const User = sequelize.define(
       unique: true,
       type: Sequelize.STRING(768)
     }
-
   },
   {
     indexes: [
@@ -198,7 +198,6 @@ const User = sequelize.define(
     ]
   }
 )
-
 
 const UserOptions = sequelize.define(
   'userOptions',
@@ -390,7 +389,7 @@ const SilencedPost = sequelize.define('silencedPost', {
 const PostTag = sequelize.define(
   'postTags',
   {
-    tagName: Sequelize.TEXT,
+    tagName: Sequelize.TEXT
   },
   {
     indexes: [
@@ -479,38 +478,42 @@ const EmojiCollection = sequelize.define('emojiCollections', {
   }
 })
 
-const Media = sequelize.define('medias', {
-  mediaOrder: {
-    type: Sequelize.INTEGER,
-    defaultValue: 0
+const Media = sequelize.define(
+  'medias',
+  {
+    mediaOrder: {
+      type: Sequelize.INTEGER,
+      defaultValue: 0
+    },
+    NSFW: Sequelize.BOOLEAN,
+    description: Sequelize.TEXT,
+    url: Sequelize.TEXT,
+    ipUpload: Sequelize.STRING,
+    external: {
+      defaultValue: false,
+      type: Sequelize.BOOLEAN,
+      allowNull: false
+    },
+    mediaType: Sequelize.STRING,
+    width: {
+      type: Sequelize.INTEGER,
+      defaultValue: 0
+    },
+    height: {
+      type: Sequelize.INTEGER,
+      defaultValue: 0
+    },
+    blurhash: Sequelize.STRING
   },
-  NSFW: Sequelize.BOOLEAN,
-  description: Sequelize.TEXT,
-  url: Sequelize.TEXT,
-  ipUpload: Sequelize.STRING,
-  external: {
-    defaultValue: false,
-    type: Sequelize.BOOLEAN,
-    allowNull: false
-  },
-  mediaType: Sequelize.STRING,
-  width: {
-    type: Sequelize.INTEGER,
-    defaultValue: 0
-  },
-  height: {
-    type: Sequelize.INTEGER,
-    defaultValue: 0
-  },
-  blurhash: Sequelize.STRING
-}, {
-  indexes: [
-    {
-      fields: ['postId'],
-      unique: false
-    }
-  ]
-})
+  {
+    indexes: [
+      {
+        fields: ['postId'],
+        unique: false
+      }
+    ]
+  }
+)
 
 const PostReport = sequelize.define('postReports', {
   resolved: Sequelize.BOOLEAN,
@@ -593,7 +596,7 @@ const UserLikesPostRelations = sequelize.define(
             attribute: 'postId'
           }
         ]
-      },
+      }
     ]
   }
 )
@@ -614,7 +617,7 @@ const QuestionPollAnswer = sequelize.define('questionPollAnswer', {
     type: Sequelize.STRING(768),
     allowNull: true,
     unique: true
-  },
+  }
 })
 
 const PostHostView = sequelize.define('postHostView', {})
@@ -813,7 +816,7 @@ Post.belongsToMany(User, {
   as: 'mentionPost',
   foreignKey: 'postId',
   onDelete: 'cascade'
-},)
+})
 
 UserLikesPostRelations.belongsTo(User)
 UserLikesPostRelations.belongsTo(Post)
@@ -826,7 +829,7 @@ FederatedHost.belongsToMany(Post, {
 })
 Post.belongsToMany(FederatedHost, {
   through: PostHostView,
-  as: 'hostView',
+  as: 'hostView'
 })
 
 Post.belongsToMany(User, {

@@ -64,6 +64,9 @@ export class EditProfileComponent implements OnInit {
     this.dashboardService.getBlogDetails(this.jwtService.getTokenData()['url'], true).then(async (blogDetails) => {
       blogDetails['avatar'] = ''
       this.editProfileForm.patchValue(blogDetails)
+      if (blogDetails.descriptionMarkdown) {
+        this.editProfileForm.controls['description'].patchValue(blogDetails.descriptionMarkdown)
+      }
       this.editProfileForm.controls['disableNSFWFilter'].patchValue(this.mediaService.checkNSFWFilterDisabled())
       this.editProfileForm.controls['defaultPostEditorPrivacy'].patchValue(
         this.loginService.getUserDefaultPostPrivacyLevel()
