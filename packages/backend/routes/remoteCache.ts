@@ -10,12 +10,7 @@ import { getResolver } from 'plc-did-resolver'
 import { redisCache } from '../utils/redis.js'
 
 function extensionFromMimeType(mime: string) {
-  return mime
-    .split('/')
-    .pop()
-    ?.replace('jpeg', 'jpg')
-    .replace('svg+xml', 'svg')
-    .replace('x-icon', 'ico') || ''
+  return mime.split('/').pop()?.replace('jpeg', 'jpg').replace('svg+xml', 'svg').replace('x-icon', 'ico') || ''
 }
 
 function sendWithCache(res: Response, localFileName: string) {
@@ -49,7 +44,7 @@ export default function cacheRoutes(app: Application) {
       res.sendStatus(404)
       return
     }
-  
+
     try {
       // TODO: to support bluesky images, we should receive full URLs built on frontend and not just cids
       if (mediaUrl.startsWith('?cid=')) {
@@ -98,17 +93,6 @@ export default function cacheRoutes(app: Application) {
       const urlBase = req.protocol + '://' + req.get('host') + req.originalUrl
       // with the second parameter to the URL constructor we can provide a base URL in case the media URL is something like "/api/uploads/..." so the URL constructor does not throw an error
       const url = new URL(mediaUrl, urlBase)
-
-      // this is only useful for local development
-      if (url.hostname === 'localhost' && url.pathname.startsWith('/api/uploads/')) {
-        const localFileName = url.pathname.replace('/api/uploads/', 'uploads/')
-        if (fs.existsSync(localFileName)) {
-          return sendWithCache(res, localFileName)
-        } else {
-          return res.sendStatus(404)
-        }
-      }
-
       const mediaLink = url.href as string
       const mediaLinkArray = url.pathname.split('.')
       let linkExtension = mediaLinkArray[mediaLinkArray.length - 1].toLowerCase()
@@ -130,7 +114,7 @@ export default function cacheRoutes(app: Application) {
         const mimeType = String(stream.headers['Content-Type'] || stream.headers['content-type'] || '')
         const ext = extensionFromMimeType(mimeType)
         localFileName = `cache/${mediaLinkHash}.${ext}`
-        
+
         await redisCache.set(`cache:${mediaLinkHash}`, localFileName)
         await writeStream(stream, localFileName)
       }
