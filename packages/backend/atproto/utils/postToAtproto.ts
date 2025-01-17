@@ -48,12 +48,7 @@ async function postToAtproto(post: Model<any, any>, agent: BskyAgent) {
   let question: string | undefined
   const ask = await post.getAsk()
   if (ask) {
-    const userAsker = await User.findOne({
-      where: {
-        id: ask.userAsker
-      }
-    })
-
+    const userAsker = await User.findByPk(ask.userAsker)
     if (userAsker) {
       question = `${userAsker.url} asked:`
       postText = `${question} ${ask.question}\n\n${postText}`
