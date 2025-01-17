@@ -121,8 +121,7 @@ export default function cacheRoutes(app: Application) {
       const mediaLinkHash = crypto.createHash('sha256').update(mediaLink).digest('hex')
       let localFileName = await redisCache.get(`cache:${mediaLinkHash}`)
 
-      // if we dont have the hash-filename relation in the redis cache, we assume the file is not in the local file system
-      if (!localFileName) {
+      if (!localFileName || !fs.existsSync(localFileName)) {
         const stream = await axios.get(mediaLink, {
           responseType: 'stream',
           headers: { 'User-Agent': environment.instanceUrl }
