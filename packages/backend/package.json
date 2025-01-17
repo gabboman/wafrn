@@ -13,6 +13,7 @@
   "author": "",
   "license": "MIT",
   "dependencies": {
+    "@atcute/bluesky-richtext-builder": "^1.0.2",
     "@atproto/api": "^0.13.14",
     "@atproto/identity": "^0.4.2",
     "@atproto/sync": "^0.1.4",

@@ -4,6 +4,8 @@ import { Media, Post, Quotes, User } from '../../db.js'
 import { environment } from '../../environment.js'
 import fs from 'fs/promises'
 import { getPostUrlForQuote } from '../../utils/activitypub/postToJSONLD.js'
+import RichtextBuilder from '@atcute/bluesky-richtext-builder'
+import { Main } from '@atproto/api/dist/client/types/app/bsky/richtext/facet.js'
 
 async function postToAtproto(post: Model<any, any>, agent: BskyAgent) {
   let labels: any = undefined
@@ -33,14 +35,26 @@ async function postToAtproto(post: Model<any, any>, agent: BskyAgent) {
       }
     }
   }
-  const contentWarning = post.content_warning ? `[${post.content_warning.trim()}]\n` : ''
 
+  const contentWarning = post.content_warning ? `[${post.content_warning.trim()}]\n` : ''
   const tags = (await post.getPostTags()).map((elem) => `#${elem.tagName.trim().replaceAll(' ', '-')}`).join(' ')
   let postText: string = (contentWarning + post.markdownContent.trim() + ' ' + tags).trim()
+
   if (quotedPost && !bskyQuote) {
     const remoteId = getPostUrlForQuote(quotedPost)
     postText = postText + '\nRE: ' + remoteId
   }
+
+  let question: string | undefined
+  const ask = await post.getAsk()
+  if (ask) {
+    const userAsker = await User.findByPk(ask.userAsker)
+    if (userAsker) {
+      question = `${userAsker.url} asked:`
+      postText = `${question} ${ask.question}\n\n${postText}`
+    }
+  }
+
   const medias = await Media.findAll({
     where: {
       postId: post.id
@@ -63,11 +77,13 @@ async function postToAtproto(post: Model<any, any>, agent: BskyAgent) {
       mediasToNotSend.push(index)
     }
   }
+
   const tmpRichText = new RichText({ text: postText })
   if (tmpRichText.length > 300 || medias.length > 4 || maxMediaSize > 1000000) {
     postText =
       postText.slice(0, 150) + `... see complete post at https://${environment.instanceUrl}/fediverse/post/${post.id}`
   }
+
   const bskyMedias = medias
     .filter((elem: any, index) => !mediasToNotSend.includes(index))
     .map(async (media) => {
@@ -84,10 +100,20 @@ async function postToAtproto(post: Model<any, any>, agent: BskyAgent) {
         }
       }
     })
+
   const rt = new RichText({
     text: postText
   })
   await rt.detectFacets(agent)
+
+  if (question) {
+    const { facets } = new RichtextBuilder().addLink(question, `https://${environment.instanceUrl}/fediverse/post/${post.id}`);
+    if (rt.facets)
+      rt.facets.unshift(facets[0] as Main)
+    else
+      rt.facets = [facets[0] as Main]
+  }
+
   let res: any = {
     text: rt.text,
     facets: rt.facets,
