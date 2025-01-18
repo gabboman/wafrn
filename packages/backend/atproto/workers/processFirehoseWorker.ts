@@ -18,11 +18,11 @@ const adminUser = User.findOne({
 })
 async function processFirehose(job: Job) {
   // FIRST VERSION. THIS IS GONA BE DIRTY
+  const remoteUser = await getAtprotoUser(job.data.repo, (await adminUser) as Model<any, any>)
   const operation: RepoOp = job.data.operation
   if (remoteUser && operation) {
     switch (operation.action) {
       case 'create': {
-        const remoteUser = await getAtprotoUser(job.data.repo, (await adminUser) as Model<any, any>)
         const record = operation.record
         switch (record['$type']) {
           case 'app.bsky.feed.like': {
