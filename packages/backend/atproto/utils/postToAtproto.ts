@@ -47,18 +47,17 @@ async function postToAtproto(post: Model<any, any>, agent: BskyAgent) {
     postText = postText + '\nRE: ' + remoteId
   }
 
-  let question: string | undefined
   const ask = await post.getAsk()
   if (ask) {
     const userAsker = await User.findByPk(ask.userAsker)
     if (userAsker) {
-      question = `${userAsker.url} asked:`
-      postText = `${question} ${ask.question}\n\n${postText}`
+      postText = `[${userAsker.name} asked:](https://${environment.instanceUrl}/fediverse/post/${post.id}) ` +
+        `${ask.question}\n\n${postText}`
     }
   }
 
   postText = removeMarkdown(postText)
-  let builder = new RichtextBuilder()
+  const builder = new RichtextBuilder()
   tokenize(postText).forEach((token) => {
     if (token.type === 'link')
       builder.addLink(token.text, token.url)
@@ -132,14 +131,6 @@ async function postToAtproto(post: Model<any, any>, agent: BskyAgent) {
     else
       rt.facets = [facet as Main]
   })
-
-  if (question) {
-    const { facets } = new RichtextBuilder().addLink(question, `https://${environment.instanceUrl}/fediverse/post/${post.id}`);
-    if (rt.facets)
-      rt.facets.unshift(facets[0] as Main)
-    else
-      rt.facets = [facets[0] as Main]
-  }
 
   let res: any = {
     text: rt.text,
