@@ -6,6 +6,8 @@ import fs from 'fs/promises'
 import { getPostUrlForQuote } from '../../utils/activitypub/postToJSONLD.js'
 import RichtextBuilder from '@atcute/bluesky-richtext-builder'
 import { Main } from '@atproto/api/dist/client/types/app/bsky/richtext/facet.js'
+import { tokenize } from '@atcute/bluesky-richtext-parser'
+import { removeMarkdown } from './removeMarkdown.js'
 
 async function postToAtproto(post: Model<any, any>, agent: BskyAgent) {
   let labels: any = undefined
@@ -55,6 +57,16 @@ async function postToAtproto(post: Model<any, any>, agent: BskyAgent) {
     }
   }
 
+  postText = removeMarkdown(postText)
+  let builder = new RichtextBuilder()
+  tokenize(postText).forEach((token) => {
+    if (token.type === 'link')
+      builder.addLink(token.text, token.url)
+    else
+      builder.addText(token.raw)
+  })
+  postText = builder.text
+
   const medias = await Media.findAll({
     where: {
       postId: post.id
@@ -79,9 +91,11 @@ async function postToAtproto(post: Model<any, any>, agent: BskyAgent) {
   }
 
   const tmpRichText = new RichText({ text: postText })
+  let postShortened: boolean = false
   if (tmpRichText.length > 300 || medias.length > 4 || maxMediaSize > 1000000) {
     postText =
       postText.slice(0, 150) + `... see complete post at https://${environment.instanceUrl}/fediverse/post/${post.id}`
+    postShortened = true
   }
 
   const bskyMedias = medias
@@ -106,6 +120,19 @@ async function postToAtproto(post: Model<any, any>, agent: BskyAgent) {
   })
   await rt.detectFacets(agent)
 
+  const encoder = new TextEncoder();
+  const byteSliceLength = encoder.encode(postText.slice(0, 150)).byteLength
+  builder.facets.forEach((facet) => {
+    // Do not add facets representing links that were removed
+    if (postShortened && facet.index.byteEnd > byteSliceLength)
+      return
+
+    if (rt.facets)
+      rt.facets.push(facet as Main)
+    else
+      rt.facets = [facet as Main]
+  })
+
   if (question) {
     const { facets } = new RichtextBuilder().addLink(question, `https://${environment.instanceUrl}/fediverse/post/${post.id}`);
     if (rt.facets)
@@ -122,12 +149,14 @@ async function postToAtproto(post: Model<any, any>, agent: BskyAgent) {
     fullTags: tags,
     fediverseId: `${environment.frontendUrl}/fediverse/post/${post.id}`
   }
+
   if (bskyMedias.length) {
     res.embed = {
       $type: 'app.bsky.embed.images',
       images: await Promise.all(bskyMedias)
     }
   }
+
   if (post.parentId) {
     // ok this post is in reply to something
     const parent = (await Post.findByPk(post.parentId)) as Model<any, any>
@@ -136,6 +165,7 @@ async function postToAtproto(post: Model<any, any>, agent: BskyAgent) {
         hierarchyLevel: 1
       }
     })
+
     const rootPost = ancestors[0]
     res.reply = {
       root: {
@@ -152,9 +182,11 @@ async function postToAtproto(post: Model<any, any>, agent: BskyAgent) {
   if (bskyQuote) {
     res.embed = bskyQuote
   }
+
   if (labels) {
     res.labels = labels
   }
+
   return res
 }
 
