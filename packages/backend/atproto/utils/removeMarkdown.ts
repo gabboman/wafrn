@@ -23,6 +23,9 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
+/**
+ * Removes markdown formatting that Bluesky doesn't support
+ */
 export function removeMarkdown(text: string) {
     return text
         // Remove setext-style headers
