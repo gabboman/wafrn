@@ -106,7 +106,7 @@
   padding: 0 0.75ch;
   cursor: pointer;
   background-color: var(--mat-sys-primary);
-  color: var(--mat-sys-on-primary);
+  color: var(--mat-sys-on-primary) !important;
   text-decoration: none;
   border-radius: var(--mat-sys-corner-small);
   font-size: 0.8em;
