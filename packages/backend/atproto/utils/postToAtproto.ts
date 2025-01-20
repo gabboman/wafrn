@@ -51,7 +51,8 @@ async function postToAtproto(post: Model<any, any>, agent: BskyAgent) {
   if (ask) {
     const userAsker = await User.findByPk(ask.userAsker)
     if (userAsker) {
-      postText = `[${userAsker.name} asked:](https://${environment.instanceUrl}/fediverse/post/${post.id}) ` +
+      postText =
+        `[${userAsker.name} asked:](https://${environment.instanceUrl}/fediverse/post/${post.id}) ` +
         `${ask.question}\n\n${postText}`
     }
   }
@@ -59,10 +60,8 @@ async function postToAtproto(post: Model<any, any>, agent: BskyAgent) {
   postText = removeMarkdown(postText)
   const builder = new RichtextBuilder()
   tokenize(postText).forEach((token) => {
-    if (token.type === 'link')
-      builder.addLink(token.text, token.url)
-    else
-      builder.addText(token.raw)
+    if (token.type === 'link') builder.addLink(token.text, token.url)
+    else builder.addText(token.raw)
   })
   postText = builder.text
 
@@ -119,24 +118,21 @@ async function postToAtproto(post: Model<any, any>, agent: BskyAgent) {
   })
   await rt.detectFacets(agent)
 
-  const encoder = new TextEncoder();
+  const encoder = new TextEncoder()
   const byteSliceLength = encoder.encode(postText.slice(0, 150)).byteLength
   builder.facets.forEach((facet) => {
     // Do not add facets representing links that were removed
-    if (postShortened && facet.index.byteEnd > byteSliceLength)
-      return
+    if (postShortened && facet.index.byteEnd > byteSliceLength) return
 
-    if (rt.facets)
-      rt.facets.push(facet as Main)
-    else
-      rt.facets = [facet as Main]
+    if (rt.facets) rt.facets.push(facet as Main)
+    else rt.facets = [facet as Main]
   })
 
   let res: any = {
     text: rt.text,
     facets: rt.facets,
     createdAt: new Date(post.createdAt).toISOString(),
-    fullTexk: post.content,
+    fullText: post.content,
     fullTags: tags,
     fediverseId: `${environment.frontendUrl}/fediverse/post/${post.id}`
   }

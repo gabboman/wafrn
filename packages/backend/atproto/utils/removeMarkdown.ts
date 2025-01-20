@@ -27,23 +27,25 @@ SOFTWARE.
  * Removes markdown formatting that Bluesky doesn't support
  */
 export function removeMarkdown(text: string) {
-    return text
-        // Remove setext-style headers
-        .replace(/^[=\-]{2,}\s*$/g, '')
-        // Remove footnotes?
-        .replace(/\[\^.+?\](\: .*?$)?/g, '')
-        .replace(/\s{0,2}\[.*?\]: .*?$/g, '')
-        // Remove images
-        .replace(/\!\[(.*?)\][\[\(].*?[\]\)]/g, '')
-        // Remove blockquotes
-        .replace(/^(\n)?\s{0,3}>\s?/gm, '$1')
-        // Remove reference-style links?
-        .replace(/^\s{1,2}\[(.*?)\]: (\S+)( ".*?")?\s*$/g, '')
-        // Remove atx-style headers
-        .replace(/^(\n)?\s{0,}#{1,6}\s*( (.+))? +#+$|^(\n)?\s{0,}#{1,6}\s*( (.+))?$/gm, '$1$3$4$6')
-        // Remove code blocks
-        .replace(/(`{3,})(.*?)\1/gsm, '$2')
-        .replace(/(`{3,})(md)(.*?)\1/gsm, '$3')
-        // Remove inline code
-        .replace(/`(.+?)`/gs, '$1')
+  return (
+    text
+      // Remove setext-style headers
+      .replaceAll(/^[=\-]{2,}\s*$/g, '')
+      // Remove footnotes?
+      .replaceAll(/\[\^.+?\](\: .*?$)?/g, '')
+      .replaceAll(/\s{0,2}\[.*?\]: .*?$/g, '')
+      // Remove images
+      .replaceAll(/\!\[(.*?)\][\[\(].*?[\]\)]/g, '')
+      // Remove blockquotes
+      .replaceAll(/^(\n)?\s{0,3}>\s?/gm, '$1')
+      // Remove reference-style links?
+      .replaceAll(/^\s{1,2}\[(.*?)\]: (\S+)( ".*?")?\s*$/g, '')
+      // Remove atx-style headers
+      .replaceAll(/^(\n)?\s{0,}#{1,6}\s*( (.+))? +#+$|^(\n)?\s{0,}#{1,6}\s*( (.+))?$/gm, '$1$3$4$6')
+      // Remove code blocks
+      .replaceAll(/(`{3,})(.*?)\1/gms, '$2')
+      .replaceAll(/(`{3,})(md)(.*?)\1/gms, '$3')
+      // Remove inline code
+      .replaceAll(/`(.+?)`/gs, '$1')
+  )
 }
