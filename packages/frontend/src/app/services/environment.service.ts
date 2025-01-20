@@ -8,19 +8,7 @@ import { environment } from '../../environments/environment'
 })
 export class EnvironmentService {
   // default env
-  public static environment = {
-    maxUploadSize: '250',
-    logo: '/assets/logo.png',
-    baseUrl: '/api',
-    baseMediaUrl: `${window.location.protocol}${window.location.host}/api/uploads`,
-    externalCacheurl: '/api/cache?media=',
-    frontUrl: `${window.location.protocol}${window.location.host}`,
-    shortenPosts: 3,
-    reviewRegistrations: true,
-    disablePWA: false,
-    maintenance: false,
-    maintenanceMessage: ''
-  }
+  public static environment: any = { ...environment }
 
   constructor(private http: HttpClient) {
     const environmentCopy: any = { ...environment }
