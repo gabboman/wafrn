@@ -46,14 +46,16 @@
   </app-post-ribbon>
   @if (notification.type !== notificationType.FOLLOW) {
     <hr />
-    <div class="relative notification-content-shortened">
-      <a [routerLink]="notification.url" class="absolute inset-0">
-        <span class="opacity-0">direct link to the post</span>
-      </a>
-      @if (notification.fragment) {
-        <app-post-header [fragment]="notification.fragment"></app-post-header>
-        <app-post-fragment [fragment]="notification.fragment"></app-post-fragment>
-      }
+    <div class="notification-content-shortened">
+      <div [routerLink]="notification.url">
+        <a [routerLink]="notification.url" class="absolute inset-0">
+          <span class="opacity-0">direct link to the post for accesibility reasons</span>
+        </a>
+        @if (notification.fragment) {
+          <app-post-header [fragment]="notification.fragment"></app-post-header>
+          <app-post-fragment [fragment]="notification.fragment"></app-post-fragment>
+        }
+      </div>
     </div>
   }
 </mat-card>
