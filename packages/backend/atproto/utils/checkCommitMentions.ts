@@ -21,7 +21,12 @@ async function checkCommitMentions(
       (operation.path.startsWith('app.bsky.feed.like') || operation.path.startsWith('app.bsky.graph.follow'))
     ) {
       // we do not ned 18k likes on a mark hamill post. We better do just a "people you follow liked..."
-      if (didsToCheck.some((elem) => elem == commit.repo || operation.record?.subject == elem)) {
+      if (
+        didsToCheck.some(
+          (elem) =>
+            elem == commit.repo || operation.record?.subject == elem || operation.record.subject?.uri?.includes(elem)
+        )
+      ) {
         return true
       }
     }
