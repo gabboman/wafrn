@@ -42,7 +42,8 @@ export function removeMarkdown(text: string) {
         // Remove atx-style headers
         .replace(/^(\n)?\s{0,}#{1,6}\s*( (.+))? +#+$|^(\n)?\s{0,}#{1,6}\s*( (.+))?$/gm, '$1$3$4$6')
         // Remove code blocks
-        .replace(/(`{3,})(.*?)\1/gm, '$2')
+        .replace(/(`{3,})(.*?)\1/gsm, '$2')
+        .replace(/(`{3,})(md)(.*?)\1/gsm, '$3')
         // Remove inline code
-        .replace(/`(.+?)`/g, '$1')
+        .replace(/`(.+?)`/gs, '$1')
 }
