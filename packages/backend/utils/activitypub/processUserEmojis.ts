@@ -11,7 +11,8 @@ async function processUserEmojis(user: any, fediEmojis: any[]) {
   const emojis: any[] = []
   if (fediEmojis) {
     for await (const emoji of fediEmojis) {
-      let emojiToAdd = await Emoji.findByPk(emoji.id)
+      const emojiId = emoji.id ? emoji.id : emoji.icon?.url
+      let emojiToAdd = await Emoji.findByPk(emojiId)
       if (emojiToAdd && new Date(emojiToAdd.updatedAt).getTime() < new Date(emoji.updated).getTime()) {
         emojiToAdd.name = emoji.name
         emojiToAdd.updatedAt = new Date()
@@ -20,7 +21,7 @@ async function processUserEmojis(user: any, fediEmojis: any[]) {
       }
       if (!emojiToAdd) {
         emojiToAdd = await Emoji.create({
-          id: emoji.id,
+          id: emojiId,
           name: emoji.name,
           url: emoji.icon.url,
           external: true
