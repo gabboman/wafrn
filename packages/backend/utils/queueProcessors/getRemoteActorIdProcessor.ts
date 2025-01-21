@@ -58,10 +58,11 @@ async function getRemoteActorIdProcessor(job: Job) {
         if (!federatedHost && url) {
           const federatedHostToCreate = {
             displayName: url.host.toLocaleLowerCase(),
-            publicInbox: userPetition.endpoints?.sharedInbox
+            publicInbox: userPetition.endpoints?.sharedInbox ? userPetition.endpoints?.sharedInbox : ''
           }
           federatedHost = (await FederatedHost.findOrCreate({ where: federatedHostToCreate }))[0]
-        } if (!url) {
+        }
+        if (!url) {
           logger.warn({ message: 'Url is not valid wtf', trace: new Error().stack })
         }
         const remoteMentionUrl = typeof userPetition.url === 'string' ? userPetition.url : ''
@@ -108,10 +109,7 @@ async function getRemoteActorIdProcessor(job: Job) {
         let userRes
         const existingUsers = await User.findAll({
           where: {
-            literal: sequelize.where(
-              sequelize.fn('lower', sequelize.col('url')),
-              userData.url.toLowerCase()
-            )
+            literal: sequelize.where(sequelize.fn('lower', sequelize.col('url')), userData.url.toLowerCase())
           }
         })
         if (res) {
@@ -290,7 +288,6 @@ async function getRemoteActorIdProcessor(job: Job) {
   }
   return res
 }
-
 
 async function getDeletedUser() {
   return await getUserIdFromRemoteId(`https://${environment.instanceUrl}/fediverse/blog/${environment.deletedUser}`)
