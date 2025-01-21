@@ -22,9 +22,9 @@ async function checkCommitMentions(
     ) {
       // we do not ned 18k likes on a mark hamill post. We better do just a "people you follow liked..."
       if (
-        didsToCheck.some(
-          (elem) =>
-            elem == commit.repo || operation.record?.subject == elem || operation.record.subject?.uri?.includes(elem)
+        didsToCheck.some((elem) => elem == commit.repo) ||
+        cacheData.localUserDids.some(
+          (elem) => operation.record.subject?.uri == elem || operation.record?.subject == elem
         )
       ) {
         return true
