@@ -264,7 +264,7 @@ export class PostsService {
       id: '42'
     }
     this.rewootedPosts = this.rewootedPosts.concat(unlinked.rewootIds)
-    const user = elem ? unlinked.users.find((usr) => usr.id === elem.userId) : nonExistentUser
+    const user = elem ? { ...unlinked.users.find((usr) => usr.id === elem.userId) } : nonExistentUser
     const userEmojis = elem ? unlinked.emojiRelations.userEmojiRelation.filter((elem) => elem.userId === user?.id) : []
     const polls = elem ? unlinked.polls.filter((poll) => poll.postId === elem.id) : []
     const medias = elem
@@ -272,10 +272,10 @@ export class PostsService {
           return media.postId === elem.id
         })
       : []
-    if (userEmojis && userEmojis.length && user?.name) {
+    if (userEmojis && userEmojis.length && user && user.name) {
       userEmojis.forEach((usrEmoji) => {
         const emoji = unlinked.emojiRelations.emojis.find((emojis) => emojis.id === usrEmoji.emojiId)
-        if (emoji) {
+        if (emoji && user.name) {
           user.name = user.name.replaceAll(emoji.name, this.emojiToHtml(emoji))
         }
       })
@@ -315,7 +315,7 @@ export class PostsService {
       ...elem,
       content: elem ? elem.content : '',
       emojiReactions: emojiReactions,
-      user: user ? user : nonExistentUser,
+      user: user ? (user as SimplifiedUser) : nonExistentUser,
       tags: elem ? unlinked.tags.filter((tag) => tag.postId === elem.id) : [],
       descendents: [],
       userLikesPostRelations: elem

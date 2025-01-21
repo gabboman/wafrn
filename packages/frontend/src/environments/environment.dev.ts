@@ -5,7 +5,17 @@
 //
 // This is for development options TODO: add jsdocs.
 export const environment = {
-  production: false
+  production: false,
+  maxUploadSize: '250',
+  logo: '/assets/logo.png',
+  baseUrl: 'http://localhost:3001/api',
+  baseMediaUrl: 'http://localhost:3001/api/uploads',
+  externalCacheurl: 'https://cdn.wafrn.net.net/api/cache/?media=',
+  frontUrl: 'http://localhost:4200',
+  shortenPosts: 5,
+  reviewRegistrations: true,
+  disablePWA: false,
+  maintenance: false
 }
 
 /*
