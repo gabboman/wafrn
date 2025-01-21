@@ -80,12 +80,16 @@ async function processFirehose(job: Job) {
           case 'app.bsky.graph.follow': {
             const userFollowed = await getAtprotoUser(record.subject, (await adminUser) as Model<any, any>)
             if (userFollowed) {
-              let tmp = await Follows.create({
-                followedId: userFollowed.id,
-                followerId: remoteUser.id,
-                bskyPath: operation.path,
-                accepted: true
+              let tmp = await Follows.findOrCreate({
+                where: {
+                  followedId: userFollowed.id,
+                  followerId: remoteUser.id
+                }
               })
+              const follow = tmp[0]
+              follow.bskyPath = operation.path
+              follow.accepted = true
+              await follow.save()
             }
             break
           }
