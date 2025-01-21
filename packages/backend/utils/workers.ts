@@ -7,7 +7,7 @@ import { getRemoteActorIdProcessor } from './queueProcessors/getRemoteActorIdPro
 import { logger } from './logger.js'
 import { processRemotePostView } from './queueProcessors/processRemotePostView.js'
 import { processRemoteMedia } from './queueProcessors/remoteMediaProcessor.js'
-import { processFirehose } from "../atproto/workers/processFirehoseWorker.js";
+import { processFirehose } from '../atproto/workers/processFirehoseWorker.js'
 
 logger.info('starting workers')
 const workerInbox = new Worker('inbox', (job: Job) => inboxWorker(job), {
@@ -80,18 +80,17 @@ const workerProcessRemoteMediaData = new Worker(
   }
 )
 
-const workerProcessFirehose = environment.enableBsky ? new Worker(
-  'firehoseQueue', async (job: Job) => await processFirehose(job),
-  {
-    connection: environment.bullmqConnection,
-    metrics: {
-      maxDataPoints: MetricsTime.ONE_WEEK * 2
-    },
-    concurrency: environment.workers.high,
-    // up to five minutes
-    lockDuration: 300000,
-  }
-) : null
+const workerProcessFirehose = environment.enableBsky
+  ? new Worker('firehoseQueue', async (job: Job) => await processFirehose(job), {
+      connection: environment.bullmqConnection,
+      metrics: {
+        maxDataPoints: MetricsTime.ONE_WEEK * 2
+      },
+      concurrency: environment.workers.high,
+      // up to five minutes
+      lockDuration: 300000
+    })
+  : null
 
 const workers = [
   workerInbox,
@@ -101,7 +100,7 @@ const workers = [
   workerProcessRemotePostView,
   workerSendPostChunk,
   workerProcessRemotePostView,
-  workerProcessRemoteMediaData,
+  workerProcessRemoteMediaData
 ]
 if (environment.enableBsky) {
   workers.push(workerProcessFirehose as Worker)
@@ -110,10 +109,25 @@ if (environment.enableBsky) {
 workers.forEach((worker) => {
   worker.on('error', (err) => {
     logger.warn({
+      message: `worker ${worker.name} had error`,
+      error: err
+    })
+  })
+  worker.on('failed', (err) => {
+    logger.warn({
       message: `worker ${worker.name} failed`,
       error: err
     })
   })
 })
 
-export { workerInbox, workerSendPostChunk, workerPrepareSendPost, workerGetUser, workerDeletePost, workerProcessRemotePostView, workerProcessRemoteMediaData, workerProcessFirehose }
+export {
+  workerInbox,
+  workerSendPostChunk,
+  workerPrepareSendPost,
+  workerGetUser,
+  workerDeletePost,
+  workerProcessRemotePostView,
+  workerProcessRemoteMediaData,
+  workerProcessFirehose
+}
