@@ -145,7 +145,7 @@ async function internalGetDBUser(did: string, url: string) {
   } else {
     // OH WOW SOMETHING OFF
     foundUsers.forEach(async (usr) => {
-      usr.url = `handle.invalid_${usr.bskyDid}`
+      usr.url = `handle.invalid_${usr.bskyDid}_${new Date().getTime()}`
       await usr.save()
     })
     return foundUsers.find((elem) => elem.bskyDid === did)
