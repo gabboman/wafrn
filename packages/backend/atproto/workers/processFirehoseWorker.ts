@@ -21,7 +21,7 @@ async function processFirehose(job: Job) {
   const remoteUser = await getAtprotoUser(job.data.repo, (await adminUser) as Model<any, any>)
   const operation: RepoOp = job.data.operation
   if (remoteUser && operation) {
-    logger.debug({ action: operation.action, type: operation.record['$type'] })
+    logger.trace({ action: operation.action, type: operation.record['$type'] })
     switch (operation.action) {
       case 'create': {
         const record = operation.record
