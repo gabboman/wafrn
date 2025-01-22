@@ -466,7 +466,9 @@ export default function userRoutes(app: Application) {
           'followingCount',
           'followerCount',
           'manuallyAcceptsFollows',
-          'bskyDid'
+          'bskyDid',
+          'isFediverseUser',
+          'isBlueskyUser'
         ],
         include: [
           {

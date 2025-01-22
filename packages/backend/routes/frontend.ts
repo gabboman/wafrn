@@ -156,9 +156,7 @@ async function getBlogSEOCache(url: string): Promise<{ title: string; descriptio
   if (!resData) {
     const blog = await User.findOne({
       where: {
-        url: {
-          [Op.iLike]: url
-        }
+        literal: sequelize.where(sequelize.fn('lower', sequelize.col('url')), url.toLowerCase())
       }
     })
     if (blog) {
@@ -202,10 +200,11 @@ function getIndexSeo(title: string, description: string, image?: string) {
     <meta property="description" content="${sanitizedDescription}">
     <meta property="og:description" content="${sanitizedDescription}">
     <meta name="twitter:description" content="${sanitizedDescription}">
-    ${imgUrl
-      ? `<meta property="og:image" content="${imgUrl}">
+    ${
+      imgUrl
+        ? `<meta property="og:image" content="${imgUrl}">
     <meta name="twitter:image" content="${imgUrl}">`
-      : ''
+        : ''
     }
     <meta property="og:site_name" content="${environment.instanceUrl}">
     <meta name="twitter:site" content="${environment.instanceUrl}">

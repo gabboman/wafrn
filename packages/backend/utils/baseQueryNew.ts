@@ -276,7 +276,7 @@ async function getUnjointedPosts(postIdsInput: string[], posterId: string) {
   const likes = await getLikes(postIds)
   userIds = userIds.concat(likes.map((like: any) => like.userId))
   const users = User.findAll({
-    attributes: ['url', 'avatar', 'id', 'name', 'remoteId', 'banned'],
+    attributes: ['url', 'avatar', 'id', 'name', 'remoteId', 'banned', 'bskyDid', 'isBlueskyUser', 'isFediverseUser'],
     where: {
       id: {
         [Op.in]: userIds

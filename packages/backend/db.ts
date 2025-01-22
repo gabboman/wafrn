@@ -170,6 +170,24 @@ const User = sequelize.define(
     bskyDid: {
       unique: true,
       type: Sequelize.STRING(768)
+    },
+    isBlueskyUser: {
+      type: DataTypes.VIRTUAL,
+      get() {
+        return !this.email && this.bskyDid
+      },
+      set(value) {
+        throw new Error('Do not try to set the `isBlueskyUser` value!')
+      }
+    },
+    isFediverseUser: {
+      type: DataTypes.VIRTUAL,
+      get() {
+        return !this.email && this.remoteId
+      },
+      set(value) {
+        throw new Error('Do not try to set the `isFediverseUser` value!')
+      }
     }
   },
   {
