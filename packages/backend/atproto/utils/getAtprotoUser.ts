@@ -36,7 +36,8 @@ async function forcePopulateUsers(dids: string[], localUser: Model<any, any>) {
               headerImage: data.banner,
               // bsky does not has this function lol
               manuallyAcceptsFollows: false,
-              updatedAt: new Date()
+              updatedAt: new Date(),
+              activated: true
             }
           })
         )
@@ -108,7 +109,8 @@ async function getAtprotoUser(handle: string, localUser: Model<any, any>, petiti
       headerImage: data.banner,
       // bsky does not has this function lol
       manuallyAcceptsFollows: false,
-      updatedAt: new Date()
+      updatedAt: new Date(),
+      activated: true
     }
     userFound = userFound ? userFound : await internalGetDBUser(newData.bskyDid, newData.url)
     if (userFound && !userFound.email) {
