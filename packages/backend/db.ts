@@ -174,7 +174,7 @@ const User = sequelize.define(
     isBlueskyUser: {
       type: DataTypes.VIRTUAL,
       get() {
-        return !!(!this.email && this.bskyDid)
+        return !!(this.url.split('@').length == 2 && this.bskyDid)
       },
       set(value) {
         throw new Error('Do not try to set the `isBlueskyUser` value!')
@@ -183,7 +183,7 @@ const User = sequelize.define(
     isFediverseUser: {
       type: DataTypes.VIRTUAL,
       get() {
-        return !!(!this.email && this.remoteId)
+        return !!(this.url.split('@').length == 3 && this.remoteId)
       },
       set(value) {
         throw new Error('Do not try to set the `isFediverseUser` value!')

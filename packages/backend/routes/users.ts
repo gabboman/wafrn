@@ -562,6 +562,8 @@ export default function userRoutes(app: Application) {
       if (success) {
         res.send({
           ...blog.dataValues,
+          isBlueskyUser: blog.isBlueskyUser,
+          isFediverseUser: blog.isFediverseUser,
           postCount,
           muted,
           blocked,
