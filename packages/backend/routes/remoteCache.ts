@@ -16,7 +16,7 @@ function extensionFromMimeType(mime: string) {
 function sendWithCache(res: Response, localFileName: string) {
   // 1 hour of cache
   res.set('Cache-control', 'public, max-age=3600')
-  res.set('Content-Disposition', `attachment; filename="${localFileName.split('/').pop()}"`)
+  res.set('Content-Disposition', `inline; filename="${localFileName.split('/').pop()}"`)
   res.sendFile(localFileName, { root: '.' })
 }
 
