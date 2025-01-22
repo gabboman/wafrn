@@ -198,7 +198,9 @@ export default function searchRoutes(app: Application) {
         federatedHostId: {
           [Op.notIn]: await getallBlockedServers()
         },
-        banned: false,
+        banned: {
+          [Op.ne]: true
+        },
         [Op.or]: [
           {
             url: {
