@@ -194,17 +194,21 @@ export default function searchRoutes(app: Application) {
       limit: 20,
       where: {
         activated: true,
-        url: { [Op.like]: '@%' },
-        federatedHostId: {
-          [Op.notIn]: await getallBlockedServers()
+        url: {
+          [Op.iLike]: `@%${searchTerm}%`
         },
         banned: {
           [Op.ne]: true
         },
         [Op.or]: [
           {
-            url: {
-              [Op.iLike]: `%${searchTerm}%`
+            federatedHostId: {
+              [Op.notIn]: await getallBlockedServers()
+            }
+          },
+          {
+            federatedHostId: {
+              [Op.eq]: null
             }
           }
         ]
