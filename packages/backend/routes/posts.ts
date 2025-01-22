@@ -423,7 +423,7 @@ export default function postsRoutes(app: Application) {
                       [Op.any]: mentionsInPost.map((elem) => {
                         // local users are stored without the @, so remove it from the query param
                         let urlToSearch = elem.trim().toLowerCase()
-                        if (urlToSearch.match(new RegExp('@', 'g'))?.length == 1) {
+                        if (urlToSearch.split('@').length == 2 && urlToSearch.split('.').length == 1) {
                           urlToSearch = urlToSearch.split('@')[1]
                         }
                         return urlToSearch
@@ -496,12 +496,14 @@ export default function postsRoutes(app: Application) {
 
           const sortedMentions = dbFoundMentions.sort((a: any, b: any) => a.url.length - b.url.length)
           for (let userMentioned of sortedMentions) {
-            const url = userMentioned.url.trim().startsWith('@')
-              ? userMentioned.url.split('@')[1].trim()
-              : `${userMentioned.url.trim()}`
-            const remoteId = userMentioned.url.startsWith('@')
-              ? userMentioned.remoteId
-              : `${environment.frontendUrl}/fediverse/blog/${userMentioned.url}`
+            const url =
+              !userMentioned.url.trim().startsWith('@') && userMentioned.url.split('.').length == 1
+                ? `${userMentioned.url.trim()}`
+                : userMentioned.url.split('@')[1].trim()
+            const remoteId =
+              userMentioned.url.split('@').length > 2
+                ? userMentioned.remoteId
+                : `${environment.frontendUrl}/fediverse/blog/${userMentioned.url}`
             const remoteUrl = userMentioned.remoteMentionUrl ? userMentioned.remoteMentionUrl : remoteId
             const stringToReplace = userMentioned.url.startsWith('@')
               ? userMentioned.url.toLowerCase()
