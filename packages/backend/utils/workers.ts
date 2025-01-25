@@ -121,6 +121,25 @@ workers.forEach((worker) => {
   })
 })
 
+const workersToLogFail = [
+  workerInbox,
+  workerDeletePost,
+  workerGetUser,
+  workerPrepareSendPost,
+  workerProcessRemotePostView,
+  workerSendPostChunk,
+  workerProcessRemotePostView
+]
+
+workersToLogFail.forEach((worker) =>
+  worker.on('failed', (err) => {
+    logger.warn({
+      message: `worker ${worker.name} failed`,
+      error: err
+    })
+  })
+)
+
 export {
   workerInbox,
   workerSendPostChunk,
