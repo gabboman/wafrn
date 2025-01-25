@@ -79,8 +79,7 @@ async function inboxWorker(job: Job) {
           break
         }
         case 'Update': {
-          logger.debug(`Update recived ${body.id}`)
-          await wait(5000);
+          await wait(5000)
           await UpdateActivity(body, remoteUser, user)
           break
         }
