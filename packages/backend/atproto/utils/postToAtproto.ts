@@ -1,6 +1,6 @@
 import { Model } from 'sequelize'
 import { BskyAgent, RichText } from '@atproto/api'
-import { Media, Post, Quotes, User } from '../../db.js'
+import { Media, Post, PostMentionsUserRelation, Quotes, User } from '../../db.js'
 import { environment } from '../../environment.js'
 import fs from 'fs/promises'
 import { getPostUrlForQuote } from '../../utils/activitypub/postToJSONLD.js'
@@ -45,6 +45,36 @@ async function postToAtproto(post: Model<any, any>, agent: BskyAgent) {
   if (quotedPost && !bskyQuote) {
     const remoteId = getPostUrlForQuote(quotedPost)
     postText = postText + '\nRE: ' + remoteId
+  }
+
+  const mentionedUserRelations = await PostMentionsUserRelation.findAll({
+    where: {
+      postId: post.id
+    }
+  })
+
+  for (const mentionedRelation of mentionedUserRelations) {
+    const user = await User.findByPk(mentionedRelation.userId)
+    const escapedUrl = user.url.replaceAll(/[/\-\\^$*+?.()|[\]{}]/g, '\\$&')
+    let mentionRegex = new RegExp(`(?<=\\s|^)(@${escapedUrl})(?=\\s|$)`, 'gm')
+
+    // Fedi users
+    if (user.remoteMentionUrl) {
+      // A Fedi user url already has an @ in the start
+      mentionRegex = new RegExp(`(?<=\\s|^)(${escapedUrl})(?=\\s|$)`, 'gm')
+      postText = postText.replaceAll(mentionRegex, `[@${user.url.split('@')[1]}](${user.remoteMentionUrl})`)
+      continue
+    }
+
+    // Local users
+    if (!user.isBlueskyUser) {
+      if (user.bskyDid && user.enableBsky) {
+        const response = await agent.getProfile({ actor: user.bskyDid })
+        if (response.data)
+          postText = postText.replaceAll(mentionRegex, `@${response.data.handle}`)
+      }
+      else postText = postText.replaceAll(mentionRegex, `[@${user.url}](${environment.frontendUrl}/fediverse/blog/${user.url.toLowerCase()})`)
+    }
   }
 
   const ask = await post.getAsk()
