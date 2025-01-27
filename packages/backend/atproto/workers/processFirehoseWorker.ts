@@ -180,9 +180,11 @@ async function processFirehose(job: Job) {
               }
               break
             }
-
             default: {
-              logger.info({ message: `Bsky deleted type not implemented: ${deleteOperation.path}` })
+              logger.info({
+                message: `Bsky deleted type not implemented: ${deleteOperation.path}`,
+                operation: deleteOperation
+              })
             }
           }
         } catch (error) {
