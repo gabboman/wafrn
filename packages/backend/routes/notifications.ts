@@ -43,9 +43,18 @@ export default function notificationRoutes(app: Application) {
       : new Date()
     const quotesDate = req.query?.quotesDate ? new Date(parseInt(req.query.quotesDate as string)) : new Date()
 
-    const newQuotes = Quotes.findAll(await getQuotedPostsQuery(userId, quotesDate, Op.lt, true))
+    let reblogQuery: any = getReblogQuery(userId, reblogsDate)
+    let followsQuery: any = getNewFollows(userId, followsDate)
+    let mentionedPostsPreQuery: any = getMentionedPostsId(userId, mentionsDate, Op.lt, true)
+    let quotedPostsPreQuery: any = getQuotedPostsQuery(userId, quotesDate, Op.lt, true)
+    await Promise.all([reblogQuery, followsQuery, mentionedPostsPreQuery, quotedPostsPreQuery])
+    reblogQuery = await reblogQuery
+    followsQuery = await followsQuery
+    mentionedPostsPreQuery = await mentionedPostsPreQuery
+    quotedPostsPreQuery = await quotedPostsPreQuery
 
-    const reblogQuery: any = await getReblogQuery(userId, reblogsDate)
+    const newQuotes = Quotes.findAll(quotedPostsPreQuery)
+
     reblogQuery.where.createdAt = {
       [Op.lt]: reblogsDate
     }
@@ -53,17 +62,13 @@ export default function notificationRoutes(app: Application) {
       ...reblogQuery,
       limit: environment.postsPerPage
     })
-
-    const mentionedPostsId = (await getMentionedPostsId(userId, mentionsDate, Op.lt, true)).map(
-      (mention: any) => mention.postId
-    )
+    const mentionedPostsId = mentionedPostsPreQuery.map((mention: any) => mention.postId)
 
     const mentions = Post.findAll({
       where: {
         id: { [Op.in]: mentionedPostsId }
       }
     })
-    const followsQuery: any = await getNewFollows(userId, followsDate)
     followsQuery.where.createdAt = {
       [Op.lt]: followsDate
     }
