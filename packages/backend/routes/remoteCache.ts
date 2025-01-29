@@ -122,12 +122,12 @@ export default function cacheRoutes(app: Application) {
 
       // if the avatarTransform flag is true, we need to optimize the file and save the optimized copy in the local file system
       if (avatarTransform) {
-        const avatarFileName = `cache/avatars_${mediaLinkHash}.avif`
+        const avatarFileName = `cache/avatars_${mediaLinkHash}.webp`
         if (fs.existsSync(avatarFileName)) {
           localFileName = avatarFileName
         } else {
           localFileName = await optimizeMedia(localFileName, {
-            outPath: `cache/avatars_${mediaLinkHash}`,
+            outPath: avatarFileName,
             maxSize: 96,
             keep: true
           })

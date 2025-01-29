@@ -53,9 +53,11 @@ async function postToJSONLD(postId: string) {
   // we remove the wafrnmedia from the post for the outside world, as they get this on the attachments
   processedContent = processedContent.replaceAll(wafrnMediaRegex, '')
   if (ask) {
-    processedContent = `<p>${getUserName(userAsker)} asked </p> <blockquote>${ask.question
-      }</blockquote> ${processedContent} <p>To properly see this ask, <a href="${environment.frontendUrl + '/fediverse/post/' + post.id
-      }">check the post in the original instance</a></p>`
+    processedContent = `<p>${getUserName(userAsker)} asked </p> <blockquote>${
+      ask.question
+    }</blockquote> ${processedContent} <p>To properly see this ask, <a href="${
+      environment.frontendUrl + '/fediverse/post/' + post.id
+    }">check the post in the original instance</a></p>`
   }
   const mentions: string[] = post.mentionPost.map((elem: any) => elem.id)
   const fediMentions: fediverseTag[] = []
@@ -129,9 +131,9 @@ async function postToJSONLD(postId: string) {
 
   const usersToSend = getToAndCC(post.privacy, mentionedUsers, stringMyFollowers)
   const actorUrl = `${environment.frontendUrl}/fediverse/blog/${localUser.url.toLowerCase()}`
-  let misskeyQuoteURL = quotedPostString;
+  let misskeyQuoteURL = quotedPostString
   if (misskeyQuoteURL?.startsWith('https://bsky.app/')) {
-    misskeyQuoteURL = null;
+    misskeyQuoteURL = null
   }
   let postAsJSONLD: activityPubObject = {
     '@context': ['https://www.w3.org/ns/activitystreams', `${environment.frontendUrl}/contexts/litepub-0.1.jsonld`],
@@ -167,7 +169,7 @@ async function postToJSONLD(postId: string) {
           const extension = media.url.split('.')[media.url.split('.').length - 1].toLowerCase()
           return {
             type: 'Document',
-            mediaType: extension === 'mp4' ? 'video/mp4' : 'image/avif',
+            mediaType: media.mediaType,
             url: environment.mediaUrl + media.url,
             sensitive: media.NSFW ? true : false,
             name: media.description
@@ -210,8 +212,8 @@ async function postToJSONLD(postId: string) {
         post.privacy / 1 === 10
           ? mentionedUsers
           : post.privacy / 1 === 0
-            ? ['https://www.w3.org/ns/activitystreams#Public']
-            : [stringMyFollowers],
+          ? ['https://www.w3.org/ns/activitystreams#Public']
+          : [stringMyFollowers],
       cc: [`${environment.frontendUrl}/fediverse/blog/${localUser.url.toLowerCase()}`, stringMyFollowers],
       object: parentPostString
     }
@@ -243,7 +245,7 @@ function getToAndCC(
       break
     }
     default: {
-      ; (to = mentionedUsers), (cc = [])
+      ;(to = mentionedUsers), (cc = [])
     }
   }
   return {
@@ -271,7 +273,7 @@ function getUserName(user?: { url: string }): string {
 function getPostUrlForQuote(post: any): string {
   const isPostFromBsky = !!post.bskyUri
   const isPostFromFedi = !!post.remotePostId
-  let res = `${environment.frontendUrl}/fediverse/post/${post.id}`;
+  let res = `${environment.frontendUrl}/fediverse/post/${post.id}`
   if (isPostFromBsky && post.user.url.startsWith('@')) {
     const parts = post.bskyUri.split('/app.bsky.feed.post/')
     const userDid = parts[0].split('at://')[1]

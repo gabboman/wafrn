@@ -12,7 +12,7 @@ export default async function optimizeMedia(
 ): Promise<string> {
   const fileAndExtension = options?.outPath ? [options.outPath, ''] : inputPath.split('.')
   const originalExtension = fileAndExtension[1].toLowerCase()
-  fileAndExtension[1] = options?.forceImageExtension ? options.forceImageExtension : 'avif'
+  fileAndExtension[1] = options?.forceImageExtension ? options.forceImageExtension : 'webp'
   let outputPath = fileAndExtension.join('.')
   const doNotDelete = options?.keep ? options.keep : false
   switch (originalExtension) {
@@ -79,8 +79,8 @@ export default async function optimizeMedia(
       if (options?.maxSize) {
         await conversion.resize(options.maxSize, options.maxSize)
       }
-      if (fileAndExtension[1] == 'avif') {
-        conversion.avif({
+      if (fileAndExtension[1] == 'webp') {
+        conversion.webp({
           lossless: inputPath.toLowerCase().endsWith('png')
         })
       }

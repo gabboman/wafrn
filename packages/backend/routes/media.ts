@@ -39,7 +39,7 @@ export default function mediaRoutes(app: Application) {
           let fileUrl = `/${file.path}`
           const originalNameArray = fileUrl.split('.')
           const extension = originalNameArray[originalNameArray.length - 1].toLowerCase()
-          const formatsToNotConvert = ['avif', 'aac', 'mp3', 'wav', 'ogg', 'oga', 'm4a', 'pdf']
+          const formatsToNotConvert = ['webp', 'aac', 'mp3', 'wav', 'ogg', 'oga', 'm4a', 'pdf']
           if (!formatsToNotConvert.includes(extension)) {
             fileUrl = `/${await optimizeMedia(file.path)}`
           }
