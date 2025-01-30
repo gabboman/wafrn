@@ -533,7 +533,9 @@ export default function postsRoutes(app: Application) {
             userId: posterId,
             privacy: bodyPrivacy,
             parentId: req.body.parent,
-            markdownContent: req.body.content
+            markdownContent: req.body.content,
+            isReblog:
+              content == '' && !postToBeQuoted && !req.body.ask && mediaToAdd.length === 0 && mentionsToAdd.length === 0
           })
         }
         if (postToBeQuoted) {

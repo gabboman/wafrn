@@ -368,7 +368,7 @@ SELECT "parentId" as "postId", "userId", "createdAt", 'REBLOG' as "type" FROM "p
     return {
       order: [['createdAt', 'DESC']],
       where: {
-        content: '',
+        isReblog: true,
         parentId: {
           [Op.notIn]: await getMutedPosts(userId)
         },

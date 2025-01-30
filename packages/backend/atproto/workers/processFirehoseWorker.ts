@@ -66,6 +66,7 @@ async function processFirehose(job: Job) {
             if (postToBeRewooted) {
               const rewootCreated = await Post.create({
                 content: '',
+                isReblog: true,
                 userId: remoteUser.id,
                 parentId: postToBeRewooted,
                 bskyUri: `at://${job.data.repo}/${operation.path}`,
@@ -127,7 +128,8 @@ async function processFirehose(job: Job) {
                   let postsToDeleteUnfiltered = await Post.findAll({
                     where: {
                       parentId: id,
-                      content: ''
+                      content: '',
+                      isReblog: true
                     }
                   })
                   const unfilteredPostIds: string[] = postsToDeleteUnfiltered.map((elem: any) => elem.id)

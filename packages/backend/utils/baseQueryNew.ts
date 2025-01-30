@@ -228,7 +228,7 @@ async function getUnjointedPosts(postIdsInput: string[], posterId: string) {
   const rewootedPosts = await Post.findAll({
     attributes: ['id', 'parentId'],
     where: {
-      content: '',
+      isReblog: true,
       userId: posterId,
       parentId: {
         [Op.in]: postIds

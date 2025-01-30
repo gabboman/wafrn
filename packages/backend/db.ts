@@ -362,6 +362,11 @@ const Post = sequelize.define(
       type: Sequelize.BOOLEAN,
       allowNull: true,
       defaultValue: false
+    },
+    isReblog: {
+      type: Sequelize.BOOLEAN,
+      allowNull: true,
+      defaultValue: false
     }
   },
   {
@@ -393,6 +398,14 @@ const Post = sequelize.define(
       {
         unique: true,
         fields: ['userId', 'title']
+      },
+      {
+        unique: false,
+        fields: ['isReblog']
+      },
+      {
+        unique: false,
+        fields: ['isReblog', 'parentId']
       }
     ]
   }

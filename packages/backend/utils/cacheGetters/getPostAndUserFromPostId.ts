@@ -18,10 +18,12 @@ async function getPostAndUserFromPostId(postId: string): Promise<{ found: boolea
         },
         {
           model: Post,
-          include: [{
-            model: User,
-            as: 'user'
-          }],
+          include: [
+            {
+              model: User,
+              as: 'user'
+            }
+          ],
           as: 'quoted',
           required: false
         },
@@ -74,7 +76,7 @@ async function getPostAndUserFromPostId(postId: string): Promise<{ found: boolea
       let shares = Post.findAll({
         where: {
           parentId: postId,
-          content: ''
+          isReblog: true
         }
       })
       let reacts = EmojiReaction.findAll({
