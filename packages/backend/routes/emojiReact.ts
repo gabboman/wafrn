@@ -20,7 +20,7 @@ export default function emojiReactRoutes(app: Application) {
     }
 
     const user = User.findByPk(userId)
-    const post = Post.findByPk(postId)
+    const post = await Post.findByPk(postId)
     let emoji = await Emoji.findByPk(emojiName)
     emoji =
       emojiName.startsWith(':') && emojiName.endsWith(':')
