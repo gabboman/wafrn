@@ -20,12 +20,12 @@ export default function likeRoutes(app: Application) {
         id: userId
       }
     })
-    const post = Post.findOne({
+    const post = await Post.findOne({
       where: {
         id: postId
       }
     })
-    const like = UserLikesPostRelations.findOne({
+    const like = await UserLikesPostRelations.findOne({
       where: {
         userId: userId,
         postId: postId
