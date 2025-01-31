@@ -535,7 +535,7 @@ export default function postsRoutes(app: Application) {
             privacy: bodyPrivacy,
             parentId: req.body.parent,
             markdownContent: req.body.content,
-            isReblog:
+            isReblog: !!(
               parent &&
               content == '' &&
               !postToBeQuoted &&
@@ -543,6 +543,7 @@ export default function postsRoutes(app: Application) {
               mediaToAdd.length === 0 &&
               mentionsToAdd.length === 0 &&
               (req.body.tags ? req.body.tags.trim : '') == ''
+            )
           })
         }
         if (post.isReblog) {
