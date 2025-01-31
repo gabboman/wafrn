@@ -11,7 +11,8 @@ import {
   Follows,
   UserLikesPostRelations,
   Media,
-  Ask
+  Ask,
+  Notification
 } from '../db.js'
 import { authenticateToken } from '../utils/authenticateToken.js'
 
@@ -535,11 +536,41 @@ export default function postsRoutes(app: Application) {
             parentId: req.body.parent,
             markdownContent: req.body.content,
             isReblog:
-              content == '' && !postToBeQuoted && !req.body.ask && mediaToAdd.length === 0 && mentionsToAdd.length === 0
+              parent &&
+              content == '' &&
+              !postToBeQuoted &&
+              !req.body.ask &&
+              mediaToAdd.length === 0 &&
+              mentionsToAdd.length === 0 &&
+              (req.body.tags ? req.body.tags.trim : '') == ''
+          })
+        }
+        if (post.isReblog) {
+          await Notification.create({
+            notificationType: 'REWOOT',
+            notifiedUserId: parent?.userId,
+            userId: post.userId,
+            postId: post.id
           })
         }
         if (postToBeQuoted) {
+          if (req.body.idPostToEdit) {
+            await Notification.destroy({
+              where: {
+                notificationType: 'QUOTE',
+                notifiedUserId: postToBeQuoted.userId,
+                userId: post.userId,
+                postId: post.id
+              }
+            })
+          }
           post.addQuoted(postToBeQuoted)
+          await Notification.create({
+            notificationType: 'QUOTE',
+            notifiedUserId: postToBeQuoted.userId,
+            userId: post.userId,
+            postId: post.id
+          })
         }
         const askId = req.body.ask
         if (askId) {
@@ -561,6 +592,25 @@ export default function postsRoutes(app: Application) {
         mentionsToAdd = [...new Set(mentionsToAdd)].filter((elem) => elem != posterId)
         post.setMedias(mediaToAdd.map((media: any) => media.id))
         post.setMentionPost(mentionsToAdd)
+        if (req.body.idPostToEdit) {
+          await Notification.destroy({
+            where: {
+              notificationType: 'MENTION',
+              postId: post.id
+            }
+          })
+        }
+
+        await Notification.bulkCreate(
+          mentionsToAdd.map((mention) => {
+            return {
+              notificationType: 'MENTION',
+              notifiedUserId: mention,
+              userId: post.userId,
+              postId: post.id
+            }
+          })
+        )
         post.setEmojis(emojisToAdd)
         success = !req.body.tags
         if (req.body.tags) {

@@ -2,6 +2,7 @@ import { Application, Response } from 'express'
 import {
   FederatedHost,
   Media,
+  Notification,
   Post,
   PostHostView,
   PostMentionsUserRelation,
@@ -184,25 +185,8 @@ export default function deletePost(app: Application) {
           }
         })
         const unfilteredPostIds: string[] = postsToDeleteUnfiltered.map((elem: any) => elem.id)
-        const tags = await PostTag.findAll({
-          where: {
-            postId: {
-              [Op.in]: unfilteredPostIds
-            }
-          }
-        })
-        const medias = await Media.findAll({
-          where: {
-            postId: {
-              [Op.in]: unfilteredPostIds
-            }
-          }
-        })
 
-        const postsThatAreNotReblogs = tags
-          .map((tag: any) => tag.postId)
-          .concat(medias.map((media: any) => media.postId))
-        const reblogsToDelete = unfilteredPostIds.filter((elem) => !postsThatAreNotReblogs.includes(elem))
+        const reblogsToDelete = unfilteredPostIds
 
         if (!reblogsToDelete) {
           return res.send(true)
@@ -289,6 +273,13 @@ export default function deletePost(app: Application) {
         }
         reblogsToDelete.forEach(async (elem) => {
           await redisCache.del('postAndUser:' + elem)
+        })
+        await Notification.destroy({
+          where: {
+            notificationType: 'REWOOT',
+            postId: req.query.id,
+            userId: user.id
+          }
         })
         await Post.destroy({
           where: {

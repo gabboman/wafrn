@@ -684,6 +684,58 @@ const BskyInviteCodes = sequelize.define('bskyInviteCodes', {
   code: Sequelize.STRING(512)
 })
 
+const Notification = sequelize.define(
+  'notifications',
+  {
+    notificationType: Sequelize.STRING(128)
+  },
+  {
+    indexes: [
+      {
+        fields: ['notifiedUserId'],
+        unique: false
+      },
+      {
+        fields: ['notifiedUserId', 'createdAt'],
+        unique: false
+      },
+      {
+        fields: ['notificationType', 'postId'],
+        unique: false
+      },
+      {
+        fields: ['userId'],
+        unique: false
+      },
+      {
+        fields: ['postId'],
+        unique: false
+      },
+      {
+        fields: ['notificationType', 'postId'],
+        unique: false
+      }
+    ]
+  }
+)
+
+Notification.belongsTo(User, {
+  as: 'notifiedUser'
+})
+
+Notification.belongsTo(User, {
+  as: 'user'
+})
+
+Notification.belongsTo(Post, {
+  constraints: false,
+  foreignKey: 'postId'
+})
+
+Notification.belongsTo(EmojiReaction, {
+  constraints: false
+})
+
 Post.hasOne(Ask)
 Ask.belongsTo(Post)
 User.hasMany(Ask, {
@@ -973,5 +1025,6 @@ export {
   Quotes,
   PostHostView,
   RemoteUserPostView,
-  Ask
+  Ask,
+  Notification
 }

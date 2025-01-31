@@ -1,20 +1,20 @@
 import { Application, Response } from 'express'
 import { authenticateToken } from '../utils/authenticateToken.js'
 
-import { Post, User, UserLikesPostRelations } from '../db.js'
+import { Notification, Post, User, UserLikesPostRelations } from '../db.js'
 import { logger } from '../utils/logger.js'
 import { likePostRemote } from '../utils/activitypub/likePost.js'
 import AuthorizedRequest from '../interfaces/authorizedRequest.js'
 import { getUserOptions } from '../utils/cacheGetters/getUserOptions.js'
-import {getAtProtoSession} from "../atproto/utils/getAtProtoSession.js";
-import {Model} from "sequelize";
+import { getAtProtoSession } from '../atproto/utils/getAtProtoSession.js'
+import { Model } from 'sequelize'
 
 export default function likeRoutes(app: Application) {
   app.post('/api/like', authenticateToken, async (req: AuthorizedRequest, res: Response) => {
     let success = false
     const userId = req.jwtData?.userId
     const postId = req.body.postId
-    let bskyUri = undefined;
+    let bskyUri = undefined
     const user = User.findOne({
       where: {
         id: userId
@@ -42,22 +42,22 @@ export default function likeRoutes(app: Application) {
           const userPosterOfPostToBeLiked = await User.findByPk((await post).userId)
           if (userPosterOfPostToBeLiked.url.toLowerCase().endsWith('threads.net')) {
             res.status(500)
-            res.send({error: true, message: 'You do not have threads federation enabled'})
+            res.send({ error: true, message: 'You do not have threads federation enabled' })
             return
           }
         }
-        if(!(await user)?.enableBsky && (await post)?.bskyUri) {
-          const userPosterOfPostToBeLiked = await User.findByPk((await post as Model<any, any>).userId)
-          if(userPosterOfPostToBeLiked.url.startsWith('@')) {
+        if (!(await user)?.enableBsky && (await post)?.bskyUri) {
+          const userPosterOfPostToBeLiked = await User.findByPk(((await post) as Model<any, any>).userId)
+          if (userPosterOfPostToBeLiked.url.startsWith('@')) {
             res.status(500)
-            res.send({error: true, message: 'You do not have bluesky federation enabled'})
+            res.send({ error: true, message: 'You do not have bluesky federation enabled' })
             return
           }
         } else {
-          if((await user).enableBsky && (await post).bskyuri) {
-            const agent = await getAtProtoSession((await user) as Model<any, any>);
+          if ((await user).enableBsky && (await post).bskyuri) {
+            const agent = await getAtProtoSession((await user) as Model<any, any>)
             const { uri } = await agent.like((await post).bskyUri, (await post).bskyCid)
-            bskyUri = uri;
+            bskyUri = uri
           }
         }
         const likedPost = await UserLikesPostRelations.create({
@@ -66,6 +66,12 @@ export default function likeRoutes(app: Application) {
           bskyUri: bskyUri
         })
         await likedPost.save()
+        await Notification.create({
+          notificationType: 'LIKE',
+          notifiedUserId: post.userId,
+          userId: userId,
+          postId: postId
+        })
         success = true
         likePostRemote(likedPost)
       }
@@ -88,11 +94,18 @@ export default function likeRoutes(app: Application) {
         postId: postId
       }
     })
-    if(like && like.bskyUri){
-      const agent = await getAtProtoSession(await User.findByPk(userId) as Model<any, any>)
+    await Notification.destroy({
+      where: {
+        notificationType: 'LIKE',
+        userId: userId,
+        postId: postId
+      }
+    })
+    if (like && like.bskyUri) {
+      const agent = await getAtProtoSession((await User.findByPk(userId)) as Model<any, any>)
       await agent.deleteLike(like.bskyUri)
     }
-    if(like) {
+    if (like) {
       likePostRemote(like, true)
       await like.destroy()
       success = true
