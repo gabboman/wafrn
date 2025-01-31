@@ -223,7 +223,7 @@ async function processSinglePost(
           return {
             notificationType: 'MENTION',
             postId: postToProcess.id,
-            notifiedUser: mnt,
+            notifiedUserId: mnt,
             userId: postToProcess.userId
           }
         }),
