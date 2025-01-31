@@ -61,7 +61,8 @@ export default function emojiReactRoutes(app: Application) {
           notificationType: 'EMOJIREACT',
           userId: userId,
           postId: postId,
-          notifiedUserId: post.userId
+          notifiedUserId: post.userId,
+          emojiReactionId: reaction.id
         })
         success = true
         emojiReactRemote(reaction)
