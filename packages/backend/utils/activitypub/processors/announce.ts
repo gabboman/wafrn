@@ -1,4 +1,4 @@
-import { Post } from '../../../db.js'
+import { Notification, Post } from '../../../db.js'
 import { environment } from '../../../environment.js'
 import { activityPubObject } from '../../../interfaces/fediverse/activityPubObject.js'
 import { logger } from '../../logger.js'
@@ -57,6 +57,12 @@ async function AnnounceActivity(body: activityPubObject, remoteUser: any, user: 
     }
     const newToot = await Post.create(postToCreate)
     await newToot.save()
+    await Notification.create({
+      notificationType: 'REWOOT',
+      postId: retooted_content.id,
+      notifiedUserId: retooted_content.userId,
+      userId: remoteUser.id
+    })
     // await signAndAccept({ body: body }, remoteUser, user)
   }
 }

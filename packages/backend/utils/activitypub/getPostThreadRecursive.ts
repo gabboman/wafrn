@@ -10,7 +10,8 @@ import {
   PostTag,
   User,
   sequelize,
-  Ask
+  Ask,
+  Notification
 } from '../../db.js'
 import { environment } from '../../environment.js'
 import { logger } from '../logger.js'
@@ -263,6 +264,16 @@ async function getPostThreadRecursive(
         logger.debug(error)
       }
       newPost.setQuoted(quotes)
+      await Notification.bulkCreate(
+        quotes.map((quote) => {
+          return {
+            notificationType: 'QUOTE',
+            notifiedUserId: quote.userId,
+            userId: newPost.userId,
+            postId: newPost.id
+          }
+        })
+      )
       await newPost.save()
       try {
         if (!remoteUser.banned && !remoteUserServerBaned) {
@@ -319,6 +330,12 @@ async function addTagsToPost(post: any, tags: fediverseTag[]) {
 
 async function processMentions(post: any, userIds: string[]) {
   await post.setMentionPost([])
+  await Notification.destroy({
+    where: {
+      notificationType: 'MENTION',
+      postId: post.id
+    }
+  })
   const blocks = await Blocks.findAll({
     where: {
       blockerId: {
@@ -339,7 +356,16 @@ async function processMentions(post: any, userIds: string[]) {
   const blockerIds: string[] = blocks
     .map((block: any) => block.blockerId)
     .concat(userServerBlocks.map((elem: any) => elem.userBlockerId))
-
+  await Notification.bulkCreate(
+    userIds.map((mentionedUserId) => {
+      return {
+        notificationType: 'MENTION',
+        notifiedUserId: mentionedUserId,
+        userId: post.userId,
+        postId: post.id
+      }
+    })
+  )
   return await PostMentionsUserRelation.bulkCreate(
     userIds
       .filter((elem) => !blockerIds.includes(elem))

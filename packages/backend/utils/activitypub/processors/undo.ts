@@ -1,4 +1,4 @@
-import { Blocks, EmojiReaction, Follows, Post, UserLikesPostRelations } from '../../../db.js'
+import { Blocks, EmojiReaction, Follows, Notification, Post, UserLikesPostRelations } from '../../../db.js'
 import { activityPubObject } from '../../../interfaces/fediverse/activityPubObject.js'
 import { deletePostCommon } from '../../deletePost.js'
 import { logger } from '../../logger.js'
@@ -38,6 +38,13 @@ async function UndoActivity(body: activityPubObject, remoteUser: any, user: any)
         }
       })
       if (remoteFollow) {
+        Notification.destroy({
+          where: {
+            notificationType: 'FOLLOW',
+            notifiedUserid: remoteFollow.followedId,
+            userId: followerId
+          }
+        })
         await remoteFollow.destroy()
       }
       // await signAndAccept({ body: body }, remoteUser, user)
@@ -84,6 +91,13 @@ async function UndoActivity(body: activityPubObject, remoteUser: any, user: any)
         }
       })
       if (likeToRemove) {
+        await Notification.destroy({
+          where: {
+            notificationType: 'LIKE',
+            postId: likeToRemove.postId,
+            userId: likeToRemove.userId
+          }
+        })
         likeToRemove.destroy()
       }
     }
@@ -95,6 +109,11 @@ async function UndoActivity(body: activityPubObject, remoteUser: any, user: any)
         }
       })
       if (reactionToRemove) {
+        await Notification.destroy({
+          where: {
+            emojiReactionId: reactionToRemove.id
+          }
+        })
         await reactionToRemove.destroy()
       }
       // await signAndAccept({ body: body }, remoteUser, user)
