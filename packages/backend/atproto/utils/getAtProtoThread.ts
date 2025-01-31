@@ -1,7 +1,7 @@
 // returns the post id
 import { getAtProtoSession } from './getAtProtoSession.js'
 import { QueryParams } from '@atproto/sync/dist/firehose/lexicons.js'
-import { Media, Post, PostMentionsUserRelation, PostTag, Quotes, User } from '../../db.js'
+import { Media, Notification, Post, PostMentionsUserRelation, PostTag, Quotes, User } from '../../db.js'
 import { environment } from '../../environment.js'
 import { Model, Op } from 'sequelize'
 import { PostView, ThreadViewPost } from '@atproto/api/dist/client/types/app/bsky/feed/defs.js'
@@ -207,12 +207,28 @@ async function processSinglePost(
     }
     mentions = [...new Set(mentions)]
     if (mentions.length > 0) {
+      await Notification.destroy({
+        where: {
+          notificationType: 'MENTION',
+          postId: postToProcess.id
+        }
+      })
       await PostMentionsUserRelation.destroy({
         where: {
           postId: postToProcess.id
         }
       })
-      await wait(50)
+      await Notification.bulkCreate(
+        mentions.map((mnt) => {
+          return {
+            notificationType: 'MENTION',
+            postId: postToProcess.id,
+            notifiedUser: mnt,
+            userId: postToProcess.userId
+          }
+        }),
+        { ignoreDuplicates: true }
+      )
       await PostMentionsUserRelation.bulkCreate(
         mentions.map((mnt) => {
           return {
@@ -229,7 +245,6 @@ async function processSinglePost(
           postId: postToProcess.id
         }
       })
-      await wait(50)
       await PostTag.bulkCreate(
         tags.map((tag) => {
           return {

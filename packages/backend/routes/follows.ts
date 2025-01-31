@@ -1,5 +1,5 @@
 import { Application, Response } from 'express'
-import { Blocks, Follows, User } from '../db.js'
+import { Blocks, Follows, Notification, User } from '../db.js'
 import { authenticateToken } from '../utils/authenticateToken.js'
 
 import getBlockedIds from '../utils/cacheGetters/getBlockedIds.js'
@@ -80,7 +80,13 @@ export default function followsRoutes(app: Application) {
       const posterId = req.jwtData?.userId
       if (req.body?.userId) {
         const userUnfollowed = (await User.findByPk(req.body.userId)) as Model<any, any>
-
+        await Notification.destroy({
+          where: {
+            notificationType: 'FOLLOW',
+            userId: posterId,
+            notifiedUserId: userUnfollowed.id
+          }
+        })
         if (userUnfollowed.remoteId) {
           const localUser = await User.findOne({ where: { id: posterId } })
           remoteUnfollow(localUser, userUnfollowed)

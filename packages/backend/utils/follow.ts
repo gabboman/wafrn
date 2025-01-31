@@ -1,5 +1,5 @@
 import { Op } from 'sequelize'
-import { Blocks, Follows, User } from '../db.js'
+import { Blocks, Follows, Notification, User } from '../db.js'
 import { logger } from './logger.js'
 import { Response } from 'express'
 import { remoteFollow } from './activitypub/remoteFollow.js'
@@ -58,6 +58,14 @@ async function follow(
           (userFollowed.url.startsWith('@') ? false : !userFollowed.manuallyAcceptsFollows),
         bskyUri: bskyResult?.uri
       })
+      if (follow.accepted) {
+        // if user does this manualy you dont want to give them a notification after accepting lol
+        await Notification.create({
+          notificatinType: 'FOLLOW',
+          userId: followerId,
+          notifiedUserId: userFollowed.id
+        })
+      }
       if (userFollowed.remoteId) {
         res = true
         const localUser = await User.findOne({ where: { id: followerId } })

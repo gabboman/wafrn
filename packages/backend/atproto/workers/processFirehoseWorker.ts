@@ -1,6 +1,6 @@
 import { Job } from 'bullmq'
 import { getAtprotoUser } from '../utils/getAtprotoUser.js'
-import { Follows, Post, User, UserLikesPostRelations, PostTag, Media } from '../../db.js'
+import { Follows, Post, User, UserLikesPostRelations, PostTag, Media, Notification } from '../../db.js'
 import { environment } from '../../environment.js'
 import { Op, Model } from 'sequelize'
 import { logger } from '../../utils/logger.js'
@@ -36,6 +36,12 @@ async function processFirehose(job: Job) {
                     postId: postId,
                     bskyPath: operation.path
                   }
+                })
+                await Notification.create({
+                  notificationType: 'LIKE',
+                  postId: postId,
+                  userId: remoteUser.id,
+                  notifiedUserId: (await Post.findByPk(postId)).userId
                 })
               }
             } else {
@@ -90,6 +96,11 @@ async function processFirehose(job: Job) {
               follow.bskyPath = operation.path
               follow.accepted = true
               await follow.save()
+              Notification.create({
+                type: 'FOLLOW',
+                userId: remoteUser.id,
+                notifiedUserId: userFollowed.id
+              })
             }
             break
           }
@@ -106,11 +117,21 @@ async function processFirehose(job: Job) {
           const opName = deleteOperation.path.split('app.bsky.')[1].split('/')[0]
           switch (opName) {
             case 'graph.follow': {
-              await Follows.destroy({
+              const followToBeDestroyed = await Follows.findOne({
                 where: {
                   bskyPath: operation.path
                 }
               })
+              if (followToBeDestroyed) {
+                await Notification.destroy({
+                  where: {
+                    notificationType: 'FOLLOW',
+                    userId: followToBeDestroyed.followerId,
+                    notifiedUserId: followToBeDestroyed.followedId
+                  }
+                })
+                await followToBeDestroyed.destroy()
+              }
               break
             }
 
@@ -177,7 +198,13 @@ async function processFirehose(job: Job) {
               })
 
               if (like) {
-                likePostRemote(like, true)
+                await Notification.destroy({
+                  where: {
+                    notificationType: 'LIKE',
+                    postId: like.postId,
+                    userId: like.userId
+                  }
+                })
                 await like.destroy()
               }
               break
