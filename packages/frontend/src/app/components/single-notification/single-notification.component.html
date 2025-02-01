@@ -13,7 +13,7 @@
     <a
       class="user-link user-name"
       [routerLink]="'/blog/' + notification.userUrl"
-      [innerHTML]="notification.userUrl"
+      [innerHTML]="notification.userName"
     ></a>
     <span class="text-sm post-action">
       @switch (notification.type) {
