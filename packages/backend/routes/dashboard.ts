@@ -6,7 +6,7 @@ import { Application, Response } from 'express'
 import { authenticateToken } from '../utils/authenticateToken.js'
 import optionalAuthentication from '../utils/optionalAuthentication.js'
 import AuthorizedRequest from '../interfaces/authorizedRequest.js'
-import { Post, PostMentionsUserRelation } from '../db.js'
+import { Post, PostMentionsUserRelation, sequelize } from '../db.js'
 import { Op } from 'sequelize'
 import getStartScrollParam from '../utils/getStartScrollParam.js'
 import { environment } from '../environment.js'
@@ -121,6 +121,16 @@ export default function dashboardRoutes(app: Application) {
               [Op.in]: await getMutedPosts(posterId)
             }
           }
+        }
+        //TODO delete this ALTERNATIVE DASHBOARD QUERY
+        case 50: {
+          whereObject = {
+            privacy: { [Op.in]: [0, 1, 2, 3] },
+            literal: sequelize.literal(
+              `"userid" = '${posterId}' OR "userId" IN (SELECT "followedId" FROM "follows" WHERE "followerId"='${posterId}' )  `
+            )
+          }
+          break
         }
       }
       // we get the list of posts
