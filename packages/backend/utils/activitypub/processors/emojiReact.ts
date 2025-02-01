@@ -1,4 +1,4 @@
-import { Emoji, EmojiReaction } from '../../../db.js'
+import { Emoji, EmojiReaction, Notification } from '../../../db.js'
 import { activityPubObject } from '../../../interfaces/fediverse/activityPubObject.js'
 import { getPostThreadRecursive } from '../getPostThreadRecursive.js'
 import { signAndAccept } from '../signAndAccept.js'
@@ -26,12 +26,19 @@ async function EmojiReactActivity(body: activityPubObject, remoteUser: any, user
       }
     })
     if (!existing) {
-      await EmojiReaction.create({
+      const reaction = await EmojiReaction.create({
         remoteId: apObject.id,
         userId: remoteUser.id,
         content: apObject.content,
         postId: postToReact.id,
         emojiId: emojiToAdd?.id
+      })
+      await Notification.create({
+        notificationType: 'EMOJIREACT',
+        userId: remoteUser.id,
+        postId: postToReact.id,
+        notifiedUserId: postToReact.userId,
+        emojiReactionId: reaction.id
       })
     }
   }
