@@ -1,4 +1,3 @@
-import { NotificationType } from '../enums/notification-type'
 import { Emoji } from './emoji'
 import { ProcessedPost } from './processed-post'
 
@@ -8,7 +7,7 @@ export interface UserNotifications {
   userUrl: string
   userName: string
   date: Date
-  type: NotificationType
+  type: 'MENTION' | 'LIKE' | 'EMOJIREACT' | 'REWOOT' | 'QUOTE' | 'FOLLOW'
   emojiReact?: Emoji
   emojiName?: string
   fragment?: ProcessedPost
