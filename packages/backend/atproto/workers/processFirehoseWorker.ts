@@ -97,7 +97,7 @@ async function processFirehose(job: Job) {
               follow.accepted = true
               await follow.save()
               Notification.create({
-                type: 'FOLLOW',
+                notificationType: 'FOLLOW',
                 userId: remoteUser.id,
                 notifiedUserId: userFollowed.id
               })
