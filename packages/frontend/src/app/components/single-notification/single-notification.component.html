@@ -17,22 +17,22 @@
     ></a>
     <span class="text-sm post-action">
       @switch (notification.type) {
-        @case (notificationType.MENTION) {
+        @case ('MENTION') {
           mentioned you in a woot
         }
-        @case (notificationType.LIKE) {
+        @case ('LIKE') {
           liked one of your woots
         }
-        @case (notificationType.FOLLOW) {
+        @case ('FOLLOW') {
           now follows you!
         }
-        @case (notificationType.REBLOG) {
+        @case ('REWOOT') {
           rewooted one of your woots
         }
-        @case (notificationType.QUOTE) {
+        @case ('QUOTE') {
           quoted you in a woot
         }
-        @case (notificationType.EMOJIREACT) {
+        @case ('EMOJIREACT') {
           reacted with
           @if (emojiUrl) {
             <img class="post-emoji" [src]="emojiUrl" [alt]="notification.emojiName" />
@@ -44,7 +44,7 @@
       }
     </span>
   </app-post-ribbon>
-  @if (notification.type !== notificationType.FOLLOW) {
+  @if (notification.type !== 'FOLLOW') {
     <hr />
     <div class="notification-content-shortened">
       <div [routerLink]="notification.url">

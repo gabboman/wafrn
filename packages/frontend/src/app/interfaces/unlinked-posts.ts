@@ -38,7 +38,7 @@ export interface basicPost {
   markdownContent: string
 }
 
-interface EmojiRelations {
+export interface EmojiRelations {
   userEmojiRelation: UserEmojiRelation[]
   postEmojiRelation: PostEmojiRelation[]
   postEmojiReactions: PostEmojiReaction[]
@@ -68,6 +68,7 @@ export interface PostEmojiReaction {
   content: string
   emoji?: Emoji
   user?: SimplifiedUser
+  id?: string
 }
 
 interface Mention {
@@ -75,7 +76,7 @@ interface Mention {
   post: string
 }
 
-interface Media {
+export interface Media {
   mediaOrder: any
   id: string
   NSFW: boolean
@@ -86,7 +87,7 @@ interface Media {
   mediaType: string
 }
 
-interface Tag {
+export interface Tag {
   postId: string
   tagName: string
 }
@@ -128,4 +129,14 @@ interface QuestionPollQuestion {
   questionPollId: number
 
   questionPollAnswers: any[]
+}
+
+export interface NotificationRaw {
+  notificationType: 'MENTION' | 'LIKE' | 'EMOJIREACT' | 'REWOOT' | 'QUOTE' | 'FOLLOW'
+  createdAt: string
+  updatedAt: string
+  notifiedUserId: string
+  userId: string
+  postId: string | null
+  emojiReactionId: string | null
 }

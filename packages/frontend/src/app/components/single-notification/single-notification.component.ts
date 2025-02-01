@@ -1,5 +1,4 @@
 import { Component, Input, OnInit, SimpleChanges } from '@angular/core'
-import { NotificationType } from 'src/app/enums/notification-type'
 import { UserNotifications } from 'src/app/interfaces/user-notifications'
 import { RouterModule } from '@angular/router'
 import { CommonModule } from '@angular/common'
@@ -21,20 +20,20 @@ import { faAt, faCheck, faHeart, faQuoteLeft, faRepeat, faUser } from '@fortawes
 export class SingleNotificationComponent implements OnInit {
   emojiUrl: string = ''
   @Input() notification!: UserNotifications
-  notificationType = NotificationType
 
   notificationIcons = {
-    [NotificationType.MENTION]: faAt,
-    [NotificationType.LIKE]: faHeart,
-    [NotificationType.FOLLOW]: faUser,
-    [NotificationType.REBLOG]: faRepeat,
-    [NotificationType.QUOTE]: faQuoteLeft,
-    [NotificationType.EMOJIREACT]: faCheck
+    ['MENTION']: faAt,
+    ['LIKE']: faHeart,
+    ['FOLLOW']: faUser,
+    ['REWOOT']: faRepeat,
+    ['QUOTE']: faQuoteLeft,
+    ['EMOJIREACT']: faCheck
   }
 
   constructor() {}
 
   ngOnInit(): void {
+    console.log(this.notification)
     if (this.notification.emojiReact) {
       this.emojiUrl =
         EnvironmentService.environment.externalCacheurl +

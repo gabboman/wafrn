@@ -1,4 +1,4 @@
-import { Follows } from '../../../db.js'
+import { Follows, Notification } from '../../../db.js'
 import { activityPubObject } from '../../../interfaces/fediverse/activityPubObject.js'
 import { acceptRemoteFollow } from '../acceptRemoteFollow.js'
 import { getRemoteActor } from '../getRemoteActor.js'
@@ -25,6 +25,11 @@ async function FollowActivity(body: activityPubObject, remoteUser: any, user: an
   await remoteFollow.save()
   // we accept it if user accepts follows automaticaly
   if (remoteFollow.accepted) {
+    Notification.create({
+      notificationType: 'FOLLOW',
+      userId: remoteUser.id,
+      notifiedUserId: userToBeFollowed.id
+    })
     await acceptRemoteFollow(userToBeFollowed.id, remoteUser.id)
   }
 }
