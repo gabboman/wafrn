@@ -24,7 +24,7 @@ async function getMutedPosts(userId: string, superMute = false): Promise<Array<s
       const mutedPosts = await sequelize.query(
         `SELECT "postsId" FROM "postsancestors" where "ancestorId" IN (${res.map((elem) => "'" + elem + "'")})`
       )
-      res = mutedPosts.map((elem) => elem.postsId)
+      res = mutedPosts[0].map((elem) => elem.postsId)
     }
     await redisCache.set((superMute ? 'superMutedPosts:' : 'mutedPosts:') + userId, JSON.stringify(res), 'EX', 600)
   }
