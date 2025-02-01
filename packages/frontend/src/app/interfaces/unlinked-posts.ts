@@ -68,6 +68,7 @@ export interface PostEmojiReaction {
   content: string
   emoji?: Emoji
   user?: SimplifiedUser
+  id?: string
 }
 
 interface Mention {

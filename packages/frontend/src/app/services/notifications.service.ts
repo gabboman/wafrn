@@ -164,41 +164,18 @@ export class NotificationsService {
           date: new Date(notification.createdAt),
           fragment: notification.postId ? this.postMap.get(notification.postId) : undefined,
           emojiReact: emoji,
-          emojiName: emoji?.name
+          emojiName: emoji
+            ? emoji.name
+            : notification.notificationType === 'EMOJIREACT'
+              ? petition.emojiRelations.postEmojiReactions.find((elem) => elem.id == notification.emojiReactionId)
+                  ?.content
+              : undefined
         }
         return notificationProcessed
       })
       return res
     } else {
       return []
-    }
-  }
-
-  reblogToNotificationV2(
-    reblog: any,
-    type: 'MENTION' | 'LIKE' | 'EMOJIREACT' | 'REWOOT' | 'QUOTE' | 'FOLLOW'
-  ): UserNotifications {
-    let post = this.postMap.get(reblog.postId ? reblog.postId : reblog.quoterPostId) as ProcessedPost
-    const user = this.userMap.get(reblog.userId ? reblog.userId : post.userId) as SimplifiedUser
-    const emoji = this.emojiMap.get(reblog.emojiId)
-    if (!post) {
-      if (reblog.id) {
-        post = this.postMap.get(reblog.id) as ProcessedPost
-      }
-    }
-    if (type === 'REWOOT') {
-      post = this.postMap.get(post.parentId as string) as ProcessedPost
-    }
-    return {
-      url: `/fediverse/post/${post.id}`,
-      avatar: user.avatar,
-      date: new Date(reblog.createdAt),
-      type: type,
-      userUrl: user.url,
-      fragment: post,
-      emojiName: reblog.emojiName,
-      emojiReact: emoji,
-      userName: post.user.name
     }
   }
 }
