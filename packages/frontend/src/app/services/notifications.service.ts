@@ -157,7 +157,7 @@ export class NotificationsService {
           : undefined
         let notificationProcessed: UserNotifications = {
           type: notification.notificationType,
-          url: notification.notificationType === 'FOLLOW' ? `/blog/` : ``,
+          url: notification.notificationType === 'FOLLOW' ? `/blog/${usr.url}` : `/post/${notification.postId}`,
           avatar: usr.avatar,
           userUrl: usr.url,
           userName: usr.name,
