@@ -225,7 +225,7 @@ export default function notificationRoutes(app: Application) {
     let userEmojis = UserEmojiRelation.findAll({
       where: {
         userId: {
-          [Op.in]: userId
+          [Op.in]: userIds
         }
       }
     })
