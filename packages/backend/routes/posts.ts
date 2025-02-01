@@ -551,7 +551,7 @@ export default function postsRoutes(app: Application) {
             notificationType: 'REWOOT',
             notifiedUserId: parent?.userId,
             userId: post.userId,
-            postId: post.id
+            postId: parent?.id
           })
         }
         if (postToBeQuoted) {
