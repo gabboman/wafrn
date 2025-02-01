@@ -183,7 +183,7 @@ export default function notificationRoutes(app: Application) {
       order: [['createdAt', 'DESC']],
       limit: 20
     })
-    const userIds = notifications.map((elem) => elem.userId)
+    const userIds = notifications.map((elem) => elem.userId).concat(userId)
     const postsIds = notifications.map((elem) => elem.postId)
     const emojiReactionsIds = notifications.filter((elem) => elem.emojiReactionId).map((elem) => elem.emojiReactionId)
     let users = User.findAll({
@@ -209,6 +209,19 @@ export default function notificationRoutes(app: Application) {
       }
     })
     let medias = Media.findAll({
+      attributes: [
+        'id',
+        'NSFW',
+        'description',
+        'url',
+        'external',
+        'mediaOrder',
+        'mediaType',
+        'postId',
+        'blurhash',
+        'width',
+        'height'
+      ],
       where: {
         postId: {
           [Op.in]: postsIds
