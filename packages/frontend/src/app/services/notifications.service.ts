@@ -147,7 +147,6 @@ export class NotificationsService {
       processed.flat().forEach((post) => {
         this.postMap.set(post.id, post)
       })
-      console.log(petition)
       let res: UserNotifications[] = petition.notifications.map((notification) => {
         const usr = this.userMap.get(notification.userId) as SimplifiedUser
         const emoji = notification.emojiReactionId
