@@ -297,6 +297,9 @@ export default function notificationRoutes(app: Application) {
     const notificationsCount = await Notification.count({
       where: {
         notifiedUserId: userId,
+        postId: {
+          [Op.notIn]: (await getMutedPosts(userId)).concat(await getMutedPosts(userId, true))
+        },
         createdAt: {
           [Op.gt]: startCountDate
         }

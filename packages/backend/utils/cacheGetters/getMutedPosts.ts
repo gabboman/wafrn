@@ -20,7 +20,7 @@ async function getMutedPosts(userId: string, superMute = false): Promise<Array<s
       attributes: ['postId']
     })
     res = mutedPostsQuery.map((elem: any) => elem.postId)
-    if (superMute) {
+    if (superMute && res.length) {
       const mutedPosts = await sequelize.query(
         `SELECT "postsId" FROM "postsancestors" where "ancestorId" IN (${res.map((elem) => "'" + elem + "'")})`
       )
