@@ -127,7 +127,7 @@ export default function dashboardRoutes(app: Application) {
           whereObject = {
             privacy: { [Op.in]: [0, 1, 2, 3] },
             literal: sequelize.literal(
-              `"userid" = '${posterId}' OR "userId" IN (SELECT "followedId" FROM "follows" WHERE "followerId"='${posterId}' )  `
+              `"userId" = '${posterId}' OR "userId" IN (SELECT "followedId" FROM "follows" WHERE "followerId"='${posterId}' )  `
             )
           }
           break
