@@ -122,16 +122,6 @@ export default function dashboardRoutes(app: Application) {
             }
           }
         }
-        //TODO delete this ALTERNATIVE DASHBOARD QUERY
-        case 50: {
-          whereObject = {
-            privacy: { [Op.in]: [0, 1, 2, 3] },
-            literal: sequelize.literal(
-              `"userId" = '${posterId}' OR "userId" IN (SELECT "followedId" FROM "follows" WHERE "followerId"='${posterId}' )  `
-            )
-          }
-          break
-        }
       }
       // we get the list of posts
       const postIds = await Post.findAll({
