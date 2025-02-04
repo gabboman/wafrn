@@ -3,6 +3,7 @@ import { Op, Sequelize } from 'sequelize'
 import {
   Ask,
   Blocks,
+  BskyInviteCodes,
   Emoji,
   EmojiCollection,
   FederatedHost,
@@ -46,6 +47,8 @@ import { getAvaiableEmojisCache } from '../utils/cacheGetters/getAvaiableEmojis.
 import { rejectremoteFollow } from '../utils/activitypub/rejectRemoteFollow.js'
 import { acceptRemoteFollow } from '../utils/activitypub/acceptRemoteFollow.js'
 import showdown from 'showdown'
+import { BskyAgent } from '@atproto/api'
+import { getAtProtoSession } from '../atproto/utils/getAtProtoSession.js'
 const markdownConverter = new showdown.Converter({
   simplifiedAutoLink: true,
   literalMidWordUnderscores: true,
@@ -83,7 +86,9 @@ export default function userRoutes(app: Application) {
               [Op.or]: [
                 { email: req.body.email.toLowerCase() },
                 {
-                  literal: sequelize.where(sequelize.fn('lower', sequelize.col('url')), req.body.url.toLowerCase())
+                  url: {
+                    [Op.iLike]: req.body.url
+                  }
                 }
               ]
             }
@@ -289,7 +294,10 @@ export default function userRoutes(app: Application) {
               }
             }
           }
-
+          if (user.enableBsky) {
+            const bskySession = await getAtProtoSession(user)
+            await updateBlueskyProfile(bskySession, user)
+          }
           success = true
         }
       } catch (error) {
@@ -468,7 +476,8 @@ export default function userRoutes(app: Application) {
           'manuallyAcceptsFollows',
           'bskyDid',
           'isFediverseUser',
-          'isBlueskyUser'
+          'isBlueskyUser',
+          'enableBsky'
         ],
         include: [
           {
@@ -615,6 +624,71 @@ export default function userRoutes(app: Application) {
         silencedPosts: await silencedPosts,
         emojis: await localEmojis,
         mutedUsers: await mutedUsers
+      })
+    }
+  })
+
+  app.post('/api/enable-bluesky', authenticateToken, async (req: AuthorizedRequest, res: Response) => {
+    if (!environment.enableBsky) {
+      res.status(500)
+      res.send({
+        error: true,
+        message: `This instance does not have bluesky enabled at this moment`
+      })
+    }
+    const userId = req.jwtData?.userId as string
+    const user = await User.findByPk(userId)
+    if (user && !user.enableBsky) {
+      const inviteCode = await BskyInviteCodes.findOne()
+      if (inviteCode) {
+        try {
+          const agent = new BskyAgent({
+            service: 'https://' + environment.bskyPds
+          })
+          const sanitizedUrl = user.url.replaceAll('_', '-')
+          const bskyPassword = generateRandomString()
+          await agent.createAccount({
+            email: `${user.url}@${environment.instanceUrl}`,
+            password: bskyPassword,
+            handle: `${sanitizedUrl}.${environment.bskyPds}`,
+            inviteCode: inviteCode.code
+          })
+          inviteCode.destroy()
+          const userDid = agent.assertDid
+          user.bskyDid = userDid
+          user.bskyAuthData = bskyPassword
+          user.enableBsky = true
+          await user.save()
+          // now we have to set the profile user and stuff
+          await updateBlueskyProfile(agent, user)
+          res.send({
+            success: true,
+            did: userDid
+          })
+        } catch (error) {
+          res.status(500)
+          res.send({
+            error: true,
+            message: `There was an error! Contact an admin for this`
+          })
+          logger.error({
+            message: `Error activating bluesky for user ${user.url}`,
+            error: error
+          })
+        }
+      } else {
+        //oh no no invite codes avaiable!!!!!!
+        res.status(500)
+        res.send({
+          error: true,
+          message: `Contact the administrator: no invite codes avaiable`
+        })
+      }
+    } else {
+      res.status(500)
+      res.send({
+        error: true,
+        message: `You already have bluesky enabled`
       })
     }
   })
@@ -810,5 +884,41 @@ export default function userRoutes(app: Application) {
     if (askToIgnore) {
       await askToIgnore.destroy()
     }
+  })
+}
+
+async function updateBlueskyProfile(agent: BskyAgent, user: Model<any, any>) {
+  return await agent.upsertProfile(async (existingProfile) => {
+    const profile = existingProfile ?? {}
+    if (existingProfile) {
+      const fullProfileString = `\nView full profile at ${environment.frontendUrl}/blog/${user.url}`
+      profile.displayName = user.name.substring(0, 63)
+      profile.description = user.descriptionMarkdown.substring(0, 256 - fullProfileString.length) + fullProfileString
+      if (user.avatar) {
+        let pngAvatar = await optimizeMedia('uploads' + user.avatar, {
+          forceImageExtension: 'png',
+          maxSize: 256,
+          keep: true
+        })
+        const userAvatarFile = Buffer.from(await fs.readFile(pngAvatar))
+        const avatarUpload = await agent.uploadBlob(userAvatarFile, { encoding: 'image/png' })
+        const avatarData = avatarUpload.data.blob
+        profile.avatar = avatarData
+        await fs.unlink(pngAvatar)
+      }
+      // TODO fix this
+      if (user.headerImage && false) {
+        let pngHeader = await optimizeMedia('uploads/' + user.headerImage, {
+          forceImageExtension: 'png',
+          maxSize: 256,
+          keep: true
+        })
+        const userHeaderFile = Buffer.from(pngHeader)
+        const headerUpload = await agent.uploadBlob(userHeaderFile, { encoding: 'image/png' })
+        const headerData = headerUpload.data.blob
+        profile.banner = headerData
+      }
+    }
+    return profile
   })
 }
