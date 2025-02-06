@@ -906,17 +906,18 @@ async function updateBlueskyProfile(agent: BskyAgent, user: Model<any, any>) {
         profile.avatar = avatarData
         await fs.unlink(pngAvatar)
       }
-      // TODO fix this
+      // TODO fix this it does not work
       if (user.headerImage && false) {
-        let pngHeader = await optimizeMedia('uploads/' + user.headerImage, {
-          forceImageExtension: 'png',
+        let jpegHeader = await optimizeMedia('uploads/' + user.headerImage, {
+          forceImageExtension: 'jpg',
           maxSize: 256,
           keep: true
         })
-        const userHeaderFile = Buffer.from(pngHeader)
-        const headerUpload = await agent.uploadBlob(userHeaderFile, { encoding: 'image/png' })
+        const userHeaderFile = Buffer.from(jpegHeader)
+        const headerUpload = await agent.uploadBlob(userHeaderFile, { encoding: 'image/jpeg' })
         const headerData = headerUpload.data.blob
         profile.banner = headerData
+        await fs.unlink(userHeaderFile)
       }
     }
     return profile

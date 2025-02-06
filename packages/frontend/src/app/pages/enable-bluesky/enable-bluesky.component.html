@@ -1,0 +1,27 @@
+<mat-card class="wafrn-container post-card">
+  <h1>Enable bluesky</h1>
+  <p>Read this! There is some jank still!</p>
+  <ul>
+    <li>Only posts marked as <b>public</b> will go to bluesky</li>
+    <li>
+      Notifications on bluesky SOMETIMES can be janky. Not seeing a follower on wafrn doesnt mean the follower does not
+      exist.
+    </li>
+    <li>By default, <b>all bluesky posts are public</b> wich means there is no unlisted post</li>
+    <li><b>Bluesky automaticaly accepts all follows by default</b>. Its different from fedi</li>
+    <li>Its owned by a corporation and they may not be your jam. We do the best to protect your</li>
+    <li>
+      Bluesky blocks are public by default. We are still not federating them, but we will add the option to make your
+      blocks on bluesky public in the future
+    </li>
+    <li>
+      Some posts may be marked as "only people i follow can reply" and stuff like that. Some jank we havent finished
+    </li>
+    <li>Like on fedi, not every post of every account gets saved in wafrn. We only save as much as we need</li>
+    <li>There is jank</li>
+    <li>There is jank and we are on it</li>
+    <li>There is A LOT OF JANK and we are on it</li>
+    <li>At the moment of writing this, your header image may not federate with bluesky still :(</li>
+  </ul>
+  <button [disabled]="loading" (click)="enableBluesky()" mat-flat-button class="w-full">Enable bluesky</button>
+</mat-card>

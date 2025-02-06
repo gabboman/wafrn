@@ -13,6 +13,7 @@
   },
   "private": true,
   "dependencies": {
+    "@angular-eslint/schematics": "^19.0.2",
     "@angular/animations": "^19.0.0",
     "@angular/cdk": "^19.0.0",
     "@angular/common": "^19.0.0",

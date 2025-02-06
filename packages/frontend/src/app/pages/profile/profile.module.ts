@@ -40,6 +40,11 @@ import { MyServerBlocksComponent } from './my-server-blocks/my-server-blocks.com
       {
         path: 'myAsks',
         loadComponent: () => import('../ask-list/ask-list.component').then((c) => c.AskListComponent)
+      },
+      {
+        path: 'enable-bluesky',
+        loadComponent: () =>
+          import('../../pages/enable-bluesky/enable-bluesky.component').then((c) => c.EnableBlueskyComponent)
       }
     ])
   ]

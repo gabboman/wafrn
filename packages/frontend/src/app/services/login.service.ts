@@ -1,6 +1,6 @@
 import { EventEmitter, Injectable } from '@angular/core'
 import { Router } from '@angular/router'
-import { HttpClient } from '@angular/common/http'
+import { HttpClient, HttpErrorResponse } from '@angular/common/http'
 import { UntypedFormGroup } from '@angular/forms'
 
 import { UtilsService } from './utils.service'
@@ -8,6 +8,7 @@ import { JwtService } from './jwt.service'
 import { PostsService } from './posts.service'
 import { firstValueFrom } from 'rxjs'
 import { EnvironmentService } from './environment.service'
+import { MessageService } from './message.service'
 
 @Injectable({
   providedIn: 'root'
@@ -19,7 +20,8 @@ export class LoginService {
     private router: Router,
     private utils: UtilsService,
     private jwt: JwtService,
-    private postsService: PostsService
+    private postsService: PostsService,
+    private messagesService: MessageService
   ) {}
 
   checkUserLoggedIn(): boolean {
@@ -175,6 +177,20 @@ export class LoginService {
       console.error(exception)
     }
     return success
+  }
+
+  async enableBluesky() {
+    try {
+      let result = await firstValueFrom(this.http.post(`${EnvironmentService.environment.baseUrl}/enable-bluesky`, {}))
+      this.messagesService.add({ severity: 'success', summary: 'Bluesky is enabled for you!' })
+    } catch (error: any) {
+      const tmp = error as HttpErrorResponse
+      this.messagesService.add({
+        severity: 'error',
+        summary: tmp.error.message ?? 'There was an error, try again or contact an administrator'
+      })
+    }
+    return
   }
 
   getLoggedUserUUID(): string {
