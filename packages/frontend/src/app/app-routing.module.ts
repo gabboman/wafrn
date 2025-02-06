@@ -65,7 +65,8 @@ const routes: Routes = [
       },
       {
         path: 'profile',
-        loadChildren: () => import('./pages/profile/profile.module').then((m) => m.ProfileModule)
+        loadChildren: () => import('./pages/profile/profile.module').then((m) => m.ProfileModule),
+        canActivate: [loginRequiredGuard]
       },
       {
         path: 'login',
