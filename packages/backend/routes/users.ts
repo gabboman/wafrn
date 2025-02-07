@@ -660,7 +660,7 @@ export default function userRoutes(app: Application) {
           user.enableBsky = true
           await user.save()
           // now we have to set the profile user and stuff
-          await updateBlueskyProfile(agent, user)
+          await updateBlueskyProfile(await getAtProtoSession(user), user)
           res.send({
             success: true,
             did: userDid
