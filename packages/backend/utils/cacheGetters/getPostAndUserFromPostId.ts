@@ -14,7 +14,10 @@ async function getPostAndUserFromPostId(postId: string): Promise<{ found: boolea
         {
           model: User,
           as: 'user',
-          required: true
+          required: true,
+          where: {
+            banned: false
+          }
         },
         {
           model: Post,
@@ -98,9 +101,9 @@ async function getPostAndUserFromPostId(postId: string): Promise<{ found: boolea
       res = { found: false }
     }
     if (res.found) {
-      await redisCache.set('postAndUser:' + postId, JSON.stringify(res))
-    } else {
       await redisCache.set('postAndUser:' + postId, JSON.stringify(res), 'EX', 60)
+    } else {
+      // await redisCache.set('postAndUser:' + postId, JSON.stringify(res), 'EX', 60)
     }
   }
   return res
