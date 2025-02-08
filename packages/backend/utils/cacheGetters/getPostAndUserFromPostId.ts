@@ -28,12 +28,18 @@ async function getPostAndUserFromPostId(postId: string): Promise<{ found: boolea
             }
           ],
           as: 'quoted',
+          where: {
+            isDeleted: false
+          },
           required: false
         },
         {
           model: Post,
           as: 'parent',
           required: false,
+          where: {
+            isDeleted: false
+          },
           include: [
             {
               model: Media,
@@ -65,6 +71,7 @@ async function getPostAndUserFromPostId(postId: string): Promise<{ found: boolea
       ],
       where: {
         id: postId,
+        isDeleted: false,
         privacy: {
           [Op.notIn]: [2]
         }
