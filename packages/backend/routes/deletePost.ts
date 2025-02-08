@@ -45,15 +45,23 @@ export default function deletePost(app: Application) {
       const posterId = req.jwtData?.userId
       const user = (await User.findByPk(posterId)) as Model<any, any>
       if (id) {
-        const postToDelete = await Post.findOne({
+        let postToDelete = await Post.findOne({
           where: {
             id,
             userId: posterId
           }
         })
         if (!postToDelete) {
-          res.sendStatus(500)
-          return
+          if (user.role === 10) {
+            postToDelete = await Post.findOne({
+              where: {
+                id: id
+              }
+            })
+          } else {
+            res.sendStatus(500)
+            return
+          }
         }
         // bsky delete
         if (postToDelete.bskyUri) {
