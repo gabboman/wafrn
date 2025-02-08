@@ -33,7 +33,6 @@ export class SingleNotificationComponent implements OnInit {
   constructor() {}
 
   ngOnInit(): void {
-    console.log(this.notification)
     if (this.notification.emojiReact) {
       this.emojiUrl =
         EnvironmentService.environment.externalCacheurl +
