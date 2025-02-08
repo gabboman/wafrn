@@ -112,7 +112,9 @@ async function getPostSEOCache(id: string): Promise<{ title: string; description
         id: id,
         privacy: {
           [Op.in]: [0, 2, 3]
-        }
+        },
+        isDeleted: false,
+        isReblog: false
       },
       include: [
         {

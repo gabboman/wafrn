@@ -30,7 +30,8 @@ async function removeUser(userId: string) {
       await Post.update(
         {
           userId: ownerOfDeletedPost.id,
-          content: 'Post has been deleted because remote user has been deleted'
+          content: 'Post has been deleted because remote user has been deleted',
+          isDeleted: true
         },
         {
           where: {

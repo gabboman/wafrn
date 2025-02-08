@@ -195,7 +195,8 @@ async function getUnjointedPosts(postIdsInput: string[], posterId: string) {
     where: {
       id: {
         [Op.in]: postIdsInput
-      }
+      },
+      isDeleted: false
     }
   })
   posts.forEach((post: any) => {

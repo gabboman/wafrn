@@ -57,6 +57,7 @@ async function deletePostCommon(id: string) {
     } else {
       postToDelete.content_warning = ''
       postToDelete.content = '<p>This post has been deleted</p>'
+      postToDelete.isDeleted = true
       await postToDelete.save()
     }
   }

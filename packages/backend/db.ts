@@ -367,6 +367,11 @@ const Post = sequelize.define(
       type: Sequelize.BOOLEAN,
       allowNull: true,
       defaultValue: false
+    },
+    isDeleted: {
+      type: Sequelize.BOOLEAN,
+      allowNull: true,
+      defaultValue: false
     }
   },
   {
