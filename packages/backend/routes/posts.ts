@@ -374,7 +374,7 @@ export default function postsRoutes(app: Application) {
           }
         }
 
-        let content = req.body.content ? req.body.content.trim() : ''
+        let content = req.body.content ? ' ' + req.body.content.trim() : ''
         const content_warning = req.body.content_warning
           ? req.body.content_warning.trim()
           : posterUser?.NSFW
@@ -408,7 +408,7 @@ export default function postsRoutes(app: Application) {
           })
         }
 
-        const mentionRegex = /@[\w-\.]+@?[\w-\.]*/gm
+        const mentionRegex = /\s@[\w-\.]+@?[\w-\.]*/gm
         const mentionsInPost: string[] = content.match(mentionRegex)
         content = content.replaceAll(mentionRegex, (userUrl: string) => userUrl.toLowerCase())
 
@@ -514,7 +514,7 @@ export default function postsRoutes(app: Application) {
           }
         }
 
-        content = markdownConverter.makeHtml(content)
+        content = markdownConverter.makeHtml(content.trim())
         let post: any
         content = content.trim()
         if (req.body.idPostToEdit) {
