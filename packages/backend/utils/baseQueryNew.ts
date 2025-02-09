@@ -189,7 +189,11 @@ async function getUnjointedPosts(postIdsInput: string[], posterId: string) {
     include: [
       {
         model: Post,
-        as: 'ancestors'
+        as: 'ancestors',
+        required: false,
+        where: {
+          isDeleted: false
+        }
       }
     ],
     where: {
