@@ -354,7 +354,7 @@ export class PostsService {
         newPost.tags.some((tag) => tag.tagName.toLowerCase().includes(word.toLowerCase()))
     )
     if (cwedWords.length > 0) {
-      newPost.muted_words_cw = `Post includes muted words: ${cwedWords} ${newPost.content_warning}`
+      newPost.muted_words_cw = `Post includes muted words: ${cwedWords}`
     }
     return newPost
   }
