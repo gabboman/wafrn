@@ -39,6 +39,7 @@ import { redisCache } from '../utils/redis.js'
 import { getUserOptions } from '../utils/cacheGetters/getUserOptions.js'
 
 import showdown from 'showdown'
+import { forceUpdateLastActive } from '../utils/forceUpdateLastActive.js'
 const markdownConverter = new showdown.Converter({
   simplifiedAutoLink: true,
   literalMidWordUnderscores: true,
@@ -265,6 +266,7 @@ export default function postsRoutes(app: Application) {
   app.post(
     '/api/v3/createPost',
     authenticateToken,
+    forceUpdateLastActive,
     createPostLimiter,
     async (req: AuthorizedRequest, res: Response) => {
       let success = false

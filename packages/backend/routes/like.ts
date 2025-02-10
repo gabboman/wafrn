@@ -8,9 +8,10 @@ import AuthorizedRequest from '../interfaces/authorizedRequest.js'
 import { getUserOptions } from '../utils/cacheGetters/getUserOptions.js'
 import { getAtProtoSession } from '../atproto/utils/getAtProtoSession.js'
 import { Model } from 'sequelize'
+import { forceUpdateLastActive } from '../utils/forceUpdateLastActive.js'
 
 export default function likeRoutes(app: Application) {
-  app.post('/api/like', authenticateToken, async (req: AuthorizedRequest, res: Response) => {
+  app.post('/api/like', authenticateToken, forceUpdateLastActive, async (req: AuthorizedRequest, res: Response) => {
     let success = false
     const userId = req.jwtData?.userId
     const postId = req.body.postId
@@ -84,7 +85,7 @@ export default function likeRoutes(app: Application) {
     res.send({ success: success })
   })
 
-  app.post('/api/unlike', authenticateToken, async (req: AuthorizedRequest, res: Response) => {
+  app.post('/api/unlike', authenticateToken, forceUpdateLastActive, async (req: AuthorizedRequest, res: Response) => {
     let success = false
     const userId = req.jwtData?.userId
     const postId = req.body.postId

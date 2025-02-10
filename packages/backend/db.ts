@@ -171,6 +171,11 @@ const User = sequelize.define(
       unique: true,
       type: Sequelize.STRING(768)
     },
+    lastActiveAt: {
+      type: Sequelize.DATE,
+      defaultValue: new Date(0),
+      allowNull: true
+    },
     isBlueskyUser: {
       type: DataTypes.VIRTUAL,
       get() {
