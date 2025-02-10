@@ -11,10 +11,11 @@ async function getAllLocalUserIds(): Promise<string[]> {
     const localUsers = await User.findAll({
       attributes: ['id'],
       where: {
-        url: {
-          [Op.notLike]: '@%'
+        email: {
+          [Op.ne]: null
         },
-        banned: false
+        banned: false,
+        activated: true
       }
     })
     if (localUsers) {
