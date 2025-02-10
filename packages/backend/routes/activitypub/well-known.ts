@@ -94,9 +94,18 @@ function wellKnownRoutes(app: Application) {
         id: {
           [Op.in]: localUsersIds
         },
-        lastActiveAt: {
-          [Op.gt]: new Date().setMonth(new Date().getMonth() - 6)
-        }
+        [Op.or]: [
+          {
+            lastActiveAt: {
+              [Op.gt]: new Date().setMonth(new Date().getMonth() - 6)
+            }
+          },
+          {
+            lastTimeNotificationsCheck: {
+              [Op.gt]: new Date().setMonth(new Date().getMonth() - 6)
+            }
+          }
+        ]
       }
     })
 
@@ -105,9 +114,18 @@ function wellKnownRoutes(app: Application) {
         id: {
           [Op.in]: localUsersIds
         },
-        lastActiveAt: {
-          [Op.gt]: new Date().setMonth(new Date().getMonth() - 1)
-        }
+        [Op.or]: [
+          {
+            lastActiveAt: {
+              [Op.gt]: new Date().setMonth(new Date().getMonth() - 1)
+            }
+          },
+          {
+            lastTimeNotificationsCheck: {
+              [Op.gt]: new Date().setMonth(new Date().getMonth() - 1)
+            }
+          }
+        ]
       }
     })
 
