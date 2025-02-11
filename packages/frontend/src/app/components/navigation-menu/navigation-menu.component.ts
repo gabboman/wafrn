@@ -518,6 +518,9 @@ export class NavigationMenuComponent implements OnInit, OnDestroy {
   @HostListener('window:resize', ['$event'])
   onResize() {
     this.mobile = window.innerWidth <= 992
+    if (this.mobile) {
+      this.menuVisible = false
+    }
   }
 
   @HostListener('window:keydown.n')
