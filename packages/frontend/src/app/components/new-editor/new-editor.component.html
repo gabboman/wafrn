@@ -108,14 +108,13 @@
           <app-media-preview [media]="media"></app-media-preview>
           <mat-form-field class="w-full">
             <mat-label>Image Description</mat-label>
-            <input
+            <textarea
               placeholder="Description. Please FILL THIS"
               [(ngModel)]="media.description"
-              type="text"
               matNativeControl
               required
               class="w-full"
-            />
+            ></textarea>
           </mat-form-field>
           <div>
             <mat-checkbox [(ngModel)]="media.NSFW" class="w-full">NSFW</mat-checkbox>
