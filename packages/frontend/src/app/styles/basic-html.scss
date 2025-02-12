@@ -58,3 +58,7 @@ pre {
 details {
   cursor: pointer;
 }
+
+textarea {
+  scrollbar-color: var(--mat-sys-outline) transparent;
+}
