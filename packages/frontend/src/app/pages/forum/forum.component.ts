@@ -84,12 +84,17 @@ export class ForumComponent implements OnDestroy {
     }
     this.subscription = this.route.params.subscribe(async (data: any) => {
       this.loading = true
-      const tmpForumPosts = this.forumService.getForumThread(data.id)
-      const tmpTmpPost = this.dashboardService.getPostV2(data ? data.id : '')
-      await Promise.all([tmpForumPosts, tmpTmpPost])
+      let postId: string = ''
+      if (data.id) {
+        postId = data.id
+        const tmpTmpPost = this.dashboardService.getPostV2(postId)
+        const tmpPost = await tmpTmpPost
+        this.post = tmpPost ? tmpPost : []
+      } else if (data.blog && data.title) {
+        // TODO article petition
+      }
+      const tmpForumPosts = this.forumService.getForumThread(postId)
       this.forumPosts = await tmpForumPosts
-      const tmpPost = await tmpTmpPost
-      this.post = tmpPost ? tmpPost : []
       this.loading = false
     })
   }
