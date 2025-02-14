@@ -37,9 +37,7 @@ export default function searchRoutes(app: Application) {
       const page = Number(req?.query.page) || 0
       let taggedPostsId = PostTag.findAll({
         where: {
-          tagName: {
-            [Op.iLike]: searchTerm
-          }
+          literal: sequelize.where(sequelize.fn('lower', sequelize.col('tagName')), searchTerm.toLowerCase())
         },
         include: [
           {

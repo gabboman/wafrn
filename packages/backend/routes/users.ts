@@ -87,9 +87,7 @@ export default function userRoutes(app: Application) {
               [Op.or]: [
                 { email: req.body.email.toLowerCase() },
                 {
-                  url: {
-                    [Op.iLike]: req.body.url
-                  }
+                  literal: sequelize.where(sequelize.fn('lower', sequelize.col('url')), req.body.url.toLowerCase())
                 }
               ]
             }

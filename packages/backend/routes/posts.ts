@@ -71,9 +71,7 @@ export default function postsRoutes(app: Application) {
       const postTitle = req.params?.title.replaceAll('-', ' ')
       const user = await User.findOne({
         where: {
-          url: {
-            [Op.iLike]: userUrl.toLowerCase()
-          }
+          literal: sequelize.where(sequelize.fn('lower', sequelize.col('url')), userUrl.toLowerCase())
         }
       })
       if (!user) {
@@ -82,9 +80,7 @@ export default function postsRoutes(app: Application) {
         const postFound = await Post.findOne({
           where: {
             userId: user.id,
-            title: {
-              [Op.iLike]: postTitle.toLowerCase()
-            }
+            literal: sequelize.where(sequelize.fn('lower', sequelize.col('title')), postTitle.toLowerCase())
           }
         })
         if (postFound) {
@@ -202,14 +198,12 @@ export default function postsRoutes(app: Application) {
   )
   app.get('/api/v2/blog', optionalAuthentication, async (req: AuthorizedRequest, res: Response) => {
     let success = false
-    const id = req.query.id
+    const id = req.query.id as string
 
     if (id) {
       const blog = await User.findOne({
         where: {
-          url: {
-            [Op.iLike]: id ? id : ''
-          }
+          literal: sequelize.where(sequelize.fn('lower', sequelize.col('url')), id.toLowerCase())
         }
       })
 
