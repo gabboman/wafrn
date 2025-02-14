@@ -26,7 +26,7 @@ const firehoseQueue = new Queue('firehoseQueue', {
 firehose.on('commit', async (commit) => {
   const cacheData = await getCacheAtDids()
 
-  if (cacheData.followedDids.includes(commit.repo) || (await checkCommitMentions(commit, cacheData)))
+  if (cacheData.followedDids.includes(commit.repo) || checkCommitMentions(commit, cacheData))
     for await (const op of commit.ops) {
       const data = {
         repo: commit.repo,

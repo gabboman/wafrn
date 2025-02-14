@@ -5,10 +5,10 @@ import { getLocalUserId } from '../../utils/cacheGetters/getLocalUserId.js'
 import { getAllLocalUserIds } from '../../utils/cacheGetters/getAllLocalUserIds.js'
 
 // Preemptive checks to see if
-async function checkCommitMentions(
+function checkCommitMentions(
   commit: ParsedCommit,
   cacheData: { followedDids: string[]; localUserDids: string[]; followedUsersLocalIds: string[] }
-): Promise<boolean> {
+): boolean {
   const didsToCheck = [...new Set(cacheData.localUserDids.concat(cacheData.followedDids))]
   const followedUsersLocalIds = cacheData.followedUsersLocalIds
 
