@@ -15,8 +15,8 @@ export default async function getNonFollowedLocalUsersIds(userId: string): Promi
         id: {
           [Op.notIn]: (await followedLocalUsers).concat(await blockedUsers)
         },
-        url: {
-          [Op.notLike]: '@%'
+        email: {
+          [Op.ne]: null
         },
         banned: {
           [Op.ne]: true
