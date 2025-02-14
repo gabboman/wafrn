@@ -185,9 +185,17 @@ export default function notificationRoutes(app: Application) {
       const scrollDate = req.query?.date ? new Date(parseInt(req.query.date as string)) : new Date()
       const notifications = await Notification.findAll({
         where: {
-          postId: {
-            [Op.notIn]: (await getMutedPosts(userId)).concat(await getMutedPosts(userId, true))
-          },
+          [Op.or]: [
+            {
+              postId: {
+                [Op.notIn]: (await getMutedPosts(userId)).concat(await getMutedPosts(userId, true))
+              }
+            },
+            {
+              notificationType: 'FOLLOW'
+            }
+          ],
+
           notifiedUserId: userId,
           createdAt: {
             [Op.lt]: scrollDate
