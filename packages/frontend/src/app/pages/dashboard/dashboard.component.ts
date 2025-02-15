@@ -156,6 +156,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
     if (!this.jwtService.tokenValid()) {
       this.posts.push([
         {
+          isRewoot: false,
           quotes: [],
           emojiReactions: [],
           id: '872c9649-5043-460e-a9df-c35a568c8aef',

@@ -34,4 +34,5 @@ export interface ProcessedPost {
   ask?: Ask
   markdownContent: string
   bskyUri?: string
+  isRewoot: boolean
 }

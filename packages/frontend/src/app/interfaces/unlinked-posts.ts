@@ -36,6 +36,7 @@ export interface basicPost {
   notes?: number
   quotes?: basicPost[]
   markdownContent: string
+  isRewoot: boolean
 }
 
 export interface EmojiRelations {

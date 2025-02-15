@@ -24,18 +24,9 @@
     }"
   >
     @for (content of post; track $index; let index = $index) {
-      <hr />
-      <div
-        *ngIf="
-          content.content !== '' ||
-          (content.medias && content.medias.length > 0) ||
-          index === 0 ||
-          content.tags.length > 0 ||
-          content.quotes.length > 0 ||
-          content.questionPoll
-        "
-        id="fragment"
-      >
+      <div *ngIf="!content.isRewoot" id="fragment">
+        <hr />
+
         <app-post-header class="w-full" [fragment]="content" [simplified]="false"></app-post-header>
         <app-post-fragment (forceExpand)="expanded = true" [fragment]="content"></app-post-fragment>
       </div>
@@ -60,17 +51,7 @@
     <marquee>Thread collapsed because it's very long but we show you the end of the thread</marquee>
     <hr style="margin-top: 10vh" />
     @for (content of finalPosts; track $index; let index = $index) {
-      <div
-        *ngIf="
-          content.content !== '' ||
-          (content.medias && content.medias.length > 0) ||
-          index === 0 ||
-          content.tags.length > 0 ||
-          content.quotes.length > 0 ||
-          content.questionPoll
-        "
-        id="fragment"
-      >
+      <div *ngIf="!content.isRewoot" id="fragment">
         <hr />
         <app-post-header class="w-full" [fragment]="content" [simplified]="false"></app-post-header>
         <app-post-fragment [fragment]="content"></app-post-fragment>
