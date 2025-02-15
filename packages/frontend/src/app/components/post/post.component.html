@@ -61,7 +61,7 @@
     (mousedown)="expandPost()"
   >
     Expand woot
-    <span *ngIf="originalPostContent.length - postsExpanded > 0"
+    <span *ngIf="originalPostContent.length - postsExpanded > 4"
       >({{ originalPostContent.length - postsExpanded }} posts)</span
     >
   </button>
