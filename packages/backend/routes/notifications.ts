@@ -183,12 +183,13 @@ export default function notificationRoutes(app: Application) {
         }
       })
       const scrollDate = req.query?.date ? new Date(parseInt(req.query.date as string)) : new Date()
+      const mutedPostIds = (await getMutedPosts(userId)).concat(await getMutedPosts(userId, true))
       const notifications = await Notification.findAll({
         where: {
           [Op.or]: [
             {
               postId: {
-                [Op.notIn]: (await getMutedPosts(userId)).concat(await getMutedPosts(userId, true))
+                [Op.notIn]: mutedPostIds?.length ? mutedPostIds : []
               }
             },
             {
@@ -313,12 +314,20 @@ export default function notificationRoutes(app: Application) {
 
     //const blockedUsers = await getBlockedIds(userId)
     const startCountDate = (await User.findByPk(userId)).lastTimeNotificationsCheck
+    const mutedPostIds = (await getMutedPosts(userId)).concat(await getMutedPosts(userId, true))
     const notificationsCount = await Notification.count({
       where: {
         notifiedUserId: userId,
-        postId: {
-          [Op.notIn]: (await getMutedPosts(userId)).concat(await getMutedPosts(userId, true))
-        },
+        [Op.or]: [
+          {
+            postId: {
+              [Op.notIn]: mutedPostIds?.length ? mutedPostIds : []
+            }
+          },
+          {
+            notificationType: 'FOLLOW'
+          }
+        ],
         createdAt: {
           [Op.gt]: startCountDate
         }
