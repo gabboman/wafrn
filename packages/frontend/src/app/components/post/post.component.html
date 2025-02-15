@@ -24,9 +24,7 @@
     }"
   >
     @for (content of post; track $index; let index = $index) {
-      <hr
-        *ngIf="(post.length > 1 && (content.content !== '' || content.tags.length)) || (post.length > 1 && index === 0)"
-      />
+      <hr />
       <div
         *ngIf="
           content.content !== '' ||
@@ -70,6 +68,7 @@
         "
         id="fragment"
       >
+        <hr />
         <app-post-header class="w-full" [fragment]="content" [simplified]="false"></app-post-header>
         <app-post-fragment [fragment]="content"></app-post-fragment>
       </div>
