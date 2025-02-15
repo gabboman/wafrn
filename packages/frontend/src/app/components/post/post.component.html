@@ -26,7 +26,7 @@
     @for (content of post; track $index; let index = $index) {
       <hr
         *ngIf="
-          index == 0 &&
+          index != 0 &&
           (content.content !== '' ||
             (content.medias && content.medias.length > 0) ||
             index === 0 ||
