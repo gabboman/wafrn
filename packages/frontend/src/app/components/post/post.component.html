@@ -3,21 +3,19 @@
   class="wafrn-container post-card"
   [ngClass]="{ 'top-bar': post.length > 1 }"
 >
-  @if (post.length > 1) {
-    <app-post-ribbon
-      [user]="originalPostContent[this.originalPostContent.length - 1].user"
-      [icon]="headerText === 'replied' ? replyIcon : reblogIcon"
-      [card]="false"
-      [time]="originalPostContent[this.originalPostContent.length - 1].createdAt"
-    >
-      <a
-        class="user-link user-name"
-        [routerLink]="'/blog/' + originalPostContent[this.originalPostContent.length - 1].user.url"
-        [innerHTML]="originalPostContent[this.originalPostContent.length - 1].user.name"
-      ></a>
-      <span class="text-sm post-action"> {{ headerText }}</span>
-    </app-post-ribbon>
-  }
+  <app-post-ribbon
+    [user]="originalPostContent[this.originalPostContent.length - 1].user"
+    [icon]="headerText === 'replied' ? replyIcon : reblogIcon"
+    [card]="false"
+    [time]="originalPostContent[this.originalPostContent.length - 1].createdAt"
+  >
+    <a
+      class="user-link user-name"
+      [routerLink]="'/blog/' + originalPostContent[this.originalPostContent.length - 1].user.url"
+      [innerHTML]="originalPostContent[this.originalPostContent.length - 1].user.name"
+    ></a>
+    <span class="text-sm post-action"> {{ headerText }}</span>
+  </app-post-ribbon>
   <div
     [ngClass]="{
       'shortened-post': veryLongPost && !expanded
