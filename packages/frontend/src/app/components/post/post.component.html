@@ -3,19 +3,21 @@
   class="wafrn-container post-card"
   [ngClass]="{ 'top-bar': post.length > 1 }"
 >
-  <app-post-ribbon
-    [user]="originalPostContent[this.originalPostContent.length - 1].user"
-    [icon]="headerText === 'replied' ? replyIcon : reblogIcon"
-    [card]="false"
-    [time]="originalPostContent[this.originalPostContent.length - 1].createdAt"
-  >
-    <a
-      class="user-link user-name"
-      [routerLink]="'/blog/' + originalPostContent[this.originalPostContent.length - 1].user.url"
-      [innerHTML]="originalPostContent[this.originalPostContent.length - 1].user.name"
-    ></a>
-    <span class="text-sm post-action"> {{ headerText }}</span>
-  </app-post-ribbon>
+  @if (post.length > 1) {
+    <app-post-ribbon
+      [user]="originalPostContent[this.originalPostContent.length - 1].user"
+      [icon]="headerText === 'replied' ? replyIcon : reblogIcon"
+      [card]="false"
+      [time]="originalPostContent[this.originalPostContent.length - 1].createdAt"
+    >
+      <a
+        class="user-link user-name"
+        [routerLink]="'/blog/' + originalPostContent[this.originalPostContent.length - 1].user.url"
+        [innerHTML]="originalPostContent[this.originalPostContent.length - 1].user.name"
+      ></a>
+      <span class="text-sm post-action"> {{ headerText }}</span>
+    </app-post-ribbon>
+  }
   <div
     [ngClass]="{
       'shortened-post': veryLongPost && !expanded
@@ -24,12 +26,13 @@
     @for (content of post; track $index; let index = $index) {
       <hr
         *ngIf="
-          content.content !== '' ||
-          (content.medias && content.medias.length > 0) ||
-          index === 0 ||
-          content.tags.length > 0 ||
-          content.quotes.length > 0 ||
-          content.questionPoll
+          index == 0 &&
+          (content.content !== '' ||
+            (content.medias && content.medias.length > 0) ||
+            index === 0 ||
+            content.tags.length > 0 ||
+            content.quotes.length > 0 ||
+            content.questionPoll)
         "
       />
       <div
