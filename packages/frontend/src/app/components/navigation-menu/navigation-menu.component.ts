@@ -44,6 +44,7 @@ import { MenuItem } from 'src/app/interfaces/menu-item'
 import { MatDialog } from '@angular/material/dialog'
 import { EnvironmentService } from 'src/app/services/environment.service'
 import { faBluesky } from '@fortawesome/free-brands-svg-icons'
+import { TranslateService } from '@ngx-translate/core'
 
 @Component({
   selector: 'app-navigation-menu',
@@ -81,7 +82,8 @@ export class NavigationMenuComponent implements OnInit, OnDestroy {
     private cdr: ChangeDetectorRef,
     private adminService: AdminService,
     private dashboardService: DashboardService,
-    private dialogService: MatDialog
+    private dialogService: MatDialog,
+    private translateService: TranslateService
   ) {
     this.loginSubscription = this.loginSubscription = this.loginService.loginEventEmitter.subscribe(() => {
       this.drawMenu()
@@ -160,9 +162,9 @@ export class NavigationMenuComponent implements OnInit, OnDestroy {
         }
       },
       {
-        label: 'Dashboard',
+        label: this.translateService.instant('menu.dashboard'),
         icon: faHouse,
-        title: 'View dashboard',
+        title: this.translateService.instant('menu.dashboardHover'),
         visible: this.jwtService.tokenValid(),
         routerLink: '/dashboard',
         command: () => {
@@ -170,9 +172,9 @@ export class NavigationMenuComponent implements OnInit, OnDestroy {
         }
       },
       {
-        label: 'Write new woot',
+        label: this.translateService.instant('menu.writeWoot'),
         icon: faPencil,
-        title: 'Write a woot',
+        title: this.translateService.instant('menu.writeWoot'),
         visible: this.jwtService.tokenValid(),
         command: async () => {
           this.hideMenu()

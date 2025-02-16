@@ -3,7 +3,7 @@
     <fa-icon size="lg" [icon]="closeIcon"></fa-icon>
   </button>
   @if (data && data.post && !editing) {
-    <p class="text-2xl mt-2 mb-4">In reply to:</p>
+    <p class="text-2xl mt-2 mb-4">{{ 'editor.inReplyTo' | translate }}</p>
     <div class="mb-3 quoted-post">
       <app-post-header [fragment]="data.post" [disableLink]="true"></app-post-header>
       <app-post-fragment [fragment]="data.post"></app-post-fragment>

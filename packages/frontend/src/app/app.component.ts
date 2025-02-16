@@ -2,6 +2,7 @@ import { Component, Injector, OnInit } from '@angular/core'
 import { SwUpdate } from '@angular/service-worker'
 import { LoginService } from './services/login.service'
 import { EnvironmentService } from './services/environment.service'
+import { TranslateService } from '@ngx-translate/core'
 
 @Component({
   selector: 'app-root',
@@ -16,8 +17,13 @@ export class AppComponent implements OnInit {
     private swUpdate: SwUpdate,
     private injector: Injector,
     private loginService: LoginService,
-    private environmentService: EnvironmentService
-  ) {}
+    private environmentService: EnvironmentService,
+    private translate: TranslateService
+  ) {
+    this.translate.addLangs(['en'])
+    this.translate.setDefaultLang('en')
+    this.translate.use(this.translate.getBrowserLang() || 'en')
+  }
 
   ngOnInit() {
     // unregister serviceworkers

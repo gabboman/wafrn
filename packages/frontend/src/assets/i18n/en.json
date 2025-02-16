@@ -1,0 +1,10 @@
+{
+    "menu": {
+        "dashboard": "Dashboard",
+        "dashboardHover": "View dashboard",
+        "writeWoot": "Write new woot"
+    },
+    "editor": {
+        "inReplyTo": "In reply to:"
+    }
+}

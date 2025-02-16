@@ -46,6 +46,7 @@ import { MatCheckboxModule } from '@angular/material/checkbox'
 import { EnvironmentService } from 'src/app/services/environment.service'
 import { MatTooltipModule } from '@angular/material/tooltip'
 import { InfoCardComponent } from '../info-card/info-card.component'
+import { TranslateModule } from '@ngx-translate/core'
 
 @Component({
   selector: 'app-new-editor',
@@ -69,7 +70,8 @@ import { InfoCardComponent } from '../info-card/info-card.component'
     MatCheckboxModule,
     MatTooltipModule,
     InfoCardComponent,
-    MatDialogModule
+    MatDialogModule,
+    TranslateModule
   ],
   templateUrl: './new-editor.component.html',
   styleUrl: './new-editor.component.scss'
