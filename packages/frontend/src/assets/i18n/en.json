@@ -2,7 +2,43 @@
     "menu": {
         "dashboard": "Dashboard",
         "dashboardHover": "View dashboard",
-        "writeWoot": "Write new woot"
+        "writeWoot": "Write new woot",
+        "notifications": "Notififications",
+        "explore": "Explore",
+        "exploreWafrn": "Explore Wafrn",
+        "exploreFediverse": "Explore the Fediverse",
+        "unansweredAsks": "Unanswered Asks",
+        "privateMessages": "Private Messages",
+        "search": "Search",
+        "myBlog": "My blog",
+        "privacy": "Privacy Policy",
+        "source": "View the source!",
+        "patreon": "Patreon",
+        "kofi": "Ko-fi",
+        "logout": "Log out",
+        "settings": {
+            "title": "Settings",
+            "follows": "Manage followers",
+            "enableBluesky": "Enable bluesky",
+            "editProfile": "Edit profile",
+            "themeEditor": "Theme editor",
+            "mutedUsers": "Muted Users",
+            "mutedPosts": "Muted Posts",
+            "myBlockedUsers": "Blocked users",
+            "myBlockedServers": "Blocked servers",
+            "importFollows": "Import followers",
+            "superSecretMenu": "Super Secret Menu"
+        },
+        "admin": {
+            "title": "Admin",
+            "serverList": "Server list",
+            "addEmojis": "Add emojis",
+            "reports": "Reports",
+            "bans": "Banned users",
+            "blocklist": "Blocked users",
+            "stats": "Stats",
+            "awaitingAproval": "Awaiting aproval"
+        }
     },
     "editor": {
         "inReplyTo": "In reply to:"

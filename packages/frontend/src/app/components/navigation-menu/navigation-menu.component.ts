@@ -182,9 +182,9 @@ export class NavigationMenuComponent implements OnInit, OnDestroy {
         }
       },
       {
-        label: 'Notifications',
+        label: this.translateService.instant('menu.notifications'),
         icon: faBell,
-        title: 'Check your notifications',
+        title: this.translateService.instant('menu.notifications'),
         visible: this.jwtService.tokenValid(),
         badge: this.notifications,
         routerLink: '/dashboard/notifications',
@@ -193,15 +193,15 @@ export class NavigationMenuComponent implements OnInit, OnDestroy {
         }
       },
       {
-        label: 'Explore',
+        label: this.translateService.instant('menu.explore'),
         icon: faCompass,
-        title: 'See the local posts of the server or the fediverse!',
+        title: this.translateService.instant('menu.exploreDescription'),
         visible: this.jwtService.tokenValid(),
         items: [
           {
-            label: 'Explore WAFRN',
+            label: this.translateService.instant('menu.exploreWafrn'),
             icon: faServer,
-            title: 'See the local posts of the server!',
+            title: this.translateService.instant('menu.exploreWafrnDescription'),
             visible: this.jwtService.tokenValid(),
             routerLink: '/dashboard/exploreLocal',
             command: () => {
@@ -209,9 +209,9 @@ export class NavigationMenuComponent implements OnInit, OnDestroy {
             }
           },
           {
-            label: 'Explore the fediverse',
+            label: this.translateService.instant('menu.exploreFediverse'),
             icon: faCompass,
-            title: 'Take a look to all the public posts available to us, not only of people in this servers',
+            title: this.translateService.instant('menu.exploreFediverseDescription'),
             visible: this.jwtService.tokenValid(),
             routerLink: '/dashboard/explore',
             command: () => {
@@ -221,9 +221,9 @@ export class NavigationMenuComponent implements OnInit, OnDestroy {
         ]
       },
       {
-        label: 'Unanswered Asks',
+        label: this.translateService.instant('menu.unansweredAsks'),
         icon: faQuestion,
-        title: 'Unanswered Asks',
+        title: this.translateService.instant('menu.unansweredAsks'),
         visible: this.jwtService.tokenValid(),
         badge: this.awaitingAsks,
         routerLink: '/profile/myAsks',
@@ -232,9 +232,9 @@ export class NavigationMenuComponent implements OnInit, OnDestroy {
         }
       },
       {
-        label: 'Private messages',
+        label: this.translateService.instant('menu.privateMessages'),
         icon: faEnvelope,
-        title: 'Private messages are here!',
+        title: this.translateService.instant('menu.privateMessages'),
         visible: this.jwtService.tokenValid(),
         routerLink: '/dashboard/private',
         command: () => {
@@ -242,16 +242,16 @@ export class NavigationMenuComponent implements OnInit, OnDestroy {
         }
       },
       {
-        label: 'Admin',
+        label: this.translateService.instant('menu.admin.title'),
         icon: faPowerOff,
-        title: 'Check your notifications',
+        title: this.translateService.instant('menu.admin.title'),
         visible: this.jwtService.adminToken(),
         badge: this.adminNotifications + this.usersAwaitingApproval,
         items: [
           {
-            label: 'Server list',
+            label: this.translateService.instant('menu.admin.serverList'),
             icon: faServer,
-            title: 'List of all the servers',
+            title: this.translateService.instant('menu.admin.serverList'),
             visible: true,
             routerLink: '/admin/server-list',
             command: () => {
@@ -259,9 +259,9 @@ export class NavigationMenuComponent implements OnInit, OnDestroy {
             }
           },
           {
-            label: 'Add emojis',
+            label: this.translateService.instant('menu.admin.addEmojis'),
             icon: faIcons,
-            title: 'Add emoji collection',
+            title: this.translateService.instant('menu.admin.addEmojis'),
             visible: true,
             routerLink: '/admin/emojis',
             command: () => {
@@ -269,9 +269,9 @@ export class NavigationMenuComponent implements OnInit, OnDestroy {
             }
           },
           {
-            label: 'User reports',
+            label: this.translateService.instant('menu.admin.reports'),
             icon: faExclamationTriangle,
-            title: 'User reports',
+            title: this.translateService.instant('menu.admin.reports'),
             visible: true,
             badge: this.adminNotifications,
             routerLink: '/admin/user-reports',
@@ -280,9 +280,9 @@ export class NavigationMenuComponent implements OnInit, OnDestroy {
             }
           },
           {
-            label: 'User bans',
+            label: this.translateService.instant('menu.admin.bans'),
             icon: faBan,
-            title: 'User bans',
+            title: this.translateService.instant('menu.admin.bans'),
             visible: true,
             routerLink: '/admin/bans',
             command: () => {
@@ -290,9 +290,9 @@ export class NavigationMenuComponent implements OnInit, OnDestroy {
             }
           },
           {
-            label: 'User blocklists',
+            label: this.translateService.instant('menu.admin.blocklist'),
             icon: faHourglass,
-            title: 'User blocklists',
+            title: this.translateService.instant('menu.admin.blocklist'),
             visible: true,
             routerLink: '/admin/user-blocks',
             command: () => {
@@ -300,9 +300,9 @@ export class NavigationMenuComponent implements OnInit, OnDestroy {
             }
           },
           {
-            label: 'Stats',
+            label: this.translateService.instant('menu.admin.stats'),
             icon: faChartSimple,
-            title: 'Stats',
+            title: this.translateService.instant('menu.admin.stats'),
             visible: true,
             routerLink: '/admin/stats',
             command: () => {
@@ -310,9 +310,9 @@ export class NavigationMenuComponent implements OnInit, OnDestroy {
             }
           },
           {
-            label: 'Users awaiting approval',
+            label: this.translateService.instant('menu.admin.awaitingAproval'),
             icon: faUserLock,
-            title: 'User awaiting approval',
+            title: this.translateService.instant('menu.admin.awaitingAproval'),
             visible: true,
             badge: this.usersAwaitingApproval,
             routerLink: '/admin/activate-users',
@@ -323,9 +323,9 @@ export class NavigationMenuComponent implements OnInit, OnDestroy {
         ]
       },
       {
-        label: 'Search',
+        label: this.translateService.instant('menu.search'),
         icon: faSearch,
-        title: 'Search',
+        title: this.translateService.instant('menu.search'),
         visible: this.jwtService.tokenValid(),
         routerLink: '/dashboard/search',
         command: () => {
@@ -333,16 +333,16 @@ export class NavigationMenuComponent implements OnInit, OnDestroy {
         }
       },
       {
-        label: 'Settings',
+        label: this.translateService.instant('menu.settings.title'),
         icon: faCog,
-        title: 'Your blog, your profile, blocks, and other stuff',
+        title: this.translateService.instant('menu.settings.title'),
         visible: this.jwtService.tokenValid(),
         badge: this.followsAwaitingApproval,
         items: [
           {
-            label: 'Manage followers',
+            label: this.translateService.instant('menu.settings.follows'),
             icon: faUser,
-            title: 'Manage followers',
+            title: this.translateService.instant('menu.settings.follows'),
             visible: true,
             badge: this.followsAwaitingApproval,
             routerLink: '/blog/' + this.jwtService.getTokenData().url + '/followers',
@@ -351,9 +351,9 @@ export class NavigationMenuComponent implements OnInit, OnDestroy {
             }
           },
           {
-            label: 'Enable bluesky',
+            label: this.translateService.instant('menu.settings.enableBluesky'),
             icon: faBluesky,
-            title: 'Enable bluesky',
+            title: this.translateService.instant('menu.settings.enableBluesky'),
             visible: true,
             routerLink: '/profile/enable-bluesky',
             command: () => {
@@ -361,9 +361,9 @@ export class NavigationMenuComponent implements OnInit, OnDestroy {
             }
           },
           {
-            label: 'Profile options',
+            label: this.translateService.instant('menu.settings.editProfile'),
             icon: faUserEdit,
-            title: 'Profile options',
+            title: this.translateService.instant('menu.settings.editProfile'),
             visible: this.jwtService.tokenValid(),
             routerLink: '/profile/edit',
             command: () => {
@@ -371,9 +371,9 @@ export class NavigationMenuComponent implements OnInit, OnDestroy {
             }
           },
           {
-            label: 'Edit my theme',
+            label: this.translateService.instant('menu.settings.themeEditor'),
             icon: faPaintbrush,
-            title: 'Edit my theme',
+            title: this.translateService.instant('menu.settings.themeEditor'),
             visible: this.jwtService.tokenValid(),
             routerLink: '/profile/css',
             command: () => {
@@ -381,9 +381,9 @@ export class NavigationMenuComponent implements OnInit, OnDestroy {
             }
           },
           {
-            label: 'Manage muted users',
+            label: this.translateService.instant('menu.settings.mutedUsers'),
             icon: faVolumeMute,
-            title: 'Manage muted users',
+            title: this.translateService.instant('menu.settings.mutedUsers'),
             visible: this.jwtService.tokenValid(),
             routerLink: '/profile/mutes',
             command: () => {
@@ -391,9 +391,9 @@ export class NavigationMenuComponent implements OnInit, OnDestroy {
             }
           },
           {
-            label: 'Manage muted posts',
+            label: this.translateService.instant('menu.settings.mutedPosts'),
             icon: faBellSlash,
-            title: 'Manage muted posts',
+            title: this.translateService.instant('menu.settings.mutedPosts'),
             visible: this.jwtService.tokenValid(),
             routerLink: '/profile/silencedPosts',
             command: () => {
@@ -401,9 +401,9 @@ export class NavigationMenuComponent implements OnInit, OnDestroy {
             }
           },
           {
-            label: 'Manage blocked users',
+            label: this.translateService.instant('menu.settings.myBlockedUsers'),
             icon: faBan,
-            title: 'Manage blocked users',
+            title: this.translateService.instant('menu.settings.myBlockedUsers'),
             visible: this.jwtService.tokenValid(),
             routerLink: '/profile/blocks',
             command: () => {
@@ -411,9 +411,9 @@ export class NavigationMenuComponent implements OnInit, OnDestroy {
             }
           },
           {
-            label: 'Manage blocked servers',
+            label: this.translateService.instant('menu.settings.myBlockedServers'),
             icon: faServer,
-            title: 'Manage blocked servers',
+            title: this.translateService.instant('menu.settings.myBlockedServers'),
             visible: this.jwtService.tokenValid(),
             routerLink: '/profile/serverBlocks',
             command: () => {
@@ -421,9 +421,9 @@ export class NavigationMenuComponent implements OnInit, OnDestroy {
             }
           },
           {
-            label: 'Import follows',
+            label: this.translateService.instant('menu.settings.importFollows'),
             icon: faUserEdit,
-            title: 'Import follows',
+            title: this.translateService.instant('menu.settings.importFollows'),
             visible: this.jwtService.tokenValid(),
             routerLink: '/profile/importFollows',
             command: () => {
@@ -431,9 +431,9 @@ export class NavigationMenuComponent implements OnInit, OnDestroy {
             }
           },
           {
-            label: 'Special secret menu',
+            label: this.translateService.instant('menu.settings.superSecretMenu'),
             icon: faSkull,
-            title: 'Special secret menu',
+            title: this.translateService.instant('menu.settings.superSecretMenu'),
             visible: this.jwtService.tokenValid(),
             routerLink: '/doom',
             command: () => {
@@ -443,9 +443,9 @@ export class NavigationMenuComponent implements OnInit, OnDestroy {
         ]
       },
       {
-        label: 'My blog',
+        label: this.translateService.instant('menu.myBlog'),
         icon: faUser,
-        title: 'View your own blog',
+        title: this.translateService.instant('menu.myBlog'),
         visible: this.jwtService.tokenValid(),
         routerLink: '/blog/' + (this.jwtService.tokenValid() ? this.jwtService.getTokenData()['url'] : ''),
         command: () => {
@@ -459,9 +459,9 @@ export class NavigationMenuComponent implements OnInit, OnDestroy {
         divider: true
       },
       {
-        label: 'Privacy policy & rules',
+        label: this.translateService.instant('menu.privacy'),
         icon: faEyeSlash,
-        title: 'Privacy policy & rules',
+        title: this.translateService.instant('menu.privacy'),
         visible: true,
         routerLink: '/privacy',
         command: () => {
@@ -469,9 +469,9 @@ export class NavigationMenuComponent implements OnInit, OnDestroy {
         }
       },
       {
-        label: 'Check the source code!',
+        label: this.translateService.instant('menu.source'),
         icon: faCode,
-        title: 'The frontend is made in angular, and the backend in typescript. you can check the code here',
+        title: this.translateService.instant('menu.source'),
         visible: true,
         url: 'https://github.com/gabboman/wafrn',
         command: () => {
@@ -479,9 +479,9 @@ export class NavigationMenuComponent implements OnInit, OnDestroy {
         }
       },
       {
-        label: 'Patreon',
+        label: this.translateService.instant('menu.patreon'),
         icon: faEuro,
-        title: 'Give us some money through patreon',
+        title: this.translateService.instant('menu.patreon'),
         visible: true,
         url: 'https://patreon.com/wafrn',
         command: () => {
@@ -489,9 +489,9 @@ export class NavigationMenuComponent implements OnInit, OnDestroy {
         }
       },
       {
-        label: 'Ko-fi',
+        label: this.translateService.instant('menu.kofi'),
         icon: faEuro,
-        title: 'Give us some money through ko-fi',
+        title: this.translateService.instant('menu.kofi'),
         visible: true,
         url: 'https://ko-fi.com/wafrn',
         command: () => {
@@ -499,9 +499,9 @@ export class NavigationMenuComponent implements OnInit, OnDestroy {
         }
       },
       {
-        label: 'Log out',
+        label: this.translateService.instant('menu.logout'),
         icon: faSignOut,
-        title: 'nintendo this button is for you, and your 25000000 alt accounts',
+        title: this.translateService.instant('menu.logout'),
         visible: this.jwtService.tokenValid(),
         command: () => {
           this.loginService.logOut()
