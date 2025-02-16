@@ -55,7 +55,7 @@ export default function likeRoutes(app: Application) {
             return
           }
         } else {
-          if ((await user).enableBsky && (await post).bskyuri) {
+          if ((await user).enableBsky && (await post).bskyUri) {
             const agent = await getAtProtoSession((await user) as Model<any, any>)
             const { uri } = await agent.like((await post).bskyUri, (await post).bskyCid)
             bskyUri = uri
@@ -64,7 +64,7 @@ export default function likeRoutes(app: Application) {
         const likedPost = await UserLikesPostRelations.create({
           userId: userId,
           postId: postId,
-          bskyUri: bskyUri
+          bskyPath: bskyUri
         })
         await likedPost.save()
         await Notification.create({
@@ -102,9 +102,9 @@ export default function likeRoutes(app: Application) {
         postId: postId
       }
     })
-    if (like && like.bskyUri) {
+    if (like && like.bskyPath) {
       const agent = await getAtProtoSession((await User.findByPk(userId)) as Model<any, any>)
-      await agent.deleteLike(like.bskyUri)
+      await agent.deleteLike(like.bskyPath)
     }
     if (like) {
       likePostRemote(like, true)
