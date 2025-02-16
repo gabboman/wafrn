@@ -12,7 +12,8 @@ import {
   UserLikesPostRelations,
   Media,
   Ask,
-  Notification
+  Notification,
+  UserEmojiRelation
 } from '../db.js'
 import { authenticateToken } from '../utils/authenticateToken.js'
 
@@ -561,7 +562,13 @@ export default function postsRoutes(app: Application) {
               }
             })
           }
-          post.addQuoted(postToBeQuoted)
+          await post.addQuoted(postToBeQuoted)
+          await PostMentionsUserRelation.findOrCreate({
+            where: {
+              postId: post.id,
+              userId: postToBeQuoted.userId
+            }
+          })
           await Notification.create({
             notificationType: 'QUOTE',
             notifiedUserId: postToBeQuoted.userId,
