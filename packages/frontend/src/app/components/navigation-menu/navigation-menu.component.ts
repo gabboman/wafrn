@@ -43,6 +43,7 @@ import {
 import { MenuItem } from 'src/app/interfaces/menu-item'
 import { MatDialog } from '@angular/material/dialog'
 import { EnvironmentService } from 'src/app/services/environment.service'
+import { faBluesky } from '@fortawesome/free-brands-svg-icons'
 
 @Component({
   selector: 'app-navigation-menu',
@@ -343,6 +344,16 @@ export class NavigationMenuComponent implements OnInit, OnDestroy {
             visible: true,
             badge: this.followsAwaitingApproval,
             routerLink: '/blog/' + this.jwtService.getTokenData().url + '/followers',
+            command: () => {
+              this.hideMenu()
+            }
+          },
+          {
+            label: 'Enable bluesky',
+            icon: faBluesky,
+            title: 'Enable bluesky',
+            visible: true,
+            routerLink: '/profile/enable-bluesky',
             command: () => {
               this.hideMenu()
             }
