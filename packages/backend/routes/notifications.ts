@@ -321,7 +321,7 @@ export default function notificationRoutes(app: Application) {
         [Op.or]: [
           {
             postId: {
-              [Op.notIn]: mutedPostIds?.length ? mutedPostIds : []
+              [Op.notIn]: mutedPostIds?.length ? mutedPostIds : ['00000000-0000-0000-0000-000000000000']
             }
           },
           {
