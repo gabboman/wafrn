@@ -37,7 +37,7 @@
     "cors": "^2.8.5",
     "csv-parse": "^5.4.0",
     "did-resolver": "^4.1.0",
-    "dompurify": "^3.1.0",
+    "dompurify": "^3.2.4",
     "express": "^4.21.2",
     "express-rate-limit": "^6.7.0",
     "file-type": "^19.5.0",
