@@ -7,7 +7,7 @@ WORKDIR /wafrn
 COPY . ./
 
 # copy the frontend environment file
-RUN rm -rf packages/backend packages/frontend/src/environments/environment.prod.ts && mv packages/frontend/src/environments/environment.example.ts packages/frontend/src/environments/environment.prod.ts
+RUN rm -rf packages/backend packages/frontend/src/environments/environment.prod.ts && mv packages/frontend/src/environments/environment.docker.ts packages/frontend/src/environments/environment.prod.ts
 
 
 # install dependencies
