@@ -209,7 +209,7 @@ export default function notificationRoutes(app: Application) {
       const postsIds = notifications.map((elem) => elem.postId)
       const emojiReactionsIds = notifications.filter((elem) => elem.emojiReactionId).map((elem) => elem.emojiReactionId)
 
-      const postsWithQuotes = Quotes.findAll({
+      const postsWithQuotes = await Quotes.findAll({
         where: {
           quoterPostId: {
             [Op.in]: notifications.filter((elem) => elem.postId != undefined).map((elem) => elem.postId)
@@ -314,7 +314,7 @@ export default function notificationRoutes(app: Application) {
         medias: await medias,
         asks: await asks,
         tags: await tags,
-        quotes: quotedPostsRelations,
+        quotes: postsWithQuotes,
         emojiRelations: {
           userEmojiRelation: _userEmojis,
           postEmojiRelation: _postEmojis,
