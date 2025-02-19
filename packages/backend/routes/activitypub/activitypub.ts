@@ -71,52 +71,58 @@ function activityPubRoutes(app: Application) {
             res.sendStatus(403)
             return
           }
-          const emojis = await getUserEmojis(user.id)
-          const userForFediverse = {
-            '@context': ['https://www.w3.org/ns/activitystreams', 'https://w3id.org/security/v1'],
-            id: `${environment.frontendUrl}/fediverse/blog/${user.url.toLowerCase()}`,
-            type: 'Person',
-            following: `${environment.frontendUrl}/fediverse/blog/${user.url.toLowerCase()}/following`,
-            followers: `${environment.frontendUrl}/fediverse/blog/${user.url.toLowerCase()}/followers`,
-            featured: `${environment.frontendUrl}/fediverse/blog/${user.url.toLowerCase()}/featured`,
-            inbox: `${environment.frontendUrl}/fediverse/blog/${user.url.toLowerCase()}/inbox`,
-            outbox: `${environment.frontendUrl}/fediverse/blog/${user.url.toLowerCase()}/outbox`,
-            preferredUsername: user.url.toLowerCase(),
-            name: user.name,
-            summary: user.description,
-            url: `${environment.frontendUrl}/fediverse/blog/${user.url.toLowerCase()}`,
-            manuallyApprovesFollowers: user.manuallyAcceptsFollows,
-            discoverable: true,
-            published: user.createdAt,
-            tag: emojis.map((emoji: any) => emojiToAPTag(emoji)),
-            endpoints: {
-              sharedInbox: `${environment.frontendUrl}/fediverse/sharedInbox`
-            },
-            ...(user.avatar
-              ? {
-                icon: {
-                  type: 'Image',
-                  mediaType: 'image/webp',
-                  url: environment.mediaUrl + user.avatar
-                }
+          const userCacheResult = await redisCache.get('fediverse:user:base:' + user.id)
+          let userForFediverse
+          if (userCacheResult) {
+            userForFediverse = JSON.parse(userCacheResult)
+          } else {
+            const emojis = await getUserEmojis(user.id)
+            userForFediverse = {
+              '@context': ['https://www.w3.org/ns/activitystreams', 'https://w3id.org/security/v1'],
+              id: `${environment.frontendUrl}/fediverse/blog/${user.url.toLowerCase()}`,
+              type: 'Person',
+              following: `${environment.frontendUrl}/fediverse/blog/${user.url.toLowerCase()}/following`,
+              followers: `${environment.frontendUrl}/fediverse/blog/${user.url.toLowerCase()}/followers`,
+              featured: `${environment.frontendUrl}/fediverse/blog/${user.url.toLowerCase()}/featured`,
+              inbox: `${environment.frontendUrl}/fediverse/blog/${user.url.toLowerCase()}/inbox`,
+              outbox: `${environment.frontendUrl}/fediverse/blog/${user.url.toLowerCase()}/outbox`,
+              preferredUsername: user.url.toLowerCase(),
+              name: user.name,
+              summary: user.description,
+              url: `${environment.frontendUrl}/fediverse/blog/${user.url.toLowerCase()}`,
+              manuallyApprovesFollowers: user.manuallyAcceptsFollows,
+              discoverable: true,
+              published: user.createdAt,
+              tag: emojis.map((emoji: any) => emojiToAPTag(emoji)),
+              endpoints: {
+                sharedInbox: `${environment.frontendUrl}/fediverse/sharedInbox`
+              },
+              ...(user.avatar
+                ? {
+                    icon: {
+                      type: 'Image',
+                      mediaType: 'image/webp',
+                      url: environment.mediaUrl + user.avatar
+                    }
+                  }
+                : undefined),
+              ...(user.headerImage
+                ? {
+                    image: {
+                      type: 'Image',
+                      mediaType: 'image/webp',
+                      url: environment.mediaUrl + user.headerImage
+                    }
+                  }
+                : undefined),
+              publicKey: {
+                id: `${environment.frontendUrl}/fediverse/blog/${user.url.toLowerCase()}#main-key`,
+                owner: `${environment.frontendUrl}/fediverse/blog/${user.url.toLowerCase()}`,
+                publicKeyPem: user.publicKey
               }
-              : undefined),
-            ...(user.headerImage
-              ? {
-                image: {
-                  type: 'Image',
-                  mediaType: 'image/webp',
-                  url: environment.mediaUrl + user.headerImage
-                }
-              }
-              : undefined),
-            publicKey: {
-              id: `${environment.frontendUrl}/fediverse/blog/${user.url.toLowerCase()}#main-key`,
-              owner: `${environment.frontendUrl}/fediverse/blog/${user.url.toLowerCase()}`,
-              publicKeyPem: user.publicKey
             }
+            redisCache.set('fediverse:user:base:' + user.id, JSON.stringify(userForFediverse), 'EX', 60)
           }
-
           res
             .set({
               'content-type': 'application/activity+json'
@@ -162,12 +168,14 @@ function activityPubRoutes(app: Application) {
               orderedItems: itemsToSend
             }
             if (page > 1) {
-              response['prev'] = `${environment.frontendUrl}/fediverse/blog/${user.url.toLowerCase()}/following?page=${page - 1
-                }`
+              response['prev'] = `${environment.frontendUrl}/fediverse/blog/${user.url.toLowerCase()}/following?page=${
+                page - 1
+              }`
             }
             if (followedUsers.length > pageSize * page) {
-              response['next'] = `${environment.frontendUrl}/fediverse/blog/${user.url.toLowerCase()}/following?page=${page + 1
-                }`
+              response['next'] = `${environment.frontendUrl}/fediverse/blog/${user.url.toLowerCase()}/following?page=${
+                page + 1
+              }`
             }
           } else {
             response = {
@@ -218,19 +226,22 @@ function activityPubRoutes(app: Application) {
             const itemsToSend = followers.slice((page - 1) * pageSize, page * pageSize)
             response = {
               '@context': 'https://www.w3.org/ns/activitystreams',
-              id: `${environment.frontendUrl}/fediverse/blog/${user.url.toLowerCase()}/followers?page=${req.query.page
-                }`,
+              id: `${environment.frontendUrl}/fediverse/blog/${user.url.toLowerCase()}/followers?page=${
+                req.query.page
+              }`,
               type: 'OrderedCollectionPage',
               orderedItems: itemsToSend,
               totalItems: followersNumber
             }
             if (page > 1) {
-              response['prev'] = `${environment.frontendUrl}/fediverse/blog/${user.url.toLowerCase()}/followers?page=${page - 1
-                }`
+              response['prev'] = `${environment.frontendUrl}/fediverse/blog/${user.url.toLowerCase()}/followers?page=${
+                page - 1
+              }`
             }
             if (followers.length > pageSize * page) {
-              response['next'] = `${environment.frontendUrl}/fediverse/blog/${user.url.toLowerCase()}/followers?page=${page + 1
-                }`
+              response['next'] = `${environment.frontendUrl}/fediverse/blog/${user.url.toLowerCase()}/followers?page=${
+                page + 1
+              }`
             }
           } else {
             response = {
