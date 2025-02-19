@@ -208,6 +208,26 @@ export default function notificationRoutes(app: Application) {
       const userIds = notifications.map((elem) => elem.userId).concat(userId)
       const postsIds = notifications.map((elem) => elem.postId)
       const emojiReactionsIds = notifications.filter((elem) => elem.emojiReactionId).map((elem) => elem.emojiReactionId)
+
+      const postIdsWithQuotes = notifications
+        .filter((elem) => elem.notificationType === 'QUOTE')
+        .map((elem) => elem.postId)
+
+      let quotedPostsRelations = [] as any[]
+      
+      // do not execute the query if there are no quote notifications on this page
+      if (postIdsWithQuotes.length > 0) {
+        quotedPostsRelations = await Quotes.findAll({
+          where: {
+            quoterPostId: {
+              [Op.in]: postIdsWithQuotes
+            }
+          }
+        })
+      }
+
+      const quotedPostsIds = quotedPostsRelations.map((elem) => elem.quotedPostId)
+
       let users = User.findAll({
         attributes: ['id', 'url', 'name', 'avatar'],
         where: {
@@ -219,7 +239,7 @@ export default function notificationRoutes(app: Application) {
       let posts = Post.findAll({
         where: {
           id: {
-            [Op.in]: postsIds
+            [Op.in]: [...postsIds, ...quotedPostsIds]
           }
         }
       })
@@ -278,11 +298,18 @@ export default function notificationRoutes(app: Application) {
           }
         }
       })
-      await Promise.all([users, posts, asks, tags, medias, userEmojis, postEmojis, emojiReactions])
-      let emojisToGet = (await emojiReactions)
+      
+      const [
+        _emojiReactions,
+        _userEmojis,
+        _postEmojis
+      ] = await Promise.all([emojiReactions, userEmojis, postEmojis])
+  
+      let emojisToGet = _emojiReactions
         .map((elem) => elem.emojiId)
-        .concat((await userEmojis).map((elem) => elem.emojiId))
-        .concat((await postEmojis).map((elem) => elem.emojiId))
+        .concat(_userEmojis.map((elem) => elem.emojiId))
+        .concat(_postEmojis.map((elem) => elem.emojiId))
+
       const emojis = await Emoji.findAll({
         where: {
           id: {
@@ -290,7 +317,9 @@ export default function notificationRoutes(app: Application) {
           }
         }
       })
-      await Promise.all([users, posts, asks, tags, medias, userEmojis, postEmojis, emojiReactions])
+
+      // not including emoji promises here as they were already awaited above
+      await Promise.all([users, posts, asks, tags, medias])
 
       res.send({
         notifications,
@@ -299,10 +328,11 @@ export default function notificationRoutes(app: Application) {
         medias: await medias,
         asks: await asks,
         tags: await tags,
+        quotes: quotedPostsRelations,
         emojiRelations: {
-          userEmojiRelation: await userEmojis,
-          postEmojiRelation: await postEmojis,
-          postEmojiReactions: await emojiReactions,
+          userEmojiRelation: _userEmojis,
+          postEmojiRelation: _postEmojis,
+          postEmojiReactions: _emojiReactions,
           emojis: emojis
         }
       })
