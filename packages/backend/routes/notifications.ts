@@ -209,24 +209,14 @@ export default function notificationRoutes(app: Application) {
       const postsIds = notifications.map((elem) => elem.postId)
       const emojiReactionsIds = notifications.filter((elem) => elem.emojiReactionId).map((elem) => elem.emojiReactionId)
 
-      const postIdsWithQuotes = notifications
-        .filter((elem) => elem.notificationType === 'QUOTE')
-        .map((elem) => elem.postId)
-
-      let quotedPostsRelations = [] as any[]
-      
-      // do not execute the query if there are no quote notifications on this page
-      if (postIdsWithQuotes.length > 0) {
-        quotedPostsRelations = await Quotes.findAll({
-          where: {
-            quoterPostId: {
-              [Op.in]: postIdsWithQuotes
-            }
+      const postsWithQuotes = Quotes.findAll({
+        where: {
+          quoterPostId: {
+            [Op.in]: notifications.filter((elem) => elem.postId != undefined).map((elem) => elem.postId)
           }
-        })
-      }
-
-      const quotedPostsIds = quotedPostsRelations.map((elem) => elem.quotedPostId)
+        }
+      })
+      const quotedPostsIds = postsWithQuotes.map((elem) => elem.quotedPostId)
 
       let users = User.findAll({
         attributes: ['id', 'url', 'name', 'avatar'],
@@ -298,13 +288,9 @@ export default function notificationRoutes(app: Application) {
           }
         }
       })
-      
-      const [
-        _emojiReactions,
-        _userEmojis,
-        _postEmojis
-      ] = await Promise.all([emojiReactions, userEmojis, postEmojis])
-  
+
+      const [_emojiReactions, _userEmojis, _postEmojis] = await Promise.all([emojiReactions, userEmojis, postEmojis])
+
       let emojisToGet = _emojiReactions
         .map((elem) => elem.emojiId)
         .concat(_userEmojis.map((elem) => elem.emojiId))
