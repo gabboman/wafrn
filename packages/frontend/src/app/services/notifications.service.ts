@@ -103,6 +103,7 @@ export class NotificationsService {
         tags: Tag[]
         emojiRelations: EmojiRelations
         notifications: NotificationRaw[]
+        quotes: Quote[]
       }>(`${EnvironmentService.environment.baseUrl}/v3/notificationsScroll`, {
         params: petitionData
       })
@@ -122,7 +123,7 @@ export class NotificationsService {
         medias: petition.medias,
         tags: petition.tags,
         likes: [],
-        quotes: [],
+        quotes: petition.quotes,
         quotedPosts: [],
         rewootIds: []
       })
