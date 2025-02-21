@@ -94,14 +94,7 @@ export default function cacheRoutes(app: Application) {
       // with the second parameter to the URL constructor we can provide a base URL in case the media URL is something like "/api/uploads/..." so the URL constructor does not throw an error
       const url = new URL(mediaUrl, urlBase)
       const mediaLink = url.href as string
-      const mediaLinkArray = url.pathname.split('.')
-      let linkExtension = mediaLinkArray[mediaLinkArray.length - 1].toLowerCase()
-
-      // images from calckey and some other instances have no extension
-      if (!url.pathname.includes('.')) {
-        linkExtension = ''
-      }
-
+      
       const mediaLinkHash = crypto.createHash('sha256').update(mediaLink).digest('hex')
       let localFileName = await redisCache.get(`cache:${mediaLinkHash}`)
 
