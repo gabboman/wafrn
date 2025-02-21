@@ -257,6 +257,29 @@ const UserOptions = sequelize.define(
   }
 )
 
+const PushNotificationToken = sequelize.define('pushNotificationTokens', {
+  token: {
+    type: Sequelize.STRING(768),
+    allowNull: false,
+    primaryKey: true
+  },
+  userId: {
+    type: Sequelize.UUID,
+    allowNull: false,
+  },
+}, {
+  indexes: [
+    {
+      unique: true,
+      fields: ['token']
+    },
+    {
+      unique: false,
+      fields: ['userId']
+    }
+  ]
+})
+
 const Quotes = sequelize.define('quotes', {})
 
 const Follows = sequelize.define(
@@ -773,6 +796,9 @@ EmojiReaction.belongsTo(Emoji)
 User.hasMany(UserOptions)
 UserOptions.belongsTo(User)
 
+User.hasMany(PushNotificationToken)
+PushNotificationToken.belongsTo(User)
+
 User.hasMany(QuestionPollAnswer),
   User.belongsToMany(Emoji, {
     through: UserEmojiRelation
@@ -1011,6 +1037,7 @@ export {
   sequelize,
   User,
   UserOptions,
+  PushNotificationToken,
   Blocks,
   Mutes,
   Post,
