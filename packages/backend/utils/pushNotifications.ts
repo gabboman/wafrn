@@ -3,46 +3,18 @@ import { Expo } from "expo-server-sdk"
 import { logger } from "./logger.js"
 import { Notification, PushNotificationToken } from "../db.js"
 
-export type NotificationBase = {
-  id: number
-  createdAt: string // ISO date
-  updatedAt: string // ISO date
+export type NotificationBody = {
   notifiedUserId: string
   userId: string
+  notificationType: 'FOLLOW' | 'LIKE' | 'REWOOT' | 'MENTION' | 'QUOTE' | 'EMOJIREACT'
+  postId?: string
+  emojiReactionId?: string
 }
-
-export type FollowNotification = NotificationBase & {
-  notificationType: 'FOLLOW'
-}
-export type LikeNotification = NotificationBase & {
-  notificationType: 'LIKE'
-  postId: string
-}
-export type ReblogNotification = NotificationBase & {
-  notificationType: 'REWOOT'
-  postId: string
-}
-export type MentionNotification = NotificationBase & {
-  notificationType: 'MENTION'
-  postId: string
-}
-export type QuoteNotification = NotificationBase & {
-  notificationType: 'QUOTE'
-  postId: string
-}
-export type EmojiReactionNotification = NotificationBase & {
-  notificationType: 'EMOJIREACT'
-  postId: string
-  emojiReactionId: string
-}
-export type Notification = FollowNotification | LikeNotification | ReblogNotification | MentionNotification | QuoteNotification | EmojiReactionNotification
-
-export type NotificationBody = Omit<Notification, 'id' | 'createdAt' | 'updatedAt'>
 
 export type NotificationContext = {
-  postContent: string
-  userUrl: string
-  emoji: string
+  postContent?: string
+  userUrl?: string
+  emoji?: string
 }
 
 export async function deleteToken(token: string) {
