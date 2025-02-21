@@ -29,23 +29,10 @@ const expoClient = new Expo()
 
 
 export async function createNotification(notification: NotificationBody, context?: NotificationContext) {
-  const userId = notification.notifiedUserId
-  const tokenRows = await PushNotificationToken.findAll({
-    where: {
-      userId
-    }
-  })
-
-  const tokens = tokenRows.map((token) => token.token)
-
-  const promises = []
-  if (tokens.length > 0) {
-    promises.push(sendNotification(notification, context))
-  }
-
-  promises.push(Notification.create(notification))
-
-  await Promise.allSettled(promises)
+  await Promise.all([
+    Notification.create(notification),
+    sendNotification(notification, context)
+  ])
 }
 
             
