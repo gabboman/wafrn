@@ -6,6 +6,7 @@ import { logger } from '../utils/logger.js'
 import { emojiReactRemote } from '../utils/activitypub/likePost.js'
 import { getUserOptions } from '../utils/cacheGetters/getUserOptions.js'
 import { forceUpdateLastActive } from '../utils/forceUpdateLastActive.js'
+import { createNotification } from '../utils/pushNotifications.js'
 
 export default function emojiReactRoutes(app: Application) {
   app.post(
@@ -62,12 +63,16 @@ export default function emojiReactRoutes(app: Application) {
             content: (await emoji).name ? emoji.name : emojiName
           })
           await reaction.save()
-          await Notification.create({
+          await createNotification({
             notificationType: 'EMOJIREACT',
             userId: userId,
             postId: postId,
             notifiedUserId: post.userId,
             emojiReactionId: reaction.id
+          }, {
+            postContent: post?.markdownContent,
+            userUrl: (await user)?.url,
+            emoji: reaction.content
           })
           success = true
           emojiReactRemote(reaction)

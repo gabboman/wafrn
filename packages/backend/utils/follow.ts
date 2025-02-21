@@ -4,6 +4,7 @@ import { logger } from './logger.js'
 import { Response } from 'express'
 import { remoteFollow } from './activitypub/remoteFollow.js'
 import { redisCache } from './redis.js'
+import { createNotification } from './pushNotifications.js'
 
 async function follow(
   followerId: string,
@@ -60,10 +61,12 @@ async function follow(
       })
       if (follow.accepted) {
         // if user does this manualy you dont want to give them a notification after accepting lol
-        await Notification.create({
-          notificatinType: 'FOLLOW',
+        await createNotification({
+          notificationType: 'FOLLOW',
           userId: followerId,
-          notifiedUserId: userFollowed.id
+          notifiedUserId: userFollowed?.id
+        }, {
+          userUrl: (await User.findByPk(followerId))?.url
         })
       }
       if (userFollowed.remoteId) {

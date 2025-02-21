@@ -9,6 +9,7 @@ import { getUserOptions } from '../utils/cacheGetters/getUserOptions.js'
 import { getAtProtoSession } from '../atproto/utils/getAtProtoSession.js'
 import { Model } from 'sequelize'
 import { forceUpdateLastActive } from '../utils/forceUpdateLastActive.js'
+import { createNotification } from '../utils/pushNotifications.js'
 
 export default function likeRoutes(app: Application) {
   app.post('/api/like', authenticateToken, forceUpdateLastActive, async (req: AuthorizedRequest, res: Response) => {
@@ -67,11 +68,14 @@ export default function likeRoutes(app: Application) {
           bskyPath: bskyUri
         })
         await likedPost.save()
-        await Notification.create({
+        await createNotification({
           notificationType: 'LIKE',
           notifiedUserId: post.userId,
           userId: userId,
           postId: postId
+        }, {
+          postContent: post?.markdownContent,
+          userUrl: (await user)?.url
         })
         success = true
         likePostRemote(likedPost)

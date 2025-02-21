@@ -1,6 +1,7 @@
 import { Emoji, EmojiReaction, Notification, UserLikesPostRelations } from '../../../db.js'
 import { activityPubObject } from '../../../interfaces/fediverse/activityPubObject.js'
 import { logger } from '../../logger.js'
+import { createNotification } from '../../pushNotifications.js'
 import { getPostThreadRecursive } from '../getPostThreadRecursive.js'
 import { signAndAccept } from '../signAndAccept.js'
 
@@ -26,12 +27,16 @@ async function LikeActivity(body: activityPubObject, remoteUser: any, user: any)
             postId: postToBeLiked.id
           })
       if (!reactionFound) {
-        await Notification.create({
+        await createNotification({
           notificationType: 'EMOJIREACT',
           userId: remoteUser.id,
           notifiedUserId: postToBeLiked.userId,
           postId: postToBeLiked.id,
           emojiReactionId: reaction.id
+        }, {
+          postContent: postToBeLiked.markdownContent,
+          userUrl: remoteUser.url,
+          emoji: reaction.content
         })
       }
       if (apObject.tag) {
@@ -58,11 +63,14 @@ async function LikeActivity(body: activityPubObject, remoteUser: any, user: any)
           }
         })
         if (likeFound[1]) {
-          await Notification.create({
+          await createNotification({
             notificationType: 'LIKE',
             userId: remoteUser.id,
             notifiedUserId: postToBeLiked.userId,
             postId: postToBeLiked.id
+          }, {
+            postContent: postToBeLiked.markdownContent,
+            userUrl: remoteUser.url
           })
         }
       } catch (error) {

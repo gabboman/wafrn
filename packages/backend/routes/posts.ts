@@ -41,6 +41,8 @@ import { getUserOptions } from '../utils/cacheGetters/getUserOptions.js'
 
 import showdown from 'showdown'
 import { forceUpdateLastActive } from '../utils/forceUpdateLastActive.js'
+import { createNotification } from '../utils/pushNotifications.js'
+
 const markdownConverter = new showdown.Converter({
   simplifiedAutoLink: true,
   literalMidWordUnderscores: true,
@@ -543,12 +545,17 @@ export default function postsRoutes(app: Application) {
             )
           })
         }
+        const userUrl = (await User.findByPk(parent?.userId))?.url
+
         if (post.isReblog) {
-          await Notification.create({
+          await createNotification({
             notificationType: 'REWOOT',
             notifiedUserId: parent?.userId,
             userId: post.userId,
             postId: parent?.id
+          }, {
+            postContent: parent?.markdownContent,
+            userUrl 
           })
         }
         if (postToBeQuoted) {
@@ -569,11 +576,14 @@ export default function postsRoutes(app: Application) {
               userId: postToBeQuoted.userId
             }
           })
-          await Notification.create({
+          await createNotification({
             notificationType: 'QUOTE',
             notifiedUserId: postToBeQuoted.userId,
             userId: post.userId,
             postId: post.id
+          }, {
+            postContent: post.markdownContent,
+            userUrl
           })
         }
         const askId = req.body.ask

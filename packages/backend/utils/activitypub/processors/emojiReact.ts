@@ -1,5 +1,6 @@
 import { Emoji, EmojiReaction, Notification } from '../../../db.js'
 import { activityPubObject } from '../../../interfaces/fediverse/activityPubObject.js'
+import { createNotification } from '../../pushNotifications.js'
 import { getPostThreadRecursive } from '../getPostThreadRecursive.js'
 import { signAndAccept } from '../signAndAccept.js'
 
@@ -33,12 +34,16 @@ async function EmojiReactActivity(body: activityPubObject, remoteUser: any, user
         postId: postToReact.id,
         emojiId: emojiToAdd?.id
       })
-      await Notification.create({
+      await createNotification({
         notificationType: 'EMOJIREACT',
         userId: remoteUser.id,
         postId: postToReact.id,
         notifiedUserId: postToReact.userId,
         emojiReactionId: reaction.id
+      }, {
+        postContent: postToReact.markdownContent,
+        userUrl: remoteUser.url,
+        emoji: reaction.content
       })
     }
   }

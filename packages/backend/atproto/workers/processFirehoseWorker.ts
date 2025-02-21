@@ -10,6 +10,7 @@ import { getCacheAtDids } from '../cache/getCacheAtDids.js'
 import { deletePostCommon } from '../../utils/deletePost.js'
 import { redisCache } from '../../utils/redis.js'
 import { likePostRemote } from '../../utils/activitypub/likePost.js'
+import { createNotification } from '../../utils/pushNotifications.js'
 
 const adminUser = User.findOne({
   where: {
@@ -37,11 +38,15 @@ async function processFirehose(job: Job) {
                     bskyPath: operation.path
                   }
                 })
-                await Notification.create({
+                const post = await Post.findByPk(postId)
+                await createNotification({
                   notificationType: 'LIKE',
                   postId: postId,
                   userId: remoteUser.id,
-                  notifiedUserId: (await Post.findByPk(postId)).userId
+                  notifiedUserId: post?.userId
+                }, {
+                  postContent: post?.markdownContent,
+                  userUrl: remoteUser.url
                 })
               }
             } else {
@@ -96,10 +101,12 @@ async function processFirehose(job: Job) {
               follow.bskyPath = operation.path
               follow.accepted = true
               await follow.save()
-              Notification.create({
+              createNotification({
                 notificationType: 'FOLLOW',
                 userId: remoteUser.id,
                 notifiedUserId: userFollowed.id
+              }, {
+                userUrl: remoteUser.url
               })
             }
             break
