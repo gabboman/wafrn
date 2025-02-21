@@ -70,7 +70,7 @@ export async function sendPushNotification(job: Job<PushNotificationPayload>) {
     sound: 'default',
     title: getNotificationTitle(notification, context),
     body: getNotificationBody(notification, context),
-    data: notification
+    data: job.data
   }))
 
   // this will chunk the payloads into chunks of 1000 (max) and compress notifications with similar content
