@@ -8,6 +8,8 @@ import { logger } from './logger.js'
 import { processRemotePostView } from './queueProcessors/processRemotePostView.js'
 import { processRemoteMedia } from './queueProcessors/remoteMediaProcessor.js'
 import { processFirehose } from '../atproto/workers/processFirehoseWorker.js'
+import { sendPushNotification } from './queueProcessors/sendPushNotification.js'
+import { checkPushNotificationDelivery } from './queueProcessors/checkPushNotificationDelivery.js'
 
 logger.info('starting workers')
 const workerInbox = new Worker('inbox', (job: Job) => inboxWorker(job), {
@@ -92,6 +94,30 @@ const workerProcessFirehose = environment.enableBsky
     })
   : null
 
+const workerSendPushNotification = new Worker(
+  'sendPushNotification',
+  async (job: Job) => await sendPushNotification(job),
+  {
+    connection: environment.bullmqConnection,
+    metrics: {
+      maxDataPoints: MetricsTime.ONE_WEEK * 2
+    },
+    concurrency: environment.workers.medium,
+  }
+)
+
+const workerCheckPushNotificationDelivery = new Worker(
+  'checkPushNotificationDelivery',
+  async (job: Job) => await checkPushNotificationDelivery(job),
+  {
+    connection: environment.bullmqConnection,
+    metrics: {
+      maxDataPoints: MetricsTime.ONE_WEEK * 2
+    },
+    concurrency: environment.workers.medium,
+  }
+)
+
 const workers = [
   workerInbox,
   workerDeletePost,
@@ -100,7 +126,9 @@ const workers = [
   workerProcessRemotePostView,
   workerSendPostChunk,
   workerProcessRemotePostView,
-  workerProcessRemoteMediaData
+  workerProcessRemoteMediaData,
+  workerSendPushNotification,
+  workerCheckPushNotificationDelivery
 ]
 if (environment.enableBsky) {
   workers.push(workerProcessFirehose as Worker)
@@ -148,5 +176,7 @@ export {
   workerDeletePost,
   workerProcessRemotePostView,
   workerProcessRemoteMediaData,
-  workerProcessFirehose
+  workerProcessFirehose,
+  workerSendPushNotification,
+  workerCheckPushNotificationDelivery
 }
