@@ -27,14 +27,12 @@ export async function deleteToken(token: string) {
 
 const expoClient = new Expo()
 
-
 export async function createNotification(notification: NotificationBody, context?: NotificationContext) {
   await Promise.all([
     Notification.create(notification),
     sendNotification(notification, context)
   ])
 }
-
             
 // Error codes reference: https://docs.expo.io/push-notifications/sending-notifications/#individual-errors
 async function handleDeliveryError(response: ExpoPushErrorTicket) {
@@ -86,6 +84,10 @@ async function sendNotification(notification: NotificationBody, context?: Notifi
     }
   })
 
+  if (tokenRows.length === 0) {
+    return
+  }
+
   const payloads = tokenRows.map((row) => ({
     to: row.token,
     sound: 'default',
@@ -115,8 +117,11 @@ async function sendNotification(notification: NotificationBody, context?: Notifi
     }
   }
 
+  scheduleNotificationCheck(okTickets)
+}
+
+function scheduleNotificationCheck(ticketIds: string[]) {
   // TODO: enqueue a task in the queue to check that the okTickets are actually ok and were delivered to the device
-  return okTickets
 }
 
 export async function checkNotificationDelivery(ticketIds: string[]) {
