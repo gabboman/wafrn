@@ -267,11 +267,7 @@ export default function notificationRoutes(app: Application) {
     }
 
     try {
-      const existingToken = await PushNotificationToken.findOne({
-        where: {
-          token
-        }
-      })
+      const existingToken = await PushNotificationToken.findByPk(token)
   
       if (existingToken) {
         return res.send({ success: true, message: 'Token already registered.' })
