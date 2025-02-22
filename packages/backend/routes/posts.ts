@@ -545,7 +545,6 @@ export default function postsRoutes(app: Application) {
             )
           })
         }
-        const userUrl = (await User.findByPk(parent?.userId))?.url
 
         if (post.isReblog) {
           await createNotification(
@@ -557,7 +556,7 @@ export default function postsRoutes(app: Application) {
             },
             {
               postContent: parent?.content,
-              userUrl
+              userUrl: posterUser?.url
             }
           )
         }
@@ -588,7 +587,7 @@ export default function postsRoutes(app: Application) {
             },
             {
               postContent: post.content,
-              userUrl
+              userUrl: posterUser?.url
             }
           )
         }
@@ -630,7 +629,7 @@ export default function postsRoutes(app: Application) {
           })),
           {
             postContent: post.content,
-            userUrl: userUrl
+            userUrl: posterUser?.url
           }
         )
 
