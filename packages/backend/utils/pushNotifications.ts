@@ -4,7 +4,12 @@ import { Notification, PushNotificationToken } from "../db.js"
 import { Queue } from "bullmq"
 import { environment } from "../environment.js"
 
-const sendPushNotificationQueue = new Queue('sendPushNotification', {
+type PushNotificationPayload = {
+  notifications: NotificationBody[]
+  context?: NotificationContext
+}
+
+const sendPushNotificationQueue = new Queue<PushNotificationPayload>('sendPushNotification', {
   connection: environment.bullmqConnection,
   defaultJobOptions: {
     removeOnComplete: true,
@@ -28,6 +33,7 @@ export type NotificationContext = {
   postContent?: string
   userUrl?: string
   emoji?: string
+  ignoreDuplicates?: boolean
 }
 
 export async function deleteToken(token: string) {
@@ -40,10 +46,17 @@ export async function deleteToken(token: string) {
 
 const expoClient = new Expo()
 
+export async function bulkCreateNotifications(notifications: NotificationBody[], context?: NotificationContext) {
+  await Promise.all([
+    Notification.bulkCreate(notifications, { ignoreDuplicates: context?.ignoreDuplicates }),
+    sendPushNotificationQueue.add('sendPushNotification', { notifications, context })
+  ])
+}
+
 export async function createNotification(notification: NotificationBody, context?: NotificationContext) {
   await Promise.all([
     Notification.create(notification),
-    sendPushNotificationQueue.add('sendPushNotification', { notification, context })
+    sendPushNotificationQueue.add('sendPushNotification', { notifications: [notification], context })
   ])
 }
             

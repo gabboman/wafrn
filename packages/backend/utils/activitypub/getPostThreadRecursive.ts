@@ -22,6 +22,7 @@ import { loadPoll } from './loadPollFromPost.js'
 import { getApObjectPrivacy } from './getPrivacy.js'
 import dompurify from 'isomorphic-dompurify'
 import { Queue } from 'bullmq'
+import { bulkCreateNotifications } from '../pushNotifications.js'
 
 const updateMediaDataQueue = new Queue('processRemoteMediaData', {
   connection: environment.bullmqConnection,
@@ -264,16 +265,17 @@ async function getPostThreadRecursive(
         logger.debug(error)
       }
       newPost.setQuoted(quotes)
-      await Notification.bulkCreate(
-        quotes.map((quote) => {
-          return {
-            notificationType: 'QUOTE',
-            notifiedUserId: quote.userId,
-            userId: newPost.userId,
-            postId: newPost.id
-          }
-        })
-      )
+      
+      await bulkCreateNotifications(quotes.map((quote) => ({
+        notificationType: 'QUOTE',
+        notifiedUserId: quote.userId,
+        userId: newPost.userId,
+        postId: newPost.id
+      })), {
+        postContent: newPost.markdownContent,
+        userUrl: remoteUser.url
+      })
+
       await newPost.save()
       try {
         if (!remoteUser.banned && !remoteUserServerBaned) {
@@ -344,7 +346,7 @@ async function processMentions(post: any, userIds: string[]) {
       blockedId: post.userId
     }
   })
-  const remoteUser = await User.findByPk(post.userId, { attributes: ['federatedHostId'] })
+  const remoteUser = await User.findByPk(post.userId, { attributes: ['url', 'federatedHostId'] })
   const userServerBlocks = await ServerBlock.findAll({
     where: {
       userBlockerId: {
@@ -356,16 +358,17 @@ async function processMentions(post: any, userIds: string[]) {
   const blockerIds: string[] = blocks
     .map((block: any) => block.blockerId)
     .concat(userServerBlocks.map((elem: any) => elem.userBlockerId))
-  await Notification.bulkCreate(
-    userIds.map((mentionedUserId) => {
-      return {
-        notificationType: 'MENTION',
-        notifiedUserId: mentionedUserId,
-        userId: post.userId,
-        postId: post.id
-      }
-    })
-  )
+  
+  await bulkCreateNotifications(userIds.map((mentionedUserId) => ({
+    notificationType: 'MENTION',
+    notifiedUserId: mentionedUserId,
+    userId: post.userId,
+    postId: post.id
+  })), {
+    postContent: post.markdownContent,
+    userUrl: remoteUser.url
+  })
+
   return await PostMentionsUserRelation.bulkCreate(
     userIds
       .filter((elem) => !blockerIds.includes(elem))

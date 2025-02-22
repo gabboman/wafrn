@@ -41,7 +41,7 @@ import { getUserOptions } from '../utils/cacheGetters/getUserOptions.js'
 
 import showdown from 'showdown'
 import { forceUpdateLastActive } from '../utils/forceUpdateLastActive.js'
-import { createNotification } from '../utils/pushNotifications.js'
+import { bulkCreateNotifications, createNotification } from '../utils/pushNotifications.js'
 
 const markdownConverter = new showdown.Converter({
   simplifiedAutoLink: true,
@@ -615,16 +615,16 @@ export default function postsRoutes(app: Application) {
           })
         }
 
-        await Notification.bulkCreate(
-          mentionsToAdd.map((mention) => {
-            return {
-              notificationType: 'MENTION',
-              notifiedUserId: mention,
-              userId: post.userId,
-              postId: post.id
-            }
-          })
-        )
+        await bulkCreateNotifications(mentionsToAdd.map((mention) => ({
+          notificationType: 'MENTION',
+          notifiedUserId: mention,
+          userId: post.userId,
+          postId: post.id
+        })), {
+          postContent: post.markdownContent,
+          userUrl: userUrl
+        })
+
         post.setEmojis(emojisToAdd)
         success = !req.body.tags
         if (req.body.tags) {

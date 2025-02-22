@@ -4,6 +4,7 @@ import { logger } from "../logger.js"
 import { handleDeliveryError, type NotificationBody, type NotificationContext } from "../pushNotifications.js"
 import { Job, Queue } from "bullmq"
 import { environment } from "../../environment.js"
+import { Op } from "sequelize"
 
 const deliveryCheckQueue = new Queue('checkPushNotificationDelivery', {
   connection: environment.bullmqConnection,
@@ -48,16 +49,18 @@ function getNotificationBody(notification: NotificationBody, context?: Notificat
 }
 
 type PushNotificationPayload = {
-  notification: NotificationBody
+  notifications: NotificationBody[]
   context?: NotificationContext
 }
 
 export async function sendPushNotification(job: Job<PushNotificationPayload>) {
-  const { notification, context } = job.data
-  const userId = notification.notifiedUserId
+  const { notifications, context } = job.data
+  const userIds = notifications.map((elem) => elem.notifiedUserId)
   const tokenRows = await PushNotificationToken.findAll({
     where: {
-      userId
+      userId: {
+        [Op.in]: userIds
+      }
     }
   })
 
@@ -65,39 +68,42 @@ export async function sendPushNotification(job: Job<PushNotificationPayload>) {
     return
   }
 
-  const payloads = tokenRows.map((row) => ({
-    to: row.token,
-    sound: 'default',
-    title: getNotificationTitle(notification, context),
-    body: getNotificationBody(notification, context),
-    data: job.data
-  }))
+  const payloads = notifications.map((notification) => {
+    const tokens = tokenRows
+      .filter((row) => row.userId === notification.notifiedUserId)
+      .map((row) => row.token)
+
+    // send the same notification to all the devices of each notified user
+    return {
+      to: tokens,
+      sound: 'default',
+      title: getNotificationTitle(notification, context),
+      body: getNotificationBody(notification, context),
+      data: { notification, context }
+    }
+  })
 
   // this will chunk the payloads into chunks of 1000 (max) and compress notifications with similar content
   const chunks = expoClient.chunkPushNotifications(payloads)
   const okTickets = []
 
-  // TODO: handle in a queue with retry logic and exponential backoff
   for (const chunk of chunks) {
-    try {
-      const responses = await expoClient.sendPushNotificationsAsync(chunk)
-      for (const response of responses) {
-        if (response.status === 'ok') {
-          okTickets.push(response.id)
-        } else {
-          await handleDeliveryError(response)
-        }
+    const responses = await expoClient.sendPushNotificationsAsync(chunk)
+    for (const response of responses) {
+      if (response.status === 'ok') {
+        okTickets.push(response.id)
+      } else {
+        await handleDeliveryError(response)
       }
-    } catch (error) {
-      logger.error(error)
-      // TODO: retry sending the notification after some time
     }
   }
 
   await scheduleNotificationCheck(okTickets)
 }
 
+// schedule a job to check the delivery of the notifications after 30 minutes of being sent
+// this guarantees that the notification was delivered to the messaging services even in cases of high load
 function scheduleNotificationCheck(ticketIds: string[]) {
   const delay = 1000 * 60 * 30 // 30 minutes
-  return deliveryCheckQueue.add('checkPushNotificationDelivery', { ticketIds}, { delay })
+  return deliveryCheckQueue.add('checkPushNotificationDelivery', { ticketIds }, { delay })
 }

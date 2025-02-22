@@ -13,6 +13,9 @@ import { isArray } from 'underscore'
 import { logger } from '../../utils/logger.js'
 import { RichText } from '@atproto/api'
 import showdown from 'showdown'
+import { bulkCreateNotifications } from '../../utils/pushNotifications.js'
+
+
 const markdownConverter = new showdown.Converter({
   simplifiedAutoLink: true,
   literalMidWordUnderscores: true,
@@ -218,17 +221,16 @@ async function processSinglePost(
           postId: postToProcess.id
         }
       })
-      await Notification.bulkCreate(
-        mentions.map((mnt) => {
-          return {
-            notificationType: 'MENTION',
-            postId: postToProcess.id,
-            notifiedUserId: mnt,
-            userId: postToProcess.userId
-          }
-        }),
-        { ignoreDuplicates: true }
-      )
+      await bulkCreateNotifications(mentions.map((mnt) => ({
+        notificationType: 'MENTION',
+        postId: postToProcess.id,
+        notifiedUserId: mnt,
+        userId: postToProcess.userId
+      })), {
+        ignoreDuplicates: true,
+        postContent: postText,
+        userUrl: postCreator.url
+      })
       await PostMentionsUserRelation.bulkCreate(
         mentions.map((mnt) => {
           return {
