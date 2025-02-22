@@ -31,4 +31,57 @@ async function getMutedPosts(userId: string, superMute = false): Promise<Array<s
   return res
 }
 
-export { getMutedPosts }
+async function getMutedPostsMultiple(userIds: string[], superMute = false) {
+  const cacheResults = await redisCache.mget(
+    userIds.map((userId) => (superMute ? 'superMutedPosts:' : 'mutedPosts:') + userId)
+  )
+
+  if (cacheResults.every((result) => !!result)) {
+    const ids = cacheResults.map((result) => JSON.parse(result!) as string[])
+    return ids.flat()
+  }
+
+  const where = {
+    userId: {
+      [Op.in]: userIds
+    }
+  } as { userId: Record<any, any>; superMuted?: true }
+
+  if (superMute) {
+    where.superMuted = true
+  }
+
+  const mutedFirstIds = await SilencedPost.findAll({
+    where,
+    attributes: ['postId', 'userId']
+  })
+
+  let postIds: string[] = []
+  for (const result of cacheResults) {
+    if (result) {
+      postIds.push(...JSON.parse(result) as string[])
+    } else {
+      const index = cacheResults.indexOf(result)
+      const userId = userIds[index]
+      
+      let newPostIds = mutedFirstIds.filter((elem) => elem.userId === userId).map((elem) => elem.postId)
+      if (superMute && newPostIds.length) {
+        const mutedPosts = await sequelize.query(
+          `SELECT "postsId" FROM "postsancestors" where "ancestorId" IN (${newPostIds.map((elem) => "'" + elem + "'")})`
+        )
+        newPostIds = mutedPosts[0].map((elem) => elem.postsId)
+      }
+      await redisCache.set(
+        (superMute ? 'superMutedPosts:' : 'mutedPosts:') + userIds[index],
+        JSON.stringify(newPostIds),
+        'EX',
+        600
+      )
+      postIds.push(...newPostIds)
+    }
+  }
+  
+  return postIds
+}
+
+export { getMutedPosts, getMutedPostsMultiple }
