@@ -1,10 +1,11 @@
-import { Expo } from "expo-server-sdk"
-import { PushNotificationToken } from "../../db.js"
-import { logger } from "../logger.js"
-import { handleDeliveryError, type NotificationBody, type NotificationContext } from "../pushNotifications.js"
-import { Job, Queue } from "bullmq"
-import { environment } from "../../environment.js"
-import { Op } from "sequelize"
+import { Expo } from 'expo-server-sdk'
+import { PushNotificationToken } from '../../db.js'
+import { logger } from '../logger.js'
+import { handleDeliveryError, type NotificationBody, type NotificationContext } from '../pushNotifications.js'
+import { Job, Queue } from 'bullmq'
+import { environment } from '../../environment.js'
+import { Op } from 'sequelize'
+import { getMutedPosts } from '../cacheGetters/getMutedPosts.js'
 
 const deliveryCheckQueue = new Queue('checkPushNotificationDelivery', {
   connection: environment.bullmqConnection,
@@ -23,7 +24,7 @@ const verbMap = {
   REWOOT: 'rewooted',
   MENTION: 'replied to',
   QUOTE: 'quoted',
-  EMOJIREACT: 'reacted to',
+  EMOJIREACT: 'reacted to'
 }
 
 const expoClient = new Expo()
@@ -67,10 +68,15 @@ export async function sendPushNotification(job: Job<PushNotificationPayload>) {
   if (tokenRows.length === 0) {
     return
   }
-
   const payloads = notifications.map((notification) => {
     const tokens = tokenRows
       .filter((row) => row.userId === notification.notifiedUserId)
+      .filter(async (row) => {
+        const mutedPosts = (await getMutedPosts(notification.notifiedUserId, false)).concat(
+          await getMutedPosts(notification.notifiedUserId, true)
+        )
+        return !mutedPosts.includes(notification.postId ? notification.postId : '')
+      })
       .map((row) => row.token)
 
     // send the same notification to all the devices of each notified user
