@@ -8,37 +8,20 @@ import { environment } from "../../environment.js";
 import { fileTypeFromFile } from 'file-type';
 import sharp from "sharp";
 import { Model } from "sequelize";
+import { redisCache } from "../redis.js";
 
 async function processRemoteMedia(job: Job) {
     const media = await Media.findByPk(job.data.mediaId) as Model<any, any>;
     let fileLocation = "";
     if (media.external) {
-        // TODO this code uses parts from the cacher. Could be better done? absolutely. Will do once it breaks
-        // we fetch the media
-        const _petition = await axios.get(
-            // we call the local api
-            environment.frontendUrl + '/api/cache/?media=' + encodeURIComponent(media.url),
-        );
-        const _secondPetition = await axios.get(
-            // we call the cdn or the local url twice
-            environment.externalCacheurl + encodeURIComponent(media.url),
-        );
-        // the local file url is....
-        const mediaLinkHash = crypto
-            .createHash("sha256")
-            .update(media.url)
-            .digest("hex");
-        const mediaLinkArray = media.url.split(".");
-        let linkExtension = mediaLinkArray[mediaLinkArray.length - 1]
-            .toLowerCase()
-            .replaceAll("/", "_");
-        if (linkExtension.includes("/")) {
-            linkExtension = "";
-        }
-        linkExtension = linkExtension.split("?")[0].substring(0, 4);
-        fileLocation = linkExtension
-            ? `cache/${mediaLinkHash}.${linkExtension}`
-            : `cache/${mediaLinkHash}`;
+        // call the local cache endpoint to populate redis
+        const cacheUrl = environment.frontendUrl + '/api/cache/?media=' + encodeURIComponent(media.url)
+        await axios.get(cacheUrl)
+
+        // get the local file name from redis using the hash of the media url
+        const mediaLinkHash = crypto.createHash('sha256').update(media.url).digest('hex')
+        const localFilename = await redisCache.get(`cache:${mediaLinkHash}`)
+        fileLocation = localFilename!
     } else {
         fileLocation = `uploads${media.url}`;
     }
