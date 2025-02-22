@@ -58,15 +58,18 @@ async function AnnounceActivity(body: activityPubObject, remoteUser: any, user: 
     }
     const newToot = await Post.create(postToCreate)
     await newToot.save()
-    await createNotification({
-      notificationType: 'REWOOT',
-      postId: retooted_content.id,
-      notifiedUserId: retooted_content.userId,
-      userId: remoteUser.id
-    }, {
-      postContent: retooted_content.markdownContent,
-      userUrl: remoteUser.url
-    })
+    await createNotification(
+      {
+        notificationType: 'REWOOT',
+        postId: retooted_content.id,
+        notifiedUserId: retooted_content.userId,
+        userId: remoteUser.id
+      },
+      {
+        postContent: retooted_content.content,
+        userUrl: remoteUser.url
+      }
+    )
     // await signAndAccept({ body: body }, remoteUser, user)
   }
 }

@@ -34,17 +34,20 @@ async function EmojiReactActivity(body: activityPubObject, remoteUser: any, user
         postId: postToReact.id,
         emojiId: emojiToAdd?.id
       })
-      await createNotification({
-        notificationType: 'EMOJIREACT',
-        userId: remoteUser.id,
-        postId: postToReact.id,
-        notifiedUserId: postToReact.userId,
-        emojiReactionId: reaction.id
-      }, {
-        postContent: postToReact.markdownContent,
-        userUrl: remoteUser.url,
-        emoji: reaction.content
-      })
+      await createNotification(
+        {
+          notificationType: 'EMOJIREACT',
+          userId: remoteUser.id,
+          postId: postToReact.id,
+          notifiedUserId: postToReact.userId,
+          emojiReactionId: reaction.id
+        },
+        {
+          postContent: postToReact.content,
+          userUrl: remoteUser.url,
+          emoji: reaction.content
+        }
+      )
     }
   }
   // await signAndAccept({ body: body }, remoteUser, user)

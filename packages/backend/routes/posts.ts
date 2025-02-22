@@ -548,15 +548,18 @@ export default function postsRoutes(app: Application) {
         const userUrl = (await User.findByPk(parent?.userId))?.url
 
         if (post.isReblog) {
-          await createNotification({
-            notificationType: 'REWOOT',
-            notifiedUserId: parent?.userId,
-            userId: post.userId,
-            postId: parent?.id
-          }, {
-            postContent: parent?.markdownContent,
-            userUrl 
-          })
+          await createNotification(
+            {
+              notificationType: 'REWOOT',
+              notifiedUserId: parent?.userId,
+              userId: post.userId,
+              postId: parent?.id
+            },
+            {
+              postContent: parent?.content,
+              userUrl
+            }
+          )
         }
         if (postToBeQuoted) {
           if (req.body.idPostToEdit) {
@@ -576,15 +579,18 @@ export default function postsRoutes(app: Application) {
               userId: postToBeQuoted.userId
             }
           })
-          await createNotification({
-            notificationType: 'QUOTE',
-            notifiedUserId: postToBeQuoted.userId,
-            userId: post.userId,
-            postId: post.id
-          }, {
-            postContent: post.markdownContent,
-            userUrl
-          })
+          await createNotification(
+            {
+              notificationType: 'QUOTE',
+              notifiedUserId: postToBeQuoted.userId,
+              userId: post.userId,
+              postId: post.id
+            },
+            {
+              postContent: post.content,
+              userUrl
+            }
+          )
         }
         const askId = req.body.ask
         if (askId) {
@@ -615,15 +621,18 @@ export default function postsRoutes(app: Application) {
           })
         }
 
-        await bulkCreateNotifications(mentionsToAdd.map((mention) => ({
-          notificationType: 'MENTION',
-          notifiedUserId: mention,
-          userId: post.userId,
-          postId: post.id
-        })), {
-          postContent: post.markdownContent,
-          userUrl: userUrl
-        })
+        await bulkCreateNotifications(
+          mentionsToAdd.map((mention) => ({
+            notificationType: 'MENTION',
+            notifiedUserId: mention,
+            userId: post.userId,
+            postId: post.id
+          })),
+          {
+            postContent: post.content,
+            userUrl: userUrl
+          }
+        )
 
         post.setEmojis(emojisToAdd)
         success = !req.body.tags

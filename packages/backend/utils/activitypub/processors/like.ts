@@ -27,17 +27,20 @@ async function LikeActivity(body: activityPubObject, remoteUser: any, user: any)
             postId: postToBeLiked.id
           })
       if (!reactionFound) {
-        await createNotification({
-          notificationType: 'EMOJIREACT',
-          userId: remoteUser.id,
-          notifiedUserId: postToBeLiked.userId,
-          postId: postToBeLiked.id,
-          emojiReactionId: reaction.id
-        }, {
-          postContent: postToBeLiked.markdownContent,
-          userUrl: remoteUser.url,
-          emoji: reaction.content
-        })
+        await createNotification(
+          {
+            notificationType: 'EMOJIREACT',
+            userId: remoteUser.id,
+            notifiedUserId: postToBeLiked.userId,
+            postId: postToBeLiked.id,
+            emojiReactionId: reaction.id
+          },
+          {
+            postContent: postToBeLiked.content,
+            userUrl: remoteUser.url,
+            emoji: reaction.content
+          }
+        )
       }
       if (apObject.tag) {
         const emojiRemote = apObject.tag[0]
@@ -63,15 +66,18 @@ async function LikeActivity(body: activityPubObject, remoteUser: any, user: any)
           }
         })
         if (likeFound[1]) {
-          await createNotification({
-            notificationType: 'LIKE',
-            userId: remoteUser.id,
-            notifiedUserId: postToBeLiked.userId,
-            postId: postToBeLiked.id
-          }, {
-            postContent: postToBeLiked.markdownContent,
-            userUrl: remoteUser.url
-          })
+          await createNotification(
+            {
+              notificationType: 'LIKE',
+              userId: remoteUser.id,
+              notifiedUserId: postToBeLiked.userId,
+              postId: postToBeLiked.id
+            },
+            {
+              postContent: postToBeLiked.content,
+              userUrl: remoteUser.url
+            }
+          )
         }
       } catch (error) {
         logger.trace(`Error processing like user ${remoteUser.url} post ${postToBeLiked.id} ${apObject.id}`)

@@ -265,16 +265,19 @@ async function getPostThreadRecursive(
         logger.debug(error)
       }
       newPost.setQuoted(quotes)
-      
-      await bulkCreateNotifications(quotes.map((quote) => ({
-        notificationType: 'QUOTE',
-        notifiedUserId: quote.userId,
-        userId: newPost.userId,
-        postId: newPost.id
-      })), {
-        postContent: newPost.markdownContent,
-        userUrl: remoteUser.url
-      })
+
+      await bulkCreateNotifications(
+        quotes.map((quote) => ({
+          notificationType: 'QUOTE',
+          notifiedUserId: quote.userId,
+          userId: newPost.userId,
+          postId: newPost.id
+        })),
+        {
+          postContent: newPost.content,
+          userUrl: remoteUser.url
+        }
+      )
 
       await newPost.save()
       try {
@@ -358,16 +361,19 @@ async function processMentions(post: any, userIds: string[]) {
   const blockerIds: string[] = blocks
     .map((block: any) => block.blockerId)
     .concat(userServerBlocks.map((elem: any) => elem.userBlockerId))
-  
-  await bulkCreateNotifications(userIds.map((mentionedUserId) => ({
-    notificationType: 'MENTION',
-    notifiedUserId: mentionedUserId,
-    userId: post.userId,
-    postId: post.id
-  })), {
-    postContent: post.markdownContent,
-    userUrl: remoteUser.url
-  })
+
+  await bulkCreateNotifications(
+    userIds.map((mentionedUserId) => ({
+      notificationType: 'MENTION',
+      notifiedUserId: mentionedUserId,
+      userId: post.userId,
+      postId: post.id
+    })),
+    {
+      postContent: post.content,
+      userUrl: remoteUser.url
+    }
+  )
 
   return await PostMentionsUserRelation.bulkCreate(
     userIds

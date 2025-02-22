@@ -63,17 +63,20 @@ export default function emojiReactRoutes(app: Application) {
             content: (await emoji).name ? emoji.name : emojiName
           })
           await reaction.save()
-          await createNotification({
-            notificationType: 'EMOJIREACT',
-            userId: userId,
-            postId: postId,
-            notifiedUserId: post.userId,
-            emojiReactionId: reaction.id
-          }, {
-            postContent: post?.markdownContent,
-            userUrl: (await user)?.url,
-            emoji: reaction.content
-          })
+          await createNotification(
+            {
+              notificationType: 'EMOJIREACT',
+              userId: userId,
+              postId: postId,
+              notifiedUserId: post.userId,
+              emojiReactionId: reaction.id
+            },
+            {
+              postContent: post?.content,
+              userUrl: (await user)?.url,
+              emoji: reaction.content
+            }
+          )
           success = true
           emojiReactRemote(reaction)
         }

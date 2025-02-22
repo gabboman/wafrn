@@ -39,15 +39,18 @@ async function processFirehose(job: Job) {
                   }
                 })
                 const post = await Post.findByPk(postId)
-                await createNotification({
-                  notificationType: 'LIKE',
-                  postId: postId,
-                  userId: remoteUser.id,
-                  notifiedUserId: post?.userId
-                }, {
-                  postContent: post?.markdownContent,
-                  userUrl: remoteUser.url
-                })
+                await createNotification(
+                  {
+                    notificationType: 'LIKE',
+                    postId: postId,
+                    userId: remoteUser.id,
+                    notifiedUserId: post?.userId
+                  },
+                  {
+                    postContent: post?.content,
+                    userUrl: remoteUser.url
+                  }
+                )
               }
             } else {
               const postInDb = await Post.findOne({
@@ -101,13 +104,16 @@ async function processFirehose(job: Job) {
               follow.bskyPath = operation.path
               follow.accepted = true
               await follow.save()
-              createNotification({
-                notificationType: 'FOLLOW',
-                userId: remoteUser.id,
-                notifiedUserId: userFollowed.id
-              }, {
-                userUrl: remoteUser.url
-              })
+              createNotification(
+                {
+                  notificationType: 'FOLLOW',
+                  userId: remoteUser.id,
+                  notifiedUserId: userFollowed.id
+                },
+                {
+                  userUrl: remoteUser.url
+                }
+              )
             }
             break
           }

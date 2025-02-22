@@ -68,15 +68,18 @@ export default function likeRoutes(app: Application) {
           bskyPath: bskyUri
         })
         await likedPost.save()
-        await createNotification({
-          notificationType: 'LIKE',
-          notifiedUserId: post.userId,
-          userId: userId,
-          postId: postId
-        }, {
-          postContent: post?.markdownContent,
-          userUrl: (await user)?.url
-        })
+        await createNotification(
+          {
+            notificationType: 'LIKE',
+            notifiedUserId: post.userId,
+            userId: userId,
+            postId: postId
+          },
+          {
+            postContent: post?.content,
+            userUrl: (await user)?.url
+          }
+        )
         success = true
         likePostRemote(likedPost)
       }

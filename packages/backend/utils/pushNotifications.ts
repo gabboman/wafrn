@@ -4,6 +4,7 @@ import { Notification, PushNotificationToken } from '../db.js'
 import { Queue } from 'bullmq'
 import { environment } from '../environment.js'
 import { getAllLocalUserIds } from './cacheGetters/getAllLocalUserIds.js'
+import dompurify from 'isomorphic-dompurify'
 
 type PushNotificationPayload = {
   notifications: NotificationBody[]
@@ -51,6 +52,9 @@ export async function bulkCreateNotifications(notifications: NotificationBody[],
   const localUserIds = await getAllLocalUserIds()
   const localUserNotifications = notifications.filter((elem) => localUserIds.includes(elem.notifiedUserId))
   if (localUserNotifications.length > 0) {
+    if (context && context.postContent) {
+      context.postContent = dompurify.sanitize(context.postContent, { ALLOWED_TAGS: [] })
+    }
     await Promise.all([
       Notification.bulkCreate(localUserNotifications, { ignoreDuplicates: context?.ignoreDuplicates }),
       sendPushNotificationQueue.add('sendPushNotification', { notifications, context })
@@ -61,6 +65,9 @@ export async function bulkCreateNotifications(notifications: NotificationBody[],
 export async function createNotification(notification: NotificationBody, context?: NotificationContext) {
   const localUserIds = await getAllLocalUserIds()
   if (localUserIds.includes(notification.notifiedUserId)) {
+    if (context && context.postContent) {
+      context.postContent = dompurify.sanitize(context.postContent, { ALLOWED_TAGS: [] })
+    }
     await Promise.all([
       Notification.create(notification),
       sendPushNotificationQueue.add('sendPushNotification', { notifications: [notification], context })
