@@ -90,9 +90,26 @@ export async function sendPushNotification(job: Job<PushNotificationPayload>) {
   })
 
   // this will chunk the payloads into chunks of 1000 (max) and compress notifications with similar content
-  const chunks = expoClient.chunkPushNotifications(payloads)
   const okTickets = []
-
+  const filteredPayloads: {
+    to: any[]
+    sound: string
+    title: string
+    body: string
+    data: {
+      notification: NotificationBody
+      context: NotificationContext | undefined
+    }
+  }[] = []
+  for await (const payload of payloads) {
+    const mutedPosts = (await getMutedPosts(payload.data.notification.notifiedUserId, false)).concat(
+      await getMutedPosts(payload.data.notification.notifiedUserId, true)
+    )
+    if (!mutedPosts.includes(payload.data.notification.postId as string)) {
+      filteredPayloads.push(payload)
+    }
+  }
+  const chunks = expoClient.chunkPushNotifications(filteredPayloads)
   for (const chunk of chunks) {
     const responses = await expoClient.sendPushNotificationsAsync(chunk)
     for (const response of responses) {
