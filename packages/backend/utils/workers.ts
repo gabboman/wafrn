@@ -102,7 +102,7 @@ const workerSendPushNotification = new Worker(
     metrics: {
       maxDataPoints: MetricsTime.ONE_WEEK * 2
     },
-    concurrency: environment.workers.medium,
+    concurrency: environment.workers.medium
   }
 )
 
@@ -114,7 +114,7 @@ const workerCheckPushNotificationDelivery = new Worker(
     metrics: {
       maxDataPoints: MetricsTime.ONE_WEEK * 2
     },
-    concurrency: environment.workers.medium,
+    concurrency: environment.workers.medium
   }
 )
 
@@ -156,7 +156,7 @@ const workersToLogFail = [
   workerPrepareSendPost,
   workerProcessRemotePostView,
   workerSendPostChunk,
-  workerProcessRemotePostView
+  workerSendPushNotification
 ]
 
 workersToLogFail.forEach((worker) =>

@@ -1,8 +1,9 @@
-import { Expo, type ExpoPushErrorTicket } from "expo-server-sdk"
-import { logger } from "./logger.js"
-import { Notification, PushNotificationToken } from "../db.js"
-import { Queue } from "bullmq"
-import { environment } from "../environment.js"
+import { Expo, type ExpoPushErrorTicket } from 'expo-server-sdk'
+import { logger } from './logger.js'
+import { Notification, PushNotificationToken } from '../db.js'
+import { Queue } from 'bullmq'
+import { environment } from '../environment.js'
+import { getAllLocalUserIds } from './cacheGetters/getAllLocalUserIds.js'
 
 type PushNotificationPayload = {
   notifications: NotificationBody[]
@@ -47,24 +48,31 @@ export async function deleteToken(token: string) {
 const expoClient = new Expo()
 
 export async function bulkCreateNotifications(notifications: NotificationBody[], context?: NotificationContext) {
-  await Promise.all([
-    Notification.bulkCreate(notifications, { ignoreDuplicates: context?.ignoreDuplicates }),
-    sendPushNotificationQueue.add('sendPushNotification', { notifications, context })
-  ])
+  const localUserIds = await getAllLocalUserIds()
+  const localUserNotifications = notifications.filter((elem) => localUserIds.includes(elem.notifiedUserId))
+  if (localUserNotifications.length > 0) {
+    await Promise.all([
+      Notification.bulkCreate(localUserNotifications, { ignoreDuplicates: context?.ignoreDuplicates }),
+      sendPushNotificationQueue.add('sendPushNotification', { notifications, context })
+    ])
+  }
 }
 
 export async function createNotification(notification: NotificationBody, context?: NotificationContext) {
-  await Promise.all([
-    Notification.create(notification),
-    sendPushNotificationQueue.add('sendPushNotification', { notifications: [notification], context })
-  ])
+  const localUserIds = await getAllLocalUserIds()
+  if (localUserIds.includes(notification.notifiedUserId)) {
+    await Promise.all([
+      Notification.create(notification),
+      sendPushNotificationQueue.add('sendPushNotification', { notifications: [notification], context })
+    ])
+  }
 }
-            
+
 // Error codes reference: https://docs.expo.io/push-notifications/sending-notifications/#individual-errors
 export async function handleDeliveryError(response: ExpoPushErrorTicket) {
   logger.error(response)
   const error = response.details?.error
-  
+
   // do not send notifications again to this token until it is registered again
   if (error === 'DeviceNotRegistered') {
     const token = response.details?.expoPushToken
