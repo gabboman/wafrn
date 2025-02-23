@@ -4,7 +4,7 @@
         "exploreWithoutAccount": "Click here to take a look without an account!",
         "dontHaveAccount": "Don't have an account?",
         "register": "Register now!",
-        "checkSpam": "If you have any issue please check your spam folder!",
+        "checkSpam": "If you have any issue, please check your spam folder!",
         "email": "Email",
         "password": "Password",
         "forgottenPassword": "Forgot password? Click here!",
@@ -16,10 +16,10 @@
         "writeWoot": "Write new woot",
         "notifications": "Notifications",
         "explore": "Explore",
-        "exploreWafrn": "Explore Wafrn",
+        "exploreWafrn": "Explore WAFRN",
         "exploreFediverse": "Explore the Fediverse",
         "unansweredAsks": "Unanswered Asks",
-        "privateMessages": "Private Messages",
+        "privateMessages": "Private messages",
         "search": "Search",
         "myBlog": "My blog",
         "privacy": "Privacy Policy",
@@ -30,11 +30,11 @@
         "settings": {
             "title": "Settings",
             "follows": "Manage followers",
-            "enableBluesky": "Enable bluesky",
+            "enableBluesky": "Enable Bluesky",
             "editProfile": "Edit profile",
             "themeEditor": "Theme editor",
-            "mutedUsers": "Muted Users",
-            "mutedPosts": "Muted Posts",
+            "mutedUsers": "Muted users",
+            "mutedPosts": "Muted posts",
             "myBlockedUsers": "Blocked users",
             "myBlockedServers": "Blocked servers",
             "importFollows": "Import followers",
@@ -48,7 +48,7 @@
             "bans": "Banned users",
             "blocklist": "Blocked users",
             "stats": "Stats",
-            "awaitingAproval": "Awaiting aproval"
+            "awaitingAproval": "Awaiting approval"
         }
     },
     "editor": {
