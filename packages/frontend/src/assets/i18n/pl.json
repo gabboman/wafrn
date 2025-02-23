@@ -1,0 +1,57 @@
+{
+    "login": {
+        "welcomeBack": "Witaj z powrotem!",
+        "exploreWithoutAccount": "Kliknij tutaj, by przejrzeć Gofra bez konta!",
+        "dontHaveAccount": "Nie masz konta?",
+        "register": "Zarejestruj się teraz!",
+        "checkSpam": "Jeśli masz problemy z rejestracją, sprawdź swój folder spam.",
+        "email": "Email",
+        "password": "Hasło",
+        "forgottenPassword": "Zapomniałoś hasła? Kliknij tutaj!",
+        "loginButton": "Zaloguj się"
+    },
+    "menu": {
+        "dashboard": "Oś czasu",
+        "dashboardHover": "Zobacz oś czasu",
+        "writeWoot": "Stwórz woota",
+        "notifications": "Powiadomienia",
+        "explore": "Eksploruj",
+        "exploreWafrn": "Eksploruj Gofra",
+        "exploreFediverse": "Eksploruj Fediwersum",
+        "unansweredAsks": "Pytania bez odpowiedzi",
+        "privateMessages": "Wiadomości prywatne",
+        "search": "Szukaj",
+        "myBlog": "Mój blog",
+        "privacy": "Polityka prywatności",
+        "source": "Zobacz kod żródłowy!",
+        "patreon": "Patreon",
+        "kofi": "Ko-fi",
+        "logout": "Wyloguj się",
+        "settings": {
+            "title": "Ustawienia",
+            "follows": "Zarządzaj obserwującymi",
+            "enableBluesky": "Włącz mostek z Bluesky",
+            "editProfile": "Edytuj profil",
+            "themeEditor": "Edytor motywu",
+            "mutedUsers": "Wyciszeni użytkownicy",
+            "mutedPosts": "Wyciszone posty",
+            "myBlockedUsers": "Zablokowani użytkownicy",
+            "myBlockedServers": "Zablokowane serwery",
+            "importFollows": "Importuj obserwujących",
+            "superSecretMenu": "Seekretne Menu"
+        },
+        "admin": {
+            "title": "Administracja",
+            "serverList": "Lista serwerów",
+            "addEmojis": "Dodaj emotki",
+            "reports": "Zgłoszenia",
+            "bans": "Zbanowani użytkownicy",
+            "blocklist": "Zablokowani użytkownicy",
+            "stats": "Statystyki",
+            "awaitingAproval": "Oczekujący na akceptację"
+        }
+    },
+    "editor": {
+        "inReplyTo": "W odpowiedzi do:"
+    }
+}
