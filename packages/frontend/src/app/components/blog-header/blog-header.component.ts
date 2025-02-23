@@ -23,6 +23,8 @@ import { PostsService } from 'src/app/services/posts.service'
 import { AskDialogContentComponent } from '../ask-dialog-content/ask-dialog-content.component'
 import { EnvironmentService } from 'src/app/services/environment.service'
 import { InfoCardComponent } from '../info-card/info-card.component'
+import { faBluesky } from '@fortawesome/free-brands-svg-icons'
+
 
 @Component({
   selector: 'app-blog-header',
@@ -49,10 +51,12 @@ export class BlogHeaderComponent implements OnChanges, OnDestroy {
   muteUserIcon = faVolumeMute
   unmuteUserIcon = faVolumeUp
   userIcon = faUser
+  bskyIcon = faBluesky
   blockUserIcon = faUserSlash
   unblockServerIcon = faServer
   allowAsk = false
   allowRemoteAsk = false
+  isBlueskyUser = false
 
   constructor(
     private loginService: LoginService,

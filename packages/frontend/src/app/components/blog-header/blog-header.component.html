@@ -64,10 +64,15 @@
     </div>
     <div class="min-w-0">
       <p [innerHtml]="blogDetails.name" class="m-0 text-xl font-medium line-height-3"></p>
-      <p [innerText]="blogDetails.url" class="m-0 text-sm line-height-3 blog-url"></p>
+			@if (blogDetails.isBlueskyUser) {
+		    <p [innerText]="blogDetails.url" class="m-0 text-sm line-height-3 blog-url"></p>
+				<p class="bsky-badge mt-2 mb-0 text-sm line-height-3"><fa-icon class="mr-2" [icon]="bskyIcon"></fa-icon>Bluesky</p>
+			} @else {
+		    <p [innerText]="blogDetails.url" class="m-0 text-sm line-height-3 blog-url"></p>
+			}
     </div>
   </div>
-  <div [innerHtml]="blogDetails.description" class="mt-4 post-text"></div>
+  <div [innerHtml]="blogDetails.description" class="mt-2 post-text"></div>
   @if (fediAttachment.length !== 0) {
   <hr class="my-3" />
   <div class="w-full overflow-hidden flex flex-column gap-2">
