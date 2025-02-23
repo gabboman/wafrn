@@ -71,7 +71,8 @@
     "tsx": "^4.19.1",
     "turndown": "^7.2.0",
     "underscore": "^1.13.6",
-    "unzip-stream": "^0.3.4"
+    "unzip-stream": "^0.3.4",
+    "web-push": "^3.6.7"
   },
   "devDependencies": {
     "@types/body-parser": "^1.19.5",

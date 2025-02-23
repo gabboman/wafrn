@@ -98,12 +98,15 @@ export const environment = {
     description: 'DOMAINNAME, a wafrn instance',
     img: 'https://DOMAINNAME/assets/logo.png'
   },
+  // to generate these keys: npm install -g web-push then web-push generate-vapid-keys. Remember to do the environment one too!!
+  webpushPrivateKey: 'WEBPUSH_PRIVATE',
   frontendEnvironment: {
     logo: 'FRONTEND_LOGO',
     frontUrl: 'FRONTEND_URL',
     baseUrl: 'FRONTEND_API_URL',
     baseMediaUrl: 'FRONTEND_MEDIA_URL',
     externalCacheurl: 'FRONTEND_CACHE_URL',
+    webPushPublicKey: 'WEBPUSH_PUBLIC',
     shortenPosts: FRONTEND_SHORTEN_POSTS,
     disablePWA: FRONTEND_DISABLE_PWA,
     maintenance: FRONTEND_MAINTENANCE

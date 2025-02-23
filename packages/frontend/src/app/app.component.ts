@@ -3,6 +3,7 @@ import { SwUpdate } from '@angular/service-worker'
 import { LoginService } from './services/login.service'
 import { EnvironmentService } from './services/environment.service'
 import { TranslateService } from '@ngx-translate/core'
+import { SwPush } from '@angular/service-worker'
 
 @Component({
   selector: 'app-root',
@@ -15,12 +16,13 @@ export class AppComponent implements OnInit {
 
   constructor(
     private swUpdate: SwUpdate,
+    private swPush: SwPush,
     private injector: Injector,
     private loginService: LoginService,
     private environmentService: EnvironmentService,
     private translate: TranslateService
   ) {
-    this.translate.addLangs(['en'])
+    this.translate.addLangs(['en', 'pl'])
     this.translate.setDefaultLang('en')
     this.translate.use(this.translate.getBrowserLang() || 'en')
   }
@@ -57,6 +59,16 @@ export class AppComponent implements OnInit {
           }
         }
       })
+    }
+    // TODO lets keep with this later
+    if (false && this.swPush.isEnabled && EnvironmentService.environment.webpushPublicKey) {
+      this.swPush
+        .requestSubscription({
+          serverPublicKey: EnvironmentService.environment.webpushPublicKey
+        })
+        .then((notificationSubscription) => {
+          console.log(notificationSubscription)
+        })
     }
   }
 }
