@@ -25,4 +25,5 @@ export interface BlogDetails {
   followers: number
   publicOptions: PublicOption[]
   postCount: number
+  isBlueskyUser: boolean
 }

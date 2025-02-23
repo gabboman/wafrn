@@ -60,3 +60,11 @@ footer {
 mat-card:has(+ app-info-card) {
   margin-bottom: 0 !important;
 }
+
+.bsky-badge {
+	width: max-content;
+	border-radius: 2em;
+	background-color: rgba(0 133 255 / 0.35);
+	padding-inline: 10px;
+	padding-block: 4px;
+}
