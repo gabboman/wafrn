@@ -9,6 +9,7 @@ import { MatButtonModule } from '@angular/material/button'
 import { MatFormFieldModule } from '@angular/material/form-field'
 import { MatInputModule } from '@angular/material/input'
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome'
+import { TranslateModule } from '@ngx-translate/core'
 
 const routes: Routes = [
   {
@@ -29,7 +30,8 @@ const routes: Routes = [
     MatFormFieldModule,
     MatInputModule,
     MatButtonModule,
-    FontAwesomeModule
+    FontAwesomeModule,
+    TranslateModule
   ]
 })
 export class LoginModule {}

@@ -1,4 +1,15 @@
 {
+    "login": {
+        "welcomeBack": "Welcome back!",
+        "exploreWithoutAccount": "Click here to take a look without an account!",
+        "dontHaveAccount": "Don't have an account?",
+        "register": "Register now!",
+        "checkSpam": "If you have any issue please check your spam folder!",
+        "email": "Email",
+        "password": "Password",
+        "forgottenPassword": "Forgot password? Click here!",
+        "loginButton": "Log in"
+    },
     "menu": {
         "dashboard": "Dashboard",
         "dashboardHover": "View dashboard",
