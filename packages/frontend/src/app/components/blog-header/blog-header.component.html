@@ -48,6 +48,7 @@
         </button>
         }
         @if (blogDetails.url.startsWith('@')) {
+        @if (!blogDetails.isBlueskyUser) {
         @if (!blogDetails.serverBlocked) {
         <button mat-menu-item (mousedown)="blockService.blockServer(this.blogDetails.id)">
           <fa-icon class="mr-2" [icon]="unblockServerIcon"></fa-icon>Block server
@@ -57,6 +58,7 @@
           (mousedown)="blockService.unblockServer(this.blogDetails.federatedHost.id)">
           <fa-icon class="mr-2" [icon]="unblockServerIcon"></fa-icon>Unblock server
         </button>
+        }
         }
         }
       </mat-menu>
