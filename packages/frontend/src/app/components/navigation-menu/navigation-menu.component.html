@@ -55,7 +55,7 @@
       color="primary"
       [hidden]="!mobile || !jwtService.tokenValid() || currentRoute === '/editor'"
       type="button"
-      class="show-sidebar-menu-button"
+      class="show-sidebar-menu-button create-post-button"
       (mousedown)="this.hideMenu(); this.openEditor()"
     >
       <fa-icon [icon]="pencilIcon"></fa-icon>
