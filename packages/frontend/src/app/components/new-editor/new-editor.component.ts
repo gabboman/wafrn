@@ -19,7 +19,8 @@ import {
   faServer,
   faSkullCrossbones,
   faUnlock,
-  faUser
+  faUser,
+  faPaperPlane
 } from '@fortawesome/free-solid-svg-icons'
 import { EditorData } from 'src/app/interfaces/editor-data'
 import { PostHeaderComponent } from '../post/post-header/post-header.component'
@@ -124,6 +125,7 @@ export class NewEditorComponent implements OnDestroy {
   skull = faSkullCrossbones
   infoIcon = faQuestionCircle
   alertIcon = faExclamationTriangle
+  postIcon=faPaperPlane
   emojiSubscription: Subscription
   editorUpdatedSubscription: Subscription | undefined
   httpMentionPetitionSubscription: Subscription | undefined
