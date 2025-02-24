@@ -87,7 +87,7 @@
 
   @if (quoteOpen && !data?.quote) {
     <mat-card class="p-2 my-4" *ngIf="!quoteLoading">
-      <mat-form-field class="w-full">
+      <mat-form-field class="w-full" appearance="outline">
         <mat-label> Paste the URL of a woot to quote it. Can be the external url or the wafrn url </mat-label>
         <input [(ngModel)]="urlPostToQuote" placeholder="Just paste the woot url" matNativeControl />
       </mat-form-field>
@@ -131,7 +131,7 @@
       <ng-container *ngFor="let media of uploadedMedias; let i = index">
         <div class="col-12 md:col-6 my-2 relative">
           <app-media-preview [media]="media"></app-media-preview>
-          <mat-form-field class="w-full">
+          <mat-form-field class="w-full" appearance="outline">
             <mat-label>Image Description</mat-label>
             <textarea
               placeholder="Description. Please FILL THIS"
