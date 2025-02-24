@@ -56,6 +56,28 @@ app-media-preview {
   z-index: 2;
 }
 
+.delete-btn.mdc-icon-button .ng-fa-icon {
+	display: block;
+	transform: translateY(-5px);
+}
+
+.post-btn {
+	position: absolute;
+	top: 16px;
+	right: 64px;
+	z-index: 2;
+}
+
+@media screen and (max-width: 380px) {
+	.post-text {
+		display: none;
+	}
+	
+	.post-btn {
+		width: 24px;
+	}
+}
+
 .quote-container {
   position: relative;
 }
@@ -88,3 +110,9 @@ app-media-preview {
 svg {
   display: block;
 }
+
+/* Sadly this doesn't actually work, I'll have to be mildly infuriated */
+/* by random padding for the rest of my life */
+/* .mat-mdc-form-field-subscript-wrapper { */
+/* 	height: 12px; */
+/* } */
