@@ -34,8 +34,8 @@
   </mat-drawer>
   <mat-drawer-content>
     <button
-      style="position: fixed; z-index: 500; top: 1em; left: 0.5em"
-      mat-flat-button
+      style="position: fixed; z-index: 500; top: 1em; left: 1em"
+      mat-mini-fab
       color="primary"
       [hidden]="!mobile"
       type="button"
@@ -50,8 +50,8 @@
       <fa-icon [icon]="hamburguerIcon"></fa-icon>
     </button>
     <button
-      style="position: fixed; z-index: 500; bottom: 1em; right: 0.5em"
-      mat-flat-button
+      style="position: fixed; z-index: 500; bottom: 1em; right: 1em"
+      mat-fab
       color="primary"
       [hidden]="!mobile || !jwtService.tokenValid() || currentRoute === '/editor'"
       type="button"
