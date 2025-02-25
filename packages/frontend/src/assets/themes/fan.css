@@ -52,6 +52,10 @@
     color: black !important;
     }
     
-    .emojireact-overlay, .theme-selector-button {
-        color: black;
+    .emojireact-overlay, .theme-selector-button, .info-card, .quoted-post, .post-editor-data {
+        color: black !important;
+    }
+
+    .dashboard-title, .asks-text {
+        color: #ccc3d1
     }

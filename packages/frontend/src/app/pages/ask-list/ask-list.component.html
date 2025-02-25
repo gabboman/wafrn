@@ -1,5 +1,5 @@
 <div class="wafrn-container mx-1 md:mx-4">
-  <h3 class="m-0 text-2xl">Unanswered asks</h3>
+  <h3 class="m-0 text-2xl asks-text">Unanswered asks</h3>
 </div>
 <app-loader *ngIf="loading">posts</app-loader>
 @for (ask of asks; track $index) {
@@ -10,7 +10,7 @@
   </mat-card>
 }
 @if (!loading && asks.length === 0) {
-  <footer class="m-2 mb-6 lg:mx-4 wafrn-container">
+  <footer class="m-2 mb-6 lg:mx-4 wafrn-container asks-text">
     <p class="mb-4 text-lg">No more asks found</p>
     <marquee scrollamount="12" class="m-0 text-lg">Nobody asked...</marquee>
     <marquee scrollamount="11" class="m-0 text-lg">Nobody asked...</marquee>
