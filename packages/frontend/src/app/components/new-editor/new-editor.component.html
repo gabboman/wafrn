@@ -13,7 +13,7 @@
     "
     (click)="submitPost()"
   	matTooltip="Publishes this woot">
-		<fa-icon size="lg" [icon]="postIcon"></fa-icon><span class="post-text"> Post</span>
+		<fa-icon size="lg" [icon]="postIcon"></fa-icon><span class="post-text"><b> Post</b></span>
   </button>
   @if (data && data.post && !editing) {
     <p class="text-2xl mt-2 mb-4">{{ 'editor.inReplyTo' | translate }}</p>
