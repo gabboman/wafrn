@@ -36,6 +36,7 @@
       aria-label="Edit privacy of woot"
       class="input-height-btn"
       [matTooltip]="getPrivacyIconName()"
+      [disabled]="editing"
     >
       <fa-icon size="lg" [icon]="getPrivacyIcon()"></fa-icon>
     </button>
