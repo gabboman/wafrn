@@ -148,3 +148,30 @@ body {
 .force-comic-sans {
   font-family: 'Comic Sans MS', cursive, sans-serif;
 }
+
+/* TODO: Refactor this to work inside the new-editor component's SCSS */
+
+@media screen and (max-width: 960px) {
+  :root {
+    --mdc-dialog-container-shape: 16px 16px 0px 0px;
+  }
+
+  .cdk-global-overlay-wrapper {
+    align-items: flex-end!important;
+  }
+
+  [id*="mat-mdc-dialog-"] {
+    animation: 300ms slideup;
+    --mat-dialog-transition-duration: 0ms!important;
+  }
+
+  @keyframes slideup {
+    0% {
+      transform: translateY(200%);
+    }
+
+    100% {
+      transform: translateY(0%);
+    }
+  }
+}

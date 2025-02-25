@@ -17,16 +17,34 @@
 
 .below-editor-toolbar {
   display: flex;
-  flex-wrap: wrap;
+  justify-content: space-between;
   align-items: flex-start;
-  justify-content: flex-start;
-  gap: 0.5rem;
-  margin-bottom: 0.5rem;
+  /* flex-wrap: wrap; */
+  /* align-items: flex-start; */
+  /* gap: 0.5rem; */
+  /* margin-bottom: 0.5rem; */
   --mdc-icon-button-icon-color: var(--mat-sys-primary);
 
   & button {
     --fa-display: block;
   }
+}
+
+.below-editor-toolbar-leftside,
+.below-editor-toolbar-rightside {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: flex-start;
+	justify-content: flex-start;
+	gap: 0.5rem;
+	margin-bottom: 0.5rem;
+}
+
+.below-editor-toolbar-divider {
+	border: 1px solid var(--mat-sys-outline-variant);
+	width: 1px;
+	min-height: 40px;
+	max-height: max-content;
 }
 
 .cw-wrapper {
@@ -54,6 +72,28 @@ app-media-preview {
   top: 16px;
   right: 16px;
   z-index: 2;
+}
+
+.delete-btn.mdc-icon-button .ng-fa-icon {
+	display: block;
+	transform: translateY(-5px);
+}
+
+.fucked-wrapper {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	gap: 0.4rem;
+}
+
+@media screen and (max-width: 380px) {
+	.post-text {
+		display: none;
+	}
+	
+	.post-btn {
+		width: 24px;
+	}
 }
 
 .quote-container {
@@ -88,3 +128,5 @@ app-media-preview {
 svg {
   display: block;
 }
+
+

@@ -14,7 +14,7 @@
     </div>
     <div *ngIf="!simplified()" class="flex align-items-center date-line">
       <span class="text-sm" matTooltip="{{ fragment.createdAt | date: 'short' }}">
-        {{ this.timeAgo }}
+        <a [routerLink]="'/fediverse/post/' + fragment.id" style="color: var(--mat-sys-outline)">{{ this.timeAgo }}</a>
       </span>
       <span *ngIf="edited" matTooltip="Edited {{ fragment.updatedAt | date: 'short' }}" class="text-xs">
         <fa-icon [icon]="editedIcon"></fa-icon>
