@@ -52,7 +52,7 @@
     color: black !important;
     }
     
-    .emojireact-overlay, .theme-selector-button, .info-card, .quoted-post, .post-editor-data {
+    .emojireact-overlay, .theme-selector-button, .info-card, .quoted-post, .post-editor-data, .mat-mdc-menu-item {
         color: black !important;
     }
 
