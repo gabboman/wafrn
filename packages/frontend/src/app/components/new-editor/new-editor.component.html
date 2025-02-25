@@ -1,20 +1,67 @@
-<mat-dialog-content style="padding:0px;">
+<mat-dialog-content style="padding:0px; overflow-x: hidden">
 <!-- hardcoded padding :( -->
-  <button mat-icon-button class="delete-btn" (mousedown)="closeEditor()">
-    <fa-icon size="lg" [icon]="closeIcon"></fa-icon>
-  </button>
-  <button mat-flat-button
-  	class="post-btn"
-  	(mousedown)="submitPost()"
-		[disabled]="
-      !allDescriptionsFilled() ||
-      postBeingSubmitted ||
-      (postCreatorForm.value.content === initialContent && tags.length === 0 && uploadedMedias.length === 0)
-    "
-    (click)="submitPost()"
-  	matTooltip="Publishes this woot">
-		<fa-icon size="lg" [icon]="postIcon"></fa-icon><span class="post-text"><b> Post</b></span>
-  </button>
+
+  <div class="below-editor-toolbar">
+    <div class="below-editor-toolbar-leftside">
+			<button mat-icon-button class="close-post-btn" (mousedown)="closeEditor()">
+			    <fa-icon size="lg" [icon]="closeIcon"></fa-icon>
+			</button>
+			<div class="below-editor-toolbar-divider"></div>
+			<button
+    	  mat-icon-button
+    	  [matMenuTriggerFor]="menu"
+    	  aria-label="Edit privacy of woot"
+    	  class="input-height-btn"
+    	  [matTooltip]="getPrivacyIconName()"
+    	  [disabled]="editing"
+    	>
+    	  <fa-icon size="lg" [icon]="getPrivacyIcon()"></fa-icon>
+    	</button>
+    	<button
+    	  aria-label="Enable the quote setter"
+    	  mat-icon-button
+    	  (mousedown)="quoteOpen = !quoteOpen"
+    	  class="input-height-btn"
+    	  matTooltip="Quote a woot"
+    	>
+    	  <fa-icon size="lg" [icon]="quoteIcon"></fa-icon>
+    	</button>
+    	@if (pollQuestions.length === 0) {
+    	  <div matTooltip="Upload Media">
+    	    <app-file-upload (fileUpload)="uploadImage($event)"></app-file-upload>
+    	  </div>
+    	}
+    	<button
+    	  class="input-height-btn"
+    	  mat-icon-button
+    	  (mousedown)="showContentWarning = !showContentWarning"
+    	  matTooltip="Content Warning"
+    	>
+    	  @if (contentWarning.includes('meta')) {
+    	    <fa-icon size="lg" [icon]="skull"></fa-icon>
+    	  } @else {
+    	    <fa-icon size="lg" [icon]="contentWarningIcon"></fa-icon>
+    	  }
+    	</button>
+    </div>
+    <div class="below-editor-toolbar-rightside">
+			  <button mat-flat-button
+			  	class="post-btn"
+			  	(mousedown)="submitPost()"
+					[disabled]="
+			      !allDescriptionsFilled() ||
+			      postBeingSubmitted ||
+			      (postCreatorForm.value.content === initialContent && tags.length === 0 && uploadedMedias.length === 0)
+			    "
+			    (click)="submitPost()"
+			  	matTooltip="Publishes this woot">
+					<span class="fucked-wrapper">
+						<fa-icon size="lg" [icon]="postIcon"></fa-icon><span class="post-text"><b> Post</b></span>
+					</span>
+			  </button>
+    </div>
+  </div>
+  
   @if (data && data.post && !editing) {
     <p class="text-2xl mt-2 mb-4">{{ 'editor.inReplyTo' | translate }}</p>
     <div class="mb-3 quoted-post">
@@ -28,45 +75,6 @@
     <h4 class="mt-3">Replying ask</h4>
     <app-single-ask [ask]="data.ask"></app-single-ask>
   </ng-container>
-
-  <div class="below-editor-toolbar">
-    <button
-      mat-icon-button
-      [matMenuTriggerFor]="menu"
-      aria-label="Edit privacy of woot"
-      class="input-height-btn"
-      [matTooltip]="getPrivacyIconName()"
-      [disabled]="editing"
-    >
-      <fa-icon size="lg" [icon]="getPrivacyIcon()"></fa-icon>
-    </button>
-    <button
-      aria-label="Enable the quote setter"
-      mat-icon-button
-      (mousedown)="quoteOpen = !quoteOpen"
-      class="input-height-btn"
-      matTooltip="Quote a woot"
-    >
-      <fa-icon size="lg" [icon]="quoteIcon"></fa-icon>
-    </button>
-    @if (pollQuestions.length === 0) {
-      <div matTooltip="Upload Media">
-        <app-file-upload (fileUpload)="uploadImage($event)"></app-file-upload>
-      </div>
-    }
-    <button
-      class="input-height-btn"
-      mat-icon-button
-      (mousedown)="showContentWarning = !showContentWarning"
-      matTooltip="Content Warning"
-    >
-      @if (contentWarning.includes('meta')) {
-        <fa-icon size="lg" [icon]="skull"></fa-icon>
-      } @else {
-        <fa-icon size="lg" [icon]="contentWarningIcon"></fa-icon>
-      }
-    </button>
-  </div>
 
   @if (privacy === 10) {
     <app-info-card [type]="'caution'" addClass="mb-3">
