@@ -9,7 +9,7 @@
     {{ fragment.muted_words_cw }}
     {{ fragment.content_warning }}
   </div>
-  <button mat-raised-button color="primary" (mousedown)="cwClick()" class="w-full my-2">
+  <button class="toggle-cw-button" mat-raised-button color="primary" (mousedown)="cwClick()" class="w-full my-2">
     @if (showSensitiveContent) {
       Hide
     } @else {
@@ -74,6 +74,7 @@
           mat-raised-button
           matTooltipTouchGestures="on"
           [matTooltip]="emoji.tooltip"
+          class="emojireact-button"
         >
           @if (emoji.img) {
             <img class="post-emoji" [src]="emoji.img" [alt]="emoji.content" />
