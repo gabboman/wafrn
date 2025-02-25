@@ -1,6 +1,19 @@
-<mat-dialog-content>
-  <button mat-mini-fab class="delete-btn" (mousedown)="closeEditor()">
+<mat-dialog-content style="padding:0px;">
+<!-- hardcoded padding :( -->
+  <button mat-icon-button class="delete-btn" (mousedown)="closeEditor()">
     <fa-icon size="lg" [icon]="closeIcon"></fa-icon>
+  </button>
+  <button mat-flat-button
+  	class="post-btn"
+  	(mousedown)="submitPost()"
+		[disabled]="
+      !allDescriptionsFilled() ||
+      postBeingSubmitted ||
+      (postCreatorForm.value.content === initialContent && tags.length === 0 && uploadedMedias.length === 0)
+    "
+    (click)="submitPost()"
+  	matTooltip="Publishes this woot">
+		<fa-icon size="lg" [icon]="postIcon"></fa-icon><span class="post-text"><b> Post</b></span>
   </button>
   @if (data && data.post && !editing) {
     <p class="text-2xl mt-2 mb-4">{{ 'editor.inReplyTo' | translate }}</p>
@@ -9,9 +22,10 @@
       <app-post-fragment [fragment]="data.post"></app-post-fragment>
     </div>
   }
-  <h2 class="mt-3" *ngIf="editing">You are editing your woot</h2>
+  
+  <h4 class="mt-3" *ngIf="editing">You are editing your woot</h4>
   <ng-container *ngIf="data && data.ask">
-    <h2 class="mt-3">Replying ask</h2>
+    <h4 class="mt-3">Replying ask</h4>
     <app-single-ask [ask]="data.ask"></app-single-ask>
   </ng-container>
 
@@ -53,16 +67,27 @@
     </button>
   </div>
 
-  @if (showContentWarning || contentWarning) {
-    <mat-form-field class="w-full transition-size" appearance="outline">
-      <mat-label>Content warning</mat-label>
-      <input [(ngModel)]="contentWarning" placeholder="What is sensitive about this woot?" matNativeControl />
-    </mat-form-field>
+  @if (privacy === 10) {
+    <app-info-card [type]="'caution'" addClass="mb-3">
+      Admins of both your instance, and the external instance can read these messages.
+    </app-info-card>
   }
+  @if (privacy === 3) {
+    <app-info-card type="info" addClass="mb-3">
+      This woot is set as unlisted. It opts out of search, hashtags and other features. This is not recommended for
+      anything you want discoverable.
+    </app-info-card>
+  }
+  @if (showContentWarning || contentWarning) {
+  	<mat-form-field class="w-full transition-size" appearance="outline">
+  	  <mat-label>Content warning (optional)</mat-label>
+  	  <input [(ngModel)]="contentWarning" placeholder="What is sensitive about this woot?" matNativeControl />
+  	</mat-form-field>
+	}
 
   @if (quoteOpen && !data?.quote) {
     <mat-card class="p-2 my-4" *ngIf="!quoteLoading">
-      <mat-form-field class="w-full">
+      <mat-form-field class="w-full" appearance="outline">
         <mat-label> Paste the URL of a woot to quote it. Can be the external url or the wafrn url </mat-label>
         <input [(ngModel)]="urlPostToQuote" placeholder="Just paste the woot url" matNativeControl />
       </mat-form-field>
@@ -79,7 +104,7 @@
   }
 
   <form [formGroup]="postCreatorForm">
-    <mat-form-field class="w-full">
+    <mat-form-field class="w-full" appearance="outline">
       <mat-label>Woot text</mat-label>
       <textarea
         id="postCreatorContent"
@@ -106,7 +131,7 @@
       <ng-container *ngFor="let media of uploadedMedias; let i = index">
         <div class="col-12 md:col-6 my-2 relative">
           <app-media-preview [media]="media"></app-media-preview>
-          <mat-form-field class="w-full">
+          <mat-form-field class="w-full" appearance="outline">
             <mat-label>Image Description</mat-label>
             <textarea
               placeholder="Description. Please FILL THIS"
@@ -138,9 +163,9 @@
     <div *ngIf="!data?.quote">
       <mat-spinner *ngIf="quoteLoading" class="my-4" color="accent" diameter="24"></mat-spinner>
     </div>
-    <div *ngIf="data && data.quote" class="my-4">
+    <div *ngIf="data && data.quote">
       <p class="mb-1">QUOTING:</p>
-      <div class="quoted-post">
+      <div class="quoted-post mb-4">
         <button mat-mini-fab class="delete-btn" color="warn" (mousedown)="data ? (data.quote = undefined) : null">
           <fa-icon size="lg" [icon]="closeIcon"></fa-icon>
         </button>
@@ -151,8 +176,8 @@
       </div>
     </div>
   </section>
-  <section id="tags" class="mt-2 w-full flex-row">
-    <mat-form-field class="w-full">
+  <section id="tags" class="w-full flex-row">
+    <mat-form-field class="w-full" appearance="outline">
       <mat-label>Tags</mat-label>
       <input [(ngModel)]="tags" placeholder="Separated by commas" matNativeControl />
     </mat-form-field>
@@ -163,30 +188,20 @@
     </div>
   </section>
 
-  @if (privacy === 10) {
-    <app-info-card [type]="'caution'" addClass="mb-3">
-      Admins of both your instance, and the external instance can read these messages.
-    </app-info-card>
-  }
-  @if (privacy === 3) {
-    <app-info-card type="info" class="mb-3">
-      This woot is set as unlisted. It opts out of search, hashtags and other features. This is not recommended for
-      anything you want discoverable.
-    </app-info-card>
-  }
 
-  <button
-    mat-flat-button
-    class="w-full my-2"
-    [disabled]="
-      !allDescriptionsFilled() ||
-      postBeingSubmitted ||
-      (postCreatorForm.value.content === initialContent && tags.length === 0 && uploadedMedias.length === 0)
-    "
-    (click)="submitPost()"
-  >
-    {{ editing ? 'Save woot' : idPostToReblog ? 'Publish reply to woot' : 'Publish woot' }}
-  </button>
+
+  <!-- <button -->
+  <!--   mat-flat-button -->
+  <!--   class="w-full my-2" -->
+  <!--   [disabled]=" -->
+  <!--     !allDescriptionsFilled() || -->
+  <!--     postBeingSubmitted || -->
+  <!--     (postCreatorForm.value.content === initialContent && tags.length === 0 && uploadedMedias.length === 0) -->
+  <!--   " -->
+  <!--   (click)="submitPost()" -->
+  <!-- > -->
+  <!--   {{ editing ? 'Save woot' : idPostToReblog ? 'Publish reply to woot' : 'Publish woot' }} -->
+  <!-- </button> -->
 
   <!-- Popup Menus -->
   <mat-menu #menu="matMenu">
