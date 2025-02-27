@@ -32,7 +32,7 @@
             mat-stroked-button
             color="accent"
             class="follow-button flex-shrink-0"
-            (mousedown)="postService.followUser(element.id)"
+            (click)="postService.followUser(element.id)"
           >
             Follow user
           </button>
@@ -42,7 +42,7 @@
             mat-stroked-button
             color="accent"
             class="follow-button flex-shrink-0"
-            (mousedown)="postService.unfollowUser(element.id)"
+            (click)="postService.unfollowUser(element.id)"
           >
             Awaiting approval
           </button>

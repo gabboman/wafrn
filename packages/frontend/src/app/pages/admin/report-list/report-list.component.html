@@ -36,10 +36,10 @@
     <ng-container matColumnDef="actions">
       <th mat-header-cell *matHeaderCellDef>Actions</th>
       <td mat-cell *matCellDef="let element">
-        <button mat-flat-button color="primary" *ngIf="!element.resolved" (mousedown)="ignore(element.id)">
+        <button mat-flat-button color="primary" *ngIf="!element.resolved" (click)="ignore(element.id)">
           Ignore report
         </button>
-        <button mat-flat-button color="warn" *ngIf="!element.resolved" (mousedown)="ban(element.post.user.id)">
+        <button mat-flat-button color="warn" *ngIf="!element.resolved" (click)="ban(element.post.user.id)">
           Ban user
         </button>
       </td>

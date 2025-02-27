@@ -7,7 +7,7 @@
   >
     <button
       *ngIf="!post[post.length - 1].remotePostId.startsWith(localUrl) && userLoggedIn"
-      (mousedown)="loadRepliesFromFediverse()"
+      (click)="loadRepliesFromFediverse()"
       color="primary"
       mat-stroked-button
       class="w-full"

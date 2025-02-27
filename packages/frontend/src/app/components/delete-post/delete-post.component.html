@@ -6,5 +6,5 @@
 @if (deleting) {
   <app-loader></app-loader>
 } @else {
-  <button mat-flat-button (mousedown)="deletePost()" class="w-full">Delete post</button>
+  <button mat-flat-button (click)="deletePost()" class="w-full">Delete post</button>
 }

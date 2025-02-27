@@ -3,7 +3,7 @@
 
   <div class="below-editor-toolbar">
     <div class="below-editor-toolbar-leftside">
-      <button mat-icon-button class="close-post-btn" (mousedown)="closeEditor()">
+      <button mat-icon-button class="close-post-btn" (click)="closeEditor()">
         <fa-icon size="lg" [icon]="closeIcon"></fa-icon>
       </button>
       <div class="below-editor-toolbar-divider"></div>
@@ -20,7 +20,7 @@
       <button
         aria-label="Enable the quote setter"
         mat-icon-button
-        (mousedown)="quoteOpen = !quoteOpen"
+        (click)="quoteOpen = !quoteOpen"
         class="input-height-btn"
         matTooltip="Quote a woot"
       >
@@ -34,7 +34,7 @@
       <button
         class="input-height-btn"
         mat-icon-button
-        (mousedown)="showContentWarning = !showContentWarning"
+        (click)="showContentWarning = !showContentWarning"
         matTooltip="Content Warning"
       >
         @if (contentWarning.includes('meta')) {
@@ -48,7 +48,7 @@
       <button
         mat-flat-button
         class="post-btn"
-        (mousedown)="submitPost()"
+        (click)="submitPost()"
         [disabled]="
           !allDescriptionsFilled() ||
           postBeingSubmitted ||
@@ -104,7 +104,7 @@
           <input [(ngModel)]="urlPostToQuote" placeholder="Just paste the woot url" matNativeControl />
         </mat-form-field>
         <button
-          (mousedown)="loadQuote()"
+          (click)="loadQuote()"
           mat-stroked-button
           color="primary"
           class="w-full"
@@ -134,7 +134,7 @@
     @if (false && uploadedMedias.length === 0) {
       <!-- Polls are not available yet :( -->
       <section class="mt-3" id="pollControls">
-        <button class="w-full" mat-button (mousedown)="quoteOpen = true" mat-flat-button>add poll</button>
+        <button class="w-full" mat-button (click)="quoteOpen = true" mat-flat-button>add poll</button>
       </section>
     }
 
@@ -155,7 +155,7 @@
             </mat-form-field>
             <div>
               <mat-checkbox [(ngModel)]="media.NSFW" class="w-full">NSFW</mat-checkbox>
-              <button mat-mini-fab class="delete-btn" (mousedown)="deleteImage(i)">
+              <button mat-mini-fab class="delete-btn" (click)="deleteImage(i)">
                 <fa-icon size="lg" [icon]="closeIcon"></fa-icon>
               </button>
             </div>
@@ -178,7 +178,7 @@
       <div *ngIf="data && data.quote">
         <p class="mb-1">QUOTING:</p>
         <div class="quoted-post mb-4">
-          <button mat-mini-fab class="delete-btn" color="warn" (mousedown)="data ? (data.quote = undefined) : null">
+          <button mat-mini-fab class="delete-btn" color="warn" (click)="data ? (data.quote = undefined) : null">
             <fa-icon size="lg" [icon]="closeIcon"></fa-icon>
           </button>
           <div class="flex">

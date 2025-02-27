@@ -5,7 +5,7 @@
 @for (ask of asks; track $index) {
   <mat-card class="p-3 m-2 mb-6 lg:mx-4 wafrn-container">
     <app-single-ask [ask]="ask"></app-single-ask>
-    <button (mousedown)="replyAsk(ask)" mat-flat-button class="w-full mt-2">Answer</button>
+    <button (click)="replyAsk(ask)" mat-flat-button class="w-full mt-2">Answer</button>
     <button (click)="ignoreAsk(ask)" mat-stroked-button class="w-full mt-2">Ignore</button>
   </mat-card>
 }

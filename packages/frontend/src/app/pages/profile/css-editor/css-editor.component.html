@@ -8,5 +8,5 @@
     <textarea style="min-height: 50vh" matInput placeholder="Write down your own css..." [(ngModel)]="myCSS">
     </textarea>
   </mat-form-field>
-  <button mat-flat-button color="primary" *ngIf="ready" (mousedown)="submit()" class="w-full">Update your theme</button>
+  <button mat-flat-button color="primary" *ngIf="ready" (click)="submit()" class="w-full">Update your theme</button>
 </mat-card>

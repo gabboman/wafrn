@@ -1,6 +1,6 @@
 @if (item.visible) {
   @if (item.items) {
-    <a mat-list-item (mousedown)="expanded = !expanded" (keydown)="handleKey($event)" tabIndex="0">
+    <a mat-list-item (click)="expanded = !expanded" (keydown)="handleKey($event)" tabIndex="0">
       <div class="h-3rem flex align-items-center justify-content-start">
         <span
           [matBadge]="item.badge"
@@ -28,7 +28,7 @@
     <a
       mat-list-item
       [routerLink]="item.routerLink ? item.routerLink : null"
-      (mousedown)="doCommand()"
+      (click)="doCommand()"
       (keydown)="handleKey($event)"
       tabIndex="0"
     >

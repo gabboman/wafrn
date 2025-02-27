@@ -9,7 +9,7 @@
     {{ fragment.muted_words_cw }}
     {{ fragment.content_warning }}
   </div>
-  <button class="toggle-cw-button" mat-raised-button color="primary" (mousedown)="cwClick()" class="w-full my-2">
+  <button class="toggle-cw-button" mat-raised-button color="primary" (click)="cwClick()" class="w-full my-2">
     @if (showSensitiveContent) {
       Hide
     } @else {
@@ -70,7 +70,7 @@
           [ngClass]="{
             reacted: emoji.includesMe
           }"
-          (mousedown)="toggleEmojiReact(emoji)"
+          (click)="toggleEmojiReact(emoji)"
           mat-raised-button
           matTooltipTouchGestures="on"
           [matTooltip]="emoji.tooltip"

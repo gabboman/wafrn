@@ -16,7 +16,7 @@
           <button
             mat-flat-button
             [matTooltip]="emoji.name"
-            (mousedown)="click(emoji)"
+            (click)="click(emoji)"
             class="p-2 flex align-content-center justify-content-center cursor-pointer bg-transparent"
           >
             @if (!emoji.url) {

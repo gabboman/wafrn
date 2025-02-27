@@ -45,7 +45,7 @@
                 mat-raised-button
                 color="primary"
                 *ngIf="followedUsers.indexOf(user.id) === -1 && userLoggedIn"
-                (mousedown)="followUser(user.id)"
+                (click)="followUser(user.id)"
                 class="mb-4"
               >
                 Follow
@@ -54,7 +54,7 @@
                 mat-raised-button
                 color="primary"
                 *ngIf="followedUsers.indexOf(user.id) !== -1 && userLoggedIn"
-                (mousedown)="unfollowUser(user.id)"
+                (click)="unfollowUser(user.id)"
               >
                 Unfollow
               </button>

@@ -3,7 +3,10 @@
     <div class="flex gap-2 min-w-0">
       <div class="flex gap-2 mr-auto min-w-0">
         <app-avatar-small [user]="fragment.user"></app-avatar-small>
-        <a class="flex flex-column min-w-0 user-link" [routerLink]="!disableLink() ? '/blog/' + fragment.user.url : null">
+        <a
+          class="flex flex-column min-w-0 user-link"
+          [routerLink]="!disableLink() ? '/blog/' + fragment.user.url : null"
+        >
           <span class="no-underline user-name"
             ><span [innerHTML]="fragment.user.name"></span>
             <span class="text-sm post-action">{{ headerText() }}</span></span
@@ -35,7 +38,7 @@
         userLoggedIn
       "
       class="text-sm follow-button"
-      (mousedown)="followUser(fragment.userId)"
+      (click)="followUser(fragment.userId)"
     >
       Follow
     </button>
@@ -44,7 +47,7 @@
       color="accent"
       *ngIf="postService.notYetAcceptedFollowedUsersIds.includes(fragment.userId) && userLoggedIn"
       class="text-sm follow-button"
-      (mousedown)="unfollowUser(fragment.userId)"
+      (click)="unfollowUser(fragment.userId)"
     >
       Awaiting approval
     </button>

@@ -1,61 +1,99 @@
 <div class="flex justify-content-between">
   <div class="flex align-items-center">
     @if (notes) {
-    <p class="m-0 text-sm">
-      <a [routerLink]="'/fediverse/post/' + fragment.id" class="subtle-link notes-link" mat-stroked-button><b>{{ notes
-          }}</b> notes</a>
-    </p>
+      <p class="m-0 text-sm">
+        <a [routerLink]="'/fediverse/post/' + fragment.id" class="subtle-link notes-link" mat-stroked-button
+          ><b>{{ notes }}</b> notes</a
+        >
+      </p>
     } @else {
-    <p class="m-0 text-sm">
-      <a [routerLink]="'/fediverse/post/' + fragment.id" class="subtle-link notes-link">View thread</a>
-    </p>
+      <p class="m-0 text-sm">
+        <a [routerLink]="'/fediverse/post/' + fragment.id" class="subtle-link notes-link">View thread</a>
+      </p>
     }
   </div>
   @if (userLoggedIn) {
-  <div class="flex gap-1 action-list" aria-label="Action list">
-    @if (fragment.privacy !== 10 && fragment.privacy !== 1 && fragment.privacy !== 2) {
-    <button aria-label="Quote woot" mat-button color="accent" (mousedown)="quotePost(fragment)"
-      class="cursor-pointer quote-icon">
-      <fa-icon size="lg" [icon]="quoteIcon" matTooltip="Quote woot"></fa-icon>
-    </button>
-    }
-    @if (myRewootsIncludePost) {
-    <button aria-label="Delete rewoot" mat-button color="accent" (mousedown)="deleteRewoots(fragment.id)"
-      class="cursor-pointer delete-rewoot-icon" [disabled]="loadingAction">
-      <fa-icon size="lg" [icon]="closeIcon" matTooltip="Delete rewoot"></fa-icon>
-    </button>
-    }
-    @if (!myRewootsIncludePost && fragment.privacy !== 10 && fragment.privacy !== 1) {
-    <button aria-label="Rewoot" mat-button color="accent" (mousedown)="quickReblog(fragment)"
-      class="cursor-pointer rewoot-icon" [disabled]="loadingAction">
-      <fa-icon size="lg" [icon]="quickReblogIcon" matTooltip="Rewoot"></fa-icon>
-    </button>
-    }
-    <button aria-label="Reply woot" mat-button color="accent" (mousedown)="replyPost(fragment)"
-      class="cursor-pointer reply-icon">
-      <fa-icon size="lg" [icon]="reblogIcon" matTooltip="Reply woot"></fa-icon>
-    </button>
-    @if (fragment.userId !== myId) {
-    @if (fragment.userLikesPostRelations.includes(myId)) {
-    <button aria-label="Remove like" mat-button color="accent" (mousedown)="unlikePost(fragment)"
-      class="cursor-pointer unlike-icon">
-      <fa-icon size="lg" [icon]="clearHeartIcon" matTooltip="Remove like"></fa-icon>
-    </button>
-    } @else {
-    <button aria-label="Like woot" mat-button color="accent" (mousedown)="likePost(fragment)"
-      class="cursor-pointer like-icon">
-      <fa-icon size="lg" [icon]="solidHeartIcon" matTooltip="Like woot"></fa-icon>
-    </button>
-    }
-    } @else {
-    <button aria-label="Edit woot" mat-button color="accent" (mousedown)="editPost(fragment)" class="cursor-pointer">
-      <fa-icon size="lg" [icon]="editedIcon" matTooltip="Edit woot"></fa-icon>
-    </button>
-    <button aria-label="Delete woot" mat-button color="accent" (mousedown)="deletePost(fragment.id)"
-      class="cursor-pointer delete-woot-icon">
-      <fa-icon size="lg" [icon]="deleteIcon" matTooltip="Delete woot"></fa-icon>
-    </button>
-    }
-  </div>
+    <div class="flex gap-1 action-list" aria-label="Action list">
+      @if (fragment.privacy !== 10 && fragment.privacy !== 1 && fragment.privacy !== 2) {
+        <button
+          aria-label="Quote woot"
+          mat-button
+          color="accent"
+          (click)="quotePost(fragment)"
+          class="cursor-pointer quote-icon"
+        >
+          <fa-icon size="lg" [icon]="quoteIcon" matTooltip="Quote woot"></fa-icon>
+        </button>
+      }
+      @if (myRewootsIncludePost) {
+        <button
+          aria-label="Delete rewoot"
+          mat-button
+          color="accent"
+          (click)="deleteRewoots(fragment.id)"
+          class="cursor-pointer delete-rewoot-icon"
+          [disabled]="loadingAction"
+        >
+          <fa-icon size="lg" [icon]="closeIcon" matTooltip="Delete rewoot"></fa-icon>
+        </button>
+      }
+      @if (!myRewootsIncludePost && fragment.privacy !== 10 && fragment.privacy !== 1) {
+        <button
+          aria-label="Rewoot"
+          mat-button
+          color="accent"
+          (click)="quickReblog(fragment)"
+          class="cursor-pointer rewoot-icon"
+          [disabled]="loadingAction"
+        >
+          <fa-icon size="lg" [icon]="quickReblogIcon" matTooltip="Rewoot"></fa-icon>
+        </button>
+      }
+      <button
+        aria-label="Reply woot"
+        mat-button
+        color="accent"
+        (click)="replyPost(fragment)"
+        class="cursor-pointer reply-icon"
+      >
+        <fa-icon size="lg" [icon]="reblogIcon" matTooltip="Reply woot"></fa-icon>
+      </button>
+      @if (fragment.userId !== myId) {
+        @if (fragment.userLikesPostRelations.includes(myId)) {
+          <button
+            aria-label="Remove like"
+            mat-button
+            color="accent"
+            (click)="unlikePost(fragment)"
+            class="cursor-pointer unlike-icon"
+          >
+            <fa-icon size="lg" [icon]="clearHeartIcon" matTooltip="Remove like"></fa-icon>
+          </button>
+        } @else {
+          <button
+            aria-label="Like woot"
+            mat-button
+            color="accent"
+            (click)="likePost(fragment)"
+            class="cursor-pointer like-icon"
+          >
+            <fa-icon size="lg" [icon]="solidHeartIcon" matTooltip="Like woot"></fa-icon>
+          </button>
+        }
+      } @else {
+        <button aria-label="Edit woot" mat-button color="accent" (click)="editPost(fragment)" class="cursor-pointer">
+          <fa-icon size="lg" [icon]="editedIcon" matTooltip="Edit woot"></fa-icon>
+        </button>
+        <button
+          aria-label="Delete woot"
+          mat-button
+          color="accent"
+          (click)="deletePost(fragment.id)"
+          class="cursor-pointer delete-woot-icon"
+        >
+          <fa-icon size="lg" [icon]="deleteIcon" matTooltip="Delete woot"></fa-icon>
+        </button>
+      }
+    </div>
   }
 </div>

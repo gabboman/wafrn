@@ -58,7 +58,7 @@
     color="accent"
     class="w-full mb-3 mt-2 w-full"
     mat-flat-button
-    (mousedown)="expandPost()"
+    (click)="expandPost()"
   >
     Expand woot
     <span *ngIf="originalPostContent.length - postsExpanded > 4"

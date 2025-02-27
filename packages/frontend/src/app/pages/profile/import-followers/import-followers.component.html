@@ -14,7 +14,7 @@
         />
 
         <div *ngIf="!uploading" class="file-upload">
-          <button mat-flat-button color="accent" class="upload-btn w-full" (mousedown)="fileUpload.click()">
+          <button mat-flat-button color="accent" class="upload-btn w-full" (click)="fileUpload.click()">
             Upload CSV
           </button>
         </div>
@@ -25,7 +25,7 @@
         </div>
       }
       @case (1) {
-        <button (mousedown)="followEveryone()" mat-flat-button class="w-full" color="primary">Follow all users</button>
+        <button (click)="followEveryone()" mat-flat-button class="w-full" color="primary">Follow all users</button>
         @if (response.notFoundUsers.length > 0) {
           <span>We had problems finding these {{ response.notFoundUsers.length }} users users:</span>
           @for (user of response.notFoundUsers; track $index) {

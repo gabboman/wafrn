@@ -56,7 +56,7 @@
         <button
           class="m-2 toggle-button toggle-description"
           mat-raised-button
-          (mousedown)="descriptionVisible = !descriptionVisible"
+          (click)="descriptionVisible = !descriptionVisible"
           title="Show alt text"
           [ariaDescription]="'Show alt text'"
         >
@@ -72,7 +72,7 @@
       <button
         class="m-2 toggle-button toggle-nsfw"
         mat-raised-button
-        (mousedown)="$event.stopPropagation(); nsfw = !nsfw"
+        (click)="$event.stopPropagation(); nsfw = !nsfw"
         title="Hide image"
         [ariaDescription]="'Hide image'"
       >

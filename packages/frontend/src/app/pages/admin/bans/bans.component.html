@@ -19,7 +19,7 @@
         <ng-template pTemplate="body" let-userBanned>
           <tr>
             <td><img class="avatar" [src]="userBanned.avatar"> {{userBanned.url}}</td>
-            <td><button pButton label="Unban" (mousedown)="unbanUser(userBanned.id)"></button></td>
+            <td><button pButton label="Unban" (click)="unbanUser(userBanned.id)"></button></td>
           </tr>
         </ng-template>
       </p-table>

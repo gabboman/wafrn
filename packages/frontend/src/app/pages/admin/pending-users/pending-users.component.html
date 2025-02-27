@@ -22,6 +22,6 @@
     <div style="word-wrap: anywhere" [innerHtml]="user.description"></div>
   </div>
 
-  <button (mousedown)="activateUser(user.id)" mat-flat-button color="primary">Activate user</button>
-  <button (mousedown)="requireExtra(user.id)" mat-flat-button color="warn">Require extra steps</button>
+  <button (click)="activateUser(user.id)" mat-flat-button color="primary">Activate user</button>
+  <button (click)="requireExtra(user.id)" mat-flat-button color="warn">Require extra steps</button>
 </mat-card>

@@ -6,7 +6,7 @@
     [opened]="menuVisible || !mobile"
     (closed)="hideMenu()"
   >
-    <a [href]="'/'" class="block" (mousedown)="hideMenu()">
+    <a [href]="'/'" class="block" (click)="hideMenu()">
       <img
         [src]="logo"
         class="instance-logo block mx-auto mt-3"
@@ -39,7 +39,7 @@
       [hidden]="!mobile"
       type="button"
       class="show-sidebar-menu-button"
-      (mousedown)="showMenu()"
+      (click)="showMenu()"
       [matBadge]="notifications + adminNotifications + usersAwaitingApproval + followsAwaitingApproval + awaitingAsks"
       [matBadgeHidden]="
         notifications + adminNotifications + usersAwaitingApproval + followsAwaitingApproval + awaitingAsks === 0
@@ -55,7 +55,7 @@
       [hidden]="!mobile || !jwtService.tokenValid() || currentRoute === '/editor'"
       type="button"
       class="show-sidebar-menu-button create-post-button"
-      (mousedown)="this.hideMenu(); this.openEditor()"
+      (click)="this.hideMenu(); this.openEditor()"
     >
       <fa-icon [icon]="pencilIcon"></fa-icon>
     </button>
