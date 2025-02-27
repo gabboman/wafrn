@@ -56,6 +56,6 @@
         color: black !important;
     }
 
-    .dashboard-title, .asks-text {
+    .dashboard-title, .asks-text, .notifications-text {
         color: #ccc3d1
     }
