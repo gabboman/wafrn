@@ -12,8 +12,8 @@
 
 # npx browserslist
 
-last 6 Chrome versions
-last 6 Firefox version
+last 24 Chrome versions
+last 16 Firefox version
 last 6 Edge major versions
 last 6 Safari major versions
 last 6 iOS major versions
