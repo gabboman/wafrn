@@ -652,7 +652,7 @@ export default function userRoutes(app: Application) {
             handle: `${sanitizedUrl}.${environment.bskyPds}`,
             inviteCode: inviteCode.code
           })
-          inviteCode.destroy()
+          await inviteCode.destroy()
           const userDid = agent.assertDid
           user.bskyDid = userDid
           user.bskyAuthData = bskyPassword
@@ -890,36 +890,35 @@ async function updateBlueskyProfile(agent: BskyAgent, user: Model<any, any>) {
   await getCacheAtDids(true)
   return await agent.upsertProfile(async (existingProfile) => {
     const profile = existingProfile ?? {}
-    if (existingProfile) {
-      const fullProfileString = `\nView full profile at ${environment.frontendUrl}/blog/${user.url}`
-      profile.displayName = user.name.substring(0, 63)
-      profile.description = user.descriptionMarkdown.substring(0, 256 - fullProfileString.length) + fullProfileString
-      if (user.avatar) {
-        let pngAvatar = await optimizeMedia('uploads' + user.avatar, {
-          forceImageExtension: 'png',
-          maxSize: 256,
-          keep: true
-        })
-        const userAvatarFile = Buffer.from(await fs.readFile(pngAvatar))
-        const avatarUpload = await agent.uploadBlob(userAvatarFile, { encoding: 'image/png' })
-        const avatarData = avatarUpload.data.blob
-        profile.avatar = avatarData
-        await fs.unlink(pngAvatar)
-      }
-      // TODO fix this it does not work
-      if (user.headerImage && false) {
-        let jpegHeader = await optimizeMedia('uploads/' + user.headerImage, {
-          forceImageExtension: 'jpg',
-          maxSize: 256,
-          keep: true
-        })
-        const userHeaderFile = Buffer.from(jpegHeader)
-        const headerUpload = await agent.uploadBlob(userHeaderFile, { encoding: 'image/jpeg' })
-        const headerData = headerUpload.data.blob
-        profile.banner = headerData
-        await fs.unlink(userHeaderFile)
-      }
+    const fullProfileString = `\nView full profile at ${environment.frontendUrl}/blog/${user.url}`
+    profile.displayName = user.name.substring(0, 63)
+    profile.description = user.descriptionMarkdown.substring(0, 256 - fullProfileString.length) + fullProfileString
+    if (user.avatar) {
+      let pngAvatar = await optimizeMedia('uploads' + user.avatar, {
+        forceImageExtension: 'png',
+        maxSize: 256,
+        keep: true
+      })
+      const userAvatarFile = Buffer.from(await fs.readFile(pngAvatar))
+      const avatarUpload = await agent.uploadBlob(userAvatarFile, { encoding: 'image/png' })
+      const avatarData = avatarUpload.data.blob
+      profile.avatar = avatarData
+      await fs.unlink(pngAvatar)
     }
+    // TODO fix this it does not work
+    if (user.headerImage && false) {
+      let jpegHeader = await optimizeMedia('uploads/' + user.headerImage, {
+        forceImageExtension: 'jpg',
+        maxSize: 256,
+        keep: true
+      })
+      const userHeaderFile = Buffer.from(jpegHeader)
+      const headerUpload = await agent.uploadBlob(userHeaderFile, { encoding: 'image/jpeg' })
+      const headerData = headerUpload.data.blob
+      profile.banner = headerData
+      await fs.unlink(userHeaderFile)
+    }
+
     return profile
   })
 }
