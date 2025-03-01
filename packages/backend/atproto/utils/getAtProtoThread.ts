@@ -13,8 +13,7 @@ import { isArray } from 'underscore'
 import { logger } from '../../utils/logger.js'
 import { RichText } from '@atproto/api'
 import showdown from 'showdown'
-import { bulkCreateNotifications } from '../../utils/pushNotifications.js'
-
+import { bulkCreateNotifications, createNotification } from '../../utils/pushNotifications.js'
 
 const markdownConverter = new showdown.Converter({
   simplifiedAutoLink: true,
@@ -221,16 +220,19 @@ async function processSinglePost(
           postId: postToProcess.id
         }
       })
-      await bulkCreateNotifications(mentions.map((mnt) => ({
-        notificationType: 'MENTION',
-        postId: postToProcess.id,
-        notifiedUserId: mnt,
-        userId: postToProcess.userId
-      })), {
-        ignoreDuplicates: true,
-        postContent: postText,
-        userUrl: postCreator.url
-      })
+      await bulkCreateNotifications(
+        mentions.map((mnt) => ({
+          notificationType: 'MENTION',
+          postId: postToProcess.id,
+          notifiedUserId: mnt,
+          userId: postToProcess.userId
+        })),
+        {
+          ignoreDuplicates: true,
+          postContent: postText,
+          userUrl: postCreator.url
+        }
+      )
       await PostMentionsUserRelation.bulkCreate(
         mentions.map((mnt) => {
           return {
@@ -256,12 +258,25 @@ async function processSinglePost(
         })
       )
     }
-    const quotedPostId = getQuotedPostUri(post)
-    if (quotedPostId) {
-      const quotedPost = await getAtProtoThread(quotedPostId)
+    const quotedPostUri = getQuotedPostUri(post)
+    if (quotedPostUri) {
+      const quotedPostId = await getAtProtoThread(quotedPostUri)
+      const quotedPost = (await Post.findByPk(quotedPostId)) as Model<any, any>
+      await createNotification(
+        {
+          notificationType: 'QUOTE',
+          notifiedUserId: quotedPost.userId,
+          userId: postToProcess.userId,
+          postId: postToProcess.id
+        },
+        {
+          postContent: postToProcess.content,
+          userUrl: posterUser?.url
+        }
+      )
       await Quotes.create({
         quoterPostId: postToProcess.id,
-        quotedPostId: quotedPost
+        quotedPostId: quotedPostId
       })
     }
     return postToProcess.id
