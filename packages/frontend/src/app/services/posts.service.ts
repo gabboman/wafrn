@@ -408,8 +408,9 @@ export class PostsService {
     Array.from(links).forEach((link) => {
       const youtubeMatch = link.href.matchAll(this.youtubeRegex)
       if (link.innerText === link.href && youtubeMatch) {
+        // NOTE: Since this should not be part of the image Viewer, we have to add then no-viewer class to be checked for later
         Array.from(youtubeMatch).forEach((youtubeString) => {
-          link.innerHTML = `<div class="watermark"><!-- Watermark container --><div class="watermark__inner"><!-- The watermark --><div class="watermark__body"><img alt="youtube logo" class="yt-watermark" loading="lazy" src="/assets/img/youtube_logo.png"></div></div><img class="yt-thumbnail" src="${
+          link.innerHTML = `<div class="watermark"><!-- Watermark container --><div class="watermark__inner"><!-- The watermark --><div class="watermark__body"><img alt="youtube logo" class="yt-watermark no-viewer" loading="lazy" src="/assets/img/youtube_logo.png"></div></div><img class="yt-thumbnail" src="${
             EnvironmentService.environment.externalCacheurl +
             encodeURIComponent(`https://img.youtube.com/vi/${youtubeString[6]}/hqdefault.jpg`)
           }" loading="lazy" alt="Thumbnail for video"></div>`
