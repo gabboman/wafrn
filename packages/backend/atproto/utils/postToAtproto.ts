@@ -88,6 +88,11 @@ async function postToAtproto(post: Model<any, any>, agent: BskyAgent) {
         `[${userAsker.name} asked:](https://${environment.instanceUrl}/fediverse/post/${post.id}) ` +
         `${ask.question}\n\n${postText}`
     }
+    else {
+      postText =
+        `[Anonymous asked:](https://${environment.instanceUrl}/fediverse/post/${post.id}) ` +
+        `${ask.question}\n\n${postText}`
+    }
   }
 
   postText = removeMarkdown(postText)
