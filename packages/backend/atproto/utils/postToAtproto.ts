@@ -70,10 +70,13 @@ async function postToAtproto(post: Model<any, any>, agent: BskyAgent) {
     if (!user.isBlueskyUser) {
       if (user.bskyDid && user.enableBsky) {
         const response = await agent.getProfile({ actor: user.bskyDid })
-        if (response.data)
-          postText = postText.replaceAll(mentionRegex, `@${response.data.handle}`)
+        if (response.data) postText = postText.replaceAll(mentionRegex, `@${response.data.handle}`)
+      } else {
+        postText = postText.replaceAll(
+          mentionRegex,
+          `[@${user.url}](${environment.frontendUrl}/fediverse/blog/${user.url.toLowerCase()})`
+        )
       }
-      else postText = postText.replaceAll(mentionRegex, `[@${user.url}](${environment.frontendUrl}/fediverse/blog/${user.url.toLowerCase()})`)
     }
   }
 
@@ -133,7 +136,7 @@ async function postToAtproto(post: Model<any, any>, agent: BskyAgent) {
       const image = Buffer.from(file)
       const { data } = await agent.uploadBlob(image, { encoding: media.mediaType })
       return {
-        alt: media.description,
+        alt: media.description ? media.description : '',
         image: data.blob,
         labels: labels ? labels : undefined,
         aspectRatio: {
