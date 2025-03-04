@@ -8,6 +8,7 @@ import RichtextBuilder from '@atcute/bluesky-richtext-builder'
 import { Main } from '@atproto/api/dist/client/types/app/bsky/richtext/facet.js'
 import { tokenize } from '@atcute/bluesky-richtext-parser'
 import { removeMarkdown } from './removeMarkdown.js'
+import optimizeMedia from '../../utils/optimizeMedia.js'
 
 async function postToAtproto(post: Model<any, any>, agent: BskyAgent) {
   let labels: any = undefined
@@ -111,19 +112,17 @@ async function postToAtproto(post: Model<any, any>, agent: BskyAgent) {
     }
   }
 
-  let maxMediaSize = 0
   const mediasToNotSend: number[] = []
   for await (const [index, media] of medias.entries()) {
     const data = await fs.stat('uploads/' + media.url)
-    maxMediaSize = maxMediaSize > data.size ? maxMediaSize : data.size
-    if (data.size > 1000000 || media.url.endsWith('mp4')) {
+    if (media.url.endsWith('mp4')) {
       mediasToNotSend.push(index)
     }
   }
 
   const tmpRichText = new RichText({ text: postText })
   let postShortened: boolean = false
-  if (tmpRichText.length > 300 || medias.length > 4 || maxMediaSize > 1000000) {
+  if (tmpRichText.length > 300 || medias.length > 4 || mediasToNotSend.length > 0) {
     postText =
       postText.slice(0, 150) + `... see complete post at https://${environment.instanceUrl}/fediverse/post/${post.id}`
     postShortened = true
@@ -132,7 +131,16 @@ async function postToAtproto(post: Model<any, any>, agent: BskyAgent) {
   const bskyMedias = medias
     .filter((elem: any, index) => !mediasToNotSend.includes(index))
     .map(async (media) => {
-      const file = await fs.readFile('uploads/' + media.url)
+      let file = await fs.readFile('uploads/' + media.url)
+      if (file.length > 1000000) {
+        // well this image is TOO BIG. time to convert it
+        const localFilename = await optimizeMedia('uploads/' + media.url, {
+          outPath: 'uploads/' + media.id + '_bsky',
+          maxSize: 768,
+          keep: true
+        })
+        file = await fs.readFile('uploads/' + media.id + '_bsky.webp')
+      }
       const image = Buffer.from(file)
       const { data } = await agent.uploadBlob(image, { encoding: media.mediaType })
       return {
