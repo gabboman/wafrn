@@ -370,6 +370,9 @@ export class PostFragmentComponent implements OnChanges, OnDestroy {
       },
       title: false,
       className: 'viewer',
+      filter(image: HTMLImageElement) {
+        return !image.classList.contains('no-viewer')
+      },
       toggleOnDblclick: false
     })
   }
