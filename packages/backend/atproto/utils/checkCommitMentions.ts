@@ -10,7 +10,6 @@ function checkCommitMentions(
   cacheData: { followedDids: string[]; localUserDids: string[]; followedUsersLocalIds: string[] }
 ): boolean {
   const didsToCheck = [...new Set(cacheData.localUserDids.concat(cacheData.followedDids))]
-  const followedUsersLocalIds = cacheData.followedUsersLocalIds
 
   let res = false
   // first we check if there are any mentions to local users. if so we return true
@@ -35,7 +34,7 @@ function checkCommitMentions(
         .flatMap((elem) => elem.features)
         .map((elem) => elem.did)
         .filter((elem) => elem)
-      if (mentions && mentions.length && mentions.some((mention) => didsToCheck.includes(mention))) {
+      if (mentions && mentions.length && mentions.some((mention: string) => didsToCheck.includes(mention))) {
         res = true
         return res
       }
@@ -54,30 +53,7 @@ function checkCommitMentions(
   let postsFounds = 0
 
   if (urisToCheck.length > 0) {
-    postsFounds = urisToCheck.some((elem) => didsToCheck.includes(elem)) ? 1 : 0
-    /*
-    // if post starts with uri of any of our users it must be in reply to one of our users!
-    if (urisToCheck.map(elem => elem.split('/app.bsky.feed.post/')[0]).some(elem => didsToCheck.includes(elem))) {
-      return true;
-    }
-    const existingPostInDb = await Post.findOne({
-      include: [{
-        model: Post,
-        as: 'ancestors'
-      }],
-      where: {
-        bskyUri: {
-          [Op.in]: urisToCheck
-        }
-      }
-    })
-    if (existingPostInDb) {
-      const localUsers = await getAllLocalUserIds();
-      const userIds = [existingPostInDb.userId, ...existingPostInDb.ancestors.map(elem => elem.userId)].concat(followedUsersLocalIds)
-      const postInReplyToLocalUserOrFollowedUser = userIds.some(usrId => localUsers.includes(usrId))
-      postsFounds = postInReplyToLocalUserOrFollowedUser ? 1 : 0
-    }
-    */
+    postsFounds = urisToCheck.some((elem) => didsToCheck.includes(elem)) ? 1 : postsFounds
   }
 
   if (postsFounds > 0) {

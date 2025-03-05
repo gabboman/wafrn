@@ -151,6 +151,22 @@ async function processSinglePost(
     let mentions: string[] = []
     let postText = post.record.text
     if (post.record.facets && post.record.facets.length > 0 && agent) {
+      // lets get mentions
+      const mentionedDids = post.record.facets
+        .flatMap((elem) => elem.features)
+        .map((elem) => elem.did)
+        .filter((elem) => elem)
+      if (mentionedDids && mentionedDids.length > 0) {
+        const mentionedUsers = await User.findAll({
+          where: {
+            bskyDid: {
+              [Op.in]: mentionedDids
+            }
+          }
+        })
+        mentions = mentionedUsers.map((elem) => elem.id)
+      }
+
       const rt = new RichText({
         text: postText
       })
