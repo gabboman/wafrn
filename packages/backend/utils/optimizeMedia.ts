@@ -75,9 +75,27 @@ export default async function optimizeMedia(
         outputPath = fileAndExtension.join('.')
       }
 
-      let conversion = await sharp(inputPath, { animated: true, failOnError: false }).rotate()
+      let conversion = sharp(inputPath, { animated: true, failOnError: false }).rotate()
       if (options?.maxSize) {
-        await conversion.resize(options.maxSize, options.maxSize)
+        const imageMetadata = await conversion.metadata()
+        if (
+          imageMetadata.height &&
+          imageMetadata.width &&
+          (imageMetadata.height > options.maxSize || imageMetadata.width > options.maxSize)
+        ) {
+          let height = imageMetadata.height
+          let width = imageMetadata.width
+          const maxSize = options.maxSize
+          if (height > width) {
+            height = Math.round((maxSize * width) / height)
+            width = maxSize
+          } else {
+            width = Math.round((maxSize * height) / width)
+            height = maxSize
+          }
+
+          conversion.resize(height, width)
+        }
       }
       if (fileAndExtension[1] == 'webp') {
         conversion.webp({
