@@ -10,7 +10,7 @@
       <button
         mat-icon-button
         [matMenuTriggerFor]="menu"
-        aria-label="Edit privacy of woot"
+        attr.aria-label="{{ 'editor.ariaLabelWootPrivacy' | translate }}"
         class="input-height-btn"
         [matTooltip]="getPrivacyIconName()"
         [disabled]="editing"
@@ -18,16 +18,16 @@
         <fa-icon size="lg" [icon]="getPrivacyIcon()"></fa-icon>
       </button>
       <button
-        aria-label="Enable the quote setter"
+        attr.aria-label="{{ 'editor.ariaLabelQuoteSetter' | translate }}"
         mat-icon-button
         (click)="quoteOpen = !quoteOpen"
         class="input-height-btn"
-        matTooltip="Quote a woot"
+        matTooltip="{{ 'editor.quoteButton' | translate }}"
       >
         <fa-icon size="lg" [icon]="quoteIcon"></fa-icon>
       </button>
       @if (pollQuestions.length === 0) {
-        <div matTooltip="Upload Media">
+        <div matTooltip="{{ 'editor.uploadMediaTooltip' | translate }}">
           <app-file-upload (fileUpload)="uploadImage($event)"></app-file-upload>
         </div>
       }
@@ -35,7 +35,7 @@
         class="input-height-btn"
         mat-icon-button
         (click)="showContentWarning = !showContentWarning"
-        matTooltip="Content Warning"
+        matTooltip="{{ 'editor.contentWarningTooltip' | translate }}"
       >
         @if (contentWarning.includes('meta')) {
           <fa-icon size="lg" [icon]="skull"></fa-icon>
@@ -54,7 +54,7 @@
           postBeingSubmitted ||
           (postCreatorForm.value.content === initialContent && tags.length === 0 && uploadedMedias.length === 0)
         "
-        matTooltip="Publishes this woot"
+        matTooltip="{{ 'editor.publishWoot' | translate }}"
       >
         <span class="fucked-wrapper">
           <fa-icon size="lg" [icon]="postIcon"></fa-icon><span class="post-text"><b> Post</b></span>
@@ -80,27 +80,26 @@
 
     @if (privacy === 10) {
       <app-info-card [type]="'caution'" addClass="mb-3">
-        Admins of both your instance, and the external instance can read these messages.
+        {{ 'editor.directMessageWarning' | translate }}
       </app-info-card>
     }
     @if (privacy === 3) {
       <app-info-card type="info" addClass="mb-3">
-        This woot is set as unlisted. It opts out of search, hashtags and other features. This is not recommended for
-        anything you want discoverable.
+        {{ 'editor.unlistedWarning' | translate }}
       </app-info-card>
     }
     @if (showContentWarning || contentWarning) {
       <mat-form-field class="w-full transition-size" appearance="outline">
         <mat-label>Content warning (optional)</mat-label>
-        <input [(ngModel)]="contentWarning" placeholder="What is sensitive about this woot?" matNativeControl />
+        <input [(ngModel)]="contentWarning" placeholder="{{ 'editor.sensitivePlaceholder' | translate }}" matNativeControl />
       </mat-form-field>
     }
 
     @if (quoteOpen && !data?.quote) {
       <mat-card class="p-2 my-4" *ngIf="!quoteLoading">
         <mat-form-field class="w-full" appearance="outline">
-          <mat-label> Paste the URL of a woot to quote it. Can be the external url or the wafrn url </mat-label>
-          <input [(ngModel)]="urlPostToQuote" placeholder="Just paste the woot url" matNativeControl />
+          <mat-label> {{ 'editor.wootQuoteBoxLabel' | translate }} </mat-label>
+          <input [(ngModel)]="urlPostToQuote" placeholder="{{ 'editor.wootQuoteBoxPlaceholder' | translate }}" matNativeControl />
         </mat-form-field>
         <button
           (click)="loadQuote()"
@@ -109,14 +108,14 @@
           class="w-full"
           [disabled]="urlPostToQuote === ''"
         >
-          Add woot as quote
+          {{ 'editor.wootQuoteConfirmButton' | translate }}
         </button>
       </mat-card>
     }
 
     <form [formGroup]="postCreatorForm">
       <mat-form-field class="w-full" appearance="outline">
-        <mat-label>Woot text</mat-label>
+        <mat-label>{{ 'editor.wootTextLabel' | translate }}</mat-label>
         <textarea
           id="postCreatorContent"
           formControlName="content"
@@ -124,7 +123,7 @@
           (blur)="editorFocusedOut()"
           (focus)="editorFocusedIn()"
           rows="4"
-          placeholder="Start writing..."
+          placeholder="{{ 'editor.wootTextPlaceholder' | translate }}"
           matNativeControl
         ></textarea>
       </mat-form-field>
@@ -143,9 +142,9 @@
           <div class="col-12 md:col-6 my-2 relative">
             <app-media-preview [media]="media"></app-media-preview>
             <mat-form-field class="w-full" appearance="outline">
-              <mat-label>Image Description</mat-label>
+              <mat-label>{{ 'editor.altTextFieldLabel' | translate }}</mat-label>
               <textarea
-                placeholder="Description. Please FILL THIS"
+                placeholder="{{ 'editor.altTextFieldPlaceholder' | translate }}"
                 [(ngModel)]="media.description"
                 matNativeControl
                 required
@@ -153,7 +152,8 @@
               ></textarea>
             </mat-form-field>
             <div>
-              <mat-checkbox [(ngModel)]="media.NSFW" class="w-full">NSFW</mat-checkbox>
+           	  <!-- Yknow, I don't think translating "NSFW" is needed but YOU NEVER KNOW -->
+              <mat-checkbox [(ngModel)]="media.NSFW" class="w-full">{{ 'editor.isNSFWToggle' | translate }}</mat-checkbox>
               <button mat-mini-fab class="delete-btn" (click)="deleteImage(i)">
                 <fa-icon size="lg" [icon]="closeIcon"></fa-icon>
               </button>
@@ -162,11 +162,10 @@
         </ng-container>
       </div>
       <p class="my-2" *ngIf="uploadedMedias.length >= 4">
-        ATTENTION! ANY FURTHER MEDIA UPLOADED WILL NOT BE DISPLAYED ON MASTODON
+        {{ 'editor.mediaCountMastodonWarning' | translate }}
       </p>
       <p class="my-2" *ngIf="!allDescriptionsFilled()">
-        Please fill in the media descriptions. If you want to disable this check, there is an option in the profile that
-        you can disable.
+        {{ 'editor.altTextWarning' | translate }}
       </p>
     </section>
 
@@ -175,7 +174,7 @@
         <mat-spinner *ngIf="quoteLoading" class="my-4" color="accent" diameter="24"></mat-spinner>
       </div>
       <div *ngIf="data && data.quote">
-        <p class="mb-1">QUOTING:</p>
+        <p class="mb-1">{{ 'editor.quoteTitle' | translate }}</p>
         <div class="quoted-post mb-4">
           <button mat-mini-fab class="delete-btn" color="warn" (click)="data ? (data.quote = undefined) : null">
             <fa-icon size="lg" [icon]="closeIcon"></fa-icon>
@@ -189,8 +188,8 @@
     </section>
     <section id="tags" class="w-full flex-row">
       <mat-form-field class="w-full" appearance="outline">
-        <mat-label>Tags</mat-label>
-        <input [(ngModel)]="tags" placeholder="Separated by commas" matNativeControl />
+        <mat-label>{{ 'editor.tagFieldLabel' | translate }}</mat-label>
+        <input [(ngModel)]="tags" placeholder="{{ 'editor.tagSeparationNotice' | translate }}" matNativeControl />
       </mat-form-field>
       <div class="taglist">
         @for (tag of tags.split(','); track $index) {

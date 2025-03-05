@@ -52,6 +52,28 @@
         }
     },
     "editor": {
-        "inReplyTo": "In reply to:"
+        "inReplyTo": "In reply to:",
+        "quoteButton": "Quote a woot",
+        "publishWoot": "Publish this woot",
+        "directMessageWarning": "Admins of both your server and the external server can read these messages.",
+        "unlistedWarning": "This woot is set to be unlisted. It opts out of search, hashtags and other discovery features. This is not recommended for anything you want discoverable.",
+        "sensitivePlaceholder": "What is sensitive about this woot?",
+        "wootQuoteBoxLabel": "Paste the URL of a woot to quote it. Can be the external url or the wafrn url",
+        "wootQuoteBoxPlaceholder": "Just paste the woot url",
+        "wootQuoteConfirmButton": "Add woot as quote",
+        "wootTextLabel": "Woot text",
+        "wootTextPlaceholder": "Start writing...",
+        "altTextFieldLabel": "Image Description",
+        "altTextFieldPlaceholder": "Description. Please FILL THIS",
+        "isNSFWToggle": "NSFW",
+        "mediaCountMastodonWarning": "ATTENTION! ANY FURTHER MEDIA UPLOADED WILL NOT BE DISPLAYED ON MASTODON",
+        "altTextWarning": "Please fill in the media descriptions. If you want to disable this check, you can do so in the settings.",
+        "quoteTitle": "Quoting:",
+        "tagFieldLabel": "Tags",
+        "tagSeparationNotice": "Separated by commas",
+        "ariaLabelWootPrivacy": "Edit privacy of woot",
+        "ariaLabelQuoteSetter": "Enable the quote setter",
+        "uploadMediaTooltip": "Upload Media",
+        "contentWarningTooltip": "Content Warning"
     }
 }
