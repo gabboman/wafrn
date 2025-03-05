@@ -50,6 +50,7 @@ import showdown from 'showdown'
 import { BskyAgent } from '@atproto/api'
 import { getAtProtoSession } from '../atproto/utils/getAtProtoSession.js'
 import { getCacheAtDids } from '../atproto/cache/getCacheAtDids.js'
+import { sanitize } from 'isomorphic-dompurify'
 const markdownConverter = new showdown.Converter({
   simplifiedAutoLink: true,
   literalMidWordUnderscores: true,
@@ -892,7 +893,9 @@ async function updateBlueskyProfile(agent: BskyAgent, user: Model<any, any>) {
     const profile = existingProfile ?? {}
     const fullProfileString = `\nView full profile at ${environment.frontendUrl}/blog/${user.url}`
     profile.displayName = user.name.substring(0, 63)
-    profile.description = user.descriptionMarkdown.substring(0, 256 - fullProfileString.length) + fullProfileString
+    profile.description =
+      sanitize(user.descriptionMarkdown.substring(0, 256 - fullProfileString.length), { ALLOWED_TAGS: [] }) +
+      fullProfileString
     if (user.avatar) {
       let pngAvatar = await optimizeMedia('uploads' + user.avatar, {
         forceImageExtension: 'png',
