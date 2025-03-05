@@ -10,6 +10,7 @@ import { BlogService } from 'src/app/services/blog.service'
 import { LoginService } from 'src/app/services/login.service'
 import { MessageService } from 'src/app/services/message.service'
 import { InfoCardComponent } from '../info-card/info-card.component'
+import { TranslateModule } from '@ngx-translate/core'
 
 @Component({
   selector: 'app-ask-dialog-content',
@@ -20,7 +21,8 @@ import { InfoCardComponent } from '../info-card/info-card.component'
     MatInput,
     MatFormFieldModule,
     MatButtonModule,
-    InfoCardComponent
+    InfoCardComponent,
+    TranslateModule
   ],
   templateUrl: './ask-dialog-content.component.html',
   styleUrl: './ask-dialog-content.component.scss'
