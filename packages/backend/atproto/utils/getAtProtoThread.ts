@@ -287,7 +287,7 @@ async function processSinglePost(
         },
         {
           postContent: postToProcess.content,
-          userUrl: posterUser?.url
+          userUrl: postCreator?.url
         }
       )
       await Quotes.create({

@@ -21,8 +21,9 @@ async function getMutedPosts(userId: string, superMute = false): Promise<Array<s
     })
     res = mutedPostsQuery.map((elem: any) => elem.postId)
     if (superMute && res.length) {
+      const muted = res.map((elem) => "'" + (elem ? elem : '00000000-0000-0000-0000-000000000000') + "'")
       const mutedPosts = await sequelize.query(
-        `SELECT "postsId" FROM "postsancestors" where "ancestorId" IN (${res.map((elem) => "'" + elem + "'")})`
+        `SELECT "postsId" FROM "postsancestors" where "ancestorId" IN (${muted})`
       )
       res = mutedPosts[0].map((elem) => elem.postsId)
     }
@@ -59,11 +60,11 @@ async function getMutedPostsMultiple(userIds: string[], superMute = false) {
   let postIds: string[] = []
   for (const result of cacheResults) {
     if (result) {
-      postIds.push(...JSON.parse(result) as string[])
+      postIds.push(...(JSON.parse(result) as string[]))
     } else {
       const index = cacheResults.indexOf(result)
       const userId = userIds[index]
-      
+
       let newPostIds = mutedFirstIds.filter((elem) => elem.userId === userId).map((elem) => elem.postId)
       if (superMute && newPostIds.length) {
         const mutedPosts = await sequelize.query(
@@ -80,7 +81,7 @@ async function getMutedPostsMultiple(userIds: string[], superMute = false) {
       postIds.push(...newPostIds)
     }
   }
-  
+
   return postIds
 }
 

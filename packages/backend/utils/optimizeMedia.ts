@@ -83,7 +83,7 @@ export default async function optimizeMedia(
           imageMetadata.width &&
           (imageMetadata.height > options.maxSize || imageMetadata.width > options.maxSize)
         ) {
-          let height = imageMetadata.height
+          let height = imageMetadata.delay ? imageMetadata.height / imageMetadata.delay.length : imageMetadata.height
           let width = imageMetadata.width
           const maxSize = options.maxSize
           if (height > width) {
