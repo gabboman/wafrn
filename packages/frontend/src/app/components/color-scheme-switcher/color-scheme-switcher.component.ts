@@ -87,7 +87,6 @@ export class ColorSchemeSwitcherComponent {
   }
 
   setColorScheme(scheme: ColorScheme) {
-    console.log(scheme)
     this.colorScheme.set(scheme)
     localStorage.setItem('colorScheme', scheme)
   }
