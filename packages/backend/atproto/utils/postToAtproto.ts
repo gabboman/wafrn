@@ -129,7 +129,8 @@ async function postToAtproto(post: Model<any, any>, agent: BskyAgent) {
   let postShortened: boolean = false
   if (tmpRichText.length > 300 || medias.length > 4 || mediasToNotSend.length > 0) {
     postText =
-      postText.slice(0, 150) + `... see complete post at https://${environment.instanceUrl}/fediverse/post/${post.id}`
+      // Slice a bit more to account for unicode and such
+      postText.slice(0, 290) + "[...]"
     postShortened = true
   }
 
@@ -187,6 +188,17 @@ async function postToAtproto(post: Model<any, any>, agent: BskyAgent) {
     res.embed = {
       $type: 'app.bsky.embed.images',
       images: await Promise.all(bskyMedias)
+    }
+  }
+
+  if (postShortened) {
+    res.embed = {
+      $type: 'app.bsky.embed.external',
+      external: {
+        uri: `https://${environment.instanceUrl}/fediverse/post/${post.id}`,
+        title: `See complete post at ${environment.instanceUrl}`,
+        description: `${environment.instanceUrl} is a Wafrn server. Wafrn is a federated social media inspired by Tumblr, join us and have fun!`
+      }
     }
   }
 
