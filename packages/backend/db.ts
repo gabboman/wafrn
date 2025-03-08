@@ -743,10 +743,6 @@ const Notification = sequelize.define(
       {
         fields: ['postId'],
         unique: false
-      },
-      {
-        fields: ['notificationType', 'postId'],
-        unique: false
       }
     ]
   }
