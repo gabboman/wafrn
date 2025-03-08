@@ -52,6 +52,33 @@
         }
     },
     "editor": {
-        "inReplyTo": "W odpowiedzi do:"
+        "inReplyTo": "W odpowiedzi do:",
+        "quoteButton": "Zacytuj woota",
+        "publishWoot": "Opublikuj woota",
+        "directMessageWarning": "Administracja twojego serwera oraz serwera odbiorcy mają dostęp do tych wiadomości.",
+        "unlistedWarning": "Prywatność woota jest ustawiona jako niepubliczna. Nie będzie on widoczny w hasztagach, wynikach wyszukiwania oraz innych opcjach odkrywania. Nie jest to rekomendowane dla wootów, które mają dotrzeć do szerszej publiki.",
+        "sensitivePlaceholder": "Jakie treści wrażliwe są w tym woocie?",
+        "wootQuoteBoxLabel": "Wklej link woota, który chcesz zacytować. Może być to link zewnętrzny lub link z Gofra.",
+        "wootQuoteBoxPlaceholder": "Wklej link woota",
+        "wootQuoteConfirmButton": "Dodaj woota jako cytat",
+        "wootTextLabel": "Treść woota",
+        "wootTextPlaceholder": "Zacznij pisać...",
+        "altTextFieldLabel": "Opis załącznika",
+        "altTextFieldPlaceholder": "Opis. WYPEŁNIJ TO!",
+        "isNSFWToggle": "Treści wrażliwe",
+        "mediaCountMastodonWarning": "UWAGA! KAŻDE KOLEJNE ZAŁĄCZNIKI NIE WYŚWIELĄ SIĘ UŻYTKOWNIKOM MASTODONA",
+        "altTextWarning": "Wypełnij opisy załączników. Jeśli chcesz wyłączyć to powiadomienie, możesz zrobić to w ustawieniach.",
+        "quoteTitle": "Cytowane:",
+        "tagFieldLabel": "Tagi",
+        "tagSeparationNotice": "Oddzielone przecinkiem",
+        "ariaLabelWootPrivacy": "Zmień ustawienia prywatności woota",
+        "ariaLabelQuoteSetter": "Enable the quote setter",
+        "uploadMediaTooltip": "Dodaj media",
+        "contentWarningTooltip": "Ostrzeżenie o treściach wrażliwych"
+    },
+    "ask-dialog-content": {
+    		"loggedInNotice": "Jesteś aktualnie zalogowane, twoje pytanie nie będzie anonimowe",
+    		"askFormLabel": "Pytanie",
+    		"askButtonText": "Zapytaj"
     }
 }
