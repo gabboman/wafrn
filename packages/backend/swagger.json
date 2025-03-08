@@ -296,12 +296,12 @@
         }
       }
     },
-    "/api/v2/notificationsScroll": {
+    "/api/v3/notificationsScroll": {
       "get": {
         "description": "",
         "parameters": [
           {
-            "name": "req",
+            "name": "date",
             "in": "query",
             "schema": {
               "type": "string"
@@ -343,6 +343,76 @@
           },
           "401": {
             "description": "Unauthorized"
+          }
+        }
+      }
+    },
+    "/api/v3/registerNotificationToken": {
+      "post": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "authorization",
+            "in": "header",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        },
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "token": {
+                    "example": "any"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/article/{user}/{title}": {
+      "get": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "user",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "title",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "404": {
+            "description": "Not Found"
           }
         }
       }
@@ -427,69 +497,6 @@
         }
       }
     },
-    "/api/v2/createPost": {
-      "post": {
-        "description": "",
-        "parameters": [
-          {
-            "name": "authorization",
-            "in": "header",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          },
-          "401": {
-            "description": "Unauthorized"
-          },
-          "500": {
-            "description": "Internal Server Error"
-          }
-        },
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "postToQuote": {
-                    "example": "any"
-                  },
-                  "parent": {
-                    "example": "any"
-                  },
-                  "privacy": {
-                    "example": "any"
-                  },
-                  "content": {
-                    "example": "any"
-                  },
-                  "content_warning": {
-                    "example": "any"
-                  },
-                  "medias": {
-                    "example": "any"
-                  },
-                  "idPostToEdit": {
-                    "example": "any"
-                  },
-                  "ask": {
-                    "example": "any"
-                  },
-                  "tags": {
-                    "example": "any"
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
-    },
     "/api/v3/createPost": {
       "post": {
         "description": "",
@@ -535,6 +542,9 @@
                     "example": "any"
                   },
                   "medias": {
+                    "example": "any"
+                  },
+                  "mentionedUsersIds": {
                     "example": "any"
                   },
                   "idPostToEdit": {
@@ -689,6 +699,9 @@
         "responses": {
           "200": {
             "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request"
           }
         },
         "requestBody": {
@@ -703,6 +716,9 @@
                   "email": {
                     "example": "any"
                   },
+                  "birthDate": {
+                    "example": "any"
+                  },
                   "description": {
                     "example": "any"
                   },
@@ -713,9 +729,6 @@
                     "example": "any"
                   },
                   "password": {
-                    "example": "any"
-                  },
-                  "birthDate": {
                     "example": "any"
                   }
                 }
@@ -790,31 +803,7 @@
               "schema": {
                 "type": "object",
                 "properties": {
-                  "manuallyAcceptsFollows": {
-                    "example": "any"
-                  },
-                  "description": {
-                    "example": "any"
-                  },
-                  "asksLevel": {
-                    "example": "any"
-                  },
-                  "federateWithThreads": {
-                    "example": "any"
-                  },
-                  "disableForceAltText": {
-                    "example": "any"
-                  },
-                  "forceOldEditor": {
-                    "example": "any"
-                  },
-                  "forceClassicLogo": {
-                    "example": "any"
-                  },
-                  "defaultPostEditorPrivacy": {
-                    "example": "any"
-                  },
-                  "name": {
+                  "where": {
                     "example": "any"
                   }
                 }
@@ -972,6 +961,31 @@
           },
           "401": {
             "description": "Unauthorized"
+          }
+        }
+      }
+    },
+    "/api/enable-bluesky": {
+      "post": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "authorization",
+            "in": "header",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "500": {
+            "description": "Internal Server Error"
           }
         }
       }
@@ -2037,31 +2051,28 @@
     "/api/cache": {
       "get": {
         "description": "",
-        "parameters": [
-          {
-            "name": "media",
-            "in": "query",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "avatar",
-            "in": "query",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
         "responses": {
           "200": {
             "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request"
           },
           "404": {
             "description": "Not Found"
           },
           "500": {
             "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/api/linkPreview": {
+      "get": {
+        "description": "",
+        "responses": {
+          "200": {
+            "description": "OK"
           }
         }
       }

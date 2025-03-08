@@ -8,6 +8,7 @@ import { environment } from '../environment.js'
 import { Resolver } from 'did-resolver'
 import { getResolver } from 'plc-did-resolver'
 import { redisCache } from '../utils/redis.js'
+import { getLinkPreview } from 'link-preview-js'
 
 function extensionFromMimeType(mime: string) {
   return mime.split('/').pop()?.replace('jpeg', 'jpg').replace('svg+xml', 'svg').replace('x-icon', 'ico') || ''
@@ -94,7 +95,7 @@ export default function cacheRoutes(app: Application) {
       // with the second parameter to the URL constructor we can provide a base URL in case the media URL is something like "/api/uploads/..." so the URL constructor does not throw an error
       const url = new URL(mediaUrl, urlBase)
       const mediaLink = url.href as string
-      
+
       const mediaLinkHash = crypto.createHash('sha256').update(mediaLink).digest('hex')
       let localFileName = await redisCache.get(`cache:${mediaLinkHash}`)
 
@@ -135,6 +136,25 @@ export default function cacheRoutes(app: Application) {
         error: error
       })
       return res.sendStatus(500)
+    }
+  })
+
+  app.get('/api/linkPreview', async (req: Request, res: Response) => {
+    const url = String(req.query?.url)
+    const shasum = crypto.createHash('sha1')
+    shasum.update(url.toLowerCase())
+    const urlHash = shasum.digest('hex')
+    const cacheResult = await redisCache.get('linkPreviewCache:' + urlHash)
+    if (cacheResult) {
+      res.send(cacheResult)
+    } else {
+      let result = {}
+      try {
+        result = await getLinkPreview(url)
+      } catch (error) {}
+      // we cache the url 24 hours if success, 5 minutes if not
+      await redisCache.set('linkPreviewCache:' + urlHash, JSON.stringify(result), 'EX', result ? 3600 * 24 : 300)
+      res.send(result)
     }
   })
 }
