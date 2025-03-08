@@ -134,32 +134,6 @@ async function postToAtproto(post: Model<any, any>, agent: BskyAgent) {
     postShortened = true
   }
 
-  const bskyMedias = medias
-    .filter((elem: any, index) => !mediasToNotSend.includes(index))
-    .map(async (media) => {
-      let file = await fs.readFile('uploads/' + media.url)
-      if (file.length > 1000000) {
-        // well this image is TOO BIG. time to convert it
-        const localFilename = await optimizeMedia('uploads/' + media.url, {
-          outPath: 'uploads/' + media.id + '_bsky',
-          maxSize: 768,
-          keep: true
-        })
-        file = await fs.readFile('uploads/' + media.id + '_bsky.webp')
-      }
-      const image = Buffer.from(file)
-      const { data } = await agent.uploadBlob(image, { encoding: media.mediaType })
-      return {
-        alt: media.description ? media.description : '',
-        image: data.blob,
-        labels: labels ? labels : undefined,
-        aspectRatio: {
-          width: media.width,
-          height: media.height
-        }
-      }
-    })
-
   const rt = new RichText({
     text: postText
   })
@@ -184,13 +158,6 @@ async function postToAtproto(post: Model<any, any>, agent: BskyAgent) {
     fediverseId: `${environment.frontendUrl}/fediverse/post/${post.id}`
   }
 
-  if (bskyMedias.length) {
-    res.embed = {
-      $type: 'app.bsky.embed.images',
-      images: await Promise.all(bskyMedias)
-    }
-  }
-
   if (postShortened) {
     res.embed = {
       $type: 'app.bsky.embed.external',
@@ -198,6 +165,39 @@ async function postToAtproto(post: Model<any, any>, agent: BskyAgent) {
         uri: `https://${environment.instanceUrl}/fediverse/post/${post.id}`,
         title: `See complete post at ${environment.instanceUrl}`,
         description: `${environment.instanceUrl} is a Wafrn server. Wafrn is a federated social media inspired by Tumblr, join us and have fun!`
+      }
+    }
+  } else {
+    const bskyMedias = medias
+      .filter((elem: any, index) => !mediasToNotSend.includes(index))
+      .map(async (media) => {
+        let file = await fs.readFile('uploads/' + media.url)
+        if (file.length > 1000000) {
+          // well this image is TOO BIG. time to convert it
+          const localFilename = await optimizeMedia('uploads/' + media.url, {
+            outPath: 'uploads/' + media.id + '_bsky',
+            maxSize: 768,
+            keep: true
+          })
+          file = await fs.readFile('uploads/' + media.id + '_bsky.webp')
+        }
+        const image = Buffer.from(file)
+        const { data } = await agent.uploadBlob(image, { encoding: media.mediaType })
+        return {
+          alt: media.description ? media.description : '',
+          image: data.blob,
+          labels: labels ? labels : undefined,
+          aspectRatio: {
+            width: media.width,
+            height: media.height
+          }
+        }
+      })
+
+    if (bskyMedias.length) {
+      res.embed = {
+        $type: 'app.bsky.embed.images',
+        images: await Promise.all(bskyMedias)
       }
     }
   }
