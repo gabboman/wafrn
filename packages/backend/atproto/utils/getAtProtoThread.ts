@@ -338,7 +338,7 @@ function getPostMedias(post: PostView) {
     if (embed.external) {
       res = res.concat([
         {
-          mediaType: embed.external.thumb?.mimeType,
+          mediaType: !embed.external.uri.startsWith('https://media.ternor.com/') ? 'text/html' : 'image/gif',
           description: embed.external.title,
           url: embed.external.uri,
           mediaOrder: 0,
@@ -392,8 +392,12 @@ function getPostMedias(post: PostView) {
 function getQuotedPostUri(post: PostView): string | undefined {
   let res: string | undefined = undefined
   const embed = post.record.embed
-  if (embed && ['app.bsky.embed.record', 'app.bsky.embed.recordWithMedia'].includes(embed['$type'])) {
+  if (embed && ['app.bsky.embed.record'].includes(embed['$type'])) {
     res = embed.record.uri
+  }
+  // case of post with pictures and quote
+  else if (embed && ['app.bsky.embed.recordWithMedia'].includes(embed['$type'])) {
+    res = embed.record.record.uri
   }
   return res
 }
