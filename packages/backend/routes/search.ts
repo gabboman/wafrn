@@ -77,9 +77,7 @@ export default function searchRoutes(app: Application) {
               }
             },
             {
-              url: {
-                [Op.iLike]: `%${searchTerm}%`
-              }
+              literal: sequelize.literal(`lower("url") LIKE ${sequelize.escape('%' + searchTerm + '%')}`)
             }
           ]
         },
@@ -97,9 +95,7 @@ export default function searchRoutes(app: Application) {
           banned: false,
           [Op.or]: [
             {
-              url: {
-                [Op.iLike]: `%${searchTerm}%`
-              }
+              literal: sequelize.literal(`lower("url") LIKE ${sequelize.escape('%' + searchTerm + '%')}`)
             }
           ]
         },
@@ -192,9 +188,7 @@ export default function searchRoutes(app: Application) {
       limit: 20,
       where: {
         activated: true,
-        url: {
-          [Op.iLike]: `@%${searchTerm}%`
-        },
+        literal: sequelize.literal(`lower("url") LIKE ${sequelize.escape('@%' + searchTerm + '%')}`),
         banned: {
           [Op.ne]: true
         },
@@ -224,13 +218,10 @@ export default function searchRoutes(app: Application) {
               [Op.notLike]: '@%'
             }
           },
-          [
-            {
-              url: {
-                [Op.iLike]: `%${searchTerm}%`
-              }
-            }
-          ]
+
+          {
+            literal: sequelize.literal(`lower("url") LIKE ${sequelize.escape('%' + searchTerm + '%')}`)
+          }
         ]
       },
       attributes: ['url', 'avatar', 'id', 'remoteId']
