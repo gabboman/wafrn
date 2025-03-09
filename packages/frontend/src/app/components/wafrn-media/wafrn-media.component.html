@@ -1,89 +1,90 @@
-<div class="media-container" [ngClass]="{ 'always-show-alt': alwaysShowAlt() }">
-  <div class="media-content-container">
-    @if (
-      (!extensionsToHideImgTag.includes(extension()) || mimeType() === 'UNKNOWN') &&
-      !mimeType().startsWith('video') &&
-      !mimeType().startsWith('text/html')
-    ) {
-      <img
-        *ngIf="!errorMode"
-        [src]="displayUrl()"
-        [alt]="data().description"
-        width="{{ width() }}"
-        height="{{ height() }}"
-        loading="lazy"
-        (error)="handleError()"
-        [ngClass]="{
-          nsfw: nsfw,
-          'displayed-image': !nsfw
-        }"
-      />
-    }
+@if (mimeType().toLowerCase() == 'text/html') {
+  <app-link-preview *ngIf="displayUrl()" [link]="displayUrl()"></app-link-preview>
+} @else {
+  <div class="media-container" [ngClass]="{ 'always-show-alt': alwaysShowAlt() }">
+    <div class="media-content-container">
+      @if (
+        (!extensionsToHideImgTag.includes(extension()) || mimeType() === 'UNKNOWN') &&
+        !mimeType().startsWith('video') &&
+        !mimeType().startsWith('text/html')
+      ) {
+        <img
+          *ngIf="!errorMode"
+          [src]="displayUrl()"
+          [alt]="data().description"
+          width="{{ width() }}"
+          height="{{ height() }}"
+          loading="lazy"
+          (error)="handleError()"
+          [ngClass]="{
+            nsfw: nsfw,
+            'displayed-image': !nsfw
+          }"
+        />
+      }
 
-    @if (mimeType().startsWith('video')) {
-      <video
-        #videoelement
-        (play)="showPicture()"
-        preload="metadata"
-        [ngClass]="{
-          nsfw: nsfw,
-          'displayed-image': !nsfw
-        }"
-        width="{{ width() }}"
-        height="{{ height() }}"
-        [controls]="enableVideoControls()"
-      >
-        <source [src]="displayUrl()" [type]="mimeType()" />
-      </video>
-    }
-    @if (mimeType().toLowerCase() == 'text/html') {
-      <app-link-preview *ngIf="displayUrl()" [link]="displayUrl()"></app-link-preview>
-    }
-  </div>
-
-  @if (nsfw) {
-    <div class="flex flex-column justify-content-center align-items-center image-cw-text">
-      <p>This media contains sensitive content</p>
-      <button mat-raised-button (click)="showPicture()">Show media</button>
-    </div>
-  } @else {
-    @if (mimeType().startsWith('pdf')) {
-      <a [href]="displayUrl()" target="_blank">Click here to see the PDF file that is embedded in this post</a>
-    }
-    @if (mimeType().startsWith('audio')) {
-      <audio #audioelement [controls]="enableAudioControls()">
-        <source [src]="displayUrl()" [type]="mimeType()" />
-      </audio>
-    }
-
-    @if (data().description) {
-      @if (!alwaysShowAlt() && !mimeType().startsWith('text/html')) {
-        <button
-          class="m-2 toggle-button toggle-description"
-          mat-raised-button
-          (click)="descriptionVisible = !descriptionVisible"
-          title="Show alt text"
-          [ariaDescription]="'Show alt text'"
+      @if (mimeType().startsWith('video')) {
+        <video
+          #videoelement
+          (play)="showPicture()"
+          preload="metadata"
+          [ngClass]="{
+            nsfw: nsfw,
+            'displayed-image': !nsfw
+          }"
+          width="{{ width() }}"
+          height="{{ height() }}"
+          [controls]="enableVideoControls()"
         >
-          ALT
+          <source [src]="displayUrl()" [type]="mimeType()" />
+        </video>
+      }
+    </div>
+
+    @if (nsfw) {
+      <div class="flex flex-column justify-content-center align-items-center image-cw-text">
+        <p>This media contains sensitive content</p>
+        <button mat-raised-button (click)="showPicture()">Show media</button>
+      </div>
+    } @else {
+      @if (mimeType().startsWith('pdf')) {
+        <a [href]="displayUrl()" target="_blank">Click here to see the PDF file that is embedded in this post</a>
+      }
+      @if (mimeType().startsWith('audio')) {
+        <audio #audioelement [controls]="enableAudioControls()">
+          <source [src]="displayUrl()" [type]="mimeType()" />
+        </audio>
+      }
+
+      @if (data().description) {
+        @if (!alwaysShowAlt() && !mimeType().startsWith('text/html')) {
+          <button
+            class="m-2 toggle-button toggle-description"
+            mat-raised-button
+            (click)="descriptionVisible = !descriptionVisible"
+            title="Show alt text"
+            [ariaDescription]="'Show alt text'"
+          >
+            ALT
+          </button>
+        }
+        <div class="px-2 py-1 image-description" [ngClass]="{ visible: descriptionVisible }">
+          <p class="m-0" [innerText]="data().description"></p>
+        </div>
+      }
+
+      @if (!hideSensitiveButton()) {
+        <button
+          class="m-2 toggle-button toggle-nsfw"
+          mat-raised-button
+          (click)="$event.stopPropagation(); nsfw = !nsfw"
+          title="Hide image"
+          [ariaDescription]="'Hide image'"
+        >
+          <fa-icon [icon]="hideIcon"></fa-icon>
         </button>
       }
-      <div class="px-2 py-1 image-description" [ngClass]="{ visible: descriptionVisible }">
-        <p class="m-0" [innerText]="data().description"></p>
-      </div>
     }
-
-    @if (!hideSensitiveButton()) {
-      <button
-        class="m-2 toggle-button toggle-nsfw"
-        mat-raised-button
-        (click)="$event.stopPropagation(); nsfw = !nsfw"
-        title="Hide image"
-        [ariaDescription]="'Hide image'"
-      >
-        <fa-icon [icon]="hideIcon"></fa-icon>
-      </button>
-    }
-  }
-  <a *ngIf="errorMode" [href]="data().url" target="_blank"> {{ data().description + ': ' + data().url }}</a>
-</div>
+    <a *ngIf="errorMode" [href]="data().url" target="_blank"> {{ data().description + ': ' + data().url }}</a>
+  </div>
+}
