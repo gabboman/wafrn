@@ -6,6 +6,7 @@
       <mat-card-title>{{ title }}</mat-card-title>
       <mat-card-content> {{ description }}</mat-card-content>
       <img *ngIf="img" [src]="img" mat-card-image />
+      <div>{{ (url | slice: 0 : 128) + (url.length > 127 ? '...' : '') }}</div>
     </mat-card>
   }
 </a>
