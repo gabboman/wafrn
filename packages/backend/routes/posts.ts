@@ -414,22 +414,20 @@ export default function postsRoutes(app: Application) {
         let dbFoundMentions: any[] = []
         const newMentionedUsers = req.body.mentionedUsersIds || []
         if (mentionsInPost?.length || newMentionedUsers.length) {
+          const urlsToSearch = mentionsInPost.map((elem) => {
+            // local users are stored without the @, so remove it from the query param
+            let urlToSearch = elem.trim()
+            if (urlToSearch.split('@').length == 2 && urlToSearch.split('.').length == 1) {
+              urlToSearch = urlToSearch.split('@')[1]
+            }
+            // we sanitize the possible urls so we can use a literal
+            return sequelize.escape(urlToSearch.toLowerCase().trim())
+          })
           dbFoundMentions = await User.findAll({
             where: {
               [Op.or]: [
                 {
-                  url: {
-                    [Op.iLike]: {
-                      [Op.any]: mentionsInPost.map((elem) => {
-                        // local users are stored without the @, so remove it from the query param
-                        let urlToSearch = elem.trim().toLowerCase()
-                        if (urlToSearch.split('@').length == 2 && urlToSearch.split('.').length == 1) {
-                          urlToSearch = urlToSearch.split('@')[1]
-                        }
-                        return urlToSearch
-                      })
-                    }
-                  }
+                  literal: sequelize.literal(`lower("url") IN (${urlsToSearch.join(',')})`)
                 },
                 {
                   id: {
