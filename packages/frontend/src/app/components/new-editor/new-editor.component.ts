@@ -125,7 +125,7 @@ export class NewEditorComponent implements OnDestroy {
   skull = faSkullCrossbones
   infoIcon = faQuestionCircle
   alertIcon = faExclamationTriangle
-  postIcon=faPaperPlane
+  postIcon = faPaperPlane
   emojiSubscription: Subscription
   editorUpdatedSubscription: Subscription | undefined
   httpMentionPetitionSubscription: Subscription | undefined
@@ -173,7 +173,9 @@ export class NewEditorComponent implements OnDestroy {
       this.postCreatorForm.controls['content'].patchValue(this.data.post.markdownContent)
       this.contentWarning = this.data.post.content_warning
       this.tags = this.data.post.tags.map((tag) => tag.tagName).join(',')
-      this.uploadedMedias = this.data.post.medias ? this.data.post.medias : []
+      this.uploadedMedias = this.data.post.medias
+        ? this.data.post.medias.filter((elem) => elem.mediaOrder != 9999999999999999)
+        : []
       this.privacy = this.data.post.privacy
     }
   }
