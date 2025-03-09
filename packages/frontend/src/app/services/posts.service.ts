@@ -311,9 +311,26 @@ export class PostsService {
       }
     })
     emojiReactions = emojiReactions.concat(likesAsEmojiReactions)
+    const content = elem ? elem.content : ''
+    const parsedAsHTML = this.parser.parseFromString(content, 'text/html')
+    const links = parsedAsHTML.getElementsByTagName('a')
+    Array.from(links).forEach((link) => {
+      if (link.innerText === link.href) {
+        medias.push({
+          mediaOrder: 9999999999999999,
+          id: '',
+          NSFW: false,
+          description: '',
+          url: link.href,
+          external: true,
+          postId: elem ? elem.id : '',
+          mediaType: 'text/html'
+        })
+      }
+    })
     const newPost: ProcessedPost = {
       ...elem,
-      content: elem ? elem.content : '',
+      content: content,
       emojiReactions: emojiReactions,
       user: user ? (user as SimplifiedUser) : nonExistentUser,
       tags: elem ? unlinked.tags.filter((tag) => tag.postId === elem.id) : [],
@@ -406,16 +423,6 @@ export class PostsService {
       : []
     const hostUrl = this.getURL(EnvironmentService.environment.frontUrl).hostname
     Array.from(links).forEach((link) => {
-      const youtubeMatch = link.href.matchAll(this.youtubeRegex)
-      if (link.innerText === link.href && youtubeMatch) {
-        // NOTE: Since this should not be part of the image Viewer, we have to add then no-viewer class to be checked for later
-        Array.from(youtubeMatch).forEach((youtubeString) => {
-          link.innerHTML = `<div class="watermark"><!-- Watermark container --><div class="watermark__inner"><!-- The watermark --><div class="watermark__body"><img alt="youtube logo" class="yt-watermark no-viewer" loading="lazy" src="/assets/img/youtube_logo.png"></div></div><img class="yt-thumbnail" src="${
-            EnvironmentService.environment.externalCacheurl +
-            encodeURIComponent(`https://img.youtube.com/vi/${youtubeString[6]}/hqdefault.jpg`)
-          }" loading="lazy" alt="Thumbnail for video"></div>`
-        })
-      }
       // replace mentioned users with wafrn version of profile.
       // TODO not all software links to mentionedProfile
       if (mentionedRemoteIds.includes(link.href)) {
