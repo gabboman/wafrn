@@ -49,7 +49,7 @@ import { acceptRemoteFollow } from '../utils/activitypub/acceptRemoteFollow.js'
 import showdown from 'showdown'
 import { BskyAgent } from '@atproto/api'
 import { getAtProtoSession } from '../atproto/utils/getAtProtoSession.js'
-import { getCacheAtDids } from '../atproto/cache/getCacheAtDids.js'
+import { forceUpdateCacheDidsAtThread, getCacheAtDids } from '../atproto/cache/getCacheAtDids.js'
 import dompurify from 'isomorphic-dompurify'
 
 const markdownConverter = new showdown.Converter({
@@ -889,6 +889,7 @@ export default function userRoutes(app: Application) {
 }
 
 async function updateBlueskyProfile(agent: BskyAgent, user: Model<any, any>) {
+  await forceUpdateCacheDidsAtThread()
   await getCacheAtDids(true)
   return await agent.upsertProfile(async (existingProfile) => {
     const profile = existingProfile ?? {}

@@ -3,6 +3,8 @@ import { Follows, User } from '../../db.js'
 import { Op } from 'sequelize'
 import { getAllLocalUserIds } from '../../utils/cacheGetters/getAllLocalUserIds.js'
 import { cache } from 'sharp'
+import { environment } from '../../environment.js'
+import { Queue } from 'bullmq'
 
 let superCache: undefined | { followedDids: string[]; localUserDids: string[]; followedUsersLocalIds: string[] }
 
@@ -63,4 +65,19 @@ async function getCacheAtDids(
   return JSON.parse(cacheResult)
 }
 
-export { getCacheAtDids }
+async function forceUpdateCacheDidsAtThread() {
+  const forceUpdaDidsteQueue = new Queue('forceUpdateDids', {
+    connection: environment.bullmqConnection,
+    defaultJobOptions: {
+      removeOnComplete: true,
+      attempts: 3,
+      backoff: {
+        type: 'exponential',
+        delay: 1000
+      }
+    }
+  })
+  await forceUpdaDidsteQueue.add('forceUpdateDids', {})
+}
+
+export { getCacheAtDids, forceUpdateCacheDidsAtThread }

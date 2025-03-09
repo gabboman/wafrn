@@ -1,6 +1,6 @@
 import { Firehose } from '@skyware/firehose'
 import { getCacheAtDids } from './atproto/cache/getCacheAtDids.js'
-import { Queue } from 'bullmq'
+import { Queue, Worker } from 'bullmq'
 import { environment } from './environment.js'
 import { checkCommitMentions } from './atproto/utils/checkCommitMentions.js'
 import { logger } from './utils/logger.js'
@@ -36,3 +36,23 @@ firehose.on('commit', async (commit) => {
     }
 })
 firehose.start()
+
+const workerForceUpdateAtDidCache = new Worker(
+  'forceUpdateDids',
+  async (job: Job) => {
+    logger.info(`Atproto force update of dids`)
+    await getCacheAtDids(true)
+  },
+  {
+    connection: environment.bullmqConnection,
+    concurrency: 1,
+    lockDuration: 120000
+  }
+)
+
+workerForceUpdateAtDidCache.on('failed', (err) => {
+  logger.warn({
+    message: `workerforceUpdateDids failed`,
+    error: err
+  })
+})

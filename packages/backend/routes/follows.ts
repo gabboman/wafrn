@@ -16,7 +16,7 @@ import { getUserOptions } from '../utils/cacheGetters/getUserOptions.js'
 import { getMutedPosts } from '../utils/cacheGetters/getMutedPosts.js'
 import { environment } from '../environment.js'
 import { getAtProtoSession } from '../atproto/utils/getAtProtoSession.js'
-import { getCacheAtDids } from '../atproto/cache/getCacheAtDids.js'
+import { forceUpdateCacheDidsAtThread, getCacheAtDids } from '../atproto/cache/getCacheAtDids.js'
 
 export default function followsRoutes(app: Application) {
   // TODO refactor? It works, but I have a few res.send and thats not nice!
@@ -48,6 +48,7 @@ export default function followsRoutes(app: Application) {
           const followResult = await agent.follow(userToBeFollowed.bskyDid)
           if (followResult.validationStatus == 'valid') {
             await follow(posterId, req.body.userId, res, followResult)
+            await forceUpdateCacheDidsAtThread()
             await getCacheAtDids(true)
             return res.send({ success: true })
           } else {
@@ -105,6 +106,7 @@ export default function followsRoutes(app: Application) {
         if (follow?.bskyUri) {
           const agent = await getAtProtoSession(await User.findByPk(posterId))
           await agent.deleteFollow(follow.bskyUri)
+          await forceUpdateCacheDidsAtThread()
           await getCacheAtDids(true)
         }
         userUnfollowed.removeFollower(posterId)
