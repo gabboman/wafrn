@@ -28,7 +28,6 @@ export class LinkPreviewComponent implements OnChanges {
       const linkToGet = this.link.startsWith(EnvironmentService.environment.externalCacheurl)
       this.url = linkToGet ? (new URL(this.link).searchParams.get('media') as string) : this.link
       this.mediaService.getLinkPreview(this.url).then((data) => {
-        console.log(data)
         this.loading = false
         if (data.images && data.images.length) {
           this.img = EnvironmentService.environment.externalCacheurl + encodeURIComponent(data.images[0])
