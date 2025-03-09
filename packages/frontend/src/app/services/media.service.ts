@@ -52,7 +52,7 @@ export class MediaService {
   async getLinkPreview(link: string): Promise<any> {
     try {
       return await firstValueFrom(
-        this.http.get<any>(`${EnvironmentService.environment.baseUrl}/linkPreview?url=${link}`)
+        this.http.get<any>(`${EnvironmentService.environment.baseUrl}/linkPreview/?url=${encodeURIComponent(link)}`)
       )
     } catch (error) {
       return {}
