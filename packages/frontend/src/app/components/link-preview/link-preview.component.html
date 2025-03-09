@@ -6,7 +6,9 @@
       <div class="media-content-container">
         <h4>{{ title }}</h4>
         <h6>{{ description }}</h6>
-        <img *ngIf="img" [src]="img" class="displayed-image" />
+        <div *ngIf="img" class="w-full flex">
+          <img [src]="img" style="margin: auto" />
+        </div>
         <div>{{ (url | slice: 0 : 128) + (url.length > 127 ? '...' : '') }}</div>
       </div>
     </div>
