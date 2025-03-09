@@ -31,7 +31,7 @@ export class LinkPreviewComponent implements OnChanges {
         console.log(data)
         this.loading = false
         if (data.images && data.images.length) {
-          this.img = data.images[0]
+          this.img = EnvironmentService.environment.externalCacheurl + encodeURIComponent(data.images[0])
         }
         if (data.siteName) {
           this.title = data.siteName
