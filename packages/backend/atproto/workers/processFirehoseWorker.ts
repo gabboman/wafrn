@@ -66,6 +66,19 @@ async function processFirehose(job: Job) {
                     bskyPath: operation.path
                   }
                 })
+
+                await createNotification(
+                  {
+                    notificationType: 'LIKE',
+                    postId: postInDb.id,
+                    userId: remoteUser.id,
+                    notifiedUserId: postInDb.userId
+                  },
+                  {
+                    postContent: postInDb.content,
+                    userUrl: remoteUser.url
+                  }
+                )
               }
             }
             break
