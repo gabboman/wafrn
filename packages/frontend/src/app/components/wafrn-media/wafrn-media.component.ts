@@ -56,7 +56,6 @@ export class WafrnMediaComponent implements OnChanges, AfterViewInit {
   nsfw = true
   viewLongImage = false
   descriptionVisible = false
-
   // Icons
   readonly hideIcon = faEyeSlash
 

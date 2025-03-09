@@ -1,0 +1,11 @@
+<a [href]="url">
+  @if (loading) {
+    <app-loader></app-loader>
+  } @else {
+    <mat-card class="align-items-center wafrn-container post-card">
+      <mat-card-title>{{ title }}</mat-card-title>
+      <mat-card-content> {{ description }}</mat-card-content>
+      <img *ngIf="img" [src]="img" mat-card-image />
+    </mat-card>
+  }
+</a>

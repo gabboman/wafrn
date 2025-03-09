@@ -1,6 +1,9 @@
 import { HttpClient } from '@angular/common/http'
 import { Injectable } from '@angular/core'
 import { JwtService } from './jwt.service'
+import { getLinkPreview, getPreviewFromContent } from 'link-preview-js'
+import { firstValueFrom } from 'rxjs'
+import { EnvironmentService } from './environment.service'
 
 @Injectable({
   providedIn: 'root'
@@ -10,7 +13,8 @@ export class MediaService {
   constructor(
     private jwt: JwtService,
     private jwtService: JwtService,
-    private http: HttpClient
+    private http: HttpClient,
+    private environmentService: EnvironmentService
   ) {
     if (localStorage.getItem('disableNSFWFilter') === 'true' && this.jwtService.tokenValid() && this.checkAge()) {
       this.disableNSFWFilter = true
@@ -43,5 +47,15 @@ export class MediaService {
       return false
     }
     return minimumBirthDate > birthDate
+  }
+
+  async getLinkPreview(link: string): Promise<any> {
+    try {
+      return await firstValueFrom(
+        this.http.get<any>(`${EnvironmentService.environment.baseUrl}/linkPreview?url=${link}`)
+      )
+    } catch (error) {
+      return {}
+    }
   }
 }

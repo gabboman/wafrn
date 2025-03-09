@@ -1,7 +1,9 @@
 <div class="media-container" [ngClass]="{ 'always-show-alt': alwaysShowAlt() }">
   <div class="media-content-container">
     @if (
-      (!extensionsToHideImgTag.includes(extension()) || mimeType() === 'UNKNOWN') && !mimeType().startsWith('video')
+      (!extensionsToHideImgTag.includes(extension()) || mimeType() === 'UNKNOWN') &&
+      !mimeType().startsWith('video') &&
+      !mimeType().startsWith('text/html')
     ) {
       <img
         *ngIf="!errorMode"
@@ -34,6 +36,9 @@
         <source [src]="displayUrl()" [type]="mimeType()" />
       </video>
     }
+    @if (mimeType().toLowerCase() == 'text/html') {
+      <app-link-preview *ngIf="displayUrl()" [link]="displayUrl()"></app-link-preview>
+    }
   </div>
 
   @if (nsfw) {
@@ -52,7 +57,7 @@
     }
 
     @if (data().description) {
-      @if (!alwaysShowAlt()) {
+      @if (!alwaysShowAlt() && !mimeType().startsWith('text/html')) {
         <button
           class="m-2 toggle-button toggle-description"
           mat-raised-button
