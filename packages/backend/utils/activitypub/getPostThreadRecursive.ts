@@ -289,22 +289,20 @@ async function getPostThreadRecursive(
       }
       await processMentions(newPost, mentionedUsersIds)
       await loadPoll(remotePostObject, newPost, user)
-      if (newPost.privacy === 10) {
-        const postCleanContent = dompurify.sanitize(newPost.content, { ALLOWED_TAGS: [] }).trim()
-        const mentions = await newPost.getMentionPost()
-        if (postCleanContent.startsWith('!ask') && mentions.length === 1) {
-          let askContent = postCleanContent.split(`!ask @${mentions[0].url}`)[1]
-          if (askContent.startsWith('@' + environment.instanceUrl)) {
-            askContent = askContent.split('@' + environment.instanceUrl)[1]
-          }
-          await Ask.create({
-            question: askContent,
-            userAsker: newPost.userId,
-            userAsked: mentions[0].id,
-            answered: false,
-            apObject: JSON.stringify(postPetition)
-          })
+      const postCleanContent = dompurify.sanitize(newPost.content, { ALLOWED_TAGS: [] }).trim()
+      const mentions = await newPost.getMentionPost()
+      if (postCleanContent.startsWith('!ask') && mentions.length === 1) {
+        let askContent = postCleanContent.split(`!ask @${mentions[0].url}`)[1]
+        if (askContent.startsWith('@' + environment.instanceUrl)) {
+          askContent = askContent.split('@' + environment.instanceUrl)[1]
         }
+        await Ask.create({
+          question: askContent,
+          userAsker: newPost.userId,
+          userAsked: mentions[0].id,
+          answered: false,
+          apObject: JSON.stringify(postPetition)
+        })
       }
       return newPost
     } catch (error) {
