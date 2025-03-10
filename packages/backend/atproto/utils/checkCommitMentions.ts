@@ -20,11 +20,16 @@ function checkCommitMentions(
       (operation.path.startsWith('app.bsky.feed.like') || operation.path.startsWith('app.bsky.graph.follow'))
     ) {
       // we do not ned 18k likes on a mark hamill post. We better do just a "people you follow liked..."
-      const likedPostUri = operation.record?.subject?.uri ? operation.record.subject.uri : ''
-      const followedUser = operation.path.startsWith('app.bsky.graph.follow') ? operation.record.subject : ''
+      let likedPostUri = operation.record?.subject?.uri ? operation.record.subject.uri : ''
+      if (likedPostUri) {
+        likedPostUri = likedPostUri.split('/')[2]
+      }
+      let followedUser = operation.path.startsWith('app.bsky.graph.follow') ? operation.record.subject : ''
+
       if (
         didsToCheck.has(commit.repo) ||
-        Array.from(cacheData.localUserDids).some((elem) => likedPostUri.includes(elem) || elem === followedUser)
+        cacheData.localUserDids.has(likedPostUri) ||
+        cacheData.localUserDids.has(followedUser)
       ) {
         return true
       }
