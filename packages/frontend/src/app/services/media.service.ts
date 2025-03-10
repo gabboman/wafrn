@@ -1,7 +1,6 @@
 import { HttpClient } from '@angular/common/http'
 import { Injectable } from '@angular/core'
 import { JwtService } from './jwt.service'
-import { getLinkPreview, getPreviewFromContent } from 'link-preview-js'
 import { firstValueFrom } from 'rxjs'
 import { EnvironmentService } from './environment.service'
 
