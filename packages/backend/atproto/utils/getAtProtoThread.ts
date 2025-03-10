@@ -7,9 +7,6 @@ import { Model, Op } from 'sequelize'
 import { PostView, ThreadViewPost } from '@atproto/api/dist/client/types/app/bsky/feed/defs.js'
 import { getAtprotoUser, forcePopulateUsers } from './getAtprotoUser.js'
 import { CreateOrUpdateOp } from '@skyware/firehose'
-import { getAllLocalUserIds } from '../../utils/cacheGetters/getAllLocalUserIds.js'
-import { wait } from '../../utils/wait.js'
-import { isArray } from 'underscore'
 import { logger } from '../../utils/logger.js'
 import { RichText } from '@atproto/api'
 import showdown from 'showdown'
@@ -290,45 +287,15 @@ async function processSinglePost(
           userUrl: postCreator?.url
         }
       )
-      await Quotes.create({
-        quoterPostId: postToProcess.id,
-        quotedPostId: quotedPostId
+      await Quotes.findOrCreate({
+        where: {
+          quoterPostId: postToProcess.id,
+          quotedPostId: quotedPostId
+        }
       })
     }
     return postToProcess.id
   }
-}
-
-function getDidsFromThread(thread: ThreadViewPost): string[] {
-  let res: string[] = []
-  res.push(thread.post.author.did)
-  if (thread.replies) {
-    for (const reply of thread.replies) {
-      res = res.concat(getRepliesDidRecursive(reply as ThreadViewPost, res))
-    }
-  }
-
-  if (thread.parent) {
-    let parent: ThreadViewPost | undefined = thread.parent as ThreadViewPost
-    while (parent) {
-      res.push(parent.post.author.did)
-      parent = parent.parent as ThreadViewPost | undefined
-    }
-  }
-
-  res = [...new Set(res)]
-  return res
-}
-
-function getRepliesDidRecursive(thread: ThreadViewPost, dids: string[]): string[] {
-  let res: string[] = [...dids]
-  res.push(thread.post.author.did)
-  if (thread.replies) {
-    for (const reply of thread.replies) {
-      res = res.concat(getRepliesDidRecursive(reply as ThreadViewPost, res))
-    }
-  }
-  return res
 }
 
 function getPostMedias(post: PostView) {
