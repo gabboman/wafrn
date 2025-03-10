@@ -7,9 +7,9 @@ import { getAllLocalUserIds } from '../../utils/cacheGetters/getAllLocalUserIds.
 // Preemptive checks to see if
 function checkCommitMentions(
   commit: ParsedCommit,
-  cacheData: { followedDids: string[]; localUserDids: string[]; followedUsersLocalIds: string[] }
+  cacheData: { followedDids: Set<string>; localUserDids: Set<string>; followedUsersLocalIds: Set<string> }
 ): boolean {
-  const didsToCheck = [...new Set(cacheData.localUserDids.concat(cacheData.followedDids))]
+  const didsToCheck = cacheData.followedDids
 
   let res = false
   // first we check if there are any mentions to local users. if so we return true
@@ -23,8 +23,8 @@ function checkCommitMentions(
       const likedPostUri = operation.record?.subject?.uri ? operation.record.subject.uri : ''
       const followedUser = operation.path.startsWith('app.bsky.graph.follow') ? operation.record.subject : ''
       if (
-        didsToCheck.some((elem) => elem == commit.repo) ||
-        cacheData.localUserDids.some((elem) => likedPostUri.includes(elem) || elem === followedUser)
+        didsToCheck.has(commit.repo) ||
+        Array.from(cacheData.localUserDids).some((elem) => likedPostUri.includes(elem) || elem === followedUser)
       ) {
         return true
       }
@@ -34,7 +34,7 @@ function checkCommitMentions(
         .flatMap((elem) => elem.features)
         .map((elem) => elem.did)
         .filter((elem) => elem)
-      if (mentions && mentions.length && mentions.some((mention: string) => didsToCheck.includes(mention))) {
+      if (mentions && mentions.length && mentions.some((mention: string) => didsToCheck.has(mention))) {
         res = true
         return res
       }
@@ -53,7 +53,7 @@ function checkCommitMentions(
   let postsFounds = 0
 
   if (urisToCheck.length > 0) {
-    postsFounds = urisToCheck.some((elem) => didsToCheck.includes(elem)) ? 1 : postsFounds
+    postsFounds = urisToCheck.some((elem) => didsToCheck.has(elem)) ? 1 : postsFounds
   }
 
   if (postsFounds > 0) {

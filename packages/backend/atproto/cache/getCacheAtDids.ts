@@ -1,4 +1,3 @@
-import { redisCache } from '../../utils/redis.js'
 import { Follows, User } from '../../db.js'
 import { Op } from 'sequelize'
 import { getAllLocalUserIds } from '../../utils/cacheGetters/getAllLocalUserIds.js'
@@ -6,16 +5,18 @@ import { cache } from 'sharp'
 import { environment } from '../../environment.js'
 import { Queue } from 'bullmq'
 
-let superCache: undefined | { followedDids: string[]; localUserDids: string[]; followedUsersLocalIds: string[] }
+let superCache:
+  | undefined
+  | { followedDids: Set<string>; localUserDids: Set<string>; followedUsersLocalIds: Set<string> }
 
 // TODO improve this. This function is called A LOT and we could use a lot less of JSON PARSE
 async function getCacheAtDids(
   forceUpdate = false
-): Promise<{ followedDids: string[]; localUserDids: string[]; followedUsersLocalIds: string[] }> {
+): Promise<{ followedDids: Set<string>; localUserDids: Set<string>; followedUsersLocalIds: Set<string> }> {
   if (!forceUpdate && superCache) {
     return superCache
   }
-  let cacheResult = forceUpdate ? undefined : await redisCache.get('follows:bsky')
+  let cacheResult = forceUpdate ? undefined : superCache
   if (!cacheResult) {
     const follows = await Follows.findAll({
       attributes: ['followedId'],
@@ -51,18 +52,18 @@ async function getCacheAtDids(
         }
       }
     })
-    const followedUsersLocalIds = dids.map((elem) => elem.id)
-    const followedDids = dids.map((elem) => elem.bskyDid)
-    const localUserDids = localUsersWithDid.map((elem) => elem.bskyDid)
-    cacheResult = JSON.stringify({
+    const followedUsersLocalIds = new Set<string>(dids.map((elem) => elem.id))
+    const localUserDids = new Set<string>(localUsersWithDid.map((elem) => elem.bskyDid))
+    const followedDids = new Set<string>(dids.map((elem) => elem.bskyDid).concat(localUserDids))
+
+    cacheResult = {
       followedDids: followedDids,
       localUserDids: localUserDids,
       followedUsersLocalIds: followedUsersLocalIds
-    })
-    await redisCache.set('follows:bsky', cacheResult)
+    }
   }
-  superCache = JSON.parse(cacheResult)
-  return JSON.parse(cacheResult)
+  superCache = cacheResult
+  return cacheResult
 }
 
 async function forceUpdateCacheDidsAtThread() {

@@ -7,7 +7,7 @@ import { logger } from './utils/logger.js'
 
 //const firehose = new Firehose(`wss://bolson.bsky.dev`);
 
-await getCacheAtDids(true)
+let cachedDids = await getCacheAtDids(true)
 const firehose = new Firehose()
 
 const firehoseQueue = new Queue('firehoseQueue', {
@@ -24,9 +24,9 @@ const firehoseQueue = new Queue('firehoseQueue', {
 })
 
 firehose.on('commit', async (commit) => {
-  const cacheData = await getCacheAtDids()
+  const cacheData = cachedDids
 
-  if (cacheData.followedDids.includes(commit.repo) || checkCommitMentions(commit, cacheData))
+  if (cacheData.followedDids.has(commit.repo) || checkCommitMentions(commit, cacheData))
     for await (const op of commit.ops) {
       const data = {
         repo: commit.repo,
@@ -41,7 +41,7 @@ const workerForceUpdateAtDidCache = new Worker(
   'forceUpdateDids',
   async (job: Job) => {
     logger.info(`Atproto force update of dids`)
-    await getCacheAtDids(true)
+    cachedDids = await getCacheAtDids(true)
   },
   {
     connection: environment.bullmqConnection,
