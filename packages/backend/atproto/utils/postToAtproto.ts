@@ -88,8 +88,7 @@ async function postToAtproto(post: Model<any, any>, agent: BskyAgent) {
       postText =
         `[${userAsker.name} asked:](https://${environment.instanceUrl}/fediverse/post/${post.id}) ` +
         `${ask.question}\n\n${postText}`
-    }
-    else {
+    } else {
       postText =
         `[Anonymous asked:](https://${environment.instanceUrl}/fediverse/post/${post.id}) ` +
         `${ask.question}\n\n${postText}`
@@ -118,10 +117,15 @@ async function postToAtproto(post: Model<any, any>, agent: BskyAgent) {
   }
 
   const mediasToNotSend: number[] = []
+  let videoSize = 0
   for await (const [index, media] of medias.entries()) {
     const data = await fs.stat('uploads/' + media.url)
     if (media.url.endsWith('mp4')) {
-      mediasToNotSend.push(index)
+      videoSize = data.size
+      // TODO add a video is longer than 3 minutes
+      if (data.size > 100000000 || medias.length != 1 || false) {
+        mediasToNotSend.push(index)
+      }
     }
   }
 
@@ -130,7 +134,7 @@ async function postToAtproto(post: Model<any, any>, agent: BskyAgent) {
   if (tmpRichText.length > 300 || medias.length > 4 || mediasToNotSend.length > 0) {
     postText =
       // Slice a bit more to account for unicode and such
-      postText.slice(0, 290) + "[...]"
+      postText.slice(0, 290) + '[...]'
     postShortened = true
   }
 
@@ -172,7 +176,7 @@ async function postToAtproto(post: Model<any, any>, agent: BskyAgent) {
       .filter((elem: any, index) => !mediasToNotSend.includes(index))
       .map(async (media) => {
         let file = await fs.readFile('uploads/' + media.url)
-        if (file.length > 1000000) {
+        if (file.length > 1000000 && !media.url.endsWith('mp4')) {
           // well this image is TOO BIG. time to convert it
           const localFilename = await optimizeMedia('uploads/' + media.url, {
             outPath: 'uploads/' + media.id + '_bsky',
@@ -183,13 +187,17 @@ async function postToAtproto(post: Model<any, any>, agent: BskyAgent) {
         }
         const image = Buffer.from(file)
         const { data } = await agent.uploadBlob(image, { encoding: media.mediaType })
-        return {
-          alt: media.description ? media.description : '',
-          image: data.blob,
-          labels: labels ? labels : undefined,
-          aspectRatio: {
-            width: media.width,
-            height: media.height
+        if (media.url.endsWith('mp4')) {
+          return data
+        } else {
+          return {
+            alt: media.description ? media.description : '',
+            image: data.blob,
+            labels: labels ? labels : undefined,
+            aspectRatio: {
+              width: media.width,
+              height: media.height
+            }
           }
         }
       })
@@ -198,6 +206,13 @@ async function postToAtproto(post: Model<any, any>, agent: BskyAgent) {
       res.embed = {
         $type: 'app.bsky.embed.images',
         images: await Promise.all(bskyMedias)
+      }
+      if (medias.length == 1 && medias[0].url.endsWith('mp4')) {
+        const data = (await Promise.all(bskyMedias))[0]
+        res.embed = {
+          $type: 'app.bsky.embed.video',
+          video: data
+        }
       }
     }
   }

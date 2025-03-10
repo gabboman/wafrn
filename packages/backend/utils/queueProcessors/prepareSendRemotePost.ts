@@ -19,8 +19,8 @@ import { Job, Queue } from 'bullmq'
 import { Agent, BskyAgent, CredentialSession } from '@atproto/api'
 import { wait } from '../wait.js'
 import dompurify from 'isomorphic-dompurify'
-import { postToAtproto } from "../../atproto/utils/postToAtproto.js";
-import { getAtProtoSession } from "../../atproto/utils/getAtProtoSession.js";
+import { postToAtproto } from '../../atproto/utils/postToAtproto.js'
+import { getAtProtoSession } from '../../atproto/utils/getAtProtoSession.js'
 
 const processPostViewQueue = new Queue('processRemoteView', {
   connection: environment.bullmqConnection,
@@ -51,18 +51,18 @@ async function prepareSendRemotePostWorker(job: Job) {
   // TODO fix this! this is dirtier than my unwashed gim clothes
   await wait(1500)
   //async function sendRemotePost(localUser: any, post: any) {
-  const post = await Post.findByPk(job.id) as Model<any, any>
-  const parent = post.parentId ? await Post.findByPk(post.parentId) as Model<any, any> : undefined;
+  const post = (await Post.findByPk(job.id)) as Model<any, any>
+  const parent = post.parentId ? ((await Post.findByPk(post.parentId)) as Model<any, any>) : undefined
   const parentPoster = parent ? await User.findByPk(parent.userId) : undefined
-  const localUser = await User.findByPk(post.userId) as Model<any, any>
+  const localUser = (await User.findByPk(post.userId)) as Model<any, any>
   if (post.privacy === 0 && localUser.enableBsky && environment.enableBsky) {
     try {
       // if parent has no bsky data we dont reblog
       if (!parent || parent.bskyUri) {
         // ok the user has bluesky time to send the post
         const agent = await getAtProtoSession(localUser)
-        let isReblog = false;
-        if (post.content == '' && post.content_warning == "" && post.parentId) {
+        let isReblog = false
+        if (post.content == '' && post.content_warning == '' && post.parentId) {
           const mediaCount = await Media.count({
             where: {
               postId: post.id
@@ -79,21 +79,21 @@ async function prepareSendRemotePostWorker(job: Job) {
             }
           })
           if (mediaCount + quotesCount + tagsCount === 0) {
-            isReblog = true;
+            isReblog = true
             if (parent.bskyUri) {
               const { uri } = await agent.repost(parent.bskyUri, parent.bskyCid)
-              post.bskyUri = uri;
-              await post.save();
+              post.bskyUri = uri
+              await post.save()
             }
           }
-        } if (!isReblog) {
-          const bskyPost = await agent.post(await postToAtproto(post, agent));
-          post.bskyUri = bskyPost.uri;
-          post.bskyCid = bskyPost.cid;
-          await post.save();
+        }
+        if (!isReblog) {
+          const bskyPost = await agent.post(await postToAtproto(post, agent))
+          post.bskyUri = bskyPost.uri
+          post.bskyCid = bskyPost.cid
+          await post.save()
         }
       }
-
     } catch (error) {
       logger.warn({
         message: 'Error while posting to bsky',
@@ -102,7 +102,7 @@ async function prepareSendRemotePostWorker(job: Job) {
     }
   }
   // we check if we need to send the post to fedi
-  if (!parent || (!parent.bskyUri || !parentPoster.url.startsWith('@'))) {
+  if (!parent || !parent.bskyUri || !parentPoster.url.startsWith('@')) {
     // servers with shared inbox
     let serversToSendThePost
     const localUserFollowers = await localUser.getFollower()
@@ -174,7 +174,6 @@ async function prepareSendRemotePostWorker(job: Job) {
           }
         })
       )
-
 
     // we store the fact that we have sent the post in a queue
     await processPostViewQueue.addBulk(
@@ -255,7 +254,6 @@ async function prepareSendRemotePostWorker(job: Job) {
       await Promise.allSettled(addSendPostToQueuePromises)
     }
   }
-
 }
 
 export { prepareSendRemotePostWorker }
