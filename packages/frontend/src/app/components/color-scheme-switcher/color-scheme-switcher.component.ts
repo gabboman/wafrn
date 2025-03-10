@@ -24,7 +24,7 @@ function isColorTheme(value: string): value is ColorTheme {
 function isColorScheme(value: string): value is ColorScheme {
   return colorSchemeVariants.includes(value as ColorScheme)
 }
-const colorSchemeVariants = ['default', 'tan', 'green', 'gold', 'red', 'pink', 'fan'] as const
+const colorSchemeVariants = ['default', 'tan', 'green', 'gold', 'red', 'pink', 'rizzler', 'fan'] as const
 type ColorSchemeTuple = typeof colorSchemeVariants
 type ColorScheme = ColorSchemeTuple[number]
 
@@ -69,8 +69,15 @@ export class ColorSchemeSwitcherComponent {
 
   constructor() {
     const colorScheme = localStorage.getItem('colorScheme')
-    if (colorScheme !== null && isColorScheme(colorScheme)) {
+    if (colorScheme !== null && colorScheme !== 'rizzler' && isColorScheme(colorScheme)) {
       this.setColorScheme(colorScheme)
+    }
+    const chromeVersionForCompatibilityReasons = this.getChromeVersion()
+    if (chromeVersionForCompatibilityReasons) {
+      if (chromeVersionForCompatibilityReasons < 122) {
+        // we force the fan theme on old browsers
+        this.setColorScheme('fan')
+      }
     }
     this.setTheme(this.theme())
     window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', this.updateIconTheme.bind(this))
@@ -122,5 +129,11 @@ export class ColorSchemeSwitcherComponent {
     } else {
       this.iconClass = ''
     }
+  }
+
+  getChromeVersion() {
+    var raw = navigator.userAgent.match(/Chrom(e|ium)\/([0-9]+)\./)
+
+    return raw ? parseInt(raw[2], 10) : false
   }
 }
