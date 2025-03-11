@@ -13,10 +13,8 @@ img  {
     position: relative;
     display: grid;
     border-radius: var(--mat-sys-corner-extra-small);
-    overflow: clip;
     padding: 0.5em;	
 	cursor: pointer !important;
-    border-radius: 12px;
     border: 1px solid var(--mat-sys-outline-variant);
     flex-shrink: 0;
     overflow: hidden;
