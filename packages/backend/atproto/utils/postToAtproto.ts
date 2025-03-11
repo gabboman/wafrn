@@ -88,8 +88,7 @@ async function postToAtproto(post: Model<any, any>, agent: BskyAgent) {
       postText =
         `[${userAsker.name} asked:](https://${environment.instanceUrl}/fediverse/post/${post.id}) ` +
         `${ask.question}\n\n${postText}`
-    }
-    else {
+    } else {
       postText =
         `[Anonymous asked:](https://${environment.instanceUrl}/fediverse/post/${post.id}) ` +
         `${ask.question}\n\n${postText}`
@@ -130,7 +129,7 @@ async function postToAtproto(post: Model<any, any>, agent: BskyAgent) {
   if (tmpRichText.length > 300 || medias.length > 4 || mediasToNotSend.length > 0) {
     postText =
       // Slice a bit more to account for unicode and such
-      postText.slice(0, 290) + "[...]"
+      postText.slice(0, 290) + '[...]'
     postShortened = true
   }
 
@@ -225,7 +224,16 @@ async function postToAtproto(post: Model<any, any>, agent: BskyAgent) {
   }
 
   if (bskyQuote) {
-    res.embed = bskyQuote
+    // OK oK so turns out that posting video/images and quoting a post needs more consideration!
+    if (res.embed) {
+      res.embed = {
+        $type: 'app.bsky.embed.recordWithMedia',
+        media: res.embed,
+        record: bskyQuote
+      }
+    } else {
+      res.embed = bskyQuote
+    }
   }
 
   if (labels) {
