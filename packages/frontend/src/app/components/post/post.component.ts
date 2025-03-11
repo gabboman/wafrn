@@ -47,7 +47,7 @@ import { environment } from 'src/environments/environment'
   styleUrls: ['./post.component.scss'],
   standalone: false
 })
-export class PostComponent implements OnInit, OnChanges, OnDestroy, AfterViewInit, AfterViewChecked {
+export class PostComponent implements OnInit, OnChanges, OnDestroy, AfterViewInit {
   @Input() post!: ProcessedPost[]
   @Input() showFull: boolean = false
   postCanExpand = computed(() => this.veryLongPost || !this.showFull || !this.expanded)
@@ -146,17 +146,14 @@ export class PostComponent implements OnInit, OnChanges, OnDestroy, AfterViewIni
       const numberOfMedias = medias.length
       this.veryLongPost = numberOfMedias > 2
       this.showFull = this.showFull || this.veryLongPost
-      setTimeout(() => {}, 500)
-    }
-  }
-
-  ngAfterViewChecked(): void {
-    console.log('afterviewchecked called')
-    if (!this.veryLongPost) {
-      const postHtmlId = 'post-element-' + this.finalPost.id
-      const postHtmlElement = document.getElementById(postHtmlId) as HTMLElement
-      const postHeight = postHtmlElement.getBoundingClientRect().height
-      this.veryLongPost = this.veryLongPost || postHeight > 1250
+      setTimeout(() => {
+        if (!this.veryLongPost) {
+          const postHtmlId = 'post-element-' + this.finalPost.id
+          const postHtmlElement = document.getElementById(postHtmlId) as HTMLElement
+          const postHeight = postHtmlElement.getBoundingClientRect().height
+          this.veryLongPost = this.veryLongPost || postHeight > 80
+        }
+      }, 25)
     }
   }
 
