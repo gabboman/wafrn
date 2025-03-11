@@ -151,7 +151,7 @@ export class PostComponent implements OnInit, OnChanges, OnDestroy, AfterViewIni
           const postHtmlId = 'post-element-' + this.finalPost.id
           const postHtmlElement = document.getElementById(postHtmlId) as HTMLElement
           const postHeight = postHtmlElement.getBoundingClientRect().height
-          this.veryLongPost = this.veryLongPost || postHeight > 80
+          this.veryLongPost = this.veryLongPost || postHeight > 1250
         }
       }, 25)
     }
