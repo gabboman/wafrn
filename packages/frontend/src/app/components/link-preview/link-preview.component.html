@@ -4,12 +4,12 @@
   } @else {
     <div class="media-container">
       <div class="media-content-container">
-        <h4>{{ title }}</h4>
-        <h6>{{ description }}</h6>
+        <h4>{{ title | slice: 0 : 64 }}{{ title.length > 63 ? '...' : '' }}</h4>
+        <h6>{{ description | slice: 0 : 128 }}{{ description.length > 127 ? '...' : '' }}</h6>
+        <div style="text-align: center">{{ (url | slice: 0 : 32) + (url.length > 31 ? '...' : '') }}</div>
         <div *ngIf="img" class="w-full flex">
           <img [src]="img" style="margin: auto" />
         </div>
-        <div>{{ (url | slice: 0 : 128) + (url.length > 127 ? '...' : '') }}</div>
       </div>
     </div>
   }

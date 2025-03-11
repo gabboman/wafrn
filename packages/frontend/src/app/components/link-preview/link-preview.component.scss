@@ -6,3 +6,25 @@ img  {
     aspect-ratio: auto;
 
 }
+
+.media-container {
+
+    background: var(--mat-sys-surface-container);
+    position: relative;
+    display: grid;
+    border-radius: var(--mat-sys-corner-extra-small);
+    overflow: clip;
+    padding: 0.5em;	
+	cursor: pointer !important;
+    border-radius: 12px;
+    border: 1px solid var(--mat-sys-outline-variant);
+    max-height: 256px;
+    flex-shrink: 0;
+    overflow: hidden;
+    margin-bottom: 4px;
+    &:hover .toggle-button {
+      opacity: 1;
+    }
+  }
+
+  

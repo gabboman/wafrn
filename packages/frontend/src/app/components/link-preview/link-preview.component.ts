@@ -32,6 +32,11 @@ export class LinkPreviewComponent implements OnChanges {
         if (data.images && data.images.length) {
           this.img = EnvironmentService.environment.externalCacheurl + encodeURIComponent(data.images[0])
         }
+        if (!this.img && data.favicons && data.favicons.length) {
+          this.img =
+            EnvironmentService.environment.externalCacheurl +
+            encodeURIComponent(data.favicons[data.favicons.length - 1])
+        }
         if (data.siteName) {
           this.title = data.siteName
         }

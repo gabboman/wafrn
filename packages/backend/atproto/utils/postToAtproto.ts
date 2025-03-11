@@ -240,7 +240,16 @@ async function postToAtproto(post: Model<any, any>, agent: BskyAgent) {
   }
 
   if (bskyQuote) {
-    res.embed = bskyQuote
+    // OK oK so turns out that posting video/images and quoting a post needs more consideration!
+    if (res.embed) {
+      res.embed = {
+        $type: 'app.bsky.embed.recordWithMedia',
+        media: res.embed,
+        record: bskyQuote
+      }
+    } else {
+      res.embed = bskyQuote
+    }
   }
 
   if (labels) {
