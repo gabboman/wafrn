@@ -9,6 +9,7 @@ import { Resolver } from 'did-resolver'
 import { getResolver } from 'plc-did-resolver'
 import { redisCache } from '../utils/redis.js'
 import { getLinkPreview } from 'link-preview-js'
+import { linkPreviewRateLimiter } from '../utils/rateLimiters.js'
 
 function extensionFromMimeType(mime: string) {
   return mime.split('/').pop()?.replace('jpeg', 'jpg').replace('svg+xml', 'svg').replace('x-icon', 'ico') || ''
@@ -139,7 +140,7 @@ export default function cacheRoutes(app: Application) {
     }
   })
 
-  app.get('/api/linkPreview', async (req: Request, res: Response) => {
+  app.get('/api/linkPreview', linkPreviewRateLimiter, async (req: Request, res: Response) => {
     const url = String(req.query?.url)
     const shasum = crypto.createHash('sha1')
     shasum.update(url.toLowerCase())
@@ -150,7 +151,10 @@ export default function cacheRoutes(app: Application) {
     } else {
       let result = {}
       try {
-        result = await getLinkPreview(url)
+        result = await getLinkPreview(url, {
+          followRedirects: 'follow',
+          headers: { 'User-Agent': environment.instanceUrl }
+        })
       } catch (error) {}
       // we cache the url 24 hours if success, 5 minutes if not
       await redisCache.set('linkPreviewCache:' + urlHash, JSON.stringify(result), 'EX', result ? 3600 * 24 : 300)
