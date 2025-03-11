@@ -1,4 +1,5 @@
 import {
+  AfterViewChecked,
   AfterViewInit,
   Component,
   computed,
@@ -46,7 +47,7 @@ import { environment } from 'src/environments/environment'
   styleUrls: ['./post.component.scss'],
   standalone: false
 })
-export class PostComponent implements OnInit, OnChanges, OnDestroy, AfterViewInit {
+export class PostComponent implements OnInit, OnChanges, OnDestroy, AfterViewInit, AfterViewChecked {
   @Input() post!: ProcessedPost[]
   @Input() showFull: boolean = false
   postCanExpand = computed(() => this.veryLongPost || !this.showFull || !this.expanded)
@@ -132,6 +133,7 @@ export class PostComponent implements OnInit, OnChanges, OnDestroy, AfterViewIni
       }
     })
   }
+
   ngAfterViewInit(): void {
     const postHtmlId = 'post-element-' + this.finalPost.id
     const postHtmlElement = document.getElementById(postHtmlId)
@@ -141,12 +143,23 @@ export class PostComponent implements OnInit, OnChanges, OnDestroy, AfterViewIni
         .flat()
         .filter((elem) => !!elem)
         .map((media) => media.height)
-      const postHeight = postHtmlElement.getBoundingClientRect().height
       const numberOfMedias = medias.length
-      this.veryLongPost = postHeight > 1250 || numberOfMedias > 2
+      this.veryLongPost = numberOfMedias > 2
       this.showFull = this.showFull || this.veryLongPost
+      setTimeout(() => {}, 500)
     }
   }
+
+  ngAfterViewChecked(): void {
+    console.log('afterviewchecked called')
+    if (!this.veryLongPost) {
+      const postHtmlId = 'post-element-' + this.finalPost.id
+      const postHtmlElement = document.getElementById(postHtmlId) as HTMLElement
+      const postHeight = postHtmlElement.getBoundingClientRect().height
+      this.veryLongPost = this.veryLongPost || postHeight > 1250
+    }
+  }
+
   ngOnDestroy(): void {
     this.updateFollowersSubscription.unsubscribe()
     this.updateLikesSubscription.unsubscribe()
