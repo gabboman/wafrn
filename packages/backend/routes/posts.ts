@@ -639,7 +639,7 @@ export default function postsRoutes(app: Application) {
         success = !bodyTags
         if (bodyTags) {
           const tagListString = bodyTags
-          let tagList: string[] = tagListString.split(',')
+          let tagList: string[] = tagListString.split(',').filter((elem) => elem.length > 0)
           tagList = tagList.map((s: string) => s.trim())
           await PostTag.destroy({
             where: {
