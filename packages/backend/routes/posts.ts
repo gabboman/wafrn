@@ -632,9 +632,13 @@ export default function postsRoutes(app: Application) {
         )
 
         post.setEmojis(emojisToAdd)
-        success = !req.body.tags
-        if (req.body.tags) {
-          const tagListString = req.body.tags
+        const inlineTags = Array.from(post.content.matchAll(/#[a-z0-9_]+/g))
+          .join(',')
+          .replaceAll('#', '')
+        const bodyTags = req.body.tags ? req.body.tags + ',' + inlineTags : inlineTags
+        success = !bodyTags
+        if (bodyTags) {
+          const tagListString = bodyTags
           let tagList: string[] = tagListString.split(',')
           tagList = tagList.map((s: string) => s.trim())
           await PostTag.destroy({
