@@ -315,8 +315,8 @@ export class PostsService {
     const parsedAsHTML = this.parser.parseFromString(content, 'text/html')
     const links = parsedAsHTML.getElementsByTagName('a')
     Array.from(links).forEach((link) => {
-      const youtubeMatch = link.href.matchAll(this.youtubeRegex)
-      if (link.innerText === link.href && !youtubeMatch) {
+      const youtubeMatch = Array.from(link.href.matchAll(this.youtubeRegex))
+      if (link.innerText === link.href && youtubeMatch.length == 0) {
         medias.push({
           mediaOrder: 9999999999999999,
           id: '',

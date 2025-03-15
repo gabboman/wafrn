@@ -1,6 +1,6 @@
 <a target="_blank" [href]="url">
   @if (loading) {
-    <app-loader></app-loader>
+    <app-loader [text]="url"></app-loader>
   } @else {
     <div class="media-container">
       <div class="media-content-container">
