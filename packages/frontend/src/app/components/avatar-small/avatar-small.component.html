@@ -1,10 +1,11 @@
 <a class="avatar-container" [routerLink]="disabled() ? undefined : ['/blog', user().url]">
-  <img
+  <div
     class="avatar"
-    onerror="this.onerror=null;this.src='/assets/img/default.webp'"
-    [src]="avatar"
-    [alt]="user().url + '\'s avatar'"
-    crossorigin="anonymous"
-    loading="lazy"
-  />
+    [ngStyle]="{
+      background: 'url(' + avatar + ')',
+      'background-size': 'contain',
+      'background-repeat': 'no-repeat',
+      'background-position': 'center'
+    }"
+  ></div>
 </a>
