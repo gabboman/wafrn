@@ -42,6 +42,7 @@ import { getUserOptions } from '../utils/cacheGetters/getUserOptions.js'
 import showdown from 'showdown'
 import { forceUpdateLastActive } from '../utils/forceUpdateLastActive.js'
 import { bulkCreateNotifications, createNotification } from '../utils/pushNotifications.js'
+import { getAtProtoThread } from '../atproto/utils/getAtProtoThread.js'
 
 const markdownConverter = new showdown.Converter({
   simplifiedAutoLink: true,
@@ -715,19 +716,25 @@ export default function postsRoutes(app: Application) {
       await Promise.all([user, remotePost])
       user = await user
       remotePost = await remotePost
-      const postPetition = await getPetitionSigned(user, remotePost.remotePostId)
-      if (postPetition) {
-        if (postPetition.inReplyTo && remotePost.hierarchyLevel === 1) {
-          const lostParent = await getPostThreadRecursive(user, postPetition.inReplyTo)
-          await remotePost.setParent(lostParent)
+      if (remotePost.remotePostId) {
+        // fedi post
+        const postPetition = await getPetitionSigned(user, remotePost.remotePostId)
+        if (postPetition) {
+          if (postPetition.inReplyTo && remotePost.hierarchyLevel === 1) {
+            const lostParent = await getPostThreadRecursive(user, postPetition.inReplyTo)
+            await remotePost.setParent(lostParent)
+          }
+          // next replies to process
+          let next = postPetition.replies.first
+          while (next) {
+            const petitions = next.items.map((elem: any) => getPostThreadRecursive(user, elem.id ? elem.id : elem))
+            await Promise.allSettled(petitions)
+            next = next.next ? await getPetitionSigned(user, next.next) : undefined
+          }
         }
-        // next replies to process
-        let next = postPetition.replies.first
-        while (next) {
-          const petitions = next.items.map((elem: any) => getPostThreadRecursive(user, elem.id ? elem.id : elem))
-          await Promise.allSettled(petitions)
-          next = next.next ? await getPetitionSigned(user, next.next) : undefined
-        }
+      }
+      if (remotePost.bskyUri) {
+        await getAtProtoThread(remotePost.bskyUri, undefined, true)
       }
     } catch (error) {
       logger.debug({ message: 'error getting external responses', post: req.query.id, error: error })
