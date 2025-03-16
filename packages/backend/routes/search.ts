@@ -19,6 +19,8 @@ import { getUnjointedPosts } from '../utils/baseQueryNew.js'
 import getFollowedsIds from '../utils/cacheGetters/getFollowedsIds.js'
 import { getUserEmojis } from '../utils/cacheGetters/getUserEmojis.js'
 import { getAtprotoUser } from '../atproto/utils/getAtprotoUser.js'
+import { getAtProtoThread } from '../atproto/utils/getAtProtoThread.js'
+import { logger } from '../utils/logger.js'
 export default function searchRoutes(app: Application) {
   app.get('/api/v2/search/', authenticateToken, async (req: AuthorizedRequest, res: Response) => {
     // const success = false;
@@ -121,18 +123,41 @@ export default function searchRoutes(app: Application) {
         }
         const urlPattern = /(?:https?):\/\/(\w+:?\w*)?(\S+)(:\d+)?(\/|\/([\w#!:.?+=&%!\-\/]))?/
         if (searchTerm.match(urlPattern)) {
-          const existingPost = await Post.findOne({
-            where: {
-              literal: sequelize.where(sequelize.fn('lower', sequelize.col('remotePostId')), searchTerm.toLowerCase())
+          if (usr && usr.enableBsky && searchTerm.startsWith('https://bsky.app/profile/')) {
+            try {
+              // bluesky post
+              const profileAndPost = searchTerm.split('https://bsky.app/profile/')[1].split('/post/')
+              let bskyProfile = profileAndPost[0]
+              let bskyUri = profileAndPost[1]
+              if (!bskyProfile.startsWith('did:')) {
+                let profileToGet = await getAtprotoUser(`${bskyProfile}`, usr)
+                bskyProfile = profileToGet.bskyDid
+              }
+              const uri = `at://${bskyProfile}/app.bsky.feed.post/${bskyUri}`
+
+              let bskyPostId = await getAtProtoThread(uri, undefined, true)
+              remotePost = Post.findByPk(bskyPostId)
+            } catch (error) {
+              logger.debug({
+                message: `Error getting bluesky post ${searchTerm}`,
+                error: error
+              })
             }
-          })
-          if (existingPost) {
-            // We have the post. We ask for an update of it!
-            remotePost = getPostThreadRecursive(usr, searchTerm, undefined, existingPost.id)
-            promises.push(remotePost)
           } else {
-            remotePost = getPostThreadRecursive(usr, searchTerm)
-            promises.push(remotePost)
+            // fedi post
+            const existingPost = await Post.findOne({
+              where: {
+                literal: sequelize.where(sequelize.fn('lower', sequelize.col('remotePostId')), searchTerm.toLowerCase())
+              }
+            })
+            if (existingPost) {
+              // We have the post. We ask for an update of it!
+              remotePost = getPostThreadRecursive(usr, searchTerm, undefined, existingPost.id)
+              promises.push(remotePost)
+            } else {
+              remotePost = getPostThreadRecursive(usr, searchTerm)
+              promises.push(remotePost)
+            }
           }
         }
       }
