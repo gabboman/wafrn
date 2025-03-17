@@ -132,7 +132,8 @@ export class BottomReplyBarComponent implements OnChanges {
       postToLike.userLikesPostRelations.push(this.myId)
       this.messages.add({
         severity: 'success',
-        summary: 'You successfully liked this woot'
+        summary: 'You successfully liked this woot',
+        confettiEmojis: ['❤️', '💚', '💙']
       })
     } else {
       this.messages.add({
