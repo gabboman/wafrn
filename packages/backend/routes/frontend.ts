@@ -9,6 +9,7 @@ import { logger } from '../utils/logger.js'
 import { getCheckFediverseSignatureFucnction } from '../utils/activitypub/checkFediverseSignature.js'
 import { SignedRequest } from '../interfaces/fediverse/signedRequest.js'
 import { handlePostRequest } from '../utils/activitypub/handlePostRequest.js'
+import { getUserOptions } from '../utils/cacheGetters/getUserOptions.js'
 
 const cacheOptions = {
   etag: false,
@@ -47,6 +48,22 @@ function frontend(app: Application) {
     )
   })
 
+  app.get('/blog/:url/ask', async function (req, res) {
+    if (req.params?.url) {
+      try {
+        const blogData = await getBlogSEOCache(req.params.url)
+        if (blogData) {
+          res.send(getIndexSeo(`Ask anything to ${blogData.title}`, blogData.description, blogData.img))
+        } else {
+          res.send(getIndexSeo(defaultSeoData.title, defaultSeoData.description, defaultSeoData.img))
+        }
+      } catch (error) {
+        res.send(getIndexSeo(defaultSeoData.title, defaultSeoData.description, defaultSeoData.img))
+      }
+    } else {
+      res.send(getIndexSeo(defaultSeoData.title, defaultSeoData.description, defaultSeoData.img))
+    }
+  })
   app.get('/blog/:url/:somethingElse', async function (req, res) {
     res.send(getIndexSeo(defaultSeoData.title, defaultSeoData.description, defaultSeoData.img))
   })
@@ -56,7 +73,9 @@ function frontend(app: Application) {
       try {
         const blogData = await getBlogSEOCache(req.params.url)
         if (blogData) {
-          res.send(getIndexSeo(blogData.title, blogData.description, blogData.img))
+          res.send(
+            getIndexSeo(`${blogData.title}'s ${environment.instanceUrl} blog`, blogData.description, blogData.img)
+          )
         } else {
           res.send(getIndexSeo(defaultSeoData.title, defaultSeoData.description, defaultSeoData.img))
         }
@@ -158,17 +177,20 @@ async function getBlogSEOCache(url: string): Promise<{ title: string; descriptio
   if (!resData) {
     const blog = await User.findOne({
       where: {
-        literal: sequelize.where(sequelize.fn('lower', sequelize.col('url')), url.toLowerCase())
+        literal: sequelize.where(sequelize.fn('lower', sequelize.col('url')), url.toLowerCase()),
+        email: {
+          [Op.ne]: null
+        }
       }
     })
     if (blog) {
       const url = sanitizeStringForSEO(blog.url).substring(0, 65)
       const name = sanitizeStringForSEO(blog.name).substring(0, 65)
       const description = sanitizeStringForSEO(blog.description).substring(0, 200)
-      res.title = blog.url.startsWith('@') ? `Blog from external user ${url}` : `@${name}'s wafrn blog`
+      res.title = `@${name}`
       res.description = description
       res.img = blog.url.startsWith('@') ? blog.avatar : `${environment.mediaUrl}${blog.avatar}`
-      await redisCache.set('blogSeoCache:' + url, JSON.stringify(res), 'EX', 300)
+      if (blog) await redisCache.set('blogSeoCache:' + url, JSON.stringify(res), 'EX', 300)
     } else {
       // Given the fact that query can be slow even if the blog does not exist, we should cache the 404
       await redisCache.set('blogSeoCache:' + url, JSON.stringify(res), 'EX', 600)
