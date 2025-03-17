@@ -1,11 +1,16 @@
 <app-loader *ngIf="loading"></app-loader>
 <ng-container *ngIf="!loading">
   <app-post [post]="post" class="initial-post"></app-post>
-  <div
-    *ngIf="!post[post.length - 1].remotePostId.startsWith(localUrl) || post[post.length - 1].bskyUri"
-    class="px-3 mt-3 mb-6 lg:mx-4 wafrn-container flex flex-column gap-2 reply-loader"
-  >
-    <button *ngIf="userLoggedIn" (click)="loadRepliesFromFediverse()" color="primary" mat-stroked-button class="w-full">
+  <div class="px-3 mt-3 mb-6 lg:mx-4 wafrn-container flex flex-column gap-2 reply-loader">
+    <button
+      *ngIf="
+        userLoggedIn && (!post[post.length - 1].remotePostId.startsWith(localUrl) || post[post.length - 1].bskyUri)
+      "
+      (click)="loadRepliesFromFediverse()"
+      color="primary"
+      mat-stroked-button
+      class="w-full"
+    >
       Fetch more external replies
     </button>
     <p *ngIf="post.length != 1" class="m-0"><a [routerLink]="'/fediverse/post/' + post[0].id">View initial post</a></p>
