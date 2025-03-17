@@ -798,11 +798,12 @@ export default function userRoutes(app: Application) {
   app.get('/api/user/myAsks', authenticateToken, async (req: AuthorizedRequest, res: Response) => {
     const userId = req.jwtData?.userId as string
     const asks = await Ask.findAll({
-      attributes: ['userAsker', 'question', 'apObject', 'id'],
+      attributes: ['userAsker', 'question', 'apObject', 'id', 'createdAt', 'postId'],
       where: {
         userAsked: userId,
-        answered: false
-      }
+        answered: req.query.answered === 'true'
+      },
+      order: [['createdAt', 'DESC']]
     })
     const users = await User.findAll({
       attributes: ['url', 'avatar', 'name', 'id', 'description'],
