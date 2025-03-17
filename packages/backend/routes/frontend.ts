@@ -187,7 +187,7 @@ async function getBlogSEOCache(url: string): Promise<{ title: string; descriptio
       const url = sanitizeStringForSEO(blog.url).substring(0, 65)
       const name = sanitizeStringForSEO(blog.name).substring(0, 65)
       const description = sanitizeStringForSEO(blog.description).substring(0, 200)
-      res.title = `@${name}`
+      res.title = name
       res.description = description
       res.img = blog.url.startsWith('@') ? blog.avatar : `${environment.mediaUrl}${blog.avatar}`
       if (blog) await redisCache.set('blogSeoCache:' + url, JSON.stringify(res), 'EX', 300)
