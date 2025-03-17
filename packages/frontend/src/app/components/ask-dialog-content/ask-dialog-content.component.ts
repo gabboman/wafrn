@@ -50,7 +50,7 @@ export class AskDialogContentComponent {
   async onSubmit() {
     const res: any = await this.blogService.askuser(this.data.details.url, this.askForm.value.content as string)
     if (res.success) {
-      this.messages.add({ severity: 'success', summary: 'You asked the user!' })
+      this.messages.add({ severity: 'success', summary: 'You asked the user!', confettiEmojis: ['❓', '⁉️'] })
       this.dialogRef.close()
     } else {
       this.messages.add({ severity: 'error', summary: 'Something went wrong' })

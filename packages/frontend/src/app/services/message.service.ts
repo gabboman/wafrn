@@ -1,5 +1,7 @@
 import { Injectable } from '@angular/core'
 import { MatSnackBar } from '@angular/material/snack-bar'
+import  JSConfetti from 'js-confetti'
+
 
 @Injectable({
   providedIn: 'root'
@@ -10,6 +12,7 @@ export class MessageService {
   add(message: {
     severity: 'error' | 'success' | 'warn' | 'info'
     summary: string
+    confettiEmojis?: string[]
     //detail?: string;
   }) {
     let icon = ''
@@ -26,5 +29,11 @@ export class MessageService {
       horizontalPosition: 'right',
       verticalPosition: 'top'
     })
+    if (message.confettiEmojis) {
+      const confetti = new JSConfetti()
+      confetti.addConfetti({
+        emojis: message.confettiEmojis
+      })
+    }
   }
 }

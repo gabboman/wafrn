@@ -36,6 +36,7 @@
     "blurhash": "^2.0.5",
     "core-js": "^3.37.0",
     "esbuild": "0.25.0",
+    "js-confetti": "^0.12.0",
     "luxon": "^3.5.0",
     "parchment": "^2.0.1",
     "primeflex": "^3.3.1",
