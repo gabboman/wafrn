@@ -420,7 +420,8 @@ export class NewEditorComponent implements OnDestroy {
     if (res) {
       this.messages.add({
         severity: 'success',
-        summary: 'Your woot has been published!'
+        summary: 'Your woot has been published!',
+        confettiEmojis: ['✍️', '✏️']
       })
       this.postCreatorForm.value.content = ''
       this.uploadedMedias = []
