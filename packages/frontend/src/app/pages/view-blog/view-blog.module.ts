@@ -18,6 +18,10 @@ const routes: Routes = [
     component: ViewBlogComponent
   },
   {
+    path: ':url/ask',
+    component: ViewBlogComponent
+  },
+  {
     path: ':url/followers',
     loadComponent: () => import('../../pages/profile/follows/follows.component').then((m) => m.FollowsComponent)
   },

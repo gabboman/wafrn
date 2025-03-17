@@ -4,7 +4,7 @@ import { MatButtonModule } from '@angular/material/button'
 import { MatCardModule } from '@angular/material/card'
 import { MatDialog } from '@angular/material/dialog'
 import { MatMenuModule } from '@angular/material/menu'
-import { RouterModule } from '@angular/router'
+import { ActivatedRoute, RouterModule } from '@angular/router'
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome'
 import {
   faChevronDown,
@@ -24,7 +24,6 @@ import { AskDialogContentComponent } from '../ask-dialog-content/ask-dialog-cont
 import { EnvironmentService } from 'src/app/services/environment.service'
 import { InfoCardComponent } from '../info-card/info-card.component'
 import { faBluesky } from '@fortawesome/free-brands-svg-icons'
-
 
 @Component({
   selector: 'app-blog-header',
@@ -63,7 +62,8 @@ export class BlogHeaderComponent implements OnChanges, OnDestroy {
     public postService: PostsService,
     private messages: MessageService,
     public blockService: BlocksService,
-    public dialogService: MatDialog
+    public dialogService: MatDialog,
+    public activatedRoute: ActivatedRoute
   ) {
     this.userLoggedIn = loginService.checkUserLoggedIn()
   }
@@ -92,6 +92,10 @@ export class BlogHeaderComponent implements OnChanges, OnDestroy {
         this.fediAttachment = JSON.parse(fediAttachment.optionValue)
       }
       this.isMe = this.blogDetails.id == this.loginService.getLoggedUserUUID()
+      let path = this.activatedRoute.snapshot.routeConfig?.path
+      if (path && this.allowAsk && path.toLowerCase().endsWith('/ask')) {
+        this.openAskDialog()
+      }
     }
   }
 
