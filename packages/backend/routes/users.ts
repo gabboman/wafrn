@@ -69,8 +69,8 @@ export default function userRoutes(app: Application) {
     createAccountLimiter,
     uploadHandler().single('avatar'),
     async (req, res) => {
-      let success = false
       try {
+        let success = false
         if (
           req.body?.email &&
           req.body.url &&
@@ -81,8 +81,8 @@ export default function userRoutes(app: Application) {
           const minimumAge = new Date()
           minimumAge.setFullYear(new Date().getFullYear() - 18)
           if (birthDate.getTime() > minimumAge.getTime()) {
-            res.status(400)
-            return res.send({ error: true, message: 'Invalid age' })
+            res.status(400).send({ success: false, error: true, message: 'Invalid age' })
+            return
           }
           const emailExists = await User.findOne({
             where: {
@@ -169,13 +169,15 @@ export default function userRoutes(app: Application) {
             forbidChar: !forbiddenCharacters.some((char) => req.body.url.includes(char)),
             emailValid: validateEmail(req.body.email)
           })
+          res.status(400).send({ success: false })
+          return
+        }
+        if (!success) {
+          res.status(401).send({ success: false })
         }
       } catch (error) {
         logger.error(error)
-      }
-      if (!success) {
-        res.statusCode = 401
-        res.send({ success: false })
+        res.status(500).send({ success: false })
       }
     }
   )
