@@ -46,7 +46,8 @@ export class EditProfileComponent implements OnInit {
     mutedWords: new FormControl(''),
     disableCW: new FormControl(false),
     forceClassicAudioPlayer: new FormControl(false),
-    forceClassicVideoPlayer: new FormControl(false)
+    forceClassicVideoPlayer: new FormControl(false),
+    enableConfetti: new FormControl(false)
   })
 
   constructor(
@@ -87,6 +88,7 @@ export class EditProfileComponent implements OnInit {
       this.editProfileForm.controls['forceClassicVideoPlayer'].patchValue(
         this.mediaService.checkForceClassicVideoPlayer()
       )
+      this.editProfileForm.controls['enableConfetti'].patchValue(localStorage.getItem('enableConfetti') == 'true')
 
       const mutedWords = localStorage.getItem('mutedWords')
       if (mutedWords && mutedWords.trim().length) {

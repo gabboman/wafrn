@@ -31,7 +31,7 @@ export class MessageService {
       horizontalPosition: 'right',
       verticalPosition: 'top'
     })
-    if (message.confettiEmojis) {
+    if (message.confettiEmojis && message.confettiEmojis.length > 0) {
       this.confetti.addConfetti({
         emojis: message.confettiEmojis
       })

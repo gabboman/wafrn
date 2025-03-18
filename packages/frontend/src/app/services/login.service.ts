@@ -136,7 +136,8 @@ export class LoginService {
       mutedWords: 'wafrn.mutedWords',
       disableCW: 'wafrn.disableCW',
       forceClassicVideoPlayer: 'wafrn.forceClassicVideoPlayer',
-      forceClassicAudioPlayer: 'wafrn.forceClassicAudioPlayer'
+      forceClassicAudioPlayer: 'wafrn.forceClassicAudioPlayer',
+      enableConfetti: 'wafrn.enableConfetti'
     }
 
     try {

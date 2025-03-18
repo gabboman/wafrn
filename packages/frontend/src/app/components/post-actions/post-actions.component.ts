@@ -174,10 +174,11 @@ export class PostActionsComponent implements OnChanges {
   async likePost() {
     if (await this.postService.likePost(this.content.id)) {
       this.content.userLikesPostRelations.push(this.myId)
+      const enableConfetti = localStorage.getItem('enableConfetti') == 'true'
       this.messages.add({
         severity: 'success',
         summary: 'You successfully liked this woot',
-        confettiEmojis: ['❤️', '💚', '💙']
+        confettiEmojis: enableConfetti ? ['❤️', '💚', '💙'] : []
       })
     } else {
       this.messages.add({

@@ -130,10 +130,11 @@ export class BottomReplyBarComponent implements OnChanges {
     this.loadingAction = true
     if (await this.postService.likePost(postToLike.id)) {
       postToLike.userLikesPostRelations.push(this.myId)
+      const enableConfetti = localStorage.getItem('enableConfetti') == 'true'
       this.messages.add({
         severity: 'success',
         summary: 'You successfully liked this woot',
-        confettiEmojis: ['❤️', '💚', '💙']
+        confettiEmojis: enableConfetti ? ['❤️', '💚', '💙'] : []
       })
     } else {
       this.messages.add({
