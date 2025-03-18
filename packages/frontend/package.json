@@ -25,7 +25,7 @@
     "@angular/platform-browser-dynamic": "^19.0.0",
     "@angular/router": "^19.0.0",
     "@angular/service-worker": "^19.0.0",
-    "@babel/runtime": "^7.24.5",
+    "@babel/runtime": "^7.26.10",
     "@colsen1991/ngx-translate-extract-marker": "^3.0.1",
     "@fortawesome/angular-fontawesome": "^1.0.0",
     "@fortawesome/fontawesome-svg-core": "^6.7.1",
