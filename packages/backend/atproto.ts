@@ -32,6 +32,9 @@ firehose.on('commit', async (commit) => {
         repo: commit.repo,
         operation: op
       }
+      logger.debug({
+        message: `bsky operation added: ${data.operation.path} by ${data.repo}`
+      })
       await firehoseQueue.add('processFirehoseQueue', data)
     }
 })
