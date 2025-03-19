@@ -12,8 +12,8 @@ async function MoveActivity(body: activityPubObject, remoteUser: any, user: any)
   // then make them follow the new one, sending petition
   const apObject: activityPubObject = body
   logger.warn({ message: 'moving user', object: apObject })
-  const newUser = await getRemoteActor(body.object, user)
-  const oldUser = await User.findByPk(newUser.id) // a bit paranoid, innit?
+  const newUser = await getRemoteActor(apObject.target, user)
+  const oldUser = await User.findByPk(remoteUser.id) // a bit paranoid, innit?
   if (newUser && oldUser) {
     logger.debug({ message: `Moving ${oldUser.url} to ${newUser.url}` })
     const followsToMove = await Follows.findAll({
