@@ -172,10 +172,13 @@ export class BottomReplyBarComponent implements OnChanges {
         media: []
       })
       if (response) {
+        const enableConfetti = localStorage.getItem('enableConfetti') == 'true'
+
         this.myRewootsIncludePost = true
         this.messages.add({
           severity: 'success',
-          summary: 'You reblogged the woot succesfully'
+          summary: 'You rewooted the woot!',
+          confettiEmojis: enableConfetti ? ['🔁'] : []
         })
       } else {
         this.messages.add({

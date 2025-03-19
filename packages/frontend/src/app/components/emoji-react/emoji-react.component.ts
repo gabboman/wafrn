@@ -27,7 +27,7 @@ import { Emoji } from '../../interfaces/emoji'
 export class EmojiReactComponent {
   scrollStrategy
 
-  readonly postId = input<string>('');
+  readonly postId = input<string>('')
   isOpen = false
   loading = false
 
@@ -43,9 +43,11 @@ export class EmojiReactComponent {
     this.loading = true
     const response = await this.postsService.emojiReactPost(this.postId(), emoji.name)
     if (response) {
+      const enableConfetti = localStorage.getItem('enableConfetti') == 'true'
       this.messages.add({
         severity: 'success',
-        summary: `Reacted with ${emoji.name} succesfully`
+        summary: `Reacted with ${emoji.name} succesfully`,
+        confettiEmojis: enableConfetti && !emoji.url ? [emoji.name] : []
       })
       this.isOpen = false
       this.loading = false
