@@ -15,7 +15,7 @@ function checkCommitMentions(
   // first we check if there are any mentions to local users. if so we return true
   for (const operation of commit.ops) {
     // TODO nuke this
-    if (operation.path.startsWith('app.bsky.feed.like')) {
+    if (operation.path.startsWith('app.bsky.feed.like') || operation.path.startsWith('app.bsky.graph.follow')) {
       return false
     }
     // we check lik
