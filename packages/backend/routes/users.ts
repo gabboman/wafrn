@@ -822,6 +822,10 @@ export default function userRoutes(app: Application) {
   })
 
   app.post('/api/user/:url/ask', optionalAuthentication, async (req: AuthorizedRequest, res: Response) => {
+    // a bit dirty innit
+    if (req.body.anonymous) {
+      req.jwtData = undefined
+    }
     const lastHourAsks = await Ask.count({
       where: {
         creationIp: getIp(req),

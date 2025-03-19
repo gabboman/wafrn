@@ -4,9 +4,11 @@
     <textarea formControlName="content" type="textarea" matNativeControl rows="4"></textarea>
   </mat-form-field>
 
-  @if (loggedIn) {
-    <app-info-card type="info" addClass="mb-3">{{ 'ask-dialog-content.loggedInNotice' | translate }}</app-info-card>
+  @if (loggedIn && allowAnons) {
+    <mat-checkbox formControlName="anonymous">{{ 'ask-dialog-content.askAnonymously' | translate }}</mat-checkbox>
   }
 
-  <button [disabled]="!askForm.valid" mat-flat-button class="w-full my-2" type="submit">{{ 'ask-dialog-content.askButtonText' | translate }}</button>
+  <button [disabled]="!askForm.valid" mat-flat-button class="w-full my-2" type="submit">
+    {{ 'ask-dialog-content.askButtonText' | translate }}
+  </button>
 </form>

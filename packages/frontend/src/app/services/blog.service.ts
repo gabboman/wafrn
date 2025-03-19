@@ -36,11 +36,9 @@ export class BlogService {
     return true
   }
 
-  async askuser(userUrl: string, ask: string) {
+  async askuser(userUrl: string, value: object) {
     const res = await firstValueFrom(
-      this.http.post(EnvironmentService.environment.baseUrl + `/user/${userUrl}/ask`, {
-        question: ask
-      })
+      this.http.post(EnvironmentService.environment.baseUrl + `/user/${userUrl}/ask`, value)
     )
     return res
   }

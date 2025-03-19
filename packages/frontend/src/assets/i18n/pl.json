@@ -77,7 +77,7 @@
         "contentWarningTooltip": "Ostrzeżenie o treściach wrażliwych"
     },
     "ask-dialog-content": {
-    		"loggedInNotice": "Jesteś aktualnie zalogowane, twoje pytanie nie będzie anonimowe",
+    		"askAnonymously": "RETRANSLATE THIS: Make question anonymous",
     		"askFormLabel": "Pytanie",
     		"askButtonText": "Zapytaj"
     }

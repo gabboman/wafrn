@@ -77,7 +77,7 @@
         "contentWarningTooltip": "Content Warning"
     },
     "ask-dialog-content": {
-    		"loggedInNotice": "You are logged in, this question is not anonymous",
+    		"askAnonymously": "Make question anonymous",
     		"askFormLabel": "Question",
     		"askButtonText": "Ask"
     }
