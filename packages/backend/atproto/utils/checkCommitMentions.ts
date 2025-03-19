@@ -39,7 +39,7 @@ function checkCommitMentions(
         .flatMap((elem) => elem.features)
         .map((elem) => elem.did)
         .filter((elem) => elem)
-      if (mentions && mentions.length && mentions.some((mention: string) => didsToCheck.has(mention))) {
+      if (mentions && mentions.length && mentions.some((mention: string) => cacheData.localUserDids.has(mention))) {
         res = true
         return res
       }
@@ -58,7 +58,9 @@ function checkCommitMentions(
   let postsFounds = 0
 
   if (urisToCheck.length > 0) {
-    postsFounds = urisToCheck.some((elem) => didsToCheck.has(elem)) ? 1 : postsFounds
+    // TODO oh no lets lower the thing a bit
+    // postsFounds = urisToCheck.some((elem) => didsToCheck.has(elem)) ? 1 : postsFounds
+    postsFounds = urisToCheck.some((elem) => cacheData.localUserDids.has(elem)) ? 1 : postsFounds
   }
 
   if (postsFounds > 0) {
