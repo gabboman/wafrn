@@ -14,13 +14,17 @@ function checkCommitMentions(
   let res = false
   // first we check if there are any mentions to local users. if so we return true
   for (const operation of commit.ops) {
+    // TODO nuke this
+    if (operation.path.startsWith('app.bsky.feed.like')) {
+      return false
+    }
     // we check lik
     if (
       operation.action === 'create' &&
       (operation.path.startsWith('app.bsky.feed.like') || operation.path.startsWith('app.bsky.graph.follow'))
     ) {
       // we do not ned 18k likes on a mark hamill post. We better do just a "people you follow liked..."
-      let likedPostUri = '' //operation.record?.subject?.uri ? operation.record.subject.uri : ''
+      let likedPostUri = operation.record?.subject?.uri ? operation.record.subject.uri : ''
       if (likedPostUri) {
         likedPostUri = likedPostUri.split('/')[2]
       }
