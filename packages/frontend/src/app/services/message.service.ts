@@ -6,7 +6,10 @@ import JSConfetti from 'js-confetti'
   providedIn: 'root'
 })
 export class MessageService {
-  constructor(private snackBar: MatSnackBar) {}
+  confetti: JSConfetti
+  constructor(private snackBar: MatSnackBar) {
+    this.confetti = new JSConfetti()
+  }
 
   add(message: {
     severity: 'error' | 'success' | 'warn' | 'info'
@@ -28,14 +31,10 @@ export class MessageService {
       horizontalPosition: 'right',
       verticalPosition: 'top'
     })
-    if (message.confettiEmojis && message.confettiEmojis.length > 0) {
-      const confetti = new JSConfetti()
-      confetti.addConfetti({
+    if (message.confettiEmojis && message.confettiEmojis.length >) {
+      this.confetti.addConfetti({
         emojis: message.confettiEmojis
       })
-      setTimeout(() => {
-        confetti.destroyCanvas()
-      }, 5000)
     }
   }
 }
