@@ -325,6 +325,8 @@ export default function userRoutes(app: Application) {
           user.save()
 
           const link = `${environment.instanceUrl}/resetPassword/${encodeURIComponent(email)}/${resetCode}`
+          const appLink = `wafrn://complete-password-reset/${encodeURIComponent(email)}/${resetCode}`
+
           await sendActivationEmail(
             req.body.email.toLowerCase(),
             '',
@@ -336,6 +338,10 @@ export default function userRoutes(app: Application) {
             </p>
             <p>
               Or copy this link: ${link}
+            </p>
+            <p>
+              Or use this link for the wafrn mobile app
+              <a href="${appLink}">${appLink}</a>
             </p>
             <p>
               If you didn't request this, please ignore this email.
