@@ -325,7 +325,7 @@ export default function userRoutes(app: Application) {
           user.save()
 
           const link = `${environment.instanceUrl}/resetPassword/${encodeURIComponent(email)}/${resetCode}`
-          const appLink = `wafrn://complete-password-reset/${encodeURIComponent(email)}/${resetCode}`
+          const appLink = `wafrn://complete-password-reset?email=${encodeURIComponent(email)}&code=${resetCode}`
 
           await sendActivationEmail(
             req.body.email.toLowerCase(),
