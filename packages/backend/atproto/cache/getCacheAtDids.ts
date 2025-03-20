@@ -36,8 +36,11 @@ async function getCacheAtDids(
         id: {
           [Op.in]: follows.map((elem) => elem.followedId)
         },
-        url: {
-          [Op.startsWith]: '@'
+        email: {
+          [Op.eq]: null
+        },
+        bskyDid: {
+          [Op.ne]: null
         }
       }
     })
@@ -52,9 +55,14 @@ async function getCacheAtDids(
         }
       }
     })
-    const followedUsersLocalIds = new Set<string>(dids.map((elem) => elem.id))
-    const localUserDids = new Set<string>(localUsersWithDid.map((elem) => elem.bskyDid))
-    const followedDids = new Set<string>(dids.map((elem) => elem.bskyDid).concat(localUserDids))
+    const followedUsersLocalIds = new Set<string>(dids.map((elem) => elem.id).filter((elem) => elem != ''))
+    const localUserDids = new Set<string>(localUsersWithDid.map((elem) => elem.bskyDid).filter((elem) => elem != ''))
+    const followedDids = new Set<string>(
+      dids
+        .map((elem) => elem.bskyDid)
+        .concat(localUserDids)
+        .filter((elem) => elem != '')
+    )
 
     cacheResult = {
       followedDids: followedDids,

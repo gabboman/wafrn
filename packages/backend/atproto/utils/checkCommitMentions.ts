@@ -16,7 +16,7 @@ function checkCommitMentions(
   for (const operation of commit.ops) {
     // TODO nuke this
     if (operation.path.startsWith('app.bsky.feed.like') || operation.path.startsWith('app.bsky.graph.follow')) {
-      return false
+      //return false
     }
     // we check lik
     if (
@@ -64,7 +64,9 @@ function checkCommitMentions(
   if (urisToCheck.length > 0) {
     // TODO oh no lets lower the thing a bit
     // postsFounds = urisToCheck.some((elem) => didsToCheck.has(elem)) ? 1 : postsFounds
-    postsFounds = urisToCheck.some((elem) => cacheData.localUserDids.has(elem)) ? 1 : postsFounds
+    postsFounds = urisToCheck.some((elem) => cacheData.followedDids.has(elem) || cacheData.localUserDids.has(elem))
+      ? 1
+      : postsFounds
   }
 
   if (postsFounds > 0) {
