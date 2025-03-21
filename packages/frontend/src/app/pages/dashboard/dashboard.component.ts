@@ -133,22 +133,24 @@ export class DashboardComponent implements OnInit, OnDestroy {
     const tmpPosts = await this.dashboardService.getDashboardPage(scrollDate, this.level)
     this.noMorePosts = tmpPosts.length === 0
     // we do the filtering here to avoid repeating posts. Also by doing it here we avoid flickering
-    const filteredPosts = tmpPosts.filter((post: ProcessedPost[]) => {
-      // we set the scroll date to the oldest post we got here
-      const postDate = new Date(post[post.length - 1].createdAt).getTime()
-      this.timestamp = postDate < this.timestamp ? postDate : this.timestamp
-      let allFragmentsSeen = true
-      post.forEach((component) => {
-        const thisFragmentSeen =
-          this.viewedPostsIds.includes(component.id) ||
-          (component.content === '' && component.tags.length === 0 && component.medias?.length === 0)
-        allFragmentsSeen = thisFragmentSeen && allFragmentsSeen
-        if (!thisFragmentSeen) {
-          this.viewedPostsIds.push(component.id)
-        }
+    const filteredPosts = tmpPosts
+      .filter((post: ProcessedPost[]) => {
+        // we set the scroll date to the oldest post we got here
+        const postDate = new Date(post[post.length - 1].createdAt).getTime()
+        this.timestamp = postDate < this.timestamp ? postDate : this.timestamp
+        let allFragmentsSeen = true
+        post.forEach((component) => {
+          const thisFragmentSeen =
+            this.viewedPostsIds.includes(component.id) ||
+            (component.content === '' && component.tags.length === 0 && component.medias?.length === 0)
+          allFragmentsSeen = thisFragmentSeen && allFragmentsSeen
+          if (!thisFragmentSeen) {
+            this.viewedPostsIds.push(component.id)
+          }
+        })
+        return !allFragmentsSeen
       })
-      return !allFragmentsSeen
-    })
+      .map((elem) => elem.sort((a, b) => a.hierarchyLevel - b.hierarchyLevel))
 
     // internal posts, and stuff could be added here.
     // also some ads for RAID SHADOW LEGENDS. This is a joke.
@@ -156,6 +158,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
     if (!this.jwtService.tokenValid()) {
       this.posts.push([
         {
+          hierarchyLevel: 0,
           isRewoot: false,
           quotes: [],
           emojiReactions: [],

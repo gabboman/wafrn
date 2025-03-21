@@ -314,11 +314,17 @@ export class PostsService {
     const content = elem ? elem.content : ''
     const parsedAsHTML = this.parser.parseFromString(content, 'text/html')
     const links = parsedAsHTML.getElementsByTagName('a')
-    Array.from(links).forEach((link) => {
+    const quotes = elem
+      ? unlinked.quotes
+          .filter((quote) => quote.quoterPostId === elem.id)
+          .map((quote) => this.processedQuotes.find((pst) => pst.id === quote.quotedPostId) as ProcessedPost)
+      : []
+    Array.from(links).forEach((link, index) => {
       const youtubeMatch = Array.from(link.href.matchAll(this.youtubeRegex))
-      if (link.innerText === link.href && youtubeMatch.length == 0) {
+      const quoteLinks = quotes.map((elem) => elem.remotePostId)
+      if (link.innerText === link.href && youtubeMatch.length == 0 && !quoteLinks.includes(link.href)) {
         medias.push({
-          mediaOrder: 9999999999999999,
+          mediaOrder: 9999 + index,
           id: '',
           NSFW: false,
           description: '',
@@ -351,11 +357,7 @@ export class PostsService {
       medias: medias.sort((a, b) => a.mediaOrder - b.mediaOrder),
       questionPoll: polls.length > 0 ? { ...polls[0], endDate: new Date(polls[0].endDate) } : undefined,
       mentionPost: mentionedUsers as SimplifiedUser[],
-      quotes: elem
-        ? unlinked.quotes
-            .filter((quote) => quote.quoterPostId === elem.id)
-            .map((quote) => this.processedQuotes.find((pst) => pst.id === quote.quotedPostId) as ProcessedPost)
-        : []
+      quotes: quotes
     }
     if (unlinked.asks) {
       const ask = unlinked.asks.find((ask) => ask.postId === newPost.id)

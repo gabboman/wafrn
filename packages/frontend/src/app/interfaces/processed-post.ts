@@ -35,4 +35,5 @@ export interface ProcessedPost {
   markdownContent: string
   bskyUri?: string
   isRewoot: boolean
+  hierarchyLevel: number
 }
