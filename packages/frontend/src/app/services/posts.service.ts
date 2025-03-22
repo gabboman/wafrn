@@ -321,7 +321,9 @@ export class PostsService {
       : []
     Array.from(links).forEach((link, index) => {
       const youtubeMatch = Array.from(link.href.matchAll(this.youtubeRegex))
-      const quoteLinks = quotes.map((elem) => elem.remotePostId)
+      const quoteLinks = quotes
+        .filter((elem) => elem != undefined && elem.remotePostId != undefined)
+        .map((elem) => elem.remotePostId)
       if (link.innerText === link.href && youtubeMatch.length == 0 && !quoteLinks.includes(link.href)) {
         medias.push({
           mediaOrder: 9999 + index,
