@@ -15,6 +15,8 @@
 
 .mat-drawer-content {
   min-height: 100vh;
+}
+.mat-drawer-content-checked-pattern-bg {
   background-color: var(--mat-sys-background) !important;
   opacity: 1 !important;
   background-image: repeating-linear-gradient(45deg, var( --mat-sys-surface-bright) 25%, transparent 25%, transparent 75%, var( --mat-sys-surface-bright) 75%, var( --mat-sys-surface-bright)),
