@@ -1,10 +1,9 @@
 import { Application, Request, Response } from 'express'
-import { User, Follows, Post, Media, UserLikesPostRelations, Emoji, UserEmojiRelation } from '../../db.js'
+import { User, Follows, Post, Media, UserLikesPostRelations, Emoji, UserEmojiRelation, sequelize } from '../../db.js'
 import { getCheckFediverseSignatureFucnction } from '../../utils/activitypub/checkFediverseSignature.js'
 import { environment } from '../../environment.js'
 import { return404 } from '../../utils/return404.js'
 import { Queue } from 'bullmq'
-import { getLocalUserId } from '../../utils/cacheGetters/getLocalUserId.js'
 import { SignedRequest } from '../../interfaces/fediverse/signedRequest.js'
 import { emojiToAPTag } from '../../utils/activitypub/emojiToAPTag.js'
 import { getPostReplies } from '../../utils/activitypub/getPostReplies.js'
@@ -18,8 +17,11 @@ import { getPostSEOCache, getIndexSeo } from '../frontend.js'
 
 // we get the user from the memory cache. if does not exist we try to find it
 async function getLocalUserByUrl(url: string): Promise<any> {
-  const userId = await getLocalUserId(url)
-  return await User.findByPk(userId)
+  return await User.findOne({
+    where: {
+      literal: sequelize.where(sequelize.fn('lower', sequelize.col('url')), url.toLowerCase())
+    }
+  })
 }
 
 async function getLocalUserByUrlCache(url: string): Promise<any> {
@@ -121,7 +123,7 @@ function activityPubRoutes(app: Application) {
                 publicKeyPem: user.publicKey
               }
             }
-            redisCache.set('fediverse:user:base:' + user.id, JSON.stringify(userForFediverse), 'EX', 60)
+            redisCache.set('fediverse:user:base:' + user.id, JSON.stringify(userForFediverse), 'EX', 300)
           }
           res
             .set({
@@ -207,7 +209,7 @@ function activityPubRoutes(app: Application) {
     async (req: SignedRequest, res: Response) => {
       if (req.params?.url) {
         const url = req.params.url.toLowerCase()
-        const user = await getLocalUserByUrl(url)
+        const user = await getLocalUserByUrlCache(url)
         if (user && user.banned) {
           res.sendStatus(410)
           return
@@ -272,7 +274,7 @@ function activityPubRoutes(app: Application) {
     async (req: SignedRequest, res: Response) => {
       if (req.params?.url) {
         const url = req.params.url.toLowerCase()
-        const user = await getLocalUserByUrl(url)
+        const user = await getLocalUserByUrlCache(url)
         if (user && user.banned) {
           res.sendStatus(410)
           return
@@ -309,7 +311,7 @@ function activityPubRoutes(app: Application) {
     async (req: SignedRequest, res: Response) => {
       const urlToSearch = req.params?.url ? req.params.url : environment.adminUser
       const url = urlToSearch.toLowerCase()
-      const user = await getLocalUserByUrl(url)
+      const user = await getLocalUserByUrlCache(url)
       if (user && user.url !== environment.adminUser && !(await checkuserAllowsThreads(req, user))) {
         res.sendStatus(403)
         return
