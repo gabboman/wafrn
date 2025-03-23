@@ -77,7 +77,7 @@
         "contentWarningTooltip": "Ostrzeżenie o treściach wrażliwych"
     },
     "ask-dialog-content": {
-    		"askAnonymously": "RETRANSLATE THIS: Make question anonymous",
+    		"askAnonymously": "Anonimowe pytanie",
     		"askFormLabel": "Pytanie",
     		"askButtonText": "Zapytaj"
     }
