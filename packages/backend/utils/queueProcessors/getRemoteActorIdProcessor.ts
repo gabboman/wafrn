@@ -21,6 +21,7 @@ import { fediverseTag } from '../../interfaces/fediverse/tags.js'
 import { logger } from '../logger.js'
 import { redisCache } from '../redis.js'
 import { Op } from 'sequelize'
+import { getDeletedUser } from '../cacheGetters/getDeletedUser.js'
 
 // This function will return userid after processing it.
 async function getRemoteActorIdProcessor(job: Job) {
@@ -287,10 +288,6 @@ async function getRemoteActorIdProcessor(job: Job) {
     }
   }
   return res
-}
-
-async function getDeletedUser() {
-  return await getUserIdFromRemoteId(`https://${environment.instanceUrl}/fediverse/blog/${environment.deletedUser}`)
 }
 
 export { getRemoteActorIdProcessor }

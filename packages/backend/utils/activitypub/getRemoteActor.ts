@@ -4,6 +4,7 @@ import { environment } from '../../environment.js'
 
 import { logger } from '../logger.js'
 import { getUserIdFromRemoteId } from '../cacheGetters/getUserIdFromRemoteId.js'
+import { getDeletedUser } from '../cacheGetters/getDeletedUser.js'
 
 const queue = new Queue('getRemoteActorId', {
   connection: environment.bullmqConnection,
@@ -21,11 +22,6 @@ const queueEvents = new QueueEvents('getRemoteActorId', {
   connection: environment.bullmqConnection
 })
 async function getRemoteActor(actorUrl: string, user: any, forceUpdate = false): Promise<any> {
-  const deletedUser = User.findOne({
-    where: {
-      url: environment.deletedUser
-    }
-  })
   let remoteUser
   try {
     // we check its a string. A little bit dirty but could be worse
@@ -33,10 +29,7 @@ async function getRemoteActor(actorUrl: string, user: any, forceUpdate = false):
       const urlToSearch = actorUrl.split(environment.frontendUrl + '/fediverse/blog/')[1].toLowerCase()
       return User.findOne({
         where: {
-          literal: sequelize.where(
-            sequelize.fn('lower', sequelize.col('url')),
-            urlToSearch.toLowerCase()
-          )
+          literal: sequelize.where(sequelize.fn('lower', sequelize.col('url')), urlToSearch.toLowerCase())
         }
       })
     }
@@ -59,7 +52,7 @@ async function getRemoteActor(actorUrl: string, user: any, forceUpdate = false):
       (remoteUser && remoteUser.banned) ||
       (remoteUser && (await remoteUser.getFederatedHost()).blocked)
     ) {
-      remoteUser = await deletedUser
+      remoteUser = await getDeletedUser()
     }
   } catch (error) {
     logger.trace({
@@ -81,7 +74,7 @@ async function getRemoteActor(actorUrl: string, user: any, forceUpdate = false):
       )
     }
   }
-  return remoteUser ? remoteUser : deletedUser
+  return remoteUser ? remoteUser : await getDeletedUser()
 }
 
 export { getRemoteActor }

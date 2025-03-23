@@ -5,11 +5,6 @@ import { FederatedHost, User, sequelize } from '../db.js'
 
 async function blockHosts() {
   const ignoreHostsList = environment.ignoreBlockHosts
-  const deletedUser = await User.findOne({
-    where: {
-      url: environment.deletedUser
-    }
-  })
   const remoteData = await axios.get(environment.blocklistUrl)
   console.log('remote data obtained')
   const hostLines: string[] = remoteData.data.split('\n')
