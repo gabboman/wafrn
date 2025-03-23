@@ -15,6 +15,12 @@
 
 .mat-drawer-content {
   min-height: 100vh;
+  background-color: var(--mat-sys-background) !important;
+  opacity: 1 !important;
+  background-image: repeating-linear-gradient(45deg, var( --mat-sys-surface-bright) 25%, transparent 25%, transparent 75%, var( --mat-sys-surface-bright) 75%, var( --mat-sys-surface-bright)),
+    repeating-linear-gradient(45deg, var( --mat-sys-surface-bright) 25%, var(--mat-sys-background) 25%, var(--mat-sys-background) 75%, var( --mat-sys-surface-bright) 75%, var( --mat-sys-surface-bright)) !important;
+  background-position: 0 0, 80px 80px !important;
+  background-size: 160px 160px !important;
 }
 
 :root .mdc-list {
