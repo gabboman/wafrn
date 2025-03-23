@@ -3,7 +3,7 @@ import { adminToken, authenticateToken } from '../utils/authenticateToken.js'
 import AuthorizedRequest from '../interfaces/authorizedRequest.js'
 import uploadHandler from '../utils/uploads.js'
 import multer from 'multer'
-import * as fs from 'fs-extra'
+import fs from 'fs'
 import { Extract } from 'unzip-stream'
 import { Emoji, EmojiCollection } from '../db.js'
 import { logger } from '../utils/logger.js'
@@ -65,9 +65,18 @@ export default function emojiRoutes(app: Application) {
               const emojisCreated = await Emoji.bulkCreate(emojisToCreate, {
                 ignoreDuplicates: true
               })
+              await redisCache.del('avaiableEmojis')
               res.send({
                 success: true,
                 message: 'Pack created succesfuly'
+              })
+            })
+            .on('error', async (error) => {
+              await redisCache.del('avaiableEmojis')
+              res.status(500)
+              logger.info({
+                message: 'Error uploading emojis',
+                error: error
               })
             })
             .pipe(Extract({ path: './uploads/emojipacks/' + packName }))
