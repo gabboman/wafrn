@@ -268,7 +268,8 @@ async function getPostThreadRecursive(
           notificationType: 'QUOTE',
           notifiedUserId: quote.userId,
           userId: newPost.userId,
-          postId: newPost.id
+          postId: newPost.id,
+          createdAt: new Date(newPost.createdAt)
         })),
         {
           postContent: newPost.content,
@@ -362,7 +363,8 @@ async function processMentions(post: any, userIds: string[]) {
       notificationType: 'MENTION',
       notifiedUserId: mentionedUserId,
       userId: post.userId,
-      postId: post.id
+      postId: post.id,
+      createdAt: new Date(post.createdAt)
     })),
     {
       postContent: post.content,

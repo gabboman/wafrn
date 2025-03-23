@@ -238,7 +238,8 @@ async function processSinglePost(
           notificationType: 'MENTION',
           postId: postToProcess.id,
           notifiedUserId: mnt,
-          userId: postToProcess.userId
+          userId: postToProcess.userId,
+          createdAt: new Date(postToProcess.createdAt)
         })),
         {
           ignoreDuplicates: true,

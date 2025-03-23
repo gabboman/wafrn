@@ -29,6 +29,8 @@ export type NotificationBody = {
   notificationType: 'FOLLOW' | 'LIKE' | 'REWOOT' | 'MENTION' | 'QUOTE' | 'EMOJIREACT'
   postId?: string
   emojiReactionId?: string
+  createdAt?: Date
+  updatedAt?: Date
 }
 
 export type NotificationContext = {
