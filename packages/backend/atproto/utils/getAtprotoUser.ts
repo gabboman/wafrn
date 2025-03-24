@@ -127,6 +127,7 @@ async function getAtprotoUser(handle: string, localUser: Model<any, any>, petiti
       if (oldUser) {
         logger.debug({ message: `Duplicate bsky url event`, new: newData, old: oldUser.dataValues })
         oldUser.url = `@handle.invalid${oldUser.bskyDid}${oldUser.url}`
+        await oldUser.save()
       }
       await userFound.set(newData)
       await userFound.save()
