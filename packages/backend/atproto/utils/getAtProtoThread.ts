@@ -118,7 +118,7 @@ async function processSinglePost(
   forceUpdate?: boolean
 ): Promise<string | undefined> {
   if (!post) {
-    throw new Error('Post is undefined and should not be undefined')
+    return undefined
   }
   if (!forceUpdate) {
     const existingPost = await Post.findOne({
