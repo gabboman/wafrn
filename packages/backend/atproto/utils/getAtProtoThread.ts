@@ -196,18 +196,17 @@ async function processSinglePost(
     if (!parentId) {
       delete newData.parentId
     }
-    let postToProcess = await Post.findOne({
-      where: { userId: postCreator.id, bskyCid: post.cid, bskyUri: post.uri }
-    })
-    if (!postToProcess) {
-      postToProcess = await Post.create(newData)
-      if (medias) {
-        await Media.bulkCreate(
-          medias.map((media: any) => {
-            return { ...media, postId: postToProcess.id }
-          })
-        )
-      }
+    let [postToProcess, created] = await Post.findOrCreate({ where: { bskyUri: post.uri }, defaults: newData })
+    if (!created) {
+      postToProcess.set(newData)
+      await postToProcess.save()
+    }
+    if (medias) {
+      await Media.bulkCreate(
+        medias.map((media: any) => {
+          return { ...media, postId: postToProcess.id }
+        })
+      )
     }
     if (parentId) {
       const ancestors = await postToProcess.getAncestors({
