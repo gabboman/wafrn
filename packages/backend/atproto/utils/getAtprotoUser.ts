@@ -137,7 +137,7 @@ async function internalGetDBUser(did: string, url: string) {
           bskyDid: did
         },
         {
-          url: url
+          literal: sequelize.where(sequelize.fn('lower', sequelize.col('url')), url.toLowerCase())
         }
       ]
     }
