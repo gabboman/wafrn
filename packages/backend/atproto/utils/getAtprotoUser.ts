@@ -5,6 +5,7 @@ import { Model, Op } from 'sequelize'
 import { environment } from '../../environment.js'
 import _ from 'underscore'
 import { wait } from '../../utils/wait.js'
+import { logger } from '../../utils/logger.js'
 
 async function forcePopulateUsers(dids: string[], localUser: Model<any, any>) {
   const userFounds = await User.findAll({
@@ -114,6 +115,19 @@ async function getAtprotoUser(handle: string, localUser: Model<any, any>, petiti
     }
     userFound = userFound ? userFound : await internalGetDBUser(newData.bskyDid, newData.url)
     if (userFound && !userFound.email) {
+      // we check just in case that user with url does not exist:
+      const oldUser = await User.findOne({
+        where: {
+          url: newData.url,
+          bskyDid: {
+            [Op.ne]: newData.bskyDid
+          }
+        }
+      })
+      if (oldUser) {
+        logger.debug({ message: `Duplicate bsky url event`, new: newData, old: oldUser.dataValues })
+        oldUser.url = `@handle.invalid${oldUser.bskyDid}${oldUser.url}`
+      }
       await userFound.set(newData)
       await userFound.save()
     } else {
