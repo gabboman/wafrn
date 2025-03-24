@@ -11,7 +11,6 @@ async function MoveActivity(body: activityPubObject, remoteUser: any, user: any)
   // TODO get list of users who where following old account
   // then make them follow the new one, sending petition
   const apObject: activityPubObject = body
-  logger.warn({ message: 'moving user', object: apObject })
   const newUser = await getRemoteActor(apObject.target, user)
   const oldUser = await User.findByPk(remoteUser.id) // a bit paranoid, innit?
   if (newUser && oldUser) {
@@ -27,7 +26,6 @@ async function MoveActivity(body: activityPubObject, remoteUser: any, user: any)
       }
     })
     if (followsToMove) {
-      logger.debug({ message: `Moving ${oldUser.url} to ${newUser.url}: ${followsToMove.length} follows to move` })
       for await (const followToMove of followsToMove) {
         await follow(followToMove.followerId, newUser.id)
       }
