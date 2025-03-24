@@ -228,7 +228,7 @@ async function getRemoteActorIdProcessor(job: Job) {
               await redisCache.del('userRemoteId:' + existingUser.remoteId)
             }
             if (userRes) {
-              userRes.update(userData)
+              userRes.set(userData)
               await userRes.save()
             } else {
               redisCache.del('userRemoteId:' + actorUrl.toLocaleLowerCase())
@@ -236,7 +236,7 @@ async function getRemoteActorIdProcessor(job: Job) {
           }
         } else {
           if (existingUsers && existingUsers[0]) {
-            existingUsers[0].update(userData)
+            existingUsers[0].set(userData)
             await existingUsers[0].save()
           } else {
             userRes = await User.create(userData)

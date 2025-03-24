@@ -28,16 +28,16 @@ async function loadPoll(apObj: any, internalPostObject: any, user: any) {
     const poll = existingPoll
       ? existingPoll
       : await QuestionPoll.create({
-        postId: internalPostObject.id,
-        endDate: endDate,
-        multiChoice: multiChoice
-      })
+          postId: internalPostObject.id,
+          endDate: endDate,
+          multiChoice: multiChoice
+        })
     const questions = existingPoll?.questionPollQuestions
       ? existingPoll.questionPollQuestions
       : await poll.getQuestionPollQuestions()
     if (remoteQuestions.length === questions.length) {
       questions.forEach((elem: any, index: number) => {
-        elem.update({
+        elem.set({
           index: index,
           questionText: remoteQuestions[index].name,
           remoteReplies: remoteQuestions[index].replies.totalItems ? remoteQuestions[index].replies.totalItems : 0,

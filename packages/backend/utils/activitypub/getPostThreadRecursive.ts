@@ -217,7 +217,7 @@ async function getPostThreadRecursive(
       const existingPost = localPostToForceUpdate ? await Post.findByPk(localPostToForceUpdate) : undefined
 
       if (existingPost) {
-        existingPost.update(postToCreate)
+        existingPost.set(postToCreate)
         await existingPost.save()
         await loadPoll(postPetition, existingPost, user)
       }
@@ -401,7 +401,7 @@ async function processEmojis(post: any, fediEmojis: any[]) {
   foundEmojis.forEach((emoji: any) => {
     const newData = fediEmojis.find((foundEmoji: any) => foundEmoji.id === emoji.id)
     if (newData && newData.icon?.url) {
-      emoji.update({
+      emoji.set({
         url: newData.icon.url
       })
       emoji.save()

@@ -114,7 +114,7 @@ async function getAtprotoUser(handle: string, localUser: Model<any, any>, petiti
     }
     userFound = userFound ? userFound : await internalGetDBUser(newData.bskyDid, newData.url)
     if (userFound && !userFound.email) {
-      await userFound.update(newData)
+      await userFound.set(newData)
       await userFound.save()
     } else {
       try {
