@@ -11,7 +11,7 @@ import { processFirehose } from '../atproto/workers/processFirehoseWorker.js'
 import { sendPushNotification } from './queueProcessors/sendPushNotification.js'
 import { checkPushNotificationDelivery } from './queueProcessors/checkPushNotificationDelivery.js'
 
-logger.info('starting workers')
+logger.info('started worker')
 const workerInbox = new Worker('inbox', (job: Job) => inboxWorker(job), {
   connection: environment.bullmqConnection,
   metrics: {

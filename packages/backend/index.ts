@@ -122,7 +122,7 @@ pollRoutes(app)
 frontend(app)
 
 app.listen(PORT, environment.listenIp, () => {
-  logger.info('Started app')
+  logger.info('started main')
   const workers = [
     workerInbox,
     workerSendPostChunk,

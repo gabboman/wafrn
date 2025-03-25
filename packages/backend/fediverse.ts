@@ -34,5 +34,5 @@ activityPubRoutes(app)
 wellKnownRoutes(app)
 
 app.listen(PORT, environment.listenIp, () => {
-  logger.info('Started fedi listener')
+  logger.info('started fedi listener')
 })

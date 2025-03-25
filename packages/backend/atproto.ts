@@ -56,3 +56,5 @@ workerForceUpdateAtDidCache.on('failed', (err) => {
     error: err
   })
 })
+
+logger.info('started atproto')
