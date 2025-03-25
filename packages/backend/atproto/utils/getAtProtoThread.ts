@@ -89,17 +89,28 @@ async function getAtProtoThread(
   const procesedPost = await processSinglePost(thread.post, parentId, forceUpdate)
   if (thread.replies && procesedPost) {
     for await (const repliesThread of thread.replies) {
-      processReplies(repliesThread, procesedPost)
+      processReplies(repliesThread as ThreadViewPost, procesedPost)
     }
   }
   return procesedPost as string
 }
 
 async function processReplies(thread: ThreadViewPost, parentId: string) {
-  const post = await processSinglePost(thread.post, parentId)
-  if (thread.replies && post) {
-    for await (const repliesThread of thread.replies) {
-      processReplies(repliesThread, post)
+  if (thread && thread.post) {
+    try {
+      const post = await processSinglePost(thread.post, parentId)
+      if (thread.replies && post) {
+        for await (const repliesThread of thread.replies) {
+          processReplies(repliesThread as ThreadViewPost, post)
+        }
+      }
+    } catch (error) {
+      logger.debug({
+        message: `Error processing bluesky replies`,
+        error: error,
+        thread: thread,
+        parentId
+      })
     }
   }
 }
