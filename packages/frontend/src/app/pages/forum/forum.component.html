@@ -1,7 +1,7 @@
 <app-loader *ngIf="loading"></app-loader>
 <ng-container *ngIf="!loading">
   <app-post [post]="post" class="initial-post"></app-post>
-  <div class="px-3 mt-3 mb-6 lg:mx-4 wafrn-container flex flex-column gap-2 reply-loader">
+  <div class="px-3 mt-3 mb-3 lg:mx-4 wafrn-container flex flex-column gap-2 reply-loader">
     <button
       *ngIf="
         userLoggedIn && (!post[post.length - 1].remotePostId.startsWith(localUrl) || post[post.length - 1].bskyUri)
