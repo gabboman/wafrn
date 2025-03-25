@@ -24,5 +24,5 @@ app.set('trust proxy', 1)
 
 cacheRoutes(app)
 app.listen(PORT, environment.listenIp, () => {
-  logger.info('Started fedi listener')
+  logger.info('Started cacher')
 })
