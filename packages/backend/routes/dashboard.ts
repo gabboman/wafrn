@@ -6,7 +6,7 @@ import { Application, Response } from 'express'
 import { authenticateToken } from '../utils/authenticateToken.js'
 import optionalAuthentication from '../utils/optionalAuthentication.js'
 import AuthorizedRequest from '../interfaces/authorizedRequest.js'
-import { Post, PostMentionsUserRelation, sequelize } from '../db.js'
+import { FederatedHost, Post, PostMentionsUserRelation, sequelize, User } from '../db.js'
 import { Op } from 'sequelize'
 import getStartScrollParam from '../utils/getStartScrollParam.js'
 import { environment } from '../environment.js'
@@ -73,9 +73,8 @@ export default function dashboardRoutes(app: Application) {
         case 0: {
           whereObject = {
             privacy: 0,
-            content: {
-              [Op.ne]: ''
-            }
+            isReblog: false,
+            '$user.federatedHost.friendServer$': true
           }
           break
         }
@@ -125,6 +124,19 @@ export default function dashboardRoutes(app: Application) {
       }
       // we get the list of posts
       const postIds = await Post.findAll({
+        include: [
+          {
+            model: User,
+            as: 'user',
+            required: true,
+            include: [
+              {
+                model: FederatedHost,
+                required: false
+              }
+            ]
+          }
+        ],
         order: [['createdAt', 'DESC']],
         limit: POSTS_PER_PAGE,
         attributes: ['id'],
