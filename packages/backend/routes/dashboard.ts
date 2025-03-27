@@ -142,21 +142,6 @@ export default function dashboardRoutes(app: Application) {
         attributes: ['id'],
         where: {
           createdAt: { [Op.lt]: getStartScrollParam(req) },
-          '$user.banned$': {
-            [Op.ne]: true
-          },
-          [Op.or]: [
-            {
-              '$user.federatedHostId$': {
-                [Op.ne]: null
-              }
-            },
-            {
-              '$user.federatedHost.blocked$': {
-                [Op.ne]: true
-              }
-            }
-          ],
           ...whereObject
         }
       })
