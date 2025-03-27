@@ -1,13 +1,13 @@
 import { Component, inject, Input, OnChanges, SimpleChanges } from '@angular/core'
 import { EnvironmentService } from 'src/app/services/environment.service'
 import { MediaService } from 'src/app/services/media.service'
-import { LoaderComponent } from '../loader/loader.component'
 import { MatCardModule } from '@angular/material/card'
 import { CommonModule } from '@angular/common'
+import { CloseScrollStrategy } from '@angular/cdk/overlay'
 
 @Component({
   selector: 'app-link-preview',
-  imports: [CommonModule, LoaderComponent, MatCardModule],
+  imports: [CommonModule, MatCardModule],
   templateUrl: './link-preview.component.html',
   styleUrl: './link-preview.component.scss'
 })
@@ -18,6 +18,7 @@ export class LinkPreviewComponent implements OnChanges {
 
   loading = true
   url = ''
+  hostname = ''
   title = ''
   description = ''
   img = ''
@@ -27,6 +28,7 @@ export class LinkPreviewComponent implements OnChanges {
       this.loading = true
       const linkToGet = this.link.startsWith(EnvironmentService.environment.externalCacheurl)
       this.url = linkToGet ? (new URL(this.link).searchParams.get('media') as string) : this.link
+      this.hostname = new URL(this.url).hostname
       this.mediaService.getLinkPreview(this.url).then((data) => {
         this.loading = false
         if (data.images && data.images.length) {
@@ -37,11 +39,12 @@ export class LinkPreviewComponent implements OnChanges {
             EnvironmentService.environment.externalCacheurl +
             encodeURIComponent(data.favicons[data.favicons.length - 1])
         }
+        let sitenamePrefix = ''
         if (data.siteName) {
-          this.title = data.siteName
+          sitenamePrefix = data.siteName + ' - '
         }
         if (data.title) {
-          this.title = this.title + ' - ' + data.title
+          this.title = sitenamePrefix + data.title
         }
         if (data.description) {
           this.description = data.description

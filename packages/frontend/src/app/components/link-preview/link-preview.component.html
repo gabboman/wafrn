@@ -1,16 +1,19 @@
-<a target="_blank" [href]="url">
-  @if (loading) {
-    <app-loader [text]="url"></app-loader>
-  } @else {
-    <div class="media-container">
-      <div class="media-content-container">
-        <h4>{{ title | slice: 0 : 64 }}{{ title.length > 63 ? '...' : '' }}</h4>
-        <h6>{{ description | slice: 0 : 128 }}{{ description.length > 127 ? '...' : '' }}</h6>
-        <div style="text-align: center">{{ (url | slice: 0 : 32) + (url.length > 31 ? '...' : '') }}</div>
-        <div *ngIf="img" class="w-full flex">
-          <img [src]="img" style="margin: auto" />
+@if (loading) {
+} @else {
+  <a target="_blank" [href]="url" class="embed-link">
+    <div class="media-container embed-container">
+      @if (img !== '') {
+        <div class="embed-image-container">
+          <img [src]="img" alt="{{ hostname }} embed image" class="embed-image" />
         </div>
+      }
+      <div class="embed-text">
+        <h2 class="embed-title">{{ title | slice: 0 : 64 }}{{ title.length > 63 ? '...' : '' }}</h2>
+        @if (description) {
+          <p class="embed-description">{{ description | slice: 0 : 128 }}{{ description.length > 127 ? '...' : '' }}</p>
+        }
+        <p class="embed-url">{{ (hostname | slice: 0 : 64) + (hostname.length > 63 ? '...' : '') }}</p>
       </div>
     </div>
-  }
-</a>
+  </a>
+}
