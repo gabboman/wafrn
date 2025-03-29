@@ -11,6 +11,7 @@ import { logger } from '../../utils/logger.js'
 import { RichText } from '@atproto/api'
 import showdown from 'showdown'
 import { bulkCreateNotifications, createNotification } from '../../utils/pushNotifications.js'
+import { getAllLocalUserIds } from '../../utils/cacheGetters/getAllLocalUserIds.js'
 
 const markdownConverter = new showdown.Converter({
   simplifiedAutoLink: true,
@@ -208,8 +209,8 @@ async function processSinglePost(
       delete newData.parentId
     }
     let [postToProcess, created] = await Post.findOrCreate({ where: { bskyUri: post.uri }, defaults: newData })
-    if (!created) {
-      postToProcess.set(newData)
+    if (!created && !(await getAllLocalUserIds()).includes(postToProcess.userId)) {
+      postToProcess.postToProcess.set(newData)
       await postToProcess.save()
     }
     if (medias) {
