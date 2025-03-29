@@ -213,6 +213,11 @@ async function processSinglePost(
       await postToProcess.save()
     }
     if (medias) {
+      await Media.destroy({
+        where: {
+          postId: postToProcess.id
+        }
+      })
       await Media.bulkCreate(
         medias.map((media: any) => {
           return { ...media, postId: postToProcess.id }
