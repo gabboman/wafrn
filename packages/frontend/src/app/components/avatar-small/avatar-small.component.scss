@@ -1,6 +1,5 @@
 .avatar {
-    height: 40px;
-    width: 40px;
-    display: inline-flex;
-    border-radius: 8px;
-  }
+  height: var(--avatar-size);
+  width: var(--avatar-size);
+  border-radius: var(--mat-sys-corner-small);
+}
