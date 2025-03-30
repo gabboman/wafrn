@@ -7,3 +7,9 @@
 .mdc-button {
   min-width: unset !important;
 }
+
+// Fix drawer border radius without requiring themes to use !important, though uses 0 2 0 specificity
+:root .mat-drawer {
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+}
