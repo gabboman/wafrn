@@ -324,7 +324,12 @@ export class PostsService {
       const quoteLinks = quotes
         .filter((elem) => elem != undefined && elem.remotePostId != undefined)
         .map((elem) => elem.remotePostId)
-      if (link.innerText === link.href && youtubeMatch.length == 0 && !quoteLinks.includes(link.href)) {
+      if (
+        link.innerText === link.href &&
+        youtubeMatch.length == 0 &&
+        !quoteLinks.includes(link.href) &&
+        !medias.map((elem) => elem.url).includes(link.href)
+      ) {
         medias.push({
           mediaOrder: 9999 + index,
           id: '',
