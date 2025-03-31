@@ -3,7 +3,6 @@ import { EnvironmentService } from 'src/app/services/environment.service'
 import { MediaService } from 'src/app/services/media.service'
 import { MatCardModule } from '@angular/material/card'
 import { CommonModule } from '@angular/common'
-import { CloseScrollStrategy } from '@angular/cdk/overlay'
 
 @Component({
   selector: 'app-link-preview',
