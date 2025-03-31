@@ -210,7 +210,7 @@ async function processSinglePost(
     }
     let [postToProcess, created] = await Post.findOrCreate({ where: { bskyUri: post.uri }, defaults: newData })
     if (!created && !(await getAllLocalUserIds()).includes(postToProcess.userId)) {
-      postToProcess.postToProcess.set(newData)
+      postToProcess.set(newData)
       await postToProcess.save()
     }
     if (medias) {
