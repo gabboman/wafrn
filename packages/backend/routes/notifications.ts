@@ -43,7 +43,10 @@ export default function notificationRoutes(app: Application) {
           await usr.save()
         }
       })
-      const scrollDate = req.query?.date ? new Date(parseInt(req.query.date as string)) : new Date()
+      let scrollDate = req.query?.date ? new Date(parseInt(req.query.date as string)) : new Date()
+      if (isNaN(scrollDate.getTime())) {
+        scrollDate = new Date()
+      }
       const mutedPostIds = (await getMutedPosts(userId)).concat(await getMutedPosts(userId, true))
       const notifications = await Notification.findAll({
         where: {
@@ -268,11 +271,11 @@ export default function notificationRoutes(app: Application) {
 
     try {
       const existingToken = await PushNotificationToken.findByPk(token)
-  
+
       if (existingToken) {
         return res.send({ success: true, message: 'Token already registered.' })
       }
-  
+
       await PushNotificationToken.create({ token, userId })
 
       res.send({ success: true, message: 'New token registered.' })
