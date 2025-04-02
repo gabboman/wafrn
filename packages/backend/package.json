@@ -47,7 +47,7 @@
     "htmlparser2": "^9.0.0",
     "ioredis": "^5.3.2",
     "isomorphic-dompurify": "^2.7.0",
-    "jsonld": "^8.1.1",
+    "jsonld": "^8.3.2",
     "jsonwebtoken": "^9.0.0",
     "link-preview-js": "^3.0.14",
     "mariadb": "^2.5.5",

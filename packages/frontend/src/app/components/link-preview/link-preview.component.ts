@@ -3,7 +3,6 @@ import { EnvironmentService } from 'src/app/services/environment.service'
 import { MediaService } from 'src/app/services/media.service'
 import { MatCardModule } from '@angular/material/card'
 import { CommonModule } from '@angular/common'
-
 @Component({
   selector: 'app-link-preview',
   imports: [CommonModule, MatCardModule],
@@ -21,9 +20,19 @@ export class LinkPreviewComponent implements OnChanges {
   title = ''
   description = ''
   img = ''
+  forceTenorGif = false
+  forceYoutube = false
 
   ngOnChanges(changes: SimpleChanges): void {
+    this.forceTenorGif = false
+    this.forceYoutube = false
     if (this.link) {
+      console.log(this.link)
+      if (this.url.startsWith('https://media.tenor.com/')) {
+        this.loading = false
+        this.forceTenorGif = true
+        return
+      }
       this.loading = true
       const linkToGet = this.link.startsWith(EnvironmentService.environment.externalCacheurl)
       this.url = linkToGet ? (new URL(this.link).searchParams.get('media') as string) : this.link

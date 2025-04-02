@@ -1,19 +1,27 @@
 @if (loading) {
 } @else {
-  <a target="_blank" [href]="url" class="embed-link">
-    <div class="media-container embed-container">
-      @if (img !== '') {
-        <div class="embed-image-container">
-          <img [alt]="'Embed image for link'" aria-hidden="true" [src]="img" class="embed-image" />
-        </div>
-      }
-      <div class="embed-text">
-        <h2 class="embed-title">{{ title | slice: 0 : 64 }}{{ title.length > 63 ? '...' : '' }}</h2>
-        @if (description) {
-          <p class="embed-description">{{ description | slice: 0 : 128 }}{{ description.length > 127 ? '...' : '' }}</p>
+  @if (forceTenorGif) {
+    FORCE TENOR ACTIVATED
+  }
+
+  @if (!forceTenorGif && !forceYoutube) {
+    <a target="_blank" [href]="url" class="embed-link">
+      <div class="media-container embed-container">
+        @if (img !== '') {
+          <div class="embed-image-container">
+            <img [alt]="'Embed image for link'" aria-hidden="true" [src]="img" class="embed-image" />
+          </div>
         }
-        <p class="embed-url">{{ (hostname | slice: 0 : 64) + (hostname.length > 63 ? '...' : '') }}</p>
+        <div class="embed-text">
+          <h2 class="embed-title">{{ title | slice: 0 : 64 }}{{ title.length > 63 ? '...' : '' }}</h2>
+          @if (description) {
+            <p class="embed-description">
+              {{ description | slice: 0 : 128 }}{{ description.length > 127 ? '...' : '' }}
+            </p>
+          }
+          <p class="embed-url">{{ (hostname | slice: 0 : 64) + (hostname.length > 63 ? '...' : '') }}</p>
+        </div>
       </div>
-    </div>
-  </a>
+    </a>
+  }
 }

@@ -1,12 +1,10 @@
-@if (mimeType().toLowerCase() == 'text/html') {
+@if (mimeType().toLowerCase() == 'text/html' && !data().url.startsWith('https://media.tenor.com/')) {
   <app-link-preview *ngIf="displayUrl()" [link]="displayUrl()"></app-link-preview>
 } @else {
   <div class="media-container" [ngClass]="{ 'always-show-alt': alwaysShowAlt() }">
     <div class="media-content-container">
       @if (
-        (!extensionsToHideImgTag.includes(extension()) || mimeType() === 'UNKNOWN') &&
-        !mimeType().startsWith('video') &&
-        !mimeType().startsWith('text/html')
+        (!extensionsToHideImgTag.includes(extension()) || mimeType() === 'UNKNOWN') && !mimeType().startsWith('video')
       ) {
         <img
           *ngIf="!errorMode"

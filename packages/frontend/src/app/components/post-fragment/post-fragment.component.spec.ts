@@ -2,7 +2,10 @@ import { ComponentFixture, TestBed } from '@angular/core/testing'
 
 import { PostFragmentComponent } from './post-fragment.component'
 import { LoginService } from '../../services/login.service'
-import { HttpClientTestingModule } from '@angular/common/http/testing'
+import { provideHttpClientTesting } from '@angular/common/http/testing'
+import { WafrnMediaComponent } from '../wafrn-media/wafrn-media.component'
+import { MockComponent, MockModule } from 'ng-mocks'
+import { WafrnMediaModule } from '../wafrn-media/wafrn-media.module'
 
 describe('PostFragmentComponent', () => {
   let component: PostFragmentComponent
@@ -10,9 +13,10 @@ describe('PostFragmentComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [PostFragmentComponent, HttpClientTestingModule],
-      declarations: [],
+      imports: [],
+      declarations: [PostFragmentComponent],
       providers: [
+        provideHttpClientTesting(),
         {
           provide: LoginService,
           useValue: {

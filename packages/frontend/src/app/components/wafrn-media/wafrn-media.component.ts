@@ -71,6 +71,7 @@ export class WafrnMediaComponent implements OnChanges, AfterViewInit {
   ngOnChanges(): void {
     this.nsfw = this.data().NSFW && !this.disableNSFWFilter
     this.cdr.markForCheck()
+    console.log(this.data())
   }
 
   ngAfterViewInit(): void {
