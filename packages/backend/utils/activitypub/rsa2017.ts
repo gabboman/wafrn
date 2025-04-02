@@ -3,13 +3,15 @@ import jsonld from 'jsonld'
 import axios from 'axios'
 import { environment } from '../../environment.js'
 import { logger } from '../logger.js'
+import { PRELOADED_CONTEXTS } from './contexts.js'
+import { JsonLd, RemoteDocument } from 'jsonld/jsonld-spec.js'
 
 //import { httpAgent, httpsAgent } from "@/misc/fetch.js";
 
 // RsaSignature2017 based from https://github.com/transmute-industries/RsaSignature2017
 
 export class LdSignature {
-  constructor() { }
+  constructor() {}
 
   public async signRsaSignature2017(
     data: any,
@@ -82,7 +84,7 @@ export class LdSignature {
 
   public async normalize(data: any) {
     // TODO improve this so we get some cache or something
-    const res = await jsonld.normalize(data, { safe: false })
+    const res = await jsonld.normalize(data, { documentLoader: this.getLoader() })
     return res
   }
 
@@ -90,5 +92,33 @@ export class LdSignature {
     const hash = crypto.createHash('sha256')
     hash.update(data)
     return hash.digest('hex')
+  }
+
+  private getLoader() {
+    return async (url: string): Promise<RemoteDocument> => {
+      if (url in PRELOADED_CONTEXTS) {
+        return {
+          contextUrl: undefined,
+          document: PRELOADED_CONTEXTS[url],
+          documentUrl: url
+        }
+      }
+
+      const document = await this.fetchDocument(url)
+      return {
+        contextUrl: undefined,
+        document: document,
+        documentUrl: url
+      }
+    }
+  }
+
+  private async fetchDocument(url: string): Promise<JsonLd> {
+    const headers = {
+      'User-Agent': environment.instanceUrl,
+      Accept: 'application/ld+json, application/json'
+    }
+    const axiosResponse = await axios.get(url, { headers: headers })
+    return axiosResponse.data
   }
 }
