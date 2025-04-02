@@ -15,8 +15,8 @@
   --mat-sys-secondary-container: var(--mat-sys-primary);
 
   /* Neutral palette variables */
-  --mat-sys-background: light-dark(#f7f7f7, #141414);
-  --mat-sys-on-background: light-dark(#525252, #aaaaaa);
+  --mat-sys-background: none;
+  --mat-sys-on-background: light-dark(#525252, #c0c0c0);
   --container-bordercolor: none;
   --mat-sys-surface: light-dark(#efefef, #1c1c1c);
   --mat-sys-surface-container: light-dark(#efefef, #1c1c1c);
@@ -26,63 +26,71 @@
   --mat-sys-inverse-on-surface: var(--mat-sys-on-background);
 
   /* Specific theme styles */
+  --background: light-dark(#f7f7f7, #141414);
   --button-bgcolor: light-dark(white, black);
+  --popup-bgcolor: light-dark(#30b150, #c3f346);
+  --username-bgcolor: #646464;
+  --content-warning-color: #ff9500;
   --shadow-color: light-dark(#adadad, #131313);
   --shadow-sidebar: 4px 4px 3px var(--shadow-color);
-  --shadow-card: 0px 4px 3px var(--shadow-color);
+  --shadow-card: 0px 5px 4px var(--shadow-color);
   --shadow-avatar: 0px 4px 3px var(--shadow-color);
 
   /* Numeric values */
-  --mat-sys-corner-full: 30px;
-  --mat-sys-corner-medium: 30px;
+  --mat-sys-corner-full: 50px;
+  --mat-sys-corner-medium: 20px;
   --mat-sys-corner-small: 15px;
   --avatar-size: 45px;
 
   --color-trans: 100ms;
 
-  --card-gradient: linear-gradient(
-    to top,
-    light-dark(#ededed, #1e1e1e) 0px,
-    light-dark(#f6f6f6, #272727) 25px,
-    light-dark(#ffffff, #303030) 50px,
-    light-dark(#ffffff, #303030) 100%
-  );
-  --percentage-gradient-bottom: linear-gradient(
-    to bottom,
-    light-dark(#ffffff, #303030) 0%,
-    light-dark(#f6f6f6, #272727) 47%,
-    light-dark(#ededed, #1e1e1e) 100%
-  );
-  --percentage-gradient-right: linear-gradient(
-    to right,
-    light-dark(#ffffff, #303030) 0%,
-    light-dark(#f6f6f6, #272727) 47%,
-    light-dark(#ededed, #1e1e1e) 100%
-  );
+  --card-gradient: linear-gradient(to top,
+      light-dark(#ededed, #1e1e1e) 0px,
+      light-dark(#f6f6f6, #272727) 25px,
+      light-dark(#ffffff, #303030) 50px,
+      light-dark(#ffffff, #303030) 100%);
+  --button-gradient: linear-gradient(to top,
+      light-dark(#ededed, #1e1e1e) 0px,
+      light-dark(#f6f6f6, #272727) 20%,
+      light-dark(#ffffff, #303030) 60% 100%);
+  --percentage-gradient-bottom: linear-gradient(to bottom,
+      light-dark(#ffffff, #303030) 0%,
+      light-dark(#f6f6f6, #272727) 47%,
+      light-dark(#ededed, #1e1e1e) 100%);
+  --percentage-gradient-right: linear-gradient(to right,
+      light-dark(#ffffff, #303030) 0%,
+      light-dark(#f6f6f6, #272727) 47%,
+      light-dark(#ededed, #1e1e1e) 100%);
+  --green-gradient-bottom: linear-gradient(to bottom,
+      #8ff200,
+      #0bae00);
+  --red-gradient-bottom: linear-gradient(to bottom,
+      #f2000e,
+      #ae5200);
 }
 
 /* BACKGROUND --------------------------------------------------------------- */
 .mat-drawer-content {
-  background-image: repeating-linear-gradient(
-      45deg,
+  background: none !important;
+}
+
+.mat-app-background {
+  background-image: repeating-linear-gradient(45deg,
       var(--mat-sys-surface) 25%,
       transparent 25%,
       transparent 75%,
       var(--mat-sys-surface) 75%,
-      var(--mat-sys-surface)
-    ),
-    repeating-linear-gradient(
-      45deg,
+      var(--mat-sys-surface)),
+    repeating-linear-gradient(45deg,
       var(--mat-sys-surface) 25%,
-      var(--mat-sys-background) 25%,
-      var(--mat-sys-background) 75%,
+      var(--background) 25%,
+      var(--background) 75%,
       var(--mat-sys-surface) 75%,
-      var(--mat-sys-surface)
-    ) !important;
+      var(--mat-sys-surface)) !important;
   background-position:
     0 0,
-    80px 80px;
-  background-size: 160px 160px;
+    80px 80px !important;
+  background-size: 160px 160px !important;
 }
 
 /* WAFRN LOGO --------------------------------------------------------------- */
@@ -111,16 +119,16 @@ button {
 
 /* Expand Woot, Post and other buttons */
 :root .mat-mdc-unelevated-button {
-  background: var(--percentage-gradient-bottom);
-  border-radius: var(--mat-sys-corner-medium);
-  border: 2px solid var(--mat-sys-primary);
-  color: var(--mat-sys-primary);
+  background: var(--button-gradient);
+  border-radius: var(--mat-sys-corner-small);
+  color: var(--mat-sys-on-background);
+  box-shadow: 0 2px 8px var(--shadow-color);
   transition: var(--color-trans);
 }
 
 :root .mat-mdc-unelevated-button:hover {
-  background: var(--mat-sys-primary);
-  color: var(--button-bgcolor);
+  background: var(--green-gradient-bottom);
+  color: white !important;
 }
 
 /* Notes button */
@@ -154,6 +162,49 @@ button {
   transition: var(--color-trans) !important;
 }
 
+/* Circle buttons (reload, back to dashboard, etc)*/
+.show-sidebar-menu-button,
+.refresh-button,
+.create-post-button,
+button[aria-label="Go back to the dashboard"] {
+  background: var(--percentage-gradient-bottom);
+  border-radius: var(--mat-sys-corner-full);
+  border: 1px solid var(--mat-sys-primary) !important;
+  color: var(--mat-sys-primary);
+  box-shadow: 0 2px 2px rgba(0, 0, 0, 0.5) !important;
+}
+
+/* Create post button (mobile) */
+.create-post-button {
+  background: var(--green-gradient-bottom);
+  color: white !important;
+  border: 2px solid var(--mat-sys-on-primary) !important;
+}
+
+/* Manage followers tab buttons */
+.mat-mdc-table {
+
+  button {
+    border-radius: var(--mat-sys-corner-small);
+    background: var(--red-gradient-bottom);
+    color: white !important;
+  }
+
+  .follow-button {
+    border-radius: var(--mat-sys-corner-small);
+    border-width: 0px !important;
+    background: var(--green-gradient-bottom) !important;
+    color: white !important;
+    box-shadow: 0 2px 8px var(--shadow-color);
+  }
+}
+
+/* Notifications*/
+.mat-badge-content {
+  background: var(--green-gradient-bottom);
+  color: white !important;
+}
+
 /* SIDEBAR ------------------------------------------------------------------ */
 .mat-drawer-inner-container {
   padding-left: 0px;
@@ -167,13 +218,11 @@ button {
 }
 
 .mat-drawer.side-menu {
-  border-top-right-radius: var(--mat-sys-corner-medium);
-  border-bottom-right-radius: var(--mat-sys-corner-medium);
+  border-top-right-radius: var(--mat-sys-corner-full) !important;
+  border-bottom-right-radius: var(--mat-sys-corner-full) !important;
   box-shadow: var(--shadow-sidebar);
   background: var(--percentage-gradient-right);
-  border-style: solid !important;
-  border-width: 1px !important;
-  border-color: var(--mat-sys-outline-variant);
+  border: solid 1px var(--mat-sys-outline-variant) !important;
 
   hr {
     border-color: light-dark(#adadad, #4e4e4e) !important;
@@ -196,23 +245,20 @@ button {
 
 /* POPUPS ------------------------------------------------------------------- */
 .mdc-tooltip__surface {
+  background-color: var(--popup-bgcolor) !important;
+  color: var(--mat-sys-on-primary) !important;
   border-radius: 10px !important;
 }
 
 /* POSTS -------------------------------------------------------------------- */
 .mat-mdc-card {
-  background: linear-gradient(
-    to top,
-    light-dark(#ededed, #1e1e1e) 0px,
-    light-dark(#f6f6f6, #272727) 25px,
-    light-dark(#ffffff, #303030) 50px,
-    light-dark(#ffffff, #303030) 100%
-  ) !important;
-  border-radius: var(--mat-sys-corner-small);
+  background: var(--card-gradient) !important;
+  border-radius: var(--mat-sys-corner-medium) !important;
+  border: 1px solid var(--mat-sys-outline-variant);
   box-shadow: var(--shadow-card);
 
   hr {
-    border-color: light-dark(#adadad, #4e4e4e) !important;
+    border-top: 1px solid light-dark(#adadad, #4e4e4e) !important;
   }
 }
 
@@ -224,18 +270,36 @@ button {
   color: var(--mat-sys-primary);
 }
 
+.user-name {
+  color: white !important;
+
+  span {
+    padding-left: 6px !important;
+    padding-right: 6px !important;
+    border-radius: var(--mat-sys-corner-full) !important;
+    background-color: var(--username-bgcolor) !important;
+  }
+
+  span.text-sm.post-action {
+    background: none !important;
+  }
+}
+
+.user-link.user-name {
+  padding-left: 6px !important;
+  padding-right: 6px !important;
+  border-radius: var(--mat-sys-corner-full) !important;
+  background-color: var(--username-bgcolor) !important;
+}
+
 /* Follow button */
 :root .follow-button {
   color: var(--mat-sys-on-background);
-  background: var(--percentage-gradient-bottom);
-  border-style: solid;
-  border-width: 1px;
-  border-radius: 30px;
+  background: none !important;
 }
 
 :root .follow-button:hover {
   color: var(--mat-sys-primary);
-  border-color: var(--mat-sys-primary);
 }
 
 .mat-mdc-button-persistent-ripple {
@@ -249,19 +313,25 @@ button {
 
 /* Tags */
 a.tag {
-  border-radius: 10px;
+  background: none !important;
+  color: var(--mat-sys-primary) !important;
+}
+
+a.tag:hover {
+  background: none !important;
+  color: var(--mat-sys-primary-container) !important;
 }
 
 /* Quoted post */
 div.quoted-post {
-  border-width: 2px !important;
-  border-style: solid !important;
+  border: 1px solid var(--mat-sys-outline-variant) !important;
+  border-radius: var(--mat-sys-corner-medium) !important;
   box-shadow: none !important;
 }
 
 /* Content warning text */
 .content-warning-text {
-  color: light-dark(#524500, #aa9100) !important;
+  color: var(--content-warning-color) !important;
 }
 
 /* Reacts */
@@ -290,10 +360,29 @@ div.quoted-post {
   --mdc-protected-button-container-shape: 10px;
 }
 
+/* Media container (Images, videos, etc) */
+.media-content-container,
+.yt-thumbnail,
+.media-container {
+  background-image: radial-gradient(var(--mat-sys-surface) 2px,
+      transparent 2px),
+    radial-gradient(var(--mat-sys-surface) 2px,
+      var(--background) 2px) !important;
+  background-size: 30px 30px !important;
+  background-position: 0 0, 15px 15px !important;
+  border-radius: var(--mat-sys-corner-medium) !important;
+}
+
 /* USER'S BLOG -------------------------------------------------------------- */
 :root .blog-avatar-image {
   border-radius: var(--mat-sys-corner-small);
   box-shadow: var(--shadow-avatar);
+}
+
+:root .blog-header-image {
+  margin-left: -16px !important;
+  margin-right: -16px !important;
+  margin-top: -16px !important;
 }
 
 .follow-counts {
