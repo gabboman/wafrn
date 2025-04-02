@@ -6,6 +6,7 @@
  */
 
 import type { Context, JsonLd } from 'jsonld/jsonld-spec.js'
+import { environment } from '../../environment.js'
 
 /* eslint:disable:quotemark indent */
 const id_v1 = {
@@ -528,6 +529,59 @@ const activitystreams = {
   }
 } satisfies JsonLd
 
+const wafrnContext = {
+  '@context': [
+    'https://www.w3.org/ns/activitystreams',
+    'https://w3id.org/security/v1',
+    {
+      Emoji: 'toot:Emoji',
+      Hashtag: 'as:Hashtag',
+      WafrnHashtag: 'as:WafrnHashtag',
+      PropertyValue: 'schema:PropertyValue',
+      atomUri: 'ostatus:atomUri',
+      conversation: {
+        '@id': 'ostatus:conversation',
+        '@type': '@id'
+      },
+      discoverable: 'toot:discoverable',
+      manuallyApprovesFollowers: 'as:manuallyApprovesFollowers',
+      capabilities: 'litepub:capabilities',
+      ostatus: 'http://ostatus.org#',
+      schema: 'http://schema.org#',
+      toot: 'http://joinmastodon.org/ns#',
+      misskey: 'https://misskey-hub.net/ns#',
+      fedibird: 'http://fedibird.com/ns#',
+      value: 'schema:value',
+      sensitive: 'as:sensitive',
+      litepub: 'http://litepub.social/ns#',
+      invisible: 'litepub:invisible',
+      directMessage: 'litepub:directMessage',
+      listMessage: {
+        '@id': 'litepub:listMessage',
+        '@type': '@id'
+      },
+      quoteUrl: 'as:quoteUrl',
+      quoteUri: 'fedibird:quoteUri',
+      oauthRegistrationEndpoint: {
+        '@id': 'litepub:oauthRegistrationEndpoint',
+        '@type': '@id'
+      },
+      EmojiReact: 'litepub:EmojiReact',
+      ChatMessage: 'litepub:ChatMessage',
+      alsoKnownAs: {
+        '@id': 'as:alsoKnownAs',
+        '@type': '@id'
+      },
+      vcard: 'http://www.w3.org/2006/vcard/ns#',
+      formerRepresentations: 'litepub:formerRepresentations',
+      contentMap: {
+        '@id': 'as:content',
+        '@container': '@language'
+      }
+    }
+  ]
+} satisfies JsonLd
+
 const context_iris = ['https://www.w3.org/ns/activitystreams', 'https://w3id.org/security/v1']
 
 const extension_context_definition = {
@@ -585,4 +639,11 @@ export const PRELOADED_CONTEXTS: Record<string, JsonLd> = {
   'https://w3id.org/identity/v1': id_v1,
   'https://w3id.org/security/v1': security_v1,
   'https://www.w3.org/ns/activitystreams': activitystreams
+}
+
+export function getPreloadedContexts(): Record<string, JsonLd> {
+  const res = PRELOADED_CONTEXTS
+  const wafrnContextUrl = `${environment.frontendUrl}/contexts/litepub-0.1.jsonld`
+  res[wafrnContextUrl] = wafrnContext
+  return res
 }

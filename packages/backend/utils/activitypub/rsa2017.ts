@@ -3,7 +3,7 @@ import jsonld from 'jsonld'
 import axios from 'axios'
 import { environment } from '../../environment.js'
 import { logger } from '../logger.js'
-import { PRELOADED_CONTEXTS } from './contexts.js'
+import { getPreloadedContexts, PRELOADED_CONTEXTS } from './contexts.js'
 import { JsonLd, RemoteDocument } from 'jsonld/jsonld-spec.js'
 
 //import { httpAgent, httpsAgent } from "@/misc/fetch.js";
@@ -96,10 +96,11 @@ export class LdSignature {
 
   private getLoader() {
     return async (url: string): Promise<RemoteDocument> => {
-      if (url in PRELOADED_CONTEXTS) {
+      const contexts = getPreloadedContexts()
+      if (url in contexts) {
         return {
           contextUrl: undefined,
-          document: PRELOADED_CONTEXTS[url],
+          document: contexts[url],
           documentUrl: url
         }
       }
