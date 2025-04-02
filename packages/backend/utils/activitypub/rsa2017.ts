@@ -84,7 +84,7 @@ export class LdSignature {
 
   public async normalize(data: any) {
     // TODO improve this so we get some cache or something
-    const res = await jsonld.normalize(data, { documentLoader: this.getLoader() })
+    const res = await jsonld.normalize(data, { documentLoader: this.getLoader(), safe: false })
     return res
   }
 
