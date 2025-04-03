@@ -14,7 +14,6 @@ import {
 } from '../../db.js'
 import { environment } from '../../environment.js'
 import { getUserIdFromRemoteId } from '../cacheGetters/getUserIdFromRemoteId.js'
-import { getFederatedHostIdFromUrl } from '../cacheGetters/getHostIdFromUrl.js'
 import { getPetitionSigned } from '../activitypub/getPetitionSigned.js'
 import { processUserEmojis } from '../activitypub/processUserEmojis.js'
 import { fediverseTag } from '../../interfaces/fediverse/tags.js'
