@@ -136,7 +136,9 @@ export default function searchRoutes(app: Application) {
               const uri = `at://${bskyProfile}/app.bsky.feed.post/${bskyUri}`
 
               let bskyPostId = await getAtProtoThread(uri, undefined, true)
-              remotePost = Post.findByPk(bskyPostId)
+              if (bskyPostId) {
+                remotePost = Post.findByPk(bskyPostId)
+              }
             } catch (error) {
               logger.debug({
                 message: `Error getting bluesky post ${searchTerm}`,

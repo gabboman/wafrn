@@ -8,7 +8,7 @@ import { PostView, ThreadViewPost } from '@atproto/api/dist/client/types/app/bsk
 import { getAtprotoUser, forcePopulateUsers } from './getAtprotoUser.js'
 import { CreateOrUpdateOp } from '@skyware/firehose'
 import { logger } from '../../utils/logger.js'
-import { RichText } from '@atproto/api'
+import { BskyAgent, RichText } from '@atproto/api'
 import showdown from 'showdown'
 import { bulkCreateNotifications, createNotification } from '../../utils/pushNotifications.js'
 import { getAllLocalUserIds } from '../../utils/cacheGetters/getAllLocalUserIds.js'
@@ -33,7 +33,7 @@ async function getAtProtoThread(
   uri: string,
   operation?: { operation: CreateOrUpdateOp; remoteUser: Model<any, any> },
   forceUpdate?: boolean
-): Promise<string> {
+): Promise<string | undefined> {
   if (operation) {
     const postExisting = await Post.findOne({
       where: {
@@ -64,13 +64,18 @@ async function getAtProtoThread(
         if (parentFound) {
           return (await processSinglePost(postObject, parentFound.id)) as string
         } else {
-          const parentThread: ThreadViewPost = (
-            await agent.getPostThread({ uri: postObject.record.reply.parent.uri, depth: 0, parentHeight: 1000 })
-          ).data.thread as ThreadViewPost
-          //const dids = getDidsFromThread(parentThread)
-          //await forcePopulateUsers(dids, (await adminUser) as Model<any, any>)
-          const parentId = (await processParents(parentThread as ThreadViewPost)) as string
-          return (await processSinglePost(postObject, parentId, forceUpdate)) as string
+          const thread = await getPostThreadSafe(agent, {
+            uri: postObject.record.reply.parent.uri,
+            depth: 0,
+            parentHeight: 1000
+          })
+          if (thread) {
+            const parentThread: ThreadViewPost = thread.data.thread as ThreadViewPost
+            //const dids = getDidsFromThread(parentThread)
+            //await forcePopulateUsers(dids, (await adminUser) as Model<any, any>)
+            const parentId = (await processParents(parentThread as ThreadViewPost)) as string
+            return (await processSinglePost(postObject, parentId, forceUpdate)) as string
+          }
         }
       } else {
         return (await processSinglePost(postObject, undefined, forceUpdate)) as string
@@ -79,21 +84,24 @@ async function getAtProtoThread(
   }
 
   // TODO optimize this a bit if post is not in reply to anything that we dont have
-  const thread: ThreadViewPost = (await agent.getPostThread({ uri: uri, depth: 50, parentHeight: 1000 })).data
-    .thread as ThreadViewPost
-  //const tmpDids = getDidsFromThread(thread)
-  //forcePopulateUsers(tmpDids, (await adminUser) as Model<any, any>)
-  let parentId: string | undefined = undefined
-  if (thread.parent) {
-    parentId = (await processParents(thread.parent as ThreadViewPost)) as string
-  }
-  const procesedPost = await processSinglePost(thread.post, parentId, forceUpdate)
-  if (thread.replies && procesedPost) {
-    for await (const repliesThread of thread.replies) {
-      processReplies(repliesThread as ThreadViewPost, procesedPost)
+  const preThread = await getPostThreadSafe(agent, { uri: uri, depth: 50, parentHeight: 1000 })
+  if (preThread) {
+    const thread: ThreadViewPost = preThread.data.thread as ThreadViewPost
+    //const tmpDids = getDidsFromThread(thread)
+    //forcePopulateUsers(tmpDids, (await adminUser) as Model<any, any>)
+    let parentId: string | undefined = undefined
+    if (thread.parent) {
+      parentId = (await processParents(thread.parent as ThreadViewPost)) as string
     }
+    const procesedPost = await processSinglePost(thread.post, parentId, forceUpdate)
+    if (thread.replies && procesedPost) {
+      for await (const repliesThread of thread.replies) {
+        processReplies(repliesThread as ThreadViewPost, procesedPost)
+      }
+    }
+    return procesedPost as string
+  } else {
   }
-  return procesedPost as string
 }
 
 async function processReplies(thread: ThreadViewPost, parentId: string) {
@@ -291,25 +299,27 @@ async function processSinglePost(
     const quotedPostUri = getQuotedPostUri(post)
     if (quotedPostUri) {
       const quotedPostId = await getAtProtoThread(quotedPostUri)
-      const quotedPost = (await Post.findByPk(quotedPostId)) as Model<any, any>
-      await createNotification(
-        {
-          notificationType: 'QUOTE',
-          notifiedUserId: quotedPost.userId,
-          userId: postToProcess.userId,
-          postId: postToProcess.id
-        },
-        {
-          postContent: postToProcess.content,
-          userUrl: postCreator?.url
-        }
-      )
-      await Quotes.findOrCreate({
-        where: {
-          quoterPostId: postToProcess.id,
-          quotedPostId: quotedPostId
-        }
-      })
+      if (quotedPostId) {
+        const quotedPost = (await Post.findByPk(quotedPostId)) as Model<any, any>
+        await createNotification(
+          {
+            notificationType: 'QUOTE',
+            notifiedUserId: quotedPost.userId,
+            userId: postToProcess.userId,
+            postId: postToProcess.id
+          },
+          {
+            postContent: postToProcess.content,
+            userUrl: postCreator?.url
+          }
+        )
+        await Quotes.findOrCreate({
+          where: {
+            quoterPostId: postToProcess.id,
+            quotedPostId: quotedPostId
+          }
+        })
+      }
     }
     return postToProcess.id
   }
@@ -393,6 +403,20 @@ function getPostLabels(post: PostView): string {
     res = 'Post is labeled as NSFW:'
   }
   return res
+}
+
+async function getPostThreadSafe(agent: BskyAgent | undefined, options: any) {
+  if (agent) {
+    try {
+      return await agent.getPostThread(options)
+    } catch (error) {
+      logger.debug({
+        message: `Error trying to get atproto thread`,
+        options: options,
+        error: error
+      })
+    }
+  }
 }
 
 export { getAtProtoThread }
