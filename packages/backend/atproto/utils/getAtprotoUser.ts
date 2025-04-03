@@ -33,7 +33,7 @@ async function forcePopulateUsers(dids: string[], localUser: Model<any, any>) {
               avatar: data.avatar,
               description: data.description,
               followingCount: data.followsCount,
-              followersCount: data.followersCount,
+              followerCount: data.followersCount,
               headerImage: data.banner,
               // bsky does not has this function lol
               manuallyAcceptsFollows: false,
@@ -106,7 +106,7 @@ async function getAtprotoUser(handle: string, localUser: Model<any, any>, petiti
       avatar: data.avatar,
       description: data.description,
       followingCount: data.followsCount,
-      followersCount: data.followersCount,
+      followerCount: data.followersCount,
       headerImage: data.banner,
       // bsky does not has this function lol
       manuallyAcceptsFollows: false,
