@@ -268,11 +268,12 @@ async function getRemoteActorIdProcessor(job: Job) {
         res = userRes?.id ? userRes.id : await getDeletedUser()
         try {
           if (userRes) {
-            const emojis = [
-              ...new Set(
-                userPetition?.tag ? userPetition.tag.filter((elem: fediverseTag) => elem.type === 'Emoji') : []
-              )
-            ]
+            const tags = userPetition?.tag
+              ? Array.isArray(userPetition.tag)
+                ? userPetition.tag
+                : [userPetition.tag]
+              : []
+            const emojis = [...new Set(tags.filter((elem: fediverseTag) => elem.type === 'Emoji'))]
             await processUserEmojis(userRes, emojis)
           }
         } catch (error) {
