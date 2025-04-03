@@ -13,7 +13,7 @@ async function getMutedUsers(userId: string): Promise<Array<string>> {
       }
     })
     res = mutedUsersQuery.map((elem: any) => elem.mutedId)
-    await redisCache.set('mutedUsers:' + userId, JSON.stringify(res))
+    await redisCache.set('mutedUsers:' + userId, JSON.stringify(res), 'EX', 600)
   }
   return res
 }

@@ -11,7 +11,7 @@ async function getAvaiableEmojisCache(): Promise<Array<string>> {
       include: [{ model: Emoji }]
     })
     res = avaiableEmojis
-    await redisCache.set('avaiableEmojis', JSON.stringify(res))
+    await redisCache.set('avaiableEmojis', JSON.stringify(res), 'EX', 600)
   }
   return res
 }

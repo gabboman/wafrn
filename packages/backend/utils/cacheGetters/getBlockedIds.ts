@@ -22,26 +22,26 @@ export default async function getBlockedIds(
           // if only user blocks we ask twice for the users that only the user has blocked
           onlyUserBlocks
             ? {
-              blockerId: userId
-            }
+                blockerId: userId
+              }
             : {
-              blockedId: userId
-            }
+                blockedId: userId
+              }
         ]
       }
     })
     const mutes = includeMutes
       ? Mutes.findAll({
-        where: {
-          muterId: userId
-        }
-      })
+          where: {
+            muterId: userId
+          }
+        })
       : []
     await Promise.all([blocks, mutes])
     const res = (await blocks)
       .map((block: any) => (block.blockerId !== userId ? block.blockerId : block.blockedId))
       .concat((await mutes).map((mute: any) => mute.mutedId))
-    redisCache.set(cacheKey + userId, JSON.stringify(res))
+    redisCache.set(cacheKey + userId, JSON.stringify(res), 'EX', 600)
     return res
   } catch (error) {
     return []

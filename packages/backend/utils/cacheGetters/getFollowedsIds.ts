@@ -40,7 +40,7 @@ export default async function getFollowedsIds(userId: string, local = false): Pr
     })
     const result = followed.map((followed: any) => followed.followedId)
     result.push(userId)
-    redisCache.set(local ? 'follows:local:' + userId : 'follows:full:' + userId, JSON.stringify(result))
+    redisCache.set(local ? 'follows:local:' + userId : 'follows:full:' + userId, JSON.stringify(result), 'EX', 600)
     return result as string[]
   } catch (error) {
     return []

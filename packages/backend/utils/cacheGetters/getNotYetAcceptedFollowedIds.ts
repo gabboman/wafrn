@@ -28,7 +28,7 @@ async function getNotYetAcceptedFollowedids(userId: string): Promise<Array<strin
       }
     })
     res = notAcceptedFollows.map((elem: any) => elem.followedId)
-    await redisCache.set('follows:notYetAcceptedFollows:' + userId, JSON.stringify(res))
+    await redisCache.set('follows:notYetAcceptedFollows:' + userId, JSON.stringify(res), 'EX', 600)
   }
   return res
 }

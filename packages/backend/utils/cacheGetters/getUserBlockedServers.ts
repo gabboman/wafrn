@@ -14,7 +14,7 @@ export default async function getUserBlockedServers(userId: string): Promise<str
       }
     })
     const result = blocksServers.map((elem: any) => elem.dataValues)
-    redisCache.set('serverblocks:' + userId, JSON.stringify(result))
+    redisCache.set('serverblocks:' + userId, JSON.stringify(result), 'EX', 600)
     return result as string[]
   } catch (error) {
     return []

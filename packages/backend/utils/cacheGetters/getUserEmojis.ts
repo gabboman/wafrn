@@ -18,7 +18,7 @@ async function getUserEmojis(id: string) {
       }
     })
     cacheResult = JSON.stringify(emojis.map((elem: any) => elem.dataValues))
-    redisCache.set('userEmojis:' + id, cacheResult, 'EX', 60)
+    redisCache.set('userEmojis:' + id, cacheResult, 'EX', 600)
   }
 
   return cacheResult ? JSON.parse(cacheResult) : []
