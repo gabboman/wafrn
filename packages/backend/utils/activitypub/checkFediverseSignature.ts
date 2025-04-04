@@ -14,7 +14,6 @@ import { SignedRequest } from '../../interfaces/fediverse/signedRequest.js'
 import { getRemoteActor } from './getRemoteActor.js'
 import { LdSignature } from './rsa2017.js'
 
-
 function getCheckFediverseSignatureFucnction(force = false) {
   return async function checkFediverseSignature(req: SignedRequest, res: Response, next: NextFunction) {
     let success = !force
@@ -96,7 +95,8 @@ function getCheckFediverseSignatureFucnction(force = false) {
               logger.debug({
                 message: `Problem finding user for signature`,
                 url: req.url,
-                body: req.method == 'POST' ? req.body : `GET petition`
+                body: req.method == 'POST' ? req.body : `GET petition`,
+                sigHead: sigHead
               })
             }
             if (force) {
