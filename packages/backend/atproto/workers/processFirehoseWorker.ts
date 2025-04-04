@@ -27,60 +27,76 @@ async function processFirehose(job: Job) {
         const record = operation.record
         switch (record['$type']) {
           case 'app.bsky.feed.like': {
-            if ((await getCacheAtDids()).followedDids.has(job.data.repo)) {
-              const postLikedUri = record.subject.uri
-              const postId = await getAtProtoThread(postLikedUri)
-              if (postId) {
-                await UserLikesPostRelations.findOrCreate({
-                  where: {
-                    userId: remoteUser.id,
-                    postId: postId,
-                    bskyPath: operation.path
-                  }
-                })
-                const post = await Post.findByPk(postId)
-                await createNotification(
-                  {
-                    notificationType: 'LIKE',
-                    postId: postId,
-                    userId: remoteUser.id,
-                    notifiedUserId: post?.userId
-                  },
-                  {
-                    postContent: post?.content,
-                    userUrl: remoteUser.url
-                  }
-                )
-              }
-            } else {
-              const postInDb = await Post.findOne({
-                where: {
-                  bskyUri: record.subject.uri
+            let user = undefined
+            let likedPostId = undefined
+            try {
+              if ((await getCacheAtDids()).followedDids.has(job.data.repo)) {
+                const postLikedUri = record.subject.uri
+                const postId = await getAtProtoThread(postLikedUri)
+                if (postId) {
+                  user = remoteUser.url
+                  likedPostId = postId
+                  await UserLikesPostRelations.findOrCreate({
+                    where: {
+                      userId: remoteUser.id,
+                      postId: postId,
+                      bskyPath: operation.path
+                    }
+                  })
+                  const post = await Post.findByPk(postId)
+                  await createNotification(
+                    {
+                      notificationType: 'LIKE',
+                      postId: postId,
+                      userId: remoteUser.id,
+                      notifiedUserId: post?.userId
+                    },
+                    {
+                      postContent: post?.content,
+                      userUrl: remoteUser.url
+                    }
+                  )
                 }
-              })
-              if (postInDb) {
-                await UserLikesPostRelations.findOrCreate({
+              } else {
+                const postInDb = await Post.findOne({
                   where: {
-                    userId: remoteUser.id,
-                    postId: postInDb.id,
-                    bskyPath: operation.path
+                    bskyUri: record.subject.uri
                   }
                 })
+                if (postInDb) {
+                  user = remoteUser.url
+                  likedPostId = postInDb.id
+                  await UserLikesPostRelations.findOrCreate({
+                    where: {
+                      userId: remoteUser.id,
+                      postId: postInDb.id,
+                      bskyPath: operation.path
+                    }
+                  })
 
-                await createNotification(
-                  {
-                    notificationType: 'LIKE',
-                    postId: postInDb.id,
-                    userId: remoteUser.id,
-                    notifiedUserId: postInDb.userId
-                  },
-                  {
-                    postContent: postInDb.content,
-                    userUrl: remoteUser.url
-                  }
-                )
+                  await createNotification(
+                    {
+                      notificationType: 'LIKE',
+                      postId: postInDb.id,
+                      userId: remoteUser.id,
+                      notifiedUserId: postInDb.userId
+                    },
+                    {
+                      postContent: postInDb.content,
+                      userUrl: remoteUser.url
+                    }
+                  )
+                }
               }
+            } catch (error) {
+              logger.debug({
+                message: `Error creating bluesky like`,
+                user,
+                likedPostId,
+                record
+              })
             }
+
             break
           }
           case 'app.bsky.feed.post': {
