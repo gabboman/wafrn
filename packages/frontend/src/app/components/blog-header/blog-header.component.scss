@@ -1,6 +1,6 @@
 .blog-header-image {
-  margin-top: -0.375rem;
-  margin-inline: -0.375rem;
+  margin-top: -1rem;
+  margin-inline: -1rem;
   background-color: var(--mat-sys-primary-fixed-dim);
   box-shadow: 0 0 5px -1px rgba(0, 0, 0, 0.1) inset, 0 0 10px 0 rgba(0, 0, 0, 0.07) inset,
     0 0 18px 0 rgba(0, 0, 0, 0.06) inset;
@@ -18,8 +18,8 @@
   height: 132px;
   aspect-ratio: 1 / 1;
   object-fit: cover;
-  border-radius: var(--mat-sys-corner-small);
-  margin-top: calc(-1 * 15vh + 2.5rem);
+  border-radius: var(--mat-sys-corner-large);
+  margin-top: -4rem;
   box-shadow: var(--mat-sys-level2);
 }
 
