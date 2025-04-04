@@ -217,110 +217,114 @@ async function processSinglePost(
       delete newData.parentId
     }
     let [postToProcess, created] = await Post.findOrCreate({ where: { bskyUri: post.uri }, defaults: newData })
-    if (!created && !(await getAllLocalUserIds()).includes(postToProcess.userId)) {
-      postToProcess.set(newData)
-      await postToProcess.save()
-    }
-    if (medias) {
-      await Media.destroy({
-        where: {
-          postId: postToProcess.id
-        }
-      })
-      await Media.bulkCreate(
-        medias.map((media: any) => {
-          return { ...media, postId: postToProcess.id }
-        })
-      )
-    }
-    if (parentId) {
-      const ancestors = await postToProcess.getAncestors({
-        attributes: ['userId'],
-        where: {
-          hierarchyLevel: {
-            [Op.gt]: postToProcess.hierarchyLevel - 5
-          }
-        }
-      })
-      mentions = mentions.concat(ancestors.map((elem) => elem.userId))
-    }
-    mentions = [...new Set(mentions)]
-    if (mentions.length > 0) {
-      await Notification.destroy({
-        where: {
-          notificationType: 'MENTION',
-          postId: postToProcess.id
-        }
-      })
-      await PostMentionsUserRelation.destroy({
-        where: {
-          postId: postToProcess.id
-        }
-      })
-      await bulkCreateNotifications(
-        mentions.map((mnt) => ({
-          notificationType: 'MENTION',
-          postId: postToProcess.id,
-          notifiedUserId: mnt,
-          userId: postToProcess.userId,
-          createdAt: new Date(postToProcess.createdAt)
-        })),
-        {
-          ignoreDuplicates: true,
-          postContent: postText,
-          userUrl: postCreator.url
-        }
-      )
-      await PostMentionsUserRelation.bulkCreate(
-        mentions.map((mnt) => {
-          return {
-            userId: mnt,
+    // do not update existing posts. But what if local user creates a post through bsky? then we force updte i guess
+    if (!(await getAllLocalUserIds()).includes(postToProcess.userId) || created) {
+      if (!created) {
+        postToProcess.set(newData)
+        await postToProcess.save()
+      }
+      if (medias) {
+        await Media.destroy({
+          where: {
             postId: postToProcess.id
           }
-        }),
-        { ignoreDuplicates: true }
-      )
-    }
-    if (tags.length > 0) {
-      await PostTag.destroy({
-        where: {
-          postId: postToProcess.id
-        }
-      })
-      await PostTag.bulkCreate(
-        tags.map((tag) => {
-          return {
+        })
+        await Media.bulkCreate(
+          medias.map((media: any) => {
+            return { ...media, postId: postToProcess.id }
+          })
+        )
+      }
+      if (parentId) {
+        const ancestors = await postToProcess.getAncestors({
+          attributes: ['userId'],
+          where: {
+            hierarchyLevel: {
+              [Op.gt]: postToProcess.hierarchyLevel - 5
+            }
+          }
+        })
+        mentions = mentions.concat(ancestors.map((elem) => elem.userId))
+      }
+      mentions = [...new Set(mentions)]
+      if (mentions.length > 0) {
+        await Notification.destroy({
+          where: {
+            notificationType: 'MENTION',
+            postId: postToProcess.id
+          }
+        })
+        await PostMentionsUserRelation.destroy({
+          where: {
+            postId: postToProcess.id
+          }
+        })
+        await bulkCreateNotifications(
+          mentions.map((mnt) => ({
+            notificationType: 'MENTION',
             postId: postToProcess.id,
-            tagName: tag
-          }
-        })
-      )
-    }
-    const quotedPostUri = getQuotedPostUri(post)
-    if (quotedPostUri) {
-      const quotedPostId = await getAtProtoThread(quotedPostUri)
-      if (quotedPostId) {
-        const quotedPost = (await Post.findByPk(quotedPostId)) as Model<any, any>
-        await createNotification(
-          {
-            notificationType: 'QUOTE',
-            notifiedUserId: quotedPost.userId,
+            notifiedUserId: mnt,
             userId: postToProcess.userId,
-            postId: postToProcess.id
-          },
+            createdAt: new Date(postToProcess.createdAt)
+          })),
           {
-            postContent: postToProcess.content,
-            userUrl: postCreator?.url
+            ignoreDuplicates: true,
+            postContent: postText,
+            userUrl: postCreator.url
           }
         )
-        await Quotes.findOrCreate({
+        await PostMentionsUserRelation.bulkCreate(
+          mentions.map((mnt) => {
+            return {
+              userId: mnt,
+              postId: postToProcess.id
+            }
+          }),
+          { ignoreDuplicates: true }
+        )
+      }
+      if (tags.length > 0) {
+        await PostTag.destroy({
           where: {
-            quoterPostId: postToProcess.id,
-            quotedPostId: quotedPostId
+            postId: postToProcess.id
           }
         })
+        await PostTag.bulkCreate(
+          tags.map((tag) => {
+            return {
+              postId: postToProcess.id,
+              tagName: tag
+            }
+          })
+        )
+      }
+      const quotedPostUri = getQuotedPostUri(post)
+      if (quotedPostUri) {
+        const quotedPostId = await getAtProtoThread(quotedPostUri)
+        if (quotedPostId) {
+          const quotedPost = (await Post.findByPk(quotedPostId)) as Model<any, any>
+          await createNotification(
+            {
+              notificationType: 'QUOTE',
+              notifiedUserId: quotedPost.userId,
+              userId: postToProcess.userId,
+              postId: postToProcess.id
+            },
+            {
+              postContent: postToProcess.content,
+              userUrl: postCreator?.url
+            }
+          )
+          await Quotes.findOrCreate({
+            where: {
+              quoterPostId: postToProcess.id,
+              quotedPostId: quotedPostId
+            }
+          })
+        }
       }
     }
+
     return postToProcess.id
   }
 }
