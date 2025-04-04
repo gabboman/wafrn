@@ -50,7 +50,8 @@ const markdownConverter = new showdown.Converter({
   strikethrough: true,
   simpleLineBreaks: true,
   openLinksInNewWindow: true,
-  emoji: true
+  emoji: true,
+  encodeEmails: false
 })
 
 const prepareSendPostQueue = new Queue('prepareSendPost', {
