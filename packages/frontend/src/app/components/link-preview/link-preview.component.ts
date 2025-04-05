@@ -27,7 +27,6 @@ export class LinkPreviewComponent implements OnChanges {
     this.forceTenorGif = false
     this.forceYoutube = false
     if (this.link) {
-      console.log(this.link)
       if (this.url.startsWith('https://media.tenor.com/')) {
         this.loading = false
         this.forceTenorGif = true
