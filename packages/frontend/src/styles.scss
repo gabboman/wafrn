@@ -176,9 +176,45 @@ body {
   }
 }
 
-
-
 .shortened-post {
   max-height: 450px;
   overflow: hidden;
+}
+
+/* Horizontal Media Carousel. Disabled by default. */
+.media-gallery.media-carousel {
+  /* 
+     I am not accounting for a bunch of 
+     bugs with the link-preview here because
+     when we're done with this those won't be a child of .media-gallery anymore.
+  */
+  --media-height: 32rem;
+  flex-direction: row!important;
+  overflow-x: scroll;
+  gap: 12px!important;
+  app-wafrn-media {
+    box-sizing: border-box;
+    width: fit-content;
+    flex-shrink: 0;
+    box-sizing: border-box;
+    border-radius: var(--mat-sys-corner-large);
+  }
+  .media-container {
+    border-radius: var(--mat-sys-corner-large);
+    max-height: var(--media-height);
+  }
+  .media-content-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: var(--media-height);
+    border-radius: var(--mat-sys-corner-large);
+  }
+  .media-content-container:has(.v-video) {
+    height: fit-content;
+  }
+  .displayed-image {
+    max-height: var(--media-height);
+    border-radius: var(--mat-sys-corner-large)!important;
+  }
 }

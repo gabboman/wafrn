@@ -38,11 +38,15 @@
   <div *ngIf="fragment.questionPoll">
     <app-poll [poll]="fragment.questionPoll"></app-poll>
   </div>
-  <section #mediaEnd class="flex flex-column gap-3">
+	<!-- "media-carousel" class goes in this section ↓ -->
+	<!-- It matches for .media-gallery.media-carousel -->
+  <section #mediaEnd class="flex flex-column gap-3 media-gallery">
     @for (media of fragment.medias; track $index) {
       <app-wafrn-media *ngIf="!seenMedia.includes($index)" [data]="media"></app-wafrn-media>
     }
   </section>
+  <!-- another section for link previews that notably *doesn't* have -->
+  <!-- .media-gallery here would be appreciated. -->
   <div class="flex flex-wrap gap-2 tag-list" *ngIf="fragment.tags && fragment.tags.length">
     @for (tag of fragment.tags; track $index) {
       <a class="tag" [routerLink]="'/dashboard/search/' + tag.tagName"> #{{ tag.tagName }} </a>
