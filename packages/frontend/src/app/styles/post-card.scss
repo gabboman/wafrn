@@ -94,16 +94,17 @@
 .tag {
   padding: 0 0.75ch;
   cursor: pointer;
-  background-color: var(--mat-sys-primary);
-  color: var(--mat-sys-on-primary) !important;
+  background-color: var(--mat-sys-primary-container);
+  color: var(--mat-sys-on-primary-container)!important;
   text-decoration: none;
   border-radius: var(--mat-sys-corner-small);
   font-size: 0.8em;
   line-height: 1.3;
   padding-top: 2px;
   word-break: break-all;
+  border: 1px solid var(--mat-sys-primary-fixed-dim);
+  box-sizing: border-box;
 }
-
 
 .quoted-post {
 	padding: 0.5em;	
