@@ -198,6 +198,7 @@ body {
     flex-shrink: 0;
     box-sizing: border-box;
     border-radius: var(--mat-sys-corner-large);
+    max-width: 95%;
   }
   .media-container {
     border-radius: var(--mat-sys-corner-large);
