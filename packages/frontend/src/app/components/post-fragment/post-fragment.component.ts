@@ -85,6 +85,8 @@ export class PostFragmentComponent implements OnChanges, OnDestroy {
   viewerInline: Viewer | undefined
   viewerEnd: Viewer | undefined
 
+  forceOldMediaStyle = localStorage.getItem('forceClassicMediaView') == 'true'
+
   constructor(
     private postService: PostsService,
     private loginService: LoginService,

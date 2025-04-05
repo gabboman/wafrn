@@ -37,3 +37,8 @@
   vertical-align: middle;
   border-radius: var(--mdc-protected-button-container-shape, var(--mat-sys-corner-full));
 }
+
+
+.carousel-media {
+  max-width: 75% !important;
+}

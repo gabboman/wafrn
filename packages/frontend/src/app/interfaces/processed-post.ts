@@ -18,7 +18,7 @@ export interface ProcessedPost {
   updatedAt: Date
   userId: string
   user: SimplifiedUser
-  medias?: WafrnMedia[]
+  medias: WafrnMedia[]
   tags: Tag[]
   mentionPost?: SimplifiedUser[]
   notes: number
