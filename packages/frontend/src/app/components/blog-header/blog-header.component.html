@@ -82,13 +82,22 @@
       <p [innerHtml]="blogDetails.name" class="m-0 text-xl font-medium line-height-3"></p>
       @if (blogDetails.isBlueskyUser) {
         <p [innerText]="blogDetails.url" class="m-0 text-sm line-height-3 blog-url"></p>
-        <p class="bsky-badge mt-2 mb-0 text-sm line-height-3">
-          <fa-icon class="mr-2" [icon]="bskyIcon"></fa-icon>Bluesky
-        </p>
+        
       } @else {
         <p [innerText]="blogDetails.url" class="m-0 text-sm line-height-3 blog-url"></p>
       }
-    </div>
+			<div class="flex gap-2 mt-2 mb-0 text-sm line-height-3 profile-badges">
+				<span *ngIf="blogDetails.isBlueskyUser" class="badge bsky-badge">
+      	  <fa-icon class="mr-2" [icon]="bskyIcon"></fa-icon>Bluesky
+      	</span>
+      	<span
+      		*ngIf="blogDetails.followers / blogDetails.followed > 5"
+      		class="badge ratio-badge"
+      		matTooltip="{{ 'For every ' + (blogDetails.followers / blogDetails.followed | number: '1.0-0') + ' followers ' + blogDetails.url + ' follows 1 user.' }}">
+      		<fa-icon class="mr-2" [icon]="usersIcon"></fa-icon>Follower Ratio: {{ blogDetails.followers / blogDetails.followed | number: '1.0-0' }}:1
+      	</span>
+			</div>
+      </div>
   </div>
   <div [innerHtml]="blogDetails.description" class="mt-2 post-text"></div>
   @if (fediAttachment.length !== 0) {
@@ -121,9 +130,6 @@
     </details>
   }
   @if (!blogDetails.url.startsWith('@') || (blogDetails.followers && blogDetails.followed)) {
-    <div *ngIf="blogDetails.followers / blogDetails.followed > 10" class="mt-2">
-      <p>{{ blogDetails.followers / blogDetails.followed | number }} Followers to following ratio</p>
-    </div>
     <footer class="mt-4 py-3 flex justify-content-evenly follow-counts">
       <div class="flex flex-column justify-content-center">
         <b class="m-0 text-lg text-center">{{ formatBigNumber(blogDetails.postCount) }}</b>
