@@ -12,7 +12,8 @@ import {
   faUser,
   faUserSlash,
   faVolumeMute,
-  faVolumeUp
+  faVolumeUp,
+  faUsers
 } from '@fortawesome/free-solid-svg-icons'
 import { BlogDetails } from 'src/app/interfaces/blogDetails'
 import { BlocksService } from 'src/app/services/blocks.service'
@@ -51,6 +52,7 @@ export class BlogHeaderComponent implements OnChanges, OnDestroy {
   unmuteUserIcon = faVolumeUp
   userIcon = faUser
   bskyIcon = faBluesky
+  usersIcon = faUsers
   blockUserIcon = faUserSlash
   unblockServerIcon = faServer
   allowAsk = false
