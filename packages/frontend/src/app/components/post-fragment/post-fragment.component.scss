@@ -13,6 +13,10 @@
   display: none !important;
 }
 
+.post-content section:empty {
+  display: none !important;
+}
+
 .reacted {
   background-color: var(--mat-sys-primary);
   color: var(--mat-sys-on-primary);
