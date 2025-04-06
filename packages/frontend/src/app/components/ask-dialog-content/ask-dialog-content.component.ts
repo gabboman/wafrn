@@ -52,7 +52,7 @@ export class AskDialogContentComponent implements OnInit {
   }
 
   askForm = new FormGroup({
-    content: new FormControl('', [Validators.required, Validators.minLength(1)]),
+    question: new FormControl('', [Validators.required, Validators.minLength(1)]),
     anonymous: new FormControl(true)
   })
 

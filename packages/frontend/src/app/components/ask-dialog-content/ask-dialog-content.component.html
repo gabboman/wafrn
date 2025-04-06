@@ -1,7 +1,7 @@
 <form [formGroup]="askForm" (ngSubmit)="onSubmit()">
   <mat-form-field class="w-full">
     <mat-label>{{ 'ask-dialog-content.askFormLabel' | translate }}</mat-label>
-    <textarea formControlName="content" type="textarea" matNativeControl rows="4"></textarea>
+    <textarea formControlName="question" type="textarea" matNativeControl rows="4"></textarea>
   </mat-form-field>
 
   @if (loggedIn && allowAnons) {

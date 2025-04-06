@@ -702,6 +702,12 @@
           },
           "400": {
             "description": "Bad Request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "500": {
+            "description": "Internal Server Error"
           }
         },
         "requestBody": {
@@ -1094,6 +1100,13 @@
         "description": "",
         "parameters": [
           {
+            "name": "answered",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
             "name": "authorization",
             "in": "header",
             "schema": {
@@ -1138,6 +1151,9 @@
               "schema": {
                 "type": "object",
                 "properties": {
+                  "anonymous": {
+                    "example": "any"
+                  },
                   "question": {
                     "example": "any"
                   }
@@ -2021,6 +2037,9 @@
           },
           "401": {
             "description": "Unauthorized"
+          },
+          "500": {
+            "description": "Internal Server Error"
           }
         }
       }
@@ -2223,6 +2242,26 @@
           },
           "429": {
             "description": "Too Many Requests"
+          }
+        }
+      }
+    },
+    "/blog/{url}/ask": {
+      "get": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "url",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
           }
         }
       }

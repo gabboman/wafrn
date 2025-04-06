@@ -867,7 +867,7 @@ export default function userRoutes(app: Application) {
         })
       }
       const ask = await Ask.create({
-        question: req.body.content,
+        question: req.body.question,
         apObject: null,
         creationIp: getIp(req),
         answered: false,
