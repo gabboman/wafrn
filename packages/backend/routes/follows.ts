@@ -32,7 +32,7 @@ export default function followsRoutes(app: Application) {
 
       if (userFederatesWithThreads.length === 0) {
         if (userToBeFollowed.url.toLowerCase().endsWith('threads.net')) {
-          res.status(500)
+          res.status(403)
           res.send({
             error: true,
             message: 'You are trying to follow a threads user but you did not enable threads federation'
@@ -55,7 +55,7 @@ export default function followsRoutes(app: Application) {
             return res.sendStatus(500)
           }
         } else {
-          return res.status(500).send({
+          return res.status(403).send({
             error: true,
             message: 'You are trying to follow a bsky user. You need to enable this on your profile'
           })

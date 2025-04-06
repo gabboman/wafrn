@@ -43,7 +43,7 @@ export default function likeRoutes(app: Application) {
         if (userFederatesWithThreads.length === 0) {
           const userPosterOfPostToBeLiked = await User.findByPk((await post).userId)
           if (userPosterOfPostToBeLiked.url.toLowerCase().endsWith('threads.net')) {
-            res.status(500)
+            res.status(403)
             res.send({ error: true, message: 'You do not have threads federation enabled' })
             return
           }
@@ -51,7 +51,7 @@ export default function likeRoutes(app: Application) {
         if (!(await user)?.enableBsky && (await post)?.bskyUri) {
           const userPosterOfPostToBeLiked = await User.findByPk(((await post) as Model<any, any>).userId)
           if (userPosterOfPostToBeLiked.url.startsWith('@')) {
-            res.status(500)
+            res.status(403)
             res.send({ error: true, message: 'You do not have bluesky federation enabled' })
             return
           }

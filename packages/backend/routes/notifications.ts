@@ -263,7 +263,7 @@ export default function notificationRoutes(app: Application) {
     const token = req.body.token
 
     if (!userId || !token) {
-      return res.status(400).send({
+      return res.status(401).send({
         success: false,
         error: 'Invalid request. Missing auth token (in auth header) or notification token (in request body).'
       })

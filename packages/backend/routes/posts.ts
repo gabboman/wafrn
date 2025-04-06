@@ -333,7 +333,7 @@ export default function postsRoutes(app: Application) {
             const ancestorUrls: string[] = ancestorPostsUsers.map((elem: any) => elem.url.toLowerCase())
             if (ancestorUrls.some((elem) => elem.endsWith('threads.net'))) {
               success = false
-              res.status(500)
+              res.status(403)
               res.send({
                 success: false,
                 message: 'You do not federate with threads and this thread contains a post from threads'
@@ -369,7 +369,7 @@ export default function postsRoutes(app: Application) {
             : 0
           if (blocksExistingOnParents + bannedUsers > 0) {
             success = false
-            res.status(500)
+            res.status(403)
             res.send({ success: false, message: 'You have no permission to reblog this post' })
             return false
           }
@@ -452,7 +452,7 @@ export default function postsRoutes(app: Application) {
           if (userFederatesWithThreads.length === 0) {
             if (dbFoundMentions.some((usr: any) => usr.url.toLowerCase().endsWith('threads.net'))) {
               success = false
-              res.status(500)
+              res.status(403)
               res.send({
                 success: false,
                 message: 'You do not federate with threads and this thread contains a post from threads'
@@ -486,7 +486,7 @@ export default function postsRoutes(app: Application) {
           }
         })*/
           if (blocksExisting + blocksServers > 0) {
-            res.status(500)
+            res.status(403)
             res.send({
               error: true,
               message: 'You can not mention an user that you have blocked or has blocked you'

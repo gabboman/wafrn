@@ -81,7 +81,7 @@ export default function userRoutes(app: Application) {
           const minimumAge = new Date()
           minimumAge.setFullYear(new Date().getFullYear() - 18)
           if (birthDate.getTime() > minimumAge.getTime()) {
-            res.status(400).send({ success: false, error: true, message: 'Invalid age' })
+            res.status(403).send({ success: false, error: true, message: 'Invalid age' })
             return
           }
           const emailExists = await User.findOne({
