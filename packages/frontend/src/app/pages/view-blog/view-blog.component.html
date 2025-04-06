@@ -14,8 +14,12 @@
     <div *ngIf="noMorePosts">
       <p class="mb-4 text-lg">No more posts...</p>
       @if (blogDetails.url.startsWith('@')) {
-        <app-info-card type="info"
-          >As this user is from a remote instance, the shown information may be incomplete.
+        <app-info-card [type]="userLoggedIn ? 'info' : 'caution'">
+          {{
+            userLoggedIn
+              ? 'As this user is from a remote instance, the shown information may be incomplete.'
+              : 'To see external users you need to be logged in. You can check the user in their original instance'
+          }}
           <a
             [href]="
               blogDetails.url.split('@').length === 3

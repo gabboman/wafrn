@@ -82,22 +82,29 @@
       <p [innerHtml]="blogDetails.name" class="m-0 text-xl font-medium line-height-3"></p>
       @if (blogDetails.isBlueskyUser) {
         <p [innerText]="blogDetails.url" class="m-0 text-sm line-height-3 blog-url"></p>
-        
       } @else {
         <p [innerText]="blogDetails.url" class="m-0 text-sm line-height-3 blog-url"></p>
       }
-			<div class="flex gap-2 mt-2 mb-0 text-sm line-height-3 profile-badges">
-				<span *ngIf="blogDetails.isBlueskyUser" class="badge bsky-badge">
-      	  <fa-icon class="mr-2" [icon]="bskyIcon"></fa-icon>Bluesky
-      	</span>
-      	<span
-      		*ngIf="blogDetails.followers / blogDetails.followed > 5"
-      		class="badge ratio-badge"
-      		matTooltip="{{ 'For every ' + (blogDetails.followers / blogDetails.followed | number: '1.0-0') + ' followers ' + blogDetails.url + ' follows 1 user.' }}">
-      		<fa-icon class="mr-2" [icon]="usersIcon"></fa-icon>Follower Ratio: {{ blogDetails.followers / blogDetails.followed | number: '1.0-0' }}:1
-      	</span>
-			</div>
+      <div class="flex gap-2 mt-2 mb-0 text-sm line-height-3 profile-badges">
+        <span *ngIf="blogDetails.isBlueskyUser" class="badge bsky-badge">
+          <fa-icon class="mr-2" [icon]="bskyIcon"></fa-icon>Bluesky
+        </span>
+        <span
+          *ngIf="blogDetails.followers / blogDetails.followed > 5"
+          class="badge ratio-badge"
+          matTooltip="{{
+            'For every ' +
+              (blogDetails.followers / blogDetails.followed | number: '1.0-0') +
+              ' followers ' +
+              blogDetails.url +
+              ' follows 1 user.'
+          }}"
+        >
+          <fa-icon class="mr-2" [icon]="usersIcon"></fa-icon>Follower Ratio:
+          {{ blogDetails.followers / blogDetails.followed | number: '1.0-0' }}:1
+        </span>
       </div>
+    </div>
   </div>
   <div [innerHtml]="blogDetails.description" class="mt-2 post-text"></div>
   @if (fediAttachment.length !== 0) {
@@ -153,8 +160,12 @@
   }
 </mat-card>
 @if (blogDetails.url.startsWith('@')) {
-  <app-info-card type="info" class="block pt-3 pb-6 mx-2 lg:mx-4 wafrn-container"
-    >As this user is from a remote instance, the shown information may be incomplete.
+  <app-info-card [type]="userLoggedIn ? 'info' : 'caution'">
+    {{
+      userLoggedIn
+        ? 'As this user is from a remote instance, the shown information may be incomplete.'
+        : 'To see external users you need to be logged in. You can view their profile on their actual instance.'
+    }}
     <a
       [href]="
         blogDetails.url.split('@').length === 3

@@ -88,37 +88,41 @@ export class DashboardService {
   }
 
   async getBlogPage(page: number, blogId: string): Promise<ProcessedPost[][]> {
-    let result: ProcessedPost[][] = []
-    if (page === 0) {
-      //if we are starting the scroll, we store the current date
-      this.startScrollDate = new Date()
-    }
-    let petitionData: HttpParams = new HttpParams()
-    petitionData = petitionData.set('page', page.toString())
-    petitionData = petitionData.set('startScroll', this.startScrollDate.getTime().toString())
-    petitionData = petitionData.set('id', blogId)
-    const dashboardPetition: unlinkedPosts = await firstValueFrom(
-      this.http.get<unlinkedPosts>(`${EnvironmentService.environment.baseUrl}/v2/blog`, {
-        params: petitionData
-      })
-    )
-    if (dashboardPetition) {
-      result = this.postService.processPostNew(dashboardPetition)
-      this.startScrollDate = new Date(
-        Math.min(...result.map((elem) => new Date(elem[elem.length - 1].createdAt).getTime())) - 1
-      )
-      if (result.length === 0) {
-        this.startScrollDate = new Date(0)
+    try {
+      let result: ProcessedPost[][] = []
+      if (page === 0) {
+        //if we are starting the scroll, we store the current date
+        this.startScrollDate = new Date()
       }
-      result = result.filter((post) => !this.postService.postContainsBlockedOrMuted(post, false))
-    } else {
-      this.messageService.add({
-        severity: 'error',
-        summary: 'Something went wrong :('
-      })
-    }
+      let petitionData: HttpParams = new HttpParams()
+      petitionData = petitionData.set('page', page.toString())
+      petitionData = petitionData.set('startScroll', this.startScrollDate.getTime().toString())
+      petitionData = petitionData.set('id', blogId)
+      const dashboardPetition: unlinkedPosts = await firstValueFrom(
+        this.http.get<unlinkedPosts>(`${EnvironmentService.environment.baseUrl}/v2/blog`, {
+          params: petitionData
+        })
+      )
 
-    return result
+      if (dashboardPetition) {
+        result = this.postService.processPostNew(dashboardPetition)
+        this.startScrollDate = new Date(
+          Math.min(...result.map((elem) => new Date(elem[elem.length - 1].createdAt).getTime())) - 1
+        )
+        if (result.length === 0) {
+          this.startScrollDate = new Date(0)
+        }
+        result = result.filter((post) => !this.postService.postContainsBlockedOrMuted(post, false))
+      } else {
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Something went wrong :('
+        })
+      }
+      return result
+    } catch (error) {
+      return [[]]
+    }
   }
 
   async getBlogDetails(url: string, ignoreEmojis = false) {
