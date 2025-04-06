@@ -90,7 +90,7 @@
 				<span *ngIf="blogDetails.isBlueskyUser" class="badge bsky-badge">
       	  <fa-icon class="mr-2" [icon]="bskyIcon"></fa-icon>Bluesky
       	</span>
-      	<span *ngIf="blogDetails.followers / blogDetails.followed > 10" class="badge ratio-badge">
+      	<span *ngIf="blogDetails.followers / blogDetails.followed > 5" class="badge ratio-badge">
       		<fa-icon class="mr-2" [icon]="usersIcon"></fa-icon>Follower Ratio: {{ blogDetails.followers / blogDetails.followed | number }}
       	</span>
 			</div>
