@@ -92,7 +92,8 @@
       	</span>
       	<span
       		*ngIf="blogDetails.followers / blogDetails.followed > 5"
-      		class="badge ratio-badge">
+      		class="badge ratio-badge"
+      		matTooltip="{{ 'For every ' + (blogDetails.followers / blogDetails.followed | number: '1.0-0') + ' followers ' + blogDetails.url + ' follows 1 user.' }}">
       		<fa-icon class="mr-2" [icon]="usersIcon"></fa-icon>Follower Ratio: {{ blogDetails.followers / blogDetails.followed | number: '1.0-0' }}:1
       	</span>
 			</div>
