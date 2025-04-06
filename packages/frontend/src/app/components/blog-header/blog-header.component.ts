@@ -12,13 +12,15 @@ import {
   faUser,
   faUserSlash,
   faVolumeMute,
-  faVolumeUp
+  faVolumeUp,
+  faUsers
 } from '@fortawesome/free-solid-svg-icons'
 import { BlogDetails } from 'src/app/interfaces/blogDetails'
 import { BlocksService } from 'src/app/services/blocks.service'
 import { LoginService } from 'src/app/services/login.service'
 import { MessageService } from 'src/app/services/message.service'
 import { PostsService } from 'src/app/services/posts.service'
+import { MatTooltipModule } from '@angular/material/tooltip'
 
 import { AskDialogContentComponent } from '../ask-dialog-content/ask-dialog-content.component'
 import { EnvironmentService } from 'src/app/services/environment.service'
@@ -33,6 +35,7 @@ import { faBluesky } from '@fortawesome/free-brands-svg-icons'
     FontAwesomeModule,
     MatMenuModule,
     MatButtonModule,
+    MatTooltipModule,
     RouterModule,
     InfoCardComponent
   ],
@@ -51,6 +54,7 @@ export class BlogHeaderComponent implements OnChanges, OnDestroy {
   unmuteUserIcon = faVolumeUp
   userIcon = faUser
   bskyIcon = faBluesky
+  usersIcon = faUsers
   blockUserIcon = faUserSlash
   unblockServerIcon = faServer
   allowAsk = false
