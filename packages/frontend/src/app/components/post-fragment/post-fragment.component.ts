@@ -87,6 +87,8 @@ export class PostFragmentComponent implements OnChanges, OnDestroy {
 
   forceOldMediaStyle = localStorage.getItem('forceClassicMediaView') == 'true'
 
+  nonLinkMediaCount = 0
+
   constructor(
     private postService: PostsService,
     private loginService: LoginService,
@@ -123,6 +125,7 @@ export class PostFragmentComponent implements OnChanges, OnDestroy {
   ngOnChanges(): void {
     this.initializeContent()
     this.initializeEmojis()
+    this.nonLinkMediaCount = this.fragment.medias.filter((elem) => elem.mediaType != 'text/html').length
   }
 
   initializeContent() {

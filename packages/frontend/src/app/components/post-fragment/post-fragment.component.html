@@ -40,14 +40,14 @@
   </div>
   <section
     #mediaEnd
-    [ngClass]="{ 'media-carousel': !forceOldMediaStyle && fragment.medias.length > 1 }"
+    [ngClass]="{ 'media-carousel': !forceOldMediaStyle && nonLinkMediaCount > 1 }"
     class="flex flex-column gap-3 media-gallery"
   >
     @for (media of fragment.medias; track $index) {
       @if (media.mediaType != 'text/html') {
         <app-wafrn-media
           [ngClass]="{
-            'carousel-media': !forceOldMediaStyle && fragment.medias.length > 1
+            'carousel-media': !forceOldMediaStyle && nonLinkMediaCount > 1
           }"
           *ngIf="!seenMedia.includes($index)"
           [data]="media"
