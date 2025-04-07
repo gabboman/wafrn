@@ -26,6 +26,8 @@ export default function searchRoutes(app: Application) {
     // const success = false;
     // eslint-disable-next-line max-len
     const searchTerm: string = (req.query.term || '').toString().toLowerCase().trim()
+    // FUN FACT when searching remote posts you should not send the tolowercase thing lol
+    const searchTermNoLowerCase: string = (req.query.term || '').toString().trim()
     let users: any = []
     let localUsers: any = []
 
@@ -154,10 +156,10 @@ export default function searchRoutes(app: Application) {
             })
             if (existingPost) {
               // We have the post. We ask for an update of it!
-              remotePost = getPostThreadRecursive(usr, searchTerm, undefined, existingPost.id)
+              remotePost = getPostThreadRecursive(usr, searchTermNoLowerCase, undefined, existingPost.id)
               promises.push(remotePost)
             } else {
-              remotePost = getPostThreadRecursive(usr, searchTerm)
+              remotePost = getPostThreadRecursive(usr, searchTermNoLowerCase)
               promises.push(remotePost)
             }
           }
