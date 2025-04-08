@@ -16,7 +16,7 @@
       <input formControlName="email" type="email" matInput />
     </mat-form-field>
 
-    <mat-form-field class="w-full" subscriptSizing="dynamic">
+    <mat-form-field class="w-full">
       <mat-label>Password</mat-label>
       <input [type]="isPasswordVisible ? 'text' : 'password'" formControlName="password" matInput />
       <button mat-icon-button matSuffix type="button" (click)="togglePasswordVisibility()">
