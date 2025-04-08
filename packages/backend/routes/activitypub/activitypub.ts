@@ -14,6 +14,8 @@ import { getFollowerRemoteIds } from '../../utils/cacheGetters/getFollowerRemote
 import { checkuserAllowsThreads } from '../../utils/checkUserAllowsThreads.js'
 import { handlePostRequest } from '../../utils/activitypub/handlePostRequest.js'
 import { getPostSEOCache, getIndexSeo } from '../frontend.js'
+import { getUserOptions } from '../../utils/cacheGetters/getUserOptions.js'
+import { logger } from '../../utils/logger.js'
 
 // we get the user from the memory cache. if does not exist we try to find it
 async function getLocalUserByUrl(url: string): Promise<any> {
@@ -79,10 +81,29 @@ function activityPubRoutes(app: Application) {
             userForFediverse = JSON.parse(userCacheResult)
           } else {
             const emojis = await getUserEmojis(user.id)
+            const userOptions = await getUserOptions(user.id)
+            let unprocessedAttachments = userOptions.find((elem) => elem.optionName === 'fediverse.public.attachment')
+            let attachments: { type: string; name: string; value: string }[] = []
+            if (unprocessedAttachments) {
+              try {
+                const attachmentsArray: { name: string; value: string }[] = JSON.parse(
+                  unprocessedAttachments.optionValue
+                )
+                attachments = attachmentsArray.map((elem) => {
+                  return { ...elem, type: 'PropertyValue' }
+                })
+              } catch (error) {
+                logger.debug({
+                  message: `Error parsing attachment for user ${user.url}`,
+                  error: error
+                })
+              }
+            }
             userForFediverse = {
               '@context': ['https://www.w3.org/ns/activitystreams', 'https://w3id.org/security/v1'],
               id: `${environment.frontendUrl}/fediverse/blog/${user.url.toLowerCase()}`,
               type: 'Person',
+              attachment: attachments,
               following: `${environment.frontendUrl}/fediverse/blog/${user.url.toLowerCase()}/following`,
               followers: `${environment.frontendUrl}/fediverse/blog/${user.url.toLowerCase()}/followers`,
               featured: `${environment.frontendUrl}/fediverse/blog/${user.url.toLowerCase()}/featured`,
