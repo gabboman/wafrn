@@ -27,19 +27,19 @@
       </mat-error>
     </mat-form-field>
 
-    <mat-form-field class="w-full mb-3">
+    <mat-form-field class="w-full mb-3" subscriptSizing="dynamic">
       <mat-label>Your username</mat-label>
       <input formControlName="url" type="text" matInput />
       <mat-hint>Right now we do not allow special characters nor spaces</mat-hint>
     </mat-form-field>
 
-    <mat-form-field class="w-full mb-3">
+    <mat-form-field class="w-full mb-3" subscriptSizing="dynamic">
       <mat-label>Describe yourself</mat-label>
       <input formControlName="description" type="text" matInput />
       <mat-hint>A short description of yourself so other people can know who you are</mat-hint>
     </mat-form-field>
 
-    <mat-form-field class="w-full mb-3">
+    <mat-form-field class="w-full mb-3" subscriptSizing="dynamic">
       <mat-label>Your birth date</mat-label>
       <input
         formControlName="birthDate"
@@ -55,7 +55,7 @@
       <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
       <mat-datepicker #picker></mat-datepicker>
     </mat-form-field>
-    <mat-form-field class="w-full mb-3">
+    <mat-form-field class="w-full mb-3" subscriptSizing="dynamic">
       <mat-label>Gender</mat-label>
       <mat-hint>This actually does not do anything at all</mat-hint>
       <mat-select>
