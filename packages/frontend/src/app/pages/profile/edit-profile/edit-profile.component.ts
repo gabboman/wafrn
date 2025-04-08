@@ -30,6 +30,8 @@ export class EditProfileComponent implements OnInit {
     { level: 2, name: 'Only allow asks from identified users' },
     { level: 3, name: 'Disable asks' }
   ]
+
+  fediAttachments: { name: string; value: string }[] = [{ name: '', value: '' }]
   editProfileForm = new UntypedFormGroup({
     avatar: new UntypedFormControl('', []),
     name: new FormControl('', Validators.required),
@@ -123,7 +125,11 @@ export class EditProfileComponent implements OnInit {
   async onSubmit() {
     this.loading = true
     try {
-      const res = await this.loginService.updateProfile(this.editProfileForm, this.img, this.headerImg)
+      const res = await this.loginService.updateProfile(
+        { ...this.editProfileForm.value, attachments: this.getAttachmentValue() },
+        this.img,
+        this.headerImg
+      )
 
       this.messages.add({
         severity: 'success',
@@ -145,5 +151,13 @@ export class EditProfileComponent implements OnInit {
       severity: 'success',
       summary: `The emoji ${emoji.name} was copied to your clipboard`
     })
+  }
+
+  addFediAttachment() {
+    this.fediAttachments.push({ name: '', value: '' })
+  }
+
+  getAttachmentValue() {
+    return this.fediAttachments.filter((elem) => elem.name && elem.value)
   }
 }

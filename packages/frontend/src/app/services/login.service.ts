@@ -120,11 +120,7 @@ export class LoginService {
     return res
   }
 
-  async updateProfile(
-    updateProfileForm: UntypedFormGroup,
-    img: File | undefined,
-    headerImg: File | undefined
-  ): Promise<boolean> {
+  async updateProfile(updateProfileForm: any, img: File | undefined, headerImg: File | undefined): Promise<boolean> {
     let success = false
 
     const optionFormKeyMap = {
@@ -138,11 +134,12 @@ export class LoginService {
       forceClassicVideoPlayer: 'wafrn.forceClassicVideoPlayer',
       forceClassicAudioPlayer: 'wafrn.forceClassicAudioPlayer',
       enableConfetti: 'wafrn.enableConfetti',
-      forceClassicMediaView: 'wafrn.forceClassicMediaView'
+      forceClassicMediaView: 'wafrn.forceClassicMediaView',
+      attachments: 'fediverse.public.attachment'
     }
 
     try {
-      const { name, description, manuallyAcceptsFollows, ...form } = updateProfileForm.value
+      const { name, description, manuallyAcceptsFollows, ...form } = updateProfileForm
 
       const payload = this.utils.objectToFormData({
         name,

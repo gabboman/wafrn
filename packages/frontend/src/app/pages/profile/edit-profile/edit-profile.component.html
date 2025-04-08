@@ -14,7 +14,6 @@
     <div class="pt-2 px-3 border-round-md mb-4" style="border: 1px solid #999">
       <label for="avatar" class="block font-medium mb-2">Choose header image</label>
       <input
-        formControlName="headerImage"
         id="headerImage"
         type="file"
         accept="image/jpeg,image/png,image/webp,image/gif"
@@ -123,8 +122,34 @@
         >To change your password, please use the reset password form</a
       >
     </div>
-    <button [disabled]="!editProfileForm.valid" mat-flat-button color="primary" icon="pi pi-user" class="w-full">
-      Update profile
-    </button>
   </form>
+
+  <div class="w-full">Extra information (Fediverse exclusive)</div>
+
+  @for (attachment of fediAttachments; track $index) {
+    <form [hidden]="loading">
+      <div class="w-full">
+        <mat-form-field class="w-50">
+          <mat-label>Property name</mat-label>
+          <input [ngModelOptions]="{ standalone: true }" [(ngModel)]="fediAttachments[$index].name" matInput />
+        </mat-form-field>
+        <mat-form-field class="w-50">
+          <mat-label>Property value</mat-label>
+          <input [ngModelOptions]="{ standalone: true }" [(ngModel)]="fediAttachments[$index].value" matInput />
+        </mat-form-field>
+      </div>
+    </form>
+  }
+  <div (click)="addFediAttachment()">+</div>
+
+  <button
+    (click)="onSubmit()"
+    [disabled]="!editProfileForm.valid"
+    mat-flat-button
+    color="primary"
+    icon="pi pi-user"
+    class="w-full"
+  >
+    Update profile
+  </button>
 </mat-card>
