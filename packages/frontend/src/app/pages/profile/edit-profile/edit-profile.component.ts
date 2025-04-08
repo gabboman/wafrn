@@ -106,6 +106,14 @@ export class EditProfileComponent implements OnInit {
       }
       const disableCW = localStorage.getItem('disableCW') == 'true'
       this.editProfileForm.controls['disableCW'].patchValue(disableCW)
+      const fediAttachments = blogDetails.publicOptions.find(
+        (elem) => elem.optionName === 'fediverse.public.attachment'
+      )
+      if (fediAttachments) {
+        try {
+          this.fediAttachments = JSON.parse(fediAttachments.optionValue)
+        } catch (error) {}
+      }
       this.loading = false
     })
   }

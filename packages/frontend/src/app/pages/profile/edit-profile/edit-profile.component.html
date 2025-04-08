@@ -124,7 +124,7 @@
     </div>
   </form>
 
-  <div class="w-full">Extra information (Fediverse exclusive)</div>
+  <div [hidden]="loading" class="w-full">Extra information (Fediverse exclusive)</div>
 
   @for (attachment of fediAttachments; track $index) {
     <form [hidden]="loading">
@@ -140,7 +140,7 @@
       </div>
     </form>
   }
-  <div (click)="addFediAttachment()">+</div>
+  <div [hidden]="loading" (click)="addFediAttachment()">+</div>
 
   <button
     (click)="onSubmit()"
