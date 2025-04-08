@@ -302,6 +302,7 @@ export default function userRoutes(app: Application) {
             await updateBlueskyProfile(bskySession, user)
           }
           success = true
+          await redisCache.del('fediverse:user:base:' + posterId)
         }
       } catch (error) {
         logger.error(error)
