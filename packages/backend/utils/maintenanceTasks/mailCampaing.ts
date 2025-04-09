@@ -36,9 +36,12 @@ async function sendMail() {
 
 <p>The wafrn team has grown up, its a lot more than just gabboman... Thats why, in the part of these emails where I say "give me money" instead of that, I am going to say "give money to the team!"</p>
 <ul>
+<li><a target="_blank" href="https://ko-fi.com/juandjara">Javascript</a> made <a target="_blank" href="https://app.wafrn.net/fediverse/post/271626cb-660a-412f-92a9-55faa6ebc89a">the mobile app</a>, its realy cool </li>
+
 <li><a target="_blank" href="https://ko-fi.com/cyrneko/tiers">Alexia</a> has helped improve the quality of the code and made the way for other improvements. She has done a lot to help wafrn grow</li>
-<li><a target="_blank" href="https://ko-fi.com/kaaskop">Alex</a> not only did the "fan theme" but he also is the person who I comissioned our logo. You can donate to him <a target="_blank" href="https://ko-fi.com/kaaskop">here</a> or you <a target="_blank" href="https://app.wafrn.net/blog/@kaaskop@second.demae.party">could comission him some art!</a></li>
+<li><a target="_blank" href="https://ko-fi.com/mondori">Alexander</a> not only did the "fan theme" but he also is the person who I comissioned our logo. You can donate to him <a target="_blank" href="https://ko-fi.com/mondori">here</a> or you <a target="_blank" href="https://app.wafrn.net/blog/@mondori_art@delen.2ezelf.net">could comission him some art!</a></li>
 <li><a target="_blank" href="https://ko-fi.com/fireisgood">FireIsGood</a> made lots of small improvements to wafrn over christmas!</li>
+<li><a target="_blank" href="https://ko-fi.com/motivatedtomato">motivatedtomato</a> helped by creating the WAFRNVERSE theme, inspired by nintendoo's miiverse style!</li>
 <li><a target="_blank" href="https://ko-fi.com/campos02">Campos</a> helped by doing some fixes to the bluesky integration of wafrn! Our first version had some issues and this one... has less issues!</li>
 <li>And finaly... we have to link the wafrn <a target="_blank" href="https://patreon.com/wafrn">patreon</a> and <a target="_blank" href="https://ko-fi.com/wafrn">kofi</a>. You can also give me money but if you can, go help other people who also makes wafrn a very good place!</li>
 
