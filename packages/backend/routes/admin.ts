@@ -267,6 +267,26 @@ export default function adminRoutes(app: Application) {
     res.send({ success: true })
   })
 
+  app.post('/api/admin/userUsedVPN', authenticateToken, adminToken, async (req: AuthorizedRequest, res: Response) => {
+    if (req.body.id) {
+      const userToDelete = await User.findByPk(req.body.id)
+      if (userToDelete) {
+        const emailPromise = sendActivationEmail(
+          userToDelete.email,
+          '',
+          `Registrations at ${environment.frontendUrl} with vpn are not allowed`,
+          `<h1>Hello ${userToDelete.url}, we got a lot of abusers registering with vpns and for our users and my safety I can not allow that.</h1>
+          <p>There is a quantity of gore you can see before you say “fuck this shit”</p>
+          <p>I am sorry. I promise I wont do evil shit with your data, wont sell it or anything. But yeah.</p>
+          <p>I have freed up your email if you want to join again without a vpn.</p>
+          <p>Thanks for your understanding and Im sorry</p>`
+        )
+        Promise.allSettled([emailPromise, userToDelete.destroy()])
+      }
+    }
+    res.send({ success: true })
+  })
+
   app.post(
     '/api/admin/notActivateAndSendEmail',
     authenticateToken,

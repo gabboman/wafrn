@@ -29,6 +29,11 @@ export class PendingUsersComponent {
     this.reloadList()
   }
 
+  async userUsedVPN(id: string) {
+    await this.adminService.userUsedVPN(id)
+    this.reloadList()
+  }
+
   reloadList() {
     this.pendingUsers = []
     this.adminService.getPendingActivationUsers().then((response) => {

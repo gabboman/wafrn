@@ -136,6 +136,24 @@
       </p>
     </details>
   }
+  @if (blogDetails.url.startsWith('@')) {
+    <app-info-card [type]="userLoggedIn ? 'info' : 'caution'">
+      {{
+        userLoggedIn
+          ? 'As this user is from a remote instance, the shown information may be incomplete.'
+          : 'To see external users you need to be logged in. You can view their profile on their actual instance.'
+      }}
+      <a
+        [href]="
+          blogDetails.url.split('@').length === 3
+            ? blogDetails.remoteId
+            : 'https://bsky.app/profile/' + blogDetails.url.split('@')[1]
+        "
+        target="_blank"
+        >View on remote instance</a
+      >
+    </app-info-card>
+  }
   @if (!blogDetails.url.startsWith('@') || (blogDetails.followers && blogDetails.followed)) {
     <footer class="mt-4 py-3 flex justify-content-evenly follow-counts">
       <div class="flex flex-column justify-content-center">
@@ -159,21 +177,3 @@
     </footer>
   }
 </mat-card>
-@if (blogDetails.url.startsWith('@')) {
-  <app-info-card [type]="userLoggedIn ? 'info' : 'caution'">
-    {{
-      userLoggedIn
-        ? 'As this user is from a remote instance, the shown information may be incomplete.'
-        : 'To see external users you need to be logged in. You can view their profile on their actual instance.'
-    }}
-    <a
-      [href]="
-        blogDetails.url.split('@').length === 3
-          ? blogDetails.remoteId
-          : 'https://bsky.app/profile/' + blogDetails.url.split('@')[1]
-      "
-      target="_blank"
-      >View on remote instance</a
-    >
-  </app-info-card>
-}

@@ -67,6 +67,14 @@ export class AdminService {
     )
   }
 
+  async userUsedVPN(id: string): Promise<any> {
+    return firstValueFrom(
+      this.http.post(`${EnvironmentService.environment.baseUrl}/admin/userUsedVPN`, {
+        id
+      })
+    )
+  }
+
   async activateUser(id: string): Promise<any> {
     return firstValueFrom(
       this.http.post(`${EnvironmentService.environment.baseUrl}/admin/activateUser`, {
