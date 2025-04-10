@@ -24,7 +24,19 @@ function isColorTheme(value: string): value is ColorTheme {
 function isColorScheme(value: string): value is ColorScheme {
   return colorSchemeVariants.includes(value as ColorScheme)
 }
-const colorSchemeVariants = ['default', 'tan', 'green', 'gold', 'red', 'pink', 'grey', 'rizzler', 'wafrnverse', 'fan'] as const
+const colorSchemeVariants = [
+  'default',
+  'tan',
+  'green',
+  'gold',
+  'red',
+  'pink',
+  'grey',
+  'wafrn98',
+  'rizzler',
+  'wafrnverse',
+  'fan'
+] as const
 type ColorSchemeTuple = typeof colorSchemeVariants
 type ColorScheme = ColorSchemeTuple[number]
 
