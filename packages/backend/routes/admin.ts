@@ -281,7 +281,8 @@ export default function adminRoutes(app: Application) {
           <p>I have freed up your email if you want to join again without a vpn.</p>
           <p>Thanks for your understanding and Im sorry</p>`
         )
-        Promise.allSettled([emailPromise, userToDelete.destroy()])
+        await userToDelete.destroy()
+        Promise.allSettled([emailPromise])
       }
     }
     res.send({ success: true })
