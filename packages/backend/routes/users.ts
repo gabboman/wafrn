@@ -12,6 +12,7 @@ import {
   Post,
   ServerBlock,
   User,
+  UserBookmarkedPosts,
   UserEmojiRelation,
   UserOptions
 } from '../db.js'
@@ -655,7 +656,7 @@ export default function userRoutes(app: Application) {
           const agent = new BskyAgent({
             service: 'https://' + environment.bskyPds
           })
-          const sanitizedUrl = user.url.replaceAll('_', '-')
+          const sanitizedUrl = user.url.replaceAll('_', '-').replaceAll('.', '-')
           const bskyPassword = generateRandomString()
           await agent.createAccount({
             email: `${user.url}@${environment.instanceUrl}`,
@@ -899,6 +900,30 @@ export default function userRoutes(app: Application) {
     if (askToIgnore) {
       await askToIgnore.destroy()
     }
+  })
+
+  app.post('/api/user/bookmarkPost', authenticateToken, async (req: AuthorizedRequest, res: Response) => {
+    let success = false
+    try {
+      if (req.body.postId) {
+        const userId = req.jwtData?.userId as string
+        const postId = req.body.postId
+        await UserBookmarkedPosts.create({
+          postId: postId,
+          userId: userId
+        })
+        success = true
+      }
+    } catch (error) {
+      logger.info({
+        message: `Error creating bookmark of post`,
+        error: error
+      })
+    }
+
+    res.send({
+      success: success
+    })
   })
 }
 

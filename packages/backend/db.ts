@@ -257,28 +257,32 @@ const UserOptions = sequelize.define(
   }
 )
 
-const PushNotificationToken = sequelize.define('pushNotificationTokens', {
-  token: {
-    type: Sequelize.STRING(768),
-    allowNull: false,
-    primaryKey: true
-  },
-  userId: {
-    type: Sequelize.UUID,
-    allowNull: false,
-  },
-}, {
-  indexes: [
-    {
-      unique: true,
-      fields: ['token']
+const PushNotificationToken = sequelize.define(
+  'pushNotificationTokens',
+  {
+    token: {
+      type: Sequelize.STRING(768),
+      allowNull: false,
+      primaryKey: true
     },
-    {
-      unique: false,
-      fields: ['userId']
+    userId: {
+      type: Sequelize.UUID,
+      allowNull: false
     }
-  ]
-})
+  },
+  {
+    indexes: [
+      {
+        unique: true,
+        fields: ['token']
+      },
+      {
+        unique: false,
+        fields: ['userId']
+      }
+    ]
+  }
+)
 
 const Quotes = sequelize.define('quotes', {})
 
@@ -665,6 +669,29 @@ const UserLikesPostRelations = sequelize.define(
   }
 )
 
+const UserBookmarkedPosts = sequelize.define('userBookmarkedPosts', {
+  userId: {
+    type: Sequelize.UUID,
+    allowNull: false,
+    primaryKey: true,
+    references: {
+      model: 'users',
+      key: 'id'
+    },
+    unique: false
+  },
+  postId: {
+    type: Sequelize.UUID,
+    allowNull: false,
+    primaryKey: true,
+    references: {
+      model: 'posts',
+      key: 'id'
+    },
+    unique: false
+  }
+})
+
 const QuestionPoll = sequelize.define('questionPoll', {
   endDate: Sequelize.DATE,
   multiChoice: Sequelize.BOOLEAN
@@ -938,6 +965,11 @@ UserLikesPostRelations.belongsTo(Post)
 User.hasMany(UserLikesPostRelations, { onDelete: 'cascade' })
 Post.hasMany(UserLikesPostRelations, { onDelete: 'cascade' })
 
+UserBookmarkedPosts.belongsTo(User)
+UserBookmarkedPosts.belongsTo(Post)
+User.hasMany(UserBookmarkedPosts, { onDelete: 'cascade' })
+Post.hasMany(UserBookmarkedPosts, { onDelete: 'cascade' })
+
 FederatedHost.belongsToMany(Post, {
   through: PostHostView,
   as: 'postView'
@@ -1046,6 +1078,7 @@ export {
   EmojiCollection,
   PostMentionsUserRelation,
   UserLikesPostRelations,
+  UserBookmarkedPosts,
   FederatedHost,
   ServerBlock,
   SilencedPost,

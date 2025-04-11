@@ -14,6 +14,7 @@ import {
   QuestionPollQuestion,
   Quotes,
   User,
+  UserBookmarkedPosts,
   UserEmojiRelation,
   UserLikesPostRelations
 } from '../db.js'
@@ -117,6 +118,18 @@ async function getLikes(postIds: string[]) {
   return await UserLikesPostRelations.findAll({
     attributes: ['userId', 'postId'],
     where: {
+      postId: {
+        [Op.in]: postIds
+      }
+    }
+  })
+}
+
+async function getBookmarks(postIds: string[], userId: string) {
+  return await UserBookmarkedPosts.findAll({
+    attributes: ['userId', 'postId'],
+    where: {
+      userId: userId,
       postId: {
         [Op.in]: postIds
       }
@@ -279,6 +292,7 @@ async function getUnjointedPosts(postIdsInput: string[], posterId: string) {
   let tags = getTags([...postIds, ...rewootIds])
 
   const likes = await getLikes(postIds)
+  const bookmarks = await getBookmarks(postIds, posterId)
   userIds = userIds.concat(likes.map((like: any) => like.userId))
   const users = User.findAll({
     attributes: ['url', 'avatar', 'id', 'name', 'remoteId', 'banned', 'bskyDid', 'isBlueskyUser', 'isFediverseUser'],
@@ -357,6 +371,7 @@ async function getUnjointedPosts(postIdsInput: string[], posterId: string) {
     medias: mediasToSend.filter((elem) => !!elem),
     tags: tagsFiltered.filter((elem) => !!elem),
     likes: likes.filter((elem) => !!elem),
+    bookmarks: bookmarks,
     quotes: quotesFiltered.filter((elem) => !!elem),
     quotedPosts: (await quotedPosts).map((elem: any) => filterPost(elem, postIdsToFullySend)).filter((elem) => !!elem),
     asks: asks.filter((elem) => !!elem)
@@ -375,4 +390,4 @@ function filterPost(postToBeFilter: any, postIdsToFullySend: string[]): any {
   return res
 }
 
-export { getUnjointedPosts, getMedias, getQuotes, getMentionedUserIds, getTags, getLikes, getEmojis }
+export { getUnjointedPosts, getMedias, getQuotes, getMentionedUserIds, getTags, getLikes, getBookmarks, getEmojis }
