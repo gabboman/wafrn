@@ -108,6 +108,14 @@ export class ColorSchemeSwitcherComponent {
   setColorScheme(scheme: ColorScheme) {
     this.colorScheme.set(scheme)
     localStorage.setItem('colorScheme', scheme)
+    const forceDarkModeThemes = ['wafrn98']
+    const forceLightModeThemes: string[] = []
+    if (forceDarkModeThemes.includes(scheme)) {
+      this.setTheme('dark')
+    }
+    if (forceLightModeThemes.includes(scheme)) {
+      this.setTheme('light')
+    }
   }
 
   updateCenterLayout() {
