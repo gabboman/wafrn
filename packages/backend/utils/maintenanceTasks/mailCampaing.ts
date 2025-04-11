@@ -18,22 +18,16 @@ async function sendMail() {
   })
 
   for await (const user of users) {
-    const subject = `Wafrn had A LOT of updates ${user.url}! We have a beta app with notifications, an updated editor, updated themes, updated features!`
+    const subject = `Wafrn monthly propaganda for ${user.url}! More themes! More jank! More herobrine!`
     const body = `
     <h1>Hello ${user.url}!</h1>
 <a  target="_blank" href="https://app.wafrn.net"><img style="width:100%" src="https://app.wafrn.net/assets/logo.png" /> </a>
 <p>Ok so you clicked, that's good. Lets get into it!</p>
-<p>Our friend <a  target="_blank" href="https://app.wafrn.net/blog/javascript">@javascript</a> made a phone app! The app is still not avaiable on the main stores, but you can download the beta <a  target="_blank" href="https://app.wafrn.net/fediverse/post/271626cb-660a-412f-92a9-55faa6ebc89a">here</a> and help us test it! Both for android and iphone!</p>
-<p>It was hard, but we also got notifications working in the app :D</p>
-<p>Also, <a  target="_blank" href="https://app.wafrn.net/blog/alexia">@Alexia</a> updated the editor on mobile and pc, making it a bit cooler!</p>
-<img style="max-width:80%" src="https://media.wafrn.net/1740672391733_262acc362f688a440ce332c5cc2a54060f661df0_processed.webp"/>
-<p>Between <a  target="_blank" href="https://app.wafrn.net/blog/alexia">@Alexia</a> and <a  target="_blank" href="https://app.wafrn.net/blog/FireIsGood">@FireIsGood</a> we got custom default themes! And thanks to <a  target="_blank" href="https://app.wafrn.net/blog/nugget">Alex</a> one of them is inspired by a website that you may be familiar with! Log in to wafrn and select... THE FAN THEME</p>
-<img style="max-width:80%" src="https://media.wafrn.net/1740672651944_b1b0f9de881c02dea78495983a7c0d7faa02561c_processed.webp" />
-<p> Take a look at the FAN THEME!!</p>
-<img style="width:100%" src="https://media.wafrn.net/1740518367034_6d01f8f48cc374399405569680e8a1d759f7d63e_processed.webp" />
-<p>Ok this was cool right?</p>
+<p>We have been doing lots of improvements! Bluesky integration? faster and less janky! Things? better. Users? more!</p>
+<p>Alexia made us a really cool temporal (or permanent who knows) landing page! Go share the wafrn page project with your enemies or take a look to it here! <a href="www.wafrn.net">www.wafrn.net</a></p>
+<p>Some of the custom themes include a WINDOWS 98 theme, a wafrnverse theme and stuff.</p>
+<p>Finaly, Tumblr is not gonna die. If you have an account there, please reblog <a target="_blank" href="https://www.tumblr.com/wafrn/780364634626670592/tumblr-will-not-die-but-this-post-is-wafrn">our propaganda</a> tho. It would be useful bringing people to our hellsite.</p>
 <h2>Come back to <a  target="_blank" href="https://app.wafrn.net">wafrn</a>, we miss you!</h2>
-
 <p>The wafrn team has grown up, its a lot more than just gabboman... Thats why, in the part of these emails where I say "give me money" instead of that, I am going to say "give money to the team!"</p>
 <ul>
 <li><a target="_blank" href="https://ko-fi.com/juandjara">Javascript</a> made <a target="_blank" href="https://app.wafrn.net/fediverse/post/271626cb-660a-412f-92a9-55faa6ebc89a">the mobile app</a>, its realy cool </li>
