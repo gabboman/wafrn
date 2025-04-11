@@ -120,6 +120,15 @@ export default function dashboardRoutes(app: Application) {
               [Op.in]: await getMutedPosts(posterId)
             }
           }
+          break
+        }
+        case 50: {
+          // bookmarked posts
+          whereObject = {
+            literal: sequelize.literal(
+              `"posts"."id" IN (SELECT "postId" FROM "userBookmarkedPosts" WHERE "userId"='${posterId}')`
+            )
+          }
         }
       }
       // we get the list of posts
