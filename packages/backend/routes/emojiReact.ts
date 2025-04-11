@@ -35,57 +35,60 @@ export default function emojiReactRoutes(app: Application) {
               id: emojiName
               // name: emojiName
             }
-      const existing = EmojiReaction.findOne({
-        where: {
-          userId: userId,
-          postId: postId,
-          emojiId: emoji.id
-        }
-      })
-      try {
-        await Promise.all([user, post, emoji, existing])
-        if ((await user) && (await post) && !(await existing)) {
-          const options = await getUserOptions((await user).id)
-          const userFederatesWithThreads = options.filter(
-            (elem) => elem.optionName === 'wafrn.federateWithThreads' && elem.optionValue === 'true'
-          )
-          if (userFederatesWithThreads.length === 0) {
-            const userOfPostToBeReacted = await User.findByPk((await post).userId)
-            if (userOfPostToBeReacted.url.toLowerCase().endsWith('threads.net')) {
-              res.sendStatus(500)
-              return
-            }
-          }
-          const reaction = await EmojiReaction.create({
-            userId: userId,
-            postId: postId,
-            emojiId: (await emoji).name ? emoji.name : null,
-            content: (await emoji).name ? emoji.name : emojiName
-          })
-          await reaction.save()
-          await createNotification(
-            {
-              notificationType: 'EMOJIREACT',
+      if (emoji) {
+        try {
+          const existing = EmojiReaction.findOne({
+            where: {
               userId: userId,
               postId: postId,
-              notifiedUserId: post.userId,
-              emojiReactionId: reaction.id
-            },
-            {
-              postContent: post?.content,
-              userUrl: (await user)?.url,
-              emoji: reaction.content
+              emojiId: emoji.id
             }
-          )
-          success = true
-          emojiReactRemote(reaction)
+          })
+          await Promise.all([user, post, emoji, existing])
+          if ((await user) && (await post) && !(await existing)) {
+            const options = await getUserOptions((await user).id)
+            const userFederatesWithThreads = options.filter(
+              (elem) => elem.optionName === 'wafrn.federateWithThreads' && elem.optionValue === 'true'
+            )
+            if (userFederatesWithThreads.length === 0) {
+              const userOfPostToBeReacted = await User.findByPk((await post).userId)
+              if (userOfPostToBeReacted.url.toLowerCase().endsWith('threads.net')) {
+                res.sendStatus(500)
+                return
+              }
+            }
+            const reaction = await EmojiReaction.create({
+              userId: userId,
+              postId: postId,
+              emojiId: (await emoji).name ? emoji.name : null,
+              content: (await emoji).name ? emoji.name : emojiName
+            })
+            await reaction.save()
+            await createNotification(
+              {
+                notificationType: 'EMOJIREACT',
+                userId: userId,
+                postId: postId,
+                notifiedUserId: post.userId,
+                emojiReactionId: reaction.id
+              },
+              {
+                postContent: post?.content,
+                userUrl: (await user)?.url,
+                emoji: reaction.content
+              }
+            )
+            success = true
+            emojiReactRemote(reaction)
+          }
+          if (await existing) {
+            success = true
+          }
+        } catch (error) {
+          logger.debug(error)
         }
-        if (await existing) {
-          success = true
-        }
-      } catch (error) {
-        logger.debug(error)
       }
+
       res.send({ success: success })
     }
   )

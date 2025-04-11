@@ -32,8 +32,8 @@ const colorSchemeVariants = [
   'red',
   'pink',
   'grey',
-  'wafrn98',
   'rizzler',
+  'wafrn98',
   'wafrnverse',
   'fan'
 ] as const
