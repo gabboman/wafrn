@@ -99,11 +99,13 @@ async function postToJSONLD(postId: string) {
       (await User.findOne({ where: { url: environment.deletedUser } }))
     const url = user.url.startsWith('@') ? user.url : `@${user.url}@${environment.instanceUrl}`
     const remoteId = user.url.startsWith('@') ? user.remoteId : `${environment.frontendUrl}/fediverse/blog/${user.url}`
-    fediMentions.push({
-      type: 'Mention',
-      name: url,
-      href: remoteId
-    })
+    if (remoteId) {
+      fediMentions.push({
+        type: 'Mention',
+        name: url,
+        href: remoteId
+      })
+    }
   }
 
   let contentWarning = false
