@@ -908,15 +908,43 @@ export default function userRoutes(app: Application) {
       if (req.body.postId) {
         const userId = req.jwtData?.userId as string
         const postId = req.body.postId
-        await UserBookmarkedPosts.create({
-          postId: postId,
-          userId: userId
+        await UserBookmarkedPosts.findOrCreate({
+          where: {
+            postId: postId,
+            userId: userId
+          }
         })
         success = true
       }
     } catch (error) {
       logger.info({
         message: `Error creating bookmark of post`,
+        error: error
+      })
+    }
+
+    res.send({
+      success: success
+    })
+  })
+
+  app.post('/api/user/unbookmarkPost', authenticateToken, async (req: AuthorizedRequest, res: Response) => {
+    let success = false
+    try {
+      if (req.body.postId) {
+        const userId = req.jwtData?.userId as string
+        const postId = req.body.postId
+        await UserBookmarkedPosts.destroy({
+          where: {
+            postId: postId,
+            userId: userId
+          }
+        })
+        success = true
+      }
+    } catch (error) {
+      logger.info({
+        message: `Error deleting bookmark of post`,
         error: error
       })
     }
