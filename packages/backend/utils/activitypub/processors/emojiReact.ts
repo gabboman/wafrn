@@ -13,27 +13,31 @@ async function EmojiReactActivity(body: activityPubObject, remoteUser: any, user
     const existingEmoji = await Emoji.findByPk(emojiRemote.id)
     emojiToAdd = existingEmoji
       ? existingEmoji
-      : await Emoji.create({
-          id: emojiRemote.id,
-          name: emojiRemote.name,
-          url: emojiRemote.icon?.url,
-          external: true
-        })
+      : (
+          await Emoji.findOrCreate({
+            where: {
+              id: emojiRemote.id,
+              name: emojiRemote.name,
+              url: emojiRemote.icon?.url,
+              external: true
+            }
+          })
+        )[0]
   }
   if (postToReact && apObject.content) {
-    const existing = await EmojiReaction.findOne({
+    const [created, reaction] = await EmojiReaction.findOrCreate({
       where: {
         remoteId: apObject.id
-      }
-    })
-    if (!existing) {
-      const reaction = await EmojiReaction.create({
+      },
+      defaults: {
         remoteId: apObject.id,
         userId: remoteUser.id,
         content: apObject.content,
         postId: postToReact.id,
         emojiId: emojiToAdd?.id
-      })
+      }
+    })
+    if (created) {
       await createNotification(
         {
           notificationType: 'EMOJIREACT',
