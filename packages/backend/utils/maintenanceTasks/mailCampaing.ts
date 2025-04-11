@@ -26,7 +26,6 @@ async function sendMail() {
 <p>We have been doing lots of improvements! Bluesky integration? faster and less janky! Things? better. Users? more!</p>
 <p>Alexia made us a really cool temporal (or permanent who knows) landing page! Go share the wafrn page project with your enemies or take a look to it here! <a href="www.wafrn.net">www.wafrn.net</a></p>
 <p>Some of the custom themes include a WINDOWS 98 theme, a wafrnverse theme and stuff.</p>
-<p>Finaly, Tumblr is not gonna die. If you have an account there, please reblog <a target="_blank" href="https://www.tumblr.com/wafrn/780364634626670592/tumblr-will-not-die-but-this-post-is-wafrn">our propaganda</a> tho. It would be useful bringing people to our hellsite.</p>
 <h2>Come back to <a  target="_blank" href="https://app.wafrn.net">wafrn</a>, we miss you!</h2>
 <p>The wafrn team has grown up, its a lot more than just gabboman... Thats why, in the part of these emails where I say "give me money" instead of that, I am going to say "give money to the team!"</p>
 <ul>
