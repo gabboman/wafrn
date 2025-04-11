@@ -43,6 +43,7 @@ import { faBluesky } from '@fortawesome/free-brands-svg-icons'
   styleUrl: './blog-header.component.scss'
 })
 export class BlogHeaderComponent implements OnChanges, OnDestroy {
+  parser = new DOMParser()
   @Input() blogDetails!: BlogDetails
   avatarUrl = ''
   headerUrl = ''
@@ -60,6 +61,7 @@ export class BlogHeaderComponent implements OnChanges, OnDestroy {
   allowAsk = false
   allowRemoteAsk = false
   isBlueskyUser = false
+  headerHTML = ''
 
   constructor(
     private loginService: LoginService,
@@ -67,7 +69,8 @@ export class BlogHeaderComponent implements OnChanges, OnDestroy {
     private messages: MessageService,
     public blockService: BlocksService,
     public dialogService: MatDialog,
-    public activatedRoute: ActivatedRoute
+    public activatedRoute: ActivatedRoute,
+    public environmentService: EnvironmentService
   ) {
     this.userLoggedIn = loginService.checkUserLoggedIn()
   }
@@ -100,6 +103,15 @@ export class BlogHeaderComponent implements OnChanges, OnDestroy {
       if (path && this.allowAsk && path.toLowerCase().endsWith('/ask')) {
         this.openAskDialog()
       }
+      const parsedAsHTML = this.parser.parseFromString(this.blogDetails.description, 'text/html')
+      const imgs = parsedAsHTML.getElementsByTagName('img')
+      Array.from(imgs).forEach((img, index) => {
+        console.log(img.src)
+        if (!img.src.startsWith(EnvironmentService.environment.externalCacheurl)) {
+          img.src = EnvironmentService.environment.externalCacheurl + encodeURIComponent(img.src)
+        }
+      })
+      this.headerHTML = parsedAsHTML.documentElement.innerHTML
     }
   }
 
