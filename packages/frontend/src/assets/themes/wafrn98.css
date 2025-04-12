@@ -3,901 +3,941 @@ theme by vv0ltz
 https://app.wafrn.net/blog/vv0ltz
  */
 
- @font-face {
-    font-family: 'Pixelify Sans';
-    font-style: normal;
-    font-stretch: 100%;
-    src: url(/assets/fonts/pixelify-sans-latin-400-normal.woff2) format('woff2'); 
-    unicode-range: U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD;
-  }
+ :root {    
+    
+  /* ELEMENT VARIABLES */  
+    
+  --main-bgcolor: #008080;
 
- :root {
-    /* ELEMENT VARIABLES */
-   
-    --main-bgcolor: #008080;
-   
-    --main-textcolor: black;
-   
-    --container-bordercolor: none;
-   
-    --link-textcolor: #00f;
-   
-    --link-textcolor-hover: #00f
-   
-    --link-textcolor-visited: #00f;
-   
-    --button-bgcolor: silver;
-   
-    --button-bgcolor-hover: silver;
-   
-    --button-accent-color: #00f;
-   
-    --button-accent-color-hover: #00f;
-   
-    --element-bgcolor: silver;
-   
-    --username-textcolor: #00f;
-   
-    --username-textcolor-hover: #00f
-   
-    --url-textcolor: #00f;
-   
-    --popup-textcolor: black;
-   
-    --popup-bgcolor: silver;
-   
-    --color-trans: 0.37s cubic-bezier(0.77, 0, 0.23, 1);
-   
-    --image-transoff: 0.37s cubic-bezier(0.88, 0.52, 0.48, 1);
-   
-    --image-trans: 0.37s cubic-bezier(0.81, -0.19, 0.27, 0.34);
-   
-    --mat-sys-corner-large: 0px;
-   
-    --mat-sys-corner-extra-large: 0px;
-   
-    --mat-sys-corner-extra-large-top: 0px;
-   
-    --mat-sys-corner-large-end: 0px;
-   
-    --mat-sys-corner-extra-small: 0px;
-   
-    --mat-sys-corner-extra-small-top: 0px;
-   
-    --mat-sys-corner-full: 0px;
-   
-    --mat-sys-corner-large-start: 0px;
-   
-    --mat-sys-corner-large-top: 0px;
-   
-    --mat-sys-corner-medium: 0px;
-   
-    --mat-sys-corner-small: 0px;
-   
-    --mat-sys-primary: #a9a9a9; 
-   
-    --mat-sys-surface-variant: silver;
-   
-    --mat-sys-on-surface-variant: black;
-   
-    --mat-sys-on-surface: black; 
-   
-    --mat-sys-secondary-container: #00f;
-   
-    --mat-sys-surface-container: silver;
-   
-    --mat-sys-surface-container-high: silver;
-   
-    --mat-sys-primary-container: navy;
-   
-    --mat-sys-outline: #323232;
-   
-    --mat-sys-error: maroon;
-   
-    --mat-sys-surface: silver;
-   
-  }
-   
-  /* BACKGROUND */
-   
-  .mat-drawer-content {
-    background-color: var(--main-bgcolor) !important;
-  }
-   
-  /* LINKS */
-   
-  a {
-    color: var(--link-textcolor);
-   
-    transition: var(--color-trans);
-  }
-   
-  a:visited {
-    color: var(--link-textcolor-visited);
-      outline: 1px dotted var(--link-textcolor-visited);
-  }
-   
-  a:hover {
-    color: var(--link-textcolor-hover);
-   
-    transition: var(--color-trans);
-      outline: 1px dotted var(--link-textcolor-hover);
-  }
-   
-  a:active {
-    color: var(--link-textcolor-hover);
-  }
-   
-  /* BUTTONS - these may be overwritten by the class of the button, see below */
-   
-  button {
-    background-color: var(--button-bgcolor);
-   
-    color: var(--main-textcolor);
-   
-    border-color: var(--button-accent-color);
-   
-    border-style: solid;
-   
-    border-width: 0px;
-   
-    border-radius: 3px;
-   
-    color: var(--main-textcolor);
-   
-    transition: var(--color-trans);
-  }
-   
-  button:hover {
-    background-color: var(--button-bgcolor-hover);
-   
-    color: var(button-accent-color);
-   
-    border-color: var(--button-accent-color-hover);
-   
-    border-style: solid;
-   
-    border-width: 0px;
-   
-    border-radius: 3px;
-   
-    color: var(--main-textcolor);
-   
-    transition: var(--color-trans);
-  }
-   
-  button:active {
-    background-color: var(--button-bgcolor-hover);
-   
-    color: var(button-accent-color);
-   
-    border-color: var(--button-accent-color-hover);
-   
-    border-style: solid;
-   
-    border-width: 0px;
-   
-    border-radius: 3px;
-   
-    color: var(--main-textcolor);
-   
-   transition: var(--color-trans);
-   
-    box-shadow: inset -1px -1px #ffffff, inset 1px 1px #0a0a0a, inset -2px -2px #dfdfdf, inset 2px 2px #808080;
-  }
-      .mat-mdc-raised-button:not(:disabled) {
-          background: silver;
-          box-shadow: inset -1px -1px #0a0a0a,inset 1px 1px #fff,inset -2px -2px grey,inset 2px 2px #dfdfdf;
-          border: none;
-          border-radius: 0px;
-      }
-   
-      .mat-mdc-menu-item:not([disabled]) {
-          color:black;
-      }
-   
-      /* .mat-mdc-checkbox .mat-internal-form-field {
-          color: black; 
-      } */
-  /* SIDE MENU */
-   
-      .mat-drawer-inner-container {
-          background: var(--element-bgcolor);
-      }
-   
-   
-   
-      .ml-3 {
-          color: var(--main-textcolor);
-      }
-   
-      .menu-item-icon {
-          color: var(--button-accent-color);
-      }
-   
-   
-  /* DASHBOARD TITLE */
-   
-  div.wafrn-container.mx-1 {
-    display: none;
-   
-    background-color: var(--main-bgcolor);
-  }
-   
-  div.wafrn-container.mx-1 h3 {
-    display: none;
-   
-    font-family: "Pixelify Sans", sans-serif;
-  }
-   
-  /* BUTTONS - use these i think */
-   
-  .mat-mdc-unelevated-button.mat-primary {
-    background-color: var(--button-bgcolor);
-   
-    border-color: var(--button-accent-color);
-   
-    border-width: 0px;
-   
-    color: var(--main-textcolor);
-   
-    transition: var(--color-trans);
-   
-    border-radius: 0;
-   
-    box-shadow: inset -1px -1px #0a0a0a,inset 1px 1px #fff,inset -2px -2px grey,inset 2px 2px #dfdfdf;
-  }
-   
-  .mat-mdc-unelevated-button.mat-primary:hover {
-    background-color: var(--button-bgcolor-hover);
-   
-    border-color: var(--button-accent-color-hover);
-   
-    color: var(--main-textcolor);
-   
-    border-width: 0px;
-   
-    transition: var(--color-trans);
-   
-    border-radius: 0;
-   
-    box-shadow: inset -1px -1px #0a0a0a,inset 1px 1px #fff,inset -2px -2px grey,inset 2px 2px #dfdfdf;
-  }
-   
-  .mat-mdc-unelevated-button {
-    background-color: var(--button-bgcolor);
-   
-    border-color: var(--button-accent-color);
-   
-    border-width: 0px;
-   
-    color: var(--main-textcolor);
-   
-    transition: var(--color-trans);
-   
-    border-radius: 0;
-   
-    box-shadow: inset -1px -1px #0a0a0a,inset 1px 1px #fff,inset -2px -2px grey,inset 2px 2px #dfdfdf;
-  }
-   
-  .mat-mdc-unelevated-button:hover {
-    background-color: var(--button-bgcolor-hover);
-   
-    border-color: var(--button-accent-color-hover);
-   
-    color: var(--main-textcolor);
-   
-    border-width: 0px;
-   
-    transition: var(--color-trans);
-   
-    border-radius: 0;
-   
-    box-shadow: inset -1px -1px #0a0a0a,inset 1px 1px #fff,inset -2px -2px grey,inset 2px 2px #dfdfdf;
-  }
-   
-  button[aria-label="Go back to the dashboard"] {
-    background-color: var(--button-bgcolor);
-   
-    border-color: var(--button-accent-color);
-   
-    color: var(--main-textcolor);
-   
-    transition: var(--color-trans);
-  }
-   
-  button[aria-label="Go back to the dashboard"]:hover {
-    background-color: var(--button-bgcolor-hover);
-   
-    border-color: var(--button-accent-color-hover);
-   
-    color: var(--main-textcolor);
-   
-    transition: var(--color-trans);
-  }
-   
-  /* LOADING - not quite sure this works */
-   
-  mat-spinner {
-    width: 42px;
-   
-    height: 42px;
-  }
-   
-  circle {
-    color: black !important;
-   
-    stroke-dasharray: 77px;
-   
-    stroke-width: 33px;
-  }
-   
-  p#if-you-see-this-load-more-posts {
-    color: var(--main-textcolor);
-  }
-   
-  /* POPUP TOOLTIPS */
-   
-  .mdc-tooltip__surface {
-    background-color: var(--popup-bgcolor) !important;
-   
-    color: var(--popup-textcolor) !important;
-   
-    border-radius: 2px;
-  }
-   
-  /* UNIVERSAL WAFRN CONTAINER */
-   
-  .wafrn-container {
-    background-color: var(--element-bgcolor) !important;
-   
-    color: var(--main-textcolor);
-   
-    border-radius: 0px;
-   
-    border-width: 0px;
-   
-    border-style: solid;
-   
-    border-color: var(--container-bordercolor);
-   
-    box-shadow: none;
-  }
-   
-  /* OTHER CONTAINERS (except left sidebar) */
-   
-      .p-3 {
-          background: var(--element-bgcolor);
-      }
-   
-      .mat-mdc-table {
-          background: var(--element-bgcolor) !important;
-      }
-   
-      .mat-mdc-table .mat-mdc-header-cell {
-          color: var(--main-textcolor);
-      }
-   
-      .embed-text {
-          color: var(--link-textcolor);
-      }
-   
-      .mat-mdc-paginator {
-          background: silver;
-      }
-   
-      .mat-expansion-panel {
-          background: silver;
-      }
-   
-      .mat-expansion-panel:not([class*="mat-elevation-z"]) {
-          box-shadow: inset -1px -1px #0a0a0a,inset 1px 1px #fff,inset -2px -2px grey,inset 2px 2px #dfdfdf;
-          border-radius: 0 !important;
-      }
-   
-  /* PROFILE */
-   
-  /*
-   
-  app-view-blog mat-card.wafrn-container {}
-   
-  app-view-blog img[alt="user avatar"] {}
-   
-  */
-   
-  /* UNFOLLOW BUTTON */
-   
-  .mat-mdc-unelevated-button.mat-warn {
-    color: var(--main-textcolor);
-   
-    background-color: #f44336;
-   
-    transition: var(--color-trans);
-  }
-   
-  .mat-mdc-unelevated-button.mat-warn:hover {
-    background-color: #f44336;
-   
-    transition: var(--color-trans);
-  }
-   
-  /* FOLLOW COUNT */
-   
-  /*
-   
-  div.follow-counts {}
-   
-  */
-   
-  /* TEXT EDITOR */
-   
-  .ql-snow > .ql-editor {
-    background-color: var(--element-bgcolor);
-   
-    color: var(--main-textcolor) !important;
-   
-    max-height: 600px;
-  }
-   
-  .ql-snow > .ql-editor:focus {
-    background-color: var(--element-bgcolor);
-   
-    color: var(--main-textcolor);
-  }
-   
-  /* CREATE POST */
-      :root .mat-mdc-dialog-inner-container {
-           --mat-sys-primary: ; 
-   
-    --mat-sys-on-surface-variant: black;
-   
-    --mat-sys-on-surface: black; 
-      }
-   
-   
-  /* POSTS */
-   
-  /* POST CONTAINER */
-   
-  .mat-mdc-card {
-    color: var(--main-textcolor);
-   
-    border-radius: 2px;
-   
-    border-color: var(--button-accent-color);
-   
-    box-shadow: none;
-  }
-   
-      .mat-mdc-card::after {
-          border: none;
-          border-radius: 0;
-          box-shadow: inset -1px -1px #0a0a0a,inset 1px 1px #dfdfdf,inset -2px -2px grey,inset 2px 2px #fff;
-      }
-   
-  /* DIVIDER LINE */
-   
-  app-post hr {
-    color: var(--element-bgcolor);
-   
-    border: 0px;
-  }
-   
-  /* POSTER INFO */
-   
-  .original-poster-name {
-    color: var(--username-textcolor) !important;
-   
-    transition: var(--color-trans);
-  }
-   
-  .original-poster-name:hover {
-    color: var(--username-textcolor-hover) !important;
-   
-    transition: var(--color-trans);
-  }
-   
-  .original-poster-url {
-    color: var(--url-textcolor);
-   
-    font-family: "Pixelify Sans", sans-serif;
-  }
-   
-  .avatar {
-    height: 45px;
-   
-    width: 45px;
-  }
-   
-  .avatar img {
-    border-radius: 3px;
-   
-    height: 45px;
-   
-    width: 45px;
-  }
-   
-  .user-name {
-    color: var(--username-textcolor) !important;
-   
-    transition: var(--color-trans);
-  }
-   
-  .user-name:hover {
-    color: var(--username-textcolor-hover) !important;
-   
-    transition: var(--color-trans);
-  }
-   
-  span.user-url {
-    color: #00f;
-   
-    font-family: "Pixelify Sans", sans-serif;
-  }
-   
-  /* FOLLOW BUTTON */
-   
-  button.follow-button {
-    background: none !important;
-   
-    color: #00f!important;
-   
-    border: none !important;
-   
-    transition: var(--color-trans);
-  }
-   
-  button.follow-button:hover {
-    background: none !important;
-   
-    color: var(--link-textcolor-hover) !important;
-   
-    border: none !important;
-   
-    transition: var(--color-trans);
-  }
-   
-  .mat-mdc-button-persistent-ripple {
-    display: none;
-  }
-   
-  /* NOTES BUTTON */
-   
-      .mat-mdc-outlined-button:not(:disabled) {
-          border-radius: 0;
-          color: black;
-          box-shadow: inset -1px -1px #0a0a0a,inset 1px 1px #fff,inset -2px -2px grey,inset 2px 2px #dfdfdf;
-      }
-   
-      .mat-mdc-outlined-button:active {
-          box-shadow: inset -1px -1px #ffffff, inset 1px 1px #0a0a0a, inset -2px -2px #dfdfdf, inset 2px 2px #808080;
-      }
-   
-      .mdc-button .mdc-button__label {
-          color: black;
-      }
-   
-  /* POST DATE */
-   
-  /*
-   
-  div.date-line {}
-   
-  svg.fa-globe {}
-   
-  */
-   
-  /* POST SHARE */
-   
-  app-post-actions button:hover {
-    background: none !important;
-   
-    border-width: 0px;
-  }
-   
-  svg.fa-share-nodes {
-    color: var(--button-accent-color);
-   
-    transition: var(--color-trans);
-  }
-   
-  svg.fa-share-nodes:hover {
-    color: var(--button-accent-color-hover);
-   
-    transition: var(--color-trans);
-  }
-   
-  svg.fa-chevron-down {
-    color: var(--button-accent-color);
-   
-    transition: var(--color-trans);
-  }
-   
-  svg.fa-chevron-down:hover {
-    color: var(--button-accent-color-hover);
-   
-    transition: var(--color-trans);
-  }
-   
-  /* CONTENT WARNING */
-   
-  #fragment-content-warning {
-    color: var(--main-textcolor);
-   
-    font-family: "Pixelify Sans", sans-serif;
-  }
-   
-  /*
-   
-  div.fragment-content-warning div.fragment-content {}
-   
-  div.fragment-content-warning button {}
-   
-  */
-   
-  /* POST TEXT */
-   
-  div.wafrn-text-default {
-    color: var(--main-textcolor);
-   
-    font-family: "Pixelify Sans", sans-serif;
-  }
-   
-  /* MENTIONS */
-   
-    :root .mention {
-          border-radius: 0;
-        color: white;
-      }
-   
-  a.mention {
-    color: var(--username-textcolor);
-   
-    transition: var(--color-trans);
-  }
-   
-  a.mention:hover {
-    color: var(--username-textcolor-hover);
-   
-    transition: var(--color-trans);
-  }
-   
-  /* MEDIA CONTAINER */
-   
-  app-wafrn-media {
-    max-width: 70%;
-   
-    display: block;
-   
-    margin-left: auto;
-   
-    margin-right: auto;
-  }
-   
-  /* IMAGES */
-   
-  app-wafrn-media img {
-    filter: brightness(0.7);
-   
-    transition: var(--image-transoff);
-  }
-   
-  app-wafrn-media img:hover {
-    filter: brightness(1);
-   
-    transition: var(--image-trans);
-  }
-   
-   
-  /* MEDIA DESCRIPTION */
-   
-  app-wafrn-media div.media-description {
-    background-color: var(--element-bgcolor) !important;
-   
-    border-radius: 0px;
-   
-    font-family: "Pixelify Sans", sans-serif;
-   
-    font-size: 11px;
-  }
-   
-  /* VOTING */
-   
-  /*
-   
-  .mdc-linear-progress__bar-inner {}
-   
-  .mdc-linear-progress__buffer-bar {}
-   
-  */
-   
-  /* TAGS */
-   
-  a.tag {
-    background-color: silver !important;
-   
-    color: var(--link-textcolor) !important;
-   
-    transition: var(--color-trans);
-   
-    font-family: "Pixelify Sans", sans-serif;
-   
-    box-shadow: inset -2px -2px #0a0a0a,inset 1px 1px #0a0a0a,inset 2px 2px #fff,inset -3px -3px grey,inset 3px 3px #dfdfdf;
-   
-    border-radius: 0;
-  }
-   
-  a.tag:hover {
-    color: var(--link-textcolor-hover) !important;
-   
-    transition: var(--color-trans);
-  }
-   
-      a.tag:active {
-          box-shadow: inset -1px -1px #ffffff, inset 1px 1px #0a0a0a, inset -2px -2px #dfdfdf, inset 2px 2px #808080;
-      }
-   
-  /* container of quoted post */
-   
-  div.quoted-post {
-    border-width: 2px;
-   
-    border-color: var(--button-accent-color);
-   
-    border-style: dotted;
-   
-    box-shadow: none;
-   
-    border-radius: 0;
-  }
-   
-  /* REACTS */
-   
-  #emoji-reactions button {
-    background-color: var(--element-bgcolor);
-   
-    border-width: 0px !important;
-   
-    transition: var(--color-trans);
-   
-    fill: var(--main-textcolor);
-  }
-   
-  #emoji-reactions button:hover {
-    background-color: var(--button-bgcolor-hover);
-   
-    transition: var(--color-trans);
-   
-    fill: var(--main-textcolor);
-  }
-   
-  /*
-   
-  #emoji-reactions .mat-mdc-tooltip-trigger {}
-   
-  #emoji-reactions .mat-mdc-tooltip-trigger:hover {}
-   
-  */
-   
-  app-emoji-react svg {
-    fill: var(--main-textcolor);
-   
-    transition: var(--color-trans);
-  }
-   
-  app-emoji-react svg:hover {
-    fill: var(--link-textcolor-hover);
-   
-    transition: var(--color-trans);
-  }
-   
-  /*
-   
-  div.emojireact-overlay {}
-   
-  */
-   
-  /* POST ACTIONS */
-   
-  /*
-   
-  app-post hr > div a {}
-   
-  app-post hr > div a:hover {}
-   
-  */
-   
-  fa-icon[mattooltip="Quote woot"] {
-    color: var(--main-textcolor);
-   
-    transition: var(--color-trans);
-  }
-   
-  fa-icon[mattooltip="Quote woot"]:hover {
-    color: var(--main-textcolor);
-   
-    transition: var(--color-trans);
-  }
-   
-  fa-icon[mattooltip="Quick rewoot"] {
-    color: var(--main-textcolor);
-   
-    transition: var(--color-trans);
-  }
-   
-  fa-icon[mattooltip="Quick rewoot"]:hover {
-    color: var(--main-textcolor);
-   
-    transition: var(--color-trans);
-  }
-   
-  fa-icon[mattooltip="Delete rewoot"] {
-    color: var(--main-textcolor);
-   
-    transition: var(--color-trans);
-  }
-   
-  fa-icon[mattooltip="Delete rewoot"]:hover {
-    color: var(--main-textcolor);
-   
-    transition: var(--color-trans);
-  }
-   
-  fa-icon[mattooltip="Reply woot"] {
-    color: var(--main-textcolor);
-   
-    transition: var(--color-trans);
-  }
-   
-  fa-icon[mattooltip="Reply woot"]:hover {
-    color: var(--main-textcolor);
-   
-    transition: var(--color-trans);
-  }
-   
-  fa-icon[mattooltip="Like woot"] {
-    color: var(--main-textcolor);
-   
-    transition: var(--color-trans);
-  }
-   
-  fa-icon[mattooltip="Like woot"]:hover {
-    color: var(--main-textcolor);
-   
-    transition: var(--color-trans);
-  }
-   
-  fa-icon[mattooltip="Remove like"] {
-    color: var(--main-textcolor);
-   
-    transition: var(--color-trans);
-  }
-   
-  fa-icon[mattooltip="Remove like"]:hover {
-    color: var(--main-textcolor);
-   
-    transition: var(--color-trans);
-  }
-   
-  fa-icon[mattooltip="Delete woot"] {
-    color: var(--main-textcolor);
-   
-    transition: var(--color-trans);
-  }
-   
-  fa-icon[mattooltip="Delete woot"]:hover {
-    color: var(--main-textcolor);
-   
-    transition: var(--color-trans);
-  }
-   
-  /* "USER REWOOTED/REPLIED POST DIV" */
-      .nudge-left {
-          background: linear-gradient(90deg,navy,#1084d0);
-          margin-left: -0.9rem !important;
-          margin-right: -0.9rem;
-          margin-top: -0.65rem;
-  }
-      .nudge-left .user-name, .post-action, .ribbon-date, .ribbon-icon {
-          color: white !important;
-      }
+  --main-textcolor: black;
+
+  --container-bordercolor: none;
+
+  --link-textcolor: #00f;
+
+  --link-textcolor-hover: #00f
+
+  --link-textcolor-visited: #00f;
+
+  --button-bgcolor: silver;
+
+  --button-bgcolor-hover: silver;
+
+  --button-accent-color: #00f;
+
+  --button-accent-color-hover: #00f;
+
+  --element-bgcolor: silver;
+
+  --username-textcolor: #00f;
+
+  --username-textcolor-hover: #00f
+
+  --url-textcolor: #00f;
+
+  --popup-textcolor: black;
+
+  --popup-bgcolor: silver;
+
+  --color-trans: 0.37s cubic-bezier(0.77, 0, 0.23, 1);
+
+  --image-transoff: 0.37s cubic-bezier(0.88, 0.52, 0.48, 1);
+
+  --image-trans: 0.37s cubic-bezier(0.81, -0.19, 0.27, 0.34);
+    
+  --mat-sys-corner-large: 0px;
+    
+  --mat-sys-corner-extra-large: 0px;
+    
+  --mat-sys-corner-extra-large-top: 0px;
+
+  --mat-sys-corner-large-end: 0px;
+
+  --mat-sys-corner-extra-small: 0px;
+ 
+  --mat-sys-corner-extra-small-top: 0px;
+
+  --mat-sys-corner-full: 0px;
+
+  --mat-sys-corner-large-start: 0px;
+
+  --mat-sys-corner-large-top: 0px;
+
+  --mat-sys-corner-medium: 0px;
+
+  --mat-sys-corner-small: 0px;
+    
+  --mat-sys-primary: #a9a9a9; 
+    
+  --mat-sys-surface-variant: silver;
+    
+  --mat-sys-on-surface-variant: black;
+    
+  --mat-sys-on-surface: black; 
+  
+  --mat-sys-secondary-container: #00f;
+    
+  --mat-sys-surface-container: silver;
+    
+  --mat-sys-surface-container-high: silver;
+    
+  --mat-sys-primary-container: navy;
+    
+  --mat-sys-outline: #323232;
+    
+  --mat-sys-error: maroon;
+
+  --mat-sys-surface: silver;
+    
+  --info-card-warning-background: #ff6b6b;
+    
+  --sys-on-primary-container: white;
+    
+    
+    
+}
+
+
+
+/* BACKGROUND */
+
+.mat-drawer-content {
+  background-color: var(--main-bgcolor) !important;
+}
+
+/* LINKS */
+
+a {
+  color: var(--link-textcolor);
+
+  transition: var(--color-trans);
+}
+
+a:visited {
+  color: var(--link-textcolor-visited);
+    outline: 1px dotted var(--link-textcolor-visited);
+}
+
+a:hover {
+  color: var(--link-textcolor-hover);
+
+  transition: var(--color-trans);
+    outline: 1px dotted var(--link-textcolor-hover);
+}
+
+a:active {
+  color: var(--link-textcolor-hover);
+}
+
+/* BUTTONS - these may be overwritten by the class of the button, see below */
+
+button {
+  background-color: var(--button-bgcolor);
+
+  color: var(--main-textcolor);
+
+  border-color: var(--button-accent-color);
+
+  border-style: solid;
+
+  border-width: 0px;
+
+  border-radius: 3px;
+
+  color: var(--main-textcolor);
+
+  transition: var(--color-trans);
+}
+
+button:hover {
+  background-color: var(--button-bgcolor-hover);
+
+  color: var(button-accent-color);
+
+  border-color: var(--button-accent-color-hover);
+
+  border-style: solid;
+
+  border-width: 0px;
+
+  border-radius: 3px;
+
+  color: var(--main-textcolor);
+
+  transition: var(--color-trans);
+}
+
+button:active {
+  background-color: var(--button-bgcolor-hover);
+
+  color: var(button-accent-color);
+
+  border-color: var(--button-accent-color-hover);
+
+  border-style: solid;
+
+  border-width: 0px;
+
+  border-radius: 3px;
+
+  color: var(--main-textcolor);
+
+ transition: var(--color-trans);
+    
+  box-shadow: inset -1px -1px #ffffff, inset 1px 1px #0a0a0a, inset -2px -2px #dfdfdf, inset 2px 2px #808080;
+}
+    .mat-mdc-raised-button:not(:disabled) {
+        background: silver;
+        box-shadow: inset -1px -1px #0a0a0a,inset 1px 1px #fff,inset -2px -2px grey,inset 2px 2px #dfdfdf;
+        border: none;
+        border-radius: 0px;
+    }
+    
+    .mat-mdc-menu-item:not([disabled]) {
+        color:black;
+    }
+    
+    /* .mat-mdc-checkbox .mat-internal-form-field {
+        color: black; 
+    } */
+  
+/* SIDE MENU */
+
+    .mat-drawer-inner-container {
+        background: var(--element-bgcolor);
+    }
+    
+   
+    
+    .ml-3 {
+        color: var(--main-textcolor);
+    }
+    
+    .menu-item-icon {
+        color: var(--button-accent-color);
+    }
+
+
+/* LOGO */
+    
+    .instance-logo {
+        content: url("https://cdn.wafrn.net/api/cache/?media=https%3A%2F%2Fmedia.wafrn.net%2F1744406752197_a2cbc3d0300270aa81ee9a6f2b5bfb94df612f5d_processed.webp");
+    }
+
+/* DASHBOARD TITLE */
+
+div.wafrn-container.mx-1 {
+  display: none;
+
+  background-color: var(--main-bgcolor);
+}
+
+div.wafrn-container.mx-1 h3 {
+  display: none;
+
+  font-family: Arial, sans-serif;
+  
+  text-rendering: optimizeLegibility;
+}
+
+/* BUTTONS - use these i think */
+
+.mat-mdc-unelevated-button.mat-primary {
+  background-color: var(--button-bgcolor);
+
+  border-color: var(--button-accent-color);
+
+  border-width: 0px;
+
+  color: var(--main-textcolor);
+
+  transition: var(--color-trans);
+    
+  border-radius: 0;
+    
+  box-shadow: inset -1px -1px #0a0a0a,inset 1px 1px #fff,inset -2px -2px grey,inset 2px 2px #dfdfdf;
+}
+
+.mat-mdc-unelevated-button.mat-primary:hover {
+  background-color: var(--button-bgcolor-hover);
+
+  border-color: var(--button-accent-color-hover);
+
+  color: var(--main-textcolor);
+
+  border-width: 0px;
+
+  transition: var(--color-trans);
+
+  border-radius: 0;
+    
+  box-shadow: inset -1px -1px #0a0a0a,inset 1px 1px #fff,inset -2px -2px grey,inset 2px 2px #dfdfdf;
+}
+
+.mat-mdc-unelevated-button {
+  background-color: var(--button-bgcolor);
+
+  border-color: var(--button-accent-color);
+
+  border-width: 0px;
+
+  color: var(--main-textcolor);
+
+  transition: var(--color-trans);
+
+  border-radius: 0;
+    
+  box-shadow: inset -1px -1px #0a0a0a,inset 1px 1px #fff,inset -2px -2px grey,inset 2px 2px #dfdfdf;
+}
+
+.mat-mdc-unelevated-button:hover {
+  background-color: var(--button-bgcolor-hover);
+
+  border-color: var(--button-accent-color-hover);
+
+  color: var(--main-textcolor);
+
+  border-width: 0px;
+
+  transition: var(--color-trans);
+    
+  border-radius: 0;
+    
+  box-shadow: inset -1px -1px #0a0a0a,inset 1px 1px #fff,inset -2px -2px grey,inset 2px 2px #dfdfdf;
+}
+
+button[aria-label="Go back to the dashboard"] {
+  background-color: var(--button-bgcolor);
+
+  border-color: var(--button-accent-color);
+
+  color: var(--main-textcolor);
+
+  transition: var(--color-trans);
+}
+
+button[aria-label="Go back to the dashboard"]:hover {
+  background-color: var(--button-bgcolor-hover);
+
+  border-color: var(--button-accent-color-hover);
+
+  color: var(--main-textcolor);
+
+  transition: var(--color-trans);
+}
+
+/* LOADING - not quite sure this works */
+
+mat-spinner {
+  width: 42px;
+
+  height: 42px;
+}
+
+circle {
+  color: black !important;
+
+  stroke-dasharray: 77px;
+
+  stroke-width: 33px;
+}
+
+p#if-you-see-this-load-more-posts {
+  color: var(--main-textcolor);
+}
+
+/* POPUP TOOLTIPS */
+
+.mdc-tooltip__surface {
+  background-color: var(--popup-bgcolor) !important;
+
+  color: var(--popup-textcolor) !important;
+
+  border-radius: 2px;
+}
+
+/* UNIVERSAL WAFRN CONTAINER */
+
+.wafrn-container {
+  background-color: var(--element-bgcolor) !important;
+
+  color: var(--main-textcolor);
+
+  border-radius: 0px;
+
+  border-width: 0px;
+
+  border-style: solid;
+
+  border-color: var(--container-bordercolor);
+
+  box-shadow: none;
+}
+    
+/* OTHER CONTAINERS (except left sidebar) */
+
+    .p-3 {
+        background: var(--element-bgcolor);
+    }
+    
+    .mat-mdc-table {
+        background: var(--element-bgcolor) !important;
+    }
+    
+    .mat-mdc-table .mat-mdc-header-cell {
+        color: var(--main-textcolor);
+    }
+    
+    .embed-text {
+        color: var(--link-textcolor);
+    }
+    
+    .mat-mdc-paginator {
+        background: silver;
+    }
+    
+    .mat-expansion-panel {
+        background: silver;
+    }
+    
+    .mat-expansion-panel:not([class*="mat-elevation-z"]) {
+        box-shadow: inset -1px -1px #0a0a0a,inset 1px 1px #fff,inset -2px -2px grey,inset 2px 2px #dfdfdf;
+        border-radius: 0 !important;
+    }
+    
+    .info-card.info {
+        background: var(--element-bgcolor) !important;
+        box-shadow: inset -1px -1px #0a0a0a,inset 1px 1px #fff,inset -2px -2px grey,inset 2px 2px #dfdfdf;
+        margin-top: 1rem;
+    }
+    
+    .mb-2 {
+        padding-left: 1rem;
+    }
+    
+    app-notifications .post-card hr {
+        border-color: silver;
+    }
+
+/* PROFILE */
+
+/*
+
+app-view-blog mat-card.wafrn-container {}
+
+app-view-blog img[alt="user avatar"] {}
+
+*/
+
+/* UNFOLLOW BUTTON */
+
+.mat-mdc-unelevated-button.mat-warn {
+  color: var(--main-textcolor);
+
+  background-color: #f44336;
+
+  transition: var(--color-trans);
+}
+
+.mat-mdc-unelevated-button.mat-warn:hover {
+  background-color: #f44336;
+
+  transition: var(--color-trans);
+}
+
+/* FOLLOW COUNT */
+
+/*
+
+div.follow-counts {}
+
+*/
+
+/* TEXT EDITOR */
+
+.ql-snow > .ql-editor {
+  background-color: var(--element-bgcolor);
+
+  color: var(--main-textcolor) !important;
+
+  max-height: 600px;
+}
+
+.ql-snow > .ql-editor:focus {
+  background-color: var(--element-bgcolor);
+
+  color: var(--main-textcolor);
+}
+    
+/* CREATE POST */
+    :root .mat-mdc-dialog-inner-container {
+         --mat-sys-primary: ; 
+    
+  --mat-sys-on-surface-variant: black;
+    
+  --mat-sys-on-surface: black; 
+    }
+
+    
+/* POSTS */
+
+/* POST CONTAINER */
+
+.mat-mdc-card {
+  color: var(--main-textcolor);
+
+  border-radius: 2px;
+
+  border-color: var(--button-accent-color);
+
+  box-shadow: none;
+}
+
+    .mat-mdc-card::after {
+        border: none;
+        border-radius: 0;
+        box-shadow: inset -1px -1px #0a0a0a,inset 1px 1px #dfdfdf,inset -2px -2px grey,inset 2px 2px #fff;
+    }
+
+/* DIVIDER LINE */
+
+app-post hr {
+  color: var(--element-bgcolor);
+
+  border: 0px;
+}
+
+/* POSTER INFO */
+
+.original-poster-name {
+  color: var(--username-textcolor) !important;
+
+  transition: var(--color-trans);
+}
+
+.original-poster-name:hover {
+  color: var(--username-textcolor-hover) !important;
+
+  transition: var(--color-trans);
+}
+
+.original-poster-url {
+  color: var(--url-textcolor);
+
+  font-family: Arial, sans-serif;
+    
+  text-rendering: optimizeLegibility;
+}
+
+.avatar {
+  height: 45px;
+
+  width: 45px;
+}
+
+.avatar img {
+  border-radius: 3px;
+
+  height: 45px;
+
+  width: 45px;
+}
+
+.user-name {
+  color: var(--username-textcolor) !important;
+
+  transition: var(--color-trans);
+}
+
+.user-name:hover {
+  color: var(--username-textcolor-hover) !important;
+
+  transition: var(--color-trans);
+}
+
+span.user-url {
+  color: #00f;
+
+  font-family: Arial, sans-serif;
+    
+  text-rendering: optimizeLegibility;
+}
+
+/* FOLLOW BUTTON */
+
+button.follow-button {
+  background: none !important;
+
+  color: #00f!important;
+
+  border: none !important;
+
+  transition: var(--color-trans);
+}
+
+button.follow-button:hover {
+  background: none !important;
+
+  color: var(--link-textcolor-hover) !important;
+
+  border: none !important;
+
+  transition: var(--color-trans);
+}
+
+.mat-mdc-button-persistent-ripple {
+  display: none;
+}
+
+/* NOTES BUTTON */
+    
+    .mat-mdc-outlined-button:not(:disabled) {
+        border-radius: 0;
+        color: black;
+        box-shadow: inset -1px -1px #0a0a0a,inset 1px 1px #fff,inset -2px -2px grey,inset 2px 2px #dfdfdf;
+    }
+    
+    .mat-mdc-outlined-button:active {
+        box-shadow: inset -1px -1px #ffffff, inset 1px 1px #0a0a0a, inset -2px -2px #dfdfdf, inset 2px 2px #808080;
+    }
+    
+    .mdc-button .mdc-button__label {
+        color: black;
+    }
+
+/* POST DATE */
+
+/*
+
+div.date-line {}
+
+svg.fa-globe {}
+
+*/
+
+/* POST SHARE */
+
+app-post-actions button:hover {
+  background: none !important;
+
+  border-width: 0px;
+}
+
+svg.fa-share-nodes {
+  color: var(--button-accent-color);
+
+  transition: var(--color-trans);
+}
+
+svg.fa-share-nodes:hover {
+  color: var(--button-accent-color-hover);
+
+  transition: var(--color-trans);
+}
+
+svg.fa-chevron-down {
+  color: var(--button-accent-color);
+
+  transition: var(--color-trans);
+}
+
+svg.fa-chevron-down:hover {
+  color: var(--button-accent-color-hover);
+
+  transition: var(--color-trans);
+}
+
+/* CONTENT WARNING */
+
+#fragment-content-warning {
+  color: var(--main-textcolor);
+
+  font-family: Arial, sans-serif;
+    
+  text-rendering: optimizeLegibility;
+}
+
+/*
+
+div.fragment-content-warning div.fragment-content {}
+
+div.fragment-content-warning button {}
+
+*/
+
+/* POST TEXT */
+
+div.wafrn-text-default {
+  color: var(--main-textcolor);
+
+  font-family: Arial, sans-serif;
+    
+  text-rendering: optimizeLegibility;
+}
+
+/* MENTIONS */
+    
+  :root .mention {
+        border-radius: 0;
+      color: white;
+    }
+
+a.mention {
+  color: white;
+
+  transition: var(--color-trans);
+}
+
+a.mention:hover {
+  color: white;
+
+  transition: var(--color-trans);
+}
+
+/* MEDIA CONTAINER */
+
+app-wafrn-media {
+  max-width: 70%;
+
+  display: block;
+
+  margin-left: auto;
+
+  margin-right: auto;
+}
+
+/* IMAGES */
+
+app-wafrn-media img {
+  filter: brightness(0.7);
+
+  transition: var(--image-transoff);
+}
+
+app-wafrn-media img:hover {
+  filter: brightness(1);
+
+  transition: var(--image-trans);
+}
+    
+
+/* MEDIA DESCRIPTION */
+
+app-wafrn-media div.media-description {
+  background-color: var(--element-bgcolor) !important;
+
+  border-radius: 0px;
+
+  font-family: Arial, sans-serif;
+    
+  text-rendering: optimizeLegibility;
+
+  font-size: 11px;
+}
+
+/* VOTING */
+
+/*
+
+.mdc-linear-progress__bar-inner {}
+
+.mdc-linear-progress__buffer-bar {}
+
+*/
+
+/* TAGS */
+
+a.tag {
+  background-color: silver !important;
+
+  color: var(--link-textcolor) !important;
+
+  transition: var(--color-trans);
+
+  font-family: Arial, sans-serif;
+    
+  text-rendering: optimizeLegibility;
+    
+  box-shadow: inset -2px -2px #0a0a0a,inset 1px 1px #0a0a0a,inset 2px 2px #fff,inset -3px -3px grey,inset 3px 3px #dfdfdf;
+    
+  border-radius: 0;
+}
+
+a.tag:hover {
+  color: var(--link-textcolor-hover) !important;
+
+  transition: var(--color-trans);
+}
+    
+    a.tag:active {
+        box-shadow: inset -1px -1px #ffffff, inset 1px 1px #0a0a0a, inset -2px -2px #dfdfdf, inset 2px 2px #808080;
+    }
+
+/* container of quoted post */
+
+div.quoted-post {
+  border-width: 2px;
+
+  border-color: var(--button-accent-color);
+
+  border-style: dotted;
+
+  box-shadow: none;
+    
+  border-radius: 0;
+}
+
+/* REACTS */
+
+#emoji-reactions button {
+  background-color: var(--element-bgcolor);
+
+  border-width: 0px !important;
+
+  transition: var(--color-trans);
+
+  fill: var(--main-textcolor);
+}
+
+#emoji-reactions button:hover {
+  background-color: var(--button-bgcolor-hover);
+
+  transition: var(--color-trans);
+
+  fill: var(--main-textcolor);
+}
+
+/*
+
+#emoji-reactions .mat-mdc-tooltip-trigger {}
+
+#emoji-reactions .mat-mdc-tooltip-trigger:hover {}
+
+*/
+
+app-emoji-react svg {
+  fill: var(--main-textcolor);
+
+  transition: var(--color-trans);
+}
+
+app-emoji-react svg:hover {
+  fill: var(--link-textcolor-hover);
+
+  transition: var(--color-trans);
+}
+
+/*
+
+div.emojireact-overlay {}
+
+*/
+
+/* POST ACTIONS */
+
+/*
+
+app-post hr > div a {}
+
+app-post hr > div a:hover {}
+
+*/
+
+fa-icon[mattooltip="Quote woot"] {
+  color: var(--main-textcolor);
+
+  transition: var(--color-trans);
+}
+
+fa-icon[mattooltip="Quote woot"]:hover {
+  color: var(--main-textcolor);
+
+  transition: var(--color-trans);
+}
+
+fa-icon[mattooltip="Quick rewoot"] {
+  color: var(--main-textcolor);
+
+  transition: var(--color-trans);
+}
+
+fa-icon[mattooltip="Quick rewoot"]:hover {
+  color: var(--main-textcolor);
+
+  transition: var(--color-trans);
+}
+
+fa-icon[mattooltip="Delete rewoot"] {
+  color: var(--main-textcolor);
+
+  transition: var(--color-trans);
+}
+
+fa-icon[mattooltip="Delete rewoot"]:hover {
+  color: var(--main-textcolor);
+
+  transition: var(--color-trans);
+}
+
+fa-icon[mattooltip="Reply woot"] {
+  color: var(--main-textcolor);
+
+  transition: var(--color-trans);
+}
+
+fa-icon[mattooltip="Reply woot"]:hover {
+  color: var(--main-textcolor);
+
+  transition: var(--color-trans);
+}
+
+fa-icon[mattooltip="Like woot"] {
+  color: var(--main-textcolor);
+
+  transition: var(--color-trans);
+}
+
+fa-icon[mattooltip="Like woot"]:hover {
+  color: var(--main-textcolor);
+
+  transition: var(--color-trans);
+}
+
+fa-icon[mattooltip="Remove like"] {
+  color: var(--main-textcolor);
+
+  transition: var(--color-trans);
+}
+
+fa-icon[mattooltip="Remove like"]:hover {
+  color: var(--main-textcolor);
+
+  transition: var(--color-trans);
+}
+
+fa-icon[mattooltip="Delete woot"] {
+  color: var(--main-textcolor);
+
+  transition: var(--color-trans);
+}
+
+fa-icon[mattooltip="Delete woot"]:hover {
+  color: var(--main-textcolor);
+
+  transition: var(--color-trans);
+}
+
+/* "USER REWOOTED/REPLIED POST DIV" */
+    .nudge-left {
+        background: linear-gradient(90deg,navy,#1084d0);
+        margin-left: -0.9rem !important;
+        margin-right: -0.9rem;
+        margin-top: -0.65rem;
+        padding-left: 1rem;
+        padding-right: 1rem;
+        padding-top: 5px;
+        padding-bottom: 5px;
+}
+    .nudge-left .user-name, .post-action, .ribbon-date, .ribbon-icon {
+        color: white !important;
+    }
