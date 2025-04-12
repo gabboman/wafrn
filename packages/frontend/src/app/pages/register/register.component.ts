@@ -38,6 +38,7 @@ export class RegisterComponent {
     'A stone with googly eyes',
     'Autistic robot',
     'Tomp',
+    'Jeroen',
     'Kinbol',
     'Lesbian except for David Tennant',
     'Heterosexual except for Henry Cavil',
