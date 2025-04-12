@@ -314,17 +314,22 @@ button[aria-label="Go back to the dashboard"] {
 /* Tags */
 a.tag {
   background: none !important;
+  border-color: var(--mat-sys-primary) !important;
+  border-style: solid;
   color: var(--mat-sys-primary) !important;
 }
 
 a.tag:hover {
   background: none !important;
+  border-color: var(--mat-sys-primary-container) !important;
+  border-style: solid;
   color: var(--mat-sys-primary-container) !important;
 }
 
-/* Quoted post */
-div.quoted-post {
-  border: 1px solid var(--mat-sys-outline-variant) !important;
+/* Quoted posts and asks */
+div.quoted-post,
+.ask-container {
+  border: 1px solid light-dark(#adadad, #4e4e4e) !important;
   border-radius: var(--mat-sys-corner-medium) !important;
   box-shadow: none !important;
 }
@@ -377,12 +382,6 @@ div.quoted-post {
 :root .blog-avatar-image {
   border-radius: var(--mat-sys-corner-small);
   box-shadow: var(--shadow-avatar);
-}
-
-:root .blog-header-image {
-  margin-left: -16px !important;
-  margin-right: -16px !important;
-  margin-top: -16px !important;
 }
 
 .follow-counts {
