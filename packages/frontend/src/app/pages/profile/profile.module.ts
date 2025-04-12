@@ -34,6 +34,10 @@ import { MyServerBlocksComponent } from './my-server-blocks/my-server-blocks.com
         loadChildren: () => import('../../pages/dashboard/dashboard.module').then((m) => m.DashboardModule)
       },
       {
+        path: 'bookmarkedPosts',
+        loadChildren: () => import('../../pages/dashboard/dashboard.module').then((m) => m.DashboardModule)
+      },
+      {
         path: 'importFollows',
         loadChildren: () => import('./import-followers/import-followers.module').then((m) => m.ImportFollowersModule)
       },

@@ -21,7 +21,9 @@ import {
   faServer,
   faUser,
   faPen,
-  faCheck
+  faCheck,
+  faBookBookmark,
+  faBookmark
 } from '@fortawesome/free-solid-svg-icons'
 import { firstValueFrom, Observable } from 'rxjs'
 import { ProcessedPost } from 'src/app/interfaces/processed-post'
@@ -64,6 +66,8 @@ export class BottomReplyBarComponent implements OnChanges {
   userIcon = faUser
   editedIcon = faPen
   checkIcon = faCheck
+  bookmarkIcon = faBookmark
+  unbookmarkIcon = faBookBookmark
 
   constructor(
     private loginService: LoginService,
@@ -160,6 +164,36 @@ export class BottomReplyBarComponent implements OnChanges {
       })
     }
     this.loadingAction = false
+  }
+  async unbookmarkPost() {
+    if (await this.postService.unbookmarkPost(this.fragment.id)) {
+      this.fragment.bookmarkers = this.fragment.bookmarkers.filter((elem) => elem != this.myId)
+      this.messages.add({
+        severity: 'success',
+        summary: 'You successfully unbookmarked this woot'
+      })
+    } else {
+      this.messages.add({
+        severity: 'error',
+        summary: 'Something went wrong. Please try again'
+      })
+    }
+  }
+  async bookmarkPost() {
+    if (await this.postService.bookmarkPost(this.fragment.id)) {
+      this.fragment.bookmarkers.push(this.myId)
+      const enableConfetti = localStorage.getItem('enableConfetti') == 'true'
+      this.messages.add({
+        severity: 'success',
+        summary: 'You successfully bookmarked this woot',
+        confettiEmojis: enableConfetti ? ['💾'] : []
+      })
+    } else {
+      this.messages.add({
+        severity: 'error',
+        summary: 'Something went wrong. Please try again'
+      })
+    }
   }
 
   async quickReblog(postToBeReblogged: ProcessedPost) {

@@ -125,7 +125,8 @@ export class NotificationsService {
         likes: [],
         quotes: petition.quotes,
         quotedPosts: [],
-        rewootIds: []
+        rewootIds: [],
+        bookmarks: []
       })
       let users = petition.users
       petition.emojiRelations.emojis.forEach((emoji) => {

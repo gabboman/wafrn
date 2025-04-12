@@ -35,6 +35,7 @@
             "themeEditor": "Theme editor",
             "mutedUsers": "Muted users",
             "mutedPosts": "Muted posts",
+            "bookmarkedPosts": "Bookmarked posts",
             "myBlockedUsers": "Blocked users",
             "myBlockedServers": "Blocked servers",
             "importFollows": "Import followers",

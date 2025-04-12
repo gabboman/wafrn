@@ -16,6 +16,7 @@ export interface unlinkedPosts {
   quotedPosts: basicPost[]
   rewootIds: string[]
   asks?: Ask[]
+  bookmarks: string[]
 }
 
 export interface basicPost {

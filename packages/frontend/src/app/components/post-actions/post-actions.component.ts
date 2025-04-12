@@ -17,7 +17,9 @@ import {
   faRepeat,
   faQuoteLeft,
   faGlobe,
-  faClose
+  faClose,
+  faBookmark,
+  faBookBookmark
 } from '@fortawesome/free-solid-svg-icons'
 import { MatButtonModule } from '@angular/material/button'
 import { MatMenuModule } from '@angular/material/menu'
@@ -62,6 +64,8 @@ export class PostActionsComponent implements OnChanges {
   silenceIcon = faBellSlash
   unsilenceIcon = faBell
   quoteIcon = faQuoteLeft
+  bookmarkIcon = faBookmark
+  unbookmarkIcon = faBookBookmark
 
   constructor(
     private messages: MessageService,
@@ -181,6 +185,36 @@ export class PostActionsComponent implements OnChanges {
         severity: 'success',
         summary: 'You successfully liked this woot',
         confettiEmojis: enableConfetti ? ['❤️', '💚', '💙'] : []
+      })
+    } else {
+      this.messages.add({
+        severity: 'error',
+        summary: 'Something went wrong. Please try again'
+      })
+    }
+  }
+  async unbookmarkPost() {
+    if (await this.postService.unbookmarkPost(this.content.id)) {
+      this.content.bookmarkers = this.content.bookmarkers.filter((elem) => elem != this.myId)
+      this.messages.add({
+        severity: 'success',
+        summary: 'You successfully unbookmarked this woot'
+      })
+    } else {
+      this.messages.add({
+        severity: 'error',
+        summary: 'Something went wrong. Please try again'
+      })
+    }
+  }
+  async bookmarkPost() {
+    if (await this.postService.bookmarkPost(this.content.id)) {
+      this.content.bookmarkers.push(this.myId)
+      const enableConfetti = localStorage.getItem('enableConfetti') == 'true'
+      this.messages.add({
+        severity: 'success',
+        summary: 'You successfully bookmarked this woot',
+        confettiEmojis: enableConfetti ? ['💾'] : []
       })
     } else {
       this.messages.add({

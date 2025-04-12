@@ -103,7 +103,6 @@ export class DashboardService {
           params: petitionData
         })
       )
-
       if (dashboardPetition) {
         result = this.postService.processPostNew(dashboardPetition)
         this.startScrollDate = new Date(

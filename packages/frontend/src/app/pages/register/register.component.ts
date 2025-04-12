@@ -72,6 +72,7 @@ export class RegisterComponent {
     "I don't have one and I am not interested",
     'this gender is not genuine',
     'STOP CALLING ME I DONT WANT ANY OF THOSE GENDERS I AM NOT INTERESTED',
+    'I dont know and I am not deciding it now just for you',
     'I fond mine in the war',
     'Unicorn',
     'Mine was programmed by Bethesa',

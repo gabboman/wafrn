@@ -75,6 +75,10 @@ export class DashboardComponent implements OnInit, OnDestroy {
       this.level = 25
       this.title = 'My silenced posts'
     }
+    if (purePath.endsWith('bookmarkedPosts')) {
+      this.level = 50
+      this.title = 'My bookmarked posts'
+    }
 
     this.updateFollowersSubscription = this.postService.updateFollowers.subscribe(() => {
       if (this.postService.followedUserIds.length === 1 && this.level === 1) {
@@ -183,7 +187,8 @@ export class DashboardComponent implements OnInit, OnDestroy {
           privacy: 0,
           userLikesPostRelations: [],
           emojis: [],
-          descendents: []
+          descendents: [],
+          bookmarkers: []
         }
       ])
     }

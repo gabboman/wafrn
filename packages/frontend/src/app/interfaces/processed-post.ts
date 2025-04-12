@@ -36,4 +36,5 @@ export interface ProcessedPost {
   bskyUri?: string
   isRewoot: boolean
   hierarchyLevel: number
+  bookmarkers: string[]
 }

@@ -62,7 +62,17 @@
       <fa-icon class="mr-2" [icon]="quoteIcon"></fa-icon>
       Quote woot
     </button>
-
+    @if (content.bookmarkers.includes(myId)) {
+      <button (click)="unbookmarkPost()" mat-menu-item>
+        <fa-icon class="mr-2" [icon]="unbookmarkIcon"></fa-icon>
+        Unbookmark woot
+      </button>
+    } @else {
+      <button (click)="bookmarkPost()" mat-menu-item>
+        <fa-icon class="mr-2" [icon]="bookmarkIcon"></fa-icon>
+        Bookmark woot
+      </button>
+    }
     @if (content.userId !== myId) {
       @if (content.userLikesPostRelations.includes(myId)) {
         <button (click)="unlikePost()" mat-menu-item>

@@ -58,6 +58,27 @@
       >
         <fa-icon size="lg" [icon]="reblogIcon" matTooltip="Reply woot"></fa-icon>
       </button>
+      @if (fragment.bookmarkers.includes(myId)) {
+        <button
+          aria-label="Unbookmark woot"
+          mat-button
+          color="accent"
+          (click)="unbookmarkPost()"
+          class="cursor-pointer unlike-icon"
+        >
+          <fa-icon size="lg" [icon]="unbookmarkIcon" matTooltip="unbokmark woot"></fa-icon>
+        </button>
+      } @else {
+        <button
+          aria-label="Bookmark woot"
+          mat-button
+          color="accent"
+          (click)="bookmarkPost()"
+          class="cursor-pointer unlike-icon"
+        >
+          <fa-icon size="lg" [icon]="bookmarkIcon" matTooltip="Bookmark woot"></fa-icon>
+        </button>
+      }
       @if (fragment.userId !== myId) {
         @if (fragment.userLikesPostRelations.includes(myId)) {
           <button

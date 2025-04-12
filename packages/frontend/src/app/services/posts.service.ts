@@ -193,6 +193,40 @@ export class PostsService {
     return res
   }
 
+  async bookmarkPost(id: string): Promise<boolean> {
+    let res = false
+    const payload = {
+      postId: id
+    }
+    try {
+      const response = await this.http
+        .post<{ success: boolean }>(`${EnvironmentService.environment.baseUrl}/user/bookmarkPost`, payload)
+        .toPromise()
+      await this.loadFollowers()
+      res = response?.success === true
+    } catch (exception) {
+      console.log(exception)
+    }
+    return res
+  }
+
+  async unbookmarkPost(id: string): Promise<boolean> {
+    let res = false
+    const payload = {
+      postId: id
+    }
+    try {
+      const response = await this.http
+        .post<{ success: boolean }>(`${EnvironmentService.environment.baseUrl}/user/unbookmarkPost`, payload)
+        .toPromise()
+      await this.loadFollowers()
+      res = response?.success === true
+    } catch (exception) {
+      console.log(exception)
+    }
+    return res
+  }
+
   async emojiReactPost(postId: string, emojiName: string, undo = false): Promise<boolean> {
     let res = false
     const payload = {
@@ -345,6 +379,7 @@ export class PostsService {
     const newPost: ProcessedPost = {
       ...elem,
       content: content,
+      bookmarkers: unlinked.bookmarks,
       emojiReactions: emojiReactions,
       user: user ? (user as SimplifiedUser) : nonExistentUser,
       tags: elem ? unlinked.tags.filter((tag) => tag.postId === elem.id) : [],
