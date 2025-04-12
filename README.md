@@ -59,13 +59,17 @@ packages/
 
 ### What will you need
 
-Before trying to host your own wafrn, we advise you to please, very please, [join our matrix channel](https://matrix.to/#/!KFbQcLWJSAEcoKGxhl:matrix.org?via=matrix.org&via=t2bot.io) to get support
+Before trying to host your own wafrn, we advise you to please, very please, [join our discord channel](https://discord.gg/EXpCBpvM) to get support
+
+Next decide if you wish to install and run wafrn natively or using docker
+
+### Native setup
 
 First, you will need a Debian 12 VPS. The cheap Contabo one can do the trick with no problem. Maybe even the OVH one that costs 3 euros too. But I advise as a minimum the Contabo one.
 You also need a domain.
 You will also need a way of sending emails to the people registering. An SMTP server or a free Brevo account with SMTP enabled can do the trick.
 
-### First steps
+#### First steps
 
 First, point the domain to your Debian VPS. Once that is done, we download the installer and execute it, as root.
 The installer will install all required packages, create the user and clone the repo and configure Apache.
@@ -83,7 +87,7 @@ This script will download all requirements and will create a user in your system
 
 Follow the instructions of the script. It will leave the system ready with wafrn installed, the frontend deployed and the server ready to start. You're almost there!
 
-### Populate database
+#### Populate database
 
 Ok, we have the stuff ready. Log in as the user we just created (it has asked it during the previous script)
 
@@ -126,11 +130,57 @@ You're ready!
 
 **Remember, remove the admin password from the environment.ts in the backend package!**
 
-### Update wafrn
+#### Update wafrn
 
 To update wafrn, you just do the command `npm run full:upgrade` in the wafrn folder.
 
 This will do a pull the latest changes and keep the waffle up to date
+
+### Docker
+
+To get wafrn running under docker we have provided a shiny `docker-compose.yml` file. The steps below have been tested on an Ubuntu machine with Docker installed via the official install scripts.
+
+#### Checkout project
+
+You'll need to get the project files ready in a directory of your choice. 
+
+```sh
+git clone https://github.com/gabboman/wafrn
+cd wafrn
+```
+
+Should do the trick
+
+#### Configure environment
+
+Create your own `.env` file by using the example provided:
+
+```sh
+cp .env.example .env
+```
+
+Next you'll need to fill in all of the details of your domain. For example if you're trying to run your website under `wafrn.example.com` (and your DNS is already pointing to the computer running docker) you'll need to update the following details:
+
+```sh
+DOMAINNAME=wafrn.example.com
+BACKEND_URL=wafrn.example.com
+FRONTEND_URL=wafrn.example.com
+SERVER_NAME=wafrn.example.com
+CACHE_URL=wafrn.example.com
+MEDIA_URL=wafrn.example.com
+```
+
+Also make sure to get your SMTP settings, your `ACME_EMAIL` and anything that looks like a password in the config changed from the default.
+
+#### Run
+
+Next to run the setup just call
+
+```
+docker compose build && docker compose up
+```
+
+Once the scripts run and everything is okay you should be able to access your website at `https://wafrn.example.com`
 
 </details>
 
