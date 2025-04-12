@@ -5,6 +5,7 @@ import { Application, Request, Response } from 'express'
 import { Post, QuestionPoll, QuestionPollAnswer, QuestionPollQuestion, User, sequelize } from '../db.js'
 import { Op, QueryTypes } from 'sequelize'
 import {
+  getBookmarks,
   getEmojis,
   getLikes,
   getMedias,
@@ -124,7 +125,8 @@ export default function forumRoutes(app: Application) {
         tags: await tags,
         likes: likes,
         quotes: quotes,
-        quotedPosts: await quotedPosts
+        quotedPosts: await quotedPosts,
+        bookmarks: await getBookmarks(postIds, userId)
       })
     } else {
       res.sendStatus(404)
