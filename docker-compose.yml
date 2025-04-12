@@ -5,33 +5,33 @@ services:
       dockerfile: Dockerfile
       # these args configure private env vars for the backend and public env vars for the frontend
       args:
-        ADMINUSER: admin
-        ADMINEMAIL: "admin@example.com"
-        ADMINPASSWORD: example_password # CHANGEME
-        JWTSECRET: secret
-        MAINDB: root:root@db:5432 # CHANGEME: 2nd 'root' is the password
-        DBNAME: wafrn
-        DOMAINNAME: localhost
-        PORT: 9000
-        SMTPHOST: smtp.example.com
-        SMTPUSER: wafrn
-        SMTPPORT: 9003
-        SMTPPASSWORD: example_password # CHANGEME
-        SMTPFROM: wafrn@example.com
-        REDISHOST: redis
-        REDISPORT: 6379
-        LOG_SQL_QUERIES: false # this makes the logs really heavy, but might be useful for debugging
-        FRONTEND_PATH: "\\/wafrn\\/packages\\/frontend" # needs to be escaped for the sed command (\/) and yaml (\\)
-        ## Uncomment and change these if you want to configure the frontend environment variables
-        # FRONTEND_LOGO: "\\/assets\\/logo.png"
-        # FRONTEND_URL: "localhost:9992"
-        # FRONTEND_SHORTEN_POSTS: 3
-        # FRONTEND_DISABLE_PWA: false
-        # FRONTEND_MAINTENANCE: false
-        ## You can use a full URL in the next three if you want
-        # FRONTEND_API_URL: "\\/api"
-        # FRONTEND_CACHE_URL: "\\/api\\/cache?media="
-        # FRONTEND_MEDIA_URL: "\\/api\\/uploads"
+        ADMINUSER: ${ADMINUSER}
+        ADMINEMAIL: ${ADMINEMAIL}
+        ADMINPASSWORD: ${ADMINPASSWORD}
+        JWTSECRET: ${JWTSECRET}
+        MAINDB: ${MAINDB}
+        DBNAME: ${DBNAME}
+        DOMAINNAME: ${DOMAINNAME}
+        PORT: ${PORT}
+        SMTPHOST: ${SMTPHOST}
+        SMTPUSER: ${SMTPUSER}
+        SMTPPORT: ${SMTPPORT}
+        SMTPPASSWORD: ${SMTPPASSWORD}
+        SMTPFROM: ${SMTPFROM}
+        REDISHOST: ${REDISHOST}
+        REDISPORT: ${REDISPORT}
+        LOG_SQL_QUERIES: ${LOG_SQL_QUERIES}
+        FRONTEND_PATH: ${FRONTEND_PATH}
+        MEDIA_URL: ${MEDIA_URL}
+        CACHE_URL: ${CACHE_URL}
+        FRONTEND_LOGO: ${FRONTEND_LOGO}
+        FRONTEND_URL: ${FRONTEND_URL}
+        FRONTEND_SHORTEN_POSTS: ${FRONTEND_SHORTEN_POSTS}
+        FRONTEND_DISABLE_PWA: ${FRONTEND_DISABLE_PWA}
+        FRONTEND_MAINTENANCE: ${FRONTEND_MAINTENANCE}
+        FRONTEND_API_URL: ${FRONTEND_API_URL}
+        FRONTEND_CACHE_URL: ${FRONTEND_CACHE_URL}
+        FRONTEND_MEDIA_URL: ${FRONTEND_MEDIA_URL}
     depends_on:
       - db
       - redis
@@ -43,6 +43,13 @@ services:
     volumes:
       - ./packages/backend/uploads:/wafrn/uploads
       - ./packages/backend/cache:/wafrn/cache
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.backend.rule=Host(`${DOMAINNAME}`) && (PathPrefix(`/api`) || PathPrefix(`/fediverse`) || PathPrefix(`/contexts`) || PathPrefix(`/post`) || PathPrefix(`/blog`) || PathPrefix(`/.well-known`))"
+      - "traefik.http.routers.backend.entrypoints=websecure"
+      - "traefik.http.routers.backend.tls.certresolver=myresolver"
+      - "traefik.http.middlewares.backend.headers.accesscontrolalloworiginlist=*"
+      - "traefik.http.middlewares.backend.headers.contentSecurityPolicy=default-src 'self' 'unsafe-inline' 'unsafe-eval' ${FRONTEND_URL} ${CACHE_URL} ${MEDIA_URL}; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' ${FRONTEND_URL}; img-src 'self' ${CACHE_URL} ${MEDIA_URL}; font-src 'self' ${CACHE_URL} ${MEDIA_URL}; object-src 'none'; frame-src 'none'; frame-ancestors 'none'; upgrade-insecure-requests; block-all-mixed-content"
 
   frontend:
     build:
@@ -50,24 +57,28 @@ services:
       dockerfile: packages/frontend/Dockerfile
       # these args configure apache redirections and headers
       args:
-        BACKEND_URL: backend:9000 # Important: Do not include the protocol (http://) here
-        FRONTEND_URL: localhost:9992
-        ## Uncomment and change these if want to configure server name and admin email for apache
-        # SERVER_NAME: localhost:9992
-        # ADMIN_EMAIL: admin@localhost:9992
-        ## Uncomment and change these if you have different URLs for the cache and media server
-        # CACHE_URL: localhost:9992
-        # MEDIA_URL: localhost:9992
+        BACKEND_URL: ${BACKEND_URL}
+        FRONTEND_URL: ${FRONTEND_URL}
+        SERVER_NAME: ${SERVER_NAME}
+        ADMIN_EMAIL: ${ADMIN_EMAIL}
+        CACHE_URL: ${CACHE_URL}
+        MEDIA_URL: ${MEDIA_URL}
     ports:
       - 9992:80
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.frontend.rule=Host(`${DOMAINNAME}`) && PathPrefix(`/`)"
+      - "traefik.http.routers.frontend.priority=1"
+      - "traefik.http.routers.frontend.entrypoints=websecure"
+      - "traefik.http.routers.frontend.tls.certresolver=myresolver"
 
   db:
     image: postgres:17
     restart: always
     environment:
-      POSTGRES_USER: root
-      POSTGRES_PASSWORD: root
-      POSTGRES_DB: wafrn
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
     volumes:
       - dbpg:/var/lib/postgresql
     ports:
@@ -85,5 +96,22 @@ services:
     ports:
       - "6379:6379"
 
+  traefik:
+    image: "traefik:v3.3"
+    container_name: "traefik"
+    command:
+      - "--providers.docker=true"
+      - "--providers.docker.exposedbydefault=false"
+      - "--entrypoints.websecure.address=:443"
+      - "--certificatesresolvers.myresolver.acme.tlschallenge=true"
+      - "--certificatesresolvers.myresolver.acme.email=${ACME_EMAIL}"
+      - "--certificatesresolvers.myresolver.acme.storage=/letsencrypt/acme.json"
+    ports:
+      - "443:443"
+    volumes:
+      - letsencrypt:/letsencrypt
+      - "/var/run/docker.sock:/var/run/docker.sock:ro"
+
 volumes:
   dbpg:
+  letsencrypt:
