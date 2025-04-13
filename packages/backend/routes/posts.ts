@@ -43,6 +43,7 @@ import showdown from 'showdown'
 import { forceUpdateLastActive } from '../utils/forceUpdateLastActive.js'
 import { bulkCreateNotifications, createNotification } from '../utils/pushNotifications.js'
 import { getAtProtoThread } from '../atproto/utils/getAtProtoThread.js'
+import dompurify from 'isomorphic-dompurify'
 
 const markdownConverter = new showdown.Converter({
   simplifiedAutoLink: true,
@@ -636,7 +637,7 @@ export default function postsRoutes(app: Application) {
         )
 
         post.setEmojis(emojisToAdd)
-        const inlineTags = Array.from(post.content.matchAll(/#[a-z0-9_]+/g))
+        const inlineTags = Array.from(dompurify.sanitize(post.content, { ALLOWED_TAGS: [] }).matchAll(/#[a-z0-9_]+/g))
           .join(',')
           .replaceAll('#', '')
         const bodyTags = req.body.tags ? req.body.tags + ',' + inlineTags : inlineTags
