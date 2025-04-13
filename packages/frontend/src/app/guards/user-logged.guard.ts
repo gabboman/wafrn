@@ -6,7 +6,8 @@ import { inject } from '@angular/core'
 export const userLoggedGuard: CanActivateFn = (route, state) => {
   const res = !inject(JwtService).tokenValid()
   if (!res) {
-    inject(Router).navigate(['/dashboard'])
+    let target = localStorage.getItem('defaultExploreLocal') == 'true' ? '/dashboard/exploreLocal' : '/dashboard'
+    inject(Router).navigate([target])
   }
   return res
 }

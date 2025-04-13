@@ -50,7 +50,8 @@ export class EditProfileComponent implements OnInit {
     forceClassicAudioPlayer: new FormControl(false),
     forceClassicVideoPlayer: new FormControl(false),
     enableConfetti: new FormControl(false),
-    forceClassicMediaView: new FormControl(false)
+    forceClassicMediaView: new FormControl(false),
+    defaultExploreLocal: new FormControl(false)
   })
 
   constructor(
@@ -94,6 +95,10 @@ export class EditProfileComponent implements OnInit {
       this.editProfileForm.controls['enableConfetti'].patchValue(localStorage.getItem('enableConfetti') == 'true')
       this.editProfileForm.controls['forceClassicMediaView'].patchValue(
         localStorage.getItem('forceClassicMediaView') == 'true'
+      )
+
+      this.editProfileForm.controls['defaultExploreLocal'].patchValue(
+        localStorage.getItem('defaultExploreLocal') == 'true'
       )
 
       const mutedWords = localStorage.getItem('mutedWords')
