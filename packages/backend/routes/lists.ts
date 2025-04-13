@@ -22,6 +22,7 @@ export default function listRoutes(app: Application) {
             .split('\n')
             .map((elem) => elem.split(',')[0])
             .slice(1)
+            .filter((elem) => elem)
           const okUsers: string[] = []
           const localUsersUrls = lines
             .filter((elem) => elem.endsWith('@' + environment.instanceUrl))
@@ -42,7 +43,7 @@ export default function listRoutes(app: Application) {
           const notFoundUsersToFetch = notFoundUsersUrls.filter((elem) => !localUsersUrls.includes(elem))
           // try to get all users
           const userFetchPromise = await Promise.allSettled(
-            notFoundUsersToFetch.map((usr) => searchRemoteUser(`@${usr}`, petitionBy))
+            notFoundUsersToFetch.map((usr) => searchRemoteUser(usr, petitionBy))
           )
           foundUsers = await User.findAll({
             where: {
