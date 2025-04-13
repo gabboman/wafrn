@@ -446,14 +446,38 @@ export class PostsService {
       'li',
       'marquee',
       'font',
-      'blockquote'
+      'blockquote',
+      'code',
+      'hr',
+      'ol',
+      'q',
+      'small',
+      'sub',
+      'sup',
+      'table',
+      'tr',
+      'td',
+      'th'
     ]
   ): string {
     const content = post.content
     let sanitized = sanitizeHtml(content, {
       allowedTags: tags,
       allowedAttributes: {
-        a: ['href']
+        a: ['href', 'title', 'target'],
+        span: ['title',
+          {
+            name: 'style',
+            multiple: true,
+            values: ['color', 'border', 'border-*', 'font', 'font-*', 'tab-size', 'text-*', 'padding', 'padding-*', 'margin', 'margin-*']
+          }
+               ],
+        hr: [{
+          name: 'style',
+          multiple: true,
+          values: ['color', 'background-color', 'height', 'width', 'text-align', 'margin', 'padding', 'margin-*', 'padding-*']
+        }
+             ]
       }
     })
     // we remove stuff like img and script tags. we only allow certain stuff.
