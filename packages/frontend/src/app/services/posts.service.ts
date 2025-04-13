@@ -469,9 +469,15 @@ export class PostsService {
           {
             name: 'style',
             multiple: true,
-            values: ['color', 'border', 'border-*', 'font', 'font-*', 'tab-size', 'text-*']
+            values: ['color', 'border', 'border-*', 'font', 'font-*', 'tab-size', 'text-*', 'padding', 'padding-*', 'margin', 'margin-*']
           }
-               ]
+               ],
+        hr: [{
+          name: 'style',
+          multiple: true,
+          values: ['color', 'background-color', 'height', 'width', 'text-align', 'margin', 'padding', 'margin-*', 'padding-*']
+        }
+             ]
       }
     })
     // we remove stuff like img and script tags. we only allow certain stuff.
