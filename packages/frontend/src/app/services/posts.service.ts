@@ -457,7 +457,8 @@ export class PostsService {
       'table',
       'tr',
       'td',
-      'th'
+      'th',
+      'cite'
     ]
   ): string {
     const content = post.content
@@ -465,19 +466,27 @@ export class PostsService {
       allowedTags: tags,
       allowedAttributes: {
         a: ['href', 'title', 'target'],
-        span: ['title',
-          {
-            name: 'style',
-            multiple: true,
-            values: ['color', 'border', 'border-*', 'font', 'font-*', 'tab-size', 'text-*', 'padding', 'padding-*', 'margin', 'margin-*']
-          }
-               ],
-        hr: [{
-          name: 'style',
-          multiple: true,
-          values: ['color', 'background-color', 'height', 'width', 'text-align', 'margin', 'padding', 'margin-*', 'padding-*']
+        hr: ['style'],
+        span: ['title', 'style', 'lang'],
+        '*': ['title', 'lang']
+      },
+      allowedStyles: {
+        '*': {
+        'color': ['*'],
+        'font': ['*'],
+        'font-*': ['*'],
+        'text-*': ['*'],
+        'border': ['*'],
+        'border-*': ['*'],
+        'tab-size': ['*'],
+        'padding': ['*'],
+        'padding-*': ['*'],
+        'margin-*': ['*'],
+        'margin': ['*'],
+        'background-color': ['*'],
+        'height': ['*'],
+        'width': ['*']
         }
-             ]
       }
     })
     // we remove stuff like img and script tags. we only allow certain stuff.
