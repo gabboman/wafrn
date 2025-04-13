@@ -472,20 +472,20 @@ export class PostsService {
       },
       allowedStyles: {
         '*': {
-        'color': ['*'],
-        'font': ['*'],
-        'font-*': ['*'],
-        'text-*': ['*'],
-        'border': ['*'],
-        'border-*': ['*'],
-        'tab-size': ['*'],
-        'padding': ['*'],
-        'padding-*': ['*'],
-        'margin-*': ['*'],
-        'margin': ['*'],
-        'background-color': ['*'],
-        'height': ['*'],
-        'width': ['*']
+          color: [new RegExp('*')],
+          font: [new RegExp('*')],
+          'font-*': [new RegExp('*')],
+          'text-*': [new RegExp('*')],
+          border: [new RegExp('*')],
+          'border-*': [new RegExp('*')],
+          'tab-size': [new RegExp('*')],
+          padding: [new RegExp('*')],
+          'padding-*': [new RegExp('*')],
+          'margin-*': [new RegExp('*')],
+          margin: [new RegExp('*')],
+          'background-color': [new RegExp('*')],
+          height: [new RegExp('*')],
+          width: [new RegExp('*')]
         }
       }
     })
