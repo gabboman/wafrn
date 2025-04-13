@@ -1,5 +1,5 @@
 import { Application, Response } from 'express'
-import { Op, Sequelize } from 'sequelize'
+import { Model, Op, Sequelize } from 'sequelize'
 import {
   Ask,
   Blocks,
@@ -210,11 +210,11 @@ export default function userRoutes(app: Application) {
       let success = false
       try {
         const posterId = req.jwtData?.userId as string
-        const user = await User.findOne({
+        const user = (await User.findOne({
           where: {
             id: posterId
           }
-        })
+        })) as Model<any, any>
         if (req.body) {
           const { name, description, manuallyAcceptsFollows, options: optionJSON } = req.body
 
@@ -263,41 +263,7 @@ export default function userRoutes(app: Application) {
           redisCache.del('userOptions:' + posterId)
           await user.save()
 
-          const _options = JSON.parse(optionJSON)
-          if (Array.isArray(_options)) {
-            const options = _options
-              .filter((elem) => elem.name)
-              .map((opt) => {
-                return {
-                  ...opt,
-                  // NOTE: opt.value should be a string result of JSON.stringify, adding this to prevent any potential security issues
-                  value: String(opt.value),
-                  public: opt.name.startsWith('wafrn.public') || opt.name.startsWith('fediverse.public')
-                }
-              })
-
-            for (const option of options) {
-              if (option.value) {
-                const userOption = await UserOptions.findOne({
-                  where: {
-                    userId: posterId,
-                    optionName: option.name
-                  }
-                })
-                userOption
-                  ? await userOption.update({
-                      optionValue: option.value,
-                      public: option.public == true
-                    })
-                  : await UserOptions.create({
-                      userId: posterId,
-                      optionName: option.name,
-                      optionValue: option.value,
-                      public: option.public == true
-                    })
-              }
-            }
-          }
+          await updateProfileOptions(optionJSON, posterId)
           if (user.enableBsky) {
             const bskySession = await getAtProtoSession(user)
             await updateBlueskyProfile(bskySession, user)
@@ -314,6 +280,24 @@ export default function userRoutes(app: Application) {
       })
     }
   )
+
+  app.post('/api/editOptions', authenticateToken, async (req: AuthorizedRequest, res: Response) => {
+    let success = false
+    try {
+      const userId = req.jwtData?.userId
+      const options = req.body.options
+      if (userId && options) {
+        await updateProfileOptions(JSON.stringify(options), userId)
+      }
+      await redisCache.del('userOptions:' + userId)
+    } catch (error) {
+      logger.info({
+        message: 'Error updating user options',
+        error: error
+      })
+    }
+    res.send({ success: success })
+  })
 
   app.post('/api/forgotPassword', createAccountLimiter, async (req, res) => {
     const resetCode = generateRandomString()
@@ -993,4 +977,42 @@ async function updateBlueskyProfile(agent: BskyAgent, user: Model<any, any>) {
 
     return profile
   })
+}
+
+async function updateProfileOptions(optionsJSON: string, posterId: string) {
+  const _options = JSON.parse(optionsJSON)
+  if (Array.isArray(_options)) {
+    const options = _options
+      .filter((elem) => elem.name)
+      .map((opt) => {
+        return {
+          ...opt,
+          // NOTE: opt.value should be a string result of JSON.stringify, adding this to prevent any potential security issues
+          value: String(opt.value),
+          public: opt.name.startsWith('wafrn.public') || opt.name.startsWith('fediverse.public')
+        }
+      })
+
+    for (const option of options) {
+      if (option.value) {
+        const userOption = await UserOptions.findOne({
+          where: {
+            userId: posterId,
+            optionName: option.name
+          }
+        })
+        userOption
+          ? await userOption.update({
+              optionValue: option.value,
+              public: option.public == true
+            })
+          : await UserOptions.create({
+              userId: posterId,
+              optionName: option.name,
+              optionValue: option.value,
+              public: option.public == true
+            })
+      }
+    }
+  }
 }

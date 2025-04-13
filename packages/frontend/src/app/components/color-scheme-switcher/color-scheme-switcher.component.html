@@ -35,9 +35,9 @@
   </svg>
 </button>
 <mat-menu #themeMenu="matMenu">
-  <button class="theme-selector-button" mat-menu-item (click)="setTheme('light')">Light</button>
-  <button class="theme-selector-button" mat-menu-item (click)="setTheme('dark')">Dark</button>
-  <button class="theme-selector-button" mat-menu-item (click)="setTheme('auto')">Auto</button>
+  <button class="theme-selector-button" mat-menu-item (click)="setTheme('light', true)">Light</button>
+  <button class="theme-selector-button" mat-menu-item (click)="setTheme('dark', true)">Dark</button>
+  <button class="theme-selector-button" mat-menu-item (click)="setTheme('auto', true)">Auto</button>
 </mat-menu>
 
 <button
@@ -55,7 +55,7 @@
     <button
       class="theme-selector-button"
       mat-menu-item
-      (click)="setColorScheme(variant)"
+      (click)="setColorScheme(variant, true)"
       [ngClass]="{ selected: variant == colorScheme() }"
     >
       {{ variant | titlecase }}
@@ -63,7 +63,7 @@
   }
   <hr class="my-0" />
   <button mat-menu-item class="pl-1">
-    <mat-checkbox [checked]="centerLayoutMode" (click)="updateCenterLayout()"
+    <mat-checkbox [checked]="centerLayoutMode" (click)="updateCenterLayout(true)"
       ><span class="theme-selector-button">Center layout</span></mat-checkbox
     >
   </button>

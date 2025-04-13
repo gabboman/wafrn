@@ -179,6 +179,24 @@ export class LoginService {
     return success
   }
 
+  async updateUserOptions(options: { name: string; value: string }[]): Promise<boolean> {
+    let success = false
+    try {
+      const payload: FormData = new FormData()
+      const petition: any = await firstValueFrom(
+        this.http.post(`${EnvironmentService.environment.baseUrl}/editOptions`, { options: options })
+      )
+      if (petition.success) {
+        success = true
+        await this.postsService.loadFollowers()
+      }
+    } catch (error) {
+      console.log(error)
+    }
+
+    return success
+  }
+
   async enableBluesky() {
     try {
       let result = await firstValueFrom(this.http.post(`${EnvironmentService.environment.baseUrl}/enable-bluesky`, {}))

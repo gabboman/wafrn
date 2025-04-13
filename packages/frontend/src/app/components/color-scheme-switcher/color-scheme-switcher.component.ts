@@ -6,6 +6,7 @@ import { MatMenuModule } from '@angular/material/menu'
 import { MatTooltipModule } from '@angular/material/tooltip'
 import { FaIconComponent } from '@fortawesome/angular-fontawesome'
 import { faPalette } from '@fortawesome/free-solid-svg-icons'
+import { LoginService } from 'src/app/services/login.service'
 
 // !! NOTE FOR ADDING THEMES !! //
 //
@@ -79,7 +80,7 @@ export class ColorSchemeSwitcherComponent {
   themeText = linkedSignal(() => capitalize(this.theme()))
   iconClass = ''
 
-  constructor() {
+  constructor(private loginService: LoginService) {
     const colorScheme = localStorage.getItem('colorScheme')
     if (colorScheme !== null && colorScheme !== 'rizzler' && isColorScheme(colorScheme)) {
       this.setColorScheme(colorScheme)
@@ -105,22 +106,28 @@ export class ColorSchemeSwitcherComponent {
     return 'default'
   }
 
-  setColorScheme(scheme: ColorScheme) {
+  async setColorScheme(scheme: ColorScheme, forceUpdate = false) {
     this.colorScheme.set(scheme)
-    localStorage.setItem('colorScheme', scheme)
     const forceDarkModeThemes = ['wafrn98']
     const forceLightModeThemes: string[] = []
     if (forceDarkModeThemes.includes(scheme)) {
-      this.setTheme('dark')
+      await this.setTheme('dark')
     }
     if (forceLightModeThemes.includes(scheme)) {
-      this.setTheme('light')
+      await this.setTheme('light')
+    }
+    if (forceUpdate) {
+      await this.loginService.updateUserOptions([{ name: 'wafrn.colorScheme', value: scheme }])
     }
   }
 
-  updateCenterLayout() {
+  async updateCenterLayout(forceUpdate = false) {
     this.centerLayoutMode = !this.centerLayoutMode
-    localStorage.setItem('centerLayout', this.centerLayoutMode.toString())
+    if (forceUpdate) {
+      await this.loginService.updateUserOptions([
+        { name: 'wafrn.centerLayout', value: this.centerLayoutMode.toString() }
+      ])
+    }
   }
 
   getTheme(): ColorTheme {
@@ -133,11 +140,13 @@ export class ColorSchemeSwitcherComponent {
     return 'auto'
   }
 
-  setTheme(theme: ColorTheme) {
+  async setTheme(theme: ColorTheme, forceUpdate = false) {
     this.theme.set(theme)
     document.documentElement.setAttribute('data-theme', theme)
-    window.localStorage.setItem('theme', theme)
     this.updateIconTheme()
+    if (forceUpdate) {
+      await this.loginService.updateUserOptions([{ name: 'wafrn.theme', value: theme }])
+    }
   }
 
   updateIconTheme() {
