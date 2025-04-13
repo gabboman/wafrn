@@ -70,7 +70,8 @@ export default function emojiReactRoutes(app: Application) {
                 userId: userId,
                 postId: postId,
                 notifiedUserId: post.userId,
-                emojiReactionId: reaction.id
+                emojiReactionId: reaction.id,
+                createdAt: new Date(reaction.createdAt)
               },
               {
                 postContent: post?.content,

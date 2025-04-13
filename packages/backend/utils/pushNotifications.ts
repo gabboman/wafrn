@@ -57,9 +57,13 @@ export async function bulkCreateNotifications(notifications: NotificationBody[],
     if (context && context.postContent) {
       context.postContent = dompurify.sanitize(context.postContent, { ALLOWED_TAGS: [] })
     }
+    const notificationDate = notifications[0].createdAt ? notifications[0].createdAt : new Date()
+    const timeDiff = Math.abs(new Date().getTime() - notificationDate.getTime())
+    const sendNotifications =
+      timeDiff < 3600 * 1000 ? sendPushNotificationQueue.add('sendPushNotification', { notifications, context }) : null
     await Promise.all([
       Notification.bulkCreate(localUserNotifications, { ignoreDuplicates: context?.ignoreDuplicates }),
-      sendPushNotificationQueue.add('sendPushNotification', { notifications, context })
+      sendNotifications
     ])
   }
 }
@@ -70,10 +74,16 @@ export async function createNotification(notification: NotificationBody, context
     if (context && context.postContent) {
       context.postContent = dompurify.sanitize(context.postContent, { ALLOWED_TAGS: [] })
     }
-    await Promise.all([
-      Notification.create(notification),
-      sendPushNotificationQueue.add('sendPushNotification', { notifications: [notification], context })
-    ])
+    const notificationDate = notification.createdAt ? notification.createdAt : new Date()
+    const timeDiff = Math.abs(new Date().getTime() - notificationDate.getTime())
+    const sendNotification =
+      timeDiff < 3600 * 1000
+        ? sendPushNotificationQueue.add('sendPushNotification', {
+            notifications: [notification],
+            context
+          })
+        : null
+    await Promise.all([Notification.create(notification), sendNotification])
   }
 }
 

@@ -583,7 +583,8 @@ export default function postsRoutes(app: Application) {
               notificationType: 'QUOTE',
               notifiedUserId: postToBeQuoted.userId,
               userId: post.userId,
-              postId: post.id
+              postId: post.id,
+              createdAt: new Date(postToBeQuoted.createdAt)
             },
             {
               postContent: post.content,
@@ -625,7 +626,8 @@ export default function postsRoutes(app: Application) {
             notificationType: 'MENTION',
             notifiedUserId: mention,
             userId: post.userId,
-            postId: post.id
+            postId: post.id,
+            createdAt: new Date(post.createdAt)
           })),
           {
             postContent: post.content,
