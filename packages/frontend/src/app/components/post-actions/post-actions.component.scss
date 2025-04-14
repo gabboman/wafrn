@@ -2,6 +2,19 @@
   aspect-ratio: 1 / 1;
 }
 
+.post-actions-menu-span-content {
+  display: grid;
+  grid-template-columns: 20% 80%;
+  align-items: center;
+  justify-content: start;
+}
+
+.post-actions-menu-span-content .ng-fa-icon {
+  display: inline-block;
+  width: 24px;
+  text-align: center;
+}
+
 ::ng-deep :root .mat-mdc-menu-content {
   padding-block: 0;
 }
