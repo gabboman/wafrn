@@ -167,6 +167,11 @@ export class ViewBlogComponent implements OnInit, OnDestroy {
   }
 
   async loadPosts(page: number) {
+    if (!this.userLoggedIn && this.blogDetails.url.startsWith('@')) {
+      this.loading = false;
+      this.noMorePosts = true;
+      return;
+    }
     this.loading = true
     const tmpPosts = await this.dashboardService.getBlogPage(page, this.blogUrl)
     const filteredPosts = tmpPosts.filter((post: ProcessedPost[]) => {
