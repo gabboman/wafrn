@@ -1,7 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core'
 import { MatDialogRef } from '@angular/material/dialog'
 import { Meta, Title } from '@angular/platform-browser'
-import { ActivatedRoute, NavigationEnd, Router } from '@angular/router'
+import { ActivatedRoute, NavigationEnd, NavigationSkipped, Router } from '@angular/router'
 import {
   faArrowUpRightFromSquare,
   faChevronDown,
@@ -23,8 +23,6 @@ import { ProcessedPost } from 'src/app/interfaces/processed-post'
 import { BlocksService } from 'src/app/services/blocks.service'
 import { DashboardService } from 'src/app/services/dashboard.service'
 import { LoginService } from 'src/app/services/login.service'
-import { MessageService } from 'src/app/services/message.service'
-import { PostsService } from 'src/app/services/posts.service'
 import { ThemeService } from 'src/app/services/theme.service'
 
 import { MatDialog } from '@angular/material/dialog'
@@ -66,8 +64,6 @@ export class ViewBlogComponent implements OnInit, OnDestroy {
   constructor(
     private activatedRoute: ActivatedRoute,
     private dashboardService: DashboardService,
-    private postService: PostsService,
-    private messages: MessageService,
     private loginService: LoginService,
     private router: Router,
     private titleService: Title,
@@ -86,10 +82,15 @@ export class ViewBlogComponent implements OnInit, OnDestroy {
   }
 
   async ngOnInit() {
-    window.scrollTo(0, 0)
     this.navigationSubscription = this.router.events
       .pipe(filter((event) => event instanceof NavigationEnd))
       .subscribe(() => {
+        // Avoid reloading if user has selected the same user they are already
+        // viewing.
+        if (this.blogUrl == this.activatedRoute.snapshot.paramMap.get('url')) {
+          window.scrollTo(0, 0)
+          return;
+        }
         this.loading = true
         this.found = true
         this.viewedPosts = 0
@@ -100,6 +101,21 @@ export class ViewBlogComponent implements OnInit, OnDestroy {
         this.ngOnInit()
       })
 
+    this.navigationSubscription = this.router.events
+      .pipe(filter((event) => event instanceof NavigationSkipped))
+      .subscribe(() => {
+        window.scrollTo(0, 0)
+        if (window.scrollY <= 0) {
+          this.loading = true
+          this.found = true
+          this.viewedPosts = 0
+          this.currentPage = 0
+          this.posts = []
+          this.blogUrl = ''
+          this.avatarUrl = ''
+          this.ngOnInit()
+        }
+      })
     const blogUrl = this.activatedRoute.snapshot.paramMap.get('url')
     if (blogUrl) {
       this.blogUrl = blogUrl
@@ -123,7 +139,7 @@ export class ViewBlogComponent implements OnInit, OnDestroy {
       this.avatarUrl = this.blogDetails.url.startsWith('@')
         ? EnvironmentService.environment.externalCacheurl + encodeURIComponent(this.blogDetails.avatar)
         : EnvironmentService.environment.externalCacheurl +
-          encodeURIComponent(EnvironmentService.environment.baseMediaUrl + this.blogDetails.avatar)
+        encodeURIComponent(EnvironmentService.environment.baseMediaUrl + this.blogDetails.avatar)
       this.titleService.setTitle(`${this.blogDetails.url}'s blog`)
       this.metaTagService.addTags([
         {

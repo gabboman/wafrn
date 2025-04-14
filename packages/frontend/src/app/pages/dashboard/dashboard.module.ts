@@ -13,16 +13,19 @@ const routes: Routes = [
   {
     path: '',
     component: DashboardComponent,
-    canActivate: [loginRequiredGuard]
+    canActivate: [loginRequiredGuard],
+    data: { reuseRoute: true }
   },
   {
     path: 'explore',
     component: DashboardComponent,
-    canActivate: [loginRequiredGuard]
+    canActivate: [loginRequiredGuard],
+    data: { reuseRoute: true }
   },
   {
     path: 'exploreLocal',
-    component: DashboardComponent
+    component: DashboardComponent,
+    data: { reuseRoute: true }
   },
   {
     path: 'private',
@@ -43,4 +46,4 @@ const routes: Routes = [
     LoaderComponent
   ]
 })
-export class DashboardModule {}
+export class DashboardModule { }
