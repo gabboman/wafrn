@@ -5,51 +5,65 @@ services:
       dockerfile: Dockerfile
       # these args configure private env vars for the backend and public env vars for the frontend
       args:
-        ADMINUSER: ${ADMINUSER}
-        ADMINEMAIL: ${ADMINEMAIL}
-        ADMINPASSWORD: ${ADMINPASSWORD}
-        JWTSECRET: ${JWTSECRET}
-        MAINDB: ${MAINDB}
-        DBNAME: ${DBNAME}
-        DOMAINNAME: ${DOMAINNAME}
-        PORT: ${PORT}
-        SMTPHOST: ${SMTPHOST}
-        SMTPUSER: ${SMTPUSER}
-        SMTPPORT: ${SMTPPORT}
-        SMTPPASSWORD: ${SMTPPASSWORD}
-        SMTPFROM: ${SMTPFROM}
-        REDISHOST: ${REDISHOST}
-        REDISPORT: ${REDISPORT}
-        LOG_SQL_QUERIES: ${LOG_SQL_QUERIES}
-        FRONTEND_PATH: ${FRONTEND_PATH}
-        MEDIA_URL: ${MEDIA_URL}
-        CACHE_URL: ${CACHE_URL}
-        FRONTEND_LOGO: ${FRONTEND_LOGO}
-        FRONTEND_URL: "https:\\/\\/${FRONTEND_URL}"
-        FRONTEND_SHORTEN_POSTS: ${FRONTEND_SHORTEN_POSTS}
-        FRONTEND_DISABLE_PWA: ${FRONTEND_DISABLE_PWA}
-        FRONTEND_MAINTENANCE: ${FRONTEND_MAINTENANCE}
-        FRONTEND_API_URL: ${FRONTEND_API_URL}
-        FRONTEND_CACHE_URL: ${FRONTEND_CACHE_URL}
-        FRONTEND_MEDIA_URL: ${FRONTEND_MEDIA_URL}
+        ADMIN_USER: ${ADMIN_USER}
+        ADMIN_EMAIL: ${ADMIN_EMAIL}
+        ADMIN_PASSWORD: ${ADMIN_PASSWORD}
+        JWT_SECRET: ${JWT_SECRET}
+        DOMAIN_NAME: ${DOMAIN_NAME}
+
+        CACHE_DOMAIN: ${CACHE_DOMAIN}
+        MEDIA_DOMAIN: ${MEDIA_DOMAIN}
+
+        SMTP_HOST: ${SMTP_HOST}
+        SMTP_USER: ${SMTP_USER}
+        SMTP_PORT: ${SMTP_PORT}
+        SMTP_PASSWORD: ${SMTP_PASSWORD}
+        SMTP_FROM: ${SMTP_FROM}
+
+        POSTGRES_USER: ${POSTGRES_USER}
+        POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+        POSTGRES_DBNAME: ${POSTGRES_DBNAME}
+
+        WEBPUSH_PRIVATE: ${WEBPUSH_PRIVATE}
+        WEBPUSH_PUBLIC: ${WEBPUSH_PUBLIC}
+
+        LOG_SQL_QUERIES: ${LOG_SQL_QUERIES:-}
+        UPLOAD_LIMIT: ${UPLOAD_LIMIT:-}
+        POSTS_PER_PAGE: ${POSTS_PER_PAGE:-}
+        LOG_LEVEL: ${LOG_LEVEL:-}
+        BLOCKLIST_URI: ${BLOCKLIST_URI:-}
+        FRONTEND_PATH: ${FRONTEND_PATH:-}
+        DISABLE_REQUIRE_SEND_EMAIL: ${DISABLE_REQUIRE_SEND_EMAIL:-}
+        BLOCKED_IPS: ${BLOCKED_IPS:-}
+        REVIEW_REGISTRATIONS: ${REVIEW_REGISTRATIONS:-}
+        IGNORE_BLOCK_HOSTS: ${IGNORE_BLOCK_HOSTS:-}
+
+        FRONTEND_LOGO: ${FRONTEND_LOGO:-}
+        FRONTEND_API_URL: ${FRONTEND_API_URL:-}
+        FRONTEND_MEDIA_URL: ${FRONTEND_MEDIA_URL:-}
+        FRONTEND_CACHE_URL: ${FRONTEND_CACHE_URL:-}
+        FRONTEND_SHORTEN_POSTS: ${FRONTEND_SHORTEN_POSTS:-}
+        FRONTEND_DISABLE_PWA: ${FRONTEND_DISABLE_PWA:-}
+        FRONTEND_MAINTENANCE: ${FRONTEND_MAINTENANCE:-}
     depends_on:
       - db
       - redis
-    ports:
-      - 9000:9000
+    # ports:
+    #   - 9000:9000
     restart: unless-stopped
     environment:
       - NODE_ENV=production
     volumes:
       - ./packages/backend/uploads:/wafrn/uploads
       - ./packages/backend/cache:/wafrn/cache
+      - ./packages/frontend/src/index.html:/wafrn/packages/frontend/index.html
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.backend.rule=Host(`${DOMAINNAME}`) && (PathPrefix(`/api`) || PathPrefix(`/fediverse`) || PathPrefix(`/contexts`) || PathPrefix(`/post`) || PathPrefix(`/blog`) || PathPrefix(`/.well-known`))"
+      - "traefik.http.routers.backend.rule=Host(`${DOMAIN_NAME}`) && (PathPrefix(`/api`) || PathPrefix(`/fediverse`) || PathPrefix(`/contexts`) || PathPrefix(`/post`) || PathPrefix(`/blog`) || PathPrefix(`/.well-known`))"
       - "traefik.http.routers.backend.entrypoints=websecure"
       - "traefik.http.routers.backend.tls.certresolver=myresolver"
       - "traefik.http.middlewares.backend.headers.accesscontrolalloworiginlist=*"
-      - "traefik.http.middlewares.backend.headers.contentSecurityPolicy=default-src 'self' 'unsafe-inline' 'unsafe-eval' ${FRONTEND_URL} ${CACHE_URL} ${MEDIA_URL}; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' ${FRONTEND_URL}; img-src 'self' ${CACHE_URL} ${MEDIA_URL}; font-src 'self' ${CACHE_URL} ${MEDIA_URL}; object-src 'none'; frame-src 'none'; frame-ancestors 'none'; upgrade-insecure-requests; block-all-mixed-content"
+      - "traefik.http.middlewares.backend.headers.contentSecurityPolicy=default-src 'self' 'unsafe-inline' 'unsafe-eval' ${DOMAIN_NAME} ${CACHE_DOMAIN} ${MEDIA_DOMAIN}; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' ${DOMAIN_NAME}; img-src 'self' ${CACHE_DOMAIN} ${MEDIA_DOMAIN}; font-src 'self' ${CACHE_DOMAIN} ${MEDIA_DOMAIN}; object-src 'none'; frame-src 'none'; frame-ancestors 'none'; upgrade-insecure-requests; block-all-mixed-content"
 
   frontend:
     build:
@@ -57,17 +71,13 @@ services:
       dockerfile: packages/frontend/Dockerfile
       # these args configure apache redirections and headers
       args:
-        BACKEND_URL: ${BACKEND_URL}
-        FRONTEND_URL: ${FRONTEND_URL}
-        SERVER_NAME: ${SERVER_NAME}
-        ADMIN_EMAIL: ${ADMIN_EMAIL}
-        CACHE_URL: ${CACHE_URL}
-        MEDIA_URL: ${MEDIA_URL}
-    ports:
-      - 9992:80
+        DOMAIN_NAME: ${DOMAIN_NAME}
+        ADMIN_CONTACT_EMAIL: ${ADMIN_CONTACT_EMAIL}
+    # ports:
+    #   - 9992:80
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.frontend.rule=Host(`${DOMAINNAME}`) && PathPrefix(`/`)"
+      - "traefik.http.routers.frontend.rule=Host(`${DOMAIN_NAME}`) && PathPrefix(`/`)"
       - "traefik.http.routers.frontend.priority=1"
       - "traefik.http.routers.frontend.entrypoints=websecure"
       - "traefik.http.routers.frontend.tls.certresolver=myresolver"
@@ -78,23 +88,30 @@ services:
     environment:
       POSTGRES_USER: ${POSTGRES_USER}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
-      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_DBNAME: ${POSTGRES_DBNAME}
     volumes:
       - dbpg:/var/lib/postgresql
-    ports:
-      - 5432:5432
+    # ports:
+    #   - 5432:5432
 
   adminer:
     image: adminer
     restart: always
-    ports:
-      - 8080:8080
+    # ports:
+    #   - 8080:8080
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.adminer.rule=Host(`${DOMAIN_NAME}`) && PathPrefix(`/adminer`)"
+      - "traefik.http.middlewares.adminer.stripprefix.prefixes=/adminer"
+      - "traefik.http.middlewares.adminer.stripprefix.forceSlash=false"
+      - "traefik.http.routers.adminer.entrypoints=websecure"
+      - "traefik.http.routers.adminer.tls.certresolver=myresolver"
 
   redis:
     image: redis:7.2.4
     restart: always
-    ports:
-      - "6379:6379"
+    # ports:
+    #   - "6379:6379"
 
   traefik:
     image: "traefik:v3.3"

@@ -1,7 +1,7 @@
 export const environment = {
   prod: true,
   // this makes the logs really heavy, but might be useful for queries
-  logSQLQueries: LOG_SQL_QUERIES,
+  logSQLQueries: ${{LOG_SQL_QUERIES:-false}},
   workers: {
     // if you set this to true, workers will start in the main thread. no need for starting the utils/workers.ts in other tmux tab
     mainThread: true,
@@ -12,52 +12,52 @@ export const environment = {
   // this was a dev thing. leave to true unless you are doing stuff in local or your media url is yourinstance/uploads (not recomended)
   removeFolderNameFromFileUploads: true,
   // we use now postgresql.
-  databaseConnectionString: 'postgresql://MAINDB/DBNAME',
-  listenIp: '0.0.0.0',
-  port: APPPORT,
+  databaseConnectionString: 'postgresql://${{POSTGRES_USER}}:${{POSTGRES_PASSWORD}}@${{POSTGRES_HOST}}:${{POSTGRES_PORT}}/${{POSTGRES_DBNAME}}',
+  listenIp: '${{LISTEN_IP:-0.0.0.0}}',
+  port: ${{PORT:-9000}},
   // In the case of you wantint to put fedi petitions in another thread, use a different port here. You will have to update your apache config
-  fediPort: APPPORT,
-  // If you want to run the cache routes in another post, same thign!
-  cachePort: APPPORT,
+  fediPort: ${{PORT:-9000}},
+  // If you want to run the cache routes in another port, same thing!
+  cachePort: ${{PORT:-9000}},
 
   saltRounds: 14,
   // for jwt secret you should use something like https://www.grc.com/passwords.htm please this is SUPER DUPER SECRET.
-  jwtSecret: 'JWTSECRET',
+  jwtSecret: Buffer.from('${{JWT_SECRET}}', 'base64'),
   // https://app.wafrn.net
-  frontendUrl: 'https://DOMAINNAME',
+  frontendUrl: 'https://${{DOMAIN_NAME}}',
   // app.wafrn.net
-  instanceUrl: 'DOMAINNAME',
+  instanceUrl: '${{DOMAIN_NAME}}',
   // https://media.wafrn.net
-  mediaUrl: 'https://DOMAINNAME/api/uploads',
+  mediaUrl: 'https://${{DOMAIN_NAME}}/api/uploads',
   // You should run also this project github.com/gabboman/fediversemediacacher. In my case, https://cache.wafrn.net/?media= The cache is there because at some point in the past I configured it to precache images. No need for it to be honest
-  externalCacheurl: 'https://DOMAINNAME/api/cache/?media=',
+  externalCacheurl: 'https://${{DOMAIN_NAME}}/api/cache/?media=',
   // after the first run, create the admin user. and a deleted user. You will have to edit the user url in db so it starts with an @
-  adminUser: 'ADMINUSER',
+  adminUser: '${{ADMIN_USER}}',
   // admin email wich you will recive things like "someone registred and you need to review this"
-  adminEmail: 'ADMINEMAIL',
-  adminPassword: 'ADMINPASSWORD',
+  adminEmail: '${{ADMIN_EMAIL}}',
+  adminPassword: '${{ADMIN_PASSWORD}}',
   // after creating the deleted_user we advice to also set the user to BANNED
   deletedUser: '@DELETEDUSER',
   // in MB. Please make sure you have the same in the frontend
-  uploadLimit: 250,
+  uploadLimit: ${{UPLOAD_LIMIT:-250}},
   // 20 is a good number. With the new query we could investigate a higher number but no need to do it
-  postsPerPage: 20,
+  postsPerPage: ${{POSTS_PER_PAGE:-20}},
   // trace is extreme logging. debug is ok for now
-  logLevel: 'debug',
+  logLevel: '${{LOG_LEVEL:-debug}}',
   // There is a script that loads the file from this url and blocks the servers
-  blocklistUrl: '',
+  blocklistUrl: ${{BLOCKLIST_URI:-''}},
   // In some cases we serve the frontend with the backend with a small preprocessing. We need the location of the frontend
-  frontedLocation: 'FRONTEND_PATH',
-  // oh yes, you need TWO reis connections, one for queues other for cache
+  frontedLocation: '${{FRONTEND_PATH:-/wafrn/packages/frontend}}',
+  // oh yes, you need TWO redis connections, one for queues other for cache
   bullmqConnection: {
-    host: 'REDISHOST',
-    port: REDISPORT,
+    host: '${{REDIS_HOST:-localhost}}',
+    port: ${{REDIS_PORT:-6379}},
     db: 0
   },
   // second database used for cache
   redisioConnection: {
-    host: 'REDISHOST',
-    port: REDISPORT,
+    host: '${{REDIS_HOST:-localhost}}',
+    port: ${{REDIS_PORT:-6379}},
     db: 1
   },
   // this will create a backendlog.log file on the folder superior to this one.
@@ -67,7 +67,7 @@ export const environment = {
         target: 'pino/file',
         level: 0,
         options: {
-          destination: 'logs/backendlog.log'
+          destination: ${{LOG_DESTINATION:-'logs/backendlog.log'}} // set to 1 to log to stdout
         }
       }
     ]
@@ -76,39 +76,39 @@ export const environment = {
   // you might need to enable https://myaccount.google.com/lesssecureapps
   // https://miracleio.me/snippets/use-gmail-with-nodemailer/
   emailConfig: {
-    host: 'SMTPHOST',
-    port: SMTPPORT,
+    host: '${{SMTP_HOST:-localhost}}',
+    port: ${{SMTP_PORT:-587}},
     auth: {
-      user: 'SMTPUSER',
-      pass: 'SMTPPASSWORD',
-      from: 'SMTPFROM'
+      user: '${{SMTP_USER}}',
+      pass: '${{SMTP_PASSWORD}}',
+      from: '${{SMTP_FROM}}'
     }
   },
   // you dont have an smtp server and you want to do a single user instance? set this to true!
-  disableRequireSendEmail: false,
+  disableRequireSendEmail: ${{DISABLE_REQUIRE_SEND_EMAIL:-false}},
   // if someone is trying to scrap your place you can send a funny message in some petitions (attacks to the frontend)
-  blockedIps: ['RANODM_IP'],
+  blockedIps: ${{BLOCKED_IPS:-[]}},
   // do you want to manually review registrations or have them open? We advice to leave this one to true
-  reviewRegistrations: true,
+  reviewRegistrations: ${{REVIEW_REGISTRATIONS:-true}},
   // if the blocklist youre using turns out to be biased you can tell the script that loads the block host to do not block these hosts
-  ignoreBlockHosts: [],
+  ignoreBlockHosts: ${{IGNORE_BLOCK_HOSTS:-[]}},
   // default SEO data that will be used when trying to load server data
   defaultSEOData: {
-    title: 'DOMAINNAME',
-    description: 'DOMAINNAME, a wafrn instance',
-    img: 'https://DOMAINNAME/assets/logo.png'
+    title: '${{DOMAIN_NAME}}',
+    description: '${{DOMAIN_NAME}}, a wafrn instance',
+    img: 'https://${{DOMAIN_NAME}}/assets/logo.png'
   },
   // to generate these keys: npm install -g web-push then web-push generate-vapid-keys. Remember to do the environment one too!!
-  webpushPrivateKey: 'WEBPUSH_PRIVATE',
+  webpushPrivateKey: '${{WEBPUSH_PRIVATE}}',
   frontendEnvironment: {
-    logo: 'FRONTEND_LOGO',
-    frontUrl: 'FRONTEND_URL',
-    baseUrl: 'FRONTEND_API_URL',
-    baseMediaUrl: 'FRONTEND_MEDIA_URL',
-    externalCacheurl: 'FRONTEND_CACHE_URL',
-    webPushPublicKey: 'WEBPUSH_PUBLIC',
-    shortenPosts: FRONTEND_SHORTEN_POSTS,
-    disablePWA: FRONTEND_DISABLE_PWA,
-    maintenance: FRONTEND_MAINTENANCE
+    logo: '${{FRONTEND_LOGO:-/assets/logo.png}}',
+    frontUrl: '${{FRONTEND_FQDN_URL}}',
+    baseUrl: '${{FRONTEND_API_URL:-/api}}',
+    baseMediaUrl: '${{FRONTEND_MEDIA_URL:-/api/uploads}}',
+    externalCacheurl: '${{FRONTEND_CACHE_URL:-/api/cache?media=}}',
+    webPushPublicKey: '${{WEBPUSH_PUBLIC}}',
+    shortenPosts: ${{FRONTEND_SHORTEN_POSTS:-3}},
+    disablePWA: ${{FRONTEND_DISABLE_PWA:-false}},
+    maintenance: ${{FRONTEND_MAINTENANCE:-false}}
   }
 }
