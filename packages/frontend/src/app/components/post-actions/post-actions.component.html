@@ -18,40 +18,55 @@
     <fa-icon [icon]="expandDownIcon"></fa-icon>
   </button>
 </div>
-<mat-menu #menu="matMenu" xPosition="before">
+<mat-menu #menu="matMenu" xPosition="before" id="post-actions-menu">
   <button (click)="sharePost()" mat-menu-item>
-    <fa-icon class="mr-2" [icon]="shareIcon"></fa-icon>Share with wafrn
+    <span class="post-actions-menu-span-content">
+      <fa-icon class="mr-2" [icon]="shareIcon"></fa-icon>Share with wafrn
+    </span>
   </button>
   <button *ngIf="content.remotePostId && content.user.url.startsWith('@')" (click)="shareOriginalPost()" mat-menu-item>
-    <fa-icon class="mr-2" [icon]="shareExternalIcon"></fa-icon>
-    Share external URL
+    <span class="post-actions-menu-span-content">
+      <fa-icon class="mr-2" [icon]="shareExternalIcon"></fa-icon>
+      Share external URL
+    </span>
   </button>
   <button *ngIf="content.bskyUri" (click)="viewOnBsky()" mat-menu-item>
-    <fa-icon class="mr-2" [icon]="bskyIcon"></fa-icon>
-    View on bluesky
+    <span class="post-actions-menu-span-content">
+      <fa-icon class="mr-2" [icon]="bskyIcon"></fa-icon>
+      View on bluesky    
+    </span>
+
   </button>
   <button
     *ngIf="content.user.url.startsWith('@') && content.privacy !== 1 && content.privacy !== 10"
     (click)="viewOriginalPost()"
     mat-menu-item
   >
-    <fa-icon class="mr-2" [icon]="goExternalPost"></fa-icon>
-    View original post
+    <span class="post-actions-menu-span-content">
+      <fa-icon class="mr-2" [icon]="goExternalPost"></fa-icon>
+      View original post
+    </span>
   </button>
   @if (userLoggedIn) {
     <button (click)="replyPost()" mat-menu-item>
-      <fa-icon class="mr-2" [icon]="reblogIcon"></fa-icon>
-      Reply woot
+      <span class="post-actions-menu-span-content">
+        <fa-icon class="mr-2" [icon]="reblogIcon"></fa-icon>
+        Reply woot
+      </span>
     </button>
     @if (myRewootsIncludePost) {
       <button (click)="deleteRewoots()" mat-menu-item>
-        <fa-icon class="mr-2" [icon]="closeIcon"></fa-icon>
-        Delete rewoot
+        <span class="post-actions-menu-span-content">
+          <fa-icon class="mr-2" [icon]="closeIcon"></fa-icon>
+          Delete rewoot
+        </span>
       </button>
     } @else {
       <button *ngIf="content.privacy !== 10 && content.privacy !== 1" (click)="quickReblog()" mat-menu-item>
-        <fa-icon class="mr-2" [icon]="quickReblogIcon"></fa-icon>
-        Rewoot
+        <span class="post-actions-menu-span-content">
+          <fa-icon class="mr-2" [icon]="quickReblogIcon"></fa-icon>
+          Rewoot
+        </span>
       </button>
     }
     <button
@@ -59,48 +74,68 @@
       (click)="quoteWoot()"
       mat-menu-item
     >
-      <fa-icon class="mr-2" [icon]="quoteIcon"></fa-icon>
-      Quote woot
+      <span class="post-actions-menu-span-content">
+        <fa-icon class="mr-2" [icon]="quoteIcon"></fa-icon>
+        Quote woot
+      </span>
     </button>
     @if (content.bookmarkers.includes(myId)) {
       <button (click)="unbookmarkPost()" mat-menu-item>
-        <fa-icon class="mr-2" [icon]="unbookmarkIcon"></fa-icon>
-        Unbookmark woot
+        <span class="post-actions-menu-span-content">
+          <fa-icon class="mr-2" [icon]="unbookmarkIcon"></fa-icon>
+          Unbookmark woot
+        </span>
       </button>
     } @else {
       <button (click)="bookmarkPost()" mat-menu-item>
-        <fa-icon class="mr-2" [icon]="bookmarkIcon"></fa-icon>
-        Bookmark woot
+        <span class="post-actions-menu-span-content">
+          <fa-icon class="mr-2" [icon]="bookmarkIcon"></fa-icon>
+          Bookmark woot
+        </span>
       </button>
     }
     @if (content.userId !== myId) {
       @if (content.userLikesPostRelations.includes(myId)) {
         <button (click)="unlikePost()" mat-menu-item>
-          <fa-icon class="mr-2" [icon]="clearHeartIcon"></fa-icon>
-          Dislike woot
+          <span class="post-actions-menu-span-content">
+            <fa-icon class="mr-2" [icon]="clearHeartIcon"></fa-icon>
+            Dislike woot
+          </span>
         </button>
       } @else {
         <button (click)="likePost()" mat-menu-item>
-          <fa-icon class="mr-2" [icon]="solidHeartIcon"></fa-icon>
-          Like woot
+          <span class="post-actions-menu-span-content">
+            <fa-icon class="mr-2" [icon]="solidHeartIcon"></fa-icon>
+            Like woot
+          </span>
         </button>
       }
       <button (click)="reportPost()" mat-menu-item>
-        <fa-icon class="mr-2" [icon]="reportIcon"></fa-icon>Report woot
+        <span class="post-actions-menu-span-content">
+          <fa-icon class="mr-2" [icon]="reportIcon"></fa-icon>Report woot
+        </span>
       </button>
     } @else {
       <button (click)="editPost()" mat-menu-item><fa-icon class="mr-2" [icon]="editedIcon"></fa-icon>Edit woot</button>
       <button *ngIf="!postSilenced" (click)="silencePost()" mat-menu-item>
-        <fa-icon class="mr-2" [icon]="silenceIcon"></fa-icon>Silence interactions
+        <span class="post-actions-menu-span-content">
+          <fa-icon class="mr-2" [icon]="silenceIcon"></fa-icon>Silence interactions
+        </span>
       </button>
       <button *ngIf="!postSilenced" (click)="silencePost(true)" mat-menu-item>
-        <fa-icon class="mr-2" [icon]="silenceIcon"></fa-icon>Silence notifications and replies
+        <span class="post-actions-menu-span-content">
+          <fa-icon class="mr-2" [icon]="silenceIcon"></fa-icon>Silence notifications and replies
+        </span>
       </button>
       <button *ngIf="postSilenced" (click)="unsilencePost()" mat-menu-item>
-        <fa-icon class="mr-2" [icon]="unsilenceIcon"></fa-icon>Reactivate notifications
+        <span class="post-actions-menu-span-content">
+          <fa-icon class="mr-2" [icon]="unsilenceIcon"></fa-icon>Reactivate notifications
+        </span>
       </button>
       <button (click)="deletePost()" mat-menu-item>
-        <fa-icon class="mr-2" [icon]="deleteIcon"></fa-icon>Delete woot
+        <span class="post-actions-menu-span-content">
+          <fa-icon class="mr-2" [icon]="deleteIcon"></fa-icon>Delete woot
+        </span>
       </button>
     }
   }
