@@ -23,6 +23,9 @@ const queueEvents = new QueueEvents('getRemoteActorId', {
 })
 async function getRemoteActor(actorUrl: string, user: any, forceUpdate = false): Promise<any> {
   let remoteUser
+  if (!actorUrl) {
+    return await getDeletedUser();
+  }
   try {
     // we check its a string. A little bit dirty but could be worse
     if (actorUrl.toLowerCase().startsWith(environment.frontendUrl + '/fediverse/blog/')) {
