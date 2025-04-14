@@ -35,7 +35,6 @@ const routes: Routes = [
       {
         path: 'dashboard',
         loadChildren: () => import('./pages/dashboard/dashboard.module').then((m) => m.DashboardModule),
-        data: { reuseRoute: false }
       },
       {
         path: 'activate',
@@ -104,7 +103,6 @@ const routes: Routes = [
       preloadingStrategy: PreloadAllModules,
       anchorScrolling: 'enabled',
       scrollPositionRestoration: 'enabled',
-      enableTracing: true,
     }),
     NavigationMenuModule
   ],

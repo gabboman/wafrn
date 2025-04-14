@@ -21,7 +21,7 @@ export class MenuItemComponent {
   @Input() item!: MenuItem
   expanded = false
 
-  constructor(private router: Router) {}
+  constructor(private router: Router) { }
 
   doCommand() {
     // TODO href and routerlink in the same page, a way of not doing it this dirty way

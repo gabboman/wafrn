@@ -1,7 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core'
 import { MatDialogRef } from '@angular/material/dialog'
 import { Meta, Title } from '@angular/platform-browser'
-import { ActivatedRoute, NavigationEnd, NavigationSkipped, Router } from '@angular/router'
+import { ActivatedRoute, NavigationEnd, Router } from '@angular/router'
 import {
   faArrowUpRightFromSquare,
   faChevronDown,
@@ -65,7 +65,7 @@ export class ViewBlogComponent implements OnInit, OnDestroy {
     private activatedRoute: ActivatedRoute,
     private dashboardService: DashboardService,
     private loginService: LoginService,
-    private router: Router,
+    public router: Router,
     private titleService: Title,
     private metaTagService: Meta,
     private themeService: ThemeService,
@@ -73,6 +73,21 @@ export class ViewBlogComponent implements OnInit, OnDestroy {
     private dialog: MatDialog
   ) {
     this.userLoggedIn = loginService.checkUserLoggedIn()
+
+    this.navigationSubscription = this.router.events
+      .pipe(filter((event) => event instanceof NavigationEnd))
+      .subscribe(() => {
+        // Avoid reloading if user has selected the same user they are already
+        // viewing.
+        if (this.blogUrl == this.activatedRoute.snapshot.paramMap.get('url')) {
+          // Have to reload the theme in case it got unloaded elsewhere.
+          this.handleTheme()
+          return;
+        }
+        this.blogUrl = ''
+        this.avatarUrl = ''
+        this.configureUser()
+      })
   }
 
   ngOnDestroy(): void {
@@ -82,40 +97,11 @@ export class ViewBlogComponent implements OnInit, OnDestroy {
   }
 
   async ngOnInit() {
-    this.navigationSubscription = this.router.events
-      .pipe(filter((event) => event instanceof NavigationEnd))
-      .subscribe(() => {
-        // Avoid reloading if user has selected the same user they are already
-        // viewing.
-        if (this.blogUrl == this.activatedRoute.snapshot.paramMap.get('url')) {
-          window.scrollTo(0, 0)
-          return;
-        }
-        this.loading = true
-        this.found = true
-        this.viewedPosts = 0
-        this.currentPage = 0
-        this.posts = []
-        this.blogUrl = ''
-        this.avatarUrl = ''
-        this.ngOnInit()
-      })
+    this.currentPage = 0;
+    this.configureUser()
+  }
 
-    this.navigationSubscription = this.router.events
-      .pipe(filter((event) => event instanceof NavigationSkipped))
-      .subscribe(() => {
-        window.scrollTo(0, 0)
-        if (window.scrollY <= 0) {
-          this.loading = true
-          this.found = true
-          this.viewedPosts = 0
-          this.currentPage = 0
-          this.posts = []
-          this.blogUrl = ''
-          this.avatarUrl = ''
-          this.ngOnInit()
-        }
-      })
+  async configureUser() {
     const blogUrl = this.activatedRoute.snapshot.paramMap.get('url')
     if (blogUrl) {
       this.blogUrl = blogUrl
@@ -128,6 +114,11 @@ export class ViewBlogComponent implements OnInit, OnDestroy {
     if (blogResponse) {
       this.blogDetails = blogResponse
 
+      this.loading = true
+      this.found = true
+      this.viewedPosts = 0
+      this.currentPage = 0
+      this.posts = []
       this.loadPosts(this.currentPage).then(() => {
         setTimeout(() => {
           const element = document.querySelector('#if-you-see-this-load-more-posts')
@@ -136,6 +127,7 @@ export class ViewBlogComponent implements OnInit, OnDestroy {
           }
         })
       })
+
       this.avatarUrl = this.blogDetails.url.startsWith('@')
         ? EnvironmentService.environment.externalCacheurl + encodeURIComponent(this.blogDetails.avatar)
         : EnvironmentService.environment.externalCacheurl +
@@ -150,7 +142,19 @@ export class ViewBlogComponent implements OnInit, OnDestroy {
         { name: 'image', content: this.avatarUrl }
       ])
     }
+    this.handleTheme()
+    this.intersectionObserverForLoadPosts = new IntersectionObserver(
+      (intersectionEntries: IntersectionObserverEntry[]) => {
+        if (intersectionEntries[0].isIntersecting) {
+          this.currentPage++
+          this.loadPosts(this.currentPage);
+        }
+      }
+    )
+  }
 
+
+  handleTheme() {
     const userHasCustomTheme = !this.blogDetails.url.startsWith('@') //await this.themeService.checkThemeExists(this.blogDetails?.id);
 
     if (userHasCustomTheme) {
@@ -172,14 +176,6 @@ export class ViewBlogComponent implements OnInit, OnDestroy {
     } else {
       this.themeService.setTheme('')
     }
-    this.intersectionObserverForLoadPosts = new IntersectionObserver(
-      (intersectionEntries: IntersectionObserverEntry[]) => {
-        if (intersectionEntries[0].isIntersecting) {
-          this.currentPage++
-          this.loadPosts(this.currentPage)
-        }
-      }
-    )
   }
 
   async loadPosts(page: number) {
@@ -188,6 +184,7 @@ export class ViewBlogComponent implements OnInit, OnDestroy {
       this.noMorePosts = true;
       return;
     }
+    if (this.blogUrl === '') { return };
     this.loading = true
     const tmpPosts = await this.dashboardService.getBlogPage(page, this.blogUrl)
     const filteredPosts = tmpPosts.filter((post: ProcessedPost[]) => {

@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core'
-import { ActivatedRoute, NavigationEnd, NavigationSkipped, Router, Scroll } from '@angular/router'
+import { NavigationSkipped, Router } from '@angular/router'
 import { ProcessedPost } from 'src/app/interfaces/processed-post'
 import { DashboardService } from 'src/app/services/dashboard.service'
 import { JwtService } from 'src/app/services/jwt.service'
@@ -9,8 +9,7 @@ import { ThemeService } from 'src/app/services/theme.service'
 import { MessageService } from 'src/app/services/message.service'
 import { faArrowsRotate } from '@fortawesome/free-solid-svg-icons'
 import { Subscription } from 'rxjs'
-import { ViewportScroller } from '@angular/common'
-import { delay, filter } from 'rxjs/operators';
+import { filter } from 'rxjs/operators';
 
 @Component({
   selector: 'app-dashboard',
@@ -60,11 +59,19 @@ export class DashboardComponent implements OnInit, OnDestroy {
     this.navigationSubscription = this.router.events
       .pipe(filter((event) => event instanceof NavigationSkipped))
       .subscribe(() => {
+        this.themeService.setMyTheme()
+        if (window.scrollY > 0) {
+          // If the menu's link double-up is changed, uncomment this!
+          // At the moment, NavigationSkipped gets triggered twice.
+          //window.scrollTo(0, 0)
+          return;
+        }
         this.reloadPosts()
       })
 
   }
   ngOnDestroy(): void {
+    this.navigationSubscription.unsubscribe()
     this.updateFollowersSubscription?.unsubscribe()
   }
 
@@ -120,14 +127,19 @@ export class DashboardComponent implements OnInit, OnDestroy {
     })
   }
 
+
   reloadPosts() {
+    window.scrollTo(0, 0)
+    // Perhaps not a perfect solution, but without this guard currentPage and
+    // startScroll may unexpectedly increase, leading to the dashboard
+    // displaying posts that do not start from date.now
+    if (this.loadingPosts) return;
     this.posts = []
     this.currentPage = 0
     this.viewedPostsNumber = 0
     this.viewedPostsIds = []
     this.timestamp = new Date().getTime()
     this.loadPosts(this.currentPage)
-    window.scrollTo(0, 0)
   }
 
   async countViewedPost() {

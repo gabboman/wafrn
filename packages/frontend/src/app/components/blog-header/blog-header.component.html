@@ -157,8 +157,13 @@
   @if (!blogDetails.url.startsWith('@') || (blogDetails.followers && blogDetails.followed)) {
     <footer class="mt-4 py-3 flex justify-content-evenly follow-counts">
       <div class="flex flex-column justify-content-center">
+      <a
+        [routerLink]="['/blog', blogDetails.url]"
+        class="flex flex-column justify-content-center subtle-link"
+      >
         <b class="m-0 text-lg text-center">{{ formatBigNumber(blogDetails.postCount) }}</b>
         <p class="m-0 text-xs">Post Count</p>
+      </a>
       </div>
       <a
         [routerLink]="['/blog', blogDetails.url, 'following']"
