@@ -50,7 +50,7 @@ import { environment } from 'src/environments/environment'
 export class PostComponent implements OnInit, OnChanges, OnDestroy, AfterViewInit {
   @Input() post!: ProcessedPost[]
   @Input() showFull: boolean = false
-  postCanExpand = computed(() => this.veryLongPost || !this.showFull || !this.expanded)
+  postCanExpand = computed(() => this.isPostExpandable())
   postsExpanded = EnvironmentService.environment.shortenPosts
   expanded = false
   originalPostContent: ProcessedPost[] = []
@@ -213,5 +213,14 @@ export class PostComponent implements OnInit, OnChanges, OnDestroy, AfterViewIni
     this.expanded = true
     this.postsExpanded = this.postsExpanded + 100
     this.post = this.originalPostContent.slice(0, this.postsExpanded)
+  }
+
+  // TODO move all logic gere I guess
+  isPostExpandable() {
+    let length = 0
+    if (this.originalPostContent) {
+      this.originalPostContent.map((block) => block.content).join('').length
+    }
+    return length > 2500 || this.veryLongPost || !this.showFull || !this.expanded
   }
 }
