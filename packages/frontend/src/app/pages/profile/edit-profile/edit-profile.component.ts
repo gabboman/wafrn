@@ -51,7 +51,8 @@ export class EditProfileComponent implements OnInit {
     forceClassicVideoPlayer: new FormControl(false),
     enableConfetti: new FormControl(false),
     forceClassicMediaView: new FormControl(false),
-    defaultExploreLocal: new FormControl(false)
+    defaultExploreLocal: new FormControl(false),
+    automaticalyExpandPosts: new FormControl(false)
   })
 
   constructor(
@@ -113,6 +114,9 @@ export class EditProfileComponent implements OnInit {
       this.editProfileForm.controls['disableCW'].patchValue(disableCW)
       const fediAttachments = blogDetails.publicOptions.find(
         (elem) => elem.optionName === 'fediverse.public.attachment'
+      )
+      this.editProfileForm.controls['automaticalyExpandPosts'].patchValue(
+        localStorage.getItem('automaticalyExpandPosts') === 'true'
       )
       if (fediAttachments) {
         try {

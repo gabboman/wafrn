@@ -84,6 +84,22 @@
       <mat-checkbox formControlName="defaultExploreLocal"></mat-checkbox>
       <mat-label>Default dashboard is explore local instead of following</mat-label>
     </div>
+    <mat-accordion>
+      <mat-expansion-panel hideToggle>
+        <mat-expansion-panel-header>
+          <mat-panel-title> Not recommended options </mat-panel-title>
+        </mat-expansion-panel-header>
+        <div class="w-full">
+          <mat-checkbox formControlName="disableNSFWFilter"></mat-checkbox>
+          <mat-label>Disable NSFW images filter</mat-label>
+        </div>
+        <div class="w-full">
+          <mat-checkbox formControlName="automaticalyExpandPosts"></mat-checkbox>
+          <mat-label>Automatically expand all posts</mat-label>
+        </div>
+      </mat-expansion-panel>
+    </mat-accordion>
+
     <!--
     <div class="w-full">
       <mat-checkbox formControlName="federateWithThreads"></mat-checkbox>

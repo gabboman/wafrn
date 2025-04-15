@@ -149,6 +149,11 @@ export class PostComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   ngOnInit(): void {
+    // If user has marked autoexpand we force 1 expand. Doing full could cause EXPLOSIONS
+    if (localStorage.getItem('automaticalyExpandPosts') === 'true') {
+      this.expandPost()
+    }
+
     this.followedUsers = this.postService.followedUserIds
     this.notYetAcceptedFollows = this.postService.notYetAcceptedFollowedUsersIds
     this.originalPostContent = this.post

@@ -124,6 +124,8 @@ export class LoginService {
     let success = false
 
     const optionFormKeyMap = {
+      disableNSFWFilter: 'wafrn.disableNSFWFilter',
+      automaticalyExpandPosts: 'wafrn.autoExpandPosts',
       disableForceAltText: 'wafrn.disableForceAltText',
       federateWithThreads: 'wafrn.federateWithThreads',
       asksLevel: 'wafrn.public.asks',
