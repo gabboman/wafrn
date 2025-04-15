@@ -149,11 +149,6 @@ export class PostComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   ngOnInit(): void {
-    // If user has marked autoexpand we force 1 expand. Doing full could cause EXPLOSIONS
-    if (localStorage.getItem('automaticalyExpandPosts') === 'true') {
-      this.expandPost()
-    }
-
     this.followedUsers = this.postService.followedUserIds
     this.notYetAcceptedFollows = this.postService.notYetAcceptedFollowedUsersIds
     this.originalPostContent = this.post
@@ -168,6 +163,10 @@ export class PostComponent implements OnInit, OnChanges, OnDestroy {
     this.ribbonUser = this.originalPostContent[this.originalPostContent.length - 1].user
     this.ribbonIcon = this.headerText === 'replied' ? this.replyIcon : this.reblogIcon
     this.ribbonTime = this.originalPostContent[this.originalPostContent.length - 1].createdAt
+    // If user has marked autoexpand we force 1 expand. Doing full could cause EXPLOSIONS
+    if (localStorage.getItem('automaticalyExpandPosts') === 'true') {
+      this.expandPost()
+    }
   }
 
   isEmptyReblog() {
