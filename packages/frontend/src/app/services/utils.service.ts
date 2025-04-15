@@ -29,7 +29,7 @@ export class UtilsService {
     const servers = await firstValueFrom(
       this.http.get<{ displayName: string }[]>(`${EnvironmentService.environment.baseUrl}/status/blocks`)
     )
-    let result = servers.map((elem) => elem.displayName.toLowerCase())
+    let result = servers.map((elem) => elem.displayName.toLowerCase().trim()).filter((elem) => elem != '')
     return result.sort()
   }
 }
