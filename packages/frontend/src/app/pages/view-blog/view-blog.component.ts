@@ -1,7 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core'
 import { MatDialogRef } from '@angular/material/dialog'
 import { Meta, Title } from '@angular/platform-browser'
-import { ActivatedRoute, NavigationStart, Router } from '@angular/router'
+import { ActivatedRoute, NavigationEnd, Router } from '@angular/router'
 import {
   faArrowUpRightFromSquare,
   faChevronDown,
@@ -36,7 +36,7 @@ import { EnvironmentService } from 'src/app/services/environment.service'
   standalone: false
 })
 export class ViewBlogComponent implements OnInit, OnDestroy {
-  loading = true
+  loading = false
   noMorePosts = false
   found = true
   viewedPosts = 0
@@ -76,13 +76,13 @@ export class ViewBlogComponent implements OnInit, OnDestroy {
     this.userLoggedIn = loginService.checkUserLoggedIn()
 
     this.navigationSubscription = this.router.events
-      .pipe(filter((event) => event instanceof NavigationStart))
+      .pipe(filter((event) => event instanceof NavigationEnd))
       .subscribe((e) => {
         // Avoid reloading if user has selected the same user they are already
         // viewing.
-        this.themeService.setMyTheme()
+        if (this.userLoggedIn) { this.themeService.setMyTheme() }
         if (this.blogUrl == this.activatedRoute.snapshot.paramMap.get('url')) {
-          // Possibly a little ugly, but NavigationStart fires when navigating
+          // Possibly a little ugly, but NavigationEnd fires when navigating
           // away too!
           if (!e.url.includes(this.blogUrl)) return;
           // Have to reload the theme in case it got unloaded elsewhere.
@@ -91,7 +91,7 @@ export class ViewBlogComponent implements OnInit, OnDestroy {
         }
         this.blogUrl = ''
         this.avatarUrl = ''
-        this.configureUser()
+        this.configureUser(true)
       })
   }
 
@@ -103,10 +103,18 @@ export class ViewBlogComponent implements OnInit, OnDestroy {
 
   async ngOnInit() {
     this.currentPage = 0;
-    this.configureUser()
+    await this.configureUser(false);
+    this.loadPosts(this.currentPage).then(() => {
+      setTimeout(() => {
+        const element = document.querySelector('#if-you-see-this-load-more-posts')
+        if (element) {
+          this.intersectionObserverForLoadPosts.observe(element)
+        }
+      })
+    })
   }
 
-  async configureUser() {
+  async configureUser(reload: boolean) {
     const blogUrl = this.activatedRoute.snapshot.paramMap.get('url')
     if (blogUrl) {
       this.blogUrl = blogUrl
@@ -118,21 +126,6 @@ export class ViewBlogComponent implements OnInit, OnDestroy {
     })
     if (blogResponse) {
       this.blogDetails = blogResponse
-
-      this.loading = true
-      this.found = true
-      this.viewedPosts = 0
-      this.currentPage = 0
-      this.posts = []
-      this.loadPosts(this.currentPage).then(() => {
-        setTimeout(() => {
-          const element = document.querySelector('#if-you-see-this-load-more-posts')
-          if (element) {
-            this.intersectionObserverForLoadPosts.observe(element)
-          }
-        })
-      })
-
       this.avatarUrl = this.blogDetails.url.startsWith('@')
         ? EnvironmentService.environment.externalCacheurl + encodeURIComponent(this.blogDetails.avatar)
         : EnvironmentService.environment.externalCacheurl +
@@ -146,6 +139,11 @@ export class ViewBlogComponent implements OnInit, OnDestroy {
         { name: 'author', content: this.blogDetails.url },
         { name: 'image', content: this.avatarUrl }
       ])
+      if (reload) {
+        this.loading = false
+        this.reloadPosts()
+
+      }
     }
     this.handleTheme()
     this.intersectionObserverForLoadPosts = new IntersectionObserver(
@@ -183,13 +181,26 @@ export class ViewBlogComponent implements OnInit, OnDestroy {
     }
   }
 
+
+  reloadPosts() {
+    window.scrollTo(0, 0)
+    if (this.loading) return;
+    this.posts = []
+    this.currentPage = 0
+    this.viewedPosts = 0
+    this.viewedPostsIds = []
+    this.loadPosts(this.currentPage)
+  }
+
   async loadPosts(page: number) {
+    if (this.blogUrl === '') { return };
+
+    if (this.blogDetails === undefined) { return }
     if (!this.userLoggedIn && this.blogDetails.url.startsWith('@')) {
       this.loading = false;
       this.noMorePosts = true;
       return;
     }
-    if (this.blogUrl === '') { return };
     this.loading = true
     const tmpPosts = await this.dashboardService.getBlogPage(page, this.blogUrl)
     const filteredPosts = tmpPosts.filter((post: ProcessedPost[]) => {
