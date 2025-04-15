@@ -98,6 +98,8 @@ export const environment = {
     description: '${{DOMAIN_NAME}}, a wafrn instance',
     img: 'https://${{DOMAIN_NAME}}/assets/logo.png'
   },
+  enableBsky: ${{ENABLE_BSKY:-false}},
+  bskyPds: '${{PDS_DOMAIN_NAME}}',
   // to generate these keys: npm install -g web-push then web-push generate-vapid-keys. Remember to do the environment one too!!
   webpushPrivateKey: '${{WEBPUSH_PRIVATE}}',
   frontendEnvironment: {
