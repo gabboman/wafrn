@@ -4,7 +4,7 @@
 
 .post-actions-menu-span-content {
   display: grid;
-  grid-template-columns: 20% 80%;
+  grid-template-columns: 32px calc(100% - 32px);
   align-items: center;
   justify-content: start;
 }

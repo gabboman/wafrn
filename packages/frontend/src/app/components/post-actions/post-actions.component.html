@@ -116,7 +116,11 @@
         </span>
       </button>
     } @else {
-      <button (click)="editPost()" mat-menu-item><fa-icon class="mr-2" [icon]="editedIcon"></fa-icon>Edit woot</button>
+      <button (click)="editPost()" mat-menu-item>
+      <span class="post-actions-menu-span-content">
+        <fa-icon class="mr-2" [icon]="editedIcon"></fa-icon>Edit woot
+      </span>
+      </button>
       <button *ngIf="!postSilenced" (click)="silencePost()" mat-menu-item>
         <span class="post-actions-menu-span-content">
           <fa-icon class="mr-2" [icon]="silenceIcon"></fa-icon>Silence interactions
