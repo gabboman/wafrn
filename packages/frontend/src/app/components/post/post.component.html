@@ -20,7 +20,7 @@
   }
   <div
     [ngClass]="{
-      'shortened-post': veryLongPost && !expanded
+      'shortened-post': postCanExpand() && !expanded()
     }"
   >
     @for (content of post; track $index; let index = $index) {
@@ -47,19 +47,13 @@
         id="fragment"
       >
         <app-post-header class="w-full" [fragment]="content" [simplified]="false"></app-post-header>
-        <app-post-fragment (forceExpand)="expanded = true" [fragment]="content"></app-post-fragment>
+        <app-post-fragment (forceExpand)="expandPost()" [fragment]="content"></app-post-fragment>
       </div>
     }
   </div>
   <hr />
 
-  <button
-    *ngIf="(postCanExpand() && !(post.length === originalPostContent.length)) || (!expanded && veryLongPost)"
-    color="accent"
-    class="w-full mb-3 mt-2 w-full"
-    mat-flat-button
-    (click)="expandPost()"
-  >
+  <button *ngIf="postCanExpand()" color="accent" class="w-full mb-3 mt-2 w-full" mat-flat-button (click)="expandPost()">
     Expand woot
     <span *ngIf="originalPostContent.length - postsExpanded > 4"
       >({{ originalPostContent.length - postsExpanded }} posts)</span
