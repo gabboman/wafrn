@@ -3,17 +3,17 @@ FROM node:20-alpine AS builder
 
 WORKDIR /wafrn
 
-# copy package.json and package-lock.json
-COPY . ./
-
-# copy the frontend environment file
-RUN rm -rf packages/backend packages/frontend/src/environments/environment.prod.ts && mv packages/frontend/src/environments/environment.docker.ts packages/frontend/src/environments/environment.prod.ts
-
+COPY package*.json ./
+COPY packages/frontend/package*.json ./packages/frontend/
 
 # install dependencies
 RUN npm install
 
+COPY install ./
+COPY packages/frontend ./packages/frontend
 
+# copy the frontend environment file
+RUN rm -rf packages/frontend/src/environments/environment.prod.ts && mv packages/frontend/src/environments/environment.docker.ts packages/frontend/src/environments/environment.prod.ts
 
 # set node_env as production for the build command
 ENV NODE_ENV=production
@@ -40,23 +40,20 @@ COPY --from=builder /wafrn/frontend/ /var/www/wafrn/frontend/
 COPY install/apache_files/site.docker.conf site.conf
 
 # read the build args and assign default values
-ARG BACKEND_URL
-ARG FRONTEND_URL
+ARG DOMAIN_NAME
+ARG BACKEND_URL=${DOMAIN_NAME}
+ARG SERVER_NAME=${DOMAIN_NAME}
+ARG FRONTEND_URL=${DOMAIN_NAME}
 ARG CACHE_URL=${FRONTEND_URL}
 ARG MEDIA_URL=${FRONTEND_URL}
-ARG SERVER_NAME=${FRONTEND_URL}
-ARG ADMIN_EMAIL=admin@${FRONTEND_URL}
+ARG ADMIN_CONTACT_EMAIL=admin@${DOMAIN_NAME}
 
 # check if the backend url and frontend url are set and exit build process if not
 RUN printenv BACKEND_URL && printenv FRONTEND_URL
 
 # use sed to replace the environment variables in the site file
-RUN sed -i "s/BACKEND_URL/${BACKEND_URL}/g" site.conf && \
-    sed -i "s/FRONTEND_URL/${FRONTEND_URL}/g" site.conf && \
-    sed -i "s/CACHE_URL/${CACHE_URL}/g" site.conf && \
-    sed -i "s/MEDIA_URL/${MEDIA_URL}/g" site.conf && \
-    sed -i "s/SERVER_NAME/${SERVER_NAME}/g" site.conf && \
-    sed -i "s/ADMIN_EMAIL/${ADMIN_EMAIL}/g" site.conf
+RUN perl -pi -e 's/\$\{\{([_A-Z]+):-(.*)\}\}/$ENV{$1}||$2/ge' site.conf && \
+  perl -pi -e 's/\$\{\{([_A-Z]+)\}\}/$ENV{$1}/g' site.conf
 
 # move the site file to the apache sites-enabled directory
 RUN mkdir -p /etc/apache2/sites-available && mv site.conf /etc/apache2/sites-available/wafrn.conf

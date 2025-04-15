@@ -50,7 +50,7 @@ packages/
 
 ## Host Wafrn Yourself
 
-> [!NOTE]  
+> [!NOTE]
 > THIS GUIDE NEEDS UPDATING. IT WILL GET UPDATED SOON. SORRY
 
 <details>
@@ -142,35 +142,27 @@ To get wafrn running under docker we have provided a shiny `docker-compose.yml` 
 
 #### Checkout project
 
-You'll need to get the project files ready in a directory of your choice. 
+You'll need to get the project files ready in a directory of your choice. The following script will both download the repository and set up the basic secrets in your environment file:
 
-```sh
-git clone https://github.com/gabboman/wafrn
-cd wafrn
+```bash
+wget https://raw.githubusercontent.com/gabboman/wafrn/main/install/installer_docker.sh
+bash installer_docker.sh
 ```
-
-Should do the trick
 
 #### Configure environment
-
-Create your own `.env` file by using the example provided:
-
-```sh
-cp .env.example .env
-```
 
 Next you'll need to fill in all of the details of your domain. For example if you're trying to run your website under `wafrn.example.com` (and your DNS is already pointing to the computer running docker) you'll need to update the following details:
 
 ```sh
-DOMAINNAME=wafrn.example.com
-BACKEND_URL=wafrn.example.com
-FRONTEND_URL=wafrn.example.com
-SERVER_NAME=wafrn.example.com
-CACHE_URL=wafrn.example.com
-MEDIA_URL=wafrn.example.com
+DOMAIN_NAME=wafrn.example.com
+CACHE_DOMAN=wafrn.example.com
+MEDIA_DOMAIN=wafrn.example.com
+
+ACME_EMAIL=admin@example.com
+ADMIN_CONTACT_EMAIL=admin@example.com
 ```
 
-Also make sure to get your SMTP settings, your `ACME_EMAIL` and anything that looks like a password in the config changed from the default.
+You'll also need to fill in the `SMTP` settings for emails to work.
 
 #### Run
 
