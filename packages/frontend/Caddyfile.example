@@ -9,6 +9,10 @@
 ${{DOMAIN_NAME}} {
     @api path /api* /fediverse* /contexts* /post* /blog* /.well-known*
 
+    log {
+
+    }
+
     handle @api {
         header {
             Access-Control-Allow-Origin *
@@ -23,7 +27,8 @@ ${{DOMAIN_NAME}} {
     }
 
     handle {
-        reverse_proxy frontend:80
+        root * /var/www/html/frontend/
+        file_server
     }
 }
 
