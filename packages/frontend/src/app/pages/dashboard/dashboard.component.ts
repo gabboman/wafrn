@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core'
-import { ActivatedRoute, Router } from '@angular/router'
+import { NavigationSkipped, Router } from '@angular/router'
 import { ProcessedPost } from 'src/app/interfaces/processed-post'
 import { DashboardService } from 'src/app/services/dashboard.service'
 import { JwtService } from 'src/app/services/jwt.service'
@@ -9,6 +9,7 @@ import { ThemeService } from 'src/app/services/theme.service'
 import { MessageService } from 'src/app/services/message.service'
 import { faArrowsRotate } from '@fortawesome/free-solid-svg-icons'
 import { Subscription } from 'rxjs'
+import { filter } from 'rxjs/operators';
 
 @Component({
   selector: 'app-dashboard',
@@ -28,6 +29,8 @@ export class DashboardComponent implements OnInit, OnDestroy {
   title = ''
   reloadIcon = faArrowsRotate
   updateFollowersSubscription?: Subscription
+  navigationSubscription!: Subscription
+  scroll = 0
 
   constructor(
     private dashboardService: DashboardService,
@@ -38,7 +41,6 @@ export class DashboardComponent implements OnInit, OnDestroy {
     private titleService: Title,
     private metaTagService: Meta,
     private themeService: ThemeService,
-    private activatedRoute: ActivatedRoute
   ) {
     this.titleService.setTitle('Wafrn - the social network that respects you')
     this.metaTagService.addTags([
@@ -51,13 +53,27 @@ export class DashboardComponent implements OnInit, OnDestroy {
         content: 'Explore the posts in wafrn and if it looks cool join us!'
       }
     ])
+
+    // If the user clicks on the explore button while already on the page,
+    // reload posts.
+    this.navigationSubscription = this.router.events
+      .pipe(filter((event) => event instanceof NavigationSkipped))
+      .subscribe(() => {
+        if (window.scrollY > 0) {
+          // This subscription fires twice and scrollPositionRestoration is
+          // not exactly helping here!
+          // window.scrollTo(0, 0)
+          return;
+        }
+        this.reloadPosts()
+      })
   }
   ngOnDestroy(): void {
+    this.navigationSubscription.unsubscribe()
     this.updateFollowersSubscription?.unsubscribe()
   }
 
   ngOnInit(): void {
-    window.scrollTo(0, 0)
     const purePath = this.router.url.split('?')[0]
     if (purePath.endsWith('explore')) {
       this.level = 0
@@ -109,14 +125,19 @@ export class DashboardComponent implements OnInit, OnDestroy {
     })
   }
 
+
   reloadPosts() {
+    window.scrollTo(0, 0)
+    // Perhaps not a perfect solution, but without this guard currentPage and
+    // startScroll may unexpectedly increase, leading to the dashboard
+    // displaying posts that do not start from date.now
+    if (this.loadingPosts) return;
     this.posts = []
     this.currentPage = 0
     this.viewedPostsNumber = 0
     this.viewedPostsIds = []
     this.timestamp = new Date().getTime()
     this.loadPosts(this.currentPage)
-    window.scrollTo(0, 0)
   }
 
   async countViewedPost() {

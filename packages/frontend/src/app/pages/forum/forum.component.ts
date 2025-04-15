@@ -103,9 +103,9 @@ export class ForumComponent implements OnDestroy {
     this.updateFollowsSubscription.unsubscribe()
   }
 
-  followUser(id: string) {}
+  followUser(id: string) { }
 
-  unfollowUser(id: string) {}
+  unfollowUser(id: string) { }
 
   scrollTo(id: string) {
     document.getElementById(id)?.scrollIntoView({

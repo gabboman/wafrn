@@ -23,8 +23,6 @@ import { ProcessedPost } from 'src/app/interfaces/processed-post'
 import { BlocksService } from 'src/app/services/blocks.service'
 import { DashboardService } from 'src/app/services/dashboard.service'
 import { LoginService } from 'src/app/services/login.service'
-import { MessageService } from 'src/app/services/message.service'
-import { PostsService } from 'src/app/services/posts.service'
 import { ThemeService } from 'src/app/services/theme.service'
 
 import { MatDialog } from '@angular/material/dialog'
@@ -38,7 +36,7 @@ import { EnvironmentService } from 'src/app/services/environment.service'
   standalone: false
 })
 export class ViewBlogComponent implements OnInit, OnDestroy {
-  loading = true
+  loading = false
   noMorePosts = false
   found = true
   viewedPosts = 0
@@ -51,6 +49,7 @@ export class ViewBlogComponent implements OnInit, OnDestroy {
   userLoggedIn = false
   avatarUrl = ''
   navigationSubscription!: Subscription
+  endSubscription!: Subscription
   showModalTheme = false
   viewedPostsIds: string[] = []
   intersectionObserverForLoadPosts!: IntersectionObserver
@@ -66,10 +65,8 @@ export class ViewBlogComponent implements OnInit, OnDestroy {
   constructor(
     private activatedRoute: ActivatedRoute,
     private dashboardService: DashboardService,
-    private postService: PostsService,
-    private messages: MessageService,
     private loginService: LoginService,
-    private router: Router,
+    public router: Router,
     private titleService: Title,
     private metaTagService: Meta,
     private themeService: ThemeService,
@@ -77,6 +74,25 @@ export class ViewBlogComponent implements OnInit, OnDestroy {
     private dialog: MatDialog
   ) {
     this.userLoggedIn = loginService.checkUserLoggedIn()
+
+    this.navigationSubscription = this.router.events
+      .pipe(filter((event) => event instanceof NavigationEnd))
+      .subscribe((e) => {
+        // Avoid reloading if user has selected the same user they are already
+        // viewing.
+        if (this.userLoggedIn) { this.themeService.setMyTheme() }
+        if (this.blogUrl == this.activatedRoute.snapshot.paramMap.get('url')) {
+          // Possibly a little ugly, but NavigationEnd fires when navigating
+          // away too!
+          if (!e.url.includes(this.blogUrl)) return;
+          // Have to reload the theme in case it got unloaded elsewhere.
+          this.handleTheme()
+          return;
+        }
+        this.blogUrl = ''
+        this.avatarUrl = ''
+        this.configureUser(true)
+      })
   }
 
   ngOnDestroy(): void {
@@ -86,20 +102,19 @@ export class ViewBlogComponent implements OnInit, OnDestroy {
   }
 
   async ngOnInit() {
-    window.scrollTo(0, 0)
-    this.navigationSubscription = this.router.events
-      .pipe(filter((event) => event instanceof NavigationEnd))
-      .subscribe(() => {
-        this.loading = true
-        this.found = true
-        this.viewedPosts = 0
-        this.currentPage = 0
-        this.posts = []
-        this.blogUrl = ''
-        this.avatarUrl = ''
-        this.ngOnInit()
+    this.currentPage = 0;
+    await this.configureUser(false);
+    this.loadPosts(this.currentPage).then(() => {
+      setTimeout(() => {
+        const element = document.querySelector('#if-you-see-this-load-more-posts')
+        if (element) {
+          this.intersectionObserverForLoadPosts.observe(element)
+        }
       })
+    })
+  }
 
+  async configureUser(reload: boolean) {
     const blogUrl = this.activatedRoute.snapshot.paramMap.get('url')
     if (blogUrl) {
       this.blogUrl = blogUrl
@@ -111,19 +126,10 @@ export class ViewBlogComponent implements OnInit, OnDestroy {
     })
     if (blogResponse) {
       this.blogDetails = blogResponse
-
-      this.loadPosts(this.currentPage).then(() => {
-        setTimeout(() => {
-          const element = document.querySelector('#if-you-see-this-load-more-posts')
-          if (element) {
-            this.intersectionObserverForLoadPosts.observe(element)
-          }
-        })
-      })
       this.avatarUrl = this.blogDetails.url.startsWith('@')
         ? EnvironmentService.environment.externalCacheurl + encodeURIComponent(this.blogDetails.avatar)
         : EnvironmentService.environment.externalCacheurl +
-          encodeURIComponent(EnvironmentService.environment.baseMediaUrl + this.blogDetails.avatar)
+        encodeURIComponent(EnvironmentService.environment.baseMediaUrl + this.blogDetails.avatar)
       this.titleService.setTitle(`${this.blogDetails.url}'s blog`)
       this.metaTagService.addTags([
         {
@@ -133,8 +139,25 @@ export class ViewBlogComponent implements OnInit, OnDestroy {
         { name: 'author', content: this.blogDetails.url },
         { name: 'image', content: this.avatarUrl }
       ])
-    }
+      if (reload) {
+        this.loading = false
+        this.reloadPosts()
 
+      }
+    }
+    this.handleTheme()
+    this.intersectionObserverForLoadPosts = new IntersectionObserver(
+      (intersectionEntries: IntersectionObserverEntry[]) => {
+        if (intersectionEntries[0].isIntersecting) {
+          this.currentPage++
+          this.loadPosts(this.currentPage);
+        }
+      }
+    )
+  }
+
+
+  handleTheme() {
     const userHasCustomTheme = !this.blogDetails.url.startsWith('@') //await this.themeService.checkThemeExists(this.blogDetails?.id);
 
     if (userHasCustomTheme) {
@@ -156,17 +179,23 @@ export class ViewBlogComponent implements OnInit, OnDestroy {
     } else {
       this.themeService.setTheme('')
     }
-    this.intersectionObserverForLoadPosts = new IntersectionObserver(
-      (intersectionEntries: IntersectionObserverEntry[]) => {
-        if (intersectionEntries[0].isIntersecting) {
-          this.currentPage++
-          this.loadPosts(this.currentPage)
-        }
-      }
-    )
+  }
+
+
+  reloadPosts() {
+    window.scrollTo(0, 0)
+    if (this.loading) return;
+    this.posts = []
+    this.currentPage = 0
+    this.viewedPosts = 0
+    this.viewedPostsIds = []
+    this.loadPosts(this.currentPage)
   }
 
   async loadPosts(page: number) {
+    if (this.blogUrl === '') { return };
+
+    if (this.blogDetails === undefined) { return }
     if (!this.userLoggedIn && this.blogDetails.url.startsWith('@')) {
       this.loading = false;
       this.noMorePosts = true;

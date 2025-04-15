@@ -21,7 +21,7 @@ export class MenuItemComponent {
   @Input() item!: MenuItem
   expanded = false
 
-  constructor(private router: Router) {}
+  constructor(private router: Router) { }
 
   doCommand() {
     // TODO href and routerlink in the same page, a way of not doing it this dirty way
@@ -29,9 +29,6 @@ export class MenuItemComponent {
     // the other option was an ngif and displaying it depending on this. not cool!
     if (this.item.url) {
       window.open(this.item.url, '_blank')
-    }
-    if (this.item.routerLink) {
-      this.router.navigate([this.item.routerLink])
     }
     if (this.item.command) {
       this.item.command()

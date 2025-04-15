@@ -15,7 +15,8 @@ import { InfoCardComponent } from 'src/app/components/info-card/info-card.compon
 const routes: Routes = [
   {
     path: ':url',
-    component: ViewBlogComponent
+    component: ViewBlogComponent,
+    data: { reuseRoute: true, blog: true }
   },
   {
     path: ':url/ask',
@@ -48,4 +49,4 @@ const routes: Routes = [
     InfoCardComponent
   ]
 })
-export class ViewBlogModule {}
+export class ViewBlogModule { }
