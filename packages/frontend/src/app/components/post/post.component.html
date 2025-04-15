@@ -20,7 +20,7 @@
   }
   <div
     [ngClass]="{
-      'shortened-post': postCanExpand() && !expanded
+      'shortened-post': postCanExpand() && !expanded()
     }"
   >
     @for (content of post; track $index; let index = $index) {
@@ -47,7 +47,7 @@
         id="fragment"
       >
         <app-post-header class="w-full" [fragment]="content" [simplified]="false"></app-post-header>
-        <app-post-fragment (forceExpand)="expanded = true" [fragment]="content"></app-post-fragment>
+        <app-post-fragment (forceExpand)="expandPost()" [fragment]="content"></app-post-fragment>
       </div>
     }
   </div>

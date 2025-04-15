@@ -8,7 +8,8 @@ import {
   OnChanges,
   OnDestroy,
   OnInit,
-  Output
+  Output,
+  signal
 } from '@angular/core'
 import { ProcessedPost } from 'src/app/interfaces/processed-post'
 import { EditorService } from 'src/app/services/editor.service'
@@ -49,29 +50,20 @@ import { environment } from 'src/environments/environment'
 })
 export class PostComponent implements OnInit, OnChanges, OnDestroy {
   @Input() post!: ProcessedPost[]
-  @Input() showFull: boolean = false
+  showFull: boolean = false
   postCanExpand = computed(() => {
     let textLength = 0
-    let medias = 0
     if (this.originalPostContent) {
       textLength = this.originalPostContent.map((elem) => elem.content).join('').length
       this.originalPostContent.map((block) => block.content).join('').length
-      medias = this.post
-        .map((pst) => pst.medias)
-        .flat()
-        .filter((elem) => !!elem)
-        .map((media) => media.height).length
     }
     return (
-      textLength > 2500 ||
-      medias > 2 ||
-      !this.showFull ||
-      this.expanded ||
+      ((textLength > 2500 || !this.showFull) && !this.expanded()) ||
       !(this.post.length === this.originalPostContent.length)
     )
   })
   postsExpanded = EnvironmentService.environment.shortenPosts
-  expanded = false
+  expanded = signal(false)
   originalPostContent: ProcessedPost[] = []
   finalPosts: ProcessedPost[] = []
   ready = false
@@ -204,7 +196,7 @@ export class PostComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   expandPost() {
-    this.expanded = true
+    this.expanded.set(true)
     this.postsExpanded = this.postsExpanded + 100
     this.post = this.originalPostContent.slice(0, this.postsExpanded)
   }
