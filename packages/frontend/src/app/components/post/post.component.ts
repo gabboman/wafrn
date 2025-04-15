@@ -47,10 +47,29 @@ import { environment } from 'src/environments/environment'
   styleUrls: ['./post.component.scss'],
   standalone: false
 })
-export class PostComponent implements OnInit, OnChanges, OnDestroy, AfterViewInit {
+export class PostComponent implements OnInit, OnChanges, OnDestroy {
   @Input() post!: ProcessedPost[]
   @Input() showFull: boolean = false
-  postCanExpand = computed(() => this.isPostExpandable())
+  postCanExpand = computed(() => {
+    let textLength = 0
+    let medias = 0
+    if (this.originalPostContent) {
+      textLength = this.originalPostContent.map((elem) => elem.content).join('').length
+      this.originalPostContent.map((block) => block.content).join('').length
+      medias = this.post
+        .map((pst) => pst.medias)
+        .flat()
+        .filter((elem) => !!elem)
+        .map((media) => media.height).length
+    }
+    return (
+      textLength > 2500 ||
+      medias > 2 ||
+      !this.showFull ||
+      this.expanded ||
+      !(this.post.length === this.originalPostContent.length)
+    )
+  })
   postsExpanded = EnvironmentService.environment.shortenPosts
   expanded = false
   originalPostContent: ProcessedPost[] = []
@@ -71,8 +90,6 @@ export class PostComponent implements OnInit, OnChanges, OnDestroy, AfterViewIni
   // 0 no display at all 1 display like 2 display dislike
   showLikeFinalPost: number = 0
   finalPost!: ProcessedPost
-
-  veryLongPost = false
 
   // icons
   shareIcon = faShareNodes
@@ -134,29 +151,6 @@ export class PostComponent implements OnInit, OnChanges, OnDestroy, AfterViewIni
     })
   }
 
-  ngAfterViewInit(): void {
-    const postHtmlId = 'post-element-' + this.finalPost.id
-    const postHtmlElement = document.getElementById(postHtmlId)
-    if (postHtmlElement) {
-      const medias = this.post
-        .map((pst) => pst.medias)
-        .flat()
-        .filter((elem) => !!elem)
-        .map((media) => media.height)
-      const numberOfMedias = medias.length
-      this.veryLongPost = numberOfMedias > 2
-      this.showFull = this.showFull || this.veryLongPost
-      setTimeout(() => {
-        if (!this.veryLongPost) {
-          const postHtmlId = 'post-element-' + this.finalPost.id
-          const postHtmlElement = document.getElementById(postHtmlId) as HTMLElement
-          const postHeight = postHtmlElement.getBoundingClientRect().height
-          this.veryLongPost = this.veryLongPost || postHeight > 1250
-        }
-      }, 25)
-    }
-  }
-
   ngOnDestroy(): void {
     this.updateFollowersSubscription.unsubscribe()
     this.updateLikesSubscription.unsubscribe()
@@ -213,14 +207,5 @@ export class PostComponent implements OnInit, OnChanges, OnDestroy, AfterViewIni
     this.expanded = true
     this.postsExpanded = this.postsExpanded + 100
     this.post = this.originalPostContent.slice(0, this.postsExpanded)
-  }
-
-  // TODO move all logic gere I guess
-  isPostExpandable() {
-    let length = 0
-    if (this.originalPostContent) {
-      this.originalPostContent.map((block) => block.content).join('').length
-    }
-    return length > 2500 || this.veryLongPost || !this.showFull || !this.expanded
   }
 }
