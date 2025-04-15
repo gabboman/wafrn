@@ -14,18 +14,18 @@ const routes: Routes = [
     path: '',
     component: DashboardComponent,
     canActivate: [loginRequiredGuard],
-    data: { reuseRoute: true }
+    data: { reuseRoute: true, feed: true }
   },
   {
     path: 'explore',
     component: DashboardComponent,
     canActivate: [loginRequiredGuard],
-    data: { reuseRoute: true }
+    data: { reuseRoute: true, feed: true }
   },
   {
     path: 'exploreLocal',
     component: DashboardComponent,
-    data: { reuseRoute: true }
+    data: { reuseRoute: true, feed: true }
   },
   {
     path: 'private',

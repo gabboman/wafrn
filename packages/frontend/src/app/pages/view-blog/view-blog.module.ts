@@ -16,7 +16,7 @@ const routes: Routes = [
   {
     path: ':url',
     component: ViewBlogComponent,
-    data: { reuseRoute: true }
+    data: { reuseRoute: true, blog: true }
   },
   {
     path: ':url/ask',

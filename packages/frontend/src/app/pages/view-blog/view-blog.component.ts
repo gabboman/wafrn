@@ -1,7 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core'
 import { MatDialogRef } from '@angular/material/dialog'
 import { Meta, Title } from '@angular/platform-browser'
-import { ActivatedRoute, NavigationEnd, NavigationStart, Router } from '@angular/router'
+import { ActivatedRoute, NavigationStart, Router } from '@angular/router'
 import {
   faArrowUpRightFromSquare,
   faChevronDown,

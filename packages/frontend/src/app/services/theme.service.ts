@@ -69,12 +69,6 @@ export class ThemeService {
     } catch (error) { }
   }
 
-  resetTheme() {
-    this.setMyTheme()
-    this.setStyle('customUserTheme', `null`)
-    console.log("Reset theme")
-  }
-
   private getLinkElementForKey(key: string) {
     return this.getExistingLinkElementByKey(key) || this.createLinkElementWithKey(key)
   }

@@ -60,14 +60,13 @@ export class DashboardComponent implements OnInit, OnDestroy {
       .pipe(filter((event) => event instanceof NavigationSkipped))
       .subscribe(() => {
         if (window.scrollY > 0) {
-          // If the menu's link double-up is changed, uncomment this!
-          // At the moment, NavigationSkipped gets triggered twice.
-          //window.scrollTo(0, 0)
+          // This subscription fires twice and scrollPositionRestoration is
+          // not exactly helping here!
+          // window.scrollTo(0, 0)
           return;
         }
         this.reloadPosts()
       })
-
   }
   ngOnDestroy(): void {
     this.navigationSubscription.unsubscribe()
