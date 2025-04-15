@@ -474,7 +474,7 @@ export class NavigationMenuComponent implements OnInit, OnDestroy {
         icon: faEyeSlash,
         title: this.translateService.instant('menu.privacy'),
         visible: true,
-        routerLink: '/privacy',
+        routerLink: '/about',
         command: () => {
           this.hideMenu()
         }

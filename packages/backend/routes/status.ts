@@ -3,6 +3,7 @@ import { adminToken, authenticateToken } from '../utils/authenticateToken.js'
 import AuthorizedRequest from '../interfaces/authorizedRequest.js'
 import { Queue } from 'bullmq'
 import { environment } from '../environment.js'
+import { FederatedHost } from '../db.js'
 
 export default function statusRoutes(app: Application) {
   app.get('/api/status/workerStats', authenticateToken, adminToken, async (req: AuthorizedRequest, res: Response) => {
@@ -100,5 +101,16 @@ export default function statusRoutes(app: Application) {
       deletePostAwaiting: await deletePostAwaiting,
       atProtoAwaiting: await atProtoAwaiting
     })
+  })
+
+  app.get('/api/status/blocks', async (req: AuthorizedRequest, res: Response) => {
+    res.send(
+      await FederatedHost.findAll({
+        attributes: ['displayName'],
+        where: {
+          blocked: true
+        }
+      })
+    )
   })
 }

@@ -16,6 +16,11 @@ const routes: Routes = [
         loadChildren: () => import('./pages/register/register.module').then((m) => m.RegisterModule)
       },
       {
+        path: 'about',
+        loadChildren: () => import('./pages/privacy/privacy.module').then((m) => m.PrivacyModule)
+      },
+      // TODO delete this route in the future I guess
+      {
         path: 'privacy',
         loadChildren: () => import('./pages/privacy/privacy.module').then((m) => m.PrivacyModule)
       },

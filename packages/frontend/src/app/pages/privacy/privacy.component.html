@@ -16,14 +16,13 @@
     </p>
     <p class="mb-3">
       We will store your email and every once in a while send you a small campaign so you come back and commit some
-      shitposts (please).
+      shitposts (please. please, do commit more shitposts).
     </p>
     <p class="mb-3">
       We need your birth date for legal reasons. Mostly to verify that you are older than 18 for safety reasons
     </p>
     <p class="mb-3">
-      We will also store your registration IP, your last login IP and the IP that you use when you upload a media like
-      pic or video, so if you post something illegal we can comply with the authorities.
+      We will also store your registration IP, your last login IP and the IP that you use when you upload an attachment.
     </p>
     <p class="mb-3">
       If your account does not get activated in a period between a month and a year it might get deleted.
@@ -34,7 +33,29 @@
     </p>
     <h2>Rules</h2>
     <p class="mb-3">
-      Don't be a Nazi asshole. Don't harass other people. Put CW on adult things and go nuts, make nuts, show nuts.
+      Don't be a Nazi asshole. Don't harass other people. Put CW on adult things and go nuts, make nuts, show nuts. This
+      project is a hobby project. Do not get the police on my doorstep.
     </p>
+    <p class="mb-3">
+      You can upload spicy art. Just mark it as such. Regarding "adult like characters and child like characters in
+      spicy art" the answer is no.
+    </p>
+    <p class="mb-3">Do not give me a huge headache repeatedly</p>
+  </div>
+
+  <button *ngIf="!loaded && !loading" (click)="loadBlockedServers()" color="primary" mat-stroked-button class="w-full">
+    Show list of blocked servers
+  </button>
+
+  <app-loader *ngIf="loading">blocked servers</app-loader>
+
+  <div *ngIf="loaded">
+    <h2>Blocked servers</h2>
+    <p class="mb-3">In case of possible error, please contact the admin team by email</p>
+    <ul>
+      @for (server of blockedServers; track $index) {
+        <li class="mb-3">{{ server }}</li>
+      }
+    </ul>
   </div>
 </mat-card>
