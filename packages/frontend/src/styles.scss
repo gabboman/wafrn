@@ -51,6 +51,20 @@ $theme: mat.define-theme(
   --info-card-warning-background: light-dark(#d7c3b8, #52443c);
 }
 
+// Fonts overrides
+// I don't think this is defined anywhere else, should be fine either way.
+// I hope to not use !important here eventually, so...
+// TODO: No !important
+
+:root, body, html {
+  font-family: InterVariable, Inter, system-ui, sans-serif!important;
+  font-feature-settings: 'liga' 1, 'calt' 1, 'tnum' 1, 'case' 1, 'zero' 1, 'ss01' 1, 'ss02' 1!important;
+}
+
+code {
+  font-family: 'Fira Code', 'Fira Mono', monospace!important;
+}
+
 // Global style fixes
 * {
   box-sizing: border-box;
