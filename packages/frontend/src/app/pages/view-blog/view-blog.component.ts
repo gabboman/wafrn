@@ -1,7 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core'
 import { MatDialogRef } from '@angular/material/dialog'
 import { Meta, Title } from '@angular/platform-browser'
-import { ActivatedRoute, NavigationEnd, Router } from '@angular/router'
+import { ActivatedRoute, NavigationEnd, NavigationStart, Router } from '@angular/router'
 import {
   faArrowUpRightFromSquare,
   faChevronDown,
@@ -49,6 +49,7 @@ export class ViewBlogComponent implements OnInit, OnDestroy {
   userLoggedIn = false
   avatarUrl = ''
   navigationSubscription!: Subscription
+  endSubscription!: Subscription
   showModalTheme = false
   viewedPostsIds: string[] = []
   intersectionObserverForLoadPosts!: IntersectionObserver
@@ -75,11 +76,15 @@ export class ViewBlogComponent implements OnInit, OnDestroy {
     this.userLoggedIn = loginService.checkUserLoggedIn()
 
     this.navigationSubscription = this.router.events
-      .pipe(filter((event) => event instanceof NavigationEnd))
-      .subscribe(() => {
+      .pipe(filter((event) => event instanceof NavigationStart))
+      .subscribe((e) => {
         // Avoid reloading if user has selected the same user they are already
         // viewing.
+        this.themeService.setMyTheme()
         if (this.blogUrl == this.activatedRoute.snapshot.paramMap.get('url')) {
+          // Possibly a little ugly, but NavigationStart fires when navigating
+          // away too!
+          if (!e.url.includes(this.blogUrl)) return;
           // Have to reload the theme in case it got unloaded elsewhere.
           this.handleTheme()
           return;

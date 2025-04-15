@@ -59,7 +59,6 @@ export class DashboardComponent implements OnInit, OnDestroy {
     this.navigationSubscription = this.router.events
       .pipe(filter((event) => event instanceof NavigationSkipped))
       .subscribe(() => {
-        this.themeService.setMyTheme()
         if (window.scrollY > 0) {
           // If the menu's link double-up is changed, uncomment this!
           // At the moment, NavigationSkipped gets triggered twice.

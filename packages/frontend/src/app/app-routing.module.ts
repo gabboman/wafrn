@@ -103,6 +103,7 @@ const routes: Routes = [
       preloadingStrategy: PreloadAllModules,
       anchorScrolling: 'enabled',
       scrollPositionRestoration: 'enabled',
+      enableTracing: true
     }),
     NavigationMenuModule
   ],

@@ -13,7 +13,7 @@ export class ThemeService {
     private loginService: LoginService,
     private http: HttpClient,
     private utils: UtilsService
-  ) {}
+  ) { }
 
   setMyTheme() {
     this.setTheme(this.loginService.getLoggedUserUUID())
@@ -29,7 +29,7 @@ export class ThemeService {
     try {
       const storedResponse = localStorage.getItem('acceptsCustomThemes')
       res = storedResponse ? parseInt(storedResponse) : 0
-    } catch (error) {}
+    } catch (error) { }
     return res
   }
 
@@ -44,7 +44,7 @@ export class ThemeService {
       if (response && response.length > 0) {
         res = true
       }
-    } catch (error) {}
+    } catch (error) { }
     return res
   }
 
@@ -59,14 +59,20 @@ export class ThemeService {
       if (themeResponse && themeResponse.length > 0) {
         res = themeResponse
       }
-    } catch (error) {}
+    } catch (error) { }
     return res
   }
 
   setTheme(themeToSet: string) {
     try {
       this.setStyle('customUserTheme', `${EnvironmentService.environment.baseUrl}/uploads/themes/${themeToSet}.css`)
-    } catch (error) {}
+    } catch (error) { }
+  }
+
+  resetTheme() {
+    this.setMyTheme()
+    this.setStyle('customUserTheme', `null`)
+    console.log("Reset theme")
   }
 
   private getLinkElementForKey(key: string) {
