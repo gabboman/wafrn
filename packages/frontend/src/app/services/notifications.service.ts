@@ -150,7 +150,15 @@ export class NotificationsService {
         this.postMap.set(post.id, post)
       })
       let res: UserNotifications[] = petition.notifications.map((notification) => {
-        const usr = this.userMap.get(notification.userId) as SimplifiedUser
+        let usr = this.userMap.get(notification.userId) as SimplifiedUser
+        if (!usr) {
+          usr = {
+            id: '60',
+            avatar: '',
+            name: 'ERROR',
+            url: 'ERROR'
+          }
+        }
         const emoji = notification.emojiReactionId
           ? this.emojiMap.get(
               petition.emojiRelations.postEmojiReactions.find((elem) => elem.id == notification.emojiReactionId)
