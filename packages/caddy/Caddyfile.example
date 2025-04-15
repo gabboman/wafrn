@@ -1,0 +1,36 @@
+{
+    email ${{ACME_EMAIL}}
+
+    on_demand_tls {
+		ask http://pds:3000/tls-check
+	}
+}
+
+${{DOMAIN_NAME}} {
+    @api path /api* /fediverse* /contexts* /post* /blog* /.well-known*
+
+    handle @api {
+        header {
+            Access-Control-Allow-Origin *
+            Content-Security-Policy default-src 'self' 'unsafe-inline' 'unsafe-eval' ${{DOMAIN_NAME}} ${{CACHE_DOMAIN}} ${{MEDIA_DOMAIN}}; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' ${{DOMAIN_NAME}}; img-src 'self' ${{CACHE_DOMAIN}} ${{MEDIA_DOMAIN}}; font-src 'self' ${{CACHE_DOMAIN}} ${{MEDIA_DOMAIN}}; object-src 'none'; frame-src 'none'; frame-ancestors 'none'; upgrade-insecure-requests; block-all-mixed-content
+        }
+
+        reverse_proxy backend:9000
+    }
+
+    handle_path /adminer* {
+        reverse_proxy adminer:8080
+    }
+
+    handle {
+        reverse_proxy frontend:80
+    }
+}
+
+${{PDS_DOMAIN_NAME}} *.${{PDS_DOMAIN_NAME}} {
+    tls {
+		on_demand
+	}
+
+    reverse_proxy pds:3000
+}

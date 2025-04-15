@@ -27,6 +27,9 @@ services:
         WEBPUSH_PRIVATE: ${WEBPUSH_PRIVATE}
         WEBPUSH_PUBLIC: ${WEBPUSH_PUBLIC}
 
+        ENABLE_BSKY: ${ENABLE_BSKY}
+        PDS_DOMAIN_NAME: ${PDS_DOMAIN_NAME}
+
         LOG_SQL_QUERIES: ${LOG_SQL_QUERIES:-}
         UPLOAD_LIMIT: ${UPLOAD_LIMIT:-}
         POSTS_PER_PAGE: ${POSTS_PER_PAGE:-}
@@ -48,8 +51,6 @@ services:
     depends_on:
       - db
       - redis
-    # ports:
-    #   - 9000:9000
     restart: unless-stopped
     environment:
       - NODE_ENV=production
@@ -57,30 +58,14 @@ services:
       - ./packages/backend/uploads:/wafrn/uploads
       - ./packages/backend/cache:/wafrn/cache
       - ./packages/frontend/src/index.html:/wafrn/packages/frontend/index.html
-    labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.backend.rule=Host(`${DOMAIN_NAME}`) && (PathPrefix(`/api`) || PathPrefix(`/fediverse`) || PathPrefix(`/contexts`) || PathPrefix(`/post`) || PathPrefix(`/blog`) || PathPrefix(`/.well-known`))"
-      - "traefik.http.routers.backend.entrypoints=websecure"
-      - "traefik.http.routers.backend.tls.certresolver=myresolver"
-      - "traefik.http.middlewares.backend.headers.accesscontrolalloworiginlist=*"
-      - "traefik.http.middlewares.backend.headers.contentSecurityPolicy=default-src 'self' 'unsafe-inline' 'unsafe-eval' ${DOMAIN_NAME} ${CACHE_DOMAIN} ${MEDIA_DOMAIN}; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' ${DOMAIN_NAME}; img-src 'self' ${CACHE_DOMAIN} ${MEDIA_DOMAIN}; font-src 'self' ${CACHE_DOMAIN} ${MEDIA_DOMAIN}; object-src 'none'; frame-src 'none'; frame-ancestors 'none'; upgrade-insecure-requests; block-all-mixed-content"
 
   frontend:
     build:
       context: .
       dockerfile: packages/frontend/Dockerfile
-      # these args configure apache redirections and headers
       args:
         DOMAIN_NAME: ${DOMAIN_NAME}
         ADMIN_CONTACT_EMAIL: ${ADMIN_CONTACT_EMAIL}
-    # ports:
-    #   - 9992:80
-    labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.frontend.rule=Host(`${DOMAIN_NAME}`) && PathPrefix(`/`)"
-      - "traefik.http.routers.frontend.priority=1"
-      - "traefik.http.routers.frontend.entrypoints=websecure"
-      - "traefik.http.routers.frontend.tls.certresolver=myresolver"
 
   db:
     image: postgres:17
@@ -91,44 +76,51 @@ services:
       POSTGRES_DBNAME: ${POSTGRES_DBNAME}
     volumes:
       - dbpg:/var/lib/postgresql
-    # ports:
-    #   - 5432:5432
 
   adminer:
     image: adminer
     restart: always
-    # ports:
-    #   - 8080:8080
-    labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.adminer.rule=Host(`${DOMAIN_NAME}`) && PathPrefix(`/adminer`)"
-      - "traefik.http.middlewares.adminer.stripprefix.prefixes=/adminer"
-      - "traefik.http.middlewares.adminer.stripprefix.forceSlash=false"
-      - "traefik.http.routers.adminer.entrypoints=websecure"
-      - "traefik.http.routers.adminer.tls.certresolver=myresolver"
 
   redis:
     image: redis:7.2.4
     restart: always
-    # ports:
-    #   - "6379:6379"
 
-  traefik:
-    image: "traefik:v3.3"
-    container_name: "traefik"
-    command:
-      - "--providers.docker=true"
-      - "--providers.docker.exposedbydefault=false"
-      - "--entrypoints.websecure.address=:443"
-      - "--certificatesresolvers.myresolver.acme.tlschallenge=true"
-      - "--certificatesresolvers.myresolver.acme.email=${ACME_EMAIL}"
-      - "--certificatesresolvers.myresolver.acme.storage=/letsencrypt/acme.json"
+  caddy:
+    build:
+      context: packages/caddy
+      args:
+        DOMAIN_NAME: ${DOMAIN_NAME}
+        PDS_DOMAIN_NAME: ${PDS_DOMAIN_NAME}
+        CACHE_DOMAIN: ${CACHE_DOMAIN}
+        MEDIA_DOMAIN: ${MEDIA_DOMAIN}
+        ACME_EMAIL: ${ACME_EMAIL}
     ports:
-      - "443:443"
+      - 80:80
+      - 443:443
     volumes:
-      - letsencrypt:/letsencrypt
-      - "/var/run/docker.sock:/var/run/docker.sock:ro"
+      - "caddy:/data"
+
+  pds:
+    image: ghcr.io/bluesky-social/pds:0.4
+    environment:
+      PDS_HOSTNAME: ${PDS_DOMAIN_NAME}
+      PDS_JWT_SECRET: ${PDS_JWT_SECRET}
+      PDS_ADMIN_PASSWORD: ${PDS_ADMIN_PASSWORD}
+      PDS_PLC_ROTATION_KEY_K256_PRIVATE_KEY_HEX: ${PDS_PLC_ROTATION_KEY_K256_PRIVATE_KEY_HEX}
+      PDS_DATA_DIRECTORY: /pds
+      PDS_BLOBSTORE_DISK_LOCATION: /pds/blocks
+      PDS_BLOB_UPLOAD_LIMIT: 52428800
+      PDS_DID_PLC_URL: "https://plc.directory"
+      PDS_BSKY_APP_VIEW_URL: "https://api.bsky.app"
+      PDS_BSKY_APP_VIEW_DID: "did:web:api.bsky.app"
+      PDS_REPORT_SERVICE_URL: "https://mod.bsky.app"
+      PDS_REPORT_SERVICE_DID: "did:plc:ar7c4by46qjdydhdevvrndac"
+      PDS_CRAWLERS: "https://bsky.network"
+      LOG_ENABLED: true
+    volumes:
+      - pds:/pds
 
 volumes:
   dbpg:
-  letsencrypt:
+  caddy:
+  pds:

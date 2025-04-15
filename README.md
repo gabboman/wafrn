@@ -155,12 +155,15 @@ Next you'll need to fill in all of the details of your domain. For example if yo
 
 ```sh
 DOMAIN_NAME=wafrn.example.com
-CACHE_DOMAN=wafrn.example.com
+CACHE_DOMAIN=wafrn.example.com
 MEDIA_DOMAIN=wafrn.example.com
+PDS_DOMAIN_NAME=bsky.example.com
 
 ACME_EMAIL=admin@example.com
 ADMIN_CONTACT_EMAIL=admin@example.com
 ```
+
+Note: even if you don't intend to run the BlueSky integration you'll need to set a `PDS_DOMAIN_NAME` that is different to the main domain you use. You can however make this a fake one, like `bsky.example.com`. If you don't intend to use BlueSky then it is also advised that you comment out the `pds` container in your `docker-compose.yml` for security and performance reasons.
 
 You'll also need to fill in the `SMTP` settings for emails to work.
 
@@ -173,6 +176,30 @@ docker compose build && docker compose up
 ```
 
 Once the scripts run and everything is okay you should be able to access your website at `https://wafrn.example.com`
+
+#### BlueSky integraton
+
+To enable the BlueSky integration follow the steps below:
+
+1. Make sure to have `ENABLE_BSKY=false` for now, as the system will break otherwise
+
+2. Create a new domain for your Bluesky service. For example we'll use `bsky.example.com`
+
+3. Make sure in your DNS host both `bsky.example.com` and `*.bsky.example.com` points to the computer you're running docker compose
+
+4. Run `docker compose up` to make sure everything is running
+
+5. Run `./install/bsky/create-admin.sh`. This will create a user that the agent will use later.
+
+6. If the previous call was successful now you can enable `ENABLE_BSKY=true` in your config
+
+7. Update and restart your system: `docker compose build && docker compose restart`
+
+8. Check if everything is still running
+
+9. Use `./install/bsky/add-insert-code.sh` to add a new bluesky insert code to your system. You'll need to have one for any account you wish to enable bluesky for
+
+10. Open up your selected account profile and click "Enable bluesky". If all goes well, this account will now be enabled and accessible on Bluesky
 
 </details>
 
