@@ -7,7 +7,7 @@ import { CommonModule } from '@angular/common'
   selector: 'app-link-preview',
   imports: [CommonModule, MatCardModule],
   templateUrl: './link-preview.component.html',
-  styleUrl: './link-preview.component.scss'
+  styleUrl: './link-preview.component.scss',
 })
 export class LinkPreviewComponent implements OnChanges {
   private mediaService = inject(MediaService)

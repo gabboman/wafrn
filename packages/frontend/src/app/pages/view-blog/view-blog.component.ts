@@ -1,22 +1,14 @@
 import { Component, OnDestroy, OnInit } from '@angular/core'
-import { MatDialogRef } from '@angular/material/dialog'
 import { Meta, Title } from '@angular/platform-browser'
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router'
 import {
   faArrowUpRightFromSquare,
-  faChevronDown,
   faClockRotateLeft,
   faHeart,
   faHeartBroken,
   faHome,
   faReply,
-  faServer,
   faTriangleExclamation,
-  faUser,
-  faUserSlash,
-  faVolumeMute,
-  faVolumeUp,
-  faExclamationTriangle
 } from '@fortawesome/free-solid-svg-icons'
 import { Subscription, filter } from 'rxjs'
 import { ProcessedPost } from 'src/app/interfaces/processed-post'
@@ -183,8 +175,8 @@ export class ViewBlogComponent implements OnInit, OnDestroy {
 
 
   reloadPosts() {
-    window.scrollTo(0, 0)
     if (this.loading) return;
+    window.scrollTo(0, 0)
     this.posts = []
     this.currentPage = 0
     this.viewedPosts = 0

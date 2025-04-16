@@ -1,11 +1,8 @@
 import {
-  AfterViewChecked,
-  AfterViewInit,
   Component,
   computed,
   EventEmitter,
   Input,
-  OnChanges,
   OnDestroy,
   OnInit,
   Output,
@@ -46,9 +43,9 @@ import { environment } from 'src/environments/environment'
   selector: 'app-post',
   templateUrl: './post.component.html',
   styleUrls: ['./post.component.scss'],
-  standalone: false
+  standalone: false,
 })
-export class PostComponent implements OnInit, OnChanges, OnDestroy {
+export class PostComponent implements OnInit, OnDestroy {
   @Input() post!: ProcessedPost[]
   showFull: boolean = false
   postCanExpand = computed(() => {
@@ -167,6 +164,8 @@ export class PostComponent implements OnInit, OnChanges, OnDestroy {
     if (localStorage.getItem('automaticalyExpandPosts') === 'true') {
       this.expandPost()
     }
+    this.changed()
+
   }
 
   isEmptyReblog() {
@@ -181,7 +180,7 @@ export class PostComponent implements OnInit, OnChanges, OnDestroy {
     )
   }
 
-  ngOnChanges() {
+  changed() {
     this.ready = true
     const notes = this.post[this.post.length - 1].notes
     this.notes = notes.toString()

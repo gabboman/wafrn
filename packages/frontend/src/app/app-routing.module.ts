@@ -1,10 +1,12 @@
 import { NgModule } from '@angular/core'
-import { PreloadAllModules, RouteReuseStrategy, RouterModule, Routes } from '@angular/router'
+import { PreloadAllModules, Router, Scroll, RouteReuseStrategy, RouterModule, Routes } from '@angular/router'
 import { NavigationMenuComponent } from './components/navigation-menu/navigation-menu.component'
 import { NavigationMenuModule } from './components/navigation-menu/navigation-menu.module'
 import { isAdminGuard } from './guards/is-admin.guard'
 import { loginRequiredGuard } from './guards/login-required.guard'
 import { CustomReuseStrategy } from './services/routing.service'
+import { ViewportScroller } from '@angular/common'
+import { filter } from 'rxjs'
 
 const routes: Routes = [
   {
@@ -115,4 +117,23 @@ const routes: Routes = [
   providers: [{ provide: RouteReuseStrategy, useClass: CustomReuseStrategy }],
   exports: [RouterModule]
 })
-export class AppRoutingModule { }
+export class AppRoutingModule {
+  constructor(router: Router, viewportScroller: ViewportScroller) {
+    // Chromium does not seem to handle scrollPositionRestoration the same
+    // way as firefox does. To mitigate this, we have enforced it manually.
+    router.events
+      .pipe(filter((e) => e instanceof Scroll))
+      .subscribe((e: Scroll) => {
+        // Position is not null only on backwards navigation
+        if (e.position !== null) {
+          setTimeout(() => {
+            viewportScroller.scrollToPosition(e.position!);
+          }, 100);
+        } else if (e.anchor) {
+          viewportScroller.scrollToAnchor(e.anchor);
+        }
+      });
+
+  }
+
+}

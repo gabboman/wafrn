@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core'
+import { Component, input, OnInit } from '@angular/core'
 import { FormControl, UntypedFormGroup, Validators } from '@angular/forms'
 import { QuestionPoll } from '../../interfaces/questionPoll'
 import { LoginService } from '../../services/login.service'
@@ -11,7 +11,7 @@ import { PostsService } from '../../services/posts.service'
   standalone: false
 })
 export class PollComponent implements OnInit {
-  @Input() poll!: QuestionPoll
+  poll = input.required<QuestionPoll>();
   total = 0
   openPoll = false
   form = new UntypedFormGroup({})
@@ -26,13 +26,13 @@ export class PollComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.openPoll = new Date().getTime() < this.poll.endDate.getTime()
-    this.poll.questionPollQuestions.forEach((elem) => {
+    this.openPoll = new Date().getTime() < this.poll().endDate.getTime()
+    this.poll().questionPollQuestions.forEach((elem) => {
       this.total = this.total + elem.remoteReplies
     })
-    this.alreadyVoted = this.poll?.questionPollQuestions.some((question) => question.questionPollAnswers.length > 0)
-    if (this.poll?.questionPollQuestions && this.poll.questionPollQuestions.length > 0 && this.poll.multiChoice) {
-      this.poll.questionPollQuestions.forEach((question) => {
+    this.alreadyVoted = this.poll().questionPollQuestions.some((question) => question.questionPollAnswers.length > 0)
+    if (this.poll().questionPollQuestions && this.poll().questionPollQuestions.length > 0 && this.poll().multiChoice) {
+      this.poll().questionPollQuestions.forEach((question) => {
         this.form.addControl(
           question.id.toString(),
           new FormControl(
@@ -45,8 +45,8 @@ export class PollComponent implements OnInit {
         )
       })
     }
-    if (!this.poll.multiChoice) {
-      const existingReply = this.poll.questionPollQuestions.find((reply) => reply.questionPollAnswers.length > 0)
+    if (!this.poll().multiChoice) {
+      const existingReply = this.poll().questionPollQuestions.find((reply) => reply.questionPollAnswers.length > 0)
       this.form.addControl(
         'singleValue',
         new FormControl(
@@ -63,7 +63,7 @@ export class PollComponent implements OnInit {
   async vote() {
     let votes: number[] = []
     const formValue = this.form.value
-    if (this.poll.multiChoice) {
+    if (this.poll().multiChoice) {
       Object.keys(formValue).forEach((key) => {
         if (formValue[key]) {
           votes.push(parseInt(key))
@@ -72,7 +72,7 @@ export class PollComponent implements OnInit {
     } else {
       votes.push(parseInt(formValue.singleValue))
     }
-    const voteSuccess = await this.postsService.voteInPoll(this.poll.id, votes)
+    const voteSuccess = await this.postsService.voteInPoll(this.poll().id, votes)
     if (voteSuccess) {
       this.alreadyVoted = true
     }

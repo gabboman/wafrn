@@ -11,4 +11,4 @@ import { LinkPreviewComponent } from '../link-preview/link-preview.component'
   imports: [CommonModule, MatCardModule, MatButtonModule, FontAwesomeModule, LinkPreviewComponent],
   exports: [WafrnMediaComponent]
 })
-export class WafrnMediaModule {}
+export class WafrnMediaModule { }

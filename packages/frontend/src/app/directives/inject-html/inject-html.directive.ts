@@ -12,5 +12,5 @@ export class InjectHTMLDirective {
     }
   }
 
-  constructor(private host: ElementRef) {}
+  constructor(private host: ElementRef) { }
 }

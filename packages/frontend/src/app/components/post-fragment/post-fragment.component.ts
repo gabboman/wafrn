@@ -3,11 +3,10 @@ import {
   Component,
   computed,
   ElementRef,
-  EventEmitter,
-  Input,
+  input,
   OnChanges,
   OnDestroy,
-  Output,
+  output,
   viewChild
 } from '@angular/core'
 import { ProcessedPost } from '../../interfaces/processed-post'
@@ -31,6 +30,7 @@ import { EnvironmentService } from '../../services/environment.service'
 import { WafrnMedia } from '../../interfaces/wafrn-media'
 
 import Viewer from 'viewerjs'
+import { Subscription } from 'rxjs'
 
 type EmojiReaction = {
   id: string
@@ -58,23 +58,50 @@ type EmojiReaction = {
     SingleAskComponent
   ],
   templateUrl: './post-fragment.component.html',
-  styleUrl: './post-fragment.component.scss'
+  styleUrl: './post-fragment.component.scss',
 })
 export class PostFragmentComponent implements OnChanges, OnDestroy {
-  @Input() fragment!: ProcessedPost
-  @Output() forceExpand = new EventEmitter<boolean>()
+  fragment = input.required<ProcessedPost>()
+  forceExpand = output<boolean>()
   showSensitiveContent = false
   emojiCollection: EmojiReaction[] = []
-  likeSubscription
-  emojiSubscription
-  followsSubscription
-  userId
+  likeSubscription!: Subscription
+  emojiSubscription!: Subscription
+  followsSubscription!: Subscription
+  userId!: string
   availableEmojiNames: string[] = []
 
   reactionLoading = false
   sanitizedContent = ''
   noTagsContent = ''
-  wafrnFormattedContent: Array<string | WafrnMedia> = []
+  wafrnFormattedContent = computed(() => {
+    let processedBlock: Array<string | WafrnMedia> = []
+    this.sanitizedContent = this.postService.getPostHtml(this.fragment())
+    this.noTagsContent = this.postService.getPostHtml(this.fragment(), [])
+    if (this.fragment().medias && this.fragment().medias?.length > 0) {
+      const mediaDetectorRegex = /\!\[media\-([0-9]+)]/gm
+      const textDivided = this.sanitizedContent.split(mediaDetectorRegex)
+      textDivided.forEach((elem, index) => {
+        if (index % 2 == 0) {
+          if (elem != '') {
+            processedBlock.push(elem)
+          }
+        } else {
+          const medias = this.fragment().medias as WafrnMedia[]
+          const mediaToInsert = medias[parseInt(elem) - 1]
+          if (mediaToInsert) {
+            processedBlock.push(mediaToInsert)
+            this.seenMedia.push(parseInt(elem) - 1)
+          } else {
+            processedBlock.push(`![media-${elem}]`)
+          }
+        }
+      })
+    } else {
+      processedBlock = [this.sanitizedContent]
+    }
+    return processedBlock;
+  })
   characterCount = computed(() => this.noTagsContent.length)
   wordCount = computed(() => this.noTagsContent.split(' ').length)
 
@@ -95,25 +122,7 @@ export class PostFragmentComponent implements OnChanges, OnDestroy {
     private jwtService: JwtService,
     private messages: MessageService
   ) {
-    this.followsSubscription = this.postService.updateFollowers.subscribe(() => {
-      this.availableEmojiNames = []
-      this.postService.emojiCollections.forEach(
-        (collection) =>
-          (this.availableEmojiNames = this.availableEmojiNames.concat(collection.emojis.map((elem) => elem.name)))
-      )
-      this.availableEmojiNames.push('❤️')
-    })
-    this.userId = loginService.getLoggedUserUUID()
-    this.likeSubscription = postService.postLiked.subscribe((likeEvent) => {
-      if (likeEvent.id === this.fragment?.id) {
-        this.renderLikeDislike(likeEvent)
-      }
-    })
-    this.emojiSubscription = postService.emojiReacted.subscribe((emojiEvent) => {
-      if (emojiEvent.postId === this.fragment?.id) {
-        this.renderEmojiReact(emojiEvent)
-      }
-    })
+
   }
 
   ngOnDestroy(): void {
@@ -122,52 +131,47 @@ export class PostFragmentComponent implements OnChanges, OnDestroy {
     this.followsSubscription.unsubscribe()
   }
 
+  ngOnInit(): void {
+    this.followsSubscription = this.postService.updateFollowers.subscribe(() => {
+      this.availableEmojiNames = []
+      this.postService.emojiCollections.forEach(
+        (collection) =>
+          (this.availableEmojiNames = this.availableEmojiNames.concat(collection.emojis.map((elem) => elem.name)))
+      )
+      this.availableEmojiNames.push('❤️')
+    })
+    this.userId = this.loginService.getLoggedUserUUID()
+    this.likeSubscription = this.postService.postLiked.subscribe((likeEvent) => {
+      if (likeEvent.id === this.fragment()?.id) {
+        this.renderLikeDislike(likeEvent)
+      }
+    })
+    this.emojiSubscription = this.postService.emojiReacted.subscribe((emojiEvent) => {
+      if (emojiEvent.postId === this.fragment()?.id) {
+        this.renderEmojiReact(emojiEvent)
+      }
+    })
+  }
+
   ngOnChanges(): void {
     this.initializeContent()
     this.initializeEmojis()
-    this.nonLinkMediaCount = this.fragment.medias.filter((elem) => elem.mediaType != 'text/html').length
+    this.nonLinkMediaCount = this.fragment().medias.filter((elem) => elem.mediaType != 'text/html').length
   }
 
   initializeContent() {
     const disableCW = localStorage.getItem('disableCW') === 'true'
     this.showSensitiveContent = disableCW
-
-    let processedBlock: Array<string | WafrnMedia> = []
-    this.sanitizedContent = this.postService.getPostHtml(this.fragment)
-    this.noTagsContent = this.postService.getPostHtml(this.fragment, [])
-    if (this.fragment && this.fragment.medias && this.fragment.medias?.length > 0) {
-      const mediaDetectorRegex = /\!\[media\-([0-9]+)]/gm
-      const textDivided = this.sanitizedContent.split(mediaDetectorRegex)
-      textDivided.forEach((elem, index) => {
-        if (index % 2 == 0) {
-          if (elem != '') {
-            processedBlock.push(elem)
-          }
-        } else {
-          const medias = this.fragment.medias as WafrnMedia[]
-          const mediaToInsert = medias[parseInt(elem) - 1]
-          if (mediaToInsert) {
-            processedBlock.push(mediaToInsert)
-            this.seenMedia.push(parseInt(elem) - 1)
-          } else {
-            processedBlock.push(`![media-${elem}]`)
-          }
-        }
-      })
-    } else {
-      processedBlock = [this.sanitizedContent]
-    }
-    this.wafrnFormattedContent = processedBlock
   }
 
   initializeEmojis() {
     // using a "map" here for O(1) get operations
     const emojiReactions = {} as Record<string, EmojiReaction>
-    if (!this.fragment.emojiReactions) {
+    if (!this.fragment().emojiReactions) {
       this.emojiCollection = []
       return
     }
-    this.fragment.emojiReactions.forEach((reaction) => {
+    this.fragment().emojiReactions.forEach((reaction) => {
       const hasReaction = !!emojiReactions[reaction.content]
       if (!hasReaction) {
         let image = ''
@@ -255,11 +259,11 @@ export class PostFragmentComponent implements OnChanges, OnDestroy {
   renderEmojiReact({ emoji, type }: { postId: string; emoji: Emoji; type: 'react' | 'undo_react' }) {
     const collection = this.emojiCollection.find((e) => e.id === emoji.id)
     if (type === 'react') {
-      this.fragment.emojiReactions.push({
+      this.fragment().emojiReactions.push({
         emojiId: emoji.id,
         emoji: emoji,
         userId: this.loginService.getLoggedUserUUID(),
-        postId: this.fragment.id,
+        postId: this.fragment().id,
         content: emoji.name,
         user: {
           url: this.jwtService.getTokenData()['url'],
@@ -268,7 +272,7 @@ export class PostFragmentComponent implements OnChanges, OnDestroy {
           avatar: ''
         }
       })
-      console.log(this.fragment.emojiReactions)
+      console.log(this.fragment().emojiReactions)
     } else {
       if (collection) {
         if (collection.users.length === 1) {
@@ -278,7 +282,6 @@ export class PostFragmentComponent implements OnChanges, OnDestroy {
         }
       }
     }
-    this.ngOnChanges()
   }
 
   isLike(emojiReaction: EmojiReaction) {
@@ -286,14 +289,14 @@ export class PostFragmentComponent implements OnChanges, OnDestroy {
   }
 
   async toggleEmojiReact(emojiReaction: EmojiReaction) {
-    if (this.fragment.userId === this.userId) {
+    if (this.fragment().userId === this.userId) {
       this.messages.add({
         severity: 'error',
         summary: `You can not emojireact to your own posts`
       })
       return
     }
-    const postId = this.fragment.id
+    const postId = this.fragment().id
     if (!postId) {
       return
     }
