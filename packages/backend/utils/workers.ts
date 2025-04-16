@@ -10,6 +10,7 @@ import { processRemoteMedia } from './queueProcessors/remoteMediaProcessor.js'
 import { processFirehose } from '../atproto/workers/processFirehoseWorker.js'
 import { sendPushNotification } from './queueProcessors/sendPushNotification.js'
 import { checkPushNotificationDelivery } from './queueProcessors/checkPushNotificationDelivery.js'
+import { generateUserKeyPair } from './queueProcessors/generateUserKeyPair.js'
 
 logger.info('started worker')
 const workerInbox = new Worker('inbox', (job: Job) => inboxWorker(job), {
@@ -118,6 +119,18 @@ const workerCheckPushNotificationDelivery = new Worker(
   }
 )
 
+const workerGenerateUserKeyPair = new Worker(
+  'generateUserKeyPair',
+  async (job: Job) => await generateUserKeyPair(job),
+  {
+    connection: environment.bullmqConnection,
+    metrics: {
+      maxDataPoints: MetricsTime.ONE_WEEK * 2
+    },
+    concurrency: 1 // this one is VERY cpu intensive
+  }
+)
+
 const workers = [
   workerInbox,
   workerDeletePost,
@@ -128,7 +141,8 @@ const workers = [
   workerProcessRemotePostView,
   workerProcessRemoteMediaData,
   workerSendPushNotification,
-  workerCheckPushNotificationDelivery
+  workerCheckPushNotificationDelivery,
+  workerGenerateUserKeyPair
 ]
 if (environment.enableBsky) {
   workers.push(workerProcessFirehose as Worker)
@@ -156,7 +170,8 @@ const workersToLogFail = [
   workerPrepareSendPost,
   workerProcessRemotePostView,
   workerSendPostChunk,
-  workerSendPushNotification
+  workerSendPushNotification,
+  workerGenerateUserKeyPair
 ]
 
 workersToLogFail.forEach((worker) =>
@@ -178,5 +193,6 @@ export {
   workerProcessRemoteMediaData,
   workerProcessFirehose,
   workerSendPushNotification,
-  workerCheckPushNotificationDelivery
+  workerCheckPushNotificationDelivery,
+  workerGenerateUserKeyPair
 }

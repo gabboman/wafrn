@@ -52,6 +52,7 @@ import { BskyAgent } from '@atproto/api'
 import { getAtProtoSession } from '../atproto/utils/getAtProtoSession.js'
 import { forceUpdateCacheDidsAtThread, getCacheAtDids } from '../atproto/cache/getCacheAtDids.js'
 import dompurify from 'isomorphic-dompurify'
+import { Queue } from 'bullmq'
 
 const markdownConverter = new showdown.Converter({
   simplifiedAutoLink: true,
@@ -62,6 +63,19 @@ const markdownConverter = new showdown.Converter({
   emoji: true
 })
 const forbiddenCharacters = [':', '@', '/', '<', '>', '"', '&', '?']
+
+const generateUserKeyPairQueue = new Queue('generateUserKeyPair', {
+  connection: environment.bullmqConnection,
+  defaultJobOptions: {
+    removeOnComplete: true,
+    attempts: 3,
+    backoff: {
+      type: 'exponential',
+      delay: 1000
+    },
+    removeOnFail: 25000
+  }
+})
 
 export default function userRoutes(app: Application) {
   app.post(
@@ -104,17 +118,6 @@ export default function userRoutes(app: Application) {
               avatarURL = avatarURL.slice('/uploads/'.length - 1)
             }
             const activationCode = generateRandomString()
-            const { publicKey, privateKey } = generateKeyPairSync('rsa', {
-              modulusLength: 4096,
-              publicKeyEncoding: {
-                type: 'spki',
-                format: 'pem'
-              },
-              privateKeyEncoding: {
-                type: 'pkcs8',
-                format: 'pem'
-              }
-            })
             const user = {
               email: req.body.email.toLowerCase(),
               description: req.body.description.trim(),
@@ -130,8 +133,6 @@ export default function userRoutes(app: Application) {
               lastLoginIp: 'ACCOUNT_NOT_ACTIVATED',
               banned: false,
               activationCode,
-              privateKey,
-              publicKey,
               isBot: false
             }
 
@@ -148,6 +149,7 @@ export default function userRoutes(app: Application) {
               ? true
               : sendActivationEmail(req.body.email.toLowerCase(), activationCode, mailHeader, mailBody)
             await Promise.all([userWithEmail, emailSent])
+            await generateUserKeyPairQueue.add('generateUserKeyPair', { userId: (await userWithEmail).id })
             success = true
             await redisCache.del('allLocalUserIds')
             res.send({

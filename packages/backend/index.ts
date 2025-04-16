@@ -12,7 +12,8 @@ import {
   workerProcessFirehose,
   workerDeletePost,
   workerProcessRemotePostView,
-  workerProcessRemoteMediaData
+  workerProcessRemoteMediaData,
+  workerGenerateUserKeyPair
 } from './utils/workers.js'
 
 import { SignedRequest } from './interfaces/fediverse/signedRequest.js'
@@ -130,7 +131,8 @@ app.listen(PORT, environment.listenIp, () => {
     workerGetUser,
     workerDeletePost,
     workerProcessRemotePostView,
-    workerProcessRemoteMediaData
+    workerProcessRemoteMediaData,
+    workerGenerateUserKeyPair
   ]
   if (environment.enableBsky) {
     workers.push(workerProcessFirehose as Worker)
