@@ -2,11 +2,11 @@
   <app-link-preview *ngIf="displayUrl()" [link]="displayUrl()"></app-link-preview>
 } @else {
   <div class="media-container" [ngClass]="{ 'always-show-alt': alwaysShowAlt() }">
-    <div class="media-content-container" [style.aspect-ratio]="nsfw ? aspectRatio() : 'auto'">
+    <div class="media-content-container" >
       @if (
         (!extensionsToHideImgTag.includes(extension()) || mimeType() === 'UNKNOWN') && !mimeType().startsWith('video')
       ) {
-        @let forceImg = displayUrl() !== '' ? displayUrl() : 'data:image/png;base64, iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAACXBIWXMAAC4jAAAuIwF4pT92AAAADUlEQVQIW2NgYGD4DwABBAEAwS2OUAAAAABJRU5ErkJggg==';
+        @let forceImg = (displayUrl() !== '' && !nsfw) ? displayUrl() : 'data:image/png;base64, iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAACXBIWXMAAC4jAAAuIwF4pT92AAAADUlEQVQIW2NgYGD4DwABBAEAwS2OUAAAAABJRU5ErkJggg==';
         <img
           *ngIf="!errorMode"
           [src]="forceImg"
@@ -15,9 +15,9 @@
           [height]="height()"
           loading="lazy"
           (error)="handleError()"
+          [style.aspect-ratio]="nsfw ? aspectRatio() : ''"
           [ngClass]="{
-            nsfw: nsfw,
-            'displayed-image': !nsfw
+            'displayed-image': true
           }"
         />
       }
@@ -41,7 +41,7 @@
     </div>
 
     @if (nsfw) {
-      <div class="flex flex-column justify-content-center align-items-center image-cw-text">
+      <div class="flex flex-column justify-content-center align-items-center image-cw-text" >
         <p>This media contains sensitive content</p>
         <button mat-raised-button (click)="showPicture()">Show media</button>
       </div>
