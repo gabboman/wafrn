@@ -17,8 +17,6 @@
 img,
 video {
   margin-inline: auto;
-  max-width: 100%;
-  height: auto;
   transition: filter 120ms ease-out;
 }
 
@@ -87,6 +85,7 @@ video {
 }
 
 .image-cw-text {
+  width: 100%;
   background-color: #0004;
   z-index: 1;
 }
@@ -112,7 +111,7 @@ video {
 
 /* fix aspect ratio/stretch */
 .media-content-container .displayed-image {
-  width: auto;
+  width: 100%;
   height: auto;
-  aspect-ratio: auto;
+  object-fit: contain;
 }

@@ -1,13 +1,13 @@
-@if (fragment.title) {
-  <h3 [innerText]="fragment.title"></h3>
+@if (fragment().title) {
+  <h3 [innerText]="fragment().title"></h3>
 }
-@if (fragment.ask) {
-  <app-single-ask [ask]="fragment.ask"></app-single-ask>
+@if (fragment().ask) {
+  <app-single-ask [ask]="fragment().ask!"></app-single-ask>
 }
-@if (fragment.content_warning || fragment.muted_words_cw) {
+@if (fragment().content_warning || fragment().muted_words_cw) {
   <div class="content-warning-text">
-    {{ fragment.muted_words_cw }}
-    {{ fragment.content_warning }}
+    {{ fragment().muted_words_cw }}
+    {{ fragment().content_warning }}
   </div>
   <button class="toggle-cw-button" mat-raised-button color="primary" (click)="cwClick()" class="w-full my-2">
     @if (showSensitiveContent) {
@@ -24,9 +24,9 @@
 }
 <div
   class="flex flex-column gap-3 post-content"
-  [ngClass]="{ hidden: (fragment.content_warning || fragment.muted_words_cw) && !showSensitiveContent }"
+  [ngClass]="{ hidden: (fragment().content_warning || fragment().muted_words_cw) && !showSensitiveContent }"
 >
-  @for (block of wafrnFormattedContent; track $index) {
+  @for (block of wafrnFormattedContent(); track $index) {
     <div #mediaInline class="fragment-content overflow-hidden">
       <div [injectHTML]="block" class="post-text"></div>
       @if (typeof block !== 'string') {
@@ -35,15 +35,15 @@
     </div>
   }
 
-  <div *ngIf="fragment.questionPoll">
-    <app-poll [poll]="fragment.questionPoll"></app-poll>
+  <div *ngIf="fragment().questionPoll">
+    <app-poll [poll]="fragment().questionPoll!"></app-poll>
   </div>
   <section
     #mediaEnd
     [ngClass]="{ 'media-carousel': !forceOldMediaStyle && nonLinkMediaCount > 1 }"
     class="flex flex-column gap-3 media-gallery"
   >
-    @for (media of fragment.medias; track $index) {
+    @for (media of fragment().medias; track $index) {
       @if (media.mediaType != 'text/html') {
         <app-wafrn-media
           [ngClass]="{
@@ -56,18 +56,18 @@
     }
   </section>
   <section #mediaEnd class="flex flex-column gap-3">
-    @for (media of fragment.medias; track $index) {
+    @for (media of fragment().medias; track $index) {
       @if (media.mediaType == 'text/html') {
         <app-wafrn-media *ngIf="!seenMedia.includes($index)" [data]="media"></app-wafrn-media>
       }
     }
   </section>
-  <div class="flex flex-wrap gap-2 tag-list" *ngIf="fragment.tags && fragment.tags.length">
-    @for (tag of fragment.tags; track $index) {
+  <div class="flex flex-wrap gap-2 tag-list" *ngIf="fragment().tags && fragment().tags.length">
+    @for (tag of fragment().tags; track $index) {
       <a class="tag" [routerLink]="'/dashboard/search/' + tag.tagName"> #{{ tag.tagName }} </a>
     }
   </div>
-  @for (quote of fragment.quotes; track $index) {
+  @for (quote of fragment().quotes; track $index) {
     <div *ngIf="quote" class="quoted-post cursor-pointer">
       <div class="flex">
         <app-post-header class="w-full" [fragment]="quote" [simplified]="true" [disableLink]="true"></app-post-header>
@@ -119,6 +119,6 @@
         </div>
       }
     }
-    <app-emoji-react *ngIf="!(userId === '' || userId === fragment.userId)" [postId]="fragment.id"></app-emoji-react>
+    <app-emoji-react *ngIf="!(userId === '' || userId === fragment().userId)" [postId]="fragment().id"></app-emoji-react>
   </section>
 </div>

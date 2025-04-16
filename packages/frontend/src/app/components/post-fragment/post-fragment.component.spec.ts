@@ -67,8 +67,8 @@ describe('PostFragmentComponent', () => {
       JSON.stringify(['No medias attached and ![media-1] string'])
     )
     if (component.fragment) {
-      component.fragment.content = 'post with one media ![media-1] and a second line'
-      component.fragment.medias = [
+      component.fragment().content = 'post with one media ![media-1] and a second line'
+      component.fragment().medias = [
         {
           id: '1',
           NSFW: false,
@@ -102,7 +102,7 @@ describe('PostFragmentComponent', () => {
           ' and a second line'
         ])
       )
-      component.fragment.content = 'start ![media-1] middle ![media-2] end'
+      component.fragment().content = 'start ![media-1] middle ![media-2] end'
       expect(JSON.stringify(component.seenMedia)).toBe(JSON.stringify([0]))
       component.initializeContent()
       fixture.detectChanges()
@@ -129,7 +129,7 @@ describe('PostFragmentComponent', () => {
           ' end'
         ])
       )
-      component.fragment.content = 'start ![media-249] end'
+      component.fragment().content = 'start ![media-249] end'
       component.initializeContent()
       fixture.detectChanges()
       // acceptable compromise without more headaches. Your fault for making it like this lol

@@ -1,10 +1,12 @@
-@if (loading) {
+@if (loading && forceTenorGif) {
 } @else {
   @if (forceTenorGif) {
     FORCE TENOR ACTIVATED
   }
 
   @if (!forceTenorGif && !forceYoutube) {
+    @let t = (loading) ? '...' : title;
+    @let d = (loading) ? '...' : description;
     <a target="_blank" [href]="url" class="embed-link">
       <div class="media-container embed-container">
         @if (img !== '') {
@@ -13,10 +15,10 @@
           </div>
         }
         <div class="embed-text">
-          <h2 class="embed-title">{{ title | slice: 0 : 64 }}{{ title.length > 63 ? '...' : '' }}</h2>
-          @if (description) {
+          <h2 class="embed-title">{{ t | slice: 0 : 64 }}{{ t.length > 63 ? '...' : '' }}</h2>
+          @if (d) {
             <p class="embed-description">
-              {{ description | slice: 0 : 128 }}{{ description.length > 127 ? '...' : '' }}
+              {{ d | slice: 0 : 128 }}{{ d.length > 127 ? '...' : '' }}
             </p>
           }
           <p class="embed-url">{{ (hostname | slice: 0 : 64) + (hostname.length > 63 ? '...' : '') }}</p>

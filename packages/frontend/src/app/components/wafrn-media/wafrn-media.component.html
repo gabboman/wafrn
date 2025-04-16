@@ -2,16 +2,17 @@
   <app-link-preview *ngIf="displayUrl()" [link]="displayUrl()"></app-link-preview>
 } @else {
   <div class="media-container" [ngClass]="{ 'always-show-alt': alwaysShowAlt() }">
-    <div class="media-content-container">
+    <div class="media-content-container" [style.aspect-ratio]="nsfw ? aspectRatio() : 'auto'">
       @if (
         (!extensionsToHideImgTag.includes(extension()) || mimeType() === 'UNKNOWN') && !mimeType().startsWith('video')
       ) {
+        @let forceImg = displayUrl() !== '' ? displayUrl() : 'data:image/png;base64, iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAACXBIWXMAAC4jAAAuIwF4pT92AAAADUlEQVQIW2NgYGD4DwABBAEAwS2OUAAAAABJRU5ErkJggg==';
         <img
           *ngIf="!errorMode"
-          [src]="displayUrl()"
+          [src]="forceImg"
           [alt]="data().description"
-          width="{{ width() }}"
-          height="{{ height() }}"
+          [width]="width()"
+          [height]="height()"
           loading="lazy"
           (error)="handleError()"
           [ngClass]="{
