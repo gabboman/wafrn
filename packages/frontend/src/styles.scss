@@ -12,6 +12,8 @@
 
 // Color scheme default
 @import './assets/themes/default.css';
+@import './assets/fonts/inter.css';
+@import './assets/fonts/firacode.css';
 
 html {
   color-scheme: light dark;
@@ -57,8 +59,15 @@ $theme: mat.define-theme(
 // TODO: No !important
 
 :root, body, html {
-  font-family: InterVariable, Inter, system-ui, sans-serif!important;
-  font-feature-settings: 'liga' 1, 'calt' 1, 'tnum' 1, 'case' 1, 'zero' 1, 'ss01' 1, 'ss02' 1!important;
+  font-family: Inter, sans-serif !important;
+  font-feature-settings: 'liga' 1, 'calt' 1, 'tnum' 1, 'case' 1, 'zero' 1, 'ss01' 1, 'ss02' 1 !important;
+}
+
+@supports (font-variation-settings: normal) {
+  :root, body, html {
+    font-family: InterVariable, sans-serif !important;
+    font-feature-settings: 'liga' 1, 'calt' 1, 'tnum' 1, 'case' 1, 'zero' 1, 'ss01' 1, 'ss02' 1 !important;
+  }
 }
 
 code {
