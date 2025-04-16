@@ -64,13 +64,6 @@
   </div>
 
   <div class="post-editor-data">
-    @if (data && data.post && !editing) {
-      <p class="text-2xl mt-2 mb-4">{{ 'editor.inReplyTo' | translate }}</p>
-      <div class="mb-3 quoted-post">
-        <app-post-header [fragment]="data.post" [disableLink]="true"></app-post-header>
-        <app-post-fragment [fragment]="data.post"></app-post-fragment>
-      </div>
-    }
 
     <h4 class="mt-3" *ngIf="editing">You are editing your woot</h4>
     <ng-container *ngIf="data && data.ask">
@@ -169,23 +162,6 @@
       </p>
     </section>
 
-    <section id="quote">
-      <div *ngIf="!data?.quote">
-        <mat-spinner *ngIf="quoteLoading" class="my-4" color="accent" diameter="24"></mat-spinner>
-      </div>
-      <div *ngIf="data && data.quote">
-        <p class="mb-1">{{ 'editor.quoteTitle' | translate }}</p>
-        <div class="quoted-post mb-4">
-          <button mat-mini-fab class="delete-btn" color="warn" (click)="data ? (data.quote = undefined) : null">
-            <fa-icon size="lg" [icon]="closeIcon"></fa-icon>
-          </button>
-          <div class="flex">
-            <app-post-header [fragment]="data.quote"></app-post-header>
-          </div>
-          <app-post-fragment [fragment]="data.quote"></app-post-fragment>
-        </div>
-      </div>
-    </section>
     <section id="tags" class="w-full flex-row">
       <mat-form-field class="w-full" appearance="outline">
         <mat-label>{{ 'editor.tagFieldLabel' | translate }}</mat-label>
@@ -195,6 +171,32 @@
         @for (tag of tags.split(','); track $index) {
           <span *ngIf="tag && tag !== '' && tag.trim() !== ''" class="tag"> #{{ tag.trim() }} </span>
         }
+      </div>
+    </section>
+
+    @if (data && data.post && !editing) {
+      <p class="mb-2">{{ 'editor.inReplyTo' | translate }}</p>
+      <div class="mb-3 quoted-post">
+        <app-post-header [fragment]="data.post" [disableLink]="true"></app-post-header>
+        <app-post-fragment [fragment]="data.post"></app-post-fragment>
+      </div>
+    }
+
+    <section id="quote">
+      <div *ngIf="!data?.quote">
+        <mat-spinner *ngIf="quoteLoading" class="my-4" color="accent" diameter="24"></mat-spinner>
+      </div>
+      <div *ngIf="data && data.quote">
+        <p class="mb-2">{{ 'editor.quoteTitle' | translate }}</p>
+        <div class="quoted-post mb-4">
+          <button mat-mini-fab class="delete-btn" color="warn" (click)="data ? (data.quote = undefined) : null">
+            <fa-icon size="lg" [icon]="closeIcon"></fa-icon>
+          </button>
+          <div class="flex">
+            <app-post-header [fragment]="data.quote"></app-post-header>
+          </div>
+          <app-post-fragment [fragment]="data.quote"></app-post-fragment>
+        </div>
       </div>
     </section>
     <!-- Popup Menus -->
