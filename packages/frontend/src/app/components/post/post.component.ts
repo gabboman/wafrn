@@ -1,13 +1,4 @@
-import {
-  Component,
-  computed,
-  EventEmitter,
-  Input,
-  OnDestroy,
-  OnInit,
-  Output,
-  signal
-} from '@angular/core'
+import { Component, computed, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, signal } from '@angular/core'
 import { ProcessedPost } from 'src/app/interfaces/processed-post'
 import { EditorService } from 'src/app/services/editor.service'
 import { LoginService } from 'src/app/services/login.service'
@@ -43,9 +34,9 @@ import { environment } from 'src/environments/environment'
   selector: 'app-post',
   templateUrl: './post.component.html',
   styleUrls: ['./post.component.scss'],
-  standalone: false,
+  standalone: false
 })
-export class PostComponent implements OnInit, OnDestroy {
+export class PostComponent implements OnInit, OnDestroy, OnChanges {
   @Input() post!: ProcessedPost[]
   showFull: boolean = false
   postCanExpand = computed(() => {
@@ -164,8 +155,6 @@ export class PostComponent implements OnInit, OnDestroy {
     if (localStorage.getItem('automaticalyExpandPosts') === 'true') {
       this.expandPost()
     }
-    this.changed()
-
   }
 
   isEmptyReblog() {
@@ -180,7 +169,7 @@ export class PostComponent implements OnInit, OnDestroy {
     )
   }
 
-  changed() {
+  ngOnChanges() {
     this.ready = true
     const notes = this.post[this.post.length - 1].notes
     this.notes = notes.toString()
