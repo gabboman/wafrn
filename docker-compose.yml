@@ -1,5 +1,5 @@
 services:
-  backend:
+  backend: &default_backend
     build:
       context: packages/backend
       dockerfile: Dockerfile
@@ -60,34 +60,10 @@ services:
       - ./packages/frontend/src/index.html:/wafrn/packages/frontend/index.html
 
   frontend:
+    restart: unless-stopped
     build:
-      context: .
-      dockerfile: packages/frontend/Dockerfile
-      args:
-        DOMAIN_NAME: ${DOMAIN_NAME}
-        ADMIN_CONTACT_EMAIL: ${ADMIN_CONTACT_EMAIL}
-
-  db:
-    image: postgres:17
-    restart: always
-    environment:
-      POSTGRES_USER: ${POSTGRES_USER}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
-      POSTGRES_DBNAME: ${POSTGRES_DBNAME}
-    volumes:
-      - dbpg:/var/lib/postgresql
-
-  adminer:
-    image: adminer
-    restart: always
-
-  redis:
-    image: redis:7.2.4
-    restart: always
-
-  caddy:
-    build:
-      context: packages/caddy
+      context: packages/frontend
+      dockerfile: Dockerfile
       args:
         DOMAIN_NAME: ${DOMAIN_NAME}
         PDS_DOMAIN_NAME: ${PDS_DOMAIN_NAME}
@@ -100,8 +76,27 @@ services:
     volumes:
       - "caddy:/data"
 
+  db:
+    image: postgres:17
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DBNAME}
+    volumes:
+      - dbpg:/var/lib/postgresql
+
+  adminer:
+    image: adminer
+    restart: unless-stopped
+
+  redis:
+    image: redis:7.2.4
+    restart: unless-stopped
+
   pds:
     image: ghcr.io/bluesky-social/pds:0.4
+    restart: unless-stopped
     environment:
       PDS_HOSTNAME: ${PDS_DOMAIN_NAME}
       PDS_JWT_SECRET: ${PDS_JWT_SECRET}
@@ -119,6 +114,10 @@ services:
       LOG_ENABLED: true
     volumes:
       - pds:/pds
+
+  pds_worker:
+    <<: *default_backend
+    command: "npm exec tsx atproto.ts"
 
 volumes:
   dbpg:
