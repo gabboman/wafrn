@@ -150,7 +150,7 @@ To enable the BlueSky integration follow the steps below:
 
 4. Run `docker compose up` to make sure everything is running
 
-5. Run `./install/bsky/create-admin.sh`. This will create a user that the agent will use later.
+5. Run `./install/bsky/create-admin.sh`. This will create a user that the agent will use later and assign it to the admin account. If you use your admin account as your main (like on a single-user instance), then you can also provide a username to be generated (default is  `wafrnadmin`), e.g. `./install/bsky/create-admin.sh myuser`. Make sure the username you chose is not one of the reserved names that cannot be used: https://github.com/bluesky-social/atproto/blob/main/packages/pds/src/handle/reserved.ts
 
 6. If the previous call was successful now you can enable `ENABLE_BSKY=true` in your config
 

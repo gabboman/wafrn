@@ -4,6 +4,8 @@ SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
 
 source "${SCRIPT_DIR}/../../.env"
 
+NEW_USERNAME=${1:-wafrnadmin}
+
 echo Generating new invite code
 
 NEW_CODE=$(curl \
@@ -29,7 +31,7 @@ RESULT="$(curl \
     --request POST \
     --user "admin:${PDS_ADMIN_PASSWORD}" \
     --header "Content-Type: application/json" \
-    --data "{\"email\":\"${ADMIN_USER}@${DOMAIN_NAME}\", \"handle\":\"wafrnadmin.${PDS_DOMAIN_NAME}\", \"password\":\"${PASSWORD}\", \"inviteCode\":\"${NEW_CODE}\"}" \
+    --data "{\"email\":\"${ADMIN_USER}@${DOMAIN_NAME}\", \"handle\":\"${NEW_USERNAME}.${PDS_DOMAIN_NAME}\", \"password\":\"${PASSWORD}\", \"inviteCode\":\"${NEW_CODE}\"}" \
     "https://${PDS_DOMAIN_NAME}/xrpc/com.atproto.server.createAccount"
   )"
 
