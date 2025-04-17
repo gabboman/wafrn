@@ -34,7 +34,7 @@ export class LinkPreviewComponent implements OnChanges {
       }
       this.loading = true
       const linkToGet = this.link.startsWith(EnvironmentService.environment.externalCacheurl)
-      this.url = linkToGet ? (new URL(this.link).searchParams.get('media') as string) : this.link
+      this.url = linkToGet ? (new URL(this.link, EnvironmentService.environment.frontUrl).searchParams.get('media') as string) : this.link
       this.hostname = new URL(this.url).hostname
       this.mediaService.getLinkPreview(this.url).then((data) => {
         this.loading = false
