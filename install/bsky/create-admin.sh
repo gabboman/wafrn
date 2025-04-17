@@ -43,4 +43,4 @@ echo "Generated DID: ${DID}"
 
 echo "Updating database with details"
 
-docker exec -ti wafrn-db-1 psql -d ${POSTGRES_DBNAME} -c "UPDATE users SET \"bskyAuthData\"='${PASSWORD}', \"bskyDid\"='${DID}' WHERE url = '${ADMIN_USER}';"
+docker exec -ti wafrn-db-1 psql -d ${POSTGRES_DBNAME} -c "UPDATE users SET \"bskyAuthData\"='${PASSWORD}', \"bskyDid\"='${DID}', \"enableBsky\"=1 WHERE url = '${ADMIN_USER}';"
