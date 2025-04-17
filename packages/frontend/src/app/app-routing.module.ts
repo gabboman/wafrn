@@ -32,6 +32,11 @@ const routes: Routes = [
           import('./pages/recover-password/recover-password.module').then((m) => m.RecoverPasswordModule)
       },
       {
+        path: 'mfaSetup',
+        loadChildren: () =>
+          import('./pages/mfa-setup/mfa-setup.module').then((m) => m.MfaSetupModule)
+      },
+      {
         path: 'dashboard/search',
         loadChildren: () => import('./pages/search/search.module').then((m) => m.SearchModule)
       },
@@ -78,6 +83,10 @@ const routes: Routes = [
       {
         path: 'login',
         loadChildren: () => import('./pages/login/login.module').then((m) => m.LoginModule)
+      },
+      {
+        path: 'login/mfa',
+        loadChildren: () => import('./pages/login-mfa/login-mfa.module').then((m) => m.LoginMfaModule)
       },
       {
         path: 'admin',

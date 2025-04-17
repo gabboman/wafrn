@@ -533,7 +533,7 @@ export class PostsService {
           'border-top-style': [new RegExp('.*')],
           'border-top-width': [new RegExp('.*')],
           'border-width': [new RegExp('.*')],
-          'bottom': [new RegExp('.*')],          
+          'bottom': [new RegExp('.*')],
           color: [new RegExp('.*')],
           direction: [new RegExp('.*')],
           'empty-cells': [new RegExp('.*')],
@@ -599,7 +599,7 @@ export class PostsService {
           'word-break': [new RegExp('.*')],
           'word-spacing': [new RegExp('.*')],
           'word-wrap': [new RegExp('.*')],
-          'writing-mode': [new RegExp('.*')]          
+          'writing-mode': [new RegExp('.*')]
         }
       }
     })

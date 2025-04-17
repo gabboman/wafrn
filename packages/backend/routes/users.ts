@@ -8,6 +8,8 @@ import {
   EmojiCollection,
   FederatedHost,
   Follows,
+  MfaDetails,
+  MfaDetails,
   Mutes,
   Post,
   ServerBlock,
@@ -48,11 +50,13 @@ import { getAvaiableEmojisCache } from '../utils/cacheGetters/getAvaiableEmojis.
 import { rejectremoteFollow } from '../utils/activitypub/rejectRemoteFollow.js'
 import { acceptRemoteFollow } from '../utils/activitypub/acceptRemoteFollow.js'
 import showdown from 'showdown'
-import { BskyAgent } from '@atproto/api'
+import { BskyAgent, ComNS } from '@atproto/api'
 import { getAtProtoSession } from '../atproto/utils/getAtProtoSession.js'
 import { forceUpdateCacheDidsAtThread, getCacheAtDids } from '../atproto/cache/getCacheAtDids.js'
 import dompurify from 'isomorphic-dompurify'
 import { Queue } from 'bullmq'
+import * as OTPAuth from 'otpauth'
+import verifyTotp from '../utils/verifyTotp.js'
 
 const markdownConverter = new showdown.Converter({
   simplifiedAutoLink: true,
@@ -142,9 +146,8 @@ export default function userRoutes(app: Application) {
               : `Welcome to ${environment.instanceUrl}!`
             const mailBody = environment.reviewRegistrations
               ? `Hello ${req.body.url}, at this moment we are manually reviewing registrations. You will recive an email from us once it's accepted`
-              : `<h1>Welcome to ${environment.instanceUrl}</h1> To activate your account <a href="${
-                  environment.instanceUrl
-                }/activate/${encodeURIComponent(req.body.email.toLowerCase())}/${activationCode}">click here!</a>`
+              : `<h1>Welcome to ${environment.instanceUrl}</h1> To activate your account <a href="${environment.instanceUrl
+              }/activate/${encodeURIComponent(req.body.email.toLowerCase())}/${activationCode}">click here!</a>`
             const emailSent = environment.disableRequireSendEmail
               ? true
               : sendActivationEmail(req.body.email.toLowerCase(), activationCode, mailHeader, mailBody)
@@ -384,7 +387,15 @@ export default function userRoutes(app: Application) {
           user.password = await bcrypt.hash(req.body.password, environment.saltRounds)
           user.activated = environment.reviewRegistrations ? user.activated : true
           user.requestedPasswordReset = null
-          user.save()
+          await user.save()
+
+          // also reset MFA details
+          await MfaDetails.destroy({
+            where: {
+              userId: user.id
+            }
+          })
+
           success = true
         }
       }
@@ -414,22 +425,46 @@ export default function userRoutes(app: Application) {
           if (correctPassword) {
             success = true
             if (userWithEmail.activated) {
-              res.send({
-                success: true,
-                token: jwt.sign(
-                  {
-                    userId: userWithEmail.id,
-                    email: userWithEmail.email.toLowerCase(),
-                    birthDate: userWithEmail.birthDate,
-                    url: userWithEmail.url,
-                    role: userWithEmail.role
-                  },
-                  environment.jwtSecret,
-                  { expiresIn: '31536000s' }
-                )
+              const mfaEnabled = await MfaDetails.findAll({
+                where: {
+                  userId: userWithEmail.id,
+                  enabled: {
+                    [Op.eq]: true
+                  }
+                }
               })
-              userWithEmail.lastLoginIp = getIp(req, true)
-              userWithEmail.save()
+              if (mfaEnabled.length > 0) {
+                res.send({
+                  success: true,
+                  mfaRequired: true,
+                  mfaOptions: [...new Set(mfaEnabled.map((elem) => elem.type))],
+                  token: jwt.sign(
+                    {
+                      mfaStep: 1,
+                      email: userWithEmail.email.toLowerCase()
+                    },
+                    environment.jwtSecret,
+                    { expiresIn: '300s' }
+                  )
+                })
+              } else {
+                res.send({
+                  success: true,
+                  token: jwt.sign(
+                    {
+                      userId: userWithEmail.id,
+                      email: userWithEmail.email.toLowerCase(),
+                      birthDate: userWithEmail.birthDate,
+                      url: userWithEmail.url,
+                      role: userWithEmail.role
+                    },
+                    environment.jwtSecret,
+                    { expiresIn: '31536000s' }
+                  )
+                })
+                userWithEmail.lastLoginIp = getIp(req, true)
+                await userWithEmail.save()
+              }
             } else {
               res.send({
                 success: false,
@@ -450,6 +485,190 @@ export default function userRoutes(app: Application) {
         errorMessage: 'Please recheck your email and password'
       })
     }
+  })
+
+  app.post('/api/login/mfa', [loginRateLimiter, optionalAuthentication], async (req: AuthorizedRequest, res) => {
+    let success = false
+    try {
+      if (req.body?.token && req.jwtData?.mfaStep == 1 && req.jwtData?.email) {
+        const userWithEmail = await User.findOne({
+          where: {
+            email: req.jwtData?.email,
+            banned: {
+              [Op.ne]: true
+            }
+          }
+        })
+        if (userWithEmail) {
+          const mfaDetails = await MfaDetails.findAll({
+            where: {
+              userId: userWithEmail.id,
+              enabled: {
+                [Op.eq]: true
+              }
+            }
+          })
+
+          let mfaPassed = false
+
+          for (let mfaDetail of mfaDetails) {
+            if (await verifyTotp(mfaDetail, req.body?.token)) {
+              mfaPassed = true
+              break
+            }
+          }
+
+          if (mfaPassed) {
+            success = true
+            res.send({
+              success: true,
+              token: jwt.sign(
+                {
+                  userId: userWithEmail.id,
+                  email: userWithEmail.email.toLowerCase(),
+                  birthDate: userWithEmail.birthDate,
+                  url: userWithEmail.url,
+                  role: userWithEmail.role
+                },
+                environment.jwtSecret,
+                { expiresIn: '31536000s' }
+              )
+            })
+            userWithEmail.lastLoginIp = getIp(req, true)
+            await userWithEmail.save()
+          }
+        }
+      }
+    } catch (error) {
+      logger.error(error)
+    }
+
+    if (!success) {
+      // res.statusCode = 401;
+      res.send({
+        success: false,
+        errorMessage: 'Invalid code provided'
+      })
+    }
+  })
+
+  // list all registered MFA options for a user
+  app.get('/api/user/mfa', authenticateToken, async (req: AuthorizedRequest, res) => {
+    if (req.jwtData?.userId) {
+      try {
+        const mfaDetails = await MfaDetails.findAll({
+          where: {
+            userId: req.jwtData?.userId,
+            enabled: {
+              [Op.eq]: true
+            }
+          }
+        })
+        res.send({
+          success: true,
+          mfa: mfaDetails.map((detail) => ({
+            id: detail.id,
+            name: detail.name,
+            type: detail.type,
+            enabled: detail.enabled
+          }))
+        })
+        return
+      } catch (error) {
+        logger.error(error)
+      }
+    }
+    res.send({ success: false })
+  })
+
+  app.post('/api/user/mfa', authenticateToken, async (req: AuthorizedRequest, res) => {
+    try {
+      if (req.jwtData?.userId && req.body?.type == "totp") {
+        const totpSettings = {
+          algorithm: "SHA1",
+          digits: 6,
+          period: 30,
+          secret: new OTPAuth.Secret({ size: 20 }).base32
+        }
+
+        const mfaDetail = await MfaDetails.create({
+          userId: req.jwtData?.userId,
+          type: "totp",
+          name: req.body?.name || "Authenticator App",
+          data: totpSettings,
+          enabled: false
+        })
+
+        totpSettings.issuer = environment.instanceUrl
+        totpSettings.label = req.jwtData?.email
+
+        const totp = new OTPAuth.TOTP(totpSettings)
+
+        res.send({
+          success: true,
+          mfa: {
+            id: mfaDetail.id,
+            type: mfaDetail.type,
+            name: mfaDetail.name,
+            secret: totpSettings.secret,
+            qrString: totp.toString()
+          }
+        })
+        return
+      }
+    } catch (error) {
+      logger.error(error)
+    }
+    res.send({ success: false })
+  })
+
+  app.post('/api/user/mfa/:id/verify', authenticateToken, async (req: AuthorizedRequest, res) => {
+    try {
+      if (req.jwtData?.userId && req.body?.token) {
+        const mfaDetail = await MfaDetails.findOne({
+          where: {
+            id: req.params.id,
+            userId: req.jwtData?.userId,
+            enabled: {
+              [Op.eq]: false
+            }
+          }
+        })
+        if (mfaDetail) {
+          if (await verifyTotp(mfaDetail, req.body?.token)) {
+            mfaDetail.enabled = true
+            await mfaDetail.save()
+            res.send({ success: true })
+            return
+          }
+        }
+      }
+    } catch (error) {
+      logger.error(error)
+    }
+    res.send({ success: false })
+  })
+
+  app.delete('/api/user/mfa/:id', authenticateToken, async (req: AuthorizedRequest, res) => {
+    try {
+      if (req.jwtData?.userId) {
+        const mfaDetail = await MfaDetails.findOne({
+          where: {
+            id: req.params.id,
+            userId: req.jwtData?.userId
+          }
+        })
+        if (mfaDetail) {
+          await mfaDetail.destroy()
+          res.send({ success: true })
+          return
+        }
+      }
+    }
+    catch (error) {
+      logger.error(error)
+    }
+    res.send({ success: false })
   })
 
   app.get('/api/user', optionalAuthentication, async (req: AuthorizedRequest, res) => {
@@ -505,19 +724,19 @@ export default function userRoutes(app: Application) {
       let followed = blog.url.startsWith('@')
         ? blog.followingCount
         : Follows.count({
-            where: {
-              followerId: blog.id,
-              accepted: true
-            }
-          })
+          where: {
+            followerId: blog.id,
+            accepted: true
+          }
+        })
       let followers = blog.url.startsWith('@')
         ? blog.followerCount
         : Follows.count({
-            where: {
-              followedId: blog.id,
-              accepted: true
-            }
-          })
+          where: {
+            followedId: blog.id,
+            accepted: true
+          }
+        })
       const publicOptions = UserOptions.findAll({
         where: {
           userId: blog.id,
@@ -556,10 +775,10 @@ export default function userRoutes(app: Application) {
 
       const postCount = blog
         ? await Post.count({
-            where: {
-              userId: blog.id
-            }
-          })
+          where: {
+            userId: blog.id
+          }
+        })
         : 0
 
       followed = await followed
@@ -1005,15 +1224,15 @@ async function updateProfileOptions(optionsJSON: string, posterId: string) {
         })
         userOption
           ? await userOption.update({
-              optionValue: option.value,
-              public: option.public == true
-            })
+            optionValue: option.value,
+            public: option.public == true
+          })
           : await UserOptions.create({
-              userId: posterId,
-              optionName: option.name,
-              optionValue: option.value,
-              public: option.public == true
-            })
+            userId: posterId,
+            optionName: option.name,
+            optionValue: option.value,
+            public: option.public == true
+          })
       }
     }
   }

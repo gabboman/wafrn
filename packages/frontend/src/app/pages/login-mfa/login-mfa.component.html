@@ -1,0 +1,29 @@
+<mat-card class="p-3 mb-6 lg:mx-4 wafrn-container">
+  <div class="text-center mb-5">
+    <img loading="lazy" style="display: unset" [src]="logo" alt="Image" height="64" class="mb-3 text-center" />
+    <div class="text-3xl font-medium mb-4">{{ 'login.welcomeBack' | translate }}</div>
+    <p class="text-xl font-medium mb-3">
+      <a [routerLink]="['/dashboard/explore']"> {{ 'login.exploreWithoutAccount' | translate }}</a>
+    </p>
+    <p>
+      <span class="font-medium line-height-3">{{ 'login.dontHaveAccount' | translate }}</span>
+      <a routerLink="/" class="font-medium no-underline ml-2 cursor-pointer">{{ 'login.register' | translate }}</a>
+    </p>
+    <p class="font-medium line-height-3">{{ 'login.checkSpam' | translate }}</p>
+  </div>
+
+  <form [hidden]="loading" [formGroup]="loginMfaForm" (ngSubmit)="onSubmit()">
+    <p class="font-medium line-height-3">{{ 'login.mfaTokenEnter' | translate }}</p>
+
+    <mat-form-field class="w-full">
+      <mat-label>{{ 'login.mfaToken' | translate }}</mat-label>
+      <input formControlName="token" name="token" type="token" matInput />
+    </mat-form-field>
+
+    <button [disabled]="loading || !loginMfaForm.valid" mat-flat-button color="primary" extended
+      class="w-full border-round-md mt-4">
+      <fa-icon [icon]="faUser"></fa-icon>
+      {{ 'login.loginButton' | translate }}
+    </button>
+  </form>
+</mat-card>

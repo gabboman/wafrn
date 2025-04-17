@@ -28,6 +28,7 @@ ${{DOMAIN_NAME}} {
 
     handle {
         root * /var/www/html/frontend/
+        try_files {path} /index.html
         file_server
     }
 }

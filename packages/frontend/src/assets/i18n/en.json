@@ -7,6 +7,8 @@
         "checkSpam": "If you have any issue, please check your spam folder!",
         "email": "Email",
         "password": "Password",
+        "mfaToken": "Token",
+        "mfaTokenEnter": "Enter your token from your Authenticator application",
         "forgottenPassword": "Forgot password? Click here!",
         "loginButton": "Log in"
     },
@@ -77,9 +79,39 @@
         "uploadMediaTooltip": "Upload Media",
         "contentWarningTooltip": "Content Warning"
     },
+    "profile": {
+        "security": {
+            "header": "Security Settings",
+            "passwordChange": "Reset Password",
+            "mfa": {
+                "header": "Two Factor Authentication",
+                "setup": "Setup Two Factor Authentication",
+                "addNew": "Add new Two Factor Authenticator",
+                "friendlyNameLabel": "Friendly name, e.g. 'Work Phone' or 'Aegis'",
+                "typeLabel": "Two factor type",
+                "setupNewButton": "Set up new authenticator",
+                "tokenLabel": "Token",
+                "deleteLabel": "Delete",
+                "scanInstructions": "Scan the code below in your Authenticator application, and enter the code shown",
+                "installInstructions": "If you don't have an Authenticator app yet we suggest <a href=\"https://getaegis.app/\" target=\"_blank\">Aegis</a> (Android) or <a href=\"https://2fas.com/\" target=\"_blank\">2FAS</a> (iOS/Android)",
+                "imageAltSecret": "Authentication secret is '{{ secret }}'",
+                "secretFallback": "If you cannot read the QR code you can use code '{{ secret }}' manually in your app",
+                "confirmDeleteMessage": "Are you sure you want to delete this MFA provider? Note: deleting all MFA providers will disable MFA on your account",
+                "deleteSuccess": "MFA provider successfully removed",
+                "verifySuccess": "Success, your MFA is now enabled",
+                "verifyFailed": "Verification failed. Check your token, or if the problem persists ask an Administrator",
+                "errorMessageGeneric": "There was an issue with your request. Try again, or ask an Administrator for help",
+                "noMfa": "You do not have MFA enabled on your account",
+                "mfaList": "You have the following MFA providers set up",
+                "type": {
+                    "totpLabel": "Authenticator App"
+                }
+            }
+        }
+    },
     "ask-dialog-content": {
-    		"askAnonymously": "Make question anonymous",
-    		"askFormLabel": "Question",
-    		"askButtonText": "Ask"
+        "askAnonymously": "Make question anonymous",
+        "askFormLabel": "Question",
+        "askButtonText": "Ask"
     }
 }
