@@ -111,12 +111,34 @@
 	cursor: pointer !important;
   border-radius: 12px;
   border: 1px solid var(--mat-sys-outline-variant);
-  max-height: 256px;
+  background-color: var(--mat-sys-surface-container-high);
   flex-shrink: 0;
   overflow: hidden;
   margin-bottom: 4px;
   position: relative;
 }
+
+.quoted-post.quote-collapsed {
+  max-height: 17.5rem !important;
+}
+
+// gradient overlay at the bottom
+.quoted-post.quote-collapsed::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  width: 100%;
+  height: 200px;
+  box-shadow: inset -0rem -5rem 5rem -1rem var(--mat-sys-surface-container) !important;
+}
+
+// @media (prefers-contrast: more) {
+//   .quoted-post {
+//     border: 1px solid var(--mat-sys-outline-variant);
+//   }
+// }
 
 // youtube player
 .yt-thumbnail {

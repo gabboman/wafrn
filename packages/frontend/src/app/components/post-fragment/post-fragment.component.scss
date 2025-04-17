@@ -38,6 +38,12 @@
   border-radius: var(--mdc-protected-button-container-shape, var(--mat-sys-corner-full));
 }
 
+@media (pointer: coarse),
+(hover: none) {
+  .post-emoji, .external-emoji {
+    pointer-events: none;
+  }
+}
 
 .carousel-media {
   max-width: 75% !important;

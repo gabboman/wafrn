@@ -206,15 +206,11 @@ body {
 
 /* Horizontal Media Carousel. Disabled by default. */
 .media-gallery.media-carousel {
-  /* 
-     I am not accounting for a bunch of 
-     bugs with the link-preview here because
-     when we're done with this those won't be a child of .media-gallery anymore.
-  */
-  --media-height: 32rem;
+  --media-height: 100%;
   flex-direction: row!important;
   overflow-x: scroll;
   gap: 12px!important;
+  align-items: center;
   app-wafrn-media {
     box-sizing: border-box;
     width: fit-content;
@@ -240,6 +236,10 @@ body {
     max-height: var(--media-height);
     border-radius: var(--mat-sys-corner-large)!important;
   }
+}
+
+.quoted-post .emojireact-button {
+  background-color: var(--mat-sys-surface-container-highest)!important;
 }
 
 .w-50 {
