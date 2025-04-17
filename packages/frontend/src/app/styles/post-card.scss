@@ -110,6 +110,7 @@
 	padding: 0.5em;	
 	cursor: pointer !important;
   border-radius: 12px;
+  border: 1px solid var(--mat-sys-outline-variant);
   background-color: var(--mat-sys-surface-container-high);
   flex-shrink: 0;
   overflow: hidden;
@@ -133,11 +134,11 @@
   box-shadow: inset -0rem -5rem 5rem -1rem var(--mat-sys-surface-container) !important;
 }
 
-@media (prefers-contrast: more) {
-  .quoted-post {
-    border: 1px solid var(--mat-sys-outline-variant);
-  }
-}
+// @media (prefers-contrast: more) {
+//   .quoted-post {
+//     border: 1px solid var(--mat-sys-outline-variant);
+//   }
+// }
 
 // youtube player
 .yt-thumbnail {
