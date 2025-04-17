@@ -10,7 +10,7 @@
     {{ fragment().content_warning }}
   </div>
   <button class="toggle-cw-button" mat-raised-button color="primary" (click)="cwClick()" class="w-full my-2">
-    @if (showSensitiveContent) {
+    @if (showSensitiveContent()) {
       Hide
     } @else {
       Show
@@ -24,7 +24,7 @@
 }
 <div
   class="flex flex-column gap-3 post-content"
-  [ngClass]="{ hidden: (fragment().content_warning || fragment().muted_words_cw) && !showSensitiveContent }"
+  [ngClass]="{ hidden: (fragment().content_warning || fragment().muted_words_cw) && !showSensitiveContent() }"
 >
   @for (quote of fragment().quotes; track $index) {
     <div *ngIf="quote" class="quoted-post cursor-pointer">
@@ -78,14 +78,14 @@
     }
   </div>
   <section class="mt-3" class="flex flex-wrap gap-1 emoji-reactions">
-    @for (emoji of emojiCollection; track $index) {
+    @for (emoji of emojiCollection(); track $index) {
       @if (availableEmojiNames.includes(emoji.name) || !emoji.img) {
         <!--TODO fix this! The function gettooltipusers gets called on every event
       which slows down the app when there are too many emojis
       solution: rework the emojis part so its processed only on load with all data there
       -->
         <button
-          [disabled]="reactionLoading"
+          [disabled]="reactionLoading()"
           [ngClass]="{
             reacted: emoji.includesMe
           }"
@@ -100,7 +100,7 @@
           } @else {
             <span class="force-comic-sans"> {{ emoji.content }}</span>
           }
-          @if (emoji.users.length !== 1) {
+          @if (emoji.users.length > 0) {
             <span> {{ emoji.users.length }}</span>
           }
         </button>

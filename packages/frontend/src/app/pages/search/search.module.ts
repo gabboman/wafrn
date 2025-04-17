@@ -15,11 +15,13 @@ import { MatTabsModule } from '@angular/material/tabs'
 const routes: Routes = [
   {
     path: '',
-    component: SearchComponent
+    component: SearchComponent,
+    data: { reuseRoute: true, feed: true }
   },
   {
     path: ':term',
-    component: SearchComponent
+    component: SearchComponent,
+    data: { reuseRoute: true, feed: true }
   }
 ]
 
@@ -41,4 +43,4 @@ const routes: Routes = [
     MatTabsModule
   ]
 })
-export class SearchModule {}
+export class SearchModule { }

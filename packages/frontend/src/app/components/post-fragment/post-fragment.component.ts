@@ -7,6 +7,7 @@ import {
   OnChanges,
   OnDestroy,
   output,
+  signal,
   viewChild
 } from '@angular/core'
 import { ProcessedPost } from '../../interfaces/processed-post'
@@ -63,15 +64,15 @@ type EmojiReaction = {
 export class PostFragmentComponent implements OnChanges, OnDestroy {
   fragment = input.required<ProcessedPost>()
   forceExpand = output<boolean>()
-  showSensitiveContent = false
-  emojiCollection: EmojiReaction[] = []
+  showSensitiveContent = signal<boolean>(false);
+  emojiCollection = signal<EmojiReaction[]>([]);
   likeSubscription!: Subscription
   emojiSubscription!: Subscription
   followsSubscription!: Subscription
   userId!: string
   availableEmojiNames: string[] = []
 
-  reactionLoading = false
+  reactionLoading = signal<boolean>(false);
   sanitizedContent = ''
   noTagsContent = ''
   wafrnFormattedContent = computed(() => {
@@ -148,27 +149,27 @@ export class PostFragmentComponent implements OnChanges, OnDestroy {
     })
     this.emojiSubscription = this.postService.emojiReacted.subscribe((emojiEvent) => {
       if (emojiEvent.postId === this.fragment()?.id) {
-        this.renderEmojiReact(emojiEvent)
+        this.renderEmojiReact(emojiEvent);
       }
     })
+    this.initializeContent()
   }
 
   ngOnChanges(): void {
-    this.initializeContent()
     this.initializeEmojis()
     this.nonLinkMediaCount = this.fragment().medias.filter((elem) => elem.mediaType != 'text/html').length
   }
 
   initializeContent() {
     const disableCW = localStorage.getItem('disableCW') === 'true'
-    this.showSensitiveContent = disableCW
+    this.showSensitiveContent.set(disableCW);
   }
 
   initializeEmojis() {
     // using a "map" here for O(1) get operations
     const emojiReactions = {} as Record<string, EmojiReaction>
     if (!this.fragment().emojiReactions) {
-      this.emojiCollection = []
+      this.emojiCollection.set([]);
       return
     }
     this.fragment().emojiReactions.forEach((reaction) => {
@@ -202,14 +203,15 @@ export class PostFragmentComponent implements OnChanges, OnDestroy {
       }
     })
 
-    this.emojiCollection = Object.values(emojiReactions)
+    this.emojiCollection.set(Object.values(emojiReactions)
       .sort(
         (a, b) =>
           +(this.availableEmojiNames.includes(b.name) || !b.img) -
           +(this.availableEmojiNames.includes(a.name) || !a.img)
       )
-      .sort((a, b) => b.users.length - a.users.length)
-    for (let emoji of this.emojiCollection) {
+      .sort((a, b) => b.users.length - a.users.length));
+
+    for (let emoji of this.emojiCollection()) {
       emoji.tooltip = (this.isLike(emoji) ? 'Liked' : emoji.content) + ' by ' + this.getTooltipUsers(emoji.users)
       emoji.includesMe = this.emojiReactionIncludesMe(emoji)
     }
@@ -220,7 +222,7 @@ export class PostFragmentComponent implements OnChanges, OnDestroy {
   }
 
   renderLikeDislike({ like }: { id: string; like: boolean }) {
-    let likesCollection = this.emojiCollection.find((elem) => elem.id === 'Like')
+    let likesCollection = this.emojiCollection().find((elem) => elem.id === 'Like')
     if (like) {
       // CODE TO ADD LIKE
       if (!likesCollection) {
@@ -234,7 +236,7 @@ export class PostFragmentComponent implements OnChanges, OnDestroy {
           tooltip: '',
           includesMe: false
         }
-        this.emojiCollection.push(likesCollection)
+        this.emojiCollection.update((ec) => { ec.push(likesCollection!); return ec; });
       }
       likesCollection.users.push({
         url: this.jwtService.getTokenData()['url'],
@@ -246,7 +248,7 @@ export class PostFragmentComponent implements OnChanges, OnDestroy {
       // CODE TO REMOVE LIKE
       if (likesCollection) {
         if (likesCollection.users.length === 1) {
-          this.emojiCollection = this.emojiCollection.filter((col) => col.id !== 'Like')
+          this.emojiCollection.update((ec) => { return ec.filter((col) => col.id !== 'Like') });
         } else {
           likesCollection.users = likesCollection.users.filter(
             (usr) => usr.id !== this.loginService.getLoggedUserUUID()
@@ -257,7 +259,7 @@ export class PostFragmentComponent implements OnChanges, OnDestroy {
   }
 
   renderEmojiReact({ emoji, type }: { postId: string; emoji: Emoji; type: 'react' | 'undo_react' }) {
-    const collection = this.emojiCollection.find((e) => e.id === emoji.id)
+    const collection = this.emojiCollection().find((e) => e.id === emoji.id)
     if (type === 'react') {
       this.fragment().emojiReactions.push({
         emojiId: emoji.id,
@@ -272,16 +274,17 @@ export class PostFragmentComponent implements OnChanges, OnDestroy {
           avatar: ''
         }
       })
-      console.log(this.fragment().emojiReactions)
     } else {
       if (collection) {
         if (collection.users.length === 1) {
-          this.emojiCollection = this.emojiCollection.filter((col) => col.id !== emoji.id)
+          this.emojiCollection.update((ec) => { return ec.filter((col) => col.id !== emoji.id) });
         } else {
           collection.users = collection.users.filter((usr) => usr.id !== this.loginService.getLoggedUserUUID())
         }
       }
     }
+    this.emojiCollection.update((e) => { return e });
+    this.initializeEmojis();
   }
 
   isLike(emojiReaction: EmojiReaction) {
@@ -301,9 +304,8 @@ export class PostFragmentComponent implements OnChanges, OnDestroy {
       return
     }
 
-    this.reactionLoading = true
-    const reactionIsToggled = emojiReaction.users.some((usr) => usr.id === this.userId)
-
+    this.reactionLoading.set(true);
+    const reactionIsToggled = emojiReaction.users.some((usr) => usr.id === this.userId);
     if (this.isLike(emojiReaction)) {
       if (reactionIsToggled) {
         await this.postService.unlikePost(postId)
@@ -314,11 +316,20 @@ export class PostFragmentComponent implements OnChanges, OnDestroy {
       let response = false
       if (reactionIsToggled) {
         response = await this.postService.emojiReactPost(postId, emojiReaction.content, true)
-
         if (response) {
           this.messages.add({
             severity: 'success',
             summary: `Reaction removed successfully`
+          })
+
+          // Remove user id from user list, giving visual response.
+          this.emojiCollection.update((ec) => {
+            let index = ec.indexOf(emojiReaction);
+            if (index > -1) {
+              let userIndex = ec[index].users.findIndex((usr) => { return usr.id === this.userId });
+              ec[index].users.slice(userIndex, 1);
+            }
+            return ec;
           })
         }
       } else {
@@ -329,6 +340,18 @@ export class PostFragmentComponent implements OnChanges, OnDestroy {
             summary: `Reacted with ${emojiReaction.name} successfully`
           })
         }
+
+        // Add user id to user list, giving visual response.
+        this.emojiCollection.update((ec) => {
+          let index = ec.indexOf(emojiReaction);
+          ec[index].users.push({
+            name: "You",
+            avatar: "",
+            id: this.userId,
+            url: ""
+          })
+          return ec;
+        })
       }
 
       if (!response) {
@@ -339,7 +362,7 @@ export class PostFragmentComponent implements OnChanges, OnDestroy {
       }
     }
 
-    this.reactionLoading = false
+    this.reactionLoading.set(false);
   }
 
   emojiReactionIncludesMe(emoji: EmojiReaction) {
@@ -348,7 +371,7 @@ export class PostFragmentComponent implements OnChanges, OnDestroy {
 
   cwClick() {
     this.forceExpand.emit(true)
-    this.showSensitiveContent = !this.showSensitiveContent
+    this.showSensitiveContent.set(!this.showSensitiveContent());
   }
 
   ngAfterViewInit(): void {
