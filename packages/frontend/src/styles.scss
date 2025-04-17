@@ -238,6 +238,10 @@ body {
   }
 }
 
+.quoted-post .emojireact-button {
+  background-color: var(--mat-sys-surface-container-highest)!important;
+}
+
 .w-50 {
   width: 50%;
 }
