@@ -97,7 +97,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
     }
 
     this.updateFollowersSubscription = this.postService.updateFollowers.subscribe(() => {
-      if (this.postService.followedUserIds.length === 1 && this.level === 1) {
+      if (this.postService.followedUserIds.length <= 1 && this.level === 1) {
         // if the user follows NO ONE we take them to the explore page!
         this.messages.add({
           severity: 'info',
