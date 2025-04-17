@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core'
+import { Component, OnDestroy, OnInit, signal } from '@angular/core'
 import { UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms'
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router'
 import { faSearch } from '@fortawesome/free-solid-svg-icons'
@@ -25,9 +25,9 @@ export class SearchComponent implements OnInit, OnDestroy {
     search: new UntypedFormControl('', [Validators.required])
   })
   currentSearch = ''
-  posts: ProcessedPost[][] = []
+  posts = signal<ProcessedPost[][]>([]);
   viewedPosts = 0
-  users: SimplifiedUser[] = []
+  users = signal<SimplifiedUser[]>([])
   avatars: Record<string, string> = {}
   viewedUsers = 0
   followedUsers: string[] = []
@@ -35,7 +35,7 @@ export class SearchComponent implements OnInit, OnDestroy {
 
   userLoggedIn = false
   currentPage = 0
-  loading = false
+  loading = signal(false);
   navigationSubscription: Subscription
   updateFollowersSubscription: Subscription
   searchIcon = faSearch
@@ -83,21 +83,23 @@ export class SearchComponent implements OnInit, OnDestroy {
   }
 
   async submitSearch() {
-    this.loading = true
+    this.loading.set(true);
     this.atLeastOneSearchDone = true
     this.viewedPosts = 0
     this.viewedUsers = 0
     this.currentPage = 0
+    this.posts.set([]);
+    this.users.set([]);
     this.currentSearch = this.searchForm.value['search']
     const searchResult = await this.dashboardService.getSearchPage(this.currentPage, this.currentSearch)
-    this.posts = searchResult.posts
-    this.users = searchResult.users
+    this.posts.set(searchResult.posts);
+    this.users.set(searchResult.users);
     searchResult.users.forEach((user) => {
       this.avatars[user.url] = user.url.startsWith('@')
         ? this.cacheurl + encodeURIComponent(user.avatar)
         : this.cacheurl + encodeURIComponent(this.baseMediaUrl + user.avatar)
     })
-    this.loading = false
+    this.loading.set(false);
 
     setTimeout(() => {
       // we detect the bottom of the page and load more posts
@@ -116,9 +118,9 @@ export class SearchComponent implements OnInit, OnDestroy {
 
   async loadResults(page: number) {
     const searchResult = await this.dashboardService.getSearchPage(page, this.currentSearch)
-    searchResult.posts.forEach((post) => this.posts.push(post))
+    searchResult.posts.forEach((post) => this.posts().push(post))
     searchResult.users.forEach((user) => {
-      this.users.push(user)
+      this.users().push(user)
       this.avatars[user.url] = user.url.startsWith('@')
         ? this.cacheurl + encodeURIComponent(user.avatar)
         : this.cacheurl + encodeURIComponent(this.baseMediaUrl + user.avatar)

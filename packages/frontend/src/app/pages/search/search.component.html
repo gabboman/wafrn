@@ -23,14 +23,14 @@
     </mat-card>
   </div>
   <mat-tab-group color="primary">
-    <mat-tab *ngIf="posts && posts.length > 0" label="Posts">
-      <div *ngFor="let post of posts">
+    <mat-tab *ngIf="!loading() && (posts().length > 0)" label="Posts">
+      <div *ngFor="let post of posts()">
         <app-post [post]="post"></app-post>
       </div>
     </mat-tab>
-    <mat-tab *ngIf="users && users.length > 0" label="Users">
+    <mat-tab *ngIf="users().length > 0" label="Users">
       <div class="mt-4">
-        @for (user of users; track $index) {
+        @for (user of users(); track $index) {
           <mat-card mat-list-item class="user-preview text-center p-4 m-4">
             <img
               [alt]="user.name + ' avatar'"
@@ -72,7 +72,7 @@
 </main>
 
 <footer id="if-you-see-this-load-more-posts" *ngIf="atLeastOneSearchDone" class="p-4 flex gap-3 align-items-center">
-  <mat-spinner *ngIf="loading" diameter="24"></mat-spinner>
-  <p *ngIf="loading" class="m-0 text-lg">Loading more...</p>
-  <p *ngIf="posts.length === 0" class="m-0 text-lg">No new results</p>
+  <mat-spinner *ngIf="loading()" diameter="24"></mat-spinner>
+  <p *ngIf="loading()" class="m-0 text-lg">Loading more...</p>
+  <p *ngIf="posts().length === 0" class="m-0 text-lg">No new results</p>
 </footer>
