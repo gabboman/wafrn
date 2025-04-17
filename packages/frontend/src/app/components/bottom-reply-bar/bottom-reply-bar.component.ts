@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common'
-import { Component, Input, OnChanges, SimpleChanges } from '@angular/core'
+import { Component, Input, OnChanges, signal, SimpleChanges } from '@angular/core'
 import { MatButtonModule } from '@angular/material/button'
 import { MatTooltipModule } from '@angular/material/tooltip'
 import { RouterModule } from '@angular/router'
@@ -47,6 +47,7 @@ export class BottomReplyBarComponent implements OnChanges {
   myId = ''
   loadingAction = false
   myRewootsIncludePost = false
+  bookmarked = signal<boolean>(false);
 
   // icons
   shareIcon = faShareNodes
@@ -81,6 +82,10 @@ export class BottomReplyBarComponent implements OnChanges {
     if (this.userLoggedIn) {
       this.myId = loginService.getLoggedUserUUID()
     }
+  }
+
+  ngOnInit(): void {
+    this.bookmarked.set(this.fragment.bookmarkers.includes(this.myId));
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -172,6 +177,7 @@ export class BottomReplyBarComponent implements OnChanges {
         severity: 'success',
         summary: 'You successfully unbookmarked this woot'
       })
+      this.bookmarked.set(false);
     } else {
       this.messages.add({
         severity: 'error',
@@ -188,6 +194,7 @@ export class BottomReplyBarComponent implements OnChanges {
         summary: 'You successfully bookmarked this woot',
         confettiEmojis: enableConfetti ? ['💾'] : []
       })
+      this.bookmarked.set(true);
     } else {
       this.messages.add({
         severity: 'error',
