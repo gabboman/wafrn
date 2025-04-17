@@ -14,7 +14,21 @@ async function getPostReplies(postId: string) {
           as: 'user',
           required: true,
           where: {
-            banned: false
+            banned: false,
+            [Op.or]: [
+              // this could be faster.
+              // TODO in case of doing ALL replies, we need a better way to not send bsky only posts to fedi
+              {
+                url: {
+                  [Op.like]: '@%@%'
+                }
+              },
+              {
+                url: {
+                  [Op.notLike]: '@%'
+                }
+              }
+            ]
           }
         }
       ],
