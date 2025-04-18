@@ -333,6 +333,18 @@ function getPostMedias(post: PostView) {
   let res = []
   const embed = post.record.embed
   if (embed) {
+    // case with quote and gif / link preview
+    if (embed.media.external) {
+      res = res.concat([
+        {
+          mediaType: !embed.media.external.uri.startsWith('https://media.ternor.com/') ? 'text/html' : 'image/gif',
+          description: embed.media.external.title,
+          url: embed.media.external.uri,
+          mediaOrder: 0,
+          external: true
+        }
+      ])
+    }
     if (embed.external) {
       res = res.concat([
         {
