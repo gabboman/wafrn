@@ -29,6 +29,7 @@ import {
 } from '@fortawesome/free-solid-svg-icons'
 import { MatButtonModule } from '@angular/material/button'
 import { DateTime } from 'luxon'
+import { ScrollService } from 'src/app/services/scroll.service'
 
 @Component({
   selector: 'app-post-header',
@@ -47,6 +48,7 @@ import { DateTime } from 'luxon'
 })
 export class PostHeaderComponent implements OnChanges {
   @Input() fragment!: ProcessedPost
+  anchor = input<string>('');
   readonly simplified = input<boolean>(true);
   readonly disableLink = input<boolean>(false);
   readonly headerText = input<string>('');
@@ -84,10 +86,11 @@ export class PostHeaderComponent implements OnChanges {
   constructor(
     public postService: PostsService,
     private messages: MessageService,
-    private loginService: LoginService
+    readonly loginService: LoginService,
+    public scrollService: ScrollService,
   ) {
     // its an array
-    ;(this.privacyOptions[10] = { level: 10, name: 'Direct Message', icon: faEnvelope }),
+    ; (this.privacyOptions[10] = { level: 10, name: 'Direct Message', icon: faEnvelope }),
       (this.userLoggedIn = loginService.checkUserLoggedIn())
   }
   ngOnChanges(changes: SimpleChanges): void {

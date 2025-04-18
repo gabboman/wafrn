@@ -1,8 +1,8 @@
 import { CommonModule } from '@angular/common'
-import { Component, OnDestroy } from '@angular/core'
+import { Component, OnDestroy, OnInit } from '@angular/core'
 import { MatButtonModule } from '@angular/material/button'
 import { MatCardModule } from '@angular/material/card'
-import { ActivatedRoute, RouterModule } from '@angular/router'
+import { ActivatedRoute, Router, RouterModule, NavigationEnd } from '@angular/router'
 import { Subscription } from 'rxjs'
 import { LoaderComponent } from 'src/app/components/loader/loader.component'
 import { PostFragmentComponent } from 'src/app/components/post-fragment/post-fragment.component'
@@ -16,10 +16,12 @@ import { DashboardService } from 'src/app/services/dashboard.service'
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome'
 import { faHome, faRepeat } from '@fortawesome/free-solid-svg-icons'
 import { MatPaginatorModule, PageEvent } from '@angular/material/paginator'
+import { filter } from 'rxjs/operators';
 
 import { BottomReplyBarComponent } from '../../components/bottom-reply-bar/bottom-reply-bar.component'
 import { EnvironmentService } from 'src/app/services/environment.service'
 import { PostRibbonComponent } from 'src/app/components/post-ribbon/post-ribbon.component'
+import { ScrollContext, ScrollService } from 'src/app/services/scroll.service'
 
 @Component({
   selector: 'app-forum',
@@ -40,12 +42,13 @@ import { PostRibbonComponent } from 'src/app/components/post-ribbon/post-ribbon.
   templateUrl: './forum.component.html',
   styleUrl: './forum.component.scss'
 })
-export class ForumComponent implements OnDestroy {
+export class ForumComponent implements OnInit, OnDestroy {
   loading = true
   forumPosts: ProcessedPost[] = []
   post: ProcessedPost[] = []
   subscription: Subscription
   updateFollowsSubscription: Subscription
+  navigationStart!: Subscription
   userLoggedIn = false
   myId = ''
   notYetAcceptedFollows: string[] = []
@@ -68,9 +71,11 @@ export class ForumComponent implements OnDestroy {
   constructor(
     private forumService: ForumService,
     private route: ActivatedRoute,
-    private loginService: LoginService,
+    readonly loginService: LoginService,
     private postService: PostsService,
-    private dashboardService: DashboardService
+    private readonly dashboardService: DashboardService,
+    private readonly scrollService: ScrollService,
+    private readonly router: Router
   ) {
     this.followedUsers = this.postService.followedUserIds
     this.notYetAcceptedFollows = this.postService.notYetAcceptedFollowedUsersIds
@@ -97,6 +102,15 @@ export class ForumComponent implements OnDestroy {
       this.forumPosts = await tmpForumPosts
       this.loading = false
     })
+  }
+  ngOnInit(): void {
+    this.scrollService.setScrollContext(ScrollContext.Inactive);
+
+    this.navigationStart = this.router.events
+      .pipe(filter((event) => event instanceof NavigationEnd))
+      .subscribe(() => {
+      });
+
   }
   ngOnDestroy(): void {
     this.subscription.unsubscribe()
