@@ -333,18 +333,6 @@ function getPostMedias(post: PostView) {
   let res = []
   const embed = post.record.embed
   if (embed) {
-    // case with quote and gif / link preview
-    if (embed.media.external) {
-      res = res.concat([
-        {
-          mediaType: !embed.media.external.uri.startsWith('https://media.ternor.com/') ? 'text/html' : 'image/gif',
-          description: embed.media.external.title,
-          url: embed.media.external.uri,
-          mediaOrder: 0,
-          external: true
-        }
-      ])
-    }
     if (embed.external) {
       res = res.concat([
         {
@@ -357,26 +345,39 @@ function getPostMedias(post: PostView) {
       ])
     }
     if (embed.images || embed.media) {
-      const thingToProcess = embed.images ? embed.images : embed.media.images
-      if (thingToProcess) {
-        const toConcat = thingToProcess.map((media, index) => {
-          const cid = media.image.ref['$link'] ? media.image.ref['$link'] : media.image.ref.toString()
-          const did = post.author.did
-          return {
-            mediaType: media.image.mimeType,
-            description: media.alt,
-            height: media.aspectRatio?.height,
-            width: media.aspectRatio?.width,
-            url: `?cid=${encodeURIComponent(cid)}&did=${encodeURIComponent(did)}`,
-            mediaOrder: index,
+      // case with quote and gif / link preview
+      if (embed.media?.external) {
+        res = res.concat([
+          {
+            mediaType: !embed.media.external.uri.startsWith('https://media.ternor.com/') ? 'text/html' : 'image/gif',
+            description: embed.media.external.title,
+            url: embed.media.external.uri,
+            mediaOrder: 0,
             external: true
           }
-        })
-        res = res.concat(toConcat)
+        ])
       } else {
-        logger.debug({
-          message: `Bsky problem getting medias on post ${post.uri}`
-        })
+        const thingToProcess = embed.images ? embed.images : embed.media.images
+        if (thingToProcess) {
+          const toConcat = thingToProcess.map((media, index) => {
+            const cid = media.image.ref['$link'] ? media.image.ref['$link'] : media.image.ref.toString()
+            const did = post.author.did
+            return {
+              mediaType: media.image.mimeType,
+              description: media.alt,
+              height: media.aspectRatio?.height,
+              width: media.aspectRatio?.width,
+              url: `?cid=${encodeURIComponent(cid)}&did=${encodeURIComponent(did)}`,
+              mediaOrder: index,
+              external: true
+            }
+          })
+          res = res.concat(toConcat)
+        } else {
+          logger.debug({
+            message: `Bsky problem getting medias on post ${post.uri}`
+          })
+        }
       }
     }
     if (embed.video) {
