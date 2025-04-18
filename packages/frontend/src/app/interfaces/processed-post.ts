@@ -1,7 +1,6 @@
 import { SimplifiedUser } from './simplified-user'
 import { WafrnMedia } from './wafrn-media'
 import { Tag } from './tag'
-import { WafrnMention } from './wafrn-mention'
 import { Emoji } from './emoji'
 import { RawPost } from './raw-post'
 import { QuestionPoll } from './questionPoll'
