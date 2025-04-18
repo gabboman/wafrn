@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core'
-import { NavigationEnd, NavigationSkipped, Router } from '@angular/router'
+import { NavigationEnd, NavigationSkipped, NavigationStart, Router } from '@angular/router'
 import { ProcessedPost } from 'src/app/interfaces/processed-post'
 import { DashboardService } from 'src/app/services/dashboard.service'
 import { JwtService } from 'src/app/services/jwt.service'
@@ -104,7 +104,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
       })
 
     this.navigationEnd = this.router.events
-      .pipe(filter((event) => event instanceof NavigationEnd))
+      .pipe(filter((event) => event instanceof NavigationStart))
       .subscribe(() => {
         this.scrollService.setScrollContext(ScrollContext.Dashboard);
         let anchor = this.scrollService.getLastPostID();

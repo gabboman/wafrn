@@ -8,13 +8,11 @@
       ) {
         @let forceImg = (displayUrl() && !nsfw) ? displayUrl() : 'data:image/png;base64, iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAACXBIWXMAAC4jAAAuIwF4pT92AAAADUlEQVQIW2NgYGD4DwABBAEAwS2OUAAAAABJRU5ErkJggg==';
         <img
-          *ngIf="!errorMode"
           [src]="forceImg"
           [alt]="data().description"
           [width]="width()"
           [height]="height()"
           loading="lazy"
-          (error)="handleError()"
           [style.aspect-ratio]="nsfw ? aspectRatio() : ''"
           [ngClass]="{
             'displayed-image': true
