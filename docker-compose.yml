@@ -51,13 +51,14 @@ services:
     depends_on:
       - db
       - redis
+      - frontend
     restart: unless-stopped
     environment:
       - NODE_ENV=production
     volumes:
       - ./packages/backend/uploads:/wafrn/uploads
       - ./packages/backend/cache:/wafrn/cache
-      - ./packages/frontend/src/index.html:/wafrn/packages/frontend/index.html
+      - frontend:/wafrn/packages/frontend
 
   frontend:
     restart: unless-stopped
@@ -75,6 +76,7 @@ services:
       - 443:443
     volumes:
       - "caddy:/data"
+      - "frontend:/var/www/html/frontend"
 
   db:
     image: postgres:17
@@ -123,3 +125,4 @@ volumes:
   dbpg:
   caddy:
   pds:
+  frontend:
