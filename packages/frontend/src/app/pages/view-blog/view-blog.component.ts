@@ -98,12 +98,16 @@ export class ViewBlogComponent implements OnInit, OnDestroy {
           return;
         }
         this.scrollService.setScrollContext(ScrollContext.Blog);
-        setTimeout(() => {
-          let anchor = this.scrollService.getLastPostID();
-          if (anchor !== '') {
+        let anchor = this.scrollService.getLastPostID();
+        if (anchor !== '') {
+          this.viewportScroller.scrollToAnchor(anchor);
+          setTimeout(() => {
             this.viewportScroller.scrollToAnchor(anchor);
-          }
-        }, 100);
+          }, 100);
+          setTimeout(() => {
+            this.viewportScroller.scrollToAnchor(anchor);
+          }, 300);
+        }
         this.blogUrl = ''
         this.avatarUrl = ''
         this.configureUser(true)

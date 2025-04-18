@@ -107,12 +107,16 @@ export class DashboardComponent implements OnInit, OnDestroy {
       .pipe(filter((event) => event instanceof NavigationEnd))
       .subscribe(() => {
         this.scrollService.setScrollContext(ScrollContext.Dashboard);
-        setTimeout(() => {
-          let anchor = this.scrollService.getLastPostID();
-          if (anchor !== '') {
+        let anchor = this.scrollService.getLastPostID();
+        if (anchor !== '') {
+          this.viewportScroller.scrollToAnchor(anchor);
+          setTimeout(() => {
             this.viewportScroller.scrollToAnchor(anchor);
-          }
-        }, 150);
+          }, 100);
+          setTimeout(() => {
+            this.viewportScroller.scrollToAnchor(anchor);
+          }, 500);
+        }
       });
 
     this.updateFollowersSubscription = this.postService.updateFollowers.subscribe(() => {
