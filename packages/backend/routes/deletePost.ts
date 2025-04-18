@@ -299,7 +299,10 @@ export default function deletePost(app: Application) {
         success = true
       }
     } catch (error) {
-      logger.error(error)
+      logger.error({
+        message: `Error deleting rewoots`,
+        error: error
+      })
       success = false
     }
 
