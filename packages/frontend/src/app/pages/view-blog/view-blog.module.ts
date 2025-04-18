@@ -12,11 +12,12 @@ import { MatMenuModule } from '@angular/material/menu'
 import { LoaderComponent } from 'src/app/components/loader/loader.component'
 import { BlogHeaderComponent } from '../../components/blog-header/blog-header.component'
 import { InfoCardComponent } from 'src/app/components/info-card/info-card.component'
+
 const routes: Routes = [
   {
     path: ':url',
     component: ViewBlogComponent,
-    data: { reuseRoute: true, blog: true }
+    data: { reuseRoute: true }
   },
   {
     path: ':url/ask',

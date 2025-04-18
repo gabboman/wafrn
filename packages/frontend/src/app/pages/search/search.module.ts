@@ -12,16 +12,17 @@ import { MatInputModule } from '@angular/material/input'
 import { MatListModule } from '@angular/material/list'
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner'
 import { MatTabsModule } from '@angular/material/tabs'
+import { ReuseableRouteType } from 'src/app/services/routing.service'
 const routes: Routes = [
   {
     path: '',
     component: SearchComponent,
-    data: { reuseRoute: true, feed: true }
+    data: { reuseRoute: true, routeType: ReuseableRouteType.Feed }
   },
   {
     path: ':term',
     component: SearchComponent,
-    data: { reuseRoute: true, feed: true }
+    data: { reuseRoute: true, routeType: ReuseableRouteType.Feed }
   }
 ]
 
