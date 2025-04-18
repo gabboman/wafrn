@@ -80,7 +80,7 @@ export class BottomReplyBarComponent implements OnChanges {
   ) {
     this.userLoggedIn = loginService.checkUserLoggedIn()
     if (this.userLoggedIn) {
-      this.myId = loginService.getLoggedUserUUID()
+      this.myId = loginService.getLoggedUserUUID();
     }
   }
 

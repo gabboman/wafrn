@@ -1,4 +1,4 @@
-import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core'
+import { Component, Input, OnChanges, OnInit, signal, SimpleChanges } from '@angular/core'
 import { ProcessedPost } from '../../interfaces/processed-post'
 import { MessageService } from '../../services/message.service'
 
@@ -45,7 +45,8 @@ export class PostActionsComponent implements OnChanges {
   userLoggedIn = false
   myId: string = 'user-00000000-0000-0000-0000-000000000000 '
   postSilenced = false
-  myRewootsIncludePost = false
+  myRewootsIncludePost = false;
+  bookmarked = signal<boolean>(false);
 
   // icons
   shareIcon = faShareNodes
@@ -81,6 +82,11 @@ export class PostActionsComponent implements OnChanges {
       this.myId = loginService.getLoggedUserUUID()
     }
   }
+
+  ngOnInit(): void {
+    this.bookmarked.set(this.content.bookmarkers.includes(this.myId));
+  }
+
   ngOnChanges(changes: SimpleChanges): void {
     this.myRewootsIncludePost = this.postService.rewootedPosts.includes(this.content.id)
     this.checkPostSilenced()
@@ -196,6 +202,7 @@ export class PostActionsComponent implements OnChanges {
   async unbookmarkPost() {
     if (await this.postService.unbookmarkPost(this.content.id)) {
       this.content.bookmarkers = this.content.bookmarkers.filter((elem) => elem != this.myId)
+      this.bookmarked.set(false);
       this.messages.add({
         severity: 'success',
         summary: 'You successfully unbookmarked this woot'
@@ -211,6 +218,7 @@ export class PostActionsComponent implements OnChanges {
     if (await this.postService.bookmarkPost(this.content.id)) {
       this.content.bookmarkers.push(this.myId)
       const enableConfetti = localStorage.getItem('enableConfetti') == 'true'
+      this.bookmarked.set(true);
       this.messages.add({
         severity: 'success',
         summary: 'You successfully bookmarked this woot',
