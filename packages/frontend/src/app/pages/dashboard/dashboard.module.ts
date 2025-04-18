@@ -8,24 +8,25 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner'
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome'
 import { MatButtonModule } from '@angular/material/button'
 import { LoaderComponent } from 'src/app/components/loader/loader.component'
+import { ReuseableRouteType } from 'src/app/services/routing.service'
 
 const routes: Routes = [
   {
     path: '',
     component: DashboardComponent,
     canActivate: [loginRequiredGuard],
-    data: { reuseRoute: true, feed: true }
+    data: { reuseRoute: true, routeType: ReuseableRouteType.Feed }
   },
   {
     path: 'explore',
     component: DashboardComponent,
     canActivate: [loginRequiredGuard],
-    data: { reuseRoute: true, feed: true }
+    data: { reuseRoute: true, routeType: ReuseableRouteType.Feed }
   },
   {
     path: 'exploreLocal',
     component: DashboardComponent,
-    data: { reuseRoute: true, feed: true }
+    data: { reuseRoute: true, routeType: ReuseableRouteType.Feed }
   },
   {
     path: 'private',
