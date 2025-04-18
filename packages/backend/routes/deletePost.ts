@@ -199,12 +199,15 @@ export default function deletePost(app: Application) {
         if (!reblogsToDelete) {
           return res.send(true)
         }
-        const agent = await getAtProtoSession(user)
-        postsToDeleteUnfiltered
-          .filter((elem) => elem.bskyUri && !elem.bskyCid)
-          .forEach((elem) => {
-            agent.deleteRepost(elem.bskyUri)
-          })
+        if (user.enableBsky) {
+          const agent = await getAtProtoSession(user)
+          postsToDeleteUnfiltered
+            .filter((elem) => elem.bskyUri && !elem.bskyCid)
+            .forEach((elem) => {
+              agent.deleteRepost(elem.bskyUri)
+            })
+        }
+
         const objectsToSend: activityPubObject[] = reblogsToDelete.map((elem) => {
           return {
             '@context': [`${environment.frontendUrl}/contexts/litepub-0.1.jsonld`],
@@ -299,7 +302,10 @@ export default function deletePost(app: Application) {
         success = true
       }
     } catch (error) {
-      logger.error(error)
+      logger.error({
+        message: `Error deleting rewoots`,
+        error: error
+      })
       success = false
     }
 

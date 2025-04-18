@@ -67,24 +67,6 @@ export class ViewBlogComponent implements OnInit, OnDestroy {
   ) {
     this.userLoggedIn = loginService.checkUserLoggedIn()
 
-    this.navigationSubscription = this.router.events
-      .pipe(filter((event) => event instanceof NavigationEnd))
-      .subscribe((e) => {
-        // Avoid reloading if user has selected the same user they are already
-        // viewing.
-        if (this.userLoggedIn) { this.themeService.setMyTheme() }
-        if (this.blogUrl == this.activatedRoute.snapshot.paramMap.get('url')) {
-          // Possibly a little ugly, but NavigationEnd fires when navigating
-          // away too!
-          if (!e.url.includes(this.blogUrl)) return;
-          // Have to reload the theme in case it got unloaded elsewhere.
-          this.handleTheme()
-          return;
-        }
-        this.blogUrl = ''
-        this.avatarUrl = ''
-        this.configureUser(true)
-      })
   }
 
   ngOnDestroy(): void {
@@ -94,6 +76,27 @@ export class ViewBlogComponent implements OnInit, OnDestroy {
   }
 
   async ngOnInit() {
+    this.navigationSubscription = this.router.events
+      .pipe(filter((event) => event instanceof NavigationEnd))
+      .subscribe((e) => {
+        // Avoid reloading if user has selected the same user they are already
+        // viewing.
+        if (this.userLoggedIn) { this.themeService.setMyTheme(); }
+        if (this.blogUrl == this.activatedRoute.snapshot.paramMap.get('url')) {
+          // Possibly a little ugly, but NavigationEnd fires when navigating
+          // away too!
+          if (!e.url.includes(this.blogUrl)) {
+            return;
+          }
+          // Have to reload the theme in case it got unloaded elsewhere.
+          this.handleTheme()
+          return;
+        }
+        this.blogUrl = ''
+        this.avatarUrl = ''
+        this.configureUser(true)
+      })
+
     this.currentPage = 0;
     await this.configureUser(false);
     this.loadPosts(this.currentPage).then(() => {
@@ -105,6 +108,7 @@ export class ViewBlogComponent implements OnInit, OnDestroy {
       })
     })
   }
+
 
   async configureUser(reload: boolean) {
     const blogUrl = this.activatedRoute.snapshot.paramMap.get('url')

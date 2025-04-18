@@ -23,6 +23,12 @@ async function generateUserKeyPair(job: Job) {
     user.privateKey = privateKey
 
     await user.save()
+  } else {
+    logger.error({
+      message: `OH NO user not found for generating keys`,
+      user: job.data.userId
+    })
+    throw new Error('User not found to generate keys!')
   }
 }
 

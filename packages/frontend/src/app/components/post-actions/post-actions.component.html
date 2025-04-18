@@ -33,7 +33,7 @@
   <button *ngIf="content.bskyUri" (click)="viewOnBsky()" mat-menu-item>
     <span class="post-actions-menu-span-content">
       <fa-icon class="mr-2" [icon]="bskyIcon"></fa-icon>
-      View on bluesky    
+      View on bluesky
     </span>
 
   </button>
@@ -79,7 +79,7 @@
         Quote woot
       </span>
     </button>
-    @if (content.bookmarkers.includes(myId)) {
+    @if (bookmarked()) {
       <button (click)="unbookmarkPost()" mat-menu-item>
         <span class="post-actions-menu-span-content">
           <fa-icon class="mr-2" [icon]="unbookmarkIcon"></fa-icon>
