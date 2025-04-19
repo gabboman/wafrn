@@ -1,10 +1,11 @@
 <div class="flex justify-content-between mb-3">
   <div class="flex flex-column gap-2 min-w-0">
     <div class="flex gap-2 min-w-0">
-      <div class="flex gap-2 mr-auto min-w-0">
+      <div [attr.id]="anchor()" class="flex gap-2 mr-auto min-w-0">
         <app-avatar-small [user]="fragment.user"></app-avatar-small>
         <a
           class="flex flex-column min-w-0 user-link"
+          (click)="scrollService.setLastPostID(anchor())"
           [routerLink]="!disableLink() ? '/blog/' + fragment.user.url : null"
         >
           <span class="no-underline user-name"
@@ -17,7 +18,7 @@
     </div>
     <div *ngIf="!simplified()" class="flex align-items-center date-line">
       <span class="text-sm" matTooltip="{{ fragment.createdAt | date: 'short' }}">
-        <a [routerLink]="'/fediverse/post/' + fragment.id" style="color: var(--mat-sys-outline)">{{ this.timeAgo }}</a>
+        <a (click)="scrollService.setLastPostID(anchor())" [routerLink]="'/fediverse/post/' + fragment.id" style="color: var(--mat-sys-outline)">{{ this.timeAgo }}</a>
       </span>
       <span *ngIf="edited" matTooltip="Edited {{ fragment.updatedAt | date: 'short' }}" class="text-xs">
         <fa-icon [icon]="editedIcon"></fa-icon>

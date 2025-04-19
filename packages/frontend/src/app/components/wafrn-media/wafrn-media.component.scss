@@ -111,8 +111,10 @@ video {
 }
 
 /* fix aspect ratio/stretch */
-.media-content-container .displayed-image {
+.media-content-container {
+  .displayed-image {
   width: 100%;
   height: auto;
   object-fit: contain;
+}
 }

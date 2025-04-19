@@ -21,6 +21,8 @@ import { MatDialog } from '@angular/material/dialog'
 import { AcceptThemeComponent } from 'src/app/components/accept-theme/accept-theme.component'
 import { BlogDetails } from 'src/app/interfaces/blogDetails'
 import { EnvironmentService } from 'src/app/services/environment.service'
+import { ScrollContext, ScrollService } from 'src/app/services/scroll.service'
+import { ViewportScroller } from '@angular/common'
 @Component({
   selector: 'app-view-blog',
   templateUrl: './view-blog.component.html',
@@ -63,7 +65,9 @@ export class ViewBlogComponent implements OnInit, OnDestroy {
     private metaTagService: Meta,
     private themeService: ThemeService,
     public blockService: BlocksService,
-    private dialog: MatDialog
+    private readonly dialog: MatDialog,
+    private readonly scrollService: ScrollService,
+    private readonly viewportScroller: ViewportScroller
   ) {
     this.userLoggedIn = loginService.checkUserLoggedIn()
 
@@ -76,6 +80,7 @@ export class ViewBlogComponent implements OnInit, OnDestroy {
   }
 
   async ngOnInit() {
+    this.scrollService.setScrollContext(ScrollContext.Blog);
     this.navigationSubscription = this.router.events
       .pipe(filter((event) => event instanceof NavigationEnd))
       .subscribe((e) => {
@@ -91,6 +96,17 @@ export class ViewBlogComponent implements OnInit, OnDestroy {
           // Have to reload the theme in case it got unloaded elsewhere.
           this.handleTheme()
           return;
+        }
+        this.scrollService.setScrollContext(ScrollContext.Blog);
+        let anchor = this.scrollService.getLastPostID();
+        if (anchor !== '') {
+          this.viewportScroller.scrollToAnchor(anchor);
+          setTimeout(() => {
+            this.viewportScroller.scrollToAnchor(anchor);
+          }, 100);
+          setTimeout(() => {
+            this.viewportScroller.scrollToAnchor(anchor);
+          }, 300);
         }
         this.blogUrl = ''
         this.avatarUrl = ''
@@ -180,7 +196,6 @@ export class ViewBlogComponent implements OnInit, OnDestroy {
 
   reloadPosts() {
     if (this.loading) return;
-    window.scrollTo(0, 0)
     this.posts = []
     this.currentPage = 0
     this.viewedPosts = 0

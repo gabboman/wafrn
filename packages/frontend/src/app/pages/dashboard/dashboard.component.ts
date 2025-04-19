@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core'
-import { NavigationSkipped, Router } from '@angular/router'
+import { NavigationEnd, NavigationSkipped, NavigationStart, Router } from '@angular/router'
 import { ProcessedPost } from 'src/app/interfaces/processed-post'
 import { DashboardService } from 'src/app/services/dashboard.service'
 import { JwtService } from 'src/app/services/jwt.service'
@@ -10,6 +10,8 @@ import { MessageService } from 'src/app/services/message.service'
 import { faArrowsRotate } from '@fortawesome/free-solid-svg-icons'
 import { Subscription } from 'rxjs'
 import { filter } from 'rxjs/operators';
+import { ScrollContext, ScrollService } from 'src/app/services/scroll.service'
+import { ViewportScroller } from '@angular/common'
 
 @Component({
   selector: 'app-dashboard',
@@ -30,6 +32,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
   reloadIcon = faArrowsRotate
   updateFollowersSubscription?: Subscription
   navigationSubscription!: Subscription
+  navigationEnd!: Subscription
   scroll = 0
 
   constructor(
@@ -41,6 +44,8 @@ export class DashboardComponent implements OnInit, OnDestroy {
     private titleService: Title,
     private metaTagService: Meta,
     private themeService: ThemeService,
+    private readonly scrollService: ScrollService,
+    private readonly viewportScroller: ViewportScroller
   ) {
     this.titleService.setTitle('Wafrn - the social network that respects you')
     this.metaTagService.addTags([
@@ -53,24 +58,12 @@ export class DashboardComponent implements OnInit, OnDestroy {
         content: 'Explore the posts in wafrn and if it looks cool join us!'
       }
     ])
-
-    // If the user clicks on the explore button while already on the page,
-    // reload posts.
-    this.navigationSubscription = this.router.events
-      .pipe(filter((event) => event instanceof NavigationSkipped))
-      .subscribe(() => {
-        if (window.scrollY > 0) {
-          // This subscription fires twice and scrollPositionRestoration is
-          // not exactly helping here!
-          // window.scrollTo(0, 0)
-          return;
-        }
-        this.reloadPosts()
-      })
   }
+
   ngOnDestroy(): void {
     this.navigationSubscription.unsubscribe()
     this.updateFollowersSubscription?.unsubscribe()
+    this.navigationEnd.unsubscribe()
   }
 
   ngOnInit(): void {
@@ -95,6 +88,36 @@ export class DashboardComponent implements OnInit, OnDestroy {
       this.level = 50
       this.title = 'My bookmarked posts'
     }
+
+    this.scrollService.setScrollContext(ScrollContext.Dashboard);
+
+    // If the user clicks on the explore button while already on the page,
+    // reload posts.
+    this.navigationSubscription = this.router.events
+      .pipe(filter((event) => event instanceof NavigationSkipped))
+      .subscribe(() => {
+        if (window.scrollY > 0) {
+          this.viewportScroller.scrollToPosition([0, 0]);
+          return;
+        }
+        this.reloadPosts()
+      })
+
+    this.navigationEnd = this.router.events
+      .pipe(filter((event) => event instanceof NavigationStart))
+      .subscribe(() => {
+        this.scrollService.setScrollContext(ScrollContext.Dashboard);
+        let anchor = this.scrollService.getLastPostID();
+        if (anchor !== '') {
+          this.viewportScroller.scrollToAnchor(anchor);
+          setTimeout(() => {
+            this.viewportScroller.scrollToAnchor(anchor);
+          }, 100);
+          setTimeout(() => {
+            this.viewportScroller.scrollToAnchor(anchor);
+          }, 500);
+        }
+      });
 
     this.updateFollowersSubscription = this.postService.updateFollowers.subscribe(() => {
       if (this.postService.followedUserIds.length <= 1 && this.level === 1 && false) {
@@ -127,7 +150,6 @@ export class DashboardComponent implements OnInit, OnDestroy {
 
 
   reloadPosts() {
-    window.scrollTo(0, 0)
     // Perhaps not a perfect solution, but without this guard currentPage and
     // startScroll may unexpectedly increase, leading to the dashboard
     // displaying posts that do not start from date.now

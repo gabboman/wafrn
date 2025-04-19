@@ -9,6 +9,7 @@
       [icon]="headerText === 'replied' ? replyIcon : reblogIcon"
       [card]="false"
       [time]="originalPostContent[this.originalPostContent.length - 1].createdAt"
+      [anchor]="this.anchorBase + this.finalPost.id"
     >
       <a
         class="user-link user-name"
@@ -46,8 +47,8 @@
         "
         id="fragment"
       >
-        <app-post-header class="w-full" [fragment]="content" [simplified]="false"></app-post-header>
-        <app-post-fragment (forceExpand)="expandPost()" [fragment]="content"></app-post-fragment>
+        <app-post-header [anchor]="this.anchorBase + this.finalPost.id" class="w-full" [fragment]="content" [simplified]="false"></app-post-header>
+        <app-post-fragment [anchor]="this.anchorBase + this.finalPost.id" (forceExpand)="expandPost()" [fragment]="content"></app-post-fragment>
       </div>
     }
   </div>
@@ -77,10 +78,10 @@
       >
         <hr />
         <app-post-header class="w-full" [fragment]="content" [simplified]="false"></app-post-header>
-        <app-post-fragment [fragment]="content"></app-post-fragment>
+        <app-post-fragment (click|keypress|keydown|keyup)="scrollService.setLastPostID(this.anchorBase + this.finalPost.id)" [anchor]="this.anchorBase + this.finalPost.id" [fragment]="content"></app-post-fragment>
       </div>
     }
   }
 
-  <app-bottom-reply-bar [fragment]="finalPost" [notes]="notes"></app-bottom-reply-bar>
+  <app-bottom-reply-bar [anchor]="this.anchorBase + this.finalPost.id" [fragment]="finalPost" [notes]="notes"></app-bottom-reply-bar>
 </mat-card>

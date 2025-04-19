@@ -6,6 +6,7 @@ import { MatCardModule } from '@angular/material/card'
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome'
 import { NgClass, NgTemplateOutlet } from '@angular/common'
 import { DateTime } from 'luxon'
+import { ScrollService } from 'src/app/services/scroll.service'
 
 @Component({
   selector: 'app-post-ribbon',
@@ -17,16 +18,17 @@ export class PostRibbonComponent implements OnInit {
   readonly user = input.required<SimplifiedUser>();
   readonly icon = input.required<IconDefinition>();
   readonly time = input.required<Date>();
+  readonly anchor = input<string>("");
   readonly card = input(true);
 
   timeAgo = ''
 
-  constructor() {}
+  constructor(public scrollService: ScrollService) { }
   ngOnInit(): void {
     // TODO unhardcode
     const relative = DateTime.fromJSDate(this.time()).setLocale('en').toRelative()
     this.timeAgo = relative ? relative : 'ERROR GETING TIME'
   }
 
-  ngOnChanges(changes: SimpleChanges): void {}
+  ngOnChanges(changes: SimpleChanges): void { }
 }

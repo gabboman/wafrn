@@ -1,12 +1,8 @@
 import { Component, computed, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, signal } from '@angular/core'
 import { ProcessedPost } from 'src/app/interfaces/processed-post'
-import { EditorService } from 'src/app/services/editor.service'
 import { LoginService } from 'src/app/services/login.service'
 import { PostsService } from 'src/app/services/posts.service'
 
-import { DeletePostService } from 'src/app/services/delete-post.service'
-import { Action } from 'src/app/interfaces/editor-launcher-data'
-import { MessageService } from 'src/app/services/message.service'
 import {
   faArrowUpRightFromSquare,
   faChevronDown,
@@ -29,6 +25,7 @@ import {
 import { EnvironmentService } from 'src/app/services/environment.service'
 import { SimplifiedUser } from 'src/app/interfaces/simplified-user'
 import { environment } from 'src/environments/environment'
+import { ScrollService } from 'src/app/services/scroll.service'
 
 @Component({
   selector: 'app-post',
@@ -37,7 +34,7 @@ import { environment } from 'src/environments/environment'
   standalone: false
 })
 export class PostComponent implements OnInit, OnDestroy, OnChanges {
-  @Input() post!: ProcessedPost[]
+  @Input() post!: ProcessedPost[];
   showFull: boolean = false
   postCanExpand = computed(() => {
     let textLength = 0
@@ -70,6 +67,7 @@ export class PostComponent implements OnInit, OnDestroy, OnChanges {
   // 0 no display at all 1 display like 2 display dislike
   showLikeFinalPost: number = 0
   finalPost!: ProcessedPost
+  anchorBase: string = '';
 
   // icons
   shareIcon = faShareNodes
@@ -107,7 +105,8 @@ export class PostComponent implements OnInit, OnDestroy, OnChanges {
 
   constructor(
     public postService: PostsService,
-    private loginService: LoginService
+    private readonly loginService: LoginService,
+    public scrollService: ScrollService
   ) {
     this.userLoggedIn = loginService.checkUserLoggedIn()
     if (this.userLoggedIn) {
@@ -137,6 +136,7 @@ export class PostComponent implements OnInit, OnDestroy, OnChanges {
   }
 
   ngOnInit(): void {
+    this.anchorBase = this.scrollService.getNext().toString() + "-id-";
     this.followedUsers = this.postService.followedUserIds
     this.notYetAcceptedFollows = this.postService.notYetAcceptedFollowedUsersIds
     this.originalPostContent = this.post

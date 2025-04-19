@@ -32,6 +32,7 @@ import { WafrnMedia } from '../../interfaces/wafrn-media'
 
 import Viewer from 'viewerjs'
 import { Subscription } from 'rxjs'
+import { ScrollService } from 'src/app/services/scroll.service'
 
 type EmojiReaction = {
   id: string
@@ -63,6 +64,7 @@ type EmojiReaction = {
 })
 export class PostFragmentComponent implements OnChanges, OnDestroy {
   fragment = input.required<ProcessedPost>()
+  anchor = input<string>('');
   forceExpand = output<boolean>()
   showSensitiveContent = signal<boolean>(false);
   emojiCollection = signal<EmojiReaction[]>([]);
@@ -121,7 +123,8 @@ export class PostFragmentComponent implements OnChanges, OnDestroy {
     private postService: PostsService,
     private loginService: LoginService,
     private jwtService: JwtService,
-    private messages: MessageService
+    private readonly messages: MessageService,
+    public scrollService: ScrollService,
   ) {
 
   }
