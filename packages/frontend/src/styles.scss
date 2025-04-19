@@ -60,13 +60,13 @@ $theme: mat.define-theme(
 
 :root, body, html {
   font-family: Inter, sans-serif !important;
-  font-feature-settings: 'liga' 1, 'calt' 1, 'tnum' 1, 'case' 1, 'zero' 1, 'ss01' 1, 'ss02' 1 !important;
+  font-feature-settings: 'liga' 1, 'calt' 1, 'tnum' 1, 'case' 1, 'zero' 1, 'ss01' 0, 'ss02' 1 !important;
 }
 
 @supports (font-variation-settings: normal) {
   :root, body, html {
     font-family: InterVariable, sans-serif !important;
-    font-feature-settings: 'liga' 1, 'calt' 1, 'tnum' 1, 'case' 1, 'zero' 1, 'ss01' 1, 'ss02' 1 !important;
+    font-feature-settings: 'liga' 1, 'calt' 1, 'tnum' 1, 'case' 1, 'zero' 1, 'ss01' 0, 'ss02' 1 !important;
   }
 }
 
