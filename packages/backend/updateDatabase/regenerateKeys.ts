@@ -9,7 +9,7 @@ const usersToUpdate = await User.findAll({
     privateKey: { [Op.eq]: null }
   }
 })
-
+console.log(`Users to update: ${usersToUpdate.length}`)
 for await (const user of usersToUpdate) {
   const { publicKey, privateKey } = generateKeyPairSync('rsa', {
     modulusLength: 4096,
