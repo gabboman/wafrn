@@ -5,4 +5,5 @@ export interface statsReply {
   updateUserAwaiting: number
   deletePostAwaiting: number
   atProtoAwaiting: number
+  createKeyPairWaiting: number
 }
