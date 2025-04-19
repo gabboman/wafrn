@@ -69,6 +69,10 @@ export default function statusRoutes(app: Application) {
         removeOnFail: 25000
       }
     })
+    const workerGenerateUserKeyPair = new Queue('generateUserKeyPair', {
+      connection: environment.bullmqConnection
+    })
+    const createKeyPairWaiting = workerGenerateUserKeyPair.count()
     const atProtoAwaiting = firehoseQueue.count()
     const sendPostFailed = sendPostsQueue.getMetrics('failed')
     const sendPostSuccess = sendPostsQueue.getMetrics('completed')
@@ -91,10 +95,12 @@ export default function statusRoutes(app: Application) {
       sendPostAwaiting,
       prepareSendPostAwaiting,
       inboxAwaiting,
-      atProtoAwaiting
+      atProtoAwaiting,
+      createKeyPairWaiting
     ])
 
     res.send({
+      createKeyPairWaiting: await createKeyPairWaiting,
       sendPostAwaiting: await sendPostAwaiting,
       prepareSendPostAwaiting: await prepareSendPostAwaiting,
       inboxAwaiting: await inboxAwaiting,
