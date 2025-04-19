@@ -5,7 +5,8 @@ import { generateKeyPairSync } from 'crypto'
 
 const usersToUpdate = User.findAll({
   where: {
-    url: { [Op.notLike]: '@%' }
+    email: { [Op.ne]: null },
+    privateKey: { [Op.eq]: null }
   }
 })
 
