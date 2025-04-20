@@ -106,7 +106,6 @@ export class BlogHeaderComponent implements OnChanges, OnDestroy {
       const parsedAsHTML = this.parser.parseFromString(this.blogDetails.description, 'text/html')
       const imgs = parsedAsHTML.getElementsByTagName('img')
       Array.from(imgs).forEach((img, index) => {
-        console.log(img.src)
         if (!img.src.startsWith(EnvironmentService.environment.externalCacheurl)) {
           img.src = EnvironmentService.environment.externalCacheurl + encodeURIComponent(img.src)
         }
