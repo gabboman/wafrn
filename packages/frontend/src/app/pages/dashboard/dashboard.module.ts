@@ -9,6 +9,7 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome'
 import { MatButtonModule } from '@angular/material/button'
 import { LoaderComponent } from 'src/app/components/loader/loader.component'
 import { ReuseableRouteType } from 'src/app/services/routing.service'
+import { MatCardModule } from '@angular/material/card'
 
 const routes: Routes = [
   {
@@ -44,7 +45,8 @@ const routes: Routes = [
     MatProgressSpinnerModule,
     MatButtonModule,
     FontAwesomeModule,
-    LoaderComponent
+    LoaderComponent,
+    MatCardModule
   ]
 })
-export class DashboardModule { }
+export class DashboardModule {}
