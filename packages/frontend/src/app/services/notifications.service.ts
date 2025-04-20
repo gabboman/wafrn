@@ -139,6 +139,7 @@ export class NotificationsService {
         usr.name = sanitize(usr.name, {
           allowedTags: []
         })
+        usr.name = usr.name.replaceAll('‏', '')
         userEmojis.forEach((elem) => {
           if (elem) {
             usr.name = usr.name.replaceAll(elem.name, this.postService.emojiToHtml(elem))
