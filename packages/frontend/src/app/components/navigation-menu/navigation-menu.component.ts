@@ -479,6 +479,16 @@ export class NavigationMenuComponent implements OnInit, OnDestroy {
         }
       },
       {
+        label: this.translateService.instant('menu.faq'),
+        icon: faQuestion,
+        title: this.translateService.instant('menu.faq'),
+        visible: true,
+        url: 'https://wafrn.net/faq/overview.html',
+        command: () => {
+          this.hideMenu()
+        }
+      },
+      {
         label: this.translateService.instant('menu.source'),
         icon: faCode,
         title: this.translateService.instant('menu.source'),
