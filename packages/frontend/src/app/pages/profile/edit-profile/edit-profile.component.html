@@ -2,24 +2,13 @@
   <form [hidden]="loading" [formGroup]="editProfileForm" (ngSubmit)="onSubmit()">
     <div class="pt-2 px-3 border-round-md mb-4" style="border: 1px solid #999">
       <label for="avatar" class="block font-medium mb-2">Choose another avatar</label>
-      <input
-        formControlName="avatar"
-        id="avatar"
-        type="file"
-        accept="image/jpeg,image/png,image/webp,image/gif"
-        (change)="imgSelected($event)"
-        class="w-full mb-3"
-      />
+      <input formControlName="avatar" id="avatar" type="file" accept="image/jpeg,image/png,image/webp,image/gif"
+        (change)="imgSelected($event)" class="w-full mb-3" />
     </div>
     <div class="pt-2 px-3 border-round-md mb-4" style="border: 1px solid #999">
       <label for="avatar" class="block font-medium mb-2">Choose header image</label>
-      <input
-        id="headerImage"
-        type="file"
-        accept="image/jpeg,image/png,image/webp,image/gif"
-        (change)="headerImgSelected($event)"
-        class="w-full mb-3"
-      />
+      <input id="headerImage" type="file" accept="image/jpeg,image/png,image/webp,image/gif"
+        (change)="headerImgSelected($event)" class="w-full mb-3" />
     </div>
 
     <mat-form-field class="w-full">
@@ -36,7 +25,7 @@
       <mat-label>Default post privacy</mat-label>
       <mat-select [required]="true" formControlName="defaultPostEditorPrivacy">
         @for (option of privacyOptions; track $index) {
-          <mat-option [value]="option.level">{{ option.name }}</mat-option>
+        <mat-option [value]="option.level">{{ option.name }}</mat-option>
         }
       </mat-select>
     </mat-form-field>
@@ -44,7 +33,7 @@
       <mat-label>Asks</mat-label>
       <mat-select [required]="true" formControlName="asksLevel">
         @for (option of askOptions; track $index) {
-          <mat-option [value]="option.level">{{ option.name }}</mat-option>
+        <mat-option [value]="option.level">{{ option.name }}</mat-option>
         }
       </mat-select>
     </mat-form-field>
@@ -113,6 +102,7 @@
       >
     </mat-card>
     -->
+    <hr />
     <section id="tags" class="mt-2 w-full flex-row">
       <mat-form-field class="w-full">
         <mat-label>Muted words separated by commas</mat-label>
@@ -121,9 +111,9 @@
       <div *ngIf="editProfileForm.value.mutedWords.split(',').length > 0" class="taglist">
         Muted phrases:
         @for (tag of editProfileForm.value.mutedWords.split(','); track $index) {
-          <span *ngIf="tag && tag !== '' && tag.trim() !== ''" class="tag">
-            {{ tag.trim() }}
-          </span>
+        <span *ngIf="tag && tag !== '' && tag.trim() !== ''" class="tag">
+          {{ tag.trim() }}
+        </span>
         }
       </div>
     </section>
@@ -137,39 +127,44 @@
       </mat-expansion-panel>
     </mat-accordion>
     <hr />
-    <div class="flex align-items-center justify-content-between mb-6">
-      <a routerLink="/recoverPassword" class="font-medium no-underline ml-2 text-blue-500 text-right cursor-pointer"
-        >To change your password, please use the reset password form</a
-      >
+    {{ 'profile.security.header' | translate }}:
+    <div class="flex align-items-center justify-content-between mt-2">
+      <a routerLink="/recoverPassword"
+        class="font-medium no-underline ml-2 mdc-button w-full mat-primary mat-mdc-unelevated-button cursor-pointer">
+        {{'profile.security.passwordChange' | translate}}
+      </a>
     </div>
+    <div class="flex align-items-center justify-content-between mt-2">
+      <a routerLink="/mfaSetup"
+        class="font-medium no-underline ml-2 mdc-button w-full mat-primary mat-mdc-unelevated-button cursor-pointer">
+        {{'profile.security.mfa.setup' | translate}}
+      </a>
+    </div>
+    <hr />
   </form>
 
   <div [hidden]="loading" class="w-full">Extra information (Fediverse exclusive)</div>
 
   @for (attachment of fediAttachments; track $index) {
-    <form [hidden]="loading">
-      <div class="w-full">
-        <mat-form-field class="w-50">
-          <mat-label>Property name</mat-label>
-          <input [ngModelOptions]="{ standalone: true }" [(ngModel)]="fediAttachments[$index].name" matInput />
-        </mat-form-field>
-        <mat-form-field class="w-50">
-          <mat-label>Property value</mat-label>
-          <input [ngModelOptions]="{ standalone: true }" [(ngModel)]="fediAttachments[$index].value" matInput />
-        </mat-form-field>
-      </div>
-    </form>
+  <form [hidden]="loading">
+    <div class="w-full">
+      <mat-form-field class="w-50">
+        <mat-label>Property name</mat-label>
+        <input [ngModelOptions]="{ standalone: true }" [(ngModel)]="fediAttachments[$index].name" matInput />
+      </mat-form-field>
+      <mat-form-field class="w-50">
+        <mat-label>Property value</mat-label>
+        <input [ngModelOptions]="{ standalone: true }" [(ngModel)]="fediAttachments[$index].value" matInput />
+      </mat-form-field>
+    </div>
+  </form>
   }
   <div [hidden]="loading" (click)="addFediAttachment()">+</div>
 
-  <button
-    (click)="onSubmit()"
-    [disabled]="!editProfileForm.valid"
-    mat-flat-button
-    color="primary"
-    icon="pi pi-user"
-    class="w-full"
-  >
+  <hr>
+
+  <button (click)="onSubmit()" [disabled]="!editProfileForm.valid" mat-flat-button color="primary" icon="pi pi-user"
+    class="w-full">
     Update profile
   </button>
 </mat-card>
