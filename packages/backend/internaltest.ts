@@ -23,7 +23,7 @@ async function sendMail() {
         [Op.ne]: null
       },
       createdAt: {
-        [Op.gt]: new Date().setDate(-2)
+        [Op.gt]: new Date().setDate(new Date().getDate() - 2)
       }
     },
     order: [['createdAt', 'ASC']]
