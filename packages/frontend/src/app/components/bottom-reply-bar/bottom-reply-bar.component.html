@@ -2,14 +2,13 @@
   <div class="flex align-items-center">
     @if (notes) {
       <p class="m-0 text-sm">
-        <a [attr.id]="anchor()" [routerLink]="'/fediverse/post/' + fragment.id" class="subtle-link notes-link" mat-stroked-button
-          (click)="scrollService.setLastPostID(anchor())"
+        <a class="subtle-link notes-link" mat-stroked-button [postLink]="fragment"
           ><b>{{ notes }}</b> notes</a
         >
       </p>
     } @else {
       <p class="m-0 text-sm">
-        <a [routerLink]="'/fediverse/post/' + fragment.id" class="subtle-link notes-link">View thread</a>
+        <a [postLink]="fragment" class="subtle-link notes-link">View thread</a>
       </p>
     }
   </div>

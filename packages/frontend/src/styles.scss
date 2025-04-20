@@ -17,31 +17,17 @@
 
 html {
   color-scheme: light dark;
-  @include mat.theme(
-    (
-      color: mat.$violet-palette,
-      density: 0
-    )
-  );
+  @include mat.theme((color: mat.$violet-palette,
+      density: 0));
 }
 
 // HACK: Have to make dummy theme to initialize typography
-$theme: mat.define-theme(
-  (
-    color: (
-      primary: mat.$violet-palette
-    )
-  )
-);
+$theme: mat.define-theme((color: (primary: mat.$violet-palette )));
 
 @include mat.typography-hierarchy($theme);
 
 :root {
-  @include mat.badge-overrides(
-    (
-      background-color: var(--mdc-filled-button-container-color, var(--mat-sys-primary))
-    )
-  );
+  @include mat.badge-overrides((background-color: var(--mdc-filled-button-container-color, var(--mat-sys-primary))));
 }
 
 // Variables
@@ -58,20 +44,25 @@ $theme: mat.define-theme(
 // I hope to not use !important here eventually, so...
 // TODO: No !important
 
-:root, body, html {
+:root,
+body,
+html {
   font-family: Inter, sans-serif !important;
   font-feature-settings: 'liga' 1, 'calt' 1, 'tnum' 1, 'case' 1, 'zero' 1, 'ss01' 0, 'ss02' 1 !important;
 }
 
 @supports (font-variation-settings: normal) {
-  :root, body, html {
+
+  :root,
+  body,
+  html {
     font-family: InterVariable, sans-serif !important;
     font-feature-settings: 'liga' 1, 'calt' 1, 'tnum' 1, 'case' 1, 'zero' 1, 'ss01' 0, 'ss02' 1 !important;
   }
 }
 
 code {
-  font-family: 'Fira Code', 'Fira Mono', monospace!important;
+  font-family: 'Fira Code', 'Fira Mono', monospace !important;
 }
 
 // Global style fixes
@@ -119,6 +110,7 @@ body {
   position: fixed;
   inset: 0;
 }
+
 #splash {
   background: var(--mat-sys-background);
   cursor: wait;
@@ -128,11 +120,13 @@ body {
   transition-behavior: allow-discrete;
   transition-timing-function: ease-in;
 }
+
 #splash-icon,
 #splash-icon img {
   pointer-events: none;
   user-select: none;
 }
+
 #splash-text {
   margin: 0;
   height: 0; // Do not shift image based on text height
@@ -140,6 +134,7 @@ body {
   text-align: center;
   color: var(--mat-sys-outline);
 }
+
 #splash-content {
   height: 100%;
   display: flex;
@@ -181,12 +176,12 @@ body {
   }
 
   .cdk-global-overlay-wrapper {
-    align-items: flex-end!important;
+    align-items: flex-end !important;
   }
 
   [id*="mat-mdc-dialog-"] {
     animation: 300ms slideup;
-    --mat-dialog-transition-duration: 0ms!important;
+    --mat-dialog-transition-duration: 0ms !important;
   }
 
   @keyframes slideup {
@@ -216,10 +211,11 @@ body {
 /* Horizontal Media Carousel. Disabled by default. */
 .media-gallery.media-carousel {
   --media-height: 100%;
-  flex-direction: row!important;
+  flex-direction: row !important;
   overflow-x: scroll;
-  gap: 12px!important;
+  gap: 12px !important;
   align-items: center;
+
   app-wafrn-media {
     box-sizing: border-box;
     width: fit-content;
@@ -227,10 +223,12 @@ body {
     border-radius: var(--mat-sys-corner-large);
     max-width: 95%;
   }
+
   .media-container {
     border-radius: var(--mat-sys-corner-large);
     max-height: var(--media-height);
   }
+
   .media-content-container {
     display: flex;
     align-items: center;
@@ -238,21 +236,27 @@ body {
     height: var(--media-height);
     border-radius: var(--mat-sys-corner-large);
   }
+
   .media-content-container:has(.v-video) {
     height: fit-content;
   }
+
   .displayed-image {
     max-height: var(--media-height);
-    border-radius: var(--mat-sys-corner-large)!important;
+    border-radius: var(--mat-sys-corner-large) !important;
   }
 }
 
 .quoted-post .emojireact-button {
-  background-color: var(--mat-sys-surface-container-highest)!important;
+  background-color: var(--mat-sys-surface-container-highest) !important;
 }
 
 .w-50 {
   width: 50%;
+}
+
+.snappy-hide {
+  display: none;
 }
 
 .tag {

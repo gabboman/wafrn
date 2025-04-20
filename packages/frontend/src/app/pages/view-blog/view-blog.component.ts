@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit, signal } from '@angular/core'
+import { Component, OnDestroy, OnInit, WritableSignal, signal } from '@angular/core'
 import { Meta, Title } from '@angular/platform-browser'
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router'
 import {
@@ -21,8 +21,7 @@ import { MatDialog } from '@angular/material/dialog'
 import { AcceptThemeComponent } from 'src/app/components/accept-theme/accept-theme.component'
 import { BlogDetails } from 'src/app/interfaces/blogDetails'
 import { EnvironmentService } from 'src/app/services/environment.service'
-import { ScrollContext, ScrollService } from 'src/app/services/scroll.service'
-import { ViewportScroller } from '@angular/common'
+import { ScrollService } from 'src/app/services/scroll.service'
 @Component({
   selector: 'app-view-blog',
   templateUrl: './view-blog.component.html',
@@ -57,18 +56,20 @@ export class ViewBlogComponent implements OnInit, OnDestroy {
   reportIcon = faTriangleExclamation
   homeIcon = faHome
 
+  scrollId!: number;
+  viewingPost!: WritableSignal<boolean>;
+
   constructor(
     private activatedRoute: ActivatedRoute,
     private dashboardService: DashboardService,
-    private loginService: LoginService,
+    readonly loginService: LoginService,
     public router: Router,
     private titleService: Title,
     private metaTagService: Meta,
     private themeService: ThemeService,
     public blockService: BlocksService,
     private readonly dialog: MatDialog,
-    private readonly scrollService: ScrollService,
-    private readonly viewportScroller: ViewportScroller
+    public readonly scrollService: ScrollService,
   ) {
     this.userLoggedIn = loginService.checkUserLoggedIn()
 
@@ -81,7 +82,6 @@ export class ViewBlogComponent implements OnInit, OnDestroy {
   }
 
   async ngOnInit() {
-    this.scrollService.setScrollContext(ScrollContext.Blog);
     this.navigationSubscription = this.router.events
       .pipe(filter((event) => event instanceof NavigationEnd))
       .subscribe((e) => {
@@ -94,17 +94,9 @@ export class ViewBlogComponent implements OnInit, OnDestroy {
           }
           return;
         }
-        this.scrollService.setScrollContext(ScrollContext.Blog);
-        let anchor = this.scrollService.getLastPostID();
-        if (anchor !== '') {
-          this.viewportScroller.scrollToAnchor(anchor);
-          setTimeout(() => {
-            this.viewportScroller.scrollToAnchor(anchor);
-          }, 100);
-          setTimeout(() => {
-            this.viewportScroller.scrollToAnchor(anchor);
-          }, 300);
-        }
+        this.blogUrl = ''
+        this.avatarUrl = ''
+        this.configureUser(true)
       })
 
     this.activatedRoute.params.subscribe((e) => {

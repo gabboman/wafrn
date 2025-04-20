@@ -5,26 +5,25 @@ import { PostsService } from 'src/app/services/posts.service'
 
 import {
   faArrowUpRightFromSquare,
+  faCheck,
   faChevronDown,
+  faClose,
+  faEnvelope,
+  faGlobe,
   faHeart,
   faHeartBroken,
+  faPen,
+  faQuoteLeft,
+  faRepeat,
+  faReply,
+  faServer,
   faShareNodes,
   faTrash,
-  faGlobe,
-  faEnvelope,
-  faServer,
-  faUser,
   faUnlock,
-  faPen,
-  faClose,
-  faReply,
-  faRepeat,
-  faQuoteLeft,
-  faCheck
+  faUser
 } from '@fortawesome/free-solid-svg-icons'
-import { EnvironmentService } from 'src/app/services/environment.service'
 import { SimplifiedUser } from 'src/app/interfaces/simplified-user'
-import { environment } from 'src/environments/environment'
+import { EnvironmentService } from 'src/app/services/environment.service'
 import { ScrollService } from 'src/app/services/scroll.service'
 
 @Component({
@@ -136,7 +135,6 @@ export class PostComponent implements OnInit, OnDestroy, OnChanges {
   }
 
   ngOnInit(): void {
-    this.anchorBase = this.scrollService.getNext().toString() + "-id-";
     this.followedUsers = this.postService.followedUserIds
     this.notYetAcceptedFollows = this.postService.notYetAcceptedFollowedUsersIds
     this.originalPostContent = this.post

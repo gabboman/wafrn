@@ -5,7 +5,7 @@ export enum ReuseableRouteType {
   Feed,
 };
 
-export class CustomReuseStrategy implements RouteReuseStrategy {
+export class CustomReuseStrategy extends RouteReuseStrategy {
   readonly storedRouteHandles = new Map<string, DetachedRouteHandle>()
   readonly storedTypedHandles = new Map<ReuseableRouteType, [string, DetachedRouteHandle]>();
 

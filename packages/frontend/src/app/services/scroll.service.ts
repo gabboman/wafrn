@@ -1,4 +1,7 @@
+import { Location } from '@angular/common';
 import { Injectable } from "@angular/core";
+import { Router } from "@angular/router";
+import { ProcessedPost } from "../interfaces/processed-post";
 
 export enum ScrollContext {
   Inactive,
@@ -10,29 +13,18 @@ export enum ScrollContext {
   providedIn: 'root'
 })
 export class ScrollService {
-  context = ScrollContext.Inactive;
-  unique: number = 0;
+  post!: ProcessedPost;
 
-  targets = new Map<ScrollContext, string>();
-  targetID: string = '';
-
-  public getNext() {
-    return this.unique++;
+  constructor(private readonly location: Location, private readonly router: Router) {
   }
 
-  public setScrollContext(context: ScrollContext) {
-    this.context = context;
+  public navigateTo(url: string, post: ProcessedPost) {
+    this.post = post;
+    this.router.navigateByUrl(url);
   }
 
-  public setLastPostID(id: string) {
-    this.targets.set(this.context, id);
-    this.targetID = id;
+  public getLastPost(): ProcessedPost {
+    return this.post;
   }
 
-  public getLastPostID(): string {
-    if (this.targets.has(this.context)) {
-      return this.targets.get(this.context)!;
-    }
-    return '';
-  }
 }

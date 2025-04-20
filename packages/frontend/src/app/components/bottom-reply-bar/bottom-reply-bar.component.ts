@@ -5,27 +5,28 @@ import { MatTooltipModule } from '@angular/material/tooltip'
 import { RouterModule } from '@angular/router'
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome'
 import {
-  faShareNodes,
+  faArrowUpRightFromSquare,
+  faBookBookmark,
+  faBookmark,
+  faCheck,
   faChevronDown,
+  faClose,
+  faEnvelope,
+  faGlobe,
   faHeart,
   faHeartBroken,
-  faReply,
-  faRepeat,
-  faQuoteLeft,
-  faArrowUpRightFromSquare,
-  faTrash,
-  faClose,
-  faGlobe,
-  faUnlock,
-  faEnvelope,
-  faServer,
-  faUser,
   faPen,
-  faCheck,
-  faBookBookmark,
-  faBookmark
+  faQuoteLeft,
+  faRepeat,
+  faReply,
+  faServer,
+  faShareNodes,
+  faTrash,
+  faUnlock,
+  faUser
 } from '@fortawesome/free-solid-svg-icons'
-import { firstValueFrom, Observable } from 'rxjs'
+import { firstValueFrom } from 'rxjs'
+import { PostLinkModule } from 'src/app/directives/post-link/post-link.module'
 import { ProcessedPost } from 'src/app/interfaces/processed-post'
 import { DeletePostService } from 'src/app/services/delete-post.service'
 import { EditorService } from 'src/app/services/editor.service'
@@ -36,12 +37,13 @@ import { ScrollService } from 'src/app/services/scroll.service'
 
 @Component({
   selector: 'app-bottom-reply-bar',
-  imports: [CommonModule, RouterModule, FontAwesomeModule, MatButtonModule, MatTooltipModule],
+  imports: [CommonModule, RouterModule, FontAwesomeModule, MatButtonModule, MatTooltipModule, PostLinkModule],
   templateUrl: './bottom-reply-bar.component.html',
   styleUrl: './bottom-reply-bar.component.scss'
 })
 export class BottomReplyBarComponent implements OnChanges {
   @Input() fragment!: ProcessedPost
+  @Input() post!: ProcessedPost[]
   @Input() notes: string = ''
   anchor = input<string>('')
   userLoggedIn = false
@@ -73,13 +75,13 @@ export class BottomReplyBarComponent implements OnChanges {
   unbookmarkIcon = faBookBookmark
 
   constructor(
-    private loginService: LoginService,
-    private postService: PostsService,
-    private editorService: EditorService,
-    private deletePostService: DeletePostService,
-    private messages: MessageService,
+    readonly loginService: LoginService,
+    private readonly postService: PostsService,
+    private readonly editorService: EditorService,
+    private readonly deletePostService: DeletePostService,
+    private readonly messages: MessageService,
     private readonly editor: EditorService,
-    public scrollService: ScrollService
+    public readonly scrollService: ScrollService
   ) {
     this.userLoggedIn = loginService.checkUserLoggedIn()
     if (this.userLoggedIn) {

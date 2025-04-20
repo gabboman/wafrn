@@ -1,11 +1,11 @@
-import { SimplifiedUser } from './simplified-user'
-import { WafrnMedia } from './wafrn-media'
-import { Tag } from './tag'
-import { Emoji } from './emoji'
-import { RawPost } from './raw-post'
-import { QuestionPoll } from './questionPoll'
-import { PostEmojiReaction } from './unlinked-posts'
 import { Ask } from './ask'
+import { Emoji } from './emoji'
+import { QuestionPoll } from './questionPoll'
+import { RawPost } from './raw-post'
+import { SimplifiedUser } from './simplified-user'
+import { Tag } from './tag'
+import { PostEmojiReaction } from './unlinked-posts'
+import { WafrnMedia } from './wafrn-media'
 
 export interface ProcessedPost {
   id: string
@@ -29,6 +29,7 @@ export interface ProcessedPost {
   questionPoll?: QuestionPoll
   emojiReactions: PostEmojiReaction[]
   quotes: ProcessedPost[]
+  parentCollection: ProcessedPost[]
   parentId?: string
   ask?: Ask
   markdownContent: string
