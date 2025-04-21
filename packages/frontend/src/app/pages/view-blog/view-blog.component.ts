@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core'
+import { Component, OnDestroy, OnInit, signal } from '@angular/core'
 import { Meta, Title } from '@angular/platform-browser'
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router'
 import {
@@ -30,7 +30,8 @@ import { ViewportScroller } from '@angular/common'
   standalone: false
 })
 export class ViewBlogComponent implements OnInit, OnDestroy {
-  loading = false
+  loading = signal<boolean>(true);
+  loadingBlog = signal<boolean>(true);
   noMorePosts = false
   found = true
   viewedPosts = 0
@@ -84,8 +85,6 @@ export class ViewBlogComponent implements OnInit, OnDestroy {
     this.navigationSubscription = this.router.events
       .pipe(filter((event) => event instanceof NavigationEnd))
       .subscribe((e) => {
-        // Avoid reloading if user has selected the same user they are already
-        // viewing.
         if (this.userLoggedIn) { this.themeService.setMyTheme(); }
         if (this.blogUrl == this.activatedRoute.snapshot.paramMap.get('url')) {
           // Possibly a little ugly, but NavigationEnd fires when navigating
@@ -93,8 +92,6 @@ export class ViewBlogComponent implements OnInit, OnDestroy {
           if (!e.url.includes(this.blogUrl)) {
             return;
           }
-          // Have to reload the theme in case it got unloaded elsewhere.
-          this.handleTheme()
           return;
         }
         this.scrollService.setScrollContext(ScrollContext.Blog);
@@ -108,25 +105,19 @@ export class ViewBlogComponent implements OnInit, OnDestroy {
             this.viewportScroller.scrollToAnchor(anchor);
           }, 300);
         }
-        this.blogUrl = ''
-        this.avatarUrl = ''
-        this.configureUser(true)
       })
 
-    this.currentPage = 0;
-    await this.configureUser(false);
-    this.loadPosts(this.currentPage).then(() => {
-      setTimeout(() => {
-        const element = document.querySelector('#if-you-see-this-load-more-posts')
-        if (element) {
-          this.intersectionObserverForLoadPosts.observe(element)
-        }
-      })
-    })
+    this.activatedRoute.params.subscribe((e) => {
+      this.currentPage = 0;
+      this.scrollService.setScrollContext(ScrollContext.Blog);
+      this.configureUser(true);
+    });
   }
 
 
   async configureUser(reload: boolean) {
+    this.loadingBlog.set(true);
+
     const blogUrl = this.activatedRoute.snapshot.paramMap.get('url')
     if (blogUrl) {
       this.blogUrl = blogUrl
@@ -134,7 +125,7 @@ export class ViewBlogComponent implements OnInit, OnDestroy {
 
     const blogResponse = await this.dashboardService.getBlogDetails(this.blogUrl).catch(() => {
       this.found = false
-      this.loading = false
+      this.loading.set(false);
     })
     if (blogResponse) {
       this.blogDetails = blogResponse
@@ -152,7 +143,7 @@ export class ViewBlogComponent implements OnInit, OnDestroy {
         { name: 'image', content: this.avatarUrl }
       ])
       if (reload) {
-        this.loading = false
+        this.loading.set(false);
         this.reloadPosts()
 
       }
@@ -166,6 +157,17 @@ export class ViewBlogComponent implements OnInit, OnDestroy {
         }
       }
     )
+    this.loadingBlog.set(false);
+
+    this.loadPosts(this.currentPage).then(() => {
+      setTimeout(() => {
+        const element = document.querySelector('#if-you-see-this-load-more-posts')
+        if (element) {
+          this.intersectionObserverForLoadPosts.observe(element)
+        }
+      })
+    })
+
   }
 
 
@@ -195,7 +197,7 @@ export class ViewBlogComponent implements OnInit, OnDestroy {
 
 
   reloadPosts() {
-    if (this.loading) return;
+    if (this.loading()) return;
     this.posts = []
     this.currentPage = 0
     this.viewedPosts = 0
@@ -208,11 +210,11 @@ export class ViewBlogComponent implements OnInit, OnDestroy {
 
     if (this.blogDetails === undefined) { return }
     if (!this.userLoggedIn && this.blogDetails.url.startsWith('@')) {
-      this.loading = false;
+      this.loading.set(false);
       this.noMorePosts = true;
       return;
     }
-    this.loading = true
+    this.loading.set(true);
     const tmpPosts = await this.dashboardService.getBlogPage(page, this.blogUrl)
     const filteredPosts = tmpPosts.filter((post: ProcessedPost[]) => {
       let allFragmentsSeen = true
@@ -228,7 +230,7 @@ export class ViewBlogComponent implements OnInit, OnDestroy {
     filteredPosts.forEach((post) => {
       this.posts.push(post)
     })
-    this.loading = false
+    this.loading.set(false);
     if (tmpPosts.length === 0) {
       this.noMorePosts = true
     }
