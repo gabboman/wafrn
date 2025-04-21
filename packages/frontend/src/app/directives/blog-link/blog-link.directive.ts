@@ -1,27 +1,27 @@
 import { Directive, ElementRef, HostListener, Input, OnInit, Renderer2 } from '@angular/core';
-import { ProcessedPost } from 'src/app/interfaces/processed-post';
+import { SimplifiedUser } from 'src/app/interfaces/simplified-user';
 import { ScrollService } from 'src/app/services/scroll.service';
 
 @Directive({
-  selector: '[postLink]',
+  selector: '[blogLink]',
   standalone: false
 })
-export class PostLinkDirective implements OnInit {
-  @Input({ required: true }) postLink!: ProcessedPost;
-  @Input() postLinkId?: string;
+export class BlogLinkDirective implements OnInit {
+  @Input({ required: true }) blogLink?: SimplifiedUser | null;
 
   constructor(private readonly host: ElementRef, private readonly renderer: Renderer2, private readonly scrollService: ScrollService) { }
 
   async ngOnInit() {
-    this.postLinkId ??= this.postLink.id;
-    this.renderer.setAttribute(this.host.nativeElement, 'href', '/fediverse/post/' + this.postLinkId)
+    if (!this.blogLink) return;
+    this.renderer.setAttribute(this.host.nativeElement, 'href', '/blog/' + this.blogLink.url)
   }
 
   @HostListener('click', ['$event'])
   onClick(event: MouseEvent): void {
+    if (!this.blogLink) return;
     if (event.button === 0) {
       event.preventDefault();
-      this.scrollService.navigateTo('/fediverse/post/' + this.postLinkId!, this.postLink)
+      this.scrollService.navigateToBlog('/blog/' + this.blogLink.url, this.blogLink)
     }
   }
 }

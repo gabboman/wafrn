@@ -13,7 +13,7 @@
     >
       <a
         class="user-link user-name"
-        [routerLink]="'/blog/' + originalPostContent[this.originalPostContent.length - 1].user.url"
+        [blogLink]="originalPostContent[this.originalPostContent.length - 1].user"
         [innerHTML]="originalPostContent[this.originalPostContent.length - 1].user.name"
       ></a>
       <span class="text-sm post-action"> {{ headerText }}</span>

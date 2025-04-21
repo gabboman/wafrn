@@ -1,9 +1,9 @@
-<app-loader *ngIf="loadingBlog()"></app-loader>
+<app-loader *ngIf="this.loadingBlog() && !this.useSimple()"></app-loader>
 @if (!loading() && !found) {
   <app-pagenotfound />
 }
-@if (!loadingBlog() && blogDetails) {
-  <app-blog-header [blogDetails]="blogDetails"></app-blog-header>
+@if ((!loadingBlog() || this.useSimple()) && (this.blogDetails() !== undefined)) {
+  <app-blog-header [blogDetails]="blogDetails()!"></app-blog-header>
   @for (post of posts; track $index) {
     <ng-template></ng-template>
     <app-post [post]="post"></app-post>
@@ -13,7 +13,7 @@
     <div [hidden]="loading() || noMorePosts" id="if-you-see-this-load-more-posts"></div>
     <div *ngIf="noMorePosts">
       <p class="mb-4 text-lg">No more posts...</p>
-      @if (blogDetails.url.startsWith('@')) {
+      @if (blogDetails()!.url.startsWith('@')) {
         <app-info-card [type]="userLoggedIn ? 'info' : 'caution'">
           {{
             userLoggedIn
@@ -22,9 +22,9 @@
           }}
           <a
             [href]="
-              blogDetails.url.split('@').length === 3
-                ? blogDetails.remoteId
-                : 'https://bsky.app/profile/' + blogDetails.url.split('@')[1]
+              blogDetails()!.url.split('@').length === 3
+                ? blogDetails()!.remoteId
+                : 'https://bsky.app/profile/' + blogDetails()!.url.split('@')[1]
             "
             target="_blank"
             >View on remote instance</a

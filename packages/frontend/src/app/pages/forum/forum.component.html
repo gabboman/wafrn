@@ -35,7 +35,7 @@
       </mat-card>
     } @else {
       <app-post-ribbon [user]="content.user" [icon]="rewootIcon" [time]="content.createdAt">
-        <a class="user-link user-name" [routerLink]="'/blog/' + content.user.url" [innerHTML]="content.user.name"></a>
+        <a class="user-link user-name" [blogLink]="content.user" [innerHTML]="content.user.name"></a>
         <span class="text-sm post-action"> rewooted </span>
         <a
           [postLink]="content"

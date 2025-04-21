@@ -1,8 +1,7 @@
-import { Location } from '@angular/common';
 import { Injectable } from "@angular/core";
-import { Router } from "@angular/router";
 import { ProcessedPost } from "../interfaces/processed-post";
 import { Observable, Subject } from 'rxjs';
+import { SimplifiedUser } from '../interfaces/simplified-user';
 
 export enum ScrollContext {
   Inactive,
@@ -19,15 +18,9 @@ export interface SnappyNavigation {
   providedIn: 'root'
 })
 export class ScrollService {
-  post!: ProcessedPost;
-
-  private navigation = new Subject<SnappyNavigation>();
-
-  constructor(private readonly location: Location, private readonly router: Router) {
-  }
+  private readonly navigation = new Subject<SnappyNavigation>();
 
   public navigateTo(url: string, post: ProcessedPost) {
-    this.post = post;
     this.navigation.next(
       {
         url: url,
@@ -35,12 +28,15 @@ export class ScrollService {
       });
   }
 
+  public navigateToBlog(url: string, user: SimplifiedUser) {
+    this.navigation.next(
+      {
+        url: url,
+        data: user,
+      });
+  }
+
   public getObservable(): Observable<SnappyNavigation> {
     return this.navigation.asObservable();
   }
-
-  public getLastPost(): ProcessedPost {
-    return this.post;
-  }
-
 }

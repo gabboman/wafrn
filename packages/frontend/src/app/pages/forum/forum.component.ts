@@ -19,11 +19,11 @@ import { PostsService } from 'src/app/services/posts.service'
 import { PostHeaderComponent } from '../../components/post/post-header/post-header.component'
 
 import { PostRibbonComponent } from 'src/app/components/post-ribbon/post-ribbon.component'
-import { SnappyLife } from 'src/app/components/snappy/snappy-life'
+import { SnappyCreate } from 'src/app/components/snappy/snappy-life'
 import { PostLinkModule } from 'src/app/directives/post-link/post-link.module'
 import { EnvironmentService } from 'src/app/services/environment.service'
-import { ScrollService } from 'src/app/services/scroll.service'
 import { BottomReplyBarComponent } from '../../components/bottom-reply-bar/bottom-reply-bar.component'
+import { BlogLinkModule } from 'src/app/directives/blog-link/blog-link.module'
 
 @Component({
   selector: 'app-forum-component',
@@ -40,12 +40,13 @@ import { BottomReplyBarComponent } from '../../components/bottom-reply-bar/botto
     MatPaginatorModule,
     BottomReplyBarComponent,
     PostRibbonComponent,
-    PostLinkModule
+    PostLinkModule,
+    BlogLinkModule
   ],
   templateUrl: './forum.component.html',
   styleUrl: './forum.component.scss'
 })
-export class ForumComponent extends SnappyLife implements OnInit, OnDestroy {
+export class ForumComponent implements OnInit, OnDestroy, SnappyCreate {
   loading = true
   forumPosts: ProcessedPost[] = []
   post = model<ProcessedPost[]>([]);
@@ -80,7 +81,6 @@ export class ForumComponent extends SnappyLife implements OnInit, OnDestroy {
     private readonly dashboardService: DashboardService,
     private readonly router: Router
   ) {
-    super();
     this.followedUsers = this.postService.followedUserIds
     this.notYetAcceptedFollows = this.postService.notYetAcceptedFollowedUsersIds
     this.updateFollowsSubscription = this.postService.updateFollowers.subscribe(() => {
@@ -90,18 +90,19 @@ export class ForumComponent extends SnappyLife implements OnInit, OnDestroy {
     this.userLoggedIn = loginService.checkUserLoggedIn()
   }
 
-  override snOnCreate(data: any): void {
+  snOnCreate(data: any): void {
     // society if ts had instanceof for interfaces
     if (data === null) return;
 
     let frag = data as ProcessedPost;
     let post: ProcessedPost[] = [];
-    for (let i = 0; i < frag.parentCollection.length; i++) {
-      post.push(frag.parentCollection[i]);
-      if (frag.parentCollection[i].id == frag.id) {
+    for (const f of frag.parentCollection) {
+      post.push(f);
+      if (f.id == frag.id) {
         break;
       }
     }
+
     this.post.set(post);
     this.postId.set((data as ProcessedPost).id);
   }

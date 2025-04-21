@@ -5,7 +5,7 @@
         <app-avatar-small [user]="fragment.user"></app-avatar-small>
         <a
           class="flex flex-column min-w-0 user-link"
-          [routerLink]="!disableLink() ? '/blog/' + fragment.user.url : null"
+          [blogLink]="!disableLink() ? fragment.user : null"
         >
           <span class="no-underline user-name"
             ><span [innerHTML]="fragment.user.name"></span>

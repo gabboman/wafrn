@@ -1,5 +1,11 @@
-export abstract class SnappyLife {
-  snOnCreate(data: any): void { }
-  snOnVisible(): void { }
-  snOnHide(): void { }
+export interface SnappyShow {
+  snOnShow(): void;
+}
+
+export interface SnappyHide {
+  snOnHide(): void;
+}
+
+export interface SnappyCreate {
+  snOnCreate(data: any): void;
 }

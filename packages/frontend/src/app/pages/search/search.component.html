@@ -60,7 +60,7 @@
               </button>
               <p>{{ user.name }}</p>
               <p>
-                <a [routerLink]="'/blog/' + user.url">{{ user.url }}</a>
+                <a [blogLink]="user">{{ user.url }}</a>
               </p>
               <div class="mb-3" [innerHTML]="user.description"></div>
             </div>

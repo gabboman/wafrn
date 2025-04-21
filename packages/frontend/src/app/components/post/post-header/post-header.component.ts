@@ -31,6 +31,7 @@ import { MessageService } from '../../../services/message.service'
 import { PostsService } from '../../../services/posts.service'
 import { AvatarSmallComponent } from '../../avatar-small/avatar-small.component'
 import { PostActionsComponent } from '../../post-actions/post-actions.component'
+import { BlogLinkModule } from 'src/app/directives/blog-link/blog-link.module'
 
 @Component({
   selector: 'app-post-header',
@@ -43,7 +44,8 @@ import { PostActionsComponent } from '../../post-actions/post-actions.component'
     FontAwesomeModule,
     MatButtonModule,
     MatTooltipModule,
-    PostLinkModule
+    PostLinkModule,
+    BlogLinkModule
   ],
   templateUrl: './post-header.component.html',
   styleUrl: './post-header.component.scss'

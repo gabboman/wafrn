@@ -5,7 +5,7 @@ import { NavigationSkipped, Router } from '@angular/router'
 import { faArrowsRotate } from '@fortawesome/free-solid-svg-icons'
 import { Subscription } from 'rxjs'
 import { filter } from 'rxjs/operators'
-import { SnappyLife } from 'src/app/components/snappy/snappy-life'
+import { SnappyCreate, SnappyHide, SnappyShow } from 'src/app/components/snappy/snappy-life'
 import { ProcessedPost } from 'src/app/interfaces/processed-post'
 import { DashboardService } from 'src/app/services/dashboard.service'
 import { JwtService } from 'src/app/services/jwt.service'
@@ -20,7 +20,7 @@ import { ThemeService } from 'src/app/services/theme.service'
   styleUrls: ['./dashboard.component.scss'],
   standalone: false
 })
-export class DashboardComponent extends SnappyLife implements OnInit, OnDestroy {
+export class DashboardComponent implements OnInit, OnDestroy, SnappyCreate, SnappyShow, SnappyHide {
   loadingPosts = false
   noMorePosts = false
   posts: ProcessedPost[][] = []
@@ -33,8 +33,11 @@ export class DashboardComponent extends SnappyLife implements OnInit, OnDestroy 
   reloadIcon = faArrowsRotate
   updateFollowersSubscription?: Subscription
   navigationSubscription!: Subscription
-  navigationEnd!: Subscription
-  scroll = 0
+  scroll = 0;
+
+  // I don't think this is actually needed, but just in case!
+  // Would like to have this a bit more cleanly integrated though
+  snActive: boolean = false;
 
 
   constructor(
@@ -49,7 +52,6 @@ export class DashboardComponent extends SnappyLife implements OnInit, OnDestroy 
     public readonly scrollService: ScrollService,
     private readonly viewportScroller: ViewportScroller,
   ) {
-    super();
     this.titleService.setTitle('Wafrn - the social network that respects you')
     this.metaTagService.addTags([
       {
@@ -62,8 +64,11 @@ export class DashboardComponent extends SnappyLife implements OnInit, OnDestroy 
       }
     ])
   }
+  snOnHide(): void {
+    this.snActive = false;
+  }
 
-  override snOnCreate(data: any): void {
+  snOnCreate(data: any): void {
     const purePath = this.router.url.split('?')[0]
     if (purePath.endsWith('explore')) {
       this.level = 0
@@ -87,14 +92,13 @@ export class DashboardComponent extends SnappyLife implements OnInit, OnDestroy 
     }
   }
 
-  override snOnVisible(): void {
-
+  snOnShow(): void {
+    this.snActive = true;
   }
 
   ngOnDestroy(): void {
     this.navigationSubscription.unsubscribe()
     this.updateFollowersSubscription?.unsubscribe()
-    this.navigationEnd.unsubscribe()
   }
 
   ngOnInit(): void {
@@ -146,7 +150,7 @@ export class DashboardComponent extends SnappyLife implements OnInit, OnDestroy 
     // Perhaps not a perfect solution, but without this guard currentPage and
     // startScroll may unexpectedly increase, leading to the dashboard
     // displaying posts that do not start from date.now
-    if (this.loadingPosts) return;
+    if (this.loadingPosts || !this.snActive) return;
     this.posts = []
     this.currentPage = 0
     this.viewedPostsNumber = 0

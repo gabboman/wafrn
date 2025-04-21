@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit, signal, WritableSignal } from '@angular/core'
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit, signal, WritableSignal } from '@angular/core'
 import { Meta, Title } from '@angular/platform-browser'
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router'
 import {
@@ -22,13 +22,16 @@ import { AcceptThemeComponent } from 'src/app/components/accept-theme/accept-the
 import { BlogDetails } from 'src/app/interfaces/blogDetails'
 import { EnvironmentService } from 'src/app/services/environment.service'
 import { ScrollService } from 'src/app/services/scroll.service'
+import { SnappyCreate } from 'src/app/components/snappy/snappy-life'
+import { SimplifiedUser } from 'src/app/interfaces/simplified-user'
 @Component({
   selector: 'app-view-blog',
   templateUrl: './view-blog.component.html',
   styleUrls: ['./view-blog.component.scss'],
-  standalone: false
+  standalone: false,
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ViewBlogComponent implements OnInit, OnDestroy {
+export class ViewBlogComponent implements OnInit, OnDestroy, SnappyCreate {
   loading = signal<boolean>(true);
   loadingBlog = signal<boolean>(true);
   noMorePosts = false
@@ -39,7 +42,7 @@ export class ViewBlogComponent implements OnInit, OnDestroy {
   blogUrl: string = ''
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  blogDetails!: BlogDetails
+  blogDetails = signal<BlogDetails | undefined>(undefined);
   userLoggedIn = false
   avatarUrl = ''
   navigationSubscription!: Subscription
@@ -47,6 +50,9 @@ export class ViewBlogComponent implements OnInit, OnDestroy {
   showModalTheme = false
   viewedPostsIds: string[] = []
   intersectionObserverForLoadPosts!: IntersectionObserver
+
+  simpleUser?: SimplifiedUser;
+  useSimple = signal<boolean>(false);
 
   shareExternalIcon = faArrowUpRightFromSquare
   solidHeartIcon = faHeart
@@ -60,19 +66,27 @@ export class ViewBlogComponent implements OnInit, OnDestroy {
   viewingPost!: WritableSignal<boolean>;
 
   constructor(
-    private activatedRoute: ActivatedRoute,
-    private dashboardService: DashboardService,
+    private readonly activatedRoute: ActivatedRoute,
+    private readonly dashboardService: DashboardService,
     readonly loginService: LoginService,
-    public router: Router,
-    private titleService: Title,
-    private metaTagService: Meta,
-    private themeService: ThemeService,
-    public blockService: BlocksService,
+    private readonly router: Router,
+    private readonly titleService: Title,
+    private readonly metaTagService: Meta,
+    private readonly themeService: ThemeService,
+    public readonly blockService: BlocksService,
     private readonly dialog: MatDialog,
     public readonly scrollService: ScrollService,
+    private readonly cdr: ChangeDetectorRef
   ) {
     this.userLoggedIn = loginService.checkUserLoggedIn()
+  }
 
+  snOnCreate(data: any): void {
+    if (data === null) return;
+
+    if ((data as SimplifiedUser).url) {
+      this.simpleUser = data;
+    }
   }
 
   ngOnDestroy(): void {
@@ -86,28 +100,37 @@ export class ViewBlogComponent implements OnInit, OnDestroy {
       .pipe(filter((event) => event instanceof NavigationEnd))
       .subscribe((e) => {
         if (this.userLoggedIn) { this.themeService.setMyTheme(); }
-        if (this.blogUrl == this.activatedRoute.snapshot.paramMap.get('url')) {
-          // Possibly a little ugly, but NavigationEnd fires when navigating
-          // away too!
-          if (!e.url.includes(this.blogUrl)) {
-            return;
-          }
-          return;
-        }
-        this.blogUrl = ''
-        this.avatarUrl = ''
-        this.configureUser(true)
       })
 
     this.activatedRoute.params.subscribe((e) => {
       this.currentPage = 0;
+      this.blogUrl = '';
+      this.avatarUrl = '';
+      this.blogDetails.set(undefined);
+      if (this.simpleUser) {
+        this.blogDetails.set(this.simpleToBlog(this.simpleUser));
+        this.avatarUrl = this.getAvatarUrl(this.blogDetails()!);
+        this.useSimple.set(true);
+      }
       this.configureUser(true);
     });
   }
 
+  private getAvatarUrl(blogDetails: BlogDetails): string {
+    return blogDetails.url.startsWith('@')
+      ? EnvironmentService.environment.externalCacheurl + encodeURIComponent(blogDetails.avatar)
+      : EnvironmentService.environment.externalCacheurl +
+      encodeURIComponent(EnvironmentService.environment.baseMediaUrl + blogDetails.avatar)
+  }
 
   async configureUser(reload: boolean) {
     this.loadingBlog.set(true);
+    this.loading.set(true);
+
+    // With ChangeDetectionStrategy.OnPush this will not be needed.
+    // However, it's a bit of a big job as all children will have to be
+    // updated to OnPush compatible. It's worthwhile though
+    this.cdr.detectChanges();
 
     const blogUrl = this.activatedRoute.snapshot.paramMap.get('url')
     if (blogUrl) {
@@ -118,28 +141,27 @@ export class ViewBlogComponent implements OnInit, OnDestroy {
       this.found = false
       this.loading.set(false);
     })
+
+    this.useSimple.set(false);
     if (blogResponse) {
-      this.blogDetails = blogResponse
-      this.avatarUrl = this.blogDetails.url.startsWith('@')
-        ? EnvironmentService.environment.externalCacheurl + encodeURIComponent(this.blogDetails.avatar)
-        : EnvironmentService.environment.externalCacheurl +
-        encodeURIComponent(EnvironmentService.environment.baseMediaUrl + this.blogDetails.avatar)
-      this.titleService.setTitle(`${this.blogDetails.url}'s blog`)
+      this.blogDetails.set(blogResponse);
+      this.avatarUrl = this.getAvatarUrl(this.blogDetails()!);
+      this.titleService.setTitle(`${this.blogDetails()!.url}'s blog`)
       this.metaTagService.addTags([
         {
           name: 'description',
-          content: `${this.blogDetails.url}'s wafrn blog`
+          content: `${this.blogDetails()!.url}'s wafrn blog`
         },
-        { name: 'author', content: this.blogDetails.url },
+        { name: 'author', content: this.blogDetails()!.url },
         { name: 'image', content: this.avatarUrl }
       ])
       if (reload) {
         this.loading.set(false);
         this.reloadPosts()
-
       }
+      this.useSimple.set(false);
+      this.handleTheme(this.blogDetails()!);
     }
-    this.handleTheme()
     this.intersectionObserverForLoadPosts = new IntersectionObserver(
       (intersectionEntries: IntersectionObserverEntry[]) => {
         if (intersectionEntries[0].isIntersecting) {
@@ -162,14 +184,14 @@ export class ViewBlogComponent implements OnInit, OnDestroy {
   }
 
 
-  handleTheme() {
-    const userHasCustomTheme = !this.blogDetails.url.startsWith('@') //await this.themeService.checkThemeExists(this.blogDetails?.id);
+  handleTheme(blogDetails: BlogDetails) {
+    const userHasCustomTheme = blogDetails.url.startsWith('@');
 
     if (userHasCustomTheme) {
       let userResponseToCustomThemes = this.themeService.hasUserAcceptedCustomThemes()
 
       if (userResponseToCustomThemes === 2) {
-        this.themeService.setTheme(this.blogDetails.id)
+        this.themeService.setTheme(blogDetails.id)
       }
 
       if (userResponseToCustomThemes === 0) {
@@ -177,7 +199,7 @@ export class ViewBlogComponent implements OnInit, OnDestroy {
         dialogRef.afterClosed().subscribe(() => {
           userResponseToCustomThemes = this.themeService.hasUserAcceptedCustomThemes()
           if (userResponseToCustomThemes === 2) {
-            this.themeService.setTheme(this.blogDetails.id)
+            this.themeService.setTheme(blogDetails.id)
           }
         })
       }
@@ -198,14 +220,15 @@ export class ViewBlogComponent implements OnInit, OnDestroy {
 
   async loadPosts(page: number) {
     if (this.blogUrl === '') { return };
-
-    if (this.blogDetails === undefined) { return }
-    if (!this.userLoggedIn && this.blogDetails.url.startsWith('@')) {
+    if (!this.blogDetails()) { return };
+    if (!this.userLoggedIn && this.blogDetails()!.url.startsWith('@')) {
       this.loading.set(false);
       this.noMorePosts = true;
       return;
     }
+
     this.loading.set(true);
+
     const tmpPosts = await this.dashboardService.getBlogPage(page, this.blogUrl)
     const filteredPosts = tmpPosts.filter((post: ProcessedPost[]) => {
       let allFragmentsSeen = true
@@ -224,6 +247,33 @@ export class ViewBlogComponent implements OnInit, OnDestroy {
     this.loading.set(false);
     if (tmpPosts.length === 0) {
       this.noMorePosts = true
+    }
+  }
+
+  private simpleToBlog(usr: SimplifiedUser): BlogDetails {
+    return {
+      id: usr.id,
+      url: usr.url,
+      name: usr.name,
+      createdAt: '',
+      description: '',
+      descriptionMarkdown: '',
+      remoteId: usr.remoteId ?? '',
+      avatar: usr.avatar,
+      federatedHostId: '',
+      headerImage: '',
+      followingCount: 0,
+      followerCount: 0,
+      manuallyAcceptsFollows: true,
+      emojis: [],
+      muted: false,
+      blocked: false,
+      serverBlocked: false,
+      followed: 0,
+      followers: 0,
+      publicOptions: [],
+      postCount: 0,
+      isBlueskyUser: false
     }
   }
 }
