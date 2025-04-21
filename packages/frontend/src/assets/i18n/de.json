@@ -1,0 +1,124 @@
+{
+    "login": {
+        "welcomeBack": "Willkommen zurück!",
+        "exploreWithoutAccount": "Hier klicken zum Erkunden ohne Account!",
+        "dontHaveAccount": "Keinen Account?",
+        "register": "Jetzt registrieren!",
+        "checkSpam": "Wenn du ein Problem hast, schau bitte in deinen Spam-Ordner nach!",
+        "email": "Email",
+        "password": "Passwort",
+        "mfaToken": "Token",
+        "mfaTokenEnter": "Gib den Token aus deiner Authentikator-App ein",
+        "forgottenPassword": "Passwort vergessen? Hier klicken!",
+        "loginButton": "Anmelden"
+    },
+    "menu": {
+        "dashboard": "Dashboard",
+        "dashboardHover": "Dashboard anschauen",
+        "writeWoot": "Neuen Woot schreiben",
+        "notifications": "Benachrichtigungen",
+        "explore": "Erkunden",
+        "exploreWafrn": "Erkunde WAFRN",
+        "exploreFediverse": "Erkunde das Fediverse",
+        "unansweredAsks": "Unbeantwortete Fragen",
+        "privateMessages": "Private Nachrichten",
+        "search": "Suchen",
+        "myBlog": "Mein Blog",
+        "privacy": "Datenschutzerklärung",
+        "source": "Quellcode sehen!",
+        "patreon": "Patreon",
+        "kofi": "Ko-fi",
+        "logout": "Abmelden",
+        "faq": "Häufig gestellte Fragen",
+        "settings": {
+            "title": "Einstellungen",
+            "follows": "Follower verwalten",
+            "enableBluesky": "Bluesky aktivieren",
+            "editProfile": "Einstellungen und Profil",
+            "themeEditor": "Theme-Editor",
+            "mutedUsers": "Stummgeschaltete Benutzer",
+            "mutedPosts": "Stummgeschaltete Posts",
+            "bookmarkedPosts": "Posts mit Lesezeichen",
+            "myBlockedUsers": "Blockierte Benutzer",
+            "myBlockedServers": "Blockierte Server",
+            "importFollows": "Follower importieren",
+            "superSecretMenu": "Super-geheimes Menü"
+        },
+        "admin": {
+            "title": "Admin",
+            "serverList": "Serverliste",
+            "addEmojis": "Emojis hinzufügen",
+            "reports": "Meldungen",
+            "bans": "Gebannte Benutzer",
+            "blocklist": "Blockierte Benutzer",
+            "stats": "Statistiken",
+            "awaitingAproval": "Warteschlange zur Annahme"
+        }
+    },
+    "editor": {
+        "inReplyTo": "als Antwort auf:",
+        "quoteButton": "Zitiere einen Woot",
+        "publishWoot": "Diesen Woot veröffentlichen",
+        "directMessageWarning": "Administratoren sowohl deines als auch des externen Servers können diese Nachrichten lesen.",
+        "unlistedWarning": "Dieser Woot ist als nicht gelistet eingestellt. Suche, Hashtags und andere Auffindbarkeitsfunktionen werden diesen Woot nicht finden. Dies ist nicht empfohlen, wenn du willst dass der Woot auffindbar ist.",
+        "sensitivePlaceholder": "Was ist sensitiv an diesem Woot?",
+        "wootQuoteBoxLabel": "Füge die URL eines Woots ein um diesen zu zitieren. Kann die externe oder die wafrn-URL sein.",
+        "wootQuoteBoxPlaceholder": "Woot-URL einfach einfügen",
+        "wootQuoteConfirmButton": "Woot als Zitat hinzufügen",
+        "wootTextLabel": "Woot-Text",
+        "wootTextPlaceholder": "Schreibe...",
+        "altTextFieldLabel": "Bildbeschreibung",
+        "altTextFieldPlaceholder": "Bildbeschreibung. Bitte FÜLLE DAS AUS",
+        "isNSFWToggle": "NSFW",
+        "mediaCountMastodonWarning": "WARNUNG! WEITERE HOCHGELADENE MEDIEN WERDEN IN MASTODON NICHT ANGEZEIGT WERDEN",
+        "altTextWarning": "Bitte fülle die Bildbeschreibung aus. Diese Warnung kann in den Einstellungen deaktiviert werden.",
+        "quoteTitle": "Zitiert:",
+        "tagFieldLabel": "Tags",
+        "tagSeparationNotice": "Mit Kommas getrennt",
+        "ariaLabelWootPrivacy": "Privatsphäre des Woot ändern",
+        "ariaLabelQuoteSetter": "Enable the quote setter",
+        "uploadMediaTooltip": "Medien hochladen",
+        "contentWarningTooltip": "Inhaltliche Warnung"
+    },
+    "profile": {
+        "security": {
+            "header": "Sicherheitseinstellungen",
+            "passwordChange": "Passwort zurücksetzen",
+            "mfa": {
+                "header": "Zwei-Faktor-Authentifizierung",
+                "setup": "Zwei-Faktor-Authentifizierung einrichten",
+                "addNew": "Neuen Authentifikator hinzufügen",
+                "friendlyNameLabel": "Name, bspw. 'Arbeitshandy' oder 'Aegis'",
+                "typeLabel": "Zweitfaktor-Typ",
+                "setupNewButton": "Neuen Authentifikator einrichten",
+                "tokenLabel": "Token",
+                "deleteLabel": "Löschen",
+                "scanInstructions": "Scanne den QR-Code unterhalb mit deiner Authentikator-App und gib den dort angezeigten Code ein",
+                "installInstructions": "Wenn du noch keine Authentikator-App hast, empfehlen wir <a href=\"https://getaegis.app/\" target=\"_blank\">Aegis</a> (Android) oder <a href=\"https://2fas.com/\" target=\"_blank\">2FAS</a> (iOS/Android)",
+                "imageAltSecret": "Authentifizierungs-Secret ist '{{ secret }}'",
+                "secretFallback": "Wenn du den QR-Code nicht lesen kannst, kannst du den Code '{{ secret }}' manuell in der App verwenden",
+                "confirmDeleteMessage": "Bist du dir sicher, dass du diesen Authentifikator löschen willst? Hinweis: Wenn alle Authentifikatoren gelöscht sind, wird 2FA auf diesem Account deaktiviert!",
+                "deleteSuccess": "Authentifikator erfolgreich gelöscht!",
+                "verifySuccess": "Erfolg, 2FA ist jetzt aktiv",
+                "verifyFailed": "Verifizierung fehlgeschlagen. Überprüfe deinen Token oder frage einen Administrator nach Hilfe",
+                "errorMessageGeneric": "Es gab einen Fehler mit deiner Anfrage. Versuche es erneut oder frage einen Administrator nach Hilfe",
+                "noMfa": "Dieser Account hat keine Zwei-Faktor-Authentifizierung",
+                "mfaList": "Du hast die folgenden Authentifikatoren eingerichtet",
+                "type": {
+                    "totpLabel": "Authentifikator-App"
+                }
+            }
+        },
+        "tabHeaders": {
+            "profile": "Profil",
+            "preferences": "Einstellungen",
+            "privacySecurity": "Privatsphäre und Sicherheit",
+            "misc": "Verschiedenes"
+        }
+    },
+    "ask-dialog-content": {
+        "askAnonymously": "Frage Anonym stellen",
+        "askFormLabel": "Frage",
+        "askButtonText": "Fragen"
+    }
+}
