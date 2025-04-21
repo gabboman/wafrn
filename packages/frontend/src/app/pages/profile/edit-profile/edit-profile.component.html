@@ -1,5 +1,5 @@
-<mat-card class="p-3 mb-6 lg:mx-4 wafrn-container" style="transition: 1s;">
-  <mat-tab-group mat-stretch-tabs="false" mat-align-tabs="start">
+<mat-card class="p-3 mb-6 lg:mx-4 wafrn-container">
+  <mat-tab-group mat-stretch-tabs="false" mat-align-tabs="start" dynamicHeight preserveContent>
   <form [hidden]="loading" [formGroup]="editProfileForm" (ngSubmit)="onSubmit()">
     <hr>
     <mat-tab label="{{ 'profile.tabHeaders.profile' | translate }}">
@@ -130,7 +130,7 @@
           <mat-label>Muted words separated by commas</mat-label>
           <input formControlName="mutedWords" placeholder="Separated by commas" matNativeControl />
         </mat-form-field>
-        <div *ngIf="editProfileForm.value.mutedWords.split(',').length > 0" class="taglist flex mb-2">
+        <div *ngIf="editProfileForm.value.mutedWords.split(',').length > 0" class="taglist flex flex-wrap mb-2">
           Muted phrases:
           @for (tag of editProfileForm.value.mutedWords.split(','); track $index) {
           <div *ngIf="tag && tag !== '' && tag.trim() !== ''" class="tag">
@@ -149,6 +149,13 @@
       </mat-accordion>
     </mat-tab>
     </form>
+    <mat-tab label="Bluesky">
+      <!-- I swear I'll translate this, don't merge before I do! -->
+      <p>Bluesky integration is still very experimental! Things will absolutely break!</p>
+      <p>Please refer to <a href="https://wafrn.net/faq/user.html#blueskyIntegration">the FAQ</a> to find out what does/doesn't work generally speaking.</p>
+      <p>In the future, we aim to have Bluesky-Specific settings in here, like the ability to change the Bluesky username.</p>
+      <button [disabled]="loading" (click)="enableBluesky()" mat-flat-button class="w-full">Enable bluesky</button>
+    </mat-tab>
   </mat-tab-group>
 
 

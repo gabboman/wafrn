@@ -350,16 +350,16 @@ export class NavigationMenuComponent implements OnInit, OnDestroy {
               this.hideMenu()
             }
           },
-          {
-            label: this.translateService.instant('menu.settings.enableBluesky'),
-            icon: faBluesky,
-            title: this.translateService.instant('menu.settings.enableBluesky'),
-            visible: true,
-            routerLink: '/profile/enable-bluesky',
-            command: () => {
-              this.hideMenu()
-            }
-          },
+          // {
+          //   label: this.translateService.instant('menu.settings.enableBluesky'),
+          //   icon: faBluesky,
+          //   title: this.translateService.instant('menu.settings.enableBluesky'),
+          //   visible: true,
+          //   routerLink: '/profile/enable-bluesky',
+          //   command: () => {
+          //     this.hideMenu()
+          //   }
+          // },
           {
             label: this.translateService.instant('menu.settings.editProfile'),
             icon: faUserEdit,
