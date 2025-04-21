@@ -49,6 +49,7 @@ export class RegisterComponent {
     'Big dog',
     'fallback avatar',
     'Crisp sandwich',
+    'Cool rock I just found',
     'Kill <img style="max-height: 32px" src="/assets/img/monsert.png" />',
     'Everything everywhere all at once',
     'Big scary werewolf that actually has an anxiety disorder and is more scared of you than you are of it',
