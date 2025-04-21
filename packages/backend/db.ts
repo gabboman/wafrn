@@ -113,7 +113,7 @@ const User = sequelize.define(
     lastTimeNotificationsCheck: {
       type: Sequelize.DATE,
       allowNull: false,
-      defaultValue: new Date()
+      defaultValue: new Date(0)
     },
     privateKey: Sequelize.TEXT,
     publicKey: Sequelize.TEXT,

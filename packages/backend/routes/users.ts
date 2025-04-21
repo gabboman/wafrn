@@ -137,7 +137,8 @@ export default function userRoutes(app: Application) {
               lastLoginIp: 'ACCOUNT_NOT_ACTIVATED',
               banned: false,
               activationCode,
-              isBot: false
+              isBot: false,
+              lastTimeNotificationsCheck: new Date(0)
             }
 
             const userWithEmail = User.create(user)
@@ -146,8 +147,9 @@ export default function userRoutes(app: Application) {
               : `Welcome to ${environment.instanceUrl}!`
             const mailBody = environment.reviewRegistrations
               ? `Hello ${req.body.url}, at this moment we are manually reviewing registrations. You will recive an email from us once it's accepted`
-              : `<h1>Welcome to ${environment.instanceUrl}</h1> To activate your account <a href="${environment.instanceUrl
-              }/activate/${encodeURIComponent(req.body.email.toLowerCase())}/${activationCode}">click here!</a>`
+              : `<h1>Welcome to ${environment.instanceUrl}</h1> To activate your account <a href="${
+                  environment.instanceUrl
+                }/activate/${encodeURIComponent(req.body.email.toLowerCase())}/${activationCode}">click here!</a>`
             const emailSent = environment.disableRequireSendEmail
               ? true
               : sendActivationEmail(req.body.email.toLowerCase(), activationCode, mailHeader, mailBody)
@@ -583,9 +585,9 @@ export default function userRoutes(app: Application) {
 
   app.post('/api/user/mfa', authenticateToken, async (req: AuthorizedRequest, res) => {
     try {
-      if (req.jwtData?.userId && req.body?.type == "totp") {
+      if (req.jwtData?.userId && req.body?.type == 'totp') {
         const totpSettings = {
-          algorithm: "SHA1",
+          algorithm: 'SHA1',
           digits: 6,
           period: 30,
           secret: new OTPAuth.Secret({ size: 20 }).base32
@@ -593,8 +595,8 @@ export default function userRoutes(app: Application) {
 
         const mfaDetail = await MfaDetails.create({
           userId: req.jwtData?.userId,
-          type: "totp",
-          name: req.body?.name || "Authenticator App",
+          type: 'totp',
+          name: req.body?.name || 'Authenticator App',
           data: totpSettings,
           enabled: false
         })
@@ -664,8 +666,7 @@ export default function userRoutes(app: Application) {
           return
         }
       }
-    }
-    catch (error) {
+    } catch (error) {
       logger.error(error)
     }
     res.send({ success: false })
@@ -724,19 +725,19 @@ export default function userRoutes(app: Application) {
       let followed = blog.url.startsWith('@')
         ? blog.followingCount
         : Follows.count({
-          where: {
-            followerId: blog.id,
-            accepted: true
-          }
-        })
+            where: {
+              followerId: blog.id,
+              accepted: true
+            }
+          })
       let followers = blog.url.startsWith('@')
         ? blog.followerCount
         : Follows.count({
-          where: {
-            followedId: blog.id,
-            accepted: true
-          }
-        })
+            where: {
+              followedId: blog.id,
+              accepted: true
+            }
+          })
       const publicOptions = UserOptions.findAll({
         where: {
           userId: blog.id,
@@ -775,10 +776,10 @@ export default function userRoutes(app: Application) {
 
       const postCount = blog
         ? await Post.count({
-          where: {
-            userId: blog.id
-          }
-        })
+            where: {
+              userId: blog.id
+            }
+          })
         : 0
 
       followed = await followed
@@ -1224,15 +1225,15 @@ async function updateProfileOptions(optionsJSON: string, posterId: string) {
         })
         userOption
           ? await userOption.update({
-            optionValue: option.value,
-            public: option.public == true
-          })
+              optionValue: option.value,
+              public: option.public == true
+            })
           : await UserOptions.create({
-            userId: posterId,
-            optionName: option.name,
-            optionValue: option.value,
-            public: option.public == true
-          })
+              userId: posterId,
+              optionName: option.name,
+              optionValue: option.value,
+              public: option.public == true
+            })
       }
     }
   }
