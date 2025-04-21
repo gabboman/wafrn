@@ -38,5 +38,10 @@ RUN perl -pi -e 's/\$\{\{([_A-Z]+):-(.*)\}\}/$ENV{$1}||$2/ge' /app/Caddyfile && 
 
 FROM caddy:2
 
+COPY entrypoint.sh /entrypoint.sh
 COPY --from=builder /app/Caddyfile /etc/caddy/Caddyfile
-COPY --from=builder /app/frontend/ /var/www/html/frontend/
+COPY --from=builder /app/frontend/ /app/frontend
+
+ENTRYPOINT [ "/entrypoint.sh" ]
+
+CMD ["caddy", "run", "--config", "/etc/caddy/Caddyfile", "--adapter", "caddyfile"]
