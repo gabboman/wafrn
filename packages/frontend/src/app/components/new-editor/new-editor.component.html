@@ -43,7 +43,18 @@
           <fa-icon size="lg" [icon]="contentWarningIcon"></fa-icon>
         }
       </button>
-    </div>
+      <!--
+      <button
+        [matBadge]="mentionedUsers.length"
+        [matBadgeHidden]="mentionedUsers.length == 0"
+        class="input-height-btn"
+        mat-icon-button
+        (click)="showMentionedUsersList = !showMentionedUsersList"
+        matTooltip="{{ 'editor.hiddenMentionsTooltip' | translate }}"
+      >
+        <fa-icon size="lg" [icon]="atIcon"></fa-icon>
+      </button>
+    --></div>
     <div class="below-editor-toolbar-rightside">
       <button
         mat-flat-button
@@ -64,7 +75,6 @@
   </div>
 
   <div class="post-editor-data">
-
     <h4 class="mt-3" *ngIf="editing">You are editing your woot</h4>
     <ng-container *ngIf="data && data.ask">
       <h4 class="mt-3">Replying ask</h4>
@@ -84,15 +94,35 @@
     @if (showContentWarning || contentWarning) {
       <mat-form-field class="w-full transition-size" appearance="outline">
         <mat-label>Content warning (optional)</mat-label>
-        <input [(ngModel)]="contentWarning" placeholder="{{ 'editor.sensitivePlaceholder' | translate }}" matNativeControl />
+        <input
+          [(ngModel)]="contentWarning"
+          placeholder="{{ 'editor.sensitivePlaceholder' | translate }}"
+          matNativeControl
+        />
       </mat-form-field>
+    }
+
+    @if (showMentionedUsersList) {
+      <mat-chip-grid #chipGrid aria-label="Enter fruits">
+        @for (user of mentionedUsers; track $index) {
+          <mat-chip-row [editable]="true" (removed)="removeMention($index)">
+            {{ user.url }}
+            <button matChipRemove [attr.aria-label]="'remove ' + user.url">x</button>
+          </mat-chip-row>
+        }
+        <input [hidden]="true" placeholder="Add mention (FEATURE NOT DONE YET)" [matChipInputFor]="chipGrid" />
+      </mat-chip-grid>
     }
 
     @if (quoteOpen && !data?.quote) {
       <mat-card class="p-2 my-4" *ngIf="!quoteLoading">
         <mat-form-field class="w-full" appearance="outline">
           <mat-label> {{ 'editor.wootQuoteBoxLabel' | translate }} </mat-label>
-          <input [(ngModel)]="urlPostToQuote" placeholder="{{ 'editor.wootQuoteBoxPlaceholder' | translate }}" matNativeControl />
+          <input
+            [(ngModel)]="urlPostToQuote"
+            placeholder="{{ 'editor.wootQuoteBoxPlaceholder' | translate }}"
+            matNativeControl
+          />
         </mat-form-field>
         <button
           (click)="loadQuote()"
@@ -145,8 +175,10 @@
               ></textarea>
             </mat-form-field>
             <div>
-           	  <!-- Yknow, I don't think translating "NSFW" is needed but YOU NEVER KNOW -->
-              <mat-checkbox [(ngModel)]="media.NSFW" class="w-full">{{ 'editor.isNSFWToggle' | translate }}</mat-checkbox>
+              <!-- Yknow, I don't think translating "NSFW" is needed but YOU NEVER KNOW -->
+              <mat-checkbox [(ngModel)]="media.NSFW" class="w-full">{{
+                'editor.isNSFWToggle' | translate
+              }}</mat-checkbox>
               <button mat-mini-fab class="delete-btn" (click)="deleteImage(i)">
                 <fa-icon size="lg" [icon]="closeIcon"></fa-icon>
               </button>

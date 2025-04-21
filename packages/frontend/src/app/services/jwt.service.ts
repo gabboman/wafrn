@@ -5,9 +5,18 @@ import { Router } from '@angular/router'
   providedIn: 'root'
 })
 export class JwtService {
-  constructor(private router: Router) {}
+  constructor(private router: Router) { }
 
+  // you're fully logged in
   tokenValid(): boolean {
+    if (this.tokenPartialValid()) {
+      return this.getTokenData().userId
+    }
+    return false
+  }
+
+  // you're partially logged in, e.g. you still need to complete MFA.
+  tokenPartialValid(): boolean {
     let res = false
     const tokenString = localStorage.getItem('authToken')
     if (tokenString) {

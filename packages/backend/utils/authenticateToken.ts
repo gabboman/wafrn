@@ -13,6 +13,9 @@ function authenticateToken(req: Request, res: Response, next: NextFunction) {
     if (err) {
       return res.sendStatus(401)
     }
+    if (!jwtData?.userId) {
+      return res.sendStatus(401)
+    }
     ; (req as AuthorizedRequest).jwtData = jwtData
     next()
   })

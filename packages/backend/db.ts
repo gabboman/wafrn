@@ -113,7 +113,7 @@ const User = sequelize.define(
     lastTimeNotificationsCheck: {
       type: Sequelize.DATE,
       allowNull: false,
-      defaultValue: new Date()
+      defaultValue: new Date(0)
     },
     privateKey: Sequelize.TEXT,
     publicKey: Sequelize.TEXT,
@@ -744,6 +744,44 @@ const BskyInviteCodes = sequelize.define('bskyInviteCodes', {
   code: Sequelize.STRING(512)
 })
 
+const MfaDetails = sequelize.define(
+  'mfaDetails',
+  {
+    id: {
+      type: Sequelize.UUID,
+      defaultValue: Sequelize.UUIDV4,
+      allowNull: false,
+      primaryKey: true
+    },
+    userId: {
+      type: Sequelize.UUID,
+      allowNull: false,
+      primaryKey: true,
+      references: {
+        model: 'users',
+        key: 'id'
+      },
+      unique: false
+    },
+    type: Sequelize.STRING,
+    name: Sequelize.STRING,
+    data: DataTypes.JSON,
+    lastUsedData: Sequelize.JSON,
+    enabled: DataTypes.BOOLEAN
+  },
+  {
+    indexes: [
+      {
+        fields: ['userId'],
+        unique: false
+      }
+    ]
+  }
+)
+
+User.hasMany(MfaDetails)
+MfaDetails.belongsTo(User)
+
 const Notification = sequelize.define(
   'notifications',
   {
@@ -1093,5 +1131,6 @@ export {
   RemoteUserPostView,
   Ask,
   Notification,
-  BskyInviteCodes
+  BskyInviteCodes,
+  MfaDetails
 }

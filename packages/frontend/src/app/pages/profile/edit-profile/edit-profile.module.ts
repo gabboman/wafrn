@@ -9,8 +9,10 @@ import { MatButtonModule } from '@angular/material/button'
 import { MatInputModule } from '@angular/material/input'
 import { MatSelectModule } from '@angular/material/select'
 import { MatCheckboxModule } from '@angular/material/checkbox'
+import { MatTabsModule } from '@angular/material/tabs';
 import { EmojiCollectionsComponent } from 'src/app/components/emoji-collections/emoji-collections.component'
 import { MatExpansionModule } from '@angular/material/expansion'
+import { TranslateModule } from '@ngx-translate/core'
 
 const routes: Routes = [
   {
@@ -33,7 +35,9 @@ const routes: Routes = [
     MatSelectModule,
     MatCheckboxModule,
     EmojiCollectionsComponent,
-    MatExpansionModule
+    MatExpansionModule,
+    TranslateModule,
+    MatTabsModule
   ]
 })
-export class EditProfileModule {}
+export class EditProfileModule { }

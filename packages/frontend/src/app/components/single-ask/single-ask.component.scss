@@ -1,11 +1,29 @@
 .ask-container {
-  border-color: grey !important;
-  padding: 0.5em;	
 	cursor: pointer !important;
-  border-radius: 12px;
-  border: 1px solid var(--mat-sys-outline-variant);
   flex-shrink: 0;
   overflow: hidden;
   margin-bottom: 4px;
   position: relative;
+  border-color: transparent!important;
+}
+
+.ask-content {
+  border: 1px solid var(--mat-sys-outline-variant);
+  padding: 0.5em;	
+  border-radius: 12px;
+  width: 100%;
+  margin-left: 8px;
+  margin-right: 0px;
+}
+
+.ask-avatar {
+  margin-left: 8px;
+  transform: scale(1.35);
+}
+
+.ask-container:has(.ask-avatar-anon) {
+  display: block!important;
+}
+.ask-container:has(.ask-avatar-anon) .ask-content {
+  margin-left: 0px;
 }

@@ -58,7 +58,7 @@ services:
     volumes:
       - ./packages/backend/uploads:/wafrn/uploads
       - ./packages/backend/cache:/wafrn/cache
-      - frontend:/wafrn/packages/frontend
+      - frontend:/wafrn/packages/frontend:ro
 
   frontend:
     restart: unless-stopped

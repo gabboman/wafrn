@@ -30,6 +30,7 @@ export class RegisterComponent {
   selectedFileName: string = ''
 
   genders: string[] = [
+    'All of the above',
     'Evil',
     'Alright, I guess...',
     'Cat',
@@ -48,6 +49,7 @@ export class RegisterComponent {
     'Big dog',
     'fallback avatar',
     'Crisp sandwich',
+    'Cool rock I just found',
     'Kill <img style="max-height: 32px" src="/assets/img/monsert.png" />',
     'Everything everywhere all at once',
     'Big scary werewolf that actually has an anxiety disorder and is more scared of you than you are of it',
@@ -136,19 +138,19 @@ export class RegisterComponent {
     'electrictricity lemonade drinker',
     'Popular Games in Arcade',
     'The Mosquitos In Your Bathroom Walls',
-    'オンライン翻訳ソフトを使うバカ',
+    'オンライン翻訳ソフトを使うバカ', // MEEEEEE :3
     'Monarch of an Isekai world',
     'Evil Genius',
     'Version 2.1 NTSC-J No CD (alternate hardware)',
     'Fanatic',
     'piles of crack cocaine meth weed drug',
-    'All of the above'
+    'All the ones below this one'
   ]
 
   loginForm = new UntypedFormGroup({
     email: new UntypedFormControl('', [Validators.required, Validators.email]),
     password: new UntypedFormControl('', [Validators.required]),
-    url: new UntypedFormControl('', [Validators.required]),
+    url: new UntypedFormControl('', [Validators.required, Validators.pattern('^[a-z0-9_]+([\_-]+[a-z0-9_]+)*')]),
     description: new UntypedFormControl('', [Validators.required]),
     birthDate: new UntypedFormControl('', [Validators.required]),
     captchaResponse: new UntypedFormControl('', []),

@@ -107,6 +107,7 @@ export default function deletePost(app: Application) {
                 model: User,
                 attributes: ['remoteInbox'],
                 where: {
+                  remoteInbox: { [Op.ne]: null },
                   banned: false
                 }
               }

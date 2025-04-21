@@ -411,7 +411,10 @@ export default function postsRoutes(app: Application) {
         }
 
         const mentionRegex = /\s@[\w-\.]+@?[\w-\.]*/gm
-        const mentionsInPost: string[] = content.match(mentionRegex)
+        let mentionsInPost: string[] = content.match(mentionRegex)
+        if (!mentionsInPost) {
+          mentionsInPost = ['']
+        }
         content = content.replaceAll(mentionRegex, (userUrl: string) => userUrl.toLowerCase())
 
         let dbFoundMentions: any[] = []

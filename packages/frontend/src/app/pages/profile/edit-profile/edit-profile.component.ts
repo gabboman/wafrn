@@ -177,4 +177,11 @@ export class EditProfileComponent implements OnInit {
   getAttachmentValue() {
     return this.fediAttachments.filter((elem) => elem.name && elem.value)
   }
+
+  enableBluesky() {
+    this.loading = true
+    this.loginService.enableBluesky().then(() => {
+      this.loading = false
+    })
+  }
 }

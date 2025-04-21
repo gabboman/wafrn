@@ -350,16 +350,16 @@ export class NavigationMenuComponent implements OnInit, OnDestroy {
               this.hideMenu()
             }
           },
-          {
-            label: this.translateService.instant('menu.settings.enableBluesky'),
-            icon: faBluesky,
-            title: this.translateService.instant('menu.settings.enableBluesky'),
-            visible: true,
-            routerLink: '/profile/enable-bluesky',
-            command: () => {
-              this.hideMenu()
-            }
-          },
+          // {
+          //   label: this.translateService.instant('menu.settings.enableBluesky'),
+          //   icon: faBluesky,
+          //   title: this.translateService.instant('menu.settings.enableBluesky'),
+          //   visible: true,
+          //   routerLink: '/profile/enable-bluesky',
+          //   command: () => {
+          //     this.hideMenu()
+          //   }
+          // },
           {
             label: this.translateService.instant('menu.settings.editProfile'),
             icon: faUserEdit,
@@ -474,6 +474,16 @@ export class NavigationMenuComponent implements OnInit, OnDestroy {
         title: this.translateService.instant('menu.privacy'),
         visible: true,
         routerLink: '/about',
+        command: () => {
+          this.hideMenu()
+        }
+      },
+      {
+        label: this.translateService.instant('menu.faq'),
+        icon: faQuestion,
+        title: this.translateService.instant('menu.faq'),
+        visible: true,
+        url: 'https://wafrn.net/faq/overview.html',
         command: () => {
           this.hideMenu()
         }

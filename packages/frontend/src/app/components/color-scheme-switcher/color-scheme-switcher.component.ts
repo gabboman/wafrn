@@ -35,6 +35,7 @@ const colorSchemeVariants = [
   'grey',
   'rizzler',
   'wafrn98',
+  'unwafrn',
   'wafrnverse',
   'fan'
 ] as const
@@ -108,7 +109,7 @@ export class ColorSchemeSwitcherComponent {
 
   async setColorScheme(scheme: ColorScheme, forceUpdate = false) {
     this.colorScheme.set(scheme)
-    const forceDarkModeThemes = ['wafrn98']
+    const forceDarkModeThemes = ['wafrn98', 'unwafrn']
     const forceLightModeThemes: string[] = []
     if (forceDarkModeThemes.includes(scheme)) {
       await this.setTheme('dark')

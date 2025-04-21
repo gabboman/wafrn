@@ -1,0 +1,73 @@
+<div class="mx-2 lg:mx-4 wafrn-container">
+  <h3 class="flex-grow-1 m-0 mb-2 text-2xl notifications-text">{{ 'profile.security.mfa.header' | translate }}</h3>
+</div>
+
+<mat-card class="p-3 mb-6 lg:mx-4 wafrn-container">
+  @if (mfaVerifyDetails) {
+  <div class="mb-3">
+    {{ ('profile.security.mfa.scanInstructions') | translate }}
+  </div>
+  <div class="mb-3" [innerHTML]="('profile.security.mfa.installInstructions') | translate">
+  </div>
+  <img [alt]="('profile.security.mfa.imageAltSecret') | translate : { secret: mfaVerifyDetails?.secret }"
+    [src]="mfaVerifyQrCode" class="mx-auto d-block qr-code" />
+  <div class="mb-3">
+    {{ ('profile.security.mfa.secretFallback') | translate : { secret: mfaVerifyDetails?.secret } }}
+  </div>
+  <form [hidden]="loading" [formGroup]="mfaVerifyForm" (ngSubmit)="onSubmit()">
+    <mat-form-field class="w-full">
+      <mat-label>{{ 'profile.security.mfa.tokenLabel' | translate }}</mat-label>
+      <input formControlName="token" type="text" matInput />
+    </mat-form-field>
+    <button [disabled]="loading || !mfaForm.valid" mat-flat-button color="primary" extended
+      class="w-full border-round-md mt-4">
+      <fa-icon [icon]="icon"></fa-icon>
+      {{ 'profile.security.mfa.setupNewButton' | translate }}
+    </button>
+  </form>
+  } @else {
+  @if (mfaList!==null) {
+  @if (mfaList.length==0) {
+  <div class="mb-3">
+    {{ ('profile.security.mfa.noMfa') | translate }}
+  </div>
+  } @else {
+  <div class="mb-3">
+    {{ ('profile.security.mfa.mfaList') | translate }}
+  </div>
+  <ul>
+    @for (mfa of mfaList; track $index) {
+    <li>
+      <div class="mb-2">{{ mfa.name }} ({{ `profile.security.mfa.type.${mfa.type}Label` | translate }}) <button
+          type=button class="btn btn-primary" (click)="deleteMfa(mfa)">{{ 'profile.security.mfa.deleteLabel' | translate
+          }}</button>
+      </div>
+    </li>
+    }
+  </ul>
+  }
+  }
+
+  <div class="mb-5">
+    {{ 'profile.security.mfa.addNew' | translate }}
+  </div>
+
+  <form [hidden]="loading" [formGroup]="mfaForm" (ngSubmit)="onSubmit()">
+    <mat-form-field class="w-full">
+      <mat-label>{{ 'profile.security.mfa.typeLabel' | translate }}</mat-label>
+      <mat-select [required]="true" formControlName="type">
+        <mat-option value="totp" selected>{{ 'profile.security.mfa.type.totpLabel' | translate }}</mat-option>
+      </mat-select>
+    </mat-form-field>
+    <mat-form-field class="w-full">
+      <mat-label>{{ 'profile.security.mfa.friendlyNameLabel' | translate }}</mat-label>
+      <input formControlName="name" type="text" matInput />
+    </mat-form-field>
+    <button [disabled]="loading || !mfaForm.valid" mat-flat-button color="primary" extended
+      class="w-full border-round-md mt-4">
+      <fa-icon [icon]="icon"></fa-icon>
+      {{ 'profile.security.mfa.setupNewButton' | translate }}
+    </button>
+  </form>
+  }
+</mat-card>
