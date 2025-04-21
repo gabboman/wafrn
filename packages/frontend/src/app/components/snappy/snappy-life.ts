@@ -7,5 +7,5 @@ export interface SnappyHide {
 }
 
 export interface SnappyCreate {
-  snOnCreate(data: any): void;
+  snOnCreate(): void;
 }

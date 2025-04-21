@@ -68,7 +68,7 @@ export class DashboardComponent implements OnInit, OnDestroy, SnappyCreate, Snap
     this.snActive = false;
   }
 
-  snOnCreate(data: any): void {
+  snOnCreate(): void {
     const purePath = this.router.url.split('?')[0]
     if (purePath.endsWith('explore')) {
       this.level = 0

@@ -32,14 +32,13 @@ export class SnappyOutletDirective extends RouterOutlet implements OnInit, OnDes
     super();
     this.observer = this.scrollService.getObservable();
     this.observerSub = this.observer.subscribe((e) => {
-      this.data = e.data;
       this.router.navigateByUrl(e.url);
     })
 
     this.navigationSub = this.router.events
       .pipe(filter((event) => event instanceof NavigationEnd))
       .subscribe(() => {
-        this.data = null;
+        this.scrollService.claimData();
       });
   }
 
@@ -55,8 +54,6 @@ export class SnappyOutletDirective extends RouterOutlet implements OnInit, OnDes
   components: any[] = [];
 
   override activateWith(activatedRoute: ActivatedRoute, environmentInjector: EnvironmentInjector): void {
-    let data = this.data;
-    this.data = null;
 
     if (this.router.getCurrentNavigation()?.trigger === 'popstate') {
       if (this.urlStack.length > 1 && (this.urlStack[this.urlStack.length - 2] === this.router.url)) {
@@ -90,7 +87,7 @@ export class SnappyOutletDirective extends RouterOutlet implements OnInit, OnDes
       });
 
     if ((newComponent.instance as SnappyCreate).snOnCreate) {
-      (newComponent.instance as SnappyCreate).snOnCreate(data);
+      (newComponent.instance as SnappyCreate).snOnCreate();
     }
     if ((newComponent.instance as SnappyShow).snOnShow) {
       (newComponent.instance as SnappyShow).snOnShow();

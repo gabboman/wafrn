@@ -29,7 +29,6 @@ import { SimplifiedUser } from 'src/app/interfaces/simplified-user'
   templateUrl: './view-blog.component.html',
   styleUrls: ['./view-blog.component.scss'],
   standalone: false,
-  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ViewBlogComponent implements OnInit, OnDestroy, SnappyCreate {
   loading = signal<boolean>(true);
@@ -40,11 +39,9 @@ export class ViewBlogComponent implements OnInit, OnDestroy, SnappyCreate {
   currentPage = 0
   posts: ProcessedPost[][] = []
   blogUrl: string = ''
-
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  avatarUrl = ''
   blogDetails = signal<BlogDetails | undefined>(undefined);
   userLoggedIn = false
-  avatarUrl = ''
   navigationSubscription!: Subscription
   endSubscription!: Subscription
   showModalTheme = false
@@ -76,12 +73,12 @@ export class ViewBlogComponent implements OnInit, OnDestroy, SnappyCreate {
     public readonly blockService: BlocksService,
     private readonly dialog: MatDialog,
     public readonly scrollService: ScrollService,
-    private readonly cdr: ChangeDetectorRef
   ) {
     this.userLoggedIn = loginService.checkUserLoggedIn()
   }
 
-  snOnCreate(data: any): void {
+  snOnCreate(): void {
+    let data = this.scrollService.claimData();
     if (data === null) return;
 
     if ((data as SimplifiedUser).url) {
@@ -106,6 +103,10 @@ export class ViewBlogComponent implements OnInit, OnDestroy, SnappyCreate {
       this.currentPage = 0;
       this.blogUrl = '';
       this.avatarUrl = '';
+      let data = this.scrollService.claimData();
+      if (data !== null && (data as SimplifiedUser).url) {
+        this.simpleUser = data;
+      }
       this.blogDetails.set(undefined);
       if (this.simpleUser) {
         this.blogDetails.set(this.simpleToBlog(this.simpleUser));
@@ -126,11 +127,6 @@ export class ViewBlogComponent implements OnInit, OnDestroy, SnappyCreate {
   async configureUser(reload: boolean) {
     this.loadingBlog.set(true);
     this.loading.set(true);
-
-    // With ChangeDetectionStrategy.OnPush this will not be needed.
-    // However, it's a bit of a big job as all children will have to be
-    // updated to OnPush compatible. It's worthwhile though
-    this.cdr.detectChanges();
 
     const blogUrl = this.activatedRoute.snapshot.paramMap.get('url')
     if (blogUrl) {
@@ -162,6 +158,7 @@ export class ViewBlogComponent implements OnInit, OnDestroy, SnappyCreate {
       this.useSimple.set(false);
       this.handleTheme(this.blogDetails()!);
     }
+
     this.intersectionObserverForLoadPosts = new IntersectionObserver(
       (intersectionEntries: IntersectionObserverEntry[]) => {
         if (intersectionEntries[0].isIntersecting) {

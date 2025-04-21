@@ -24,6 +24,7 @@ import { PostLinkModule } from 'src/app/directives/post-link/post-link.module'
 import { EnvironmentService } from 'src/app/services/environment.service'
 import { BottomReplyBarComponent } from '../../components/bottom-reply-bar/bottom-reply-bar.component'
 import { BlogLinkModule } from 'src/app/directives/blog-link/blog-link.module'
+import { ScrollService } from 'src/app/services/scroll.service'
 
 @Component({
   selector: 'app-forum-component',
@@ -79,7 +80,8 @@ export class ForumComponent implements OnInit, OnDestroy, SnappyCreate {
     readonly loginService: LoginService,
     private postService: PostsService,
     private readonly dashboardService: DashboardService,
-    private readonly router: Router
+    private readonly router: Router,
+    private readonly scrollService: ScrollService
   ) {
     this.followedUsers = this.postService.followedUserIds
     this.notYetAcceptedFollows = this.postService.notYetAcceptedFollowedUsersIds
@@ -90,7 +92,8 @@ export class ForumComponent implements OnInit, OnDestroy, SnappyCreate {
     this.userLoggedIn = loginService.checkUserLoggedIn()
   }
 
-  snOnCreate(data: any): void {
+  snOnCreate(): void {
+    let data = this.scrollService.claimData();
     // society if ts had instanceof for interfaces
     if (data === null) return;
 

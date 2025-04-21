@@ -19,8 +19,10 @@ export interface SnappyNavigation {
 })
 export class ScrollService {
   private readonly navigation = new Subject<SnappyNavigation>();
+  private data: any = null;
 
   public navigateTo(url: string, post: ProcessedPost) {
+    this.data = post;
     this.navigation.next(
       {
         url: url,
@@ -29,6 +31,7 @@ export class ScrollService {
   }
 
   public navigateToBlog(url: string, user: SimplifiedUser) {
+    this.data = user;
     this.navigation.next(
       {
         url: url,
@@ -38,5 +41,11 @@ export class ScrollService {
 
   public getObservable(): Observable<SnappyNavigation> {
     return this.navigation.asObservable();
+  }
+
+  public claimData(): any {
+    let data = this.data;
+    this.data = null;
+    return data;
   }
 }
