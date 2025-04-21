@@ -30,6 +30,7 @@ export class RegisterComponent {
   selectedFileName: string = ''
 
   genders: string[] = [
+    'All of the above',
     'Evil',
     'Alright, I guess...',
     'Cat',
@@ -136,13 +137,13 @@ export class RegisterComponent {
     'electrictricity lemonade drinker',
     'Popular Games in Arcade',
     'The Mosquitos In Your Bathroom Walls',
-    'オンライン翻訳ソフトを使うバカ',
+    'オンライン翻訳ソフトを使うバカ', // MEEEEEE :3
     'Monarch of an Isekai world',
     'Evil Genius',
     'Version 2.1 NTSC-J No CD (alternate hardware)',
     'Fanatic',
     'piles of crack cocaine meth weed drug',
-    'All of the above'
+    'All the ones below this one'
   ]
 
   loginForm = new UntypedFormGroup({
