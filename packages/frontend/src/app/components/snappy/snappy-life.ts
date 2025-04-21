@@ -1,5 +1,5 @@
 export abstract class SnappyLife {
-  snOnCreate(): void { }
+  snOnCreate(data: any): void { }
   snOnVisible(): void { }
   snOnHide(): void { }
 }

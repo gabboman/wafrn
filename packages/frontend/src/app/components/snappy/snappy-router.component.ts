@@ -11,8 +11,9 @@ import {
 } from '@angular/core';
 import { ActivatedRoute, Router, RouterOutlet } from '@angular/router';
 import { ForumComponent } from 'src/app/pages/forum/forum.component';
-import { ScrollService } from 'src/app/services/scroll.service';
+import { ScrollService, SnappyNavigation } from 'src/app/services/scroll.service';
 import { SnappyLife } from './snappy-life';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'snappy-router',
@@ -23,6 +24,8 @@ export class SnappyOutletDirective extends RouterOutlet implements OnInit {
   source!: QueryList<ViewContainerRef>;
   top: number = 0;
   pops: number = 0;
+  observer: Observable<SnappyNavigation>;
+  data?: any;
 
   constructor(
     private element: ViewContainerRef,
@@ -31,12 +34,20 @@ export class SnappyOutletDirective extends RouterOutlet implements OnInit {
     private readonly scrollService: ScrollService,
   ) {
     super();
+    this.observer = this.scrollService.getObservable();
+    this.observer.subscribe((e) => {
+      this.data = e.data;
+      this.router.navigateByUrl(e.url);
+    })
   }
 
   // We don't know if popstate is forwards, back or otherwise, so here we are.
   urlStack: string[] = [];
 
   override activateWith(activatedRoute: ActivatedRoute, environmentInjector: EnvironmentInjector): void {
+    let data = this.data;
+    this.data = null;
+
     // TODO: This only assumes backwards navigation at the moment.
     if (this.router.getCurrentNavigation()?.trigger === 'popstate') {
       if (this.urlStack.length > 1 && (this.urlStack[this.urlStack.length - 2] === this.router.url)) {
@@ -60,13 +71,13 @@ export class SnappyOutletDirective extends RouterOutlet implements OnInit {
       });
 
     if (newComponent.instance instanceof SnappyLife) {
-      (newComponent.instance as SnappyLife).snOnCreate();
+      (newComponent.instance as SnappyLife).snOnCreate(data);
     }
 
-    if (newComponent.instance instanceof ForumComponent) {
-      newComponent.instance.post.set(this.scrollService.getLastPost().parentCollection);
-      newComponent.instance.postId.set(this.scrollService.getLastPost().id);
-    }
+    // if (newComponent.instance instanceof ForumComponent) {
+    //   newComponent.instance.post.set(this.scrollService.getLastPost().parentCollection);
+    //   newComponent.instance.postId.set(this.scrollService.getLastPost().id);
+    // }
 
 
     for (let i = this.element.length - 1; i >= 0; i--) {

@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit, WritableSignal, signal } from '@angular/core'
+import { Component, OnDestroy, OnInit, signal, WritableSignal } from '@angular/core'
 import { Meta, Title } from '@angular/platform-browser'
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router'
 import {
@@ -101,7 +101,6 @@ export class ViewBlogComponent implements OnInit, OnDestroy {
 
     this.activatedRoute.params.subscribe((e) => {
       this.currentPage = 0;
-      this.scrollService.setScrollContext(ScrollContext.Blog);
       this.configureUser(true);
     });
   }
@@ -149,7 +148,6 @@ export class ViewBlogComponent implements OnInit, OnDestroy {
         }
       }
     )
-    this.loadingBlog.set(false);
 
     this.loadPosts(this.currentPage).then(() => {
       setTimeout(() => {
@@ -160,6 +158,7 @@ export class ViewBlogComponent implements OnInit, OnDestroy {
       })
     })
 
+    this.loadingBlog.set(false);
   }
 
 

@@ -78,7 +78,6 @@ export class ForumComponent extends SnappyLife implements OnInit, OnDestroy {
     readonly loginService: LoginService,
     private postService: PostsService,
     private readonly dashboardService: DashboardService,
-    private readonly scrollService: ScrollService,
     private readonly router: Router
   ) {
     super();
@@ -91,7 +90,20 @@ export class ForumComponent extends SnappyLife implements OnInit, OnDestroy {
     this.userLoggedIn = loginService.checkUserLoggedIn()
   }
 
-  override snOnCreate(): void {
+  override snOnCreate(data: any): void {
+    // society if ts had instanceof for interfaces
+    if (data === null) return;
+
+    let frag = data as ProcessedPost;
+    let post: ProcessedPost[] = [];
+    for (let i = 0; i < frag.parentCollection.length; i++) {
+      post.push(frag.parentCollection[i]);
+      if (frag.parentCollection[i].id == frag.id) {
+        break;
+      }
+    }
+    this.post.set(post);
+    this.postId.set((data as ProcessedPost).id);
   }
 
 

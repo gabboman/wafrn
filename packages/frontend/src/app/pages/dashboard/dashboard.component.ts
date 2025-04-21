@@ -63,7 +63,7 @@ export class DashboardComponent extends SnappyLife implements OnInit, OnDestroy 
     ])
   }
 
-  override snOnCreate(): void {
+  override snOnCreate(data: any): void {
     const purePath = this.router.url.split('?')[0]
     if (purePath.endsWith('explore')) {
       this.level = 0
