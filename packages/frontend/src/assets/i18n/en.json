@@ -108,6 +108,12 @@
                     "totpLabel": "Authenticator App"
                 }
             }
+        },
+        "tabHeaders": {
+            "profile": "Profile",
+            "preferences": "Preferences",
+            "privacySecurity": "Privacy and Security",
+            "misc": "Miscellaneous"
         }
     },
     "ask-dialog-content": {
