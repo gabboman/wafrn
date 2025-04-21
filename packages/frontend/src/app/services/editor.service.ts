@@ -43,6 +43,7 @@ export class EditorService implements OnDestroy {
   }
 
   async createPost(options: {
+    mentionedUsers: string[]
     content: string
     media: WafrnMedia[]
     privacy: number
@@ -59,6 +60,7 @@ export class EditorService implements OnDestroy {
     const tags = options.tags
     const idPostToReblog = options.idPostToReblog
     const contentWarning = options.contentWarning
+    const mentionedUsers = options.mentionedUsers
     let success: boolean = false
     try {
       const formdata = {
@@ -70,7 +72,8 @@ export class EditorService implements OnDestroy {
         content_warning: contentWarning ? contentWarning : '',
         idPostToEdit: options.idPostToEdit,
         postToQuote: options.idPosToQuote,
-        ask: options.ask?.id
+        ask: options.ask?.id,
+        mentionedUsersIds: mentionedUsers
       }
       const url = `${this.base_url}/v3/createPost`
       const petitionResponse: any = await this.http.post(url, formdata).toPromise()

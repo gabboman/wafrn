@@ -7,6 +7,7 @@ import { MatFormFieldModule } from '@angular/material/form-field'
 import { MatInputModule } from '@angular/material/input'
 import { Router } from '@angular/router'
 import { MatDialogModule, MatDialogRef } from '@angular/material/dialog'
+import { MatChipEditedEvent, MatChipInputEvent, MatChipsModule } from '@angular/material/chips'
 import { FontAwesomeModule, IconDefinition } from '@fortawesome/angular-fontawesome'
 import {
   faClose,
@@ -20,7 +21,8 @@ import {
   faSkullCrossbones,
   faUnlock,
   faUser,
-  faPaperPlane
+  faPaperPlane,
+  faAt
 } from '@fortawesome/free-solid-svg-icons'
 import { EditorData } from 'src/app/interfaces/editor-data'
 import { PostHeaderComponent } from '../post/post-header/post-header.component'
@@ -48,6 +50,8 @@ import { EnvironmentService } from 'src/app/services/environment.service'
 import { MatTooltipModule } from '@angular/material/tooltip'
 import { InfoCardComponent } from '../info-card/info-card.component'
 import { TranslateModule } from '@ngx-translate/core'
+import { SimplifiedUser } from 'src/app/interfaces/simplified-user'
+import { MatBadgeModule } from '@angular/material/badge'
 
 @Component({
   selector: 'app-new-editor',
@@ -72,7 +76,9 @@ import { TranslateModule } from '@ngx-translate/core'
     MatTooltipModule,
     InfoCardComponent,
     MatDialogModule,
-    TranslateModule
+    TranslateModule,
+    MatBadgeModule,
+    MatChipsModule
   ],
   templateUrl: './new-editor.component.html',
   styleUrl: './new-editor.component.scss'
@@ -126,9 +132,13 @@ export class NewEditorComponent implements OnDestroy {
   infoIcon = faQuestionCircle
   alertIcon = faExclamationTriangle
   postIcon = faPaperPlane
+  atIcon = faAt
   emojiSubscription: Subscription
   editorUpdatedSubscription: Subscription | undefined
   httpMentionPetitionSubscription: Subscription | undefined
+
+  mentionedUsers: SimplifiedUser[] = []
+  showMentionedUsersList = true
 
   constructor(
     private messages: MessageService,
@@ -152,19 +162,15 @@ export class NewEditorComponent implements OnDestroy {
     let postCreatorContent = ''
     const currentUserId = this.jwtService.getTokenData().userId
     if (this.data?.post?.mentionPost && this.data.post.mentionPost.length > 0) {
-      this.data.post.mentionPost
-        .filter((elem) => elem.id != currentUserId)
-        .forEach((mentionedUser) => {
-          const mentionText = mentionedUser.url.startsWith('@') ? mentionedUser.url : '@' + mentionedUser.url
-          postCreatorContent = postCreatorContent + mentionText + ' '
-        })
+      const mentionedUsersSet = new Set(this.data.post.mentionPost.filter((elem) => elem.id != currentUserId))
+      this.mentionedUsers = Array.from(mentionedUsersSet)
     }
     if (this.data?.post) {
-      if (this.data.post.user.id != currentUserId) {
-        const mentionText = this.data.post.user.url.startsWith('@')
-          ? this.data.post.user.url
-          : '@' + this.data.post.user.url
-        postCreatorContent = postCreatorContent + mentionText + ' '
+      if (
+        this.data.post.user.id != currentUserId &&
+        !this.mentionedUsers.map((elem) => elem.id).includes(this.data.post.user.url)
+      ) {
+        this.mentionedUsers.push(this.data.post.user)
       }
     }
     this.postCreatorForm.controls['content'].patchValue(postCreatorContent)
@@ -202,11 +208,11 @@ export class NewEditorComponent implements OnDestroy {
   updateMentionsSuggestions(cursorPosition: number) {
     this.httpMentionPetitionSubscription?.unsubscribe()
     this.suggestions = []
-    this.updateMentionsPanelPosition()
     const textToMatch = (' ' +
       this.postCreatorForm.value.content?.slice(cursorPosition - 250, cursorPosition).replaceAll('\n', ' ')) as string
     const matches = textToMatch.match(/[\n\r\s]?[@:][\w-\.]+@?[\w-\.]*$/)
     if (matches && matches.length > 0) {
+      this.updateMentionsPanelPosition()
       const match = matches[0].trim()
       if (match.startsWith('@')) {
         this.httpMentionPetitionSubscription = from(
@@ -396,6 +402,7 @@ export class NewEditorComponent implements OnDestroy {
       !this.data?.quote?.id
     ) {
       await this.editorService.createPost({
+        mentionedUsers: [],
         content: '',
         idPostToReblog: this.idPostToReblog,
         privacy: 0,
@@ -405,6 +412,7 @@ export class NewEditorComponent implements OnDestroy {
       await new Promise((resolve) => setTimeout(resolve, 500))
     }
     res = await this.editorService.createPost({
+      mentionedUsers: this.mentionedUsers.map((elem) => elem.id),
       content: content,
       media: this.uploadedMedias,
       privacy: this.privacy,
@@ -522,5 +530,9 @@ export class NewEditorComponent implements OnDestroy {
       this.updateMentionsSuggestions(postCreatorHTMLElement.selectionStart)
       this.cursorTextPosition = postCreatorHTMLElement.selectionStart
     }
+  }
+
+  removeMention(index: number) {
+    this.mentionedUsers.splice(index, 1)
   }
 }

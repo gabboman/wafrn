@@ -43,13 +43,13 @@ import { ScrollService } from 'src/app/services/scroll.service'
 export class BottomReplyBarComponent implements OnChanges {
   @Input() fragment!: ProcessedPost
   @Input() notes: string = ''
-  anchor = input<string>('');
+  anchor = input<string>('')
   userLoggedIn = false
   isEmptyReblog = false
   myId = ''
   loadingAction = false
   myRewootsIncludePost = false
-  bookmarked = signal<boolean>(false);
+  bookmarked = signal<boolean>(false)
 
   // icons
   shareIcon = faShareNodes
@@ -83,12 +83,12 @@ export class BottomReplyBarComponent implements OnChanges {
   ) {
     this.userLoggedIn = loginService.checkUserLoggedIn()
     if (this.userLoggedIn) {
-      this.myId = loginService.getLoggedUserUUID();
+      this.myId = loginService.getLoggedUserUUID()
     }
   }
 
   ngOnInit(): void {
-    this.bookmarked.set(this.fragment.bookmarkers.includes(this.myId));
+    this.bookmarked.set(this.fragment.bookmarkers.includes(this.myId))
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -180,7 +180,7 @@ export class BottomReplyBarComponent implements OnChanges {
         severity: 'success',
         summary: 'You successfully unbookmarked this woot'
       })
-      this.bookmarked.set(false);
+      this.bookmarked.set(false)
     } else {
       this.messages.add({
         severity: 'error',
@@ -197,7 +197,7 @@ export class BottomReplyBarComponent implements OnChanges {
         summary: 'You successfully bookmarked this woot',
         confettiEmojis: enableConfetti ? ['💾'] : []
       })
-      this.bookmarked.set(true);
+      this.bookmarked.set(true)
     } else {
       this.messages.add({
         severity: 'error',
@@ -210,6 +210,7 @@ export class BottomReplyBarComponent implements OnChanges {
     this.loadingAction = true
     if (postToBeReblogged?.privacy !== 10) {
       const response = await this.editor.createPost({
+        mentionedUsers: [],
         content: '',
         idPostToReblog: postToBeReblogged.id,
         privacy: 0,

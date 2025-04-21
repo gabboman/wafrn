@@ -78,7 +78,8 @@
         "ariaLabelWootPrivacy": "Edit privacy of woot",
         "ariaLabelQuoteSetter": "Enable the quote setter",
         "uploadMediaTooltip": "Upload Media",
-        "contentWarningTooltip": "Content Warning"
+        "contentWarningTooltip": "Content Warning",
+        "hiddenMentionsTooltip": "Other mentioned users"
     },
     "profile": {
         "security": {
