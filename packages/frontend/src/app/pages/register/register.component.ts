@@ -148,7 +148,7 @@ export class RegisterComponent {
   loginForm = new UntypedFormGroup({
     email: new UntypedFormControl('', [Validators.required, Validators.email]),
     password: new UntypedFormControl('', [Validators.required]),
-    url: new UntypedFormControl('', [Validators.required]),
+    url: new UntypedFormControl('', [Validators.required, Validators.pattern('^[a-z0-9_]+([\_-]+[a-z0-9_]+)*')]),
     description: new UntypedFormControl('', [Validators.required]),
     birthDate: new UntypedFormControl('', [Validators.required]),
     captchaResponse: new UntypedFormControl('', []),

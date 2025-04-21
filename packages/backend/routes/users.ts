@@ -93,7 +93,7 @@ export default function userRoutes(app: Application) {
         if (
           req.body?.email &&
           req.body.url &&
-          !forbiddenCharacters.some((char) => req.body.url.includes(char)) &&
+          req.body.url.match(/^[a-z0-9_]+([_-]+[a-z0-9_]+)*$/i) &&
           validateEmail(req.body.email)
         ) {
           const birthDate = new Date(req.body.birthDate)
@@ -138,7 +138,8 @@ export default function userRoutes(app: Application) {
               banned: false,
               activationCode,
               isBot: false,
-              lastTimeNotificationsCheck: new Date(0)
+              lastTimeNotificationsCheck: new Date(0),
+              lastActiveAt: new Date(0)
             }
 
             const userWithEmail = User.create(user)
