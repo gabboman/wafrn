@@ -1,16 +1,16 @@
-<app-loader *ngIf="loading && !blogDetails"></app-loader>
-@if (!loading && !found) {
+<app-loader *ngIf="loadingBlog()"></app-loader>
+@if (!loading() && !found) {
   <app-pagenotfound />
 }
-@if (blogDetails) {
+@if (!loadingBlog() && blogDetails) {
   <app-blog-header [blogDetails]="blogDetails"></app-blog-header>
   @for (post of posts; track $index) {
     <ng-template></ng-template>
     <app-post [post]="post"></app-post>
   }
-  <app-loader *ngIf="loading">posts</app-loader>
+  <app-loader *ngIf="loading()">posts</app-loader>
   <footer class="p-4 text-center wafrn-container">
-    <div [hidden]="loading || noMorePosts" id="if-you-see-this-load-more-posts"></div>
+    <div [hidden]="loading() || noMorePosts" id="if-you-see-this-load-more-posts"></div>
     <div *ngIf="noMorePosts">
       <p class="mb-4 text-lg">No more posts...</p>
       @if (blogDetails.url.startsWith('@')) {
