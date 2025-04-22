@@ -24,7 +24,6 @@ import { PostLinkModule } from 'src/app/directives/post-link/post-link.module'
 import { EnvironmentService } from 'src/app/services/environment.service'
 import { BottomReplyBarComponent } from '../../components/bottom-reply-bar/bottom-reply-bar.component'
 import { BlogLinkModule } from 'src/app/directives/blog-link/blog-link.module'
-import { SnappyService } from 'src/app/services/snappy.service'
 import { snappyInject, SnappyRouter } from 'src/app/components/snappy/snappy-router.component'
 import { SnappyPostData } from 'src/app/directives/post-link/post-link.directive'
 
@@ -99,17 +98,16 @@ export class ForumComponent implements OnInit, OnDestroy, SnappyCreate {
     let data = this.snappyPost(this.snappy)?.post;
     if (!data) return;
 
-    let frag = data as ProcessedPost;
     let post: ProcessedPost[] = [];
-    for (const f of frag.parentCollection) {
+    for (const f of data.parentCollection) {
       post.push(f);
-      if (f.id == frag.id) {
+      if (f.id == data.id) {
         break;
       }
     }
 
     this.post.set(post);
-    this.postId.set((data as ProcessedPost).id);
+    this.postId.set(data.id);
   }
 
 
@@ -135,7 +133,7 @@ export class ForumComponent implements OnInit, OnDestroy, SnappyCreate {
         this.postId.set(data.id);
         const tmpTmpPost = this.dashboardService.getPostV2(this.postId())
         const tmpPost = await tmpTmpPost;
-        this.post.set(tmpPost ? tmpPost : []);
+        this.post.set(tmpPost ?? []);
       } else if (data.blog && data.title) {
         // TODO article petition
       }

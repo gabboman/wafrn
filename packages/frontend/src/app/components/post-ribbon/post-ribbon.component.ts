@@ -6,7 +6,6 @@ import { MatCardModule } from '@angular/material/card'
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome'
 import { NgClass, NgTemplateOutlet } from '@angular/common'
 import { DateTime } from 'luxon'
-import { SnappyService } from 'src/app/services/snappy.service'
 
 @Component({
   selector: 'app-post-ribbon',
@@ -23,7 +22,6 @@ export class PostRibbonComponent implements OnInit {
 
   timeAgo = ''
 
-  constructor(public scrollService: SnappyService) { }
   ngOnInit(): void {
     // TODO unhardcode
     const relative = DateTime.fromJSDate(this.time()).setLocale('en').toRelative()

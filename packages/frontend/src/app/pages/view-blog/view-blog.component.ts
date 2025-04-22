@@ -21,8 +21,6 @@ import { MatDialog } from '@angular/material/dialog'
 import { AcceptThemeComponent } from 'src/app/components/accept-theme/accept-theme.component'
 import { BlogDetails } from 'src/app/interfaces/blogDetails'
 import { EnvironmentService } from 'src/app/services/environment.service'
-import { SnappyService } from 'src/app/services/snappy.service'
-import { SnappyCreate } from 'src/app/components/snappy/snappy-life'
 import { SimplifiedUser } from 'src/app/interfaces/simplified-user'
 import { snappyInject, SnappyRouter } from 'src/app/components/snappy/snappy-router.component'
 import { SnappyBlogData } from 'src/app/directives/blog-link/blog-link.directive'
@@ -33,7 +31,7 @@ import { SnappyBlogData } from 'src/app/directives/blog-link/blog-link.directive
   styleUrls: ['./view-blog.component.scss'],
   standalone: false,
 })
-export class ViewBlogComponent implements OnInit, OnDestroy, SnappyCreate {
+export class ViewBlogComponent implements OnInit, OnDestroy {
   loading = signal<boolean>(true);
   loadingBlog = signal<boolean>(true);
   noMorePosts = false
@@ -77,18 +75,9 @@ export class ViewBlogComponent implements OnInit, OnDestroy, SnappyCreate {
     private readonly themeService: ThemeService,
     public readonly blockService: BlocksService,
     private readonly dialog: MatDialog,
-    public readonly scrollService: SnappyService,
     private readonly snappy: SnappyRouter
   ) {
     this.userLoggedIn = loginService.checkUserLoggedIn()
-  }
-
-  snOnCreate(): void {
-    let data = this.scrollService.claimData();
-    if (data === null) return;
-    if ((data as SimplifiedUser).url) {
-      this.simpleUser = data;
-    }
   }
 
   ngOnDestroy(): void {
@@ -111,8 +100,7 @@ export class ViewBlogComponent implements OnInit, OnDestroy, SnappyCreate {
       this.snappy.claim();
 
       let data = this.test(this.snappy)?.blog;
-      console.log(data);
-      if (data && (data as SimplifiedUser).url) {
+      if (data && data.url) {
         this.simpleUser = data;
       }
       this.blogDetails.set(undefined);

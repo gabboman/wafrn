@@ -24,7 +24,6 @@ import {
 } from '@fortawesome/free-solid-svg-icons'
 import { SimplifiedUser } from 'src/app/interfaces/simplified-user'
 import { EnvironmentService } from 'src/app/services/environment.service'
-import { SnappyService } from 'src/app/services/snappy.service'
 
 @Component({
   selector: 'app-post',
@@ -105,7 +104,6 @@ export class PostComponent implements OnInit, OnDestroy, OnChanges {
   constructor(
     public postService: PostsService,
     private readonly loginService: LoginService,
-    public scrollService: SnappyService
   ) {
     this.userLoggedIn = loginService.checkUserLoggedIn()
     if (this.userLoggedIn) {

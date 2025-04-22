@@ -1,5 +1,6 @@
 import {
   Component,
+  ComponentRef,
   EmbeddedViewRef,
   EnvironmentInjector,
   Injectable,
@@ -8,10 +9,9 @@ import {
   OnInit,
   ViewContainerRef,
 } from '@angular/core';
-import { ActivatedRoute, NavigationEnd, NavigationStart, Router, RouterOutlet } from '@angular/router';
-import { SnappyService, SnappyNavigation } from 'src/app/services/snappy.service';
+import { ActivatedRoute, NavigationEnd, Router, RouterOutlet } from '@angular/router';
 import { SnappyCreate, SnappyHide, SnappyShow } from './snappy-life';
-import { filter, Observable, Subject, Subscription } from 'rxjs';
+import { filter, Subject, Subscription } from 'rxjs';
 
 interface SnappyComponent {
   component: any;
@@ -27,11 +27,10 @@ export function SnappyInjectable(ctr: Function) {
 }
 
 // Haters will say this is bad and evil. They're right!
-export function snappyInject<T>(Ψinst: { new(...args: any[]): T }): ((router: SnappyRouter) => T) {
+export function snappyInject<T>(Ψinst: new (...args: any[]) => T): ((router: SnappyRouter) => T) {
   const key = (Ψinst as any).Ψsnappyid;
   if (!key) throw new Error("Parameter is not injectable by snappy!");
   creationsubject.next(key);
-  console.log(key);
 
   // Would like to accept router somewhere else if possible
   return ((router: SnappyRouter): T => {
@@ -47,34 +46,9 @@ export function snappyInject<T>(Ψinst: { new(...args: any[]): T }): ((router: S
   template: ''
 })
 export class SnappyRouter extends RouterOutlet implements OnInit, OnDestroy {
-  public get(key: string): any {
-    let c = this.components[this.components.length - 1];
-    return c.injectables.get(key);
-  }
-  public claim(): void {
-    let c = this.components[this.components.length - 1];
-
-    for (const o of this.dataStack) {
-      if (c.injectables.has(o.name)) {
-        console.log(o.name);
-        c.injectables.set(o.name, o.data);
-      }
-    }
-
-    this.dataStack = [];
-  }
-
-
-  public navigateTo(url: string, data: any = null) {
-    this.dataStack.push({ name: (data as any).Ψsnappyid, data: data });
-    this.router.navigateByUrl(url);
-  }
-
-  observer: Observable<SnappyNavigation>;
   data?: any;
 
   navigationSub: Subscription;
-  observerSub: Subscription;
   creationSub: Subscription;
 
   currentComponent?: SnappyComponent;
@@ -87,32 +61,24 @@ export class SnappyRouter extends RouterOutlet implements OnInit, OnDestroy {
     private readonly element: ViewContainerRef,
     private readonly injector: Injector,
     private readonly router: Router,
-    private readonly scrollService: SnappyService,
   ) {
     super();
-    this.observer = this.scrollService.getObservable();
-    this.observerSub = this.observer.subscribe((e) => {
-      this.router.navigateByUrl(e.url);
-    })
-
-
     this.creationSub = creationsubject.asObservable().subscribe((e) => {
       this.creationStack.push(e);
     });
+
     this.navigationSub = this.router.events
       .pipe(filter((event) => event instanceof NavigationEnd))
-      .subscribe((e) => {
+      .subscribe(() => {
+        // We clear the these on every nav end, no claiming data that isn't yours >:(
         this.dataStack = [];
         this.creationStack = [];
-        this.scrollService.claimData();
-        // console.log(this.components[this.components.length - 1]);
       });
   }
 
   override ngOnDestroy(): void {
     super.ngOnDestroy();
     this.navigationSub.unsubscribe();
-    this.observerSub.unsubscribe();
     this.creationSub.unsubscribe()
   }
 
@@ -136,41 +102,9 @@ export class SnappyRouter extends RouterOutlet implements OnInit, OnDestroy {
 
     if (!activatedRoute.component) return;
 
-    // If we refresh the page our data will be borked, so clean the DOM
-    if (this.urlStack.length === 0) {
-      for (let i = this.element.length - 1; i >= 0; i--) {
-        this.element.remove(i)
-      }
-    }
+    this.cleanDOM();
+    let newComponent = this.createComponent(activatedRoute, environmentInjector);
 
-    const inj = Injector.create({
-      providers: [
-        { provide: ActivatedRoute, useValue: activatedRoute }
-      ],
-      parent: this.injector
-    });
-
-
-    let newComponent = this.element.createComponent(activatedRoute.component,
-      {
-        index: 0,
-        injector: inj,
-        environmentInjector: environmentInjector
-      });
-
-    this.components.push(
-      {
-        component: newComponent,
-        injectables: new Map<string, any>()
-      });
-
-    let c = this.components[this.components.length - 1];
-
-    for (const o of this.creationStack) {
-      c.injectables.set(o, null);
-    }
-
-    this.claim();
     if ((newComponent.instance as SnappyCreate).snOnCreate) {
       (newComponent.instance as SnappyCreate).snOnCreate();
     }
@@ -225,6 +159,70 @@ export class SnappyRouter extends RouterOutlet implements OnInit, OnDestroy {
     }
 
     this.urlStack.pop();
+  }
+
+  cleanDOM() {
+    // If we refresh the page our data will be borked, so clean the DOM
+    if (this.urlStack.length === 0) {
+      for (let i = this.element.length - 1; i >= 0; i--) {
+        this.element.remove(i)
+      }
+    }
+  }
+
+  createComponent(route: ActivatedRoute, env: EnvironmentInjector): ComponentRef<any> {
+    const inj = Injector.create({
+      providers: [
+        { provide: ActivatedRoute, useValue: route }
+      ],
+      parent: this.injector
+    });
+
+    let newComponent = this.element.createComponent(route.component!,
+      {
+        index: 0,
+        injector: inj,
+        environmentInjector: env
+      });
+
+    this.components.push(
+      {
+        component: newComponent,
+        injectables: new Map<string, any>()
+      });
+
+    let c = this.components[this.components.length - 1];
+
+    for (const o of this.creationStack) {
+      c.injectables.set(o, null);
+    }
+
+    this.claim();
+
+    return newComponent;
+  }
+
+  // Public Methods
+  public get(key: string): any {
+    let c = this.components[this.components.length - 1];
+    return c.injectables.get(key);
+  }
+  public claim(): void {
+    let c = this.components[this.components.length - 1];
+
+    for (const o of this.dataStack) {
+      if (c.injectables.has(o.name)) {
+        c.injectables.set(o.name, o.data);
+      }
+    }
+
+    this.dataStack = [];
+  }
+
+
+  public navigateTo(url: string, data: any = null) {
+    this.dataStack.push({ name: data?.Ψsnappyid, data: data });
+    this.router.navigateByUrl(url);
   }
 }
 
