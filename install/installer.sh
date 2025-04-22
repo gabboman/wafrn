@@ -102,6 +102,13 @@ source install/env_secret_setup.sh
 docker compose build
 docker compose up -d
 
+echo "---------------------"
+echo "Setting up backups"
+echo "---------------------"
+cat <<CROND_FILE | sudo tee /etc/cron.d/wafrn-backup
+22 3 * * * $(whoami) $HOME/wafrn/install/manage.sh backup
+CROND_FILE
+
 echo
 echo "----"
 echo "Done"
