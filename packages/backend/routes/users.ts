@@ -1059,6 +1059,13 @@ export default function userRoutes(app: Application) {
         literal: sequelize.where(sequelize.fn('lower', sequelize.col('url')), url.toLowerCase())
       }
     })
+    if (!userRecivingAsk) {
+      res.sendStatus(500)
+      logger.warn({
+        message: `Ask invalid user: ${url}`
+      })
+      return
+    }
     const userAskLevelDBOption = await UserOptions.findOne({
       where: {
         userId: userRecivingAsk.id,
