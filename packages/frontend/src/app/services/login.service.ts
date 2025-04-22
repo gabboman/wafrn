@@ -239,6 +239,7 @@ export class LoginService {
       forceClassicAudioPlayer: 'wafrn.forceClassicAudioPlayer',
       enableConfetti: 'wafrn.enableConfetti',
       forceClassicMediaView: 'wafrn.forceClassicMediaView',
+      collapseQuotes: 'wafrn.collapseQuotes',
       attachments: 'fediverse.public.attachment',
       alsoKnownAs: 'fediverse.public.alsoKnownAs',
       defaultExploreLocal: 'wafrn.defaultExploreLocal'
