@@ -1,35 +1,36 @@
-import { Component, Input, OnChanges, SimpleChanges, input } from '@angular/core'
-import { AvatarSmallComponent } from '../../avatar-small/avatar-small.component'
-import { ProcessedPost } from '../../../interfaces/processed-post'
 import { CommonModule } from '@angular/common'
-import { RouterModule } from '@angular/router'
-import { PostsService } from '../../../services/posts.service'
-import { MessageService } from '../../../services/message.service'
-import { LoginService } from '../../../services/login.service'
-import { PostActionsComponent } from '../../post-actions/post-actions.component'
+import { Component, Input, OnChanges, SimpleChanges, input } from '@angular/core'
+import { MatButtonModule } from '@angular/material/button'
 import { MatTooltipModule } from '@angular/material/tooltip'
+import { RouterModule } from '@angular/router'
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome'
 import {
-  faShareNodes,
+  faArrowUpRightFromSquare,
   faChevronDown,
+  faClose,
+  faEnvelope,
+  faGlobe,
   faHeart,
   faHeartBroken,
-  faReply,
-  faRepeat,
+  faPen,
   faQuoteLeft,
-  faArrowUpRightFromSquare,
-  faTrash,
-  faClose,
-  faGlobe,
-  faUnlock,
-  faEnvelope,
+  faRepeat,
+  faReply,
   faServer,
-  faUser,
-  faPen
+  faShareNodes,
+  faTrash,
+  faUnlock,
+  faUser
 } from '@fortawesome/free-solid-svg-icons'
-import { MatButtonModule } from '@angular/material/button'
 import { DateTime } from 'luxon'
-import { ScrollService } from 'src/app/services/scroll.service'
+import { PostLinkModule } from 'src/app/directives/post-link/post-link.module'
+import { ProcessedPost } from '../../../interfaces/processed-post'
+import { LoginService } from '../../../services/login.service'
+import { MessageService } from '../../../services/message.service'
+import { PostsService } from '../../../services/posts.service'
+import { AvatarSmallComponent } from '../../avatar-small/avatar-small.component'
+import { PostActionsComponent } from '../../post-actions/post-actions.component'
+import { BlogLinkModule } from 'src/app/directives/blog-link/blog-link.module'
 
 @Component({
   selector: 'app-post-header',
@@ -41,14 +42,16 @@ import { ScrollService } from 'src/app/services/scroll.service'
     MatTooltipModule,
     FontAwesomeModule,
     MatButtonModule,
-    MatTooltipModule
+    MatTooltipModule,
+    PostLinkModule,
+    BlogLinkModule
   ],
   templateUrl: './post-header.component.html',
   styleUrl: './post-header.component.scss'
 })
 export class PostHeaderComponent implements OnChanges {
   @Input() fragment!: ProcessedPost
-  anchor = input<string>('');
+  @Input() post!: ProcessedPost[]
   readonly simplified = input<boolean>(true);
   readonly disableLink = input<boolean>(false);
   readonly headerText = input<string>('');
@@ -87,7 +90,6 @@ export class PostHeaderComponent implements OnChanges {
     public postService: PostsService,
     private messages: MessageService,
     readonly loginService: LoginService,
-    public scrollService: ScrollService,
   ) {
     // its an array
     ; (this.privacyOptions[10] = { level: 10, name: 'Direct Message', icon: faEnvelope }),

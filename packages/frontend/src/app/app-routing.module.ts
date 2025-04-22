@@ -117,7 +117,7 @@ const routes: Routes = [
     RouterModule.forRoot(routes, {
       preloadingStrategy: PreloadAllModules,
       anchorScrolling: 'enabled',
-      scrollPositionRestoration: 'disabled',
+      scrollPositionRestoration: 'enabled',
     }),
     NavigationMenuModule
   ],

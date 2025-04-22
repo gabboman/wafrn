@@ -2,7 +2,7 @@
   <h3 [innerText]="fragment().title"></h3>
 }
 @if (fragment().ask) {
-  <app-single-ask (click|keypress|keydown|keyup)="scrollService.setLastPostID(anchor())" [ask]="fragment().ask!"></app-single-ask>
+  <app-single-ask [ask]="fragment().ask!"></app-single-ask>
 }
 @if (fragment().content_warning || fragment().muted_words_cw) {
   <div class="content-warning-text">
@@ -29,10 +29,10 @@
   @for (quote of fragment().quotes; track $index) {
     <div *ngIf="quote" class="quoted-post cursor-pointer">
       <div class="flex">
-        <app-post-header [anchor]="anchor()" class="w-full" [fragment]="quote" [simplified]="true" [disableLink]="true"></app-post-header>
+        <app-post-header class="w-full" [fragment]="quote" [simplified]="true" [disableLink]="true"></app-post-header>
       </div>
-      <div (click|keypress|keydown|keyup)="scrollService.setLastPostID(anchor())" class="cursor-pointer" [routerLink]="'/fediverse/post/' + quote.id">
-        <app-post-fragment [anchor]="anchor()" [fragment]="quote"></app-post-fragment>
+      <div class="cursor-pointer" [postLink]="quote">
+        <app-post-fragment [fragment]="quote"></app-post-fragment>
       </div>
     </div>
   }

@@ -12,6 +12,7 @@ import { MatMenuModule } from '@angular/material/menu'
 import { LoaderComponent } from 'src/app/components/loader/loader.component'
 import { BlogHeaderComponent } from '../../components/blog-header/blog-header.component'
 import { InfoCardComponent } from 'src/app/components/info-card/info-card.component'
+import { ForumComponent } from '../forum/forum.component'
 
 const routes: Routes = [
   {
@@ -47,7 +48,8 @@ const routes: Routes = [
     MatMenuModule,
     LoaderComponent,
     BlogHeaderComponent,
-    InfoCardComponent
+    InfoCardComponent,
+    ForumComponent
   ]
 })
 export class ViewBlogModule { }

@@ -1,17 +1,17 @@
+import { ViewportScroller } from '@angular/common'
 import { Component, OnDestroy, OnInit } from '@angular/core'
-import { NavigationEnd, NavigationSkipped, NavigationStart, Router } from '@angular/router'
+import { Meta, Title } from '@angular/platform-browser'
+import { NavigationSkipped, Router } from '@angular/router'
+import { faArrowsRotate } from '@fortawesome/free-solid-svg-icons'
+import { Subscription } from 'rxjs'
+import { filter } from 'rxjs/operators'
+import { SnappyCreate, SnappyHide, SnappyShow } from 'src/app/components/snappy/snappy-life'
 import { ProcessedPost } from 'src/app/interfaces/processed-post'
 import { DashboardService } from 'src/app/services/dashboard.service'
 import { JwtService } from 'src/app/services/jwt.service'
-import { PostsService } from 'src/app/services/posts.service'
-import { Title, Meta } from '@angular/platform-browser'
-import { ThemeService } from 'src/app/services/theme.service'
 import { MessageService } from 'src/app/services/message.service'
-import { faArrowsRotate } from '@fortawesome/free-solid-svg-icons'
-import { Subscription } from 'rxjs'
-import { filter } from 'rxjs/operators';
-import { ScrollContext, ScrollService } from 'src/app/services/scroll.service'
-import { ViewportScroller } from '@angular/common'
+import { PostsService } from 'src/app/services/posts.service'
+import { ThemeService } from 'src/app/services/theme.service'
 
 @Component({
   selector: 'app-dashboard',
@@ -19,7 +19,7 @@ import { ViewportScroller } from '@angular/common'
   styleUrls: ['./dashboard.component.scss'],
   standalone: false
 })
-export class DashboardComponent implements OnInit, OnDestroy {
+export class DashboardComponent implements OnInit, OnDestroy, SnappyCreate, SnappyShow, SnappyHide {
   loadingPosts = false
   noMorePosts = false
   posts: ProcessedPost[][] = []
@@ -32,8 +32,11 @@ export class DashboardComponent implements OnInit, OnDestroy {
   reloadIcon = faArrowsRotate
   updateFollowersSubscription?: Subscription
   navigationSubscription!: Subscription
-  navigationEnd!: Subscription
-  scroll = 0
+  scroll = 0;
+
+  // I don't think this is actually needed, but just in case!
+  // Would like to have this a bit more cleanly integrated though
+  snActive: boolean = false;
 
   constructor(
     private dashboardService: DashboardService,
@@ -44,8 +47,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
     private titleService: Title,
     private metaTagService: Meta,
     private themeService: ThemeService,
-    private readonly scrollService: ScrollService,
-    private readonly viewportScroller: ViewportScroller
+    private readonly viewportScroller: ViewportScroller,
   ) {
     this.titleService.setTitle('Wafrn - the social network that respects you')
     this.metaTagService.addTags([
@@ -59,14 +61,11 @@ export class DashboardComponent implements OnInit, OnDestroy {
       }
     ])
   }
-
-  ngOnDestroy(): void {
-    this.navigationSubscription.unsubscribe()
-    this.updateFollowersSubscription?.unsubscribe()
-    this.navigationEnd.unsubscribe()
+  snOnHide(): void {
+    this.snActive = false;
   }
 
-  ngOnInit(): void {
+  snOnCreate(): void {
     const purePath = this.router.url.split('?')[0]
     if (purePath.endsWith('explore')) {
       this.level = 0
@@ -88,8 +87,18 @@ export class DashboardComponent implements OnInit, OnDestroy {
       this.level = 50
       this.title = 'My bookmarked posts'
     }
+  }
 
-    this.scrollService.setScrollContext(ScrollContext.Dashboard);
+  snOnShow(): void {
+    this.snActive = true;
+  }
+
+  ngOnDestroy(): void {
+    this.navigationSubscription.unsubscribe()
+    this.updateFollowersSubscription?.unsubscribe()
+  }
+
+  ngOnInit(): void {
 
     // If the user clicks on the explore button while already on the page,
     // reload posts.
@@ -103,21 +112,6 @@ export class DashboardComponent implements OnInit, OnDestroy {
         this.reloadPosts()
       })
 
-    this.navigationEnd = this.router.events
-      .pipe(filter((event) => event instanceof NavigationStart))
-      .subscribe(() => {
-        this.scrollService.setScrollContext(ScrollContext.Dashboard);
-        let anchor = this.scrollService.getLastPostID();
-        if (anchor !== '') {
-          this.viewportScroller.scrollToAnchor(anchor);
-          setTimeout(() => {
-            this.viewportScroller.scrollToAnchor(anchor);
-          }, 100);
-          setTimeout(() => {
-            this.viewportScroller.scrollToAnchor(anchor);
-          }, 500);
-        }
-      });
 
     this.updateFollowersSubscription = this.postService.updateFollowers.subscribe(() => {
       if (this.postService.followedUserIds.length <= 1 && this.level === 1 && false) {
@@ -133,7 +127,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
     this.loadPosts(this.currentPage).then(() => {
       setTimeout(() => {
         this.themeService.setMyTheme()
-        // we detect the bottom of the page and load more posts
+        // we detect the bottom; of the page and load more posts
         const element = document.querySelector('#if-you-see-this-load-more-posts')
         const observer = new IntersectionObserver((intersectionEntries: IntersectionObserverEntry[]) => {
           if (intersectionEntries[0].isIntersecting) {
@@ -153,7 +147,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
     // Perhaps not a perfect solution, but without this guard currentPage and
     // startScroll may unexpectedly increase, leading to the dashboard
     // displaying posts that do not start from date.now
-    if (this.loadingPosts) return;
+    if (this.loadingPosts || !this.snActive) return;
     this.posts = []
     this.currentPage = 0
     this.viewedPostsNumber = 0
@@ -231,7 +225,8 @@ export class DashboardComponent implements OnInit, OnDestroy {
           userLikesPostRelations: [],
           emojis: [],
           descendents: [],
-          bookmarkers: []
+          bookmarkers: [],
+          parentCollection: [],
         }
       ])
     }

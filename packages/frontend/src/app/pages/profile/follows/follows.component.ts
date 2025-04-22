@@ -21,6 +21,7 @@ import { LoginService } from 'src/app/services/login.service'
 import { faCheck, faTrash } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome'
 import { SimplifiedUser } from 'src/app/interfaces/simplified-user'
+import { BlogLinkModule } from 'src/app/directives/blog-link/blog-link.module'
 
 @Component({
   selector: 'app-follows',
@@ -36,7 +37,8 @@ import { SimplifiedUser } from 'src/app/interfaces/simplified-user'
     MatButtonModule,
     RouterModule,
     AvatarSmallComponent,
-    FontAwesomeModule
+    FontAwesomeModule,
+    BlogLinkModule
   ],
   templateUrl: './follows.component.html',
   styleUrl: './follows.component.scss'
@@ -61,7 +63,7 @@ export class FollowsComponent implements OnInit, OnDestroy {
   dataSource!: MatTableDataSource<followsResponse, MatPaginator>
 
   constructor(
-    private loginService: LoginService,
+    loginService: LoginService,
     public activatedRoute: ActivatedRoute,
     private router: Router,
     public postService: PostsService,

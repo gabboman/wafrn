@@ -10,29 +10,29 @@ import {
   signal,
   viewChild
 } from '@angular/core'
+import { MatButtonModule } from '@angular/material/button'
+import { RouterModule } from '@angular/router'
 import { ProcessedPost } from '../../interfaces/processed-post'
+import { SimplifiedUser } from '../../interfaces/simplified-user'
 import { PollModule } from '../poll/poll.module'
 import { WafrnMediaModule } from '../wafrn-media/wafrn-media.module'
-import { RouterModule } from '@angular/router'
-import { MatButtonModule } from '@angular/material/button'
-import { SimplifiedUser } from '../../interfaces/simplified-user'
 
 import { MatTooltipModule } from '@angular/material/tooltip'
-import { PostsService } from '../../services/posts.service'
-import { LoginService } from '../../services/login.service'
-import { JwtService } from '../../services/jwt.service'
-import { EmojiReactComponent } from '../emoji-react/emoji-react.component'
-import { MessageService } from '../../services/message.service'
-import { Emoji } from '../../interfaces/emoji'
 import { InjectHtmlModule } from '../../directives/inject-html/inject-html.module'
+import { Emoji } from '../../interfaces/emoji'
+import { WafrnMedia } from '../../interfaces/wafrn-media'
+import { EnvironmentService } from '../../services/environment.service'
+import { JwtService } from '../../services/jwt.service'
+import { LoginService } from '../../services/login.service'
+import { MessageService } from '../../services/message.service'
+import { PostsService } from '../../services/posts.service'
+import { EmojiReactComponent } from '../emoji-react/emoji-react.component'
 import { PostHeaderComponent } from '../post/post-header/post-header.component'
 import { SingleAskComponent } from '../single-ask/single-ask.component'
-import { EnvironmentService } from '../../services/environment.service'
-import { WafrnMedia } from '../../interfaces/wafrn-media'
 
-import Viewer from 'viewerjs'
 import { Subscription } from 'rxjs'
-import { ScrollService } from 'src/app/services/scroll.service'
+import { PostLinkModule } from 'src/app/directives/post-link/post-link.module'
+import Viewer from 'viewerjs'
 
 type EmojiReaction = {
   id: string
@@ -57,14 +57,14 @@ type EmojiReaction = {
     EmojiReactComponent,
     InjectHtmlModule,
     PostHeaderComponent,
-    SingleAskComponent
+    SingleAskComponent,
+    PostLinkModule
   ],
   templateUrl: './post-fragment.component.html',
   styleUrl: './post-fragment.component.scss',
 })
 export class PostFragmentComponent implements OnChanges, OnDestroy {
   fragment = input.required<ProcessedPost>()
-  anchor = input<string>('');
   forceExpand = output<boolean>()
   showSensitiveContent = signal<boolean>(false);
   emojiCollection = signal<EmojiReaction[]>([]);
@@ -124,7 +124,6 @@ export class PostFragmentComponent implements OnChanges, OnDestroy {
     private loginService: LoginService,
     private jwtService: JwtService,
     private readonly messages: MessageService,
-    public scrollService: ScrollService,
   ) {
 
   }

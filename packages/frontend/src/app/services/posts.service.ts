@@ -255,18 +255,23 @@ export class PostsService {
   }
 
   processPostNew(unlinked: unlinkedPosts): ProcessedPost[][] {
-    this.processedQuotes = unlinked.quotedPosts.map((quote) => this.processSinglePost({ ...unlinked, posts: [quote] }))
+    this.processedQuotes = unlinked.quotedPosts.map((quote) => this.processSinglePost({ ...unlinked, posts: [quote] }, this.processedQuotes));
     const res = unlinked.posts
       .filter((post) => !!post)
       .map((elem) => {
-        const processed = elem.ancestors
-          ? elem.ancestors.filter((anc) => !!anc).map((anc) => this.processSinglePost({ ...unlinked, posts: [anc] }))
-          : []
+        const processed: ProcessedPost[] = [];
+        if (elem.ancestors) {
+          // We need to keep the ref to processed alive!
+          elem.ancestors.filter((anc) => !!anc).map((anc) => this.processSinglePost({ ...unlinked, posts: [anc] }, processed)).forEach((e) => {
+            processed.push(e);
+          })
+        }
+
         processed.push(
           this.processSinglePost({
             ...unlinked,
             posts: [elem]
-          })
+          }, processed)
         )
         return processed.sort((a, b) => {
           return a.createdAt.getTime() - b.createdAt.getTime()
@@ -277,7 +282,7 @@ export class PostsService {
     })
   }
 
-  processSinglePost(unlinked: unlinkedPosts): ProcessedPost {
+  processSinglePost(unlinked: unlinkedPosts, collection: ProcessedPost[]): ProcessedPost {
     const mutedWordsRaw = localStorage.getItem('mutedWords')
     let mutedWords: string[] = []
     try {
@@ -408,7 +413,8 @@ export class PostsService {
       medias: medias.sort((a, b) => a.mediaOrder - b.mediaOrder),
       questionPoll: polls.length > 0 ? { ...polls[0], endDate: new Date(polls[0].endDate) } : undefined,
       mentionPost: mentionedUsers as SimplifiedUser[],
-      quotes: quotes
+      quotes: quotes,
+      parentCollection: collection
     }
     if (unlinked.asks) {
       const ask = unlinked.asks.find((ask) => ask.postId === newPost.id)

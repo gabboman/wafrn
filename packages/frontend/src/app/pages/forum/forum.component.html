@@ -1,10 +1,10 @@
-<app-loader *ngIf="loading"></app-loader>
-<ng-container *ngIf="!loading">
-  <app-post [post]="post" class="initial-post"></app-post>
+<app-loader *ngIf="loading && !hasPost "></app-loader>
+<ng-container *ngIf="!loading || hasPost">
+  <app-post [post]="post()" class="initial-post"></app-post>
   <div class="px-3 mt-3 mb-3 lg:mx-4 wafrn-container flex flex-column gap-2 reply-loader">
     <button
       *ngIf="
-        userLoggedIn && (!post[post.length - 1].remotePostId.startsWith(localUrl) || post[post.length - 1].bskyUri)
+        userLoggedIn && (!post()[post().length - 1].remotePostId.startsWith(localUrl) || post()[post().length - 1].bskyUri)
       "
       (click)="loadRepliesFromFediverse()"
       color="primary"
@@ -13,9 +13,10 @@
     >
       Fetch more external replies
     </button>
-    <p *ngIf="post.length != 1" class="m-0"><a [routerLink]="'/fediverse/post/' + post[0].id">View initial post</a></p>
+    <p *ngIf="post().length != 1" class="m-0"><a [postLink]="post()[0]">View initial post</a></p>
   </div>
   <div id="scroll-here-on-page-change"></div>
+  <app-loader *ngIf="loading && this.hasPost"></app-loader>
   <ng-container
     *ngFor="let content of forumPosts | slice: currentPage * itemsPerPage : currentPage * itemsPerPage + itemsPerPage"
   >
@@ -34,10 +35,11 @@
       </mat-card>
     } @else {
       <app-post-ribbon [user]="content.user" [icon]="rewootIcon" [time]="content.createdAt">
-        <a class="user-link user-name" [routerLink]="'/blog/' + content.user.url" [innerHTML]="content.user.name"></a>
+        <a class="user-link user-name" [blogLink]="content.user" [innerHTML]="content.user.name"></a>
         <span class="text-sm post-action"> rewooted </span>
         <a
-          [routerLink]="'/fediverse/post/' + content.parentId"
+          [postLink]="content"
+          [postLinkId]="content.parentId"
           class="user-link user-name"
           [innerHTML]="findReply(content.parentId)?.user?.name ?? 'Unknown User'"
         ></a>

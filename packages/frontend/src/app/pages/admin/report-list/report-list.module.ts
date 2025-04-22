@@ -10,6 +10,7 @@ import { FormsModule } from '@angular/forms'
 import { MatCheckboxModule } from '@angular/material/checkbox'
 import { MatButtonModule } from '@angular/material/button'
 import { AvatarSmallComponent } from 'src/app/components/avatar-small/avatar-small.component'
+import { PostLinkModule } from 'src/app/directives/post-link/post-link.module'
 
 @NgModule({
   declarations: [ReportListComponent],
@@ -28,7 +29,8 @@ import { AvatarSmallComponent } from 'src/app/components/avatar-small/avatar-sma
     MatInputModule,
     MatCheckboxModule,
     MatButtonModule,
-    AvatarSmallComponent
+    AvatarSmallComponent,
+    PostLinkModule
   ]
 })
-export class ReportListModule {}
+export class ReportListModule { }
