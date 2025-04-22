@@ -240,6 +240,7 @@ export class LoginService {
       enableConfetti: 'wafrn.enableConfetti',
       forceClassicMediaView: 'wafrn.forceClassicMediaView',
       attachments: 'fediverse.public.attachment',
+      alsoKnownAs: 'fediverse.public.alsoKnownAs',
       defaultExploreLocal: 'wafrn.defaultExploreLocal'
     }
 
