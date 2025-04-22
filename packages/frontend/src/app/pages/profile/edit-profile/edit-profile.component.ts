@@ -52,6 +52,7 @@ export class EditProfileComponent implements OnInit {
     forceClassicVideoPlayer: new FormControl(false),
     enableConfetti: new FormControl(false),
     forceClassicMediaView: new FormControl(false),
+    collapseQuotes: new FormControl(false),
     defaultExploreLocal: new FormControl(false),
     automaticalyExpandPosts: new FormControl(false)
   })
@@ -101,6 +102,9 @@ export class EditProfileComponent implements OnInit {
       this.editProfileForm.controls['enableConfetti'].patchValue(localStorage.getItem('enableConfetti') == 'true')
       this.editProfileForm.controls['forceClassicMediaView'].patchValue(
         localStorage.getItem('forceClassicMediaView') == 'true'
+      )
+      this.editProfileForm.controls['collapseQuotes'].patchValue(
+        localStorage.getItem('collapseQuotes') == 'true'
       )
 
       this.editProfileForm.controls['defaultExploreLocal'].patchValue(

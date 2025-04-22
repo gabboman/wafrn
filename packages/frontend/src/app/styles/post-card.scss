@@ -107,7 +107,6 @@
 }
 
 .quoted-post {
-  max-height: 33vh; // ACCORDING TO ALL KNOWNS LAWS OF AVIATION
 	padding: 0.5em;	
 	cursor: pointer !important;
   border-radius: 12px;
@@ -132,7 +131,9 @@
   bottom: 0;
   width: 100%;
   height: 200px;
-  box-shadow: inset -0rem -5rem 5rem -1rem var(--mat-sys-surface-container) !important;
+  /* The -2rem down here is the "stretch" of the quote, so to speak. */
+  /* The higher the value, the closer it becomes to just blocking the whole thing. */
+  box-shadow: inset -0rem -1rem 5rem -1rem var(--mat-sys-surface-container) !important;
 }
 
 // @media (prefers-contrast: more) {

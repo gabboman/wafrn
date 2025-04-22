@@ -116,6 +116,7 @@ export class PostFragmentComponent implements OnChanges, OnDestroy {
   viewerEnd: Viewer | undefined
 
   forceOldMediaStyle = localStorage.getItem('forceClassicMediaView') == 'true'
+  collapseQuotes = localStorage.getItem('collapseQuotes') == 'true'
 
   nonLinkMediaCount = 0
 
