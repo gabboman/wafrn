@@ -75,7 +75,7 @@ export class ViewBlogComponent implements OnInit, OnDestroy {
     private readonly themeService: ThemeService,
     public readonly blockService: BlocksService,
     private readonly dialog: MatDialog,
-    private readonly snappy: SnappyRouter
+    private readonly snappy: SnappyRouter,
   ) {
     this.userLoggedIn = loginService.checkUserLoggedIn()
   }
@@ -100,7 +100,7 @@ export class ViewBlogComponent implements OnInit, OnDestroy {
       this.snappy.claim();
 
       let data = this.test(this.snappy)?.blog;
-      if (data && data.url) {
+      if (data?.url) {
         this.simpleUser = data;
       }
       this.blogDetails.set(undefined);

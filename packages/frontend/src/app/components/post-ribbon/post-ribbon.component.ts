@@ -17,7 +17,6 @@ export class PostRibbonComponent implements OnInit {
   readonly user = input.required<SimplifiedUser>();
   readonly icon = input.required<IconDefinition>();
   readonly time = input.required<Date>();
-  readonly anchor = input<string>("");
   readonly card = input(true);
 
   timeAgo = ''

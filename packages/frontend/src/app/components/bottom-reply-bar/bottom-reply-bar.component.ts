@@ -44,7 +44,6 @@ export class BottomReplyBarComponent implements OnChanges {
   @Input() fragment!: ProcessedPost
   @Input() post!: ProcessedPost[]
   @Input() notes: string = ''
-  anchor = input<string>('')
   userLoggedIn = false
   isEmptyReblog = false
   myId = ''

@@ -9,7 +9,6 @@
       [icon]="headerText === 'replied' ? replyIcon : reblogIcon"
       [card]="false"
       [time]="originalPostContent[this.originalPostContent.length - 1].createdAt"
-      [anchor]="this.anchorBase + this.finalPost.id"
     >
       <a
         class="user-link user-name"
@@ -47,8 +46,8 @@
         "
         id="fragment"
       >
-        <app-post-header [post]="this.post" [anchor]="this.anchorBase + this.finalPost.id" class="w-full" [fragment]="content" [simplified]="false"></app-post-header>
-        <app-post-fragment [anchor]="this.anchorBase + this.finalPost.id" (forceExpand)="expandPost()" [fragment]="content"></app-post-fragment>
+        <app-post-header [post]="this.post" class="w-full" [fragment]="content" [simplified]="false"></app-post-header>
+        <app-post-fragment (forceExpand)="expandPost()" [fragment]="content"></app-post-fragment>
       </div>
     }
   </div>
@@ -83,5 +82,5 @@
     }
   }
 
-  <app-bottom-reply-bar [anchor]="this.anchorBase + this.finalPost.id" [fragment]="finalPost" [post]="post" [notes]="notes"></app-bottom-reply-bar>
+  <app-bottom-reply-bar [fragment]="finalPost" [post]="post" [notes]="notes"></app-bottom-reply-bar>
 </mat-card>

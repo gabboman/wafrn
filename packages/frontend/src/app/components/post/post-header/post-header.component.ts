@@ -52,7 +52,6 @@ import { BlogLinkModule } from 'src/app/directives/blog-link/blog-link.module'
 export class PostHeaderComponent implements OnChanges {
   @Input() fragment!: ProcessedPost
   @Input() post!: ProcessedPost[]
-  anchor = input<string>('');
   readonly simplified = input<boolean>(true);
   readonly disableLink = input<boolean>(false);
   readonly headerText = input<string>('');

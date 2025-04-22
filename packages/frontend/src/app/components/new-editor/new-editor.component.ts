@@ -5,9 +5,8 @@ import { MatButtonModule } from '@angular/material/button'
 import { MatCardModule } from '@angular/material/card'
 import { MatFormFieldModule } from '@angular/material/form-field'
 import { MatInputModule } from '@angular/material/input'
-import { Router } from '@angular/router'
 import { MatDialogModule, MatDialogRef } from '@angular/material/dialog'
-import { MatChipEditedEvent, MatChipInputEvent, MatChipsModule } from '@angular/material/chips'
+import { MatChipsModule } from '@angular/material/chips'
 import { FontAwesomeModule, IconDefinition } from '@fortawesome/angular-fontawesome'
 import {
   faClose,
@@ -459,19 +458,19 @@ export class NewEditorComponent implements OnDestroy {
     var copy = document.createElement('div')
     copy.textContent = textArea.value
     var style = getComputedStyle(textArea)
-    ;[
-      'fontFamily',
-      'fontSize',
-      'fontWeight',
-      'wordWrap',
-      'whiteSpace',
-      'borderLeftWidth',
-      'borderTopWidth',
-      'borderRightWidth',
-      'borderBottomWidth'
-    ].forEach(function (key: any) {
-      copy.style[key] = style[key]
-    })
+      ;[
+        'fontFamily',
+        'fontSize',
+        'fontWeight',
+        'wordWrap',
+        'whiteSpace',
+        'borderLeftWidth',
+        'borderTopWidth',
+        'borderRightWidth',
+        'borderBottomWidth'
+      ].forEach(function (key: any) {
+        copy.style[key] = style[key]
+      })
     copy.style.overflow = 'auto'
     copy.style.width = textArea.offsetWidth + 'px'
     copy.style.height = textArea.offsetHeight + 'px'

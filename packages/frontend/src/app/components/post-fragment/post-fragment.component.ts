@@ -65,7 +65,6 @@ type EmojiReaction = {
 })
 export class PostFragmentComponent implements OnChanges, OnDestroy {
   fragment = input.required<ProcessedPost>()
-  anchor = input<string>('');
   forceExpand = output<boolean>()
   showSensitiveContent = signal<boolean>(false);
   emojiCollection = signal<EmojiReaction[]>([]);

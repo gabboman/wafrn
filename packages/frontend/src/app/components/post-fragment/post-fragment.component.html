@@ -29,10 +29,10 @@
   @for (quote of fragment().quotes; track $index) {
     <div *ngIf="quote" class="quoted-post cursor-pointer">
       <div class="flex">
-        <app-post-header [anchor]="anchor()" class="w-full" [fragment]="quote" [simplified]="true" [disableLink]="true"></app-post-header>
+        <app-post-header class="w-full" [fragment]="quote" [simplified]="true" [disableLink]="true"></app-post-header>
       </div>
       <div class="cursor-pointer" [postLink]="quote">
-        <app-post-fragment [anchor]="anchor()" [fragment]="quote"></app-post-fragment>
+        <app-post-fragment [fragment]="quote"></app-post-fragment>
       </div>
     </div>
   }

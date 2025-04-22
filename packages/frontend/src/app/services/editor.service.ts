@@ -8,9 +8,10 @@ import { MatDialog } from '@angular/material/dialog'
 import { ProcessedPost } from '../interfaces/processed-post'
 import { Ask } from '../interfaces/ask'
 import { DashboardService } from './dashboard.service'
-import { Router } from '@angular/router'
 import { EditorData } from '../interfaces/editor-data'
 import { EnvironmentService } from './environment.service'
+
+import { NewEditorComponent } from '../components/new-editor/new-editor.component'
 
 @Injectable({
   providedIn: 'any'
@@ -27,7 +28,6 @@ export class EditorService implements OnDestroy {
   constructor(
     private http: HttpClient,
     private dashboardService: DashboardService,
-    private router: Router,
     private dialogService: MatDialog
   ) {
     this.editorSubscription = this.launchPostEditorEmitter.subscribe((data) => {
@@ -135,7 +135,7 @@ export class EditorService implements OnDestroy {
         scrollDate: this.dashboardService.startScrollDate,
         path: window.location.pathname
       }
-      this.dialogService.open(await this.getEditorComponent())
+      this.dialogService.open(NewEditorComponent);
     }
   }
 

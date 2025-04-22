@@ -1,5 +1,6 @@
 import { Directive, ElementRef, HostListener, Input, OnInit, Renderer2 } from '@angular/core';
-import { SnappyInjectable, SnappyRouter } from 'src/app/components/snappy/snappy-router.component';
+import { SnappyInjectable } from 'src/app/components/snappy/snappy-router.component';
+import { SnappyService } from 'src/app/components/snappy/snappy.service';
 import { ProcessedPost } from 'src/app/interfaces/processed-post';
 
 @Directive({
@@ -10,7 +11,7 @@ export class PostLinkDirective implements OnInit {
   @Input({ required: true }) postLink!: ProcessedPost;
   @Input() postLinkId?: string;
 
-  constructor(private readonly host: ElementRef, private readonly renderer: Renderer2, private readonly snappy: SnappyRouter) { }
+  constructor(private readonly host: ElementRef, private readonly renderer: Renderer2, private readonly snappy: SnappyService) { }
 
   async ngOnInit() {
     this.postLinkId ??= this.postLink.id;

@@ -65,7 +65,6 @@ export class PostComponent implements OnInit, OnDestroy, OnChanges {
   // 0 no display at all 1 display like 2 display dislike
   showLikeFinalPost: number = 0
   finalPost!: ProcessedPost
-  anchorBase: string = '';
 
   // icons
   shareIcon = faShareNodes

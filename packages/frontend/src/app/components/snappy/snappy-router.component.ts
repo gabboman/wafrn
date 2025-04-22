@@ -1,17 +1,19 @@
 import {
-  Component,
   ComponentRef,
+  Directive,
   EmbeddedViewRef,
   EnvironmentInjector,
-  Injectable,
+  inject,
   Injector,
   OnDestroy,
   OnInit,
+  Signal,
   ViewContainerRef,
 } from '@angular/core';
-import { ActivatedRoute, NavigationEnd, Router, RouterOutlet } from '@angular/router';
+import { ActivatedRoute, ChildrenOutletContexts, NavigationEnd, PRIMARY_OUTLET, Router, ROUTER_OUTLET_DATA, RouterOutlet } from '@angular/router';
 import { SnappyCreate, SnappyHide, SnappyShow } from './snappy-life';
 import { filter, Subject, Subscription } from 'rxjs';
+import { SnappyService } from './snappy.service';
 
 interface SnappyComponent {
   component: any;
@@ -38,29 +40,31 @@ export function snappyInject<T>(Ψinst: new (...args: any[]) => T): ((router: Sn
   })
 }
 
-@Injectable({
-  providedIn: 'root'
-})
-@Component({
+// TODO: Implement routeroutletcontract rather than extend routeroutlet
+@Directive({
   selector: 'snappy-router',
-  template: ''
+  exportAs: 'outlet',
 })
 export class SnappyRouter extends RouterOutlet implements OnInit, OnDestroy {
+  private readonly parentCtx = inject(ChildrenOutletContexts);
+  n = PRIMARY_OUTLET;
   data?: any;
-
   navigationSub: Subscription;
   creationSub: Subscription;
+  dataSub: Subscription;
 
   currentComponent?: SnappyComponent;
   currentRoute?: ActivatedRoute;
 
-  dataStack: { name: string, data: any }[] = [];
+  dataStack: { token: string, data: any }[] = [];
   creationStack: string[] = [];
+
+
 
   constructor(
     private readonly element: ViewContainerRef,
-    private readonly injector: Injector,
     private readonly router: Router,
+    private readonly snappy: SnappyService
   ) {
     super();
     this.creationSub = creationsubject.asObservable().subscribe((e) => {
@@ -74,12 +78,24 @@ export class SnappyRouter extends RouterOutlet implements OnInit, OnDestroy {
         this.dataStack = [];
         this.creationStack = [];
       });
+
+    this.dataSub = this.snappy.getStream().subscribe((e) => {
+      this.dataStack.push(e);
+    })
   }
 
   override ngOnDestroy(): void {
     super.ngOnDestroy();
     this.navigationSub.unsubscribe();
     this.creationSub.unsubscribe()
+  }
+
+  override get component(): Object {
+    return this.components[this.components.length - 1].component.instance;
+  }
+
+  override get activatedRoute(): ActivatedRoute {
+    return this.currentRoute as ActivatedRoute;
   }
 
   // We don't know if popstate is forwards, back or otherwise, so here we are.
@@ -111,8 +127,6 @@ export class SnappyRouter extends RouterOutlet implements OnInit, OnDestroy {
     if ((newComponent.instance as SnappyShow).snOnShow) {
       (newComponent.instance as SnappyShow).snOnShow();
     }
-
-
 
     for (let i = this.element.length - 1; i >= 0; i--) {
       const v = this.element.get(i) as EmbeddedViewRef<any>;
@@ -171,17 +185,18 @@ export class SnappyRouter extends RouterOutlet implements OnInit, OnDestroy {
   }
 
   createComponent(route: ActivatedRoute, env: EnvironmentInjector): ComponentRef<any> {
-    const inj = Injector.create({
-      providers: [
-        { provide: ActivatedRoute, useValue: route }
-      ],
-      parent: this.injector
-    });
+    const childContexts = this.parentCtx.getOrCreateContext(this.n).children;
+    const ina = new OutletInjector(
+      route,
+      childContexts,
+      this.element.injector,
+      this.routerOutletData
+    );
 
     let newComponent = this.element.createComponent(route.component!,
       {
         index: 0,
-        injector: inj,
+        injector: ina,
         environmentInjector: env
       });
 
@@ -208,11 +223,12 @@ export class SnappyRouter extends RouterOutlet implements OnInit, OnDestroy {
     return c.injectables.get(key);
   }
   public claim(): void {
+    if (!this.components.length) { return; };
     let c = this.components[this.components.length - 1];
 
     for (const o of this.dataStack) {
-      if (c.injectables.has(o.name)) {
-        c.injectables.set(o.name, o.data);
+      if (c.injectables.has(o.token)) {
+        c.injectables.set(o.token, o.data);
       }
     }
 
@@ -221,8 +237,33 @@ export class SnappyRouter extends RouterOutlet implements OnInit, OnDestroy {
 
 
   public navigateTo(url: string, data: any = null) {
-    this.dataStack.push({ name: data?.Ψsnappyid, data: data });
+    this.dataStack.push({ token: data?.Ψsnappyid, data: data });
     this.router.navigateByUrl(url);
   }
 }
 
+
+class OutletInjector implements Injector {
+  constructor(
+    private readonly route: ActivatedRoute,
+    private readonly childContexts: ChildrenOutletContexts,
+    private readonly parent: Injector,
+    private readonly outletData: Signal<unknown>,
+  ) { }
+
+  get(token: any, notFoundValue?: any): any {
+    if (token === ActivatedRoute) {
+      return this.route;
+    }
+
+    if (token === ChildrenOutletContexts) {
+      return this.childContexts;
+    }
+
+    if (token === ROUTER_OUTLET_DATA) {
+      return this.outletData;
+    }
+
+    return this.parent.get(token, notFoundValue);
+  }
+}
