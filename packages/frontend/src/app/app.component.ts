@@ -58,10 +58,10 @@ export class AppComponent implements OnInit {
               }
             })
           }
-          // we are no longer asking nicely
-          if (updateAvaiable) {
-            window.location.reload()
-          }
+        }
+        // we are no longer asking nicely
+        if (updateAvaiable) {
+          window.location.reload()
         }
       })
     }
