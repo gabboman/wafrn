@@ -52,7 +52,7 @@ export class EditProfileComponent implements OnInit {
     forceClassicVideoPlayer: new FormControl(false),
     enableConfetti: new FormControl(false),
     forceClassicMediaView: new FormControl(false),
-    collapseQuotes: new FormControl(false),
+    expandQuotes: new FormControl(false),
     defaultExploreLocal: new FormControl(false),
     automaticalyExpandPosts: new FormControl(false)
   })
@@ -87,10 +87,10 @@ export class EditProfileComponent implements OnInit {
       const forceOldEditor = localStorage.getItem('forceOldEditor') === 'true'
       this.editProfileForm.controls['forceOldEditor'].patchValue(forceOldEditor)
       const publicOptions = blogDetails.publicOptions
-      const alsoKnownAs = publicOptions.find((elem) => elem.optionName == "fediverse.public.alsoKnownAs")
+      const alsoKnownAs = publicOptions.find((elem) => elem.optionName == 'fediverse.public.alsoKnownAs')
       try {
-        this.editProfileForm.controls['alsoKnownAs'].patchValue(JSON.parse(alsoKnownAs?.optionValue || ""))
-      } catch (_) { }
+        this.editProfileForm.controls['alsoKnownAs'].patchValue(JSON.parse(alsoKnownAs?.optionValue || ''))
+      } catch (_) {}
       const askLevel = publicOptions.find((elem) => elem.optionName == 'wafrn.public.asks')
       this.editProfileForm.controls['asksLevel'].patchValue(askLevel ? parseInt(askLevel.optionValue) : 2)
       this.editProfileForm.controls['forceClassicAudioPlayer'].patchValue(
@@ -103,9 +103,7 @@ export class EditProfileComponent implements OnInit {
       this.editProfileForm.controls['forceClassicMediaView'].patchValue(
         localStorage.getItem('forceClassicMediaView') == 'true'
       )
-      this.editProfileForm.controls['collapseQuotes'].patchValue(
-        localStorage.getItem('collapseQuotes') == 'true'
-      )
+      this.editProfileForm.controls['expandQuotes'].patchValue(localStorage.getItem('expandQuotes') == 'true')
 
       this.editProfileForm.controls['defaultExploreLocal'].patchValue(
         localStorage.getItem('defaultExploreLocal') == 'true'
@@ -130,7 +128,7 @@ export class EditProfileComponent implements OnInit {
       if (fediAttachments) {
         try {
           this.fediAttachments = JSON.parse(fediAttachments.optionValue)
-        } catch (error) { }
+        } catch (error) {}
       }
       this.loading = false
     })

@@ -27,9 +27,7 @@
   [ngClass]="{ hidden: (fragment().content_warning || fragment().muted_words_cw) && !showSensitiveContent() }"
 >
   @for (quote of fragment().quotes; track $index) {
-    <div *ngIf="quote"
-          class="quoted-post cursor-pointer"
-          [ngClass]="{ 'quote-collapsed': collapseQuotes }">
+    <div *ngIf="quote" class="quoted-post cursor-pointer" [ngClass]="{ 'quote-collapsed': !expandQuotes }">
       <div class="flex">
         <app-post-header class="w-full" [fragment]="quote" [simplified]="true" [disableLink]="true"></app-post-header>
       </div>
@@ -121,6 +119,9 @@
         </div>
       }
     }
-    <app-emoji-react *ngIf="!(userId === '' || userId === fragment().userId)" [postId]="fragment().id"></app-emoji-react>
+    <app-emoji-react
+      *ngIf="!(userId === '' || userId === fragment().userId)"
+      [postId]="fragment().id"
+    ></app-emoji-react>
   </section>
 </div>

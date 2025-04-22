@@ -1,17 +1,28 @@
 <mat-card class="p-3 mb-6 lg:mx-4 wafrn-container">
   <mat-tab-group mat-stretch-tabs="false" mat-align-tabs="start" dynamicHeight preserveContent>
     <form [hidden]="loading" [formGroup]="editProfileForm" (ngSubmit)="onSubmit()">
-      <hr>
+      <hr />
       <mat-tab label="{{ 'profile.tabHeaders.profile' | translate }}">
         <div class="pt-2 px-3 border-round-md mb-4" style="border: 1px solid var(--mat-sys-outline-variant)">
           <label for="avatar" class="block font-medium mb-2">Choose another avatar</label>
-          <input formControlName="avatar" id="avatar" type="file" accept="image/jpeg,image/png,image/webp,image/gif"
-            (change)="imgSelected($event)" class="w-full mb-3" />
+          <input
+            formControlName="avatar"
+            id="avatar"
+            type="file"
+            accept="image/jpeg,image/png,image/webp,image/gif"
+            (change)="imgSelected($event)"
+            class="w-full mb-3"
+          />
         </div>
         <div class="pt-2 px-3 border-round-md mb-4" style="border: 1px solid var(--mat-sys-outline-variant)">
           <label for="avatar" class="block font-medium mb-2">Choose header image</label>
-          <input id="headerImage" type="file" accept="image/jpeg,image/png,image/webp,image/gif"
-            (change)="headerImgSelected($event)" class="w-full mb-3" />
+          <input
+            id="headerImage"
+            type="file"
+            accept="image/jpeg,image/png,image/webp,image/gif"
+            (change)="headerImgSelected($event)"
+            class="w-full mb-3"
+          />
         </div>
         <mat-form-field class="w-full" appearance="outline">
           <mat-label>Display name (can contain emoji codes)</mat-label>
@@ -19,24 +30,28 @@
         </mat-form-field>
         <mat-form-field class="w-full" appearance="outline">
           <mat-label>Your bio/description. You can put emoji codes here too. You can use markdown here</mat-label>
-          <textarea matInput placeholder="Description" style="min-height: 20vh"
-            formControlName="description"></textarea>
+          <textarea
+            matInput
+            placeholder="Description"
+            style="min-height: 20vh"
+            formControlName="description"
+          ></textarea>
         </mat-form-field>
         <hr />
         <p [hidden]="loading" class="w-full">Extra information (Fediverse exclusive)</p>
         @for (attachment of fediAttachments; track $index) {
-        <form [hidden]="loading">
-          <div class="w-full">
-            <mat-form-field class="w-50">
-              <mat-label>Property name</mat-label>
-              <input [ngModelOptions]="{ standalone: true }" [(ngModel)]="fediAttachments[$index].name" matInput />
-            </mat-form-field>
-            <mat-form-field class="w-50">
-              <mat-label>Property value</mat-label>
-              <input [ngModelOptions]="{ standalone: true }" [(ngModel)]="fediAttachments[$index].value" matInput />
-            </mat-form-field>
-          </div>
-        </form>
+          <form [hidden]="loading">
+            <div class="w-full">
+              <mat-form-field class="w-50">
+                <mat-label>Property name</mat-label>
+                <input [ngModelOptions]="{ standalone: true }" [(ngModel)]="fediAttachments[$index].name" matInput />
+              </mat-form-field>
+              <mat-form-field class="w-50">
+                <mat-label>Property value</mat-label>
+                <input [ngModelOptions]="{ standalone: true }" [(ngModel)]="fediAttachments[$index].value" matInput />
+              </mat-form-field>
+            </div>
+          </form>
         }
         <div [hidden]="loading" (click)="addFediAttachment()">+</div>
       </mat-tab>
@@ -66,8 +81,8 @@
           <mat-label>Force classic media carousel (vertical)</mat-label>
         </div>
         <div class="w-full">
-          <mat-checkbox formControlName="collapseQuotes"></mat-checkbox>
-          <mat-label>Collapse quotes if too long</mat-label>
+          <mat-checkbox formControlName="expandQuotes"></mat-checkbox>
+          <mat-label>Do not collapse quotes</mat-label>
         </div>
         <div class="w-full">
           <mat-checkbox formControlName="disableCW"></mat-checkbox>
@@ -103,7 +118,7 @@
           <mat-label>Default post privacy</mat-label>
           <mat-select [required]="true" formControlName="defaultPostEditorPrivacy">
             @for (option of privacyOptions; track $index) {
-            <mat-option [value]="option.level">{{ option.name }}</mat-option>
+              <mat-option [value]="option.level">{{ option.name }}</mat-option>
             }
           </mat-select>
         </mat-form-field>
@@ -111,21 +126,25 @@
           <mat-label>Asks</mat-label>
           <mat-select [required]="true" formControlName="asksLevel">
             @for (option of askOptions; track $index) {
-            <mat-option [value]="option.level">{{ option.name }}</mat-option>
+              <mat-option [value]="option.level">{{ option.name }}</mat-option>
             }
           </mat-select>
         </mat-form-field>
         {{ 'profile.security.header' | translate }}:
         <div class="flex align-items-center justify-content-between mt-2">
-          <a routerLink="/recoverPassword"
-            class="font-medium no-underline ml-2 mdc-button w-full mat-primary mat-mdc-unelevated-button cursor-pointer">
-            {{'profile.security.passwordChange' | translate}}
+          <a
+            routerLink="/recoverPassword"
+            class="font-medium no-underline ml-2 mdc-button w-full mat-primary mat-mdc-unelevated-button cursor-pointer"
+          >
+            {{ 'profile.security.passwordChange' | translate }}
           </a>
         </div>
         <div class="flex align-items-center justify-content-between mt-2">
-          <a routerLink="/mfaSetup"
-            class="font-medium no-underline ml-2 mdc-button w-full mat-primary mat-mdc-unelevated-button cursor-pointer">
-            {{'profile.security.mfa.setup' | translate}}
+          <a
+            routerLink="/mfaSetup"
+            class="font-medium no-underline ml-2 mdc-button w-full mat-primary mat-mdc-unelevated-button cursor-pointer"
+          >
+            {{ 'profile.security.mfa.setup' | translate }}
           </a>
         </div>
       </mat-tab>
@@ -133,8 +152,11 @@
         <section id="tags" class="mt-2 w-full flex-row">
           <mat-form-field class="w-full">
             <mat-label>Moving from a different account</mat-label>
-            <input formControlName="alsoKnownAs" placeholder="https://your.old.fedi.server/users/your_username"
-              matNativeControl />
+            <input
+              formControlName="alsoKnownAs"
+              placeholder="https://your.old.fedi.server/users/your_username"
+              matNativeControl
+            />
           </mat-form-field>
         </section>
         <hr />
@@ -146,9 +168,9 @@
           <div *ngIf="editProfileForm.value.mutedWords.split(',').length > 0" class="taglist flex flex-wrap mb-2">
             Muted phrases:
             @for (tag of editProfileForm.value.mutedWords.split(','); track $index) {
-            <div *ngIf="tag && tag !== '' && tag.trim() !== ''" class="tag">
-              {{ tag.trim() }}
-            </div>
+              <div *ngIf="tag && tag !== '' && tag.trim() !== ''" class="tag">
+                {{ tag.trim() }}
+              </div>
             }
           </div>
         </section>
@@ -166,14 +188,17 @@
     <mat-tab label="Bluesky">
       <!-- I swear I'll translate this, don't merge before I do! -->
       <p>Bluesky integration is still very experimental! Things will absolutely break!</p>
-      <p>Please refer to <a href="https://wafrn.net/faq/user.html#blueskyIntegration">the FAQ</a> to find out what
-        does/doesn't work generally speaking.</p>
-      <p>In the future, we aim to have Bluesky-Specific settings in here, like the ability to change the Bluesky
-        username.</p>
+      <p>
+        Please refer to <a href="https://wafrn.net/faq/user.html#blueskyIntegration">the FAQ</a> to find out what
+        does/doesn't work generally speaking.
+      </p>
+      <p>
+        In the future, we aim to have Bluesky-Specific settings in here, like the ability to change the Bluesky
+        username.
+      </p>
       <button [disabled]="loading" (click)="enableBluesky()" mat-flat-button class="w-full">Enable bluesky</button>
     </mat-tab>
   </mat-tab-group>
-
 
   <!--
     <div class="w-full">
@@ -189,8 +214,14 @@
     </mat-card>
     -->
 
-  <button (click)="onSubmit()" [disabled]="!editProfileForm.valid" mat-raised-button color="primary" icon="pi pi-user"
-    class="w-full mt-4">
+  <button
+    (click)="onSubmit()"
+    [disabled]="!editProfileForm.valid"
+    mat-raised-button
+    color="primary"
+    icon="pi pi-user"
+    class="w-full mt-4"
+  >
     Update profile
   </button>
 </mat-card>
