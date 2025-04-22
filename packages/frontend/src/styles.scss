@@ -172,9 +172,10 @@ body {
   font-family: 'Comic Sans MS', cursive, sans-serif;
 }
 
-/* TODO: Refactor this to work inside the new-editor component's SCSS */
-
-@media screen and (max-width: 960px) {
+/* Small-Screen media queries. */
+/* Currently encompasses the bottom-sheet style for dialogs, as well as the full-width post style for narrow screens.*/ 
+@media screen and (max-width: 800px) {
+  /* START bottom-sheet */
   :root {
     --mdc-dialog-container-shape: 16px 16px 0px 0px;
   }
@@ -197,6 +198,14 @@ body {
       transform: translateY(0%);
     }
   }
+  /* END bottom-sheet */
+  /* START fullwidth post style */
+  mat-card {
+    border-radius: 0px!important;
+    margin-inline: 0px!important;
+  }
+  /* END fullwidth post style */
+  
 }
 
 .shortened-post {
