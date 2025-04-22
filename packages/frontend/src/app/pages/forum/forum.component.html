@@ -18,7 +18,7 @@
   <div id="scroll-here-on-page-change"></div>
   <app-loader *ngIf="loading && this.hasPost"></app-loader>
   <ng-container
-    *ngFor="let content of forumPosts | slice: currentPage * itemsPerPage : currentPage * itemsPerPage + itemsPerPage"
+    *ngFor="let content of forumPosts() | slice: currentPage * itemsPerPage : currentPage * itemsPerPage + itemsPerPage"
   >
     @if (
       content.content !== '' ||
@@ -48,12 +48,12 @@
   </ng-container>
 </ng-container>
 
-<footer *ngIf="forumPosts.length > 0" class="p-3 py-2 mb-4 lg:mx-4 wafrn-container">
+<footer *ngIf="forumPosts().length > 0" class="p-3 py-2 mb-4 lg:mx-4 wafrn-container">
   <mat-paginator
     (page)="changePage($event)"
     [pageSizeOptions]="[10, 25, 50, 100, 250]"
     showFirstLastButtons
-    [length]="forumPosts.length"
+    [length]="forumPosts().length"
     [pageIndex]="currentPage"
     [pageSize]="itemsPerPage"
   ></mat-paginator>

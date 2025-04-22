@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common'
-import { Component, inject, model, OnDestroy, OnInit } from '@angular/core'
+import { Component, inject, model, OnDestroy, OnInit, signal } from '@angular/core'
 import { MatButtonModule } from '@angular/material/button'
 import { MatCardModule } from '@angular/material/card'
 import { MatPaginatorModule, PageEvent } from '@angular/material/paginator'
@@ -50,7 +50,7 @@ import { SnappyPostData } from 'src/app/directives/post-link/post-link.directive
 })
 export class ForumComponent implements OnInit, OnDestroy, SnappyCreate {
   loading = true
-  forumPosts: ProcessedPost[] = []
+  forumPosts = signal<ProcessedPost[]>([]);
   post = model<ProcessedPost[]>([]);
   postId = model<string>('');
   snappyPost = snappyInject(SnappyPostData);
@@ -66,7 +66,7 @@ export class ForumComponent implements OnInit, OnDestroy, SnappyCreate {
 
   // evil
   findReply = (id: string | undefined) => {
-    return this.forumPosts.find((post) => post.id === id) ?? this.post().find((post) => post.id === id)
+    return this.forumPosts().find((post) => post.id === id) ?? this.post().find((post) => post.id === id)
   }
 
   // local pagination
@@ -138,7 +138,7 @@ export class ForumComponent implements OnInit, OnDestroy, SnappyCreate {
         // TODO article petition
       }
       const tmpForumPosts = this.forumService.getForumThread(this.postId());
-      this.forumPosts = await tmpForumPosts;
+      this.forumPosts.set(await tmpForumPosts);
       this.loading = false;
     })
   }
@@ -161,8 +161,9 @@ export class ForumComponent implements OnInit, OnDestroy, SnappyCreate {
 
   async loadRepliesFromFediverse() {
     this.loading = true;
+    this.hasPost = true;
     await this.postService.loadRepliesFromFediverse(this.post()[this.post().length - 1].id);
-    this.forumPosts = await this.forumService.getForumThread(this.post()[this.post().length - 1].id);
+    this.forumPosts.set(await this.forumService.getForumThread(this.post()[this.post().length - 1].id));
     this.itemsPerPage = 50
     this.currentPage = 0
     this.loading = false

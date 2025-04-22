@@ -88,6 +88,7 @@ export class ViewBlogComponent implements OnInit, OnDestroy, SnappyHide, SnappyS
 
   snOnHide(): void {
     if (this.userLoggedIn) { this.themeService.setMyTheme(); }
+    else { this.themeService.setTheme('') };
   }
 
   ngOnDestroy(): void {
