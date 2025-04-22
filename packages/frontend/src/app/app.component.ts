@@ -41,9 +41,6 @@ export class AppComponent implements OnInit {
 
     if (this.swUpdate.isEnabled) {
       this.swUpdate.checkForUpdate().then((updateAvaiable) => {
-        if (updateAvaiable && confirm("You're using an old version of wafrn, do you want to update?")) {
-          window.location.reload()
-        }
         if (EnvironmentService.environment.disablePWA) {
           if ('caches' in window) {
             caches.keys().then(function (keyList) {
@@ -60,6 +57,10 @@ export class AppComponent implements OnInit {
                 registration.unregister()
               }
             })
+          }
+          // we are no longer asking nicely
+          if (updateAvaiable) {
+            window.location.reload()
           }
         }
       })
