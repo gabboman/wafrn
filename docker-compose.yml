@@ -49,9 +49,14 @@ services:
         FRONTEND_DISABLE_PWA: ${FRONTEND_DISABLE_PWA:-}
         FRONTEND_MAINTENANCE: ${FRONTEND_MAINTENANCE:-}
     depends_on:
-      - db
-      - redis
-      - frontend
+      db:
+        condition: service_started
+      redis:
+        condition: service_started
+      frontend:
+        condition: service_started
+      migration:
+        condition: service_completed_successfully
     restart: unless-stopped
     environment:
       - NODE_ENV=production
@@ -59,6 +64,18 @@ services:
       - ./packages/backend/uploads:/wafrn/uploads
       - ./packages/backend/cache:/wafrn/cache
       - frontend:/wafrn/packages/frontend:ro
+
+  migration:
+    <<: *default_backend
+    depends_on:
+      db:
+        condition: service_started
+      redis:
+        condition: service_started
+      frontend:
+        condition: service_started
+    restart: no
+    command: "npm exec tsx migrate.ts init-container"
 
   frontend:
     restart: unless-stopped

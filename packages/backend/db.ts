@@ -1,10 +1,7 @@
-import { generateKeyPairSync } from 'crypto'
-import bcrypt from 'bcrypt'
 import { environment } from './environment.js'
 import { logger } from './utils/logger.js'
 import { Sequelize } from 'sequelize'
 import { Model, InferAttributes, InferCreationAttributes, DataTypes } from 'sequelize'
-import { redisCache } from './utils/redis.js'
 
 // @ts-ignore sequelize-hierarchy-fork has no types
 import sequelizeHierarchyFork from 'sequelize-hierarchy-fork'
@@ -1025,79 +1022,6 @@ User.belongsToMany(Post, {
   through: RemoteUserPostView,
   as: 'postView'
 })
-
-sequelize
-  .sync({
-    force: false
-  })
-  .then(async () => {
-    let adminUser = await User.findOne({
-      where: {
-        url: environment.adminUser
-      }
-    })
-    let delUser = await User.findOne({
-      where: {
-        url: environment.deletedUser
-      }
-    })
-    if (!adminUser || !delUser) {
-      await redisCache.flushdb()
-      const { publicKey, privateKey } = generateKeyPairSync('rsa', {
-        modulusLength: 4096,
-        publicKeyEncoding: {
-          type: 'spki',
-          format: 'pem'
-        },
-        privateKeyEncoding: {
-          type: 'pkcs8',
-          format: 'pem'
-        }
-      })
-
-      const admin = {
-        email: environment.adminEmail,
-        description: 'Admin',
-        url: environment.adminUser,
-        name: environment.adminUser,
-        NSFW: false,
-        password: await bcrypt.hash(environment.adminPassword as string, environment.saltRounds),
-        birthDate: new Date(),
-        avatar: '',
-        role: 10,
-        activated: true,
-        registerIp: '127.0.0.1',
-        lastLoginIp: '127.0.0.1',
-        banned: false,
-        activationCode: '',
-        privateKey,
-        publicKey,
-        lastTimeNotificationsCheck: new Date()
-      }
-
-      const deleted = {
-        email: 'localhost@localhost',
-        description: 'DELETED USER',
-        url: environment.deletedUser,
-        name: environment.deletedUser,
-        NSFW: false,
-        password: await bcrypt.hash('deleted', environment.saltRounds),
-        birthDate: new Date(),
-        avatar: '',
-        role: 0,
-        activated: true,
-        registerIp: '127.0.0.1',
-        lastLoginIp: '127.0.0.1',
-        banned: true,
-        activationCode: '',
-        privateKey,
-        publicKey
-      }
-
-      adminUser = adminUser ? adminUser : await User.create(admin)
-      delUser = delUser ? delUser : await User.create(deleted)
-    }
-  })
 
 export {
   sequelize,
