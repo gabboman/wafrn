@@ -24,6 +24,7 @@ import { EnvironmentService } from 'src/app/services/environment.service'
 import { SimplifiedUser } from 'src/app/interfaces/simplified-user'
 import { snappyInject, SnappyRouter } from 'src/app/components/snappy/snappy-router.component'
 import { SnappyBlogData } from 'src/app/directives/blog-link/blog-link.directive'
+import { SnappyHide, SnappyShow } from 'src/app/components/snappy/snappy-life'
 
 @Component({
   selector: 'app-view-blog',
@@ -31,7 +32,7 @@ import { SnappyBlogData } from 'src/app/directives/blog-link/blog-link.directive
   styleUrls: ['./view-blog.component.scss'],
   standalone: false,
 })
-export class ViewBlogComponent implements OnInit, OnDestroy {
+export class ViewBlogComponent implements OnInit, OnDestroy, SnappyHide, SnappyShow {
   loading = signal<boolean>(true);
   loadingBlog = signal<boolean>(true);
   noMorePosts = false
@@ -45,6 +46,7 @@ export class ViewBlogComponent implements OnInit, OnDestroy {
   userLoggedIn = false
   navigationSubscription!: Subscription
   endSubscription!: Subscription
+  paramSubscription!: Subscription
   showModalTheme = false
   viewedPostsIds: string[] = []
   intersectionObserverForLoadPosts!: IntersectionObserver
@@ -79,21 +81,31 @@ export class ViewBlogComponent implements OnInit, OnDestroy {
   ) {
     this.userLoggedIn = loginService.checkUserLoggedIn()
   }
+  snOnShow(): void {
+    if (this.blogDetails()) {
+      this.handleTheme(this.blogDetails()!);
+    }
+  }
+
+  snOnHide(): void {
+    if (this.userLoggedIn) { this.themeService.setMyTheme(); }
+  }
 
   ngOnDestroy(): void {
     if (this.navigationSubscription) {
       this.navigationSubscription.unsubscribe()
     }
+    this.paramSubscription.unsubscribe()
   }
 
   async ngOnInit() {
     this.navigationSubscription = this.router.events
       .pipe(filter((event) => event instanceof NavigationEnd))
       .subscribe((e) => {
-        if (this.userLoggedIn) { this.themeService.setMyTheme(); }
+        // if (this.userLoggedIn) { this.themeService.setMyTheme(); }
       })
 
-    this.activatedRoute.params.subscribe((e) => {
+    this.paramSubscription = this.activatedRoute.params.subscribe((e) => {
       this.currentPage = 0;
       this.blogUrl = '';
       this.avatarUrl = '';
@@ -178,12 +190,14 @@ export class ViewBlogComponent implements OnInit, OnDestroy {
 
 
   handleTheme(blogDetails: BlogDetails) {
-    const userHasCustomTheme = blogDetails.url.startsWith('@');
+    console.log("Themeing");
+    const userHasCustomTheme = !blogDetails.url.startsWith('@');
 
     if (userHasCustomTheme) {
       let userResponseToCustomThemes = this.themeService.hasUserAcceptedCustomThemes()
 
       if (userResponseToCustomThemes === 2) {
+        console.log("Themeing");
         this.themeService.setTheme(blogDetails.id)
       }
 

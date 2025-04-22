@@ -23,12 +23,23 @@ interface SnappyComponent {
 let creationsubject = new Subject<string>();
 
 // If Angular thinks it can use unicode characters to commit crimes, I get to too
+/**
+ * Declares a class as Injectable by
+ */
 export function SnappyInjectable(ctr: Function) {
   (ctr as any).Ψsnappyid = ctr.name;
   ctr.prototype.Ψsnappyid = ctr.name;
 }
 
 // Haters will say this is bad and evil. They're right!
+
+/**
+ * Create an injectable property on within a component.
+ *
+ * This component must be associated with a route to automatically receive data.
+ *
+ * @param Ψinst - The
+ */
 export function snappyInject<T>(Ψinst: new (...args: any[]) => T): ((router: SnappyRouter) => T) {
   const key = (Ψinst as any).Ψsnappyid;
   if (!key) throw new Error("Parameter is not injectable by snappy!");
@@ -36,9 +47,10 @@ export function snappyInject<T>(Ψinst: new (...args: any[]) => T): ((router: Sn
 
   // Would like to accept router somewhere else if possible
   return ((router: SnappyRouter): T => {
-    return router.get(key) as T;
+    return router.getInjectableData(key) as T;
   })
 }
+
 
 // TODO: Implement routeroutletcontract rather than extend routeroutlet
 @Directive({
@@ -103,6 +115,9 @@ export class SnappyRouter extends RouterOutlet implements OnInit, OnDestroy {
   // AFAIK we can't get the component ref back from a view ref :(
   components: SnappyComponent[] = [];
 
+  /**
+   * Called by Angular when a router navigation event begins that belongs to this outlet.
+   */
   override activateWith(activatedRoute: ActivatedRoute, environmentInjector: EnvironmentInjector): void {
     this.currentRoute = activatedRoute;
 
@@ -134,7 +149,7 @@ export class SnappyRouter extends RouterOutlet implements OnInit, OnDestroy {
         if (node instanceof HTMLElement) {
           if (i != 0) {
             if (!node.classList.contains("snappy-hide")) {
-              let component = this.components[i].component;
+              let component = this.components[this.components.length - 1 - i].component;
               if ((component.instance as SnappyHide).snOnHide) {
                 (component.instance as SnappyHide).snOnHide();
               }
@@ -152,14 +167,19 @@ export class SnappyRouter extends RouterOutlet implements OnInit, OnDestroy {
     this.urlStack.push(this.router.url);
   }
 
+  /**
+   * Pops the top-most element from the ViewContainerRef and unhides the
+   * next element.
+   */
   pop(): void {
-    if (this.element.length <= 1) {
-      return;
+    let component = this.components[this.components.length - 1].component;
+    if ((component.instance as SnappyHide).snOnHide) {
+      (component.instance as SnappyHide).snOnHide();
     }
     this.components.pop();
     this.element.remove(0);
     let show = this.element.get(0) as EmbeddedViewRef<any>;
-    let component = this.components[this.components.length - 1].component;
+    component = this.components[this.components.length - 1].component;
 
 
     show.rootNodes.forEach((node) => {
@@ -175,6 +195,9 @@ export class SnappyRouter extends RouterOutlet implements OnInit, OnDestroy {
     this.urlStack.pop();
   }
 
+  /**
+   * Removes all elements from the ViewContainerRef if the URL stack is empty.
+   */
   cleanDOM() {
     // If we refresh the page our data will be borked, so clean the DOM
     if (this.urlStack.length === 0) {
@@ -184,6 +207,12 @@ export class SnappyRouter extends RouterOutlet implements OnInit, OnDestroy {
     }
   }
 
+  /**
+   * Creates a component and injects it into the route's ViewcContainer
+   * @param route - The active route
+   * @param env - The environment injector from `activateWithhWith()`.
+   * @returns A ComponentRef of the component.
+   */
   createComponent(route: ActivatedRoute, env: EnvironmentInjector): ComponentRef<any> {
     const childContexts = this.parentCtx.getOrCreateContext(this.n).children;
     const ina = new OutletInjector(
@@ -218,10 +247,21 @@ export class SnappyRouter extends RouterOutlet implements OnInit, OnDestroy {
   }
 
   // Public Methods
-  public get(key: string): any {
+
+  /**
+   * Get data attached to a component via its token identifier.
+   * @param key - The token of the data
+   * @returns The data last associated with this token
+   */
+  public getInjectableData(key: string): any {
     let c = this.components[this.components.length - 1];
     return c.injectables.get(key);
   }
+
+  /**
+   * Places incoming snappy data into the active component's
+   * injectables.
+   * */
   public claim(): void {
     if (!this.components.length) { return; };
     let c = this.components[this.components.length - 1];
@@ -236,6 +276,10 @@ export class SnappyRouter extends RouterOutlet implements OnInit, OnDestroy {
   }
 
 
+  /**
+   * @param url - The URL to navigate to via the Angular router
+   * @param data - Data to attach to this navigation. Should be defined with the @SnappyInjectable decorator.
+   */
   public navigateTo(url: string, data: any = null) {
     this.dataStack.push({ token: data?.Ψsnappyid, data: data });
     this.router.navigateByUrl(url);
