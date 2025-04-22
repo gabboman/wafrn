@@ -24,7 +24,7 @@ let creationsubject = new Subject<string>();
 
 // If Angular thinks it can use unicode characters to commit crimes, I get to too
 /**
- * Declares a class as Injectable by
+ * Declares a class as Injectable via SnappyRouter
  */
 export function SnappyInjectable(ctr: Function) {
   (ctr as any).Ψsnappyid = ctr.name;
@@ -38,10 +38,10 @@ export function SnappyInjectable(ctr: Function) {
  *
  * This component must be associated with a route to automatically receive data.
  *
- * @param Ψinst - The
+ * @param type - The type of class this injection will accept.
  */
-export function snappyInject<T>(Ψinst: new (...args: any[]) => T): ((router: SnappyRouter) => T) {
-  const key = (Ψinst as any).Ψsnappyid;
+export function snappyInject<T>(type: new (...args: any[]) => T): ((router: SnappyRouter) => T) {
+  const key = (type as any).Ψsnappyid;
   if (!key) throw new Error("Parameter is not injectable by snappy!");
   creationsubject.next(key);
 
@@ -53,6 +53,17 @@ export function snappyInject<T>(Ψinst: new (...args: any[]) => T): ((router: Sn
 
 
 // TODO: Implement routeroutletcontract rather than extend routeroutlet
+/**
+ * @description A stack oriented alternative to `RouterOutlet`.
+ * `SnappyRouter` keeps elements in the DOM and merely hides previous routes.
+ * `SnappyRouter` has some additional lifecycle control that may be implements via
+ * snappy life.
+ *
+ *
+ * @see `snappyInject` - Create an injection point on a component
+ * @see `SnappyInjectable` - Describe a class as injectable
+ * @see `SnappyService` - To navigate and provide data
+ */
 @Directive({
   selector: 'snappy-router',
   exportAs: 'outlet',
@@ -70,8 +81,6 @@ export class SnappyRouter extends RouterOutlet implements OnInit, OnDestroy {
 
   dataStack: { token: string, data: any }[] = [];
   creationStack: string[] = [];
-
-
 
   constructor(
     private readonly element: ViewContainerRef,
@@ -210,7 +219,7 @@ export class SnappyRouter extends RouterOutlet implements OnInit, OnDestroy {
   /**
    * Creates a component and injects it into the route's ViewcContainer
    * @param route - The active route
-   * @param env - The environment injector from `activateWithhWith()`.
+   * @param env - The environment injector from `activateWith()`.
    * @returns A ComponentRef of the component.
    */
   createComponent(route: ActivatedRoute, env: EnvironmentInjector): ComponentRef<any> {
@@ -222,7 +231,8 @@ export class SnappyRouter extends RouterOutlet implements OnInit, OnDestroy {
       this.routerOutletData
     );
 
-    let newComponent = this.element.createComponent(route.component!,
+    const component = route.component as any;
+    const newComponent = this.element.createComponent(component,
       {
         index: 0,
         injector: ina,

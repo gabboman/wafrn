@@ -1,6 +1,6 @@
 import { Component, OnDestroy, OnInit, signal, WritableSignal } from '@angular/core'
 import { Meta, Title } from '@angular/platform-browser'
-import { ActivatedRoute, NavigationEnd, Router } from '@angular/router'
+import { ActivatedRoute, Router } from '@angular/router'
 import {
   faArrowUpRightFromSquare,
   faClockRotateLeft,
@@ -10,7 +10,7 @@ import {
   faReply,
   faTriangleExclamation,
 } from '@fortawesome/free-solid-svg-icons'
-import { Subscription, filter } from 'rxjs'
+import { Subscription } from 'rxjs'
 import { ProcessedPost } from 'src/app/interfaces/processed-post'
 import { BlocksService } from 'src/app/services/blocks.service'
 import { DashboardService } from 'src/app/services/dashboard.service'
@@ -44,8 +44,6 @@ export class ViewBlogComponent implements OnInit, OnDestroy, SnappyHide, SnappyS
   avatarUrl = ''
   blogDetails = signal<BlogDetails | undefined>(undefined);
   userLoggedIn = false
-  navigationSubscription!: Subscription
-  endSubscription!: Subscription
   paramSubscription!: Subscription
   showModalTheme = false
   viewedPostsIds: string[] = []
@@ -82,8 +80,9 @@ export class ViewBlogComponent implements OnInit, OnDestroy, SnappyHide, SnappyS
     this.userLoggedIn = loginService.checkUserLoggedIn()
   }
   snOnShow(): void {
-    if (this.blogDetails()) {
-      this.handleTheme(this.blogDetails()!);
+    const blogDetails = this.blogDetails();
+    if (blogDetails) {
+      this.handleTheme(blogDetails);
     }
   }
 
@@ -92,19 +91,10 @@ export class ViewBlogComponent implements OnInit, OnDestroy, SnappyHide, SnappyS
   }
 
   ngOnDestroy(): void {
-    if (this.navigationSubscription) {
-      this.navigationSubscription.unsubscribe()
-    }
     this.paramSubscription.unsubscribe()
   }
 
   async ngOnInit() {
-    this.navigationSubscription = this.router.events
-      .pipe(filter((event) => event instanceof NavigationEnd))
-      .subscribe((e) => {
-        // if (this.userLoggedIn) { this.themeService.setMyTheme(); }
-      })
-
     this.paramSubscription = this.activatedRoute.params.subscribe((e) => {
       this.currentPage = 0;
       this.blogUrl = '';
@@ -117,8 +107,9 @@ export class ViewBlogComponent implements OnInit, OnDestroy, SnappyHide, SnappyS
       }
       this.blogDetails.set(undefined);
       if (this.simpleUser) {
-        this.blogDetails.set(this.simpleToBlog(this.simpleUser));
-        this.avatarUrl = this.getAvatarUrl(this.blogDetails()!);
+        const blogDetails = this.simpleToBlog(this.simpleUser);
+        this.blogDetails.set(blogDetails);
+        this.avatarUrl = this.getAvatarUrl(blogDetails);
         this.useSimple.set(true);
       }
       this.configureUser(true);
@@ -148,8 +139,9 @@ export class ViewBlogComponent implements OnInit, OnDestroy, SnappyHide, SnappyS
 
     this.useSimple.set(false);
     if (blogResponse) {
-      this.blogDetails.set(blogResponse);
-      this.avatarUrl = this.getAvatarUrl(this.blogDetails()!);
+      const blogDetails = blogResponse;
+      this.blogDetails.set(blogDetails);
+      this.avatarUrl = this.getAvatarUrl(blogResponse);
       this.titleService.setTitle(`${this.blogDetails()!.url}'s blog`)
       this.metaTagService.addTags([
         {
@@ -164,7 +156,7 @@ export class ViewBlogComponent implements OnInit, OnDestroy, SnappyHide, SnappyS
         this.reloadPosts()
       }
       this.useSimple.set(false);
-      this.handleTheme(this.blogDetails()!);
+      this.handleTheme(blogDetails);
     }
 
     this.intersectionObserverForLoadPosts = new IntersectionObserver(
