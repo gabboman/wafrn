@@ -1,28 +1,29 @@
 <mat-card class="p-3 mb-6 lg:mx-4 wafrn-container">
   <mat-tab-group mat-stretch-tabs="false" mat-align-tabs="start" dynamicHeight preserveContent>
-  <form [hidden]="loading" [formGroup]="editProfileForm" (ngSubmit)="onSubmit()">
-    <hr>
-    <mat-tab label="{{ 'profile.tabHeaders.profile' | translate }}">
-      <div class="pt-2 px-3 border-round-md mb-4" style="border: 1px solid var(--mat-sys-outline-variant)">
-        <label for="avatar" class="block font-medium mb-2">Choose another avatar</label>
-        <input formControlName="avatar" id="avatar" type="file" accept="image/jpeg,image/png,image/webp,image/gif"
-          (change)="imgSelected($event)" class="w-full mb-3" />
-      </div>
-      <div class="pt-2 px-3 border-round-md mb-4" style="border: 1px solid var(--mat-sys-outline-variant)">
-        <label for="avatar" class="block font-medium mb-2">Choose header image</label>
-        <input id="headerImage" type="file" accept="image/jpeg,image/png,image/webp,image/gif"
-          (change)="headerImgSelected($event)" class="w-full mb-3" />
-      </div>
-      <mat-form-field class="w-full" appearance="outline">
-        <mat-label>Display name (can contain emoji codes)</mat-label>
-        <input formControlName="name" matInput />
-      </mat-form-field>
-      <mat-form-field class="w-full" appearance="outline" >
-        <mat-label>Your bio/description. You can put emoji codes here too. You can use markdown here</mat-label>
-        <textarea matInput placeholder="Description" style="min-height: 20vh" formControlName="description"></textarea>
-      </mat-form-field>
-      <hr />
-      <p [hidden]="loading" class="w-full">Extra information (Fediverse exclusive)</p>
+    <form [hidden]="loading" [formGroup]="editProfileForm" (ngSubmit)="onSubmit()">
+      <hr>
+      <mat-tab label="{{ 'profile.tabHeaders.profile' | translate }}">
+        <div class="pt-2 px-3 border-round-md mb-4" style="border: 1px solid var(--mat-sys-outline-variant)">
+          <label for="avatar" class="block font-medium mb-2">Choose another avatar</label>
+          <input formControlName="avatar" id="avatar" type="file" accept="image/jpeg,image/png,image/webp,image/gif"
+            (change)="imgSelected($event)" class="w-full mb-3" />
+        </div>
+        <div class="pt-2 px-3 border-round-md mb-4" style="border: 1px solid var(--mat-sys-outline-variant)">
+          <label for="avatar" class="block font-medium mb-2">Choose header image</label>
+          <input id="headerImage" type="file" accept="image/jpeg,image/png,image/webp,image/gif"
+            (change)="headerImgSelected($event)" class="w-full mb-3" />
+        </div>
+        <mat-form-field class="w-full" appearance="outline">
+          <mat-label>Display name (can contain emoji codes)</mat-label>
+          <input formControlName="name" matInput />
+        </mat-form-field>
+        <mat-form-field class="w-full" appearance="outline">
+          <mat-label>Your bio/description. You can put emoji codes here too. You can use markdown here</mat-label>
+          <textarea matInput placeholder="Description" style="min-height: 20vh"
+            formControlName="description"></textarea>
+        </mat-form-field>
+        <hr />
+        <p [hidden]="loading" class="w-full">Extra information (Fediverse exclusive)</p>
         @for (attachment of fediAttachments; track $index) {
         <form [hidden]="loading">
           <div class="w-full">
@@ -37,129 +38,140 @@
           </div>
         </form>
         }
-      <div [hidden]="loading" (click)="addFediAttachment()">+</div>
-    </mat-tab>
-    <mat-tab label="{{ 'profile.tabHeaders.preferences' | translate }}">
-      <div class="w-full">
-        <mat-checkbox formControlName="manuallyAcceptsFollows"></mat-checkbox>
-        <mat-label>Manually accept follows</mat-label>
-      </div>
-      <div class="w-full">
-        <mat-checkbox formControlName="disableForceAltText"></mat-checkbox>
-        <mat-label>Allow uploading media without alt text (enable this only if you're evil)</mat-label>
-      </div>
-      <div class="w-full">
-        <mat-checkbox formControlName="forceClassicLogo"></mat-checkbox>
-        <mat-label>Force classic logo</mat-label>
-      </div>
-      <div class="w-full">
-        <mat-checkbox formControlName="forceClassicVideoPlayer"></mat-checkbox>
-        <mat-label>Force classic video player</mat-label>
-      </div>
-      <div class="w-full">
-        <mat-checkbox formControlName="forceClassicAudioPlayer"></mat-checkbox>
-        <mat-label>Force classic audio player</mat-label>
-      </div>
-      <div class="w-full">
-        <mat-checkbox formControlName="forceClassicMediaView"></mat-checkbox>
-        <mat-label>Force classic media carousel (vertical)</mat-label>
-      </div>
-      <div class="w-full">
-        <mat-checkbox formControlName="disableCW"></mat-checkbox>
-        <mat-label>Disable CW unless post contains muted words</mat-label>
-      </div>
-      <div class="w-full">
-        <mat-checkbox formControlName="enableConfetti"></mat-checkbox>
-        <mat-label>Enable confetti effect when posting and liking posts</mat-label>
-      </div>
-      <div class="w-full">
-        <mat-checkbox formControlName="defaultExploreLocal"></mat-checkbox>
-        <mat-label>Default dashboard is explore local instead of following</mat-label>
-      </div>
-      <mat-accordion>
-        <mat-expansion-panel hideToggle>
-          <mat-expansion-panel-header>
-            <mat-panel-title> Not recommended options </mat-panel-title>
-          </mat-expansion-panel-header>
-          <div class="w-full">
-            <mat-checkbox formControlName="disableNSFWFilter"></mat-checkbox>
-            <mat-label>Disable NSFW images filter</mat-label>
-          </div>
-          <div class="w-full">
-            <mat-checkbox formControlName="automaticalyExpandPosts"></mat-checkbox>
-            <mat-label>Automatically expand all posts</mat-label>
-          </div>
-        </mat-expansion-panel>
-      </mat-accordion>
-    </mat-tab>
-    <mat-tab label="{{ 'profile.tabHeaders.privacySecurity' | translate }}">
-      <p>Options</p>
-      <mat-form-field class="w-full" appearance="outline">
-        <mat-label>Default post privacy</mat-label>
-        <mat-select [required]="true" formControlName="defaultPostEditorPrivacy">
-          @for (option of privacyOptions; track $index) {
-          <mat-option [value]="option.level">{{ option.name }}</mat-option>
-          }
-        </mat-select>
-      </mat-form-field>
-      <mat-form-field class="w-full" appearance="outline">
-        <mat-label>Asks</mat-label>
-        <mat-select [required]="true" formControlName="asksLevel">
-          @for (option of askOptions; track $index) {
-          <mat-option [value]="option.level">{{ option.name }}</mat-option>
-          }
-        </mat-select>
-      </mat-form-field>
-      {{ 'profile.security.header' | translate }}:
-      <div class="flex align-items-center justify-content-between mt-2">
-        <a routerLink="/recoverPassword"
-          class="font-medium no-underline ml-2 mdc-button w-full mat-primary mat-mdc-unelevated-button cursor-pointer">
-          {{'profile.security.passwordChange' | translate}}
-        </a>
-      </div>
-      <div class="flex align-items-center justify-content-between mt-2">
-        <a routerLink="/mfaSetup"
-          class="font-medium no-underline ml-2 mdc-button w-full mat-primary mat-mdc-unelevated-button cursor-pointer">
-          {{'profile.security.mfa.setup' | translate}}
-        </a>
-      </div>
-    </mat-tab>
-    <mat-tab label="{{ 'profile.tabHeaders.misc' | translate }}">
-      <section id="tags" class="mt-2 w-full flex-row">
-        <mat-form-field class="w-full">
-          <mat-label>Muted words separated by commas</mat-label>
-          <input formControlName="mutedWords" placeholder="Separated by commas" matNativeControl />
-        </mat-form-field>
-        <div *ngIf="editProfileForm.value.mutedWords.split(',').length > 0" class="taglist flex flex-wrap mb-2">
-          Muted phrases:
-          @for (tag of editProfileForm.value.mutedWords.split(','); track $index) {
-          <div *ngIf="tag && tag !== '' && tag.trim() !== ''" class="tag">
-            {{ tag.trim() }}
-          </div>
-          }
+        <div [hidden]="loading" (click)="addFediAttachment()">+</div>
+      </mat-tab>
+      <mat-tab label="{{ 'profile.tabHeaders.preferences' | translate }}">
+        <div class="w-full">
+          <mat-checkbox formControlName="manuallyAcceptsFollows"></mat-checkbox>
+          <mat-label>Manually accept follows</mat-label>
         </div>
-      </section>
-      <mat-accordion>
-      <mat-expansion-panel hideToggle>
-          <mat-expansion-panel-header>
-            <mat-panel-title> available emojis </mat-panel-title>
-          </mat-expansion-panel-header>
-          <app-emoji-collections (emoji)="emojiClicked($event)"></app-emoji-collections>
-        </mat-expansion-panel>
-      </mat-accordion>
-    </mat-tab>
+        <div class="w-full">
+          <mat-checkbox formControlName="disableForceAltText"></mat-checkbox>
+          <mat-label>Allow uploading media without alt text (enable this only if you're evil)</mat-label>
+        </div>
+        <div class="w-full">
+          <mat-checkbox formControlName="forceClassicLogo"></mat-checkbox>
+          <mat-label>Force classic logo</mat-label>
+        </div>
+        <div class="w-full">
+          <mat-checkbox formControlName="forceClassicVideoPlayer"></mat-checkbox>
+          <mat-label>Force classic video player</mat-label>
+        </div>
+        <div class="w-full">
+          <mat-checkbox formControlName="forceClassicAudioPlayer"></mat-checkbox>
+          <mat-label>Force classic audio player</mat-label>
+        </div>
+        <div class="w-full">
+          <mat-checkbox formControlName="forceClassicMediaView"></mat-checkbox>
+          <mat-label>Force classic media carousel (vertical)</mat-label>
+        </div>
+        <div class="w-full">
+          <mat-checkbox formControlName="disableCW"></mat-checkbox>
+          <mat-label>Disable CW unless post contains muted words</mat-label>
+        </div>
+        <div class="w-full">
+          <mat-checkbox formControlName="enableConfetti"></mat-checkbox>
+          <mat-label>Enable confetti effect when posting and liking posts</mat-label>
+        </div>
+        <div class="w-full">
+          <mat-checkbox formControlName="defaultExploreLocal"></mat-checkbox>
+          <mat-label>Default dashboard is explore local instead of following</mat-label>
+        </div>
+        <mat-accordion>
+          <mat-expansion-panel hideToggle>
+            <mat-expansion-panel-header>
+              <mat-panel-title> Not recommended options </mat-panel-title>
+            </mat-expansion-panel-header>
+            <div class="w-full">
+              <mat-checkbox formControlName="disableNSFWFilter"></mat-checkbox>
+              <mat-label>Disable NSFW images filter</mat-label>
+            </div>
+            <div class="w-full">
+              <mat-checkbox formControlName="automaticalyExpandPosts"></mat-checkbox>
+              <mat-label>Automatically expand all posts</mat-label>
+            </div>
+          </mat-expansion-panel>
+        </mat-accordion>
+      </mat-tab>
+      <mat-tab label="{{ 'profile.tabHeaders.privacySecurity' | translate }}">
+        <p>Options</p>
+        <mat-form-field class="w-full" appearance="outline">
+          <mat-label>Default post privacy</mat-label>
+          <mat-select [required]="true" formControlName="defaultPostEditorPrivacy">
+            @for (option of privacyOptions; track $index) {
+            <mat-option [value]="option.level">{{ option.name }}</mat-option>
+            }
+          </mat-select>
+        </mat-form-field>
+        <mat-form-field class="w-full" appearance="outline">
+          <mat-label>Asks</mat-label>
+          <mat-select [required]="true" formControlName="asksLevel">
+            @for (option of askOptions; track $index) {
+            <mat-option [value]="option.level">{{ option.name }}</mat-option>
+            }
+          </mat-select>
+        </mat-form-field>
+        {{ 'profile.security.header' | translate }}:
+        <div class="flex align-items-center justify-content-between mt-2">
+          <a routerLink="/recoverPassword"
+            class="font-medium no-underline ml-2 mdc-button w-full mat-primary mat-mdc-unelevated-button cursor-pointer">
+            {{'profile.security.passwordChange' | translate}}
+          </a>
+        </div>
+        <div class="flex align-items-center justify-content-between mt-2">
+          <a routerLink="/mfaSetup"
+            class="font-medium no-underline ml-2 mdc-button w-full mat-primary mat-mdc-unelevated-button cursor-pointer">
+            {{'profile.security.mfa.setup' | translate}}
+          </a>
+        </div>
+      </mat-tab>
+      <mat-tab label="{{ 'profile.tabHeaders.misc' | translate }}">
+        <section id="tags" class="mt-2 w-full flex-row">
+          <mat-form-field class="w-full">
+            <mat-label>Moving from a different account</mat-label>
+            <input formControlName="alsoKnownAs" placeholder="https://your.old.fedi.server/users/your_username"
+              matNativeControl />
+          </mat-form-field>
+        </section>
+        <hr />
+        <section id="tags" class="mt-2 w-full flex-row">
+          <mat-form-field class="w-full">
+            <mat-label>Muted words separated by commas</mat-label>
+            <input formControlName="mutedWords" placeholder="Separated by commas" matNativeControl />
+          </mat-form-field>
+          <div *ngIf="editProfileForm.value.mutedWords.split(',').length > 0" class="taglist flex flex-wrap mb-2">
+            Muted phrases:
+            @for (tag of editProfileForm.value.mutedWords.split(','); track $index) {
+            <div *ngIf="tag && tag !== '' && tag.trim() !== ''" class="tag">
+              {{ tag.trim() }}
+            </div>
+            }
+          </div>
+        </section>
+        <hr />
+        <mat-accordion>
+          <mat-expansion-panel hideToggle>
+            <mat-expansion-panel-header>
+              <mat-panel-title> available emojis </mat-panel-title>
+            </mat-expansion-panel-header>
+            <app-emoji-collections (emoji)="emojiClicked($event)"></app-emoji-collections>
+          </mat-expansion-panel>
+        </mat-accordion>
+      </mat-tab>
     </form>
     <mat-tab label="Bluesky">
       <!-- I swear I'll translate this, don't merge before I do! -->
       <p>Bluesky integration is still very experimental! Things will absolutely break!</p>
-      <p>Please refer to <a href="https://wafrn.net/faq/user.html#blueskyIntegration">the FAQ</a> to find out what does/doesn't work generally speaking.</p>
-      <p>In the future, we aim to have Bluesky-Specific settings in here, like the ability to change the Bluesky username.</p>
+      <p>Please refer to <a href="https://wafrn.net/faq/user.html#blueskyIntegration">the FAQ</a> to find out what
+        does/doesn't work generally speaking.</p>
+      <p>In the future, we aim to have Bluesky-Specific settings in here, like the ability to change the Bluesky
+        username.</p>
       <button [disabled]="loading" (click)="enableBluesky()" mat-flat-button class="w-full">Enable bluesky</button>
     </mat-tab>
   </mat-tab-group>
 
 
-    <!--
+  <!--
     <div class="w-full">
       <mat-checkbox formControlName="federateWithThreads"></mat-checkbox>
       <mat-label>Enable federation with Threads (meta/facebook)</mat-label>

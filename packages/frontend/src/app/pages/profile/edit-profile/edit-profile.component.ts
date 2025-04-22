@@ -41,6 +41,7 @@ export class EditProfileComponent implements OnInit {
     asksLevel: new UntypedFormControl(2, []),
     description: new FormControl('', Validators.required),
     federateWithThreads: new FormControl(false),
+    alsoKnownAs: new FormControl(''),
     disableForceAltText: new FormControl(false),
     forceClassicLogo: new FormControl(false),
     manuallyAcceptsFollows: new FormControl(false),
@@ -85,6 +86,10 @@ export class EditProfileComponent implements OnInit {
       const forceOldEditor = localStorage.getItem('forceOldEditor') === 'true'
       this.editProfileForm.controls['forceOldEditor'].patchValue(forceOldEditor)
       const publicOptions = blogDetails.publicOptions
+      const alsoKnownAs = publicOptions.find((elem) => elem.optionName == "fediverse.public.alsoKnownAs")
+      try {
+        this.editProfileForm.controls['alsoKnownAs'].patchValue(JSON.parse(alsoKnownAs?.optionValue || ""))
+      } catch (_) { }
       const askLevel = publicOptions.find((elem) => elem.optionName == 'wafrn.public.asks')
       this.editProfileForm.controls['asksLevel'].patchValue(askLevel ? parseInt(askLevel.optionValue) : 2)
       this.editProfileForm.controls['forceClassicAudioPlayer'].patchValue(
@@ -121,7 +126,7 @@ export class EditProfileComponent implements OnInit {
       if (fediAttachments) {
         try {
           this.fediAttachments = JSON.parse(fediAttachments.optionValue)
-        } catch (error) {}
+        } catch (error) { }
       }
       this.loading = false
     })
