@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit, signal, WritableSignal } from '@angular/core'
+import { Component, OnDestroy, OnInit, signal, WritableSignal } from '@angular/core'
 import { Meta, Title } from '@angular/platform-browser'
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router'
 import {
@@ -21,9 +21,12 @@ import { MatDialog } from '@angular/material/dialog'
 import { AcceptThemeComponent } from 'src/app/components/accept-theme/accept-theme.component'
 import { BlogDetails } from 'src/app/interfaces/blogDetails'
 import { EnvironmentService } from 'src/app/services/environment.service'
-import { ScrollService } from 'src/app/services/scroll.service'
+import { SnappyService } from 'src/app/services/snappy.service'
 import { SnappyCreate } from 'src/app/components/snappy/snappy-life'
 import { SimplifiedUser } from 'src/app/interfaces/simplified-user'
+import { snappyInject, SnappyRouter } from 'src/app/components/snappy/snappy-router.component'
+import { SnappyBlogData } from 'src/app/directives/blog-link/blog-link.directive'
+
 @Component({
   selector: 'app-view-blog',
   templateUrl: './view-blog.component.html',
@@ -62,6 +65,8 @@ export class ViewBlogComponent implements OnInit, OnDestroy, SnappyCreate {
   scrollId!: number;
   viewingPost!: WritableSignal<boolean>;
 
+  test = snappyInject(SnappyBlogData);
+
   constructor(
     private readonly activatedRoute: ActivatedRoute,
     private readonly dashboardService: DashboardService,
@@ -72,7 +77,8 @@ export class ViewBlogComponent implements OnInit, OnDestroy, SnappyCreate {
     private readonly themeService: ThemeService,
     public readonly blockService: BlocksService,
     private readonly dialog: MatDialog,
-    public readonly scrollService: ScrollService,
+    public readonly scrollService: SnappyService,
+    private readonly snappy: SnappyRouter
   ) {
     this.userLoggedIn = loginService.checkUserLoggedIn()
   }
@@ -80,7 +86,6 @@ export class ViewBlogComponent implements OnInit, OnDestroy, SnappyCreate {
   snOnCreate(): void {
     let data = this.scrollService.claimData();
     if (data === null) return;
-
     if ((data as SimplifiedUser).url) {
       this.simpleUser = data;
     }
@@ -103,8 +108,11 @@ export class ViewBlogComponent implements OnInit, OnDestroy, SnappyCreate {
       this.currentPage = 0;
       this.blogUrl = '';
       this.avatarUrl = '';
-      let data = this.scrollService.claimData();
-      if (data !== null && (data as SimplifiedUser).url) {
+      this.snappy.claim();
+
+      let data = this.test(this.snappy)?.blog;
+      console.log(data);
+      if (data && (data as SimplifiedUser).url) {
         this.simpleUser = data;
       }
       this.blogDetails.set(undefined);

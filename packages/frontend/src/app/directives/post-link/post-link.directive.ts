@@ -1,6 +1,6 @@
 import { Directive, ElementRef, HostListener, Input, OnInit, Renderer2 } from '@angular/core';
+import { SnappyInjectable, SnappyRouter } from 'src/app/components/snappy/snappy-router.component';
 import { ProcessedPost } from 'src/app/interfaces/processed-post';
-import { ScrollService } from 'src/app/services/scroll.service';
 
 @Directive({
   selector: '[postLink]',
@@ -10,7 +10,7 @@ export class PostLinkDirective implements OnInit {
   @Input({ required: true }) postLink!: ProcessedPost;
   @Input() postLinkId?: string;
 
-  constructor(private readonly host: ElementRef, private readonly renderer: Renderer2, private readonly scrollService: ScrollService) { }
+  constructor(private readonly host: ElementRef, private readonly renderer: Renderer2, private readonly snappy: SnappyRouter) { }
 
   async ngOnInit() {
     this.postLinkId ??= this.postLink.id;
@@ -21,7 +21,16 @@ export class PostLinkDirective implements OnInit {
   onClick(event: MouseEvent): void {
     if (event.button === 0) {
       event.preventDefault();
-      this.scrollService.navigateTo('/fediverse/post/' + this.postLinkId!, this.postLink)
+      const wrapper = new SnappyPostData(this.postLink);
+      this.snappy.navigateTo('/fediverse/post/' + this.postLinkId!, wrapper);
     }
+  }
+}
+
+@SnappyInjectable
+export class SnappyPostData {
+  public post: ProcessedPost;
+  constructor(post: ProcessedPost) {
+    this.post = post;
   }
 }

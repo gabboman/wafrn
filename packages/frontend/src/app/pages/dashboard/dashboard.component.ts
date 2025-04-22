@@ -11,7 +11,7 @@ import { DashboardService } from 'src/app/services/dashboard.service'
 import { JwtService } from 'src/app/services/jwt.service'
 import { MessageService } from 'src/app/services/message.service'
 import { PostsService } from 'src/app/services/posts.service'
-import { ScrollService } from 'src/app/services/scroll.service'
+import { SnappyService } from 'src/app/services/snappy.service'
 import { ThemeService } from 'src/app/services/theme.service'
 
 @Component({
@@ -39,7 +39,6 @@ export class DashboardComponent implements OnInit, OnDestroy, SnappyCreate, Snap
   // Would like to have this a bit more cleanly integrated though
   snActive: boolean = false;
 
-
   constructor(
     private dashboardService: DashboardService,
     private jwtService: JwtService,
@@ -49,7 +48,7 @@ export class DashboardComponent implements OnInit, OnDestroy, SnappyCreate, Snap
     private titleService: Title,
     private metaTagService: Meta,
     private themeService: ThemeService,
-    public readonly scrollService: ScrollService,
+    public readonly scrollService: SnappyService,
     private readonly viewportScroller: ViewportScroller,
   ) {
     this.titleService.setTitle('Wafrn - the social network that respects you')

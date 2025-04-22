@@ -32,7 +32,7 @@ import { SingleAskComponent } from '../single-ask/single-ask.component'
 
 import { Subscription } from 'rxjs'
 import { PostLinkModule } from 'src/app/directives/post-link/post-link.module'
-import { ScrollService } from 'src/app/services/scroll.service'
+import { SnappyService } from 'src/app/services/snappy.service'
 import Viewer from 'viewerjs'
 
 type EmojiReaction = {
@@ -126,7 +126,7 @@ export class PostFragmentComponent implements OnChanges, OnDestroy {
     private loginService: LoginService,
     private jwtService: JwtService,
     private readonly messages: MessageService,
-    public scrollService: ScrollService,
+    public scrollService: SnappyService,
   ) {
 
   }

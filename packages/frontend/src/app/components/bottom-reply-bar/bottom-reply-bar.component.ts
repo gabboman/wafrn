@@ -33,7 +33,7 @@ import { EditorService } from 'src/app/services/editor.service'
 import { LoginService } from 'src/app/services/login.service'
 import { MessageService } from 'src/app/services/message.service'
 import { PostsService } from 'src/app/services/posts.service'
-import { ScrollService } from 'src/app/services/scroll.service'
+import { SnappyService } from 'src/app/services/snappy.service'
 
 @Component({
   selector: 'app-bottom-reply-bar',
@@ -81,7 +81,7 @@ export class BottomReplyBarComponent implements OnChanges {
     private readonly deletePostService: DeletePostService,
     private readonly messages: MessageService,
     private readonly editor: EditorService,
-    public readonly scrollService: ScrollService
+    public readonly scrollService: SnappyService
   ) {
     this.userLoggedIn = loginService.checkUserLoggedIn()
     if (this.userLoggedIn) {

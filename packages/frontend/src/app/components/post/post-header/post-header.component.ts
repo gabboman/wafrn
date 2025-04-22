@@ -24,7 +24,7 @@ import {
 } from '@fortawesome/free-solid-svg-icons'
 import { DateTime } from 'luxon'
 import { PostLinkModule } from 'src/app/directives/post-link/post-link.module'
-import { ScrollService } from 'src/app/services/scroll.service'
+import { SnappyService } from 'src/app/services/snappy.service'
 import { ProcessedPost } from '../../../interfaces/processed-post'
 import { LoginService } from '../../../services/login.service'
 import { MessageService } from '../../../services/message.service'
@@ -92,7 +92,7 @@ export class PostHeaderComponent implements OnChanges {
     public postService: PostsService,
     private messages: MessageService,
     readonly loginService: LoginService,
-    public scrollService: ScrollService,
+    public scrollService: SnappyService,
   ) {
     // its an array
     ; (this.privacyOptions[10] = { level: 10, name: 'Direct Message', icon: faEnvelope }),

@@ -2,32 +2,92 @@ import {
   Component,
   EmbeddedViewRef,
   EnvironmentInjector,
+  Injectable,
   Injector,
   OnDestroy,
   OnInit,
   ViewContainerRef,
 } from '@angular/core';
-import { ActivatedRoute, NavigationEnd, Router, RouterOutlet } from '@angular/router';
-import { ScrollService, SnappyNavigation } from 'src/app/services/scroll.service';
+import { ActivatedRoute, NavigationEnd, NavigationStart, Router, RouterOutlet } from '@angular/router';
+import { SnappyService, SnappyNavigation } from 'src/app/services/snappy.service';
 import { SnappyCreate, SnappyHide, SnappyShow } from './snappy-life';
-import { filter, Observable, Subscription } from 'rxjs';
+import { filter, Observable, Subject, Subscription } from 'rxjs';
 
+interface SnappyComponent {
+  component: any;
+  injectables: Map<string, any>;
+}
+
+let creationsubject = new Subject<string>();
+
+// If Angular thinks it can use unicode characters to commit crimes, I get to too
+export function SnappyInjectable(ctr: Function) {
+  (ctr as any).Ψsnappyid = ctr.name;
+  ctr.prototype.Ψsnappyid = ctr.name;
+}
+
+// Haters will say this is bad and evil. They're right!
+export function snappyInject<T>(Ψinst: { new(...args: any[]): T }): ((router: SnappyRouter) => T) {
+  const key = (Ψinst as any).Ψsnappyid;
+  if (!key) throw new Error("Parameter is not injectable by snappy!");
+  creationsubject.next(key);
+  console.log(key);
+
+  // Would like to accept router somewhere else if possible
+  return ((router: SnappyRouter): T => {
+    return router.get(key) as T;
+  })
+}
+
+@Injectable({
+  providedIn: 'root'
+})
 @Component({
   selector: 'snappy-router',
   template: ''
 })
-export class SnappyOutletDirective extends RouterOutlet implements OnInit, OnDestroy {
+export class SnappyRouter extends RouterOutlet implements OnInit, OnDestroy {
+  public get(key: string): any {
+    let c = this.components[this.components.length - 1];
+    return c.injectables.get(key);
+  }
+  public claim(): void {
+    let c = this.components[this.components.length - 1];
+
+    for (const o of this.dataStack) {
+      if (c.injectables.has(o.name)) {
+        console.log(o.name);
+        c.injectables.set(o.name, o.data);
+      }
+    }
+
+    this.dataStack = [];
+  }
+
+
+  public navigateTo(url: string, data: any = null) {
+    this.dataStack.push({ name: (data as any).Ψsnappyid, data: data });
+    this.router.navigateByUrl(url);
+  }
+
   observer: Observable<SnappyNavigation>;
   data?: any;
 
   navigationSub: Subscription;
   observerSub: Subscription;
+  creationSub: Subscription;
+
+  currentComponent?: SnappyComponent;
+  currentRoute?: ActivatedRoute;
+
+  dataStack: { name: string, data: any }[] = [];
+  creationStack: string[] = [];
 
   constructor(
     private readonly element: ViewContainerRef,
     private readonly injector: Injector,
     private readonly router: Router,
-    private readonly scrollService: ScrollService,
+    private readonly scrollService: SnappyService,
   ) {
     super();
     this.observer = this.scrollService.getObservable();
@@ -35,10 +95,17 @@ export class SnappyOutletDirective extends RouterOutlet implements OnInit, OnDes
       this.router.navigateByUrl(e.url);
     })
 
+
+    this.creationSub = creationsubject.asObservable().subscribe((e) => {
+      this.creationStack.push(e);
+    });
     this.navigationSub = this.router.events
       .pipe(filter((event) => event instanceof NavigationEnd))
-      .subscribe(() => {
+      .subscribe((e) => {
+        this.dataStack = [];
+        this.creationStack = [];
         this.scrollService.claimData();
+        // console.log(this.components[this.components.length - 1]);
       });
   }
 
@@ -46,19 +113,24 @@ export class SnappyOutletDirective extends RouterOutlet implements OnInit, OnDes
     super.ngOnDestroy();
     this.navigationSub.unsubscribe();
     this.observerSub.unsubscribe();
+    this.creationSub.unsubscribe()
   }
 
   // We don't know if popstate is forwards, back or otherwise, so here we are.
   urlStack: string[] = [];
   // AFAIK we can't get the component ref back from a view ref :(
-  components: any[] = [];
+  components: SnappyComponent[] = [];
 
   override activateWith(activatedRoute: ActivatedRoute, environmentInjector: EnvironmentInjector): void {
+    this.currentRoute = activatedRoute;
 
     if (this.router.getCurrentNavigation()?.trigger === 'popstate') {
       if (this.urlStack.length > 1 && (this.urlStack[this.urlStack.length - 2] === this.router.url)) {
-        this.pop();
-        return;
+        if (this.element.length > 1) {
+          this.pop();
+          return;
+        }
+        this.element.remove(0);
       }
     }
 
@@ -86,6 +158,19 @@ export class SnappyOutletDirective extends RouterOutlet implements OnInit, OnDes
         environmentInjector: environmentInjector
       });
 
+    this.components.push(
+      {
+        component: newComponent,
+        injectables: new Map<string, any>()
+      });
+
+    let c = this.components[this.components.length - 1];
+
+    for (const o of this.creationStack) {
+      c.injectables.set(o, null);
+    }
+
+    this.claim();
     if ((newComponent.instance as SnappyCreate).snOnCreate) {
       (newComponent.instance as SnappyCreate).snOnCreate();
     }
@@ -93,7 +178,7 @@ export class SnappyOutletDirective extends RouterOutlet implements OnInit, OnDes
       (newComponent.instance as SnappyShow).snOnShow();
     }
 
-    this.components.push(newComponent);
+
 
     for (let i = this.element.length - 1; i >= 0; i--) {
       const v = this.element.get(i) as EmbeddedViewRef<any>;
@@ -101,7 +186,7 @@ export class SnappyOutletDirective extends RouterOutlet implements OnInit, OnDes
         if (node instanceof HTMLElement) {
           if (i != 0) {
             if (!node.classList.contains("snappy-hide")) {
-              let component = this.components[i];
+              let component = this.components[i].component;
               if ((component.instance as SnappyHide).snOnHide) {
                 (component.instance as SnappyHide).snOnHide();
               }
@@ -110,6 +195,10 @@ export class SnappyOutletDirective extends RouterOutlet implements OnInit, OnDes
           }
         }
       })
+    }
+
+    if (this.element.length === 5) {
+      this.element.remove(this.element.length - 1);
     }
 
     this.urlStack.push(this.router.url);
@@ -122,7 +211,7 @@ export class SnappyOutletDirective extends RouterOutlet implements OnInit, OnDes
     this.components.pop();
     this.element.remove(0);
     let show = this.element.get(0) as EmbeddedViewRef<any>;
-    let component = this.components[this.components.length - 1];
+    let component = this.components[this.components.length - 1].component;
 
 
     show.rootNodes.forEach((node) => {
@@ -138,3 +227,4 @@ export class SnappyOutletDirective extends RouterOutlet implements OnInit, OnDes
     this.urlStack.pop();
   }
 }
+

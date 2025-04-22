@@ -24,7 +24,9 @@ import { PostLinkModule } from 'src/app/directives/post-link/post-link.module'
 import { EnvironmentService } from 'src/app/services/environment.service'
 import { BottomReplyBarComponent } from '../../components/bottom-reply-bar/bottom-reply-bar.component'
 import { BlogLinkModule } from 'src/app/directives/blog-link/blog-link.module'
-import { ScrollService } from 'src/app/services/scroll.service'
+import { SnappyService } from 'src/app/services/snappy.service'
+import { snappyInject, SnappyRouter } from 'src/app/components/snappy/snappy-router.component'
+import { SnappyPostData } from 'src/app/directives/post-link/post-link.directive'
 
 @Component({
   selector: 'app-forum-component',
@@ -52,6 +54,7 @@ export class ForumComponent implements OnInit, OnDestroy, SnappyCreate {
   forumPosts: ProcessedPost[] = []
   post = model<ProcessedPost[]>([]);
   postId = model<string>('');
+  snappyPost = snappyInject(SnappyPostData);
   hasPost = false;
   subscription!: Subscription
   updateFollowsSubscription: Subscription
@@ -81,7 +84,7 @@ export class ForumComponent implements OnInit, OnDestroy, SnappyCreate {
     private postService: PostsService,
     private readonly dashboardService: DashboardService,
     private readonly router: Router,
-    private readonly scrollService: ScrollService
+    private readonly snappy: SnappyRouter
   ) {
     this.followedUsers = this.postService.followedUserIds
     this.notYetAcceptedFollows = this.postService.notYetAcceptedFollowedUsersIds
@@ -93,9 +96,8 @@ export class ForumComponent implements OnInit, OnDestroy, SnappyCreate {
   }
 
   snOnCreate(): void {
-    let data = this.scrollService.claimData();
-    // society if ts had instanceof for interfaces
-    if (data === null) return;
+    let data = this.snappyPost(this.snappy)?.post;
+    if (!data) return;
 
     let frag = data as ProcessedPost;
     let post: ProcessedPost[] = [];

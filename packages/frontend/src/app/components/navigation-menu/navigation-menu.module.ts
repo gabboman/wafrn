@@ -9,7 +9,7 @@ import { RouterModule } from '@angular/router'
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome'
 import { ColorSchemeSwitcherComponent } from '../color-scheme-switcher/color-scheme-switcher.component'
 import { MenuItemComponent } from '../menu-item/menu-item.component'
-import { SnappyOutletDirective } from '../snappy/snappy-router.component'
+import { SnappyRouter } from '../snappy/snappy-router.component'
 import { NavigationMenuComponent } from './navigation-menu.component'
 
 @NgModule({
@@ -25,7 +25,7 @@ import { NavigationMenuComponent } from './navigation-menu.component'
     MatButtonModule,
     MatDialogModule,
     ColorSchemeSwitcherComponent,
-    SnappyOutletDirective
+    SnappyRouter
   ],
   exports: [NavigationMenuComponent]
 })

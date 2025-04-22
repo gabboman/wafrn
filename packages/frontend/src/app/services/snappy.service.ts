@@ -3,6 +3,7 @@ import { ProcessedPost } from "../interfaces/processed-post";
 import { Observable, Subject } from 'rxjs';
 import { SimplifiedUser } from '../interfaces/simplified-user';
 
+
 export enum ScrollContext {
   Inactive,
   Dashboard,
@@ -14,10 +15,11 @@ export interface SnappyNavigation {
   data: any,
 }
 
+
 @Injectable({
   providedIn: 'root'
 })
-export class ScrollService {
+export class SnappyService {
   private readonly navigation = new Subject<SnappyNavigation>();
   private data: any = null;
 
@@ -49,3 +51,4 @@ export class ScrollService {
     return data;
   }
 }
+
