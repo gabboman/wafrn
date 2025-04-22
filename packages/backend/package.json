@@ -6,6 +6,10 @@
   "type": "module",
   "scripts": {
     "start": "tsx index.ts",
+    "migration:generate": "tsx migrate.ts generate",
+    "db:migrate:status": "tsx migrate.ts pending && echo '-----' && tsx migrate.ts executed",
+    "db:migrate": "tsx migrate.ts up",
+    "db:rollback": "tsx migrate.ts down",
     "test": "echo \"Error: no test specified\" && exit 1",
     "lint": "eslint .",
     "prettier-format": "prettier --config .prettierrc '**/*.ts' --write"
@@ -72,6 +76,7 @@
     "swagger-ui-express": "^4.5.0",
     "tsx": "^4.19.1",
     "turndown": "^7.2.0",
+    "umzug": "^3.8.2",
     "underscore": "^1.13.6",
     "unzip-stream": "^0.3.4",
     "web-push": "^3.6.7"
@@ -96,7 +101,6 @@
     "eslint-config-prettier": "^8.8.0",
     "eslint-plugin-prettier": "^4.2.1",
     "prettier": "^2.8.8",
-    "sequelize-cli": "^6.6.2",
     "sequelize-typescript": "^2.1.6"
   }
 }
