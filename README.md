@@ -138,6 +138,15 @@ git pull origin main
 docker compose up --build -d
 ```
 
+You can also find a small management script that can backup, restore and update your instance:
+
+```bash
+./install/manage.sh backup
+./install/manage.sh update
+```
+
+By default the installation will create a backup every day and keep it for 10 days
+
 ### BlueSky integraton
 
 To enable the BlueSky integration follow the steps below:
