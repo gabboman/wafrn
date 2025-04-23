@@ -353,7 +353,7 @@ export class User extends Model<UserAttributes, UserAttributes> implements UserA
   declare followerFollows: Follows[];
 
   @HasMany(() => Follows, {
-    foreignKey: "followsId"
+    foreignKey: "followedId"
   })
   declare followedFollows: Follows[];
 
