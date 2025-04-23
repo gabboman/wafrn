@@ -288,7 +288,7 @@ async function getPostThreadRecursive(
       await processMentions(newPost, mentionedUsersIds)
       await loadPoll(remotePostObject, newPost, user)
       const postCleanContent = dompurify.sanitize(newPost.content, { ALLOWED_TAGS: [] }).trim()
-      const mentions = await newPost.getMentionPost()
+      const mentions = await newPost.getMentioner()
       if (postCleanContent.startsWith('!ask') && mentions.length === 1) {
         let askContent = postCleanContent.split(`!ask @${mentions[0].url}`)[1]
         if (askContent.startsWith('@' + environment.instanceUrl)) {
