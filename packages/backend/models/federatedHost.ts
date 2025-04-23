@@ -1,6 +1,12 @@
 import {
-  Model, Table, Column, DataType
+  Model, Table, Column, DataType,
+  HasMany,
+  BelongsToMany
 } from "sequelize-typescript";
+import { User } from "./user.js";
+import { Post } from "./post.js";
+import { PostHostView } from "./postHostView.js";
+import { ServerBlock } from "./serverBlock.js";
 
 export interface FederatedHostAttributes {
   id?: string;
@@ -64,4 +70,13 @@ export class FederatedHost extends Model<FederatedHostAttributes, FederatedHostA
     defaultValue: false
   })
   declare friendServer: boolean;
+
+  @HasMany(() => User)
+  declare users: User[]
+
+  @BelongsToMany(() => Post, () => PostHostView)
+  declare postView: Post[]
+
+  @HasMany(() => ServerBlock)
+  declare blockedServer: ServerBlock[]
 }

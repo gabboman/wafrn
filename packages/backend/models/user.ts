@@ -420,7 +420,12 @@ export class User extends Model<UserAttributes, UserAttributes> implements UserA
   })
   declare reporterReport: UserReport[];
 
-  @BelongsTo(() => FederatedHost)
+  @BelongsTo(() => FederatedHost, {
+    foreignKey: {
+      name: "federatedHostId",
+      allowNull: true
+    }
+  })
   declare federatedHost: FederatedHost;
 
   @HasMany(() => Post, {
