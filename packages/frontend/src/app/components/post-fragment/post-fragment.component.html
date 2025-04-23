@@ -27,9 +27,10 @@
   [ngClass]="{ hidden: (fragment().content_warning || fragment().muted_words_cw) && !showSensitiveContent() }"
 >
   @for (quote of fragment().quotes; track $index) {
+    <!-- We use routerlink instead of the data because quoted posts are incomplete in the frontend!-->
     <div
       *ngIf="quote"
-      [postLink]="quote"
+      [routerLink]="'/fediverse/post/' + quote.id"
       class="quoted-post cursor-pointer"
       [ngClass]="{ 'quote-collapsed': !expandQuotes }"
     >
