@@ -112,7 +112,7 @@
             } @else {
               <span class="force-comic-sans"> {{ emoji.content }}</span>
             }
-            @if (emoji.users.length !== 1) {
+            @if (emoji.users.length > 1) {
               <span> {{ emoji.users.length }}</span>
             }
           </span>
