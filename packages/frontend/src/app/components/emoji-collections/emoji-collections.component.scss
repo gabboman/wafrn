@@ -2,3 +2,66 @@
   max-width: 1.5em;
   max-height: 1.5em;
 }
+
+.emoji-position {
+  position: relative !important;
+}
+
+.emoji-container {
+  display: flex;
+  flex-direction: row;
+}
+
+.emoji-viewport {
+  height: 300px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  row-gap: 20px;
+}
+.emoji-viewport ::ng-deep .cdk-virtual-scroll-content-wrapper {
+  display: flex;
+  flex-direction: column;
+  row-gap: 5px;
+}
+
+.emoji-row {
+  display: flex;
+  flex-direction: row;
+  column-gap: 5px;
+  height: 50px;
+  justify-content: center;
+}
+
+.emoji-item {
+  width: 50px;
+  height: 50px;
+  font-size: 1rem;
+}
+
+.emoji-sidebar {
+  display: flex;
+  padding-left: 0.2rem;
+  padding-right: 0.2rem;
+  height: 300px;
+  flex-direction: column;
+  overflow-x: hidden;
+  overflow-y: scroll;
+  text-align: center;
+  align-items: center;
+  row-gap: 0.5rem;
+}
+.emoji-sidebar-child {
+  text-align: center;
+  font-size: 1.3em;
+}
+.emoji-active-collection {
+  background-color: var(--mat-sys-inverse-primary) !important;
+}
+.emoji-collection-button {
+  width: 2em;
+  height: 2em;
+  border-radius: 50%;
+  text-decoration: none;
+  border: none;
+}

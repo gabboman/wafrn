@@ -803,12 +803,11 @@ export class PostsService {
   }
 
   emojiToHtml(emoji: Emoji): string {
-    return `<img class="post-emoji" src="${
-      EnvironmentService.environment.externalCacheurl +
+    return `<img class="post-emoji" src="${EnvironmentService.environment.externalCacheurl +
       (emoji.external
         ? encodeURIComponent(emoji.url)
         : encodeURIComponent(EnvironmentService.environment.baseMediaUrl + emoji.url))
-    }">`
+      }" title="${emoji.name}" alt="${emoji.name}">`
   }
 
   postContainsBlockedOrMuted(post: ProcessedPost[], isDashboard: boolean) {
