@@ -284,16 +284,6 @@ export class SnappyRouter extends RouterOutlet implements OnInit, OnDestroy {
 
     this.dataStack = [];
   }
-
-
-  /**
-   * @param url - The URL to navigate to via the Angular router
-   * @param data - Data to attach to this navigation. Should be defined with the @SnappyInjectable decorator.
-   */
-  public navigateTo(url: string, data: any = null) {
-    this.dataStack.push({ token: data?.Ψsnappyid, data: data });
-    this.router.navigateByUrl(url);
-  }
 }
 
 

@@ -22,7 +22,7 @@ export class PostLinkDirective implements OnInit {
   onClick(event: MouseEvent): void {
     if (event.button === 0) {
       event.preventDefault();
-      const wrapper = new SnappyPostData(this.postLink);
+      let wrapper: any = this.postLink.parentCollection.length > 0 ? new SnappyPostData(this.postLink) : undefined;
       this.snappy.navigateTo('/fediverse/post/' + this.postLinkId!, wrapper);
     }
   }

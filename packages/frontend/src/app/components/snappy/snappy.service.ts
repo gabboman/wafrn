@@ -19,6 +19,7 @@ export class SnappyService {
    * @param data - The data to be consumed, must be decorated with `@SnappyInjecatble`
    */
   public injectData(data: any) {
+    if (!data) return;
     this.stream.next({ token: data.Ψsnappyid, data: data });
   }
 
