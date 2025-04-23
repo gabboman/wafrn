@@ -4,6 +4,9 @@ import {
 import { User } from "./user.js";
 
 export interface BlocksAttributes {
+  id?: number;
+  createdAt?: Date;
+  updatedAt?: Date;
   remoteBlockId?: string;
   reason?: string;
   blockedId: string;
@@ -20,31 +23,31 @@ export class Blocks extends Model<BlocksAttributes, BlocksAttributes> implements
     allowNull: true,
     type: DataType.STRING(768)
   })
-  remoteBlockId?: string;
+  declare remoteBlockId: string;
 
   @Column({
     allowNull: true,
     type: DataType.STRING
   })
-  reason?: string;
+  declare reason: string;
 
   @ForeignKey(() => User)
   @Column({
     primaryKey: true,
     type: DataType.UUID
   })
-  blockedId!: string;
+  declare blockedId: string;
 
   @ForeignKey(() => User)
   @Column({
     primaryKey: true,
     type: DataType.UUID
   })
-  blockerId!: string;
+  declare blockerId: string;
 
   @BelongsTo(() => User, "blockedId")
-  blocked?: User;
+  declare blocked: User;
 
   @BelongsTo(() => User, "blockerId")
-  blocker?: User;
+  declare blocker: User;
 }

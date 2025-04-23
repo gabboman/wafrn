@@ -5,6 +5,9 @@ import { Post } from "./post.js";
 import { User } from "./user.js";
 
 export interface AskAttributes {
+  id?: number;
+  createdAt?: Date;
+  updatedAt?: Date;
   question?: string;
   apObject?: string;
   creationIp?: string;
@@ -23,53 +26,53 @@ export class Ask extends Model<AskAttributes, AskAttributes> implements AskAttri
     allowNull: true,
     type: DataType.STRING
   })
-  question?: string;
+  declare question: string;
 
   @Column({
     allowNull: true,
     type: DataType.STRING
   })
-  apObject?: string;
+  declare apObject: string;
 
   @Column({
     allowNull: true,
     type: DataType.STRING(255)
   })
-  creationIp?: string;
+  declare creationIp: string;
 
   @Column({
     allowNull: true,
     type: DataType.BOOLEAN
   })
-  answered?: boolean;
+  declare answered: boolean;
 
   @ForeignKey(() => Post)
   @Column({
     allowNull: true,
     type: DataType.UUID
   })
-  postId?: string;
+  declare postId: string;
 
   @ForeignKey(() => User)
   @Column({
     allowNull: true,
     type: DataType.UUID
   })
-  userAsked?: string;
+  declare userAsked: string;
 
   @ForeignKey(() => User)
   @Column({
     allowNull: true,
     type: DataType.UUID
   })
-  userAsker?: string;
+  declare userAsker: string;
 
   @BelongsTo(() => Post, "postId")
-  post?: Post;
+  declare post: Post;
 
   @BelongsTo(() => User, "userAsked")
-  userAskedUser?: User;
+  declare userAskedUser: User;
 
   @BelongsTo(() => User, "userAsker")
-  userAskerUser?: User;
+  declare userAskerUser: User;
 }

@@ -4,6 +4,9 @@ import {
 import { Emoji } from "./emoji.js";
 
 export interface EmojiCollectionAttributes {
+  id?: string;
+  createdAt?: Date;
+  updatedAt?: Date;
   name?: string;
   comment?: string;
 }
@@ -16,7 +19,8 @@ export class EmojiCollection extends Model<EmojiCollectionAttributes, EmojiColle
 
   @Column({
     primaryKey: true,
-    type: DataType.UUID
+    type: DataType.UUID,
+    defaultValue: DataType.UUIDV4
   })
   declare id: string;
 
@@ -24,14 +28,14 @@ export class EmojiCollection extends Model<EmojiCollectionAttributes, EmojiColle
     allowNull: true,
     type: DataType.STRING(255)
   })
-  name?: string;
+  declare name: string;
 
   @Column({
     allowNull: true,
     type: DataType.STRING
   })
-  comment?: string;
+  declare comment: string;
 
   @HasMany(() => Emoji)
-  emojis?: Emoji[];
+  declare emojis: Emoji[];
 }

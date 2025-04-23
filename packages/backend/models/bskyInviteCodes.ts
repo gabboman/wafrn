@@ -3,6 +3,9 @@ import {
 } from "sequelize-typescript";
 
 export interface BskyInviteCodesAttributes {
+  id?: number;
+  createdAt?: Date;
+  updatedAt?: Date;
   code?: string;
 }
 
@@ -15,5 +18,5 @@ export class BskyInviteCodes extends Model<BskyInviteCodesAttributes, BskyInvite
     allowNull: true,
     type: DataType.STRING(512)
   })
-  code?: string;
+  declare code: string;
 }

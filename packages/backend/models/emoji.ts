@@ -3,12 +3,16 @@ import {
 } from "sequelize-typescript";
 import { EmojiReaction } from "./emojiReaction.js";
 import { User } from "./user.js";
-import { UserEmojiRelations } from "./userEmojiRelation.js";
+import { UserEmojiRelation } from "./userEmojiRelation.js";
 import { Post } from "./post.js";
 import { PostEmojiRelations } from "./postEmojiRelations.js";
 import { EmojiCollection } from "./emojiCollection.js";
+import { Notification } from "./notification.js";
 
 export interface EmojiAttributes {
+  id?: string;
+  createdAt?: Date;
+  updatedAt?: Date;
   name?: string;
   url?: string;
   external?: boolean;
@@ -31,36 +35,36 @@ export class Emoji extends Model<EmojiAttributes, EmojiAttributes> implements Em
     allowNull: true,
     type: DataType.STRING(255)
   })
-  name?: string;
+  declare name: string;
 
   @Column({
     allowNull: true,
     type: DataType.STRING
   })
-  url?: string;
+  declare url: string;
 
   @Column({
     allowNull: true,
     type: DataType.BOOLEAN
   })
-  external?: boolean;
+  declare external: boolean;
 
   @ForeignKey(() => EmojiCollection)
   @Column({
     allowNull: true,
     type: DataType.UUID
   })
-  emojiCollectionId?: string;
+  declare emojiCollectionId: string;
 
   @HasMany(() => EmojiReaction)
-  emojiReactions?: EmojiReaction[];
+  declare emojiReactions: EmojiReaction[];
 
-  @BelongsToMany(() => User, () => UserEmojiRelations)
-  users?: User[];
+  @BelongsToMany(() => User, () => UserEmojiRelation)
+  declare users: User[];
 
   @BelongsToMany(() => Post, () => PostEmojiRelations)
-  posts?: Post[];
+  declare posts: Post[];
 
   @BelongsTo(() => EmojiCollection, "emojiCollectionId")
-  emojiCollection?: EmojiCollection;
+  declare emojiCollection: EmojiCollection;
 }

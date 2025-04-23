@@ -5,6 +5,9 @@ import { User } from "./user.js";
 import { Post } from "./post.js";
 
 export interface UserBookmarkedPostsAttributes {
+  id?: number;
+  createdAt?: Date;
+  updatedAt?: Date;
   userId: string;
   postId: string;
 }
@@ -20,18 +23,18 @@ export class UserBookmarkedPosts extends Model<UserBookmarkedPostsAttributes, Us
     primaryKey: true,
     type: DataType.UUID
   })
-  userId!: string;
+  declare userId: string;
 
   @ForeignKey(() => Post)
   @Column({
     primaryKey: true,
     type: DataType.UUID
   })
-  postId!: string;
+  declare postId: string;
 
   @BelongsTo(() => User, "userId")
-  user?: User;
+  declare user: User;
 
   @BelongsTo(() => Post, "postId")
-  post?: Post;
+  declare post: Post;
 }

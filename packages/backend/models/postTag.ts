@@ -4,6 +4,9 @@ import {
 import { Post } from "./post.js";
 
 export interface PostTagAttributes {
+  id?: number;
+  createdAt?: Date;
+  updatedAt?: Date;
   tagName?: string;
   postId?: string;
 }
@@ -17,15 +20,15 @@ export class PostTag extends Model<PostTagAttributes, PostTagAttributes> impleme
     allowNull: true,
     type: DataType.STRING
   })
-  tagName?: string;
+  declare tagName: string;
 
   @ForeignKey(() => Post)
   @Column({
     allowNull: true,
     type: DataType.UUID
   })
-  postId?: string;
+  declare postId: string;
 
   @BelongsTo(() => Post, "postId")
-  post?: Post;
+  declare post: Post;
 }

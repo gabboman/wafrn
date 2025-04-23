@@ -1,10 +1,13 @@
 import {
-  Model, Table, Column, DataType, Index, Sequelize, ForeignKey, BelongsTo
+  Model, Table, Column, DataType, ForeignKey, BelongsTo
 } from "sequelize-typescript";
 import { Post } from "./post.js";
 import { User } from "./user.js";
 
 export interface RemoteUserPostViewAttributes {
+  id?: number;
+  createdAt?: Date;
+  updatedAt?: Date;
   postId: string;
   userId: string;
 }
@@ -19,19 +22,19 @@ export class RemoteUserPostView extends Model<RemoteUserPostViewAttributes, Remo
     primaryKey: true,
     type: DataType.UUID
   })
-  postId!: string;
+  declare postId: string;
 
   @ForeignKey(() => User)
   @Column({
     primaryKey: true,
     type: DataType.UUID
   })
-  userId!: string;
+  declare userId: string;
 
   @BelongsTo(() => Post, "postId")
-  Post?: Post;
+  declare Post: Post;
 
   @BelongsTo(() => User, "userId")
-  User?: User;
+  declare User: User;
 
 }

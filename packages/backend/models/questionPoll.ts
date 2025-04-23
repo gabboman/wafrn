@@ -1,9 +1,14 @@
 import {
-  Model, Table, Column, DataType, Index, Sequelize, ForeignKey, BelongsTo
+  Model, Table, Column, DataType, ForeignKey, BelongsTo,
+  HasMany
 } from "sequelize-typescript";
 import { Post } from "./post.js";
+import { QuestionPollQuestion } from "./questionPollQuestion.js";
 
 export interface QuestionPollsAttributes {
+  id?: number;
+  createdAt?: Date;
+  updatedAt?: Date;
   endDate?: Date;
   multiChoice?: boolean;
   postId?: string;
@@ -18,21 +23,24 @@ export class QuestionPoll extends Model<QuestionPollsAttributes, QuestionPollsAt
     allowNull: true,
     type: DataType.DATE
   })
-  endDate?: Date;
+  declare endDate: Date;
 
   @Column({
     allowNull: true,
     type: DataType.BOOLEAN
   })
-  multiChoice?: boolean;
+  declare multiChoice: boolean;
 
   @ForeignKey(() => Post)
   @Column({
     allowNull: true,
     type: DataType.UUID
   })
-  postId?: string;
+  declare postId: string;
 
   @BelongsTo(() => Post, "postId")
-  post?: Post;
+  declare post: Post;
+
+  @HasMany(() => QuestionPollQuestion)
+  declare questionPollQuestions: QuestionPollQuestion[]
 }

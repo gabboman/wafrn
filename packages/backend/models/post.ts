@@ -19,8 +19,12 @@ import { UserBookmarkedPosts } from "./userBookmarkedPosts.js";
 import { PostHostView } from "./postHostView.js";
 import { RemoteUserPostView } from "./remoteUserPostView.js";
 import { FederatedHost } from "./federatedHost.js";
+import { PostAncestor } from "./postAncestor.js";
 
 export interface PostAttributes {
+  id?: string;
+  createdAt?: Date;
+  updatedAt?: Date;
   contentWarning?: string;
   content?: string;
   markdownContent?: string;
@@ -45,7 +49,8 @@ export class Post extends Model<PostAttributes, PostAttributes> implements PostA
 
   @Column({
     primaryKey: true,
-    type: DataType.UUID
+    type: DataType.UUID,
+    defaultValue: DataType.UUIDV4
   })
   declare id: string;
 
@@ -54,184 +59,190 @@ export class Post extends Model<PostAttributes, PostAttributes> implements PostA
     allowNull: true,
     type: DataType.STRING
   })
-  contentWarning?: string;
+  declare contentWarning: string;
 
   @Column({
     allowNull: true,
     type: DataType.STRING
   })
-  content?: string;
+  declare content: string;
 
   @Column({
     allowNull: true,
     type: DataType.STRING
   })
-  markdownContent?: string;
+  declare markdownContent: string;
 
   @Column({
     allowNull: true,
     type: DataType.STRING(256)
   })
-  title?: string;
+  declare title: string;
 
   @Column({
     allowNull: true,
     type: DataType.STRING(768)
   })
-  remotePostId?: string;
+  declare remotePostId: string;
 
   @Column({
     allowNull: true,
     type: DataType.STRING(768)
   })
-  bskyUri?: string;
+  declare bskyUri: string;
 
   @Column({
     allowNull: true,
     type: DataType.STRING(768)
   })
-  bskyCid?: string;
+  declare bskyCid: string;
 
   @Column({
     allowNull: true,
     type: DataType.INTEGER
   })
-  privacy?: number;
+  declare privacy: number;
 
   @Column({
     allowNull: true,
     type: DataType.BOOLEAN,
     defaultValue: false
   })
-  featured?: boolean;
+  declare featured: boolean;
 
   @Column({
     allowNull: true,
     type: DataType.BOOLEAN,
     defaultValue: false
   })
-  isReblog?: boolean;
+  declare isReblog: boolean;
 
   @Column({
     allowNull: true,
     type: DataType.BOOLEAN,
     defaultValue: false
   })
-  isDeleted?: boolean;
+  declare isDeleted: boolean;
 
   @ForeignKey(() => User)
   @Column({
     allowNull: true,
     type: DataType.UUID
   })
-  userId?: string;
+  declare userId: string;
 
   @Column({
     allowNull: true,
     type: DataType.INTEGER
   })
-  hierarchyLevel?: number;
+  declare hierarchyLevel: number;
 
   @ForeignKey(() => Post)
   @Column({
     allowNull: true,
     type: DataType.UUID
   })
-  parentId?: string;
+  declare parentId: string;
+
+  @BelongsToMany(() => Post, () => PostAncestor, "postsId", "ancestorId")
+  declare ancestors: Post[]
+
+  @BelongsToMany(() => Post, () => PostAncestor, "ancestorId", "postsId")
+  declare children: Post[]
 
   @HasMany(() => Notification, {
     sourceKey: "id"
   })
-  notifications?: Notification[];
+  declare notifications: Notification[];
 
   @HasOne(() => Ask, {
     sourceKey: "id"
   })
-  ask?: Ask;
+  declare ask: Ask;
 
   @HasOne(() => QuestionPoll, {
     sourceKey: "id"
   })
-  questionPoll?: QuestionPoll;
+  declare questionPoll: QuestionPoll;
 
   @HasMany(() => EmojiReaction, {
     sourceKey: "id"
   })
-  emojiReacions?: EmojiReaction[];
+  declare emojiReacions: EmojiReaction[];
 
   @BelongsToMany(() => Emoji, () => PostEmojiRelations)
-  emojis?: Emoji[];
+  declare emojis: Emoji[];
 
   @HasMany(() => Quotes, {
     foreignKey: "quoterPostId"
   })
-  quoterQuotes?: Quotes[];
+  declare quoterQuotes: Quotes[];
 
   @HasMany(() => Quotes, {
     foreignKey: "quotedPostId"
   })
-  quotedQuotes?: Quotes[];
+  declare quotedQuotes: Quotes[];
 
   @BelongsToMany(() => Post, () => Quotes, "quotedPostId", "quoterPostId")
-  quoted?: Post[]
+  declare quoted: Post[]
 
   @BelongsToMany(() => Post, () => Quotes, "quoterPostId", "quotedPostId")
-  quoter?: Post[]
+  declare quoter: Post[]
 
   @HasMany(() => PostReport, {
     sourceKey: "id"
   })
-  postReports?: PostReport[];
+  declare postReports: PostReport[];
 
   @HasMany(() => SilencedPost, {
     sourceKey: "id"
   })
-  silencedPosts?: SilencedPost[];
+  declare silencedPosts: SilencedPost[];
 
   @HasMany(() => PostTag, {
     sourceKey: "id"
   })
-  postTags?: PostTag[];
+  declare postTags: PostTag[];
 
   @BelongsTo(() => User)
-  user?: User;
+  declare user: User;
 
   @HasMany(() => Media, {
     sourceKey: "id"
   })
-  medias?: Media[];
+  declare medias: Media[];
 
   @HasMany(() => PostMentionsUserRelation, {
     sourceKey: "id"
   })
-  postMentionsUserRelations?: PostMentionsUserRelation[];
+  declare postMentionsUserRelations: PostMentionsUserRelation[];
 
   @HasMany(() => UserLikesPostRelations, {
     sourceKey: "id"
   })
-  userLikesPostRelations?: UserLikesPostRelations[];
+  declare userLikesPostRelations: UserLikesPostRelations[];
 
   @BelongsToMany(() => User, () => PostMentionsUserRelation)
-  mentioner?: User[];
+  declare mentioner: User[];
 
   @HasMany(() => UserBookmarkedPosts, {
     sourceKey: "id"
   })
-  userBookmarkedPosts?: UserBookmarkedPosts[];
+  declare userBookmarkedPosts: UserBookmarkedPosts[];
 
   @HasMany(() => PostHostView, {
     sourceKey: "id"
   })
-  postHostViews?: PostHostView[];
+  declare postHostViews: PostHostView[];
 
   @BelongsToMany(() => FederatedHost, () => PostHostView)
-  hostView?: FederatedHost[];
+  declare hostView: FederatedHost[];
 
   @HasMany(() => RemoteUserPostView, {
     sourceKey: "id"
   })
-  remoteUserPostViews?: RemoteUserPostView[];
+  declare remoteUserPostViews: RemoteUserPostView[];
 
   @BelongsToMany(() => User, () => RemoteUserPostView)
-  view?: User[];
+  declare view: User[];
 }

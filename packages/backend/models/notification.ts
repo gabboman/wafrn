@@ -6,6 +6,9 @@ import { Post } from "./post.js";
 import { EmojiReaction } from "./emojiReaction.js";
 
 export interface NotificationAttributes {
+  id?: number;
+  createdAt?: Date;
+  updatedAt?: Date;
   notificationType?: string;
   notifiedUserId?: string;
   userId?: string;
@@ -22,45 +25,45 @@ export class Notification extends Model<NotificationAttributes, NotificationAttr
     allowNull: true,
     type: DataType.STRING(128)
   })
-  notificationType?: string;
+  declare notificationType: string;
 
   @ForeignKey(() => User)
   @Column({
     allowNull: true,
     type: DataType.UUID
   })
-  notifiedUserId?: string;
+  declare notifiedUserId: string;
 
   @ForeignKey(() => User)
   @Column({
     allowNull: true,
     type: DataType.UUID
   })
-  userId?: string;
+  declare userId: string;
 
   @ForeignKey(() => Post)
   @Column({
     allowNull: true,
     type: DataType.UUID
   })
-  postId?: string;
+  declare postId: string;
 
   @ForeignKey(() => EmojiReaction)
   @Column({
     allowNull: true,
     type: DataType.UUID
   })
-  emojiReactionId?: string;
+  declare emojiReactionId: string;
 
   @BelongsTo(() => User, "userId")
-  user?: User;
+  declare user: User;
 
   @BelongsTo(() => User, "notifiedUserId")
-  notifiedUser?: User;
+  declare notifiedUser: User;
 
   @BelongsTo(() => Post, "postId")
-  post?: Post;
+  declare post: Post;
 
   @BelongsTo(() => EmojiReaction, "emojiReactionId")
-  emojiReacion?: EmojiReaction;
+  declare emojiReaction: EmojiReaction;
 }

@@ -4,6 +4,9 @@ import {
 import { User } from "./user.js";
 
 export interface UserReportAttributes {
+  id?: number;
+  createdAt?: Date;
+  updatedAt?: Date;
   resolved?: boolean;
   severity?: number;
   description?: string;
@@ -20,19 +23,19 @@ export class UserReport extends Model<UserReportAttributes, UserReportAttributes
     allowNull: true,
     type: DataType.BOOLEAN
   })
-  resolved?: boolean;
+  declare resolved: boolean;
 
   @Column({
     allowNull: true,
     type: DataType.INTEGER
   })
-  severity?: number;
+  declare severity: number;
 
   @Column({
     allowNull: true,
     type: DataType.STRING
   })
-  description?: string;
+  declare description: string;
 
   @ForeignKey(() => User)
   @Column({
@@ -40,7 +43,7 @@ export class UserReport extends Model<UserReportAttributes, UserReportAttributes
     allowNull: true,
     type: DataType.UUID
   })
-  reporterId?: string;
+  declare reporterId: string;
 
   @ForeignKey(() => User)
   @Column({
@@ -48,11 +51,11 @@ export class UserReport extends Model<UserReportAttributes, UserReportAttributes
     allowNull: true,
     type: DataType.UUID
   })
-  reportedId?: string;
+  declare reportedId: string;
 
   @BelongsTo(() => User, "ReporterId")
-  reporter?: User;
+  declare reporter: User;
 
   @BelongsTo(() => User, "ReportedId")
-  reported?: User;
+  declare reported: User;
 }

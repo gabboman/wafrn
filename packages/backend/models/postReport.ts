@@ -5,6 +5,9 @@ import { User } from "./user.js";
 import { Post } from "./post.js";
 
 export interface PostReportAttributes {
+  id?: number;
+  createdAt?: Date;
+  updatedAt?: Date;
   resolved?: boolean;
   severity?: number;
   description?: string;
@@ -21,38 +24,38 @@ export class PostReport extends Model<PostReportAttributes, PostReportAttributes
     allowNull: true,
     type: DataType.BOOLEAN
   })
-  resolved?: boolean;
+  declare resolved: boolean;
 
   @Column({
     allowNull: true,
     type: DataType.INTEGER
   })
-  severity?: number;
+  declare severity: number;
 
   @Column({
     allowNull: true,
     type: DataType.STRING
   })
-  description?: string;
+  declare description: string;
 
   @ForeignKey(() => User)
   @Column({
     allowNull: true,
     type: DataType.UUID
   })
-  userId?: string;
+  declare userId: string;
 
   @ForeignKey(() => Post)
   @Column({
     allowNull: true,
     type: DataType.UUID
   })
-  postId?: string;
+  declare postId: string;
 
   @BelongsTo(() => User, "userId")
-  user?: User;
+  declare user: User;
 
   @BelongsTo(() => Post, "postId")
-  post?: Post;
+  declare post: Post;
 
 }

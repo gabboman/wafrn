@@ -1,107 +1,110 @@
 import { sequelize } from "./sequelize.js";
 
-import { FederatedHost } from './federatedHost.js'
-import { User } from './user.js'
-import { UserOptions } from './userOptions.js'
-import { PushNotificationToken } from './pushNotificationToken.js'
-import { Quotes } from './quotes.js'
-import { Follows } from "./follows.js";
+import { Ask } from "./ask.js";
 import { Blocks } from "./blocks.js";
-import { Mutes } from "./mutes.js";
-import { ServerBlock } from "./serverBlock.js";
-import { Post } from "./post.js";
-import { SilencedPost } from "./silencedPost.js";
-import { PostTag } from "./postTag.js";
+import { BskyInviteCodes } from "./bskyInviteCodes.js";
 import { Emoji } from "./emoji.js";
-import { EmojiReaction } from "./emojiReaction.js";
 import { EmojiCollection } from "./emojiCollection.js";
+import { EmojiReaction } from "./emojiReaction.js";
+import { FederatedHost } from './federatedHost.js'
+import { Follows } from "./follows.js";
 import { Media } from "./media.js";
-import { PostReport } from "./postReport.js";
-import { UserReport } from "./userReport.js";
+import { MfaDetails } from "./mfaDetails.js";
+import { Mutes } from "./mutes.js";
+import { Notification } from "./notification.js";
+import { Post } from "./post.js";
+import { PostAncestor } from "./postAncestor.js";
+import { PostEmojiRelations } from "./postEmojiRelations.js";
+import { PostHostView } from "./postHostView.js";
 import { PostMentionsUserRelation } from "./postMentionsUserRelation.js";
-import { UserLikesPostRelations } from "./userLikesPostRelations.js";
-import { UserBookmarkedPosts } from "./userBookmarkedPosts.js";
+import { PostReport } from "./postReport.js";
+import { PostTag } from "./postTag.js";
+import { PushNotificationToken } from './pushNotificationToken.js'
 import { QuestionPoll } from "./questionPoll.js";
 import { QuestionPollAnswer } from "./questionPollAnswer.js";
 import { QuestionPollQuestion } from "./questionPollQuestion.js";
-import { UserEmojiRelation } from "./userEmojiRelation.js";
-import { PostEmojiRelations } from "./postEmojiRelations.js";
-import { PostHostView } from "./postHostView.js";
+import { Quotes } from './quotes.js'
 import { RemoteUserPostView } from "./remoteUserPostView.js";
-import { Ask } from "./ask.js";
-import { Notification } from "./notification.js";
-import { MfaDetails } from "./mfaDetails.js";
-import { BskyInviteCodes } from "./bskyInviteCodes.js";
+import { ServerBlock } from "./serverBlock.js";
+import { SilencedPost } from "./silencedPost.js";
+import { User } from './user.js'
+import { UserBookmarkedPosts } from "./userBookmarkedPosts.js";
+import { UserEmojiRelation } from "./userEmojiRelation.js";
+import { UserLikesPostRelations } from "./userLikesPostRelations.js";
+import { UserOptions } from './userOptions.js'
+import { UserReport } from "./userReport.js";
 
 sequelize.addModels([
-  User,
-  UserOptions,
-  PushNotificationToken,
+  Ask,
   Blocks,
-  Mutes,
-  Post,
-  PostReport,
-  UserReport,
-  PostTag,
-  Follows,
-  Media,
+  BskyInviteCodes,
   Emoji,
   EmojiCollection,
-  PostMentionsUserRelation,
-  UserLikesPostRelations,
-  UserBookmarkedPosts,
+  EmojiReaction,
   FederatedHost,
-  ServerBlock,
-  SilencedPost,
+  Follows,
+  Media,
+  MfaDetails,
+  Mutes,
+  Notification,
+  Post,
+  PostAncestor,
+  PostEmojiRelations,
+  PostHostView,
+  PostMentionsUserRelation,
+  PostReport,
+  PostTag,
+  PushNotificationToken,
   QuestionPoll,
   QuestionPollAnswer,
   QuestionPollQuestion,
-  EmojiReaction,
-  UserEmojiRelation,
-  PostEmojiRelations,
   Quotes,
-  PostHostView,
   RemoteUserPostView,
-  Ask,
-  Notification,
-  BskyInviteCodes,
-  MfaDetails
+  ServerBlock,
+  SilencedPost,
+  User,
+  UserBookmarkedPosts,
+  UserEmojiRelation,
+  UserLikesPostRelations,
+  UserOptions,
+  UserReport,
 ])
 
-Post.isHiearchy()
+//Post.isHiearchy()
 
 export {
   sequelize,
-  User,
-  UserOptions,
-  PushNotificationToken,
+  Ask,
   Blocks,
-  Mutes,
-  Post,
-  PostReport,
-  UserReport,
-  PostTag,
-  Follows,
-  Media,
+  BskyInviteCodes,
   Emoji,
   EmojiCollection,
-  PostMentionsUserRelation,
-  UserLikesPostRelations,
-  UserBookmarkedPosts,
+  EmojiReaction,
   FederatedHost,
-  ServerBlock,
-  SilencedPost,
+  Follows,
+  Media,
+  MfaDetails,
+  Mutes,
+  Notification,
+  Post,
+  PostAncestor,
+  PostEmojiRelations,
+  PostHostView,
+  PostMentionsUserRelation,
+  PostReport,
+  PostTag,
+  PushNotificationToken,
   QuestionPoll,
   QuestionPollAnswer,
   QuestionPollQuestion,
-  EmojiReaction,
-  UserEmojiRelation,
-  PostEmojiRelations,
   Quotes,
-  PostHostView,
   RemoteUserPostView,
-  Ask,
-  Notification,
-  BskyInviteCodes,
-  MfaDetails
+  ServerBlock,
+  SilencedPost,
+  User,
+  UserBookmarkedPosts,
+  UserEmojiRelation,
+  UserLikesPostRelations,
+  UserOptions,
+  UserReport,
 }

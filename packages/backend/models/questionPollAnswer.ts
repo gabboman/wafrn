@@ -5,6 +5,9 @@ import { QuestionPollQuestion } from "./questionPollQuestion.js";
 import { User } from "./user.js";
 
 export interface QuestionPollAnswerAttributes {
+  id?: number;
+  createdAt?: Date;
+  updatedAt?: Date;
   remoteId?: string;
   questionPollQuestionId?: number;
   userId?: string;
@@ -19,24 +22,25 @@ export class QuestionPollAnswer extends Model<QuestionPollAnswerAttributes, Ques
     allowNull: true,
     type: DataType.STRING(768)
   })
-  remoteId?: string;
+  declare remoteId: string;
 
   @ForeignKey(() => QuestionPollQuestion)
   @Column({
     allowNull: true,
     type: DataType.INTEGER
   })
-  questionPollQuestionId?: number;
+  declare questionPollQuestionId: number;
 
+  @ForeignKey(() => User)
   @Column({
     allowNull: true,
     type: DataType.UUID
   })
-  userId?: string;
+  declare userId: string;
 
   @BelongsTo(() => QuestionPollQuestion, "questionPollQuestionId")
-  questionPollQuestion?: QuestionPollQuestion;
+  declare questionPollQuestion: QuestionPollQuestion;
 
   @BelongsTo(() => User, "userId")
-  user?: User;
+  declare user: User;
 }

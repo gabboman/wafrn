@@ -1,10 +1,13 @@
 import {
-  Model, Table, Column, DataType, Sequelize, ForeignKey, BelongsTo
+  Model, Table, Column, DataType, ForeignKey, BelongsTo
 } from "sequelize-typescript";
 import { User } from "./user.js";
 import { FederatedHost } from "./federatedHost.js";
 
 export interface ServerBlockAttributes {
+  id?: number;
+  createdAt?: Date;
+  updatedAt?: Date;
   userBlockerId?: string;
   blockedServerId?: string;
 }
@@ -19,19 +22,19 @@ export class ServerBlock extends Model<ServerBlockAttributes, ServerBlockAttribu
     allowNull: true,
     type: DataType.UUID
   })
-  userBlockerId?: string;
+  declare userBlockerId: string;
 
   @ForeignKey(() => FederatedHost)
   @Column({
     allowNull: true,
     type: DataType.UUID
   })
-  blockedServerId?: string;
+  declare blockedServerId: string;
 
   @BelongsTo(() => User, "userBlockerId")
-  userBlocker?: User;
+  declare userBlocker: User;
 
   @BelongsTo(() => FederatedHost, "blockedServerId")
-  blockedServer?: FederatedHost;
+  declare blockedServer: FederatedHost;
 
 }

@@ -5,6 +5,9 @@ import { Post } from "./post.js";
 import { User } from "./user.js";
 
 export interface SilencedPostAttributes {
+  id?: number;
+  createdAt?: Date;
+  updatedAt?: Date;
   superMuted?: boolean;
   userId?: string;
   postId?: string;
@@ -20,25 +23,25 @@ export class SilencedPost extends Model<SilencedPostAttributes, SilencedPostAttr
     type: DataType.BOOLEAN,
     defaultValue: Sequelize.literal("false")
   })
-  superMuted?: boolean;
+  declare superMuted: boolean;
 
   @ForeignKey(() => User)
   @Column({
     allowNull: true,
     type: DataType.UUID
   })
-  userId?: string;
+  declare userId: string;
 
   @ForeignKey(() => Post)
   @Column({
     allowNull: true,
     type: DataType.UUID
   })
-  postId?: string;
+  declare postId: string;
 
   @BelongsTo(() => Post, "postId")
-  post?: Post;
+  declare post: Post;
 
   @BelongsTo(() => User, "userId")
-  user?: User;
+  declare user: User;
 }

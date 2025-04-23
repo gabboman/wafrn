@@ -4,6 +4,9 @@ import {
 import { User } from "./user.js";
 
 export interface FollowsAttributes {
+  id?: number;
+  createdAt?: Date;
+  updatedAt?: Date;
   remoteFollowId?: string;
   accepted?: boolean;
   bskyUri?: string;
@@ -22,44 +25,44 @@ export class Follows extends Model<FollowsAttributes, FollowsAttributes> impleme
     allowNull: true,
     type: DataType.STRING(768)
   })
-  remoteFollowId?: string;
+  declare remoteFollowId: string;
 
   @Column({
     allowNull: true,
     type: DataType.BOOLEAN,
     defaultValue: false
   })
-  accepted?: boolean;
+  declare accepted: boolean;
 
   @Column({
     allowNull: true,
     type: DataType.STRING(768)
   })
-  bskyUri?: string;
+  declare bskyUri: string;
 
   @Column({
     allowNull: true,
     type: DataType.STRING(768)
   })
-  bskyPath?: string;
+  declare bskyPath: string;
 
   @ForeignKey(() => User)
   @Column({
     primaryKey: true,
     type: DataType.UUID
   })
-  followerId!: string;
+  declare followerId: string;
 
   @ForeignKey(() => User)
   @Column({
     primaryKey: true,
     type: DataType.UUID
   })
-  followedId!: string;
+  declare followedId: string;
 
   @BelongsTo(() => User, "followerId")
-  follower?: User;
+  declare follower: User;
 
   @BelongsTo(() => User, "followedId")
-  followed?: User;
+  declare followed: User;
 }

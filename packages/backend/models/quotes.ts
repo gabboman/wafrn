@@ -4,6 +4,9 @@ import {
 import { Post } from "./post.js";
 
 export interface QuotesAttributes {
+  id?: number;
+  createdAt?: Date;
+  updatedAt?: Date;
   quoterPostId: string;
   quotedPostId: string;
 }
@@ -18,18 +21,18 @@ export class Quotes extends Model<QuotesAttributes, QuotesAttributes> implements
     primaryKey: true,
     type: DataType.UUID
   })
-  quoterPostId!: string;
+  declare quoterPostId: string;
 
   @ForeignKey(() => Post)
   @Column({
     primaryKey: true,
     type: DataType.UUID
   })
-  quotedPostId!: string;
+  declare quotedPostId: string;
 
   @BelongsTo(() => Post, "quoterPostId")
-  quoterPost?: Post;
+  declare quoterPost: Post;
 
   @BelongsTo(() => Post, "quotedPostId")
-  quotedPost?: Post;
+  declare quotedPost: Post;
 }

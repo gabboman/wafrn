@@ -5,6 +5,9 @@ import { Post } from "./post.js";
 import { FederatedHost } from "./federatedHost.js";
 
 export interface PostHostViewsAttributes {
+  id?: number;
+  createdAt?: Date;
+  updatedAt?: Date;
   federatedHostId: string;
   postId: string;
 }
@@ -19,19 +22,19 @@ export class PostHostView extends Model<PostHostViewsAttributes, PostHostViewsAt
     primaryKey: true,
     type: DataType.UUID
   })
-  federatedHostId!: string;
+  declare federatedHostId: string;
 
   @ForeignKey(() => Post)
   @Column({
     primaryKey: true,
     type: DataType.UUID
   })
-  postId!: string;
+  declare postId: string;
 
   @BelongsTo(() => Post, "postId")
-  post?: Post;
+  declare post: Post;
 
   @BelongsTo(() => FederatedHost, "federatedHostId")
-  federatedHost?: FederatedHost;
+  declare federatedHost: FederatedHost;
 
 }

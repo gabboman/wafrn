@@ -1,9 +1,14 @@
 import {
-  Model, Table, Column, DataType, Sequelize, ForeignKey, BelongsTo
+  Model, Table, Column, DataType, Sequelize, ForeignKey, BelongsTo,
+  HasMany
 } from "sequelize-typescript";
 import { QuestionPoll } from "./questionPoll.js";
+import { QuestionPollAnswer } from "./questionPollAnswer.js";
 
 export interface QuestionPollQuestionAttributes {
+  id?: number;
+  createdAt?: Date;
+  updatedAt?: Date;
   questionText?: string;
   index?: number;
   remoteReplies?: number;
@@ -19,27 +24,30 @@ export class QuestionPollQuestion extends Model<QuestionPollQuestionAttributes, 
     allowNull: true,
     type: DataType.STRING
   })
-  questionText?: string;
+  declare questionText: string;
 
   @Column({
     allowNull: true,
     type: DataType.INTEGER
   })
-  index?: number;
+  declare index: number;
 
   @Column({
     allowNull: true,
     type: DataType.INTEGER
   })
-  remoteReplies?: number;
+  declare remoteReplies: number;
 
   @ForeignKey(() => QuestionPoll)
   @Column({
     allowNull: true,
     type: DataType.INTEGER
   })
-  questionPollId?: number;
+  declare questionPollId: number;
 
   @BelongsTo(() => QuestionPoll)
-  questionPoll?: QuestionPoll;
+  declare questionPoll: QuestionPoll;
+
+  @HasMany(() => QuestionPollAnswer)
+  declare questionPollAnswers: QuestionPollAnswer;
 }

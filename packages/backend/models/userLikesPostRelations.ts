@@ -1,10 +1,13 @@
 import {
-  Model, Table, Column, DataType, Index, Sequelize, ForeignKey, BelongsTo
+  Model, Table, Column, DataType, ForeignKey, BelongsTo
 } from "sequelize-typescript";
 import { User } from "./user.js";
 import { Post } from "./post.js";
 
 export interface UserLikesPostRelationsAttributes {
+  id?: number;
+  createdAt?: Date;
+  updatedAt?: Date;
   userId: string;
   postId: string;
   remoteId?: string;
@@ -22,31 +25,31 @@ export class UserLikesPostRelations extends Model<UserLikesPostRelationsAttribut
     primaryKey: true,
     type: DataType.UUID
   })
-  userId!: string;
+  declare userId: string;
 
   @ForeignKey(() => Post)
   @Column({
     primaryKey: true,
     type: DataType.UUID
   })
-  postId!: string;
+  declare postId: string;
 
   @Column({
     allowNull: true,
     type: DataType.STRING(768)
   })
-  remoteId?: string;
+  declare remoteId: string;
 
   @Column({
     allowNull: true,
     type: DataType.STRING(768)
   })
-  bskyPath?: string;
+  declare bskyPath: string;
 
   @BelongsTo(() => User, "userId")
-  user?: User;
+  declare user: User;
 
   @BelongsTo(() => Post, "postId")
-  post?: Post;
+  declare post: Post;
 
 }

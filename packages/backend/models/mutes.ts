@@ -4,6 +4,9 @@ import {
 import { User } from "./user.js";
 
 export interface MutesAttributes {
+  id?: number;
+  createdAt?: Date;
+  updatedAt?: Date;
   reason?: string;
   mutedId: string;
   muterId: string;
@@ -19,25 +22,25 @@ export class Mutes extends Model<MutesAttributes, MutesAttributes> implements Mu
     allowNull: true,
     type: DataType.STRING
   })
-  reason?: string;
+  declare reason: string;
 
   @ForeignKey(() => User)
   @Column({
     primaryKey: true,
     type: DataType.UUID
   })
-  mutedId!: string;
+  declare mutedId: string;
 
   @ForeignKey(() => User)
   @Column({
     primaryKey: true,
     type: DataType.UUID
   })
-  muterId!: string;
+  declare muterId: string;
 
   @BelongsTo(() => User, "mutedId")
-  muted?: User;
+  declare muted: User;
 
   @BelongsTo(() => User, "muterId")
-  muter?: User;
+  declare muter: User;
 }

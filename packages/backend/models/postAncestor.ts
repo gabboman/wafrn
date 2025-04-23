@@ -19,18 +19,18 @@ export class PostAncestor extends Model<PostAncestorAttributes, PostAncestorAttr
     primaryKey: true,
     type: DataType.UUID
   })
-  postsId!: string;
+  declare postsId: string;
 
   @ForeignKey(() => Post)
   @Column({
     primaryKey: true,
     type: DataType.UUID
   })
-  ancestorId!: string;
+  declare ancestorId: string;
 
-  @BelongsTo(() => Post, "postId")
-  post?: Post
+  @BelongsTo(() => Post, "postsId")
+  declare post: Post
 
   @BelongsTo(() => Post, "ancestorId")
-  ancestor?: Post
+  declare ancestor: Post
 }

@@ -4,6 +4,9 @@ import {
 import { User } from "./user.js";
 
 export interface MfaDetailsAttributes {
+  id?: string;
+  createdAt?: Date;
+  updatedAt?: Date;
   userId: string;
   type?: string;
   name?: string;
@@ -29,38 +32,38 @@ export class MfaDetails extends Model<MfaDetailsAttributes, MfaDetailsAttributes
     primaryKey: true,
     type: DataType.UUID
   })
-  userId!: string;
+  declare userId: string;
 
   @Column({
     allowNull: true,
     type: DataType.STRING(255)
   })
-  type?: string;
+  declare type: string;
 
   @Column({
     allowNull: true,
     type: DataType.STRING(255)
   })
-  name?: string;
+  declare name: string;
 
   @Column({
     allowNull: true,
     type: DataType.JSON
   })
-  data?: object;
+  declare data: object;
 
   @Column({
     allowNull: true,
     type: DataType.JSON
   })
-  lastUsedData?: object;
+  declare lastUsedData: object;
 
   @Column({
     allowNull: true,
     type: DataType.BOOLEAN
   })
-  enabled?: boolean;
+  declare enabled: boolean;
 
   @BelongsTo(() => User, "userId")
-  user?: User;
+  declare user: User;
 }

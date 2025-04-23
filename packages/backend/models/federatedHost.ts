@@ -3,6 +3,9 @@ import {
 } from "sequelize-typescript";
 
 export interface FederatedHostAttributes {
+  id?: string;
+  createdAt?: Date;
+  updatedAt?: Date;
   displayName?: string;
   publicInbox?: string;
   publicKey?: string;
@@ -19,7 +22,8 @@ export class FederatedHost extends Model<FederatedHostAttributes, FederatedHostA
 
   @Column({
     primaryKey: true,
-    type: DataType.UUID
+    type: DataType.UUID,
+    defaultValue: DataType.UUIDV4
   })
   declare id: string;
 
@@ -27,37 +31,37 @@ export class FederatedHost extends Model<FederatedHostAttributes, FederatedHostA
     allowNull: true,
     type: DataType.STRING
   })
-  displayName?: string;
+  declare displayName: string;
 
   @Column({
     allowNull: true,
     type: DataType.STRING
   })
-  publicInbox?: string;
+  declare publicInbox: string;
 
   @Column({
     allowNull: true,
     type: DataType.STRING
   })
-  publicKey?: string;
+  declare publicKey: string;
 
   @Column({
     allowNull: true,
     type: DataType.STRING(255)
   })
-  detail?: string;
+  declare detail: string;
 
   @Column({
     allowNull: true,
     type: DataType.BOOLEAN,
     defaultValue: false
   })
-  blocked?: boolean;
+  declare blocked: boolean;
 
   @Column({
     allowNull: true,
     type: DataType.BOOLEAN,
     defaultValue: false
   })
-  friendServer?: boolean;
+  declare friendServer: boolean;
 }

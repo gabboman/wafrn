@@ -4,6 +4,9 @@ import {
 import { User } from "./user.js";
 
 export interface UserOptionsAttributes {
+  id?: number;
+  createdAt?: Date;
+  updatedAt?: Date;
   userId: string;
   optionName: string;
   optionValue?: string;
@@ -21,28 +24,28 @@ export class UserOptions extends Model<UserOptionsAttributes, UserOptionsAttribu
     primaryKey: true,
     type: DataType.UUID
   })
-  userId!: string;
+  declare userId: string;
 
   @Column({
     primaryKey: true,
     type: DataType.STRING(255)
   })
-  optionName!: string;
+  declare optionName: string;
 
   @Column({
     allowNull: true,
     type: DataType.STRING
   })
-  optionValue?: string;
+  declare optionValue: string;
 
   @Column({
     allowNull: true,
     type: DataType.BOOLEAN,
     defaultValue: false
   })
-  public?: boolean;
+  declare public: boolean;
 
   @BelongsTo(() => User)
-  user?: User;
+  declare user: User;
 
 }

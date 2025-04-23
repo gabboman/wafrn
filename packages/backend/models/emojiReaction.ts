@@ -1,9 +1,13 @@
-import { Model, Table, Column, DataType, ForeignKey, BelongsTo } from "sequelize-typescript";
+import { Model, Table, Column, DataType, ForeignKey, BelongsTo, HasMany } from "sequelize-typescript";
 import { Emoji } from "./emoji.js";
 import { User } from "./user.js";
 import { Post } from "./post.js";
+import { Notification } from "./notification.js";
 
 export interface EmojiReactionAttributes {
+  id?: string;
+  createdAt?: Date;
+  updatedAt?: Date;
   remoteId?: string;
   content?: string;
   postId?: string;
@@ -27,41 +31,44 @@ export class EmojiReaction extends Model<EmojiReactionAttributes, EmojiReactionA
     allowNull: true,
     type: DataType.STRING(768)
   })
-  remoteId?: string;
+  declare remoteId: string;
 
   @Column({
     allowNull: true,
     type: DataType.STRING
   })
-  content?: string;
+  declare content: string;
 
   @ForeignKey(() => Post)
   @Column({
     allowNull: true,
     type: DataType.UUID
   })
-  postId?: string;
+  declare postId: string;
 
   @ForeignKey(() => User)
   @Column({
     allowNull: true,
     type: DataType.UUID
   })
-  userId?: string;
+  declare userId: string;
 
   @ForeignKey(() => Emoji)
   @Column({
     allowNull: true,
     type: DataType.STRING(255)
   })
-  emojiId?: string;
+  declare emojiId: string;
 
   @BelongsTo(() => Post, "postId")
-  post?: Post
+  declare post: Post
 
   @BelongsTo(() => User, "userId")
-  user?: Post
+  declare user: Post
 
   @BelongsTo(() => Emoji, "emojiId")
-  emoji?: Post
+  declare emoji: Post
+
+  @HasMany(() => Notification)
+  declare notifications: Notification[];
 }

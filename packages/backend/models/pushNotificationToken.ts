@@ -4,6 +4,9 @@ import {
 import { User } from "./user.js";
 
 export interface PushNotificationTokenAttributes {
+  id?: number;
+  createdAt?: Date;
+  updatedAt?: Date;
   token: string;
   userId: string;
 }
@@ -18,14 +21,14 @@ export class PushNotificationToken extends Model<PushNotificationTokenAttributes
     primaryKey: true,
     type: DataType.STRING(768)
   })
-  token!: string;
+  declare token: string;
 
   @ForeignKey(() => User)
   @Column({
     type: DataType.UUID
   })
-  userId!: string;
+  declare userId: string;
 
   @BelongsTo(() => User, "userId")
-  user?: User;
+  declare user: User;
 }

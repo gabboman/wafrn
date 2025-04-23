@@ -26,6 +26,9 @@ import { UserBookmarkedPosts } from "./userBookmarkedPosts.js";
 import { RemoteUserPostView } from "./remoteUserPostView.js";
 
 export interface UserAttributes {
+  id?: string;
+  createdAt?: Date;
+  updatedAt?: Date;
   email?: string;
   description?: string;
   descriptionMarkdown?: string;
@@ -68,36 +71,41 @@ export interface UserAttributes {
   timestamps: true
 })
 export class User extends Model<UserAttributes, UserAttributes> implements UserAttributes {
+  @Column({
+    primaryKey: true,
+    type: DataType.UUID,
+    defaultValue: DataType.UUIDV4
+  })
   declare id: string;
 
   @Column({
     allowNull: true,
     type: DataType.STRING(768)
   })
-  email?: string;
+  declare email: string;
 
   @Column({
     allowNull: true,
     type: DataType.STRING
   })
-  description?: string;
+  declare description: string;
 
   @Column({
     allowNull: true,
     type: DataType.STRING
   })
-  descriptionMarkdown?: string;
+  declare descriptionMarkdown: string;
 
   @Column({
     allowNull: true,
     type: DataType.STRING
   })
-  name?: string;
+  declare name: string;
 
   @Column({
     type: DataType.STRING(768)
   })
-  url!: string;
+  declare url: string;
 
   @Column({
     field: "NSFW",
@@ -105,348 +113,348 @@ export class User extends Model<UserAttributes, UserAttributes> implements UserA
     type: DataType.BOOLEAN,
     defaultValue: false
   })
-  nsfw?: boolean;
+  declare nsfw: boolean;
 
   @Column({
     allowNull: true,
     type: DataType.STRING
   })
-  avatar?: string;
+  declare avatar: string;
 
   @Column({
     allowNull: true,
     type: DataType.STRING
   })
-  password?: string;
+  declare password: string;
 
   @Column({
     allowNull: true,
     type: DataType.DATE
   })
-  birthDate?: Date;
+  declare birthDate: Date;
 
   @Column({
     allowNull: true,
     type: DataType.BOOLEAN
   })
-  activated?: boolean;
+  declare activated: boolean;
 
   @Column({
     allowNull: true,
     type: DataType.DATE
   })
-  requestedPasswordReset?: Date;
+  declare requestedPasswordReset: Date;
 
   @Column({
     allowNull: true,
     type: DataType.STRING(255)
   })
-  activationCode?: string;
+  declare activationCode: string;
 
   @Column({
     allowNull: true,
     type: DataType.STRING(255)
   })
-  registerIp?: string;
+  declare registerIp: string;
 
   @Column({
     allowNull: true,
     type: DataType.STRING(255)
   })
-  lastLoginIp?: string;
+  declare lastLoginIp: string;
 
   @Column({
     type: DataType.DATE,
     defaultValue: new Date(0)
   })
-  lastTimeNotificationsCheck?: Date;
+  declare lastTimeNotificationsCheck: Date;
 
   @Column({
     allowNull: true,
     type: DataType.STRING
   })
-  privateKey?: string;
+  declare privateKey: string;
 
   @Column({
     allowNull: true,
     type: DataType.STRING
   })
-  publicKey?: string;
+  declare publicKey: string;
 
   @ForeignKey(() => FederatedHost)
   @Column({
     allowNull: true,
     type: DataType.UUID
   })
-  federatedHostId?: string;
+  declare federatedHostId: string;
 
   @Column({
     allowNull: true,
     type: DataType.STRING
   })
-  remoteInbox?: string;
+  declare remoteInbox: string;
 
   @Column({
     allowNull: true,
     type: DataType.STRING(768)
   })
-  remoteId?: string;
+  declare remoteId: string;
 
   @Column({
     allowNull: true,
     type: DataType.STRING
   })
-  remoteMentionUrl?: string;
+  declare remoteMentionUrl: string;
 
   @Column({
     allowNull: true,
     type: DataType.BOOLEAN,
     defaultValue: false
   })
-  isBot?: boolean;
+  declare isBot: boolean;
 
   @Column({
     allowNull: true,
     type: DataType.BOOLEAN,
     defaultValue: false
   })
-  banned?: boolean;
+  declare banned: boolean;
 
   @Column({
     allowNull: true,
     type: DataType.INTEGER,
     defaultValue: 0
   })
-  role?: number;
+  declare role: number;
 
   @Column({
     allowNull: true,
     type: DataType.BOOLEAN,
     defaultValue: false
   })
-  manuallyAcceptsFollows?: boolean;
+  declare manuallyAcceptsFollows: boolean;
 
   @Column({
     allowNull: true,
     type: DataType.STRING
   })
-  headerImage?: string;
+  declare headerImage: string;
 
   @Column({
     allowNull: true,
     type: DataType.STRING
   })
-  followersCollectionUrl?: string;
+  declare followersCollectionUrl: string;
 
   @Column({
     allowNull: true,
     type: DataType.STRING
   })
-  followingCollectionUrl?: string;
+  declare followingCollectionUrl: string;
 
   @Column({
     allowNull: true,
     type: DataType.INTEGER,
     defaultValue: 0
   })
-  followerCount?: number;
+  declare followerCount: number;
 
   @Column({
     allowNull: true,
     type: DataType.INTEGER,
     defaultValue: 0
   })
-  followingCount?: number;
+  declare followingCount: number;
 
   @Column({
     allowNull: true,
     type: DataType.BOOLEAN,
     defaultValue: false
   })
-  disableEmailNotifications?: boolean;
+  declare disableEmailNotifications: boolean;
 
   @Column({
     allowNull: true,
     type: DataType.BOOLEAN,
     defaultValue: false
   })
-  enableBsky?: boolean;
+  declare enableBsky: boolean;
 
   @Column({
     allowNull: true,
     type: DataType.STRING
   })
-  bskyAuthData?: string;
+  declare bskyAuthData: string;
 
   @Column({
     allowNull: true,
     type: DataType.STRING(768)
   })
-  bskyDid?: string;
+  declare bskyDid: string;
 
   @Column({
     allowNull: true,
     type: DataType.DATE,
     defaultValue: new Date(0)
   })
-  lastActiveAt?: Date;
+  declare lastActiveAt: Date;
 
   @HasMany(() => MfaDetails, {
     sourceKey: "id"
   })
-  mfaDetails?: MfaDetails[];
+  declare mfaDetails: MfaDetails[];
 
   @HasMany(() => Notification, {
     foreignKey: "notifiedUserId"
   })
-  incomingNotifications?: Notification[];
+  declare incomingNotifications: Notification[];
 
   @HasMany(() => Notification, {
-    sourceKey: "userId"
+    foreignKey: "userId"
   })
-  outgoingNotifications?: Notification[];
+  declare outgoingNotifications: Notification[];
 
   @HasMany(() => Ask, {
     foreignKey: "userAsker"
   })
-  userAsker?: Ask[];
+  declare userAsker: Ask[];
 
   @HasMany(() => Ask, {
     foreignKey: "userAsks"
   })
-  userAsks?: Ask[];
+  declare userAsks: Ask[];
 
   @HasMany(() => QuestionPollAnswer, {
     sourceKey: "id"
   })
-  questionPollAnswers?: QuestionPollAnswer[];
+  declare questionPollAnswers: QuestionPollAnswer[];
 
   @HasMany(() => EmojiReaction, {
     sourceKey: "id"
   })
-  emojiReacions?: EmojiReaction[];
+  declare emojiReacions: EmojiReaction[];
 
   @HasMany(() => UserOptions, {
     sourceKey: "id"
   })
-  userOptions?: UserOptions[];
+  declare userOptions: UserOptions[];
 
   @HasMany(() => PushNotificationToken, {
     sourceKey: "id"
   })
-  pushNotificationTokens?: PushNotificationToken[];
+  declare pushNotificationTokens: PushNotificationToken[];
 
   @BelongsToMany(() => Emoji, () => UserEmojiRelation)
-  emojis?: Emoji[];
+  declare emojis: Emoji[];
 
   @HasMany(() => Follows, {
     foreignKey: "followerId"
   })
-  followerFollows?: Follows[];
+  declare followerFollows: Follows[];
 
   @HasMany(() => Follows, {
     foreignKey: "followsId"
   })
-  followedFollows?: Follows[];
+  declare followedFollows: Follows[];
 
   @BelongsToMany(() => User, () => Follows, "followerId", "followsId")
-  followers?: User[]
+  declare followers: User[]
 
   @BelongsToMany(() => User, () => Follows, "followsId", "followerId")
-  follows?: User[]
+  declare follows: User[]
 
   @HasMany(() => Blocks, {
     foreignKey: "blockerId"
   })
-  blockerBlocks?: Blocks[];
+  declare blockerBlocks: Blocks[];
 
   @HasMany(() => Blocks, {
     foreignKey: "blockedId"
   })
-  blockedBlocks?: Blocks[];
+  declare blockedBlocks: Blocks[];
 
   @BelongsToMany(() => User, () => Blocks, "blockerId", "blockedId")
-  blocker?: User[]
+  declare blocker: User[]
 
   @BelongsToMany(() => User, () => Blocks, "blockedId", "blockerId")
-  blocked?: User[]
+  declare blocked: User[]
 
   @HasMany(() => Mutes, {
     foreignKey: "muterId"
   })
-  muterMutes?: Mutes[];
+  declare muterMutes: Mutes[];
 
   @HasMany(() => Mutes, {
     foreignKey: "mutedId"
   })
-  mutedMutes?: Mutes[];
+  declare mutedMutes: Mutes[];
 
-  @BelongsToMany(() => User, () => Mutes, "muterId", "mutesId")
-  muter?: User[]
+  @BelongsToMany(() => User, () => Mutes, "muterId", "mutedId")
+  declare muter: User[]
 
-  @BelongsToMany(() => User, () => Mutes, "mutesId", "muterId")
-  mutes?: User[]
+  @BelongsToMany(() => User, () => Mutes, "mutedId", "muterId")
+  declare mutes: User[]
 
   @HasMany(() => ServerBlock, {
     sourceKey: "id"
   })
-  serverBlocks?: ServerBlock[];
+  declare serverBlocks: ServerBlock[];
 
   @HasMany(() => PostReport, {
     sourceKey: "id"
   })
-  postReports?: PostReport[];
+  declare postReports: PostReport[];
 
   @HasMany(() => SilencedPost, {
     sourceKey: "id"
   })
-  silencedPosts?: SilencedPost[];
+  declare silencedPosts: SilencedPost[];
 
   @HasMany(() => UserReport, {
     foreignKey: "ReportedId"
   })
-  reportedReport?: UserReport[];
+  declare reportedReport: UserReport[];
 
   @HasMany(() => UserReport, {
     foreignKey: "ReporterId"
   })
-  reporterReport?: UserReport[];
+  declare reporterReport: UserReport[];
 
   @BelongsTo(() => FederatedHost)
-  federatedHost?: FederatedHost;
+  declare federatedHost: FederatedHost;
 
   @HasMany(() => Post, {
     sourceKey: "id"
   })
-  posts?: Post[];
+  declare posts: Post[];
 
   @HasMany(() => Media, {
     sourceKey: "id"
   })
-  medias?: Media[];
+  declare medias: Media[];
 
   @HasMany(() => PostMentionsUserRelation, {
     sourceKey: "id"
   })
-  postMentionsUserRelations?: PostMentionsUserRelation[];
+  declare postMentionsUserRelations: PostMentionsUserRelation[];
 
   @HasMany(() => UserLikesPostRelations, {
     sourceKey: "id"
   })
-  userLikesPostRelations?: UserLikesPostRelations[];
+  declare userLikesPostRelations: UserLikesPostRelations[];
 
   @HasMany(() => UserBookmarkedPosts, {
     sourceKey: "id"
   })
-  userBookmarkedPosts?: UserBookmarkedPosts[];
+  declare userBookmarkedPosts: UserBookmarkedPosts[];
 
   @HasMany(() => RemoteUserPostView, {
     sourceKey: "id"
   })
-  remoteUserPostViews?: RemoteUserPostView[];
+  declare remoteUserPostViews: RemoteUserPostView[];
 
   @Column(DataType.VIRTUAL)
-  get isBlueSkyUser() {
+  get isBlueskyUser() {
     return !!(this.url.split('@').length == 2 && this.bskyDid)
   }
 

@@ -5,6 +5,9 @@ import { User } from "./user.js";
 import { Post } from "./post.js";
 
 export interface MediaAttributes {
+  id?: number;
+  createdAt?: Date;
+  updatedAt?: Date;
   mediaOrder?: number;
   nsfw?: boolean;
   description?: string;
@@ -29,82 +32,82 @@ export class Media extends Model<MediaAttributes, MediaAttributes> implements Me
     type: DataType.INTEGER,
     defaultValue: 0
   })
-  mediaOrder?: number;
+  declare mediaOrder: number;
 
   @Column({
     field: "NSFW",
     allowNull: true,
     type: DataType.BOOLEAN
   })
-  nsfw?: boolean;
+  declare nsfw: boolean;
 
   @Column({
     allowNull: true,
     type: DataType.STRING
   })
-  description?: string;
+  declare description: string;
 
   @Column({
     allowNull: true,
     type: DataType.STRING
   })
-  url?: string;
+  declare url: string;
 
   @Column({
     allowNull: true,
     type: DataType.STRING(255)
   })
-  ipUpload?: string;
+  declare ipUpload: string;
 
   @Column({
     type: DataType.BOOLEAN,
     defaultValue: false
   })
-  external?: boolean;
+  declare external: boolean;
 
   @Column({
     allowNull: true,
     type: DataType.STRING(255)
   })
-  mediaType?: string;
+  declare mediaType: string;
 
   @Column({
     allowNull: true,
     type: DataType.INTEGER,
     defaultValue: 0
   })
-  width?: number;
+  declare width: number;
 
   @Column({
     allowNull: true,
     type: DataType.INTEGER,
     defaultValue: 0
   })
-  height?: number;
+  declare height: number;
 
   @Column({
     allowNull: true,
     type: DataType.STRING(255)
   })
-  blurhash?: string;
+  declare blurhash: string;
 
   @ForeignKey(() => User)
   @Column({
     allowNull: true,
     type: DataType.UUID
   })
-  userId?: string;
+  declare userId: string;
 
   @ForeignKey(() => Post)
   @Column({
     allowNull: true,
     type: DataType.UUID
   })
-  postId?: string;
+  declare postId: string;
 
   @BelongsTo(() => User, "userId")
-  user?: User;
+  declare user: User;
 
   @BelongsTo(() => Post, "postId")
-  post?: Post;
+  declare post: Post;
 }
