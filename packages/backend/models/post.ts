@@ -221,7 +221,7 @@ export class Post extends Model<PostAttributes, PostAttributes> implements PostA
   @HasMany(() => PostMentionsUserRelation, {
     sourceKey: "id"
   })
-  declare postMentionsUserRelations: PostMentionsUserRelation[];
+  declare pMURs: PostMentionsUserRelation[];
 
   @HasMany(() => UserLikesPostRelations, {
     sourceKey: "id"
@@ -239,7 +239,7 @@ export class Post extends Model<PostAttributes, PostAttributes> implements PostA
   @HasMany(() => PostHostView, {
     sourceKey: "id"
   })
-  declare postHostViews: PostHostView[];
+  declare postHostViewList: PostHostView[];
 
   @BelongsToMany(() => FederatedHost, () => PostHostView)
   declare hostView: FederatedHost[];
@@ -247,7 +247,7 @@ export class Post extends Model<PostAttributes, PostAttributes> implements PostA
   @HasMany(() => RemoteUserPostView, {
     sourceKey: "id"
   })
-  declare remoteUserPostViews: RemoteUserPostView[];
+  declare remoteUserPostViewList: RemoteUserPostView[];
 
   @BelongsToMany(() => User, () => RemoteUserPostView)
   declare view: User[];

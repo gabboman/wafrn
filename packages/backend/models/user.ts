@@ -442,7 +442,7 @@ export class User extends Model<UserAttributes, UserAttributes> implements UserA
   @HasMany(() => PostMentionsUserRelation, {
     sourceKey: "id"
   })
-  declare postMentionsUserRelations: PostMentionsUserRelation[];
+  declare pMURs: PostMentionsUserRelation[];
 
   @BelongsToMany(() => Post, () => PostMentionsUserRelation)
   declare mentionPost: Post[];
@@ -460,7 +460,7 @@ export class User extends Model<UserAttributes, UserAttributes> implements UserA
   @HasMany(() => RemoteUserPostView, {
     sourceKey: "id"
   })
-  declare remoteUserPostViews: RemoteUserPostView[];
+  declare remoteUserPostViewList: RemoteUserPostView[];
 
   @Column(DataType.VIRTUAL)
   get isBlueskyUser() {
