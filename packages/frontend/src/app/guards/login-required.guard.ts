@@ -5,7 +5,7 @@ import { inject } from '@angular/core'
 export const loginRequiredGuard: CanActivateChildFn = (childRoute, state) => {
   const res = inject(JwtService).tokenValid()
   if (!res) {
-    inject(Router).navigate(['/'])
+    inject(Router).navigate(['/register'])
   }
   return res
 }
