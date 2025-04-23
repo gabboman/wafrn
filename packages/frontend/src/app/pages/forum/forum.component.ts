@@ -50,11 +50,11 @@ import { SnappyPostData } from 'src/app/directives/post-link/post-link.directive
 })
 export class ForumComponent implements OnInit, OnDestroy, SnappyCreate {
   loading = true
-  forumPosts = signal<ProcessedPost[]>([]);
-  post = model<ProcessedPost[]>([]);
-  postId = model<string>('');
-  snappyPost = snappyInject(SnappyPostData);
-  hasPost = false;
+  forumPosts = signal<ProcessedPost[]>([])
+  post = model<ProcessedPost[]>([])
+  postId = model<string>('')
+  snappyPost = snappyInject(SnappyPostData)
+  hasPost = false
   subscription!: Subscription
   updateFollowsSubscription: Subscription
   navigationStart!: Subscription
@@ -75,7 +75,7 @@ export class ForumComponent implements OnInit, OnDestroy, SnappyCreate {
 
   // icons
   rewootIcon = faRepeat
-  private readonly route = inject(ActivatedRoute);
+  private readonly route = inject(ActivatedRoute)
   homeIcon = faHome
   constructor(
     private forumService: ForumService,
@@ -95,51 +95,50 @@ export class ForumComponent implements OnInit, OnDestroy, SnappyCreate {
   }
 
   snOnCreate(): void {
-    let data = this.snappyPost(this.snappy)?.post;
-    if (!data) return;
+    let data = this.snappyPost(this.snappy)?.post
+    if (!data) return
 
-    let post: ProcessedPost[] = [];
+    let post: ProcessedPost[] = []
     for (const f of data.parentCollection) {
-      post.push(f);
+      post.push(f)
       if (f.id == data.id) {
-        break;
+        break
       }
     }
 
-    this.post.set(post);
-    this.postId.set(data.id);
+    this.post.set(post)
+    this.postId.set(data.id)
   }
-
 
   ngOnInit(): void {
     if (this.post().length > 0) {
-      this.hasPost = true;
+      this.hasPost = true
     }
 
     this.navigationStart = this.router.events
       .pipe(filter((event) => event instanceof NavigationEnd))
-      .subscribe(() => {
-      });
+      .subscribe(() => {})
 
     if (this.userLoggedIn) {
       this.myId = this.loginService.getLoggedUserUUID()
     }
 
-
     this.subscription = this.route.params.subscribe(async (data: any) => {
       this.loading = true
-      if (this.hasPost && !this.postId()) this.postId.set(this.post()[0].id);
-      if (data.id) {
-        this.postId.set(data.id);
+      if (this.hasPost && !this.postId()) {
+        this.postId.set(this.post()[0].id)
+      }
+      if (data.id && this.postId() != data.id) {
+        this.postId.set(data.id)
         const tmpTmpPost = this.dashboardService.getPostV2(this.postId())
-        const tmpPost = await tmpTmpPost;
-        this.post.set(tmpPost ?? []);
+        const tmpPost = await tmpTmpPost
+        this.post.set(tmpPost ?? [])
       } else if (data.blog && data.title) {
         // TODO article petition
       }
-      const tmpForumPosts = this.forumService.getForumThread(this.postId());
-      this.forumPosts.set(await tmpForumPosts);
-      this.loading = false;
+      const tmpForumPosts = this.forumService.getForumThread(this.postId())
+      this.forumPosts.set(await tmpForumPosts)
+      this.loading = false
     })
   }
   ngOnDestroy(): void {
@@ -147,9 +146,9 @@ export class ForumComponent implements OnInit, OnDestroy, SnappyCreate {
     this.updateFollowsSubscription.unsubscribe()
   }
 
-  followUser(id: string) { }
+  followUser(id: string) {}
 
-  unfollowUser(id: string) { }
+  unfollowUser(id: string) {}
 
   scrollTo(id: string) {
     document.getElementById(id)?.scrollIntoView({
@@ -160,10 +159,10 @@ export class ForumComponent implements OnInit, OnDestroy, SnappyCreate {
   }
 
   async loadRepliesFromFediverse() {
-    this.loading = true;
-    this.hasPost = true;
-    await this.postService.loadRepliesFromFediverse(this.post()[this.post().length - 1].id);
-    this.forumPosts.set(await this.forumService.getForumThread(this.post()[this.post().length - 1].id));
+    this.loading = true
+    this.hasPost = true
+    await this.postService.loadRepliesFromFediverse(this.post()[this.post().length - 1].id)
+    this.forumPosts.set(await this.forumService.getForumThread(this.post()[this.post().length - 1].id))
     this.itemsPerPage = 50
     this.currentPage = 0
     this.loading = false
