@@ -1,12 +1,4 @@
-<button
-  mat-button
-  (click)="openOverlay()"
-  type="button"
-  cdkOverlayOrigin
-  #trigger="cdkOverlayOrigin"
-  matTooltip="React with an emoji"
-  class="line-height-1"
->
+<button mat-button (click)="openDialog()" type="button" matTooltip="React with an emoji" class="line-height-1">
   <!-- <fa-icon [icon]="isOpen ? minusIcon : plusIcon"></fa-icon> -->
   <svg width="20px" height="20px" viewBox="0 0 1000 1000" fill="currentColor" class="vertical-align-middle">
     <path
@@ -14,17 +6,3 @@
     />
   </svg>
 </button>
-
-<ng-template
-  *ngIf="isOpen"
-  cdkConnectedOverlay
-  [cdkConnectedOverlayOrigin]="trigger"
-  [cdkConnectedOverlayOpen]="isOpen"
-  [cdkConnectedOverlayScrollStrategy]="scrollStrategy"
->
-  <div class="p-3 emojireact-overlay">
-    <p class="text-xs">Mastodon does not support emojireacts yet</p>
-    <app-emoji-collections *ngIf="!loading" (emoji)="reactToPost($event)"></app-emoji-collections>
-    <app-loader *ngIf="loading"></app-loader>
-  </div>
-</ng-template>
