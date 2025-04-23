@@ -1,22 +1,31 @@
-import { sequelize } from "./sequelize.js";
-import { DataTypes } from "sequelize";
+import {
+  Model, Table, Column, DataType, ForeignKey, BelongsTo
+} from "sequelize-typescript";
+import { Post } from "./post.js";
 
-const PostTag = sequelize.define(
-  'postTags',
-  {
-    tagName: DataTypes.TEXT
-  },
-  {
-    indexes: [
-      {
-        unique: false,
-        fields: [sequelize.fn('lower', sequelize.col('tagName'))]
-      },
-      {
-        fields: ['postId']
-      }
-    ]
-  }
-)
+export interface PostTagAttributes {
+  tagName?: string;
+  postId?: string;
+}
 
-export default PostTag
+@Table({
+  tableName: "postTags",
+  timestamps: true
+})
+export class PostTag extends Model<PostTagAttributes, PostTagAttributes> implements PostTagAttributes {
+  @Column({
+    allowNull: true,
+    type: DataType.STRING
+  })
+  tagName?: string;
+
+  @ForeignKey(() => Post)
+  @Column({
+    allowNull: true,
+    type: DataType.UUID
+  })
+  postId?: string;
+
+  @BelongsTo(() => Post, "postId")
+  post?: Post;
+}

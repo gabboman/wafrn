@@ -1,6 +1,6 @@
 import { environment } from '../environment.js'
 import { logger } from '../utils/logger.js'
-import { Sequelize } from 'sequelize'
+import { Sequelize } from 'sequelize-typescript'
 
 // @ts-ignore sequelize-hierarchy-fork has no types
 import sequelizeHierarchyFork from 'sequelize-hierarchy-fork'
@@ -31,4 +31,4 @@ const sequelize = new Sequelize(environment.databaseConnectionString, {
   }
 })
 
-export { sequelize, sequelize as Sequelize };
+export { sequelize, Sequelize };

@@ -1,39 +1,48 @@
-import { sequelize } from "./sequelize.js";
-import { DataTypes } from "sequelize";
+import {
+  Model, Table, Column, DataType, ForeignKey, BelongsTo
+} from "sequelize-typescript";
+import { User } from "./user.js";
 
-const UserOptions = sequelize.define(
-  'userOptions',
-  {
-    userId: {
-      type: DataTypes.UUID,
-      defaultValue: DataTypes.UUIDV4,
-      allowNull: false,
-      primaryKey: true
-    },
-    optionName: {
-      type: DataTypes.STRING,
-      allowNull: false,
-      primaryKey: true
-    },
-    optionValue: DataTypes.TEXT,
-    public: {
-      type: DataTypes.BOOLEAN,
-      allowNull: true,
-      defaultValue: false
-    }
-  },
-  {
-    indexes: [
-      {
-        unique: true,
-        fields: ['userId', 'optionName']
-      },
-      {
-        unique: false,
-        fields: ['userId']
-      }
-    ]
-  }
-)
+export interface UserOptionsAttributes {
+  userId: string;
+  optionName: string;
+  optionValue?: string;
+  public?: boolean;
+}
 
-export default UserOptions;
+@Table({
+  tableName: "userOptions",
+  timestamps: true
+})
+export class UserOptions extends Model<UserOptionsAttributes, UserOptionsAttributes> implements UserOptionsAttributes {
+
+  @ForeignKey(() => User)
+  @Column({
+    primaryKey: true,
+    type: DataType.UUID
+  })
+  userId!: string;
+
+  @Column({
+    primaryKey: true,
+    type: DataType.STRING(255)
+  })
+  optionName!: string;
+
+  @Column({
+    allowNull: true,
+    type: DataType.STRING
+  })
+  optionValue?: string;
+
+  @Column({
+    allowNull: true,
+    type: DataType.BOOLEAN,
+    defaultValue: false
+  })
+  public?: boolean;
+
+  @BelongsTo(() => User)
+  user?: User;
+
+}

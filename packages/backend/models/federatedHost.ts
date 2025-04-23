@@ -1,40 +1,63 @@
-import { sequelize, Sequelize } from "./sequelize.js";
-import { DataTypes } from "sequelize";
+import {
+  Model, Table, Column, DataType
+} from "sequelize-typescript";
 
-const FederatedHost = sequelize.define(
-  'federatedHosts',
-  {
-    id: {
-      type: DataTypes.UUID,
-      defaultValue: DataTypes.UUIDV4,
-      allowNull: false,
-      primaryKey: true
-    },
-    displayName: DataTypes.TEXT,
-    publicInbox: DataTypes.TEXT,
-    publicKey: DataTypes.TEXT,
-    detail: DataTypes.STRING,
-    blocked: {
-      type: DataTypes.BOOLEAN,
-      defaultValue: false
-    },
-    friendServer: {
-      type: DataTypes.BOOLEAN,
-      defaultValue: false
-    }
-  },
-  {
-    indexes: [
-      {
-        unique: false,
-        fields: ['blocked']
-      },
-      {
-        unique: true,
-        fields: [Sequelize.fn('lower', Sequelize.col('displayName'))]
-      }
-    ]
-  }
-)
+export interface FederatedHostAttributes {
+  displayName?: string;
+  publicInbox?: string;
+  publicKey?: string;
+  detail?: string;
+  blocked?: boolean;
+  friendServer?: boolean;
+}
 
-export default FederatedHost;
+@Table({
+  tableName: "federatedHosts",
+  timestamps: true
+})
+export class FederatedHost extends Model<FederatedHostAttributes, FederatedHostAttributes> implements FederatedHostAttributes {
+
+  @Column({
+    primaryKey: true,
+    type: DataType.UUID
+  })
+  declare id: string;
+
+  @Column({
+    allowNull: true,
+    type: DataType.STRING
+  })
+  displayName?: string;
+
+  @Column({
+    allowNull: true,
+    type: DataType.STRING
+  })
+  publicInbox?: string;
+
+  @Column({
+    allowNull: true,
+    type: DataType.STRING
+  })
+  publicKey?: string;
+
+  @Column({
+    allowNull: true,
+    type: DataType.STRING(255)
+  })
+  detail?: string;
+
+  @Column({
+    allowNull: true,
+    type: DataType.BOOLEAN,
+    defaultValue: false
+  })
+  blocked?: boolean;
+
+  @Column({
+    allowNull: true,
+    type: DataType.BOOLEAN,
+    defaultValue: false
+  })
+  friendServer?: boolean;
+}

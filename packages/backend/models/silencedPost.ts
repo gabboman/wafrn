@@ -1,12 +1,44 @@
-import { sequelize } from "./sequelize.js";
-import { DataTypes } from "sequelize";
+import {
+  Model, Table, Column, DataType, Sequelize, ForeignKey, BelongsTo
+} from "sequelize-typescript";
+import { Post } from "./post.js";
+import { User } from "./user.js";
 
-const SilencedPost = sequelize.define('silencedPost', {
-  superMuted: {
-    type: DataTypes.BOOLEAN,
-    defaultValue: false,
-    allowNull: true
-  }
+export interface SilencedPostAttributes {
+  superMuted?: boolean;
+  userId?: string;
+  postId?: string;
+}
+
+@Table({
+  tableName: "silencedPosts",
+  timestamps: true
 })
+export class SilencedPost extends Model<SilencedPostAttributes, SilencedPostAttributes> implements SilencedPostAttributes {
+  @Column({
+    allowNull: true,
+    type: DataType.BOOLEAN,
+    defaultValue: Sequelize.literal("false")
+  })
+  superMuted?: boolean;
 
-export default SilencedPost
+  @ForeignKey(() => User)
+  @Column({
+    allowNull: true,
+    type: DataType.UUID
+  })
+  userId?: string;
+
+  @ForeignKey(() => Post)
+  @Column({
+    allowNull: true,
+    type: DataType.UUID
+  })
+  postId?: string;
+
+  @BelongsTo(() => Post, "postId")
+  post?: Post;
+
+  @BelongsTo(() => User, "userId")
+  user?: User;
+}

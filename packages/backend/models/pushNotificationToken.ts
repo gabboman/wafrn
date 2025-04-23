@@ -1,31 +1,31 @@
-import { sequelize } from "./sequelize.js";
-import { DataTypes } from "sequelize";
+import {
+  Model, Table, Column, DataType, ForeignKey, BelongsTo
+} from "sequelize-typescript";
+import { User } from "./user.js";
 
-const PushNotificationToken = sequelize.define(
-  'pushNotificationTokens',
-  {
-    token: {
-      type: DataTypes.STRING(768),
-      allowNull: false,
-      primaryKey: true
-    },
-    userId: {
-      type: DataTypes.UUID,
-      allowNull: false
-    }
-  },
-  {
-    indexes: [
-      {
-        unique: true,
-        fields: ['token']
-      },
-      {
-        unique: false,
-        fields: ['userId']
-      }
-    ]
-  }
-)
+export interface PushNotificationTokenAttributes {
+  token: string;
+  userId: string;
+}
 
-export default PushNotificationToken
+@Table({
+  tableName: "pushNotificationTokens",
+  timestamps: true
+})
+export class PushNotificationToken extends Model<PushNotificationTokenAttributes, PushNotificationTokenAttributes> implements PushNotificationTokenAttributes {
+
+  @Column({
+    primaryKey: true,
+    type: DataType.STRING(768)
+  })
+  token!: string;
+
+  @ForeignKey(() => User)
+  @Column({
+    type: DataType.UUID
+  })
+  userId!: string;
+
+  @BelongsTo(() => User, "userId")
+  user?: User;
+}

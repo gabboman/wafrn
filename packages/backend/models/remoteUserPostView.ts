@@ -1,5 +1,37 @@
-import { sequelize } from "./sequelize.js";
+import {
+  Model, Table, Column, DataType, Index, Sequelize, ForeignKey, BelongsTo
+} from "sequelize-typescript";
+import { Post } from "./post.js";
+import { User } from "./user.js";
 
-const RemoteUserPostView = sequelize.define('remoteUserPostView', {})
+export interface RemoteUserPostViewAttributes {
+  postId: string;
+  userId: string;
+}
 
-export default RemoteUserPostView
+@Table({
+  tableName: "remoteUserPostViews",
+  timestamps: true
+})
+export class RemoteUserPostView extends Model<RemoteUserPostViewAttributes, RemoteUserPostViewAttributes> implements RemoteUserPostViewAttributes {
+  @ForeignKey(() => Post)
+  @Column({
+    primaryKey: true,
+    type: DataType.UUID
+  })
+  postId!: string;
+
+  @ForeignKey(() => User)
+  @Column({
+    primaryKey: true,
+    type: DataType.UUID
+  })
+  userId!: string;
+
+  @BelongsTo(() => Post, "postId")
+  Post?: Post;
+
+  @BelongsTo(() => User, "userId")
+  User?: User;
+
+}

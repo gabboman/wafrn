@@ -1,8 +1,19 @@
-import { sequelize } from "./sequelize.js";
-import { DataTypes } from "sequelize";
+import {
+  Model, Table, Column, DataType
+} from "sequelize-typescript";
 
-const BskyInviteCodes = sequelize.define('bskyInviteCodes', {
-  code: DataTypes.STRING(512)
+export interface BskyInviteCodesAttributes {
+  code?: string;
+}
+
+@Table({
+  tableName: "bskyInviteCodes",
+  timestamps: true
 })
-
-export default BskyInviteCodes
+export class BskyInviteCodes extends Model<BskyInviteCodesAttributes, BskyInviteCodesAttributes> implements BskyInviteCodesAttributes {
+  @Column({
+    allowNull: true,
+    type: DataType.STRING(512)
+  })
+  code?: string;
+}

@@ -1,18 +1,37 @@
-import { sequelize } from "./sequelize.js";
-import { DataTypes } from "sequelize";
+import {
+  Model, Table, Column, DataType, HasMany
+} from "sequelize-typescript";
+import { Emoji } from "./emoji.js";
 
-const EmojiCollection = sequelize.define('emojiCollections', {
-  id: {
-    type: DataTypes.UUID,
-    defaultValue: DataTypes.UUIDV4,
-    allowNull: false,
-    primaryKey: true
-  },
-  name: DataTypes.STRING,
-  comment: {
-    allowNull: true,
-    type: DataTypes.TEXT
-  }
+export interface EmojiCollectionAttributes {
+  name?: string;
+  comment?: string;
+}
+
+@Table({
+  tableName: "emojiCollections",
+  timestamps: true
 })
+export class EmojiCollection extends Model<EmojiCollectionAttributes, EmojiCollectionAttributes> implements EmojiCollectionAttributes {
 
-export default EmojiCollection
+  @Column({
+    primaryKey: true,
+    type: DataType.UUID
+  })
+  declare id: string;
+
+  @Column({
+    allowNull: true,
+    type: DataType.STRING(255)
+  })
+  name?: string;
+
+  @Column({
+    allowNull: true,
+    type: DataType.STRING
+  })
+  comment?: string;
+
+  @HasMany(() => Emoji)
+  emojis?: Emoji[];
+}

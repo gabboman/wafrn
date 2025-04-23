@@ -68,6 +68,7 @@
     "plc-did-resolver": "^1.0.0",
     "reflect-metadata": "^0.2.2",
     "sequelize": "^6.37.3",
+    "sequelize-typescript": "^2.1.6",
     "sequelize-hierarchy-fork": "^1.0.0",
     "sharp": "^0.33.4",
     "showdown": "^2.1.0",
@@ -100,7 +101,6 @@
     "eslint-config-google": "^0.14.0",
     "eslint-config-prettier": "^8.8.0",
     "eslint-plugin-prettier": "^4.2.1",
-    "prettier": "^2.8.8",
-    "sequelize-typescript": "^2.1.6"
+    "prettier": "^2.8.8"
   }
 }

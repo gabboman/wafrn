@@ -1,49 +1,65 @@
-import { sequelize } from "./sequelize.js";
-import { DataTypes } from "sequelize";
+import {
+  Model, Table, Column, DataType, ForeignKey, BelongsTo
+} from "sequelize-typescript";
+import { User } from "./user.js";
 
-const Follows = sequelize.define(
-  'follows',
-  {
-    remoteFollowId: {
-      type: DataTypes.STRING(768),
-      allowNull: true,
-      unique: true
-    },
-    accepted: {
-      type: DataTypes.BOOLEAN,
-      defaultValue: false
-    },
-    bskyUri: {
-      type: DataTypes.STRING(768),
-      allowNull: true,
-      unique: true
-    },
-    bskyPath: {
-      type: DataTypes.STRING(768),
-      allowNull: true,
-      unique: true
-    }
-  },
-  {
-    indexes: [
-      {
-        unique: false,
-        fields: ['followerId']
-      },
-      {
-        unique: false,
-        fields: ['followedId']
-      },
-      {
-        unique: true,
-        fields: ['followedId', 'followerId']
-      },
-      {
-        unique: false,
-        fields: ['followedId', 'accepted']
-      }
-    ]
-  }
-)
+export interface FollowsAttributes {
+  remoteFollowId?: string;
+  accepted?: boolean;
+  bskyUri?: string;
+  bskyPath?: string;
+  followerId: string;
+  followedId: string;
+}
 
-export default Follows
+@Table({
+  tableName: "follows",
+  timestamps: true
+})
+export class Follows extends Model<FollowsAttributes, FollowsAttributes> implements FollowsAttributes {
+
+  @Column({
+    allowNull: true,
+    type: DataType.STRING(768)
+  })
+  remoteFollowId?: string;
+
+  @Column({
+    allowNull: true,
+    type: DataType.BOOLEAN,
+    defaultValue: false
+  })
+  accepted?: boolean;
+
+  @Column({
+    allowNull: true,
+    type: DataType.STRING(768)
+  })
+  bskyUri?: string;
+
+  @Column({
+    allowNull: true,
+    type: DataType.STRING(768)
+  })
+  bskyPath?: string;
+
+  @ForeignKey(() => User)
+  @Column({
+    primaryKey: true,
+    type: DataType.UUID
+  })
+  followerId!: string;
+
+  @ForeignKey(() => User)
+  @Column({
+    primaryKey: true,
+    type: DataType.UUID
+  })
+  followedId!: string;
+
+  @BelongsTo(() => User, "followerId")
+  follower?: User;
+
+  @BelongsTo(() => User, "followedId")
+  followed?: User;
+}

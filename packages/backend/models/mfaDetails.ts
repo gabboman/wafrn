@@ -1,39 +1,66 @@
-import { sequelize } from "./sequelize.js";
-import { DataTypes } from "sequelize";
+import {
+  Model, Table, Column, DataType, ForeignKey, BelongsTo
+} from "sequelize-typescript";
+import { User } from "./user.js";
 
-const MfaDetails = sequelize.define(
-  'mfaDetails',
-  {
-    id: {
-      type: DataTypes.UUID,
-      defaultValue: DataTypes.UUIDV4,
-      allowNull: false,
-      primaryKey: true
-    },
-    userId: {
-      type: DataTypes.UUID,
-      allowNull: false,
-      primaryKey: true,
-      references: {
-        model: 'users',
-        key: 'id'
-      },
-      unique: false
-    },
-    type: DataTypes.STRING,
-    name: DataTypes.STRING,
-    data: DataTypes.JSON,
-    lastUsedData: DataTypes.JSON,
-    enabled: DataTypes.BOOLEAN
-  },
-  {
-    indexes: [
-      {
-        fields: ['userId'],
-        unique: false
-      }
-    ]
-  }
-)
+export interface MfaDetailsAttributes {
+  userId: string;
+  type?: string;
+  name?: string;
+  data?: object;
+  lastUsedData?: object;
+  enabled?: boolean;
+}
 
-export default MfaDetails
+@Table({
+  tableName: "mfaDetails",
+  timestamps: true
+})
+export class MfaDetails extends Model<MfaDetailsAttributes, MfaDetailsAttributes> implements MfaDetailsAttributes {
+
+  @Column({
+    primaryKey: true,
+    type: DataType.UUID
+  })
+  declare id: string;
+
+  @ForeignKey(() => User)
+  @Column({
+    primaryKey: true,
+    type: DataType.UUID
+  })
+  userId!: string;
+
+  @Column({
+    allowNull: true,
+    type: DataType.STRING(255)
+  })
+  type?: string;
+
+  @Column({
+    allowNull: true,
+    type: DataType.STRING(255)
+  })
+  name?: string;
+
+  @Column({
+    allowNull: true,
+    type: DataType.JSON
+  })
+  data?: object;
+
+  @Column({
+    allowNull: true,
+    type: DataType.JSON
+  })
+  lastUsedData?: object;
+
+  @Column({
+    allowNull: true,
+    type: DataType.BOOLEAN
+  })
+  enabled?: boolean;
+
+  @BelongsTo(() => User, "userId")
+  user?: User;
+}

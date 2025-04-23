@@ -1,27 +1,37 @@
-import { sequelize } from "./sequelize.js";
-import { DataTypes } from "sequelize";
+import {
+  Model, Table, Column, DataType, ForeignKey, BelongsTo
+} from "sequelize-typescript";
+import { User } from "./user.js";
+import { Post } from "./post.js";
 
-const UserBookmarkedPosts = sequelize.define('userBookmarkedPosts', {
-  userId: {
-    type: DataTypes.UUID,
-    allowNull: false,
-    primaryKey: true,
-    references: {
-      model: 'users',
-      key: 'id'
-    },
-    unique: false
-  },
-  postId: {
-    type: DataTypes.UUID,
-    allowNull: false,
-    primaryKey: true,
-    references: {
-      model: 'posts',
-      key: 'id'
-    },
-    unique: false
-  }
+export interface UserBookmarkedPostsAttributes {
+  userId: string;
+  postId: string;
+}
+
+@Table({
+  tableName: "userBookmarkedPosts",
+  timestamps: true
 })
+export class UserBookmarkedPosts extends Model<UserBookmarkedPostsAttributes, UserBookmarkedPostsAttributes> implements UserBookmarkedPostsAttributes {
 
-export default UserBookmarkedPosts
+  @ForeignKey(() => User)
+  @Column({
+    primaryKey: true,
+    type: DataType.UUID
+  })
+  userId!: string;
+
+  @ForeignKey(() => Post)
+  @Column({
+    primaryKey: true,
+    type: DataType.UUID
+  })
+  postId!: string;
+
+  @BelongsTo(() => User, "userId")
+  user?: User;
+
+  @BelongsTo(() => Post, "postId")
+  post?: Post;
+}

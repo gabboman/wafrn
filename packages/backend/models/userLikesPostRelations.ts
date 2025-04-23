@@ -1,53 +1,52 @@
-import { sequelize } from "./sequelize.js";
-import { DataTypes } from "sequelize";
-import User from "./user.js";
-import Post from "./post.js";
+import {
+  Model, Table, Column, DataType, Index, Sequelize, ForeignKey, BelongsTo
+} from "sequelize-typescript";
+import { User } from "./user.js";
+import { Post } from "./post.js";
 
-const UserLikesPostRelations = sequelize.define(
-  'userLikesPostRelations',
-  {
-    userId: {
-      type: DataTypes.UUID,
-      allowNull: false,
-      primaryKey: true,
-      references: {
-        model: 'users',
-        key: 'id'
-      },
-      unique: false
-    },
-    postId: {
-      type: DataTypes.UUID,
-      allowNull: false,
-      primaryKey: true,
-      references: {
-        model: 'posts',
-        key: 'id'
-      },
-      unique: false
-    },
-    remoteId: {
-      type: DataTypes.STRING(768),
-      allowNull: true,
-      unique: true
-    },
-    bskyPath: {
-      type: DataTypes.STRING(768),
-      allowNull: true,
-      unique: true
-    }
-  },
-  {
-    indexes: [
-      {
-        fields: [
-          {
-            attribute: 'postId'
-          }
-        ]
-      }
-    ]
-  }
-)
+export interface UserLikesPostRelationsAttributes {
+  userId: string;
+  postId: string;
+  remoteId?: string;
+  bskyPath?: string;
+}
 
-export default UserLikesPostRelations
+@Table({
+  tableName: "userLikesPostRelations",
+  timestamps: true
+})
+export class UserLikesPostRelations extends Model<UserLikesPostRelationsAttributes, UserLikesPostRelationsAttributes> implements UserLikesPostRelationsAttributes {
+
+  @ForeignKey(() => User)
+  @Column({
+    primaryKey: true,
+    type: DataType.UUID
+  })
+  userId!: string;
+
+  @ForeignKey(() => Post)
+  @Column({
+    primaryKey: true,
+    type: DataType.UUID
+  })
+  postId!: string;
+
+  @Column({
+    allowNull: true,
+    type: DataType.STRING(768)
+  })
+  remoteId?: string;
+
+  @Column({
+    allowNull: true,
+    type: DataType.STRING(768)
+  })
+  bskyPath?: string;
+
+  @BelongsTo(() => User, "userId")
+  user?: User;
+
+  @BelongsTo(() => Post, "postId")
+  post?: Post;
+
+}
