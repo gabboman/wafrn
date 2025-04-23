@@ -320,9 +320,9 @@ export class User extends Model<UserAttributes, UserAttributes> implements UserA
   declare userAsker: Ask[];
 
   @HasMany(() => Ask, {
-    foreignKey: "userAsks"
+    foreignKey: "userAsked"
   })
-  declare userAsks: Ask[];
+  declare userAsked: Ask[];
 
   @HasMany(() => QuestionPollAnswer, {
     sourceKey: "id"

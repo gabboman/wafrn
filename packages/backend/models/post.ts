@@ -229,7 +229,7 @@ export class Post extends Model<PostAttributes, PostAttributes> implements PostA
   declare userLikesPostRelations: UserLikesPostRelations[];
 
   @BelongsToMany(() => User, () => PostMentionsUserRelation)
-  declare mentioner: User[];
+  declare mentionPost: User[];
 
   @HasMany(() => UserBookmarkedPosts, {
     sourceKey: "id"

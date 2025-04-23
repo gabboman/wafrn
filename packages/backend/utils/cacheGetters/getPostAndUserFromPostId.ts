@@ -53,7 +53,7 @@ async function getPostAndUserFromPostId(postId: string): Promise<{ found: boolea
         },
         {
           model: User,
-          as: 'mentioner',
+          as: 'mentionPost',
           required: false
         },
         {

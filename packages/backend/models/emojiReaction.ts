@@ -3,6 +3,7 @@ import { Emoji } from "./emoji.js";
 import { User } from "./user.js";
 import { Post } from "./post.js";
 import { Notification } from "./notification.js";
+import { defaultValueSchemable } from "sequelize/lib/utils";
 
 export interface EmojiReactionAttributes {
   id?: string;
@@ -23,7 +24,8 @@ export class EmojiReaction extends Model<EmojiReactionAttributes, EmojiReactionA
 
   @Column({
     primaryKey: true,
-    type: DataType.UUID
+    type: DataType.UUID,
+    defaultValue: DataType.UUIDV4
   })
   declare id: string;
 

@@ -128,7 +128,7 @@ async function prepareSendRemotePostWorker(job: Job) {
       ]
     })
     // mentioned users
-    const mentionedUsers = await post.getMentioner()
+    const mentionedUsers = await post.getMentionPost()
     switch (post.privacy) {
       case 2: {
         break
