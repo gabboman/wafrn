@@ -330,7 +330,7 @@ async function addTagsToPost(post: any, tags: fediverseTag[]) {
 }
 
 async function processMentions(post: any, userIds: string[]) {
-  await post.setMentionPost([])
+  await post.setMentioner([])
   await Notification.destroy({
     where: {
       notificationType: 'MENTION',
