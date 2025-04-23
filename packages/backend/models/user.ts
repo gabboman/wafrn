@@ -438,6 +438,9 @@ export class User extends Model<UserAttributes, UserAttributes> implements UserA
   })
   declare postMentionsUserRelations: PostMentionsUserRelation[];
 
+  @BelongsToMany(() => Post, () => PostMentionsUserRelation)
+  declare mentionPost: Post[];
+
   @HasMany(() => UserLikesPostRelations, {
     sourceKey: "id"
   })

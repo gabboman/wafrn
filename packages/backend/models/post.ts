@@ -1,7 +1,5 @@
 import {
-  Model, Table, Column, DataType, ForeignKey, HasMany, HasOne, BelongsToMany, BelongsTo,
-  BeforeFindAfterExpandIncludeAll,
-  BeforeCreate
+  Model, Table, Column, DataType, ForeignKey, HasMany, HasOne, BelongsToMany, BelongsTo
 } from "sequelize-typescript";
 import { Notification } from "./notification.js";
 import { Ask } from "./ask.js";
@@ -22,8 +20,6 @@ import { PostHostView } from "./postHostView.js";
 import { RemoteUserPostView } from "./remoteUserPostView.js";
 import { FederatedHost } from "./federatedHost.js";
 import { PostAncestor } from "./postAncestor.js";
-import { beforeCreate, beforeFindAfterExpandIncludeAll } from "./hierarchy/hierarchy.js";
-import { isTemplateView } from "@atproto/api/dist/client/types/tools/ozone/communication/defs.js";
 
 export interface PostAttributes {
   id?: string;
@@ -265,7 +261,7 @@ export class Post extends Model<PostAttributes, PostAttributes> implements PostA
       primaryKey: 'id',
       foreignKey: 'parentId',
       levelFieldName: 'hierarchyLevel',
-      through: 'postancestors',
+      through: PostAncestor,
       throughKey: 'postsId',
       throughForeignKey: 'ancestorId',
       throughTable: 'postancestors'
