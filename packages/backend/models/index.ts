@@ -33,6 +33,7 @@ import { UserEmojiRelation } from "./userEmojiRelation.js";
 import { UserLikesPostRelations } from "./userLikesPostRelations.js";
 import { UserOptions } from './userOptions.js'
 import { UserReport } from "./userReport.js";
+import { afterCreate, beforeBulkCreate, beforeBulkUpdate, beforeCreate, beforeUpdate } from "./hiearchy/hiearchy.js";
 
 sequelize.addModels([
   Ask,
@@ -70,7 +71,11 @@ sequelize.addModels([
   UserReport,
 ])
 
-//Post.isHiearchy()
+Post.addHook('beforeCreate', 'hiearchyBeforeCreate', beforeCreate);
+Post.addHook('afterCreate', 'hiearchyAfterCreate', afterCreate);
+Post.addHook('beforeUpdate', 'hiearchyBeforeUpdate', beforeUpdate);
+Post.addHook('beforeBulkCreate', 'hiearchyBeforeBulkCreate', beforeBulkCreate);
+Post.addHook('beforeBulkUpdate', 'hiearchyBeforeBulkUpdate', beforeBulkUpdate);
 
 export {
   sequelize,

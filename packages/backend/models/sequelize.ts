@@ -1,10 +1,7 @@
 import { environment } from '../environment.js'
 import { logger } from '../utils/logger.js'
 import { Sequelize } from 'sequelize-typescript'
-
-// @ts-ignore sequelize-hierarchy-fork has no types
-import sequelizeHierarchyFork from 'sequelize-hierarchy-fork'
-sequelizeHierarchyFork(Sequelize)
+import { beforeFindAfterExpandIncludeAll, afterFind } from './hiearchy/hiearchy.js'
 
 const sequelize = new Sequelize(environment.databaseConnectionString, {
   benchmark: true,
@@ -30,5 +27,8 @@ const sequelize = new Sequelize(environment.databaseConnectionString, {
     backoffExponent: 1.1 // Exponent to increase backoff each try. Default: 1.1
   }
 })
+
+sequelize.addHook('beforeFindAfterExpandIncludeAll', 'hiearchyPreCheck', beforeFindAfterExpandIncludeAll)
+sequelize.addHook('afterFind', 'hiearchyPostProcess', afterFind)
 
 export { sequelize, Sequelize };

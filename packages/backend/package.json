@@ -69,7 +69,6 @@
     "reflect-metadata": "^0.2.2",
     "sequelize": "^6.37.3",
     "sequelize-typescript": "^2.1.6",
-    "sequelize-hierarchy-fork": "^1.0.0",
     "sharp": "^0.33.4",
     "showdown": "^2.1.0",
     "sshpk": "^1.17.0",

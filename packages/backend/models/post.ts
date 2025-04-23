@@ -1,5 +1,7 @@
 import {
-  Model, Table, Column, DataType, ForeignKey, HasMany, HasOne, BelongsToMany, BelongsTo
+  Model, Table, Column, DataType, ForeignKey, HasMany, HasOne, BelongsToMany, BelongsTo,
+  BeforeFindAfterExpandIncludeAll,
+  BeforeCreate
 } from "sequelize-typescript";
 import { Notification } from "./notification.js";
 import { Ask } from "./ask.js";
@@ -20,6 +22,8 @@ import { PostHostView } from "./postHostView.js";
 import { RemoteUserPostView } from "./remoteUserPostView.js";
 import { FederatedHost } from "./federatedHost.js";
 import { PostAncestor } from "./postAncestor.js";
+import { beforeCreate, beforeFindAfterExpandIncludeAll } from "./hiearchy/hiearchy.js";
+import { isTemplateView } from "@atproto/api/dist/client/types/tools/ozone/communication/defs.js";
 
 export interface PostAttributes {
   id?: string;
@@ -144,11 +148,17 @@ export class Post extends Model<PostAttributes, PostAttributes> implements PostA
   })
   declare parentId: string;
 
+  @BelongsTo(() => Post, "parentId")
+  declare parent: Post
+
+  @HasMany(() => Post, "parentId")
+  declare children: Post[]
+
   @BelongsToMany(() => Post, () => PostAncestor, "postsId", "ancestorId")
   declare ancestors: Post[]
 
   @BelongsToMany(() => Post, () => PostAncestor, "ancestorId", "postsId")
-  declare children: Post[]
+  declare descendents: Post[]
 
   @HasMany(() => Notification, {
     sourceKey: "id"
@@ -245,4 +255,8 @@ export class Post extends Model<PostAttributes, PostAttributes> implements PostA
 
   @BelongsToMany(() => User, () => RemoteUserPostView)
   declare view: User[];
+
+  get hiearchy() {
+    return true
+  }
 }
