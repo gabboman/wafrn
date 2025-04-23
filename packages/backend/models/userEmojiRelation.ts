@@ -14,6 +14,7 @@ export interface UserEmojiRelationAttributes {
 
 @Table({
   tableName: "userEmojiRelations",
+  modelName: "userEmojiRelations",
   timestamps: true
 })
 export class UserEmojiRelation extends Model<UserEmojiRelationAttributes, UserEmojiRelationAttributes> implements UserEmojiRelationAttributes {

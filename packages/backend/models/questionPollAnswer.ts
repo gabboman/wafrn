@@ -15,6 +15,7 @@ export interface QuestionPollAnswerAttributes {
 
 @Table({
   tableName: "questionPollAnswers",
+  modelName: "questionPollAnswers",
   timestamps: true
 })
 export class QuestionPollAnswer extends Model<QuestionPollAnswerAttributes, QuestionPollAnswerAttributes> implements QuestionPollAnswerAttributes {

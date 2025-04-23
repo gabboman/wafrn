@@ -15,6 +15,7 @@ export interface BlocksAttributes {
 
 @Table({
   tableName: "blocks",
+  modelName: "blocks",
   timestamps: true
 })
 export class Blocks extends Model<BlocksAttributes, BlocksAttributes> implements BlocksAttributes {

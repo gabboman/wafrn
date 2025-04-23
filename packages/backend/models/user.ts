@@ -68,6 +68,7 @@ export interface UserAttributes {
 
 @Table({
   tableName: "users",
+  modelName: "users",
   timestamps: true
 })
 export class User extends Model<UserAttributes, UserAttributes> implements UserAttributes {

@@ -13,6 +13,7 @@ export interface PushNotificationTokenAttributes {
 
 @Table({
   tableName: "pushNotificationTokens",
+  modelName: "pushNotificationTokens",
   timestamps: true
 })
 export class PushNotificationToken extends Model<PushNotificationTokenAttributes, PushNotificationTokenAttributes> implements PushNotificationTokenAttributes {

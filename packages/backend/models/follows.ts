@@ -17,6 +17,7 @@ export interface FollowsAttributes {
 
 @Table({
   tableName: "follows",
+  modelName: "follows",
   timestamps: true
 })
 export class Follows extends Model<FollowsAttributes, FollowsAttributes> implements FollowsAttributes {

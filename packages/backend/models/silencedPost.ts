@@ -15,6 +15,7 @@ export interface SilencedPostAttributes {
 
 @Table({
   tableName: "silencedPosts",
+  modelName: "silencedPosts",
   timestamps: true
 })
 export class SilencedPost extends Model<SilencedPostAttributes, SilencedPostAttributes> implements SilencedPostAttributes {

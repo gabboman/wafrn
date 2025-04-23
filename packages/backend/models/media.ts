@@ -24,6 +24,7 @@ export interface MediaAttributes {
 
 @Table({
   tableName: "medias",
+  modelName: "medias",
   timestamps: true
 })
 export class Media extends Model<MediaAttributes, MediaAttributes> implements MediaAttributes {

@@ -43,6 +43,7 @@ export interface PostAttributes {
 
 @Table({
   tableName: "posts",
+  modelName: "posts",
   timestamps: true
 })
 export class Post extends Model<PostAttributes, PostAttributes> implements PostAttributes {

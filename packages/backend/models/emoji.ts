@@ -21,6 +21,7 @@ export interface EmojiAttributes {
 
 @Table({
   tableName: "emojis",
+  modelName: "emojis",
   timestamps: true
 })
 export class Emoji extends Model<EmojiAttributes, EmojiAttributes> implements EmojiAttributes {

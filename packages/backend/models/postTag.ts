@@ -13,6 +13,7 @@ export interface PostTagAttributes {
 
 @Table({
   tableName: "postTags",
+  modelName: "postTags",
   timestamps: true
 })
 export class PostTag extends Model<PostTagAttributes, PostTagAttributes> implements PostTagAttributes {

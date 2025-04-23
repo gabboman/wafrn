@@ -14,6 +14,7 @@ export interface RemoteUserPostViewAttributes {
 
 @Table({
   tableName: "remoteUserPostViews",
+  modelName: "remoteUserPostViews",
   timestamps: true
 })
 export class RemoteUserPostView extends Model<RemoteUserPostViewAttributes, RemoteUserPostViewAttributes> implements RemoteUserPostViewAttributes {

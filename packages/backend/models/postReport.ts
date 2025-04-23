@@ -17,6 +17,7 @@ export interface PostReportAttributes {
 
 @Table({
   tableName: "postReports",
+  modelName: "postReports",
   timestamps: true
 })
 export class PostReport extends Model<PostReportAttributes, PostReportAttributes> implements PostReportAttributes {

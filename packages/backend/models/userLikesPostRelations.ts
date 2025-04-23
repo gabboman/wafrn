@@ -16,6 +16,7 @@ export interface UserLikesPostRelationsAttributes {
 
 @Table({
   tableName: "userLikesPostRelations",
+  modelName: "userLikesPostRelations",
   timestamps: true
 })
 export class UserLikesPostRelations extends Model<UserLikesPostRelationsAttributes, UserLikesPostRelationsAttributes> implements UserLikesPostRelationsAttributes {

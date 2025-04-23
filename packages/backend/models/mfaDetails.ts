@@ -17,6 +17,7 @@ export interface MfaDetailsAttributes {
 
 @Table({
   tableName: "mfaDetails",
+  modelName: "mfaDetails",
   timestamps: true
 })
 export class MfaDetails extends Model<MfaDetailsAttributes, MfaDetailsAttributes> implements MfaDetailsAttributes {

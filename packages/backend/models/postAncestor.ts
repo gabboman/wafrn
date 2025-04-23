@@ -11,6 +11,7 @@ export interface PostAncestorAttributes {
 
 @Table({
   tableName: "postsancestors",
+  modelName: "postsancestors",
   timestamps: false
 })
 export class PostAncestor extends Model<PostAncestorAttributes, PostAncestorAttributes> implements PostAncestorAttributes {

@@ -11,6 +11,7 @@ export interface BskyInviteCodesAttributes {
 
 @Table({
   tableName: "bskyInviteCodes",
+  modelName: "bskyInviteCodes",
   timestamps: true
 })
 export class BskyInviteCodes extends Model<BskyInviteCodesAttributes, BskyInviteCodesAttributes> implements BskyInviteCodesAttributes {

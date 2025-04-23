@@ -22,6 +22,7 @@ export interface FederatedHostAttributes {
 
 @Table({
   tableName: "federatedHosts",
+  modelName: "federatedHosts",
   timestamps: true
 })
 export class FederatedHost extends Model<FederatedHostAttributes, FederatedHostAttributes> implements FederatedHostAttributes {

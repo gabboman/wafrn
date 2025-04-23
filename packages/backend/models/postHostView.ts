@@ -14,6 +14,7 @@ export interface PostHostViewsAttributes {
 
 @Table({
   tableName: "postHostViews",
+  modelName: "postHostViews",
   timestamps: true
 })
 export class PostHostView extends Model<PostHostViewsAttributes, PostHostViewsAttributes> implements PostHostViewsAttributes {

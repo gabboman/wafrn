@@ -19,6 +19,7 @@ export interface AskAttributes {
 
 @Table({
   tableName: "asks",
+  modelName: "asks",
   timestamps: true
 })
 export class Ask extends Model<AskAttributes, AskAttributes> implements AskAttributes {

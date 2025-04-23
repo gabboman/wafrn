@@ -18,6 +18,7 @@ export interface NotificationAttributes {
 
 @Table({
   tableName: "notifications",
+  modelName: "notifications",
   timestamps: true
 })
 export class Notification extends Model<NotificationAttributes, NotificationAttributes> implements NotificationAttributes {

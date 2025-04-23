@@ -14,6 +14,7 @@ export interface MutesAttributes {
 
 @Table({
   tableName: "mutes",
+  modelName: "mutes",
   timestamps: true
 })
 export class Mutes extends Model<MutesAttributes, MutesAttributes> implements MutesAttributes {

@@ -13,6 +13,7 @@ export interface QuotesAttributes {
 
 @Table({
   tableName: "quotes",
+  modelName: "quotes",
   timestamps: true
 })
 export class Quotes extends Model<QuotesAttributes, QuotesAttributes> implements QuotesAttributes {

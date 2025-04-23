@@ -14,6 +14,7 @@ export interface PostMentionsUserRelationAttributes {
 
 @Table({
   tableName: "postMentionsUserRelations",
+  modelName: "postMentionsUserRelations",
   timestamps: true
 })
 export class PostMentionsUserRelation extends Model<PostMentionsUserRelationAttributes, PostMentionsUserRelationAttributes> implements PostMentionsUserRelationAttributes {

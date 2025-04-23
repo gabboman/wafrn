@@ -14,6 +14,7 @@ export interface ServerBlockAttributes {
 
 @Table({
   tableName: "serverBlocks",
+  modelName: "serverBlocks",
   timestamps: true
 })
 export class ServerBlock extends Model<ServerBlockAttributes, ServerBlockAttributes> implements ServerBlockAttributes {

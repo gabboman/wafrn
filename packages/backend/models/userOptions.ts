@@ -15,6 +15,7 @@ export interface UserOptionsAttributes {
 
 @Table({
   tableName: "userOptions",
+  modelName: "userOptions",
   timestamps: true
 })
 export class UserOptions extends Model<UserOptionsAttributes, UserOptionsAttributes> implements UserOptionsAttributes {

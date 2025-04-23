@@ -14,6 +14,7 @@ export interface UserBookmarkedPostsAttributes {
 
 @Table({
   tableName: "userBookmarkedPosts",
+  modelName: "userBookmarkedPosts",
   timestamps: true
 })
 export class UserBookmarkedPosts extends Model<UserBookmarkedPostsAttributes, UserBookmarkedPostsAttributes> implements UserBookmarkedPostsAttributes {

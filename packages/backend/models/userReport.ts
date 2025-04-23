@@ -16,6 +16,7 @@ export interface UserReportAttributes {
 
 @Table({
   tableName: "userReports",
+  modelName: "userReports",
   timestamps: true
 })
 export class UserReport extends Model<UserReportAttributes, UserReportAttributes> implements UserReportAttributes {
