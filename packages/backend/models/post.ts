@@ -22,7 +22,7 @@ import { PostHostView } from "./postHostView.js";
 import { RemoteUserPostView } from "./remoteUserPostView.js";
 import { FederatedHost } from "./federatedHost.js";
 import { PostAncestor } from "./postAncestor.js";
-import { beforeCreate, beforeFindAfterExpandIncludeAll } from "./hiearchy/hiearchy.js";
+import { beforeCreate, beforeFindAfterExpandIncludeAll } from "./hierarchy/hierarchy.js";
 import { isTemplateView } from "@atproto/api/dist/client/types/tools/ozone/communication/defs.js";
 
 export interface PostAttributes {
@@ -256,7 +256,23 @@ export class Post extends Model<PostAttributes, PostAttributes> implements PostA
   @BelongsToMany(() => User, () => RemoteUserPostView)
   declare view: User[];
 
-  get hiearchy() {
-    return true
+  static get hierarchy() {
+    return {
+      as: 'parent',
+      childrenAs: 'children',
+      ancestorsAs: 'ancestors',
+      descendentsAs: 'descendents',
+      primaryKey: 'id',
+      foreignKey: 'parentId',
+      levelFieldName: 'hierarchyLevel',
+      through: 'postancestors',
+      throughKey: 'postsId',
+      throughForeignKey: 'ancestorId',
+      throughTable: 'postancestors'
+    }
+  }
+
+  get hierarchy() {
+    return Post.hierarchy;
   }
 }

@@ -1,4 +1,4 @@
-// This file is a copy of the hooksModel.js,hooksUniversal.js and utils.js files from sequelize-hiearchy
+// This file is a copy of the hooksModel.js,hooksUniversal.js and utils.js files from sequelize-hierarchy
 // Files are converted as much as possible to TypeScript, but there are some changes made so they'll likely won't work on other projects just this one
 
 import { BaseError, Model } from "sequelize";
