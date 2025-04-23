@@ -55,7 +55,7 @@ async function deletePostCommon(id: string) {
     if (children.length === 0) {
       await postToDelete.destroy()
     } else {
-      postToDelete.contentWarning = ''
+      postToDelete.content_warning = ''
       postToDelete.content = '<p>This post has been deleted</p>'
       postToDelete.isDeleted = true
       await postToDelete.save()

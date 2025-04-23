@@ -25,7 +25,7 @@ export interface PostAttributes {
   id?: string;
   createdAt?: Date;
   updatedAt?: Date;
-  contentWarning?: string;
+  content_warning?: string;
   content?: string;
   markdownContent?: string;
   title?: string;
@@ -55,11 +55,10 @@ export class Post extends Model<PostAttributes, PostAttributes> implements PostA
   declare id: string;
 
   @Column({
-    field: "content_warning",
     allowNull: true,
     type: DataType.STRING
   })
-  declare contentWarning: string;
+  declare content_warning: string;
 
   @Column({
     allowNull: true,
@@ -189,10 +188,10 @@ export class Post extends Model<PostAttributes, PostAttributes> implements PostA
   })
   declare quotedQuotes: Quotes[];
 
-  @BelongsToMany(() => Post, () => Quotes, "quotedPostId", "quoterPostId")
+  @BelongsToMany(() => Post, () => Quotes, "quoterPostId", "quotedPostId")
   declare quoted: Post[]
 
-  @BelongsToMany(() => Post, () => Quotes, "quoterPostId", "quotedPostId")
+  @BelongsToMany(() => Post, () => Quotes, "quotedPostId", "quoterPostId")
   declare quoter: Post[]
 
   @HasMany(() => PostReport, {

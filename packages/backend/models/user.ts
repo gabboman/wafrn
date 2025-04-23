@@ -357,10 +357,10 @@ export class User extends Model<UserAttributes, UserAttributes> implements UserA
   })
   declare followedFollows: Follows[];
 
-  @BelongsToMany(() => User, () => Follows, "followerId", "followedId")
+  @BelongsToMany(() => User, () => Follows, "followedId", "followerId")
   declare follower: User[]
 
-  @BelongsToMany(() => User, () => Follows, "followedId", "followerId")
+  @BelongsToMany(() => User, () => Follows, "followerId", "followedId")
   declare followed: User[]
 
   @HasMany(() => Blocks, {
@@ -373,10 +373,10 @@ export class User extends Model<UserAttributes, UserAttributes> implements UserA
   })
   declare blockedBlocks: Blocks[];
 
-  @BelongsToMany(() => User, () => Blocks, "blockerId", "blockedId")
+  @BelongsToMany(() => User, () => Blocks, "blockedId", "blockerId")
   declare blocker: User[]
 
-  @BelongsToMany(() => User, () => Blocks, "blockedId", "blockerId")
+  @BelongsToMany(() => User, () => Blocks, "blockerId", "blockedId")
   declare blocked: User[]
 
   @HasMany(() => Mutes, {
@@ -389,11 +389,11 @@ export class User extends Model<UserAttributes, UserAttributes> implements UserA
   })
   declare mutedMutes: Mutes[];
 
-  @BelongsToMany(() => User, () => Mutes, "muterId", "mutedId")
+  @BelongsToMany(() => User, () => Mutes, "mutedId", "muterId")
   declare muter: User[]
 
-  @BelongsToMany(() => User, () => Mutes, "mutedId", "muterId")
-  declare mutes: User[]
+  @BelongsToMany(() => User, () => Mutes, "muterId", "mutedId")
+  declare muted: User[]
 
   @HasMany(() => ServerBlock, {
     sourceKey: "id"
