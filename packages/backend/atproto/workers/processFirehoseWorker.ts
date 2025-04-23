@@ -1,6 +1,6 @@
 import { Job } from 'bullmq'
 import { getAtprotoUser } from '../utils/getAtprotoUser.js'
-import { Follows, Post, User, UserLikesPostRelations, PostTag, Media, Notification } from '../../db.js'
+import { Follows, Post, User, UserLikesPostRelations, PostTag, Media, Notification } from '../../models/index.js'
 import { environment } from '../../environment.js'
 import { Op, Model } from 'sequelize'
 import { logger } from '../../utils/logger.js'

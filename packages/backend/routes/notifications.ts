@@ -18,7 +18,7 @@ import {
   User,
   UserEmojiRelation,
   UserLikesPostRelations
-} from '../db.js'
+} from '../models/index.js'
 import { authenticateToken } from '../utils/authenticateToken.js'
 
 import { environment } from '../environment.js'

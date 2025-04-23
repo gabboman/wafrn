@@ -1,5 +1,5 @@
 import { getAtProtoSession } from './getAtProtoSession.js'
-import { sequelize, User } from '../../db.js'
+import { sequelize, User } from '../../models/index.js'
 import { ProfileViewBasic } from '@atproto/api/dist/client/types/app/bsky/actor/defs.js'
 import { Model, Op } from 'sequelize'
 import { environment } from '../../environment.js'
@@ -53,17 +53,17 @@ async function getAtprotoUser(handle: string, localUser: Model<any, any>, petiti
     handle == 'handle.invalid'
       ? undefined
       : await User.findOne({
-          where: {
-            [Op.or]: [
-              {
-                bskyDid: handle
-              },
-              {
-                literal: sequelize.where(sequelize.fn('lower', sequelize.col('url')), handle.toLowerCase())
-              }
-            ]
-          }
-        })
+        where: {
+          [Op.or]: [
+            {
+              bskyDid: handle
+            },
+            {
+              literal: sequelize.where(sequelize.fn('lower', sequelize.col('url')), handle.toLowerCase())
+            }
+          ]
+        }
+      })
   // sometimes we can get the dids and if its a local user we just return it and thats it
   if (userFound && !userFound.url.startsWith('@')) {
     return userFound

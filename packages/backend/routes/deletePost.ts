@@ -10,7 +10,7 @@ import {
   RemoteUserPostView,
   User,
   UserLikesPostRelations
-} from '../db.js'
+} from '../models/index.js'
 import { authenticateToken } from '../utils/authenticateToken.js'
 import { Model, Op, Sequelize } from 'sequelize'
 import { logger } from '../utils/logger.js'

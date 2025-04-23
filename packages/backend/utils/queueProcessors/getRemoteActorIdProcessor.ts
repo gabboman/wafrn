@@ -11,7 +11,7 @@ import {
   UserLikesPostRelations,
   UserOptions,
   sequelize
-} from '../../db.js'
+} from '../../models/index.js'
 import { environment } from '../../environment.js'
 import { getUserIdFromRemoteId } from '../cacheGetters/getUserIdFromRemoteId.js'
 import { getPetitionSigned } from '../activitypub/getPetitionSigned.js'

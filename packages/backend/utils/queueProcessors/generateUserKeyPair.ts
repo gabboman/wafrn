@@ -1,5 +1,5 @@
 import { Job } from 'bullmq'
-import { User } from '../../db.js'
+import { User } from '../../models/index.js'
 import { generateKeyPairSync } from 'crypto'
 
 // this funcion is cpu expensive, so we generate it asyncronously.

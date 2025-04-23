@@ -1,4 +1,4 @@
-import { Blocks, Post } from '../../../db.js'
+import { Blocks, Post } from '../../../models/index.js'
 import { activityPubObject } from '../../../interfaces/fediverse/activityPubObject.js'
 import { deletePostCommon } from '../../deletePost.js'
 import { logger } from '../../logger.js'

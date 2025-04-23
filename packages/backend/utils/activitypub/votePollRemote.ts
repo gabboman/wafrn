@@ -8,7 +8,7 @@ import {
   QuestionPollQuestion,
   User,
   sequelize
-} from '../../db.js'
+} from '../../models/index.js'
 import { environment } from '../../environment.js'
 import { activityPubObject } from '../../interfaces/fediverse/activityPubObject.js'
 import { postPetitionSigned } from './postPetitionSigned.js'

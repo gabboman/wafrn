@@ -1,5 +1,5 @@
 import { Op } from 'sequelize'
-import { Ask, Emoji, EmojiReaction, Media, Post, PostTag, User, UserLikesPostRelations } from '../../db.js'
+import { Ask, Emoji, EmojiReaction, Media, Post, PostTag, User, UserLikesPostRelations } from '../../models/index.js'
 import { redisCache } from '../redis.js'
 
 async function getPostAndUserFromPostId(postId: string): Promise<{ found: boolean; data?: any }> {

@@ -13,7 +13,7 @@ import {
   Media,
   Quotes,
   PostTag
-} from '../../db.js'
+} from '../../models/index.js'
 import { environment } from '../../environment.js'
 import { Job, Queue } from 'bullmq'
 import { Agent, BskyAgent, CredentialSession } from '@atproto/api'

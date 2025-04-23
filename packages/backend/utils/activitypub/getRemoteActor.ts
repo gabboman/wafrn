@@ -1,5 +1,5 @@
 import { Job, Queue, QueueEvents } from 'bullmq'
-import { sequelize, User } from '../../db.js'
+import { sequelize, User } from '../../models/index.js'
 import { environment } from '../../environment.js'
 
 import { logger } from '../logger.js'

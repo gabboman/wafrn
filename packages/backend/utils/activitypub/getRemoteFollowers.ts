@@ -1,4 +1,4 @@
-import { User } from '../../db.js'
+import { User } from '../../models/index.js'
 import { Op } from 'sequelize'
 import { logger } from '../logger.js'
 import _ from 'underscore'

@@ -3,7 +3,7 @@ import fs from "node:fs/promises";
 import axios from "axios";
 import type { Job } from "bullmq";
 import mime from "mime";
-import { Media } from "../../db.js";
+import { Media } from "../../models/index.js";
 import { environment } from "../../environment.js";
 import { fileTypeFromFile } from 'file-type';
 import sharp from "sharp";

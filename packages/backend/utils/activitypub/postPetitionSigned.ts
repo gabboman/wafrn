@@ -2,7 +2,7 @@ import { createHash, createSign } from 'node:crypto'
 import { environment } from '../../environment.js'
 import { logger } from '../logger.js'
 import { removeUser } from './removeUser.js'
-import { User } from '../../db.js'
+import { User } from '../../models/index.js'
 import axios from 'axios'
 
 async function postPetitionSigned(message: object, user: any, target: string): Promise<any> {

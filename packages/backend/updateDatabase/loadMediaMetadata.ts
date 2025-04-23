@@ -1,5 +1,5 @@
 import { Queue } from "bullmq";
-import { Media } from "../db.js"
+import { Media } from "../models/index.js"
 import { environment } from "../environment.js";
 import { Op } from "sequelize";
 

@@ -2,7 +2,7 @@
 
 import { Op } from 'sequelize'
 import { getAtProtoThread } from './atproto/utils/getAtProtoThread.js'
-import { User } from './db.js'
+import { User } from './models/index.js'
 import { environment } from './environment.js'
 import { getRemoteActor } from './utils/activitypub/getRemoteActor.js'
 import { MoveActivity } from './utils/activitypub/processors/move.js'

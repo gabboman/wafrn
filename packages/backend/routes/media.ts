@@ -1,6 +1,6 @@
 /* eslint-disable max-len */
 import { Application, Response } from 'express'
-import { Media } from '../db.js'
+import { Media } from '../models/index.js'
 import uploadHandler from '../utils/uploads.js'
 import { authenticateToken } from '../utils/authenticateToken.js'
 

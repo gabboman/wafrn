@@ -1,5 +1,5 @@
 import { ParsedCommit } from '@skyware/firehose'
-import { Post } from '../../db.js'
+import { Post } from '../../models/index.js'
 import { Op, Sequelize } from 'sequelize'
 import { getLocalUserId } from '../../utils/cacheGetters/getLocalUserId.js'
 import { getAllLocalUserIds } from '../../utils/cacheGetters/getAllLocalUserIds.js'

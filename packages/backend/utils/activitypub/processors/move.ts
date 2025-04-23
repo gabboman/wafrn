@@ -1,5 +1,5 @@
 import { Op } from 'sequelize'
-import { Follows, sequelize, User } from '../../../db.js'
+import { Follows, sequelize, User } from '../../../models/index.js'
 import { activityPubObject } from '../../../interfaces/fediverse/activityPubObject.js'
 import { getAllLocalUserIds } from '../../cacheGetters/getAllLocalUserIds.js'
 import { follow } from '../../follow.js'

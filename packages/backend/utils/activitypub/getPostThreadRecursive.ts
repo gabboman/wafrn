@@ -12,7 +12,7 @@ import {
   sequelize,
   Ask,
   Notification
-} from '../../db.js'
+} from '../../models/index.js'
 import { environment } from '../../environment.js'
 import { logger } from '../logger.js'
 import { getRemoteActor } from './getRemoteActor.js'
@@ -161,8 +161,8 @@ async function getPostThreadRecursive(
         content_warning: postPetition.summary
           ? postPetition.summary
           : remoteUser.NSFW
-          ? 'User is marked as NSFW by this instance staff. Possible NSFW without tagging'
-          : '',
+            ? 'User is marked as NSFW by this instance staff. Possible NSFW without tagging'
+            : '',
         createdAt: new Date(postPetition.published),
         updatedAt: createdAt,
         userId: remoteUserServerBaned || remoteUser.banned ? (await deletedUser).id : remoteUser.id,

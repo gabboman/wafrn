@@ -1,5 +1,5 @@
 import { Op } from 'sequelize'
-import { FederatedHost, PostHostView, RemoteUserPostView, User } from '../../db.js'
+import { FederatedHost, PostHostView, RemoteUserPostView, User } from '../../models/index.js'
 import { environment } from '../../environment.js'
 import { postToJSONLD } from './postToJSONLD.js'
 import { LdSignature } from './rsa2017.js'

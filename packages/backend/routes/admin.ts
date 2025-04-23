@@ -1,6 +1,6 @@
 import { Application, Response } from 'express'
 import { adminToken, authenticateToken } from '../utils/authenticateToken.js'
-import { Blocks, FederatedHost, Post, PostReport, ServerBlock, User, sequelize } from '../db.js'
+import { Blocks, FederatedHost, Post, PostReport, ServerBlock, User, sequelize } from '../models/index.js'
 import AuthorizedRequest from '../interfaces/authorizedRequest.js'
 import { server } from '../interfaces/server.js'
 import { Op } from 'sequelize'

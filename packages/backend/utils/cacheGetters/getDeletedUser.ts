@@ -1,4 +1,4 @@
-import { User } from '../../db.js'
+import { User } from '../../models/index.js'
 import { environment } from '../../environment.js'
 
 // I know its not redis cache but makes sense shut up

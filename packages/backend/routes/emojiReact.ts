@@ -1,7 +1,7 @@
 import { Application, Response } from 'express'
 import { authenticateToken } from '../utils/authenticateToken.js'
 import AuthorizedRequest from '../interfaces/authorizedRequest.js'
-import { Emoji, EmojiReaction, Notification, Post, User } from '../db.js'
+import { Emoji, EmojiReaction, Notification, Post, User } from '../models/index.js'
 import { logger } from '../utils/logger.js'
 import { emojiReactRemote } from '../utils/activitypub/likePost.js'
 import { getUserOptions } from '../utils/cacheGetters/getUserOptions.js'
@@ -32,9 +32,9 @@ export default function emojiReactRoutes(app: Application) {
         emojiName.startsWith(':') && emojiName.endsWith(':')
           ? emoji
           : {
-              id: emojiName
-              // name: emojiName
-            }
+            id: emojiName
+            // name: emojiName
+          }
       if (emoji) {
         try {
           const existing = EmojiReaction.findOne({

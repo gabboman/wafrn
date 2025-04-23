@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from 'express'
-import { FederatedHost, User, sequelize } from '../../db.js'
+import { FederatedHost, User, sequelize } from '../../models/index.js'
 import { environment } from '../../environment.js'
 import { logger } from '../logger.js'
 import crypto from 'crypto'

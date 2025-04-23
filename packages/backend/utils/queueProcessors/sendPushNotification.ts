@@ -1,5 +1,5 @@
 import { Expo } from 'expo-server-sdk'
-import { PushNotificationToken } from '../../db.js'
+import { PushNotificationToken } from '../../models/index.js'
 import { logger } from '../logger.js'
 import { handleDeliveryError, type NotificationBody, type NotificationContext } from '../pushNotifications.js'
 import { Job, Queue } from 'bullmq'

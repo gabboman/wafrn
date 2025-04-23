@@ -3,7 +3,7 @@ import { activityPubObject } from '../../../interfaces/fediverse/activityPubObje
 import { isArray } from 'underscore'
 import { environment } from '../../../environment.js'
 import sequelize from 'sequelize/lib/sequelize'
-import { Post, PostReport, User } from '../../../db.js'
+import { Post, PostReport, User } from '../../../models/index.js'
 import { logger } from '../../logger.js'
 import sendActivationEmail from '../../sendActivationEmail.js'
 

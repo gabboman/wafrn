@@ -1,5 +1,5 @@
 import { Op } from 'sequelize'
-import { Blocks, Follows, Notification, User } from '../db.js'
+import { Blocks, Follows, Notification, User } from '../models/index.js'
 import { logger } from './logger.js'
 import { Response } from 'express'
 import { remoteFollow } from './activitypub/remoteFollow.js'

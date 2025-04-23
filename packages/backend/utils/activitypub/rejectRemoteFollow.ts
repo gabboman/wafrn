@@ -1,5 +1,5 @@
 import { object } from 'underscore'
-import { Follows, User } from '../../db.js'
+import { Follows, User } from '../../models/index.js'
 import { environment } from '../../environment.js'
 import { activityPubObject } from '../../interfaces/fediverse/activityPubObject.js'
 import { postPetitionSigned } from './postPetitionSigned.js'

@@ -3,7 +3,7 @@ import { authenticateToken } from '../utils/authenticateToken.js'
 import AuthorizedRequest from '../interfaces/authorizedRequest.js'
 import { getMutedPosts } from '../utils/cacheGetters/getMutedPosts.js'
 import { getUnjointedPosts } from '../utils/baseQueryNew.js'
-import { Post, SilencedPost } from '../db.js'
+import { Post, SilencedPost } from '../models/index.js'
 import { redisCache } from '../utils/redis.js'
 
 export default function silencePostRoutes(app: Application) {

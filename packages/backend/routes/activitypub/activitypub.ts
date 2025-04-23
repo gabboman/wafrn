@@ -1,5 +1,5 @@
 import { Application, Request, Response } from 'express'
-import { User, Follows, Post, Media, UserLikesPostRelations, Emoji, UserEmojiRelation, sequelize } from '../../db.js'
+import { User, Follows, Post, Media, UserLikesPostRelations, Emoji, UserEmojiRelation, sequelize } from '../../models/index.js'
 import { getCheckFediverseSignatureFucnction } from '../../utils/activitypub/checkFediverseSignature.js'
 import { environment } from '../../environment.js'
 import { return404 } from '../../utils/return404.js'

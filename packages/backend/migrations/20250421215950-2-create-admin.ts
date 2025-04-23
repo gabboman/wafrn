@@ -3,7 +3,7 @@ import { Migration } from '../migrate.js';
 import { generateKeyPair } from 'crypto'
 import bcrypt from 'bcrypt'
 import util from 'util';
-import { User } from '../db.js'
+import { User } from '../models/index.js'
 
 const generateKeyPairAsync = util.promisify(generateKeyPair)
 

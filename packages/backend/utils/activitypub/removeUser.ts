@@ -10,7 +10,7 @@ import {
   sequelize,
   User,
   UserEmojiRelation
-} from '../../db.js'
+} from '../../models/index.js'
 import { environment } from '../../environment.js'
 import { logger } from '../logger.js'
 import { redisCache } from '../redis.js'

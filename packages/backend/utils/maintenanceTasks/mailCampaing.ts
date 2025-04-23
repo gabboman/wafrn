@@ -1,5 +1,5 @@
 import { Op } from 'sequelize'
-import { User } from '../../db.js'
+import { User } from '../../models/index.js'
 import { wait } from '../wait.js'
 import sendActivationEmail from '../sendActivationEmail.js'
 

@@ -17,7 +17,7 @@ import {
   UserBookmarkedPosts,
   UserEmojiRelation,
   UserLikesPostRelations
-} from '../db.js'
+} from '../models/index.js'
 import getPosstGroupDetails from './getPostGroupDetails.js'
 import getFollowedsIds from './cacheGetters/getFollowedsIds.js'
 import { Queue } from 'bullmq'

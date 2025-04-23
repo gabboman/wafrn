@@ -1,4 +1,4 @@
-import { Emoji, EmojiCollection } from '../../db.js'
+import { Emoji, EmojiCollection } from '../../models/index.js'
 import { redisCache } from '../redis.js'
 
 async function getAvaiableEmojisCache(): Promise<Array<string>> {

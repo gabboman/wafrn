@@ -1,7 +1,7 @@
 import { Application, Response } from 'express'
 import { Op, Sequelize } from 'sequelize'
-import { Emoji, Post, PostTag, User, UserEmojiRelation } from '../db.js'
-import { sequelize } from '../db.js'
+import { Emoji, Post, PostTag, User, UserEmojiRelation } from '../models/index.js'
+import { sequelize } from '../models/index.js'
 
 import getStartScrollParam from '../utils/getStartScrollParam.js'
 import getPosstGroupDetails from '../utils/getPostGroupDetails.js'

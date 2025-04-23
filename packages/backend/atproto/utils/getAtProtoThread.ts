@@ -1,7 +1,7 @@
 // returns the post id
 import { getAtProtoSession } from './getAtProtoSession.js'
 import { QueryParams } from '@atproto/sync/dist/firehose/lexicons.js'
-import { Media, Notification, Post, PostMentionsUserRelation, PostTag, Quotes, User } from '../../db.js'
+import { Media, Notification, Post, PostMentionsUserRelation, PostTag, Quotes, User } from '../../models/index.js'
 import { environment } from '../../environment.js'
 import { Model, Op } from 'sequelize'
 import { PostView, ThreadViewPost } from '@atproto/api/dist/client/types/app/bsky/feed/defs.js'

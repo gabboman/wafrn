@@ -1,7 +1,7 @@
 import { Application, Response } from 'express'
 import { authenticateToken } from '../utils/authenticateToken.js'
 
-import { Notification, Post, User, UserLikesPostRelations } from '../db.js'
+import { Notification, Post, User, UserLikesPostRelations } from '../models/index.js'
 import { logger } from '../utils/logger.js'
 import { likePostRemote } from '../utils/activitypub/likePost.js'
 import AuthorizedRequest from '../interfaces/authorizedRequest.js'

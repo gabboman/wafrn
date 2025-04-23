@@ -17,7 +17,7 @@ import {
   UserBookmarkedPosts,
   UserEmojiRelation,
   UserOptions
-} from '../db.js'
+} from '../models/index.js'
 import { authenticateToken } from '../utils/authenticateToken.js'
 
 import generateRandomString from '../utils/generateRandomString.js'
@@ -26,7 +26,7 @@ import sendActivationEmail from '../utils/sendActivationEmail.js'
 import validateEmail from '../utils/validateEmail.js'
 import bcrypt from 'bcrypt'
 import jwt from 'jsonwebtoken'
-import { sequelize } from '../db.js'
+import { sequelize } from '../models/index.js'
 
 import optimizeMedia from '../utils/optimizeMedia.js'
 import uploadHandler from '../utils/uploads.js'
@@ -148,9 +148,8 @@ export default function userRoutes(app: Application) {
               : `Welcome to ${environment.instanceUrl}!`
             const mailBody = environment.reviewRegistrations
               ? `Hello ${req.body.url}, at this moment we are manually reviewing registrations. You will recive an email from us once it's accepted`
-              : `<h1>Welcome to ${environment.instanceUrl}</h1> To activate your account <a href="${
-                  environment.instanceUrl
-                }/activate/${encodeURIComponent(req.body.email.toLowerCase())}/${activationCode}">click here!</a>`
+              : `<h1>Welcome to ${environment.instanceUrl}</h1> To activate your account <a href="${environment.instanceUrl
+              }/activate/${encodeURIComponent(req.body.email.toLowerCase())}/${activationCode}">click here!</a>`
             const emailSent = environment.disableRequireSendEmail
               ? true
               : sendActivationEmail(req.body.email.toLowerCase(), activationCode, mailHeader, mailBody)
@@ -726,19 +725,19 @@ export default function userRoutes(app: Application) {
       let followed = blog.url.startsWith('@')
         ? blog.followingCount
         : Follows.count({
-            where: {
-              followerId: blog.id,
-              accepted: true
-            }
-          })
+          where: {
+            followerId: blog.id,
+            accepted: true
+          }
+        })
       let followers = blog.url.startsWith('@')
         ? blog.followerCount
         : Follows.count({
-            where: {
-              followedId: blog.id,
-              accepted: true
-            }
-          })
+          where: {
+            followedId: blog.id,
+            accepted: true
+          }
+        })
       const publicOptions = UserOptions.findAll({
         where: {
           userId: blog.id,
@@ -777,10 +776,10 @@ export default function userRoutes(app: Application) {
 
       const postCount = blog
         ? await Post.count({
-            where: {
-              userId: blog.id
-            }
-          })
+          where: {
+            userId: blog.id
+          }
+        })
         : 0
 
       followed = await followed
@@ -1233,15 +1232,15 @@ async function updateProfileOptions(optionsJSON: string, posterId: string) {
         })
         userOption
           ? await userOption.update({
-              optionValue: option.value,
-              public: option.public == true
-            })
+            optionValue: option.value,
+            public: option.public == true
+          })
           : await UserOptions.create({
-              userId: posterId,
-              optionName: option.name,
-              optionValue: option.value,
-              public: option.public == true
-            })
+            userId: posterId,
+            optionName: option.name,
+            optionValue: option.value,
+            public: option.public == true
+          })
       }
     }
   }

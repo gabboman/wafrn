@@ -1,5 +1,5 @@
 import { Queue } from 'bullmq'
-import { User } from '../../db.js'
+import { User } from '../../models/index.js'
 import { getRemoteActor } from '../activitypub/getRemoteActor.js'
 import { redisCache } from '../redis.js'
 import { getUserIdFromRemoteId } from './getUserIdFromRemoteId.js'

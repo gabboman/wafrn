@@ -1,6 +1,6 @@
 import { Job } from 'bullmq'
 import { logger } from '../logger.js'
-import { Blocks, Emoji, EmojiReaction, FederatedHost, Follows, Post, User, UserLikesPostRelations } from '../../db.js'
+import { Blocks, Emoji, EmojiReaction, FederatedHost, Follows, Post, User, UserLikesPostRelations } from '../../models/index.js'
 import { getRemoteActor } from '../activitypub/getRemoteActor.js'
 import { signAndAccept } from '../activitypub/signAndAccept.js'
 import { removeUser } from '../activitypub/removeUser.js'

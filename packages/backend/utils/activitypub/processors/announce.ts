@@ -1,4 +1,4 @@
-import { Notification, Post } from '../../../db.js'
+import { Notification, Post } from '../../../models/index.js'
 import { environment } from '../../../environment.js'
 import { activityPubObject } from '../../../interfaces/fediverse/activityPubObject.js'
 import { logger } from '../../logger.js'
@@ -23,8 +23,8 @@ async function AnnounceActivity(body: activityPubObject, remoteUser: any, user: 
     typeof apObject.object === 'string'
       ? apObject.object
       : apObject.object.object
-      ? apObject.object.object
-      : apObject.id
+        ? apObject.object.object
+        : apObject.id
   urlToGet = typeof urlToGet === 'string' ? urlToGet : urlToGet?.id
   if (!urlToGet) {
     const error = new Error()

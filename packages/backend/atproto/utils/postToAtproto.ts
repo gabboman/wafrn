@@ -1,6 +1,6 @@
 import { Model } from 'sequelize'
 import { BskyAgent, RichText } from '@atproto/api'
-import { Media, Post, PostMentionsUserRelation, Quotes, User } from '../../db.js'
+import { Media, Post, PostMentionsUserRelation, Quotes, User } from '../../models/index.js'
 import { environment } from '../../environment.js'
 import fs from 'fs/promises'
 import { getPostUrlForQuote } from '../../utils/activitypub/postToJSONLD.js'

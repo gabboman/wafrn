@@ -1,4 +1,4 @@
-import { Follows } from '../../../db.js'
+import { Follows } from '../../../models/index.js'
 import { environment } from '../../../environment.js'
 import { activityPubObject } from '../../../interfaces/fediverse/activityPubObject.js'
 import { redisCache } from '../../redis.js'

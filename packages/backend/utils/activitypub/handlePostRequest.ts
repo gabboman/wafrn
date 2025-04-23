@@ -7,7 +7,7 @@ import { postToJSONLD } from './postToJSONLD.js'
 import { getRemoteActor } from './getRemoteActor.js'
 import { Queue } from 'bullmq'
 import { environment } from '../../environment.js'
-import { FederatedHost, Follows, User } from '../../db.js'
+import { FederatedHost, Follows, User } from '../../models/index.js'
 import { Op } from 'sequelize'
 
 const processPostViewQueue = new Queue('processRemoteView', {

@@ -1,5 +1,5 @@
 import { Application, Response } from 'express'
-import { User, Mutes, FederatedHost, ServerBlock } from '../db.js'
+import { User, Mutes, FederatedHost, ServerBlock } from '../models/index.js'
 import { authenticateToken } from '../utils/authenticateToken.js'
 import { logger } from '../utils/logger.js'
 import AuthorizedRequest from '../interfaces/authorizedRequest.js'

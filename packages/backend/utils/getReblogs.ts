@@ -1,5 +1,5 @@
 import { Op } from 'sequelize'
-import { Post, User } from '../db.js'
+import { Post, User } from '../models/index.js'
 import { logger } from './logger.js'
 
 export default async function getReblogs(user: any) {

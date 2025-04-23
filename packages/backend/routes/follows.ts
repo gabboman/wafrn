@@ -1,5 +1,5 @@
 import { Application, Response } from 'express'
-import { Blocks, Follows, Notification, User } from '../db.js'
+import { Blocks, Follows, Notification, User } from '../models/index.js'
 import { authenticateToken } from '../utils/authenticateToken.js'
 
 import getBlockedIds from '../utils/cacheGetters/getBlockedIds.js'

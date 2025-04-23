@@ -1,4 +1,4 @@
-import { Follows, User } from '../../db.js'
+import { Follows, User } from '../../models/index.js'
 import { Op } from 'sequelize'
 import { getAllLocalUserIds } from '../../utils/cacheGetters/getAllLocalUserIds.js'
 import { cache } from 'sharp'

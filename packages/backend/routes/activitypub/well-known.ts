@@ -1,7 +1,7 @@
 import { Application, Request, Response } from 'express'
 import { Op } from 'sequelize'
 import sequelize from 'sequelize/lib/sequelize'
-import { User, Post } from '../../db.js'
+import { User, Post } from '../../models/index.js'
 import { environment } from '../../environment.js'
 import { getAllLocalUserIds } from '../../utils/cacheGetters/getAllLocalUserIds.js'
 import { return404 } from '../../utils/return404.js'
