@@ -615,7 +615,7 @@ export default function postsRoutes(app: Application) {
         }
         mentionsToAdd = [...new Set(mentionsToAdd)].filter((elem) => elem != posterId)
         post.setMedias(mediaToAdd.map((media: any) => media.id))
-        post.setMentionPost(mentionsToAdd)
+        post.setMentioner(mentionsToAdd)
         if (req.body.idPostToEdit) {
           await Notification.destroy({
             where: {

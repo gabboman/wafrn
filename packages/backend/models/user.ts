@@ -357,11 +357,11 @@ export class User extends Model<UserAttributes, UserAttributes> implements UserA
   })
   declare followedFollows: Follows[];
 
-  @BelongsToMany(() => User, () => Follows, "followerId", "followsId")
-  declare followers: User[]
+  @BelongsToMany(() => User, () => Follows, "followerId", "followedId")
+  declare follower: User[]
 
-  @BelongsToMany(() => User, () => Follows, "followsId", "followerId")
-  declare follows: User[]
+  @BelongsToMany(() => User, () => Follows, "followedId", "followerId")
+  declare followed: User[]
 
   @HasMany(() => Blocks, {
     foreignKey: "blockerId"
