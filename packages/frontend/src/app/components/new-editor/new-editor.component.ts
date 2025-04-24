@@ -434,11 +434,11 @@ export class NewEditorComponent implements OnDestroy {
     // its a great time to check notifications isnt it?
     this.dashboardService.scrollEventEmitter.emit('post')
     if (res) {
-      const enableConfetti = localStorage.getItem('enableConfetti') == 'true'
+      const disableConfetti = localStorage.getItem('disableConfetti') == 'true'
       this.messages.add({
         severity: 'success',
         summary: 'Your woot has been published!',
-        confettiEmojis: enableConfetti ? ['✏️', '🖍️', '✒️', '🖊️'] : []
+        confettiEmojis: disableConfetti ? [] : ['✏️', '🖍️', '✒️', '🖊️']
       })
       this.postCreatorForm.value.content = ''
       this.uploadedMedias = []

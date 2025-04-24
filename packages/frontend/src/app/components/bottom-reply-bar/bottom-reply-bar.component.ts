@@ -78,7 +78,7 @@ export class BottomReplyBarComponent implements OnChanges {
     private readonly editorService: EditorService,
     private readonly deletePostService: DeletePostService,
     private readonly messages: MessageService,
-    private readonly editor: EditorService,
+    private readonly editor: EditorService
   ) {
     this.userLoggedIn = loginService.checkUserLoggedIn()
     if (this.userLoggedIn) {
@@ -141,11 +141,11 @@ export class BottomReplyBarComponent implements OnChanges {
     this.loadingAction = true
     if (await this.postService.likePost(postToLike.id)) {
       postToLike.userLikesPostRelations.push(this.myId)
-      const enableConfetti = localStorage.getItem('enableConfetti') == 'true'
+      const disableConfetti = localStorage.getItem('disableConfetti') == 'true'
       this.messages.add({
         severity: 'success',
         summary: 'You successfully liked this woot',
-        confettiEmojis: enableConfetti ? ['❤️', '💚', '💙'] : []
+        confettiEmojis: disableConfetti ? [] : ['❤️', '💚', '💙']
       })
     } else {
       this.messages.add({
@@ -190,11 +190,11 @@ export class BottomReplyBarComponent implements OnChanges {
   async bookmarkPost() {
     if (await this.postService.bookmarkPost(this.fragment.id)) {
       this.fragment.bookmarkers.push(this.myId)
-      const enableConfetti = localStorage.getItem('enableConfetti') == 'true'
+      const disableConfetti = localStorage.getItem('disableConfetti') == 'true'
       this.messages.add({
         severity: 'success',
         summary: 'You successfully bookmarked this woot',
-        confettiEmojis: enableConfetti ? ['💾'] : []
+        confettiEmojis: disableConfetti ? [] : ['💾']
       })
       this.bookmarked.set(true)
     } else {
@@ -216,13 +216,13 @@ export class BottomReplyBarComponent implements OnChanges {
         media: []
       })
       if (response) {
-        const enableConfetti = localStorage.getItem('enableConfetti') == 'true'
+        const disableConfetti = localStorage.getItem('disableConfetti') == 'true'
 
         this.myRewootsIncludePost = true
         this.messages.add({
           severity: 'success',
           summary: 'You rewooted the woot!',
-          confettiEmojis: enableConfetti ? ['🔁'] : []
+          confettiEmojis: disableConfetti ? [] : ['🔁']
         })
       } else {
         this.messages.add({

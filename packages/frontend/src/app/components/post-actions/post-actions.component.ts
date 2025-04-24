@@ -143,12 +143,12 @@ export class PostActionsComponent implements OnChanges {
         media: []
       })
       if (response) {
-        const enableConfetti = localStorage.getItem('enableConfetti') == 'true'
+        const disableConfetti = localStorage.getItem('disableConfetti') == 'true'
         this.myRewootsIncludePost = true
         this.messages.add({
           severity: 'success',
           summary: 'You rewooted the woot!',
-          confettiEmojis: enableConfetti ? ['🔁'] : []
+          confettiEmojis: disableConfetti ? [] : ['🔁']
         })
       } else {
         this.messages.add({
@@ -187,11 +187,11 @@ export class PostActionsComponent implements OnChanges {
   async likePost() {
     if (await this.postService.likePost(this.content.id)) {
       this.content.userLikesPostRelations.push(this.myId)
-      const enableConfetti = localStorage.getItem('enableConfetti') == 'true'
+      const disableConfetti = localStorage.getItem('disableConfetti') == 'true'
       this.messages.add({
         severity: 'success',
         summary: 'You successfully liked this woot',
-        confettiEmojis: enableConfetti ? ['❤️', '💚', '💙'] : []
+        confettiEmojis: disableConfetti ? [] : ['❤️', '💚', '💙']
       })
     } else {
       this.messages.add({
@@ -218,12 +218,12 @@ export class PostActionsComponent implements OnChanges {
   async bookmarkPost() {
     if (await this.postService.bookmarkPost(this.content.id)) {
       this.content.bookmarkers.push(this.myId)
-      const enableConfetti = localStorage.getItem('enableConfetti') == 'true'
+      const disableConfetti = localStorage.getItem('disableConfetti') == 'true'
       this.bookmarked.set(true)
       this.messages.add({
         severity: 'success',
         summary: 'You successfully bookmarked this woot',
-        confettiEmojis: enableConfetti ? ['💾'] : []
+        confettiEmojis: disableConfetti ? [] : ['💾']
       })
     } else {
       this.messages.add({

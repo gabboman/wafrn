@@ -12,19 +12,13 @@ import { EmojiPickerComponent } from '../emoji-picker/emoji-picker.component'
 
 @Component({
   selector: 'app-emoji-react',
-  imports: [
-    CommonModule,
-    MatButtonModule,
-    FontAwesomeModule,
-    OverlayModule,
-    MatTooltipModule,
-  ],
+  imports: [CommonModule, MatButtonModule, FontAwesomeModule, OverlayModule, MatTooltipModule],
   templateUrl: './emoji-react.component.html',
   styleUrl: './emoji-react.component.scss'
 })
 export class EmojiReactComponent {
   scrollStrategy
-  dialog = inject(Dialog);
+  dialog = inject(Dialog)
   readonly postId = input<string>('')
   isOpen = false
   loading = false
@@ -37,11 +31,11 @@ export class EmojiReactComponent {
     this.scrollStrategy = this.overlay.scrollStrategies.reposition()
   }
   openDialog(): void {
-    const dialogRef = this.dialog.open<Emoji>(EmojiPickerComponent);
+    const dialogRef = this.dialog.open<Emoji>(EmojiPickerComponent)
 
-    dialogRef.closed.subscribe(result => {
+    dialogRef.closed.subscribe((result) => {
       if (result) {
-        this.reactToPost(result);
+        this.reactToPost(result)
       }
     })
   }
@@ -50,11 +44,11 @@ export class EmojiReactComponent {
     this.loading = true
     const response = await this.postsService.emojiReactPost(this.postId(), emoji.name)
     if (response) {
-      const enableConfetti = localStorage.getItem('enableConfetti') == 'true'
+      const disableConfetti = localStorage.getItem('disableConfetti') == 'true'
       this.messages.add({
         severity: 'success',
         summary: `Reacted with ${emoji.name} succesfully`,
-        confettiEmojis: enableConfetti && !emoji.url ? [emoji.name] : []
+        confettiEmojis: !disableConfetti && !emoji.url ? [] : [emoji.name]
       })
       this.isOpen = false
       this.loading = false
