@@ -9,7 +9,7 @@ export interface FollowsAttributes {
   updatedAt?: Date;
   remoteFollowId?: string;
   accepted?: boolean;
-  bskyUri?: string;
+  bskyUri?: string | null;
   bskyPath?: string;
   followerId: string;
   followedId: string;
@@ -39,7 +39,7 @@ export class Follows extends Model<FollowsAttributes, FollowsAttributes> impleme
     allowNull: true,
     type: DataType.STRING(768)
   })
-  declare bskyUri: string;
+  declare bskyUri: string | null;
 
   @Column({
     allowNull: true,

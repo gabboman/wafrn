@@ -127,7 +127,7 @@ export default function searchRoutes(app: Application) {
               let bskyUri = profileAndPost[1]
               if (!bskyProfile.startsWith('did:')) {
                 let profileToGet = await getAtprotoUser(`${bskyProfile}`, usr)
-                if (profileToGet)
+                if (profileToGet && profileToGet.bskyDid)
                   bskyProfile = profileToGet.bskyDid
               }
               const uri = `at://${bskyProfile}/app.bsky.feed.post/${bskyUri}`

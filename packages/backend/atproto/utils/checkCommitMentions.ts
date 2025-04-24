@@ -1,7 +1,6 @@
 import { ParsedCommit } from '@skyware/firehose'
 import { Post } from '../../models/index.js'
 import { Op, Sequelize } from 'sequelize'
-import { getLocalUserId } from '../../utils/cacheGetters/getLocalUserId.js'
 import { getAllLocalUserIds } from '../../utils/cacheGetters/getAllLocalUserIds.js'
 
 // Preemptive checks to see if
@@ -23,12 +22,13 @@ function checkCommitMentions(
       operation.action === 'create' &&
       (operation.path.startsWith('app.bsky.feed.like') || operation.path.startsWith('app.bsky.graph.follow'))
     ) {
+      let record: any = operation.record;
       // we do not ned 18k likes on a mark hamill post. We better do just a "people you follow liked..."
-      let likedPostUri = operation.record?.subject?.uri ? operation.record.subject.uri : ''
+      let likedPostUri = record?.subject?.uri ? record?.subject.uri : ''
       if (likedPostUri) {
         likedPostUri = likedPostUri.split('/')[2]
       }
-      let followedUser = operation.path.startsWith('app.bsky.graph.follow') ? operation.record.subject : ''
+      let followedUser = operation.path.startsWith('app.bsky.graph.follow') ? record?.subject : ''
 
       if (
         didsToCheck.has(commit.repo) ||
@@ -38,11 +38,12 @@ function checkCommitMentions(
         return true
       }
     }
-    if (operation.action === 'create' && operation.path.startsWith('app.bsky.feed.post') && operation.record.facets) {
-      const mentions = operation.record.facets
-        .flatMap((elem) => elem.features)
-        .map((elem) => elem.did)
-        .filter((elem) => elem)
+    if (operation.action === 'create' && operation.path.startsWith('app.bsky.feed.post') && (operation.record as any)?.facets) {
+      let record: any = operation.record;
+      const mentions = record?.facets
+        .flatMap((elem: any) => elem.features)
+        .map((elem: any) => elem.did)
+        .filter((elem: any) => elem)
       if (mentions && mentions.length && mentions.some((mention: string) => cacheData.localUserDids.has(mention))) {
         res = true
         return res
@@ -51,9 +52,9 @@ function checkCommitMentions(
   }
   // second one first approach: is post being replied on db? if so we store it.
   const urisToCheck: string[] = commit.ops
-    .filter((op) => op.action === 'create' && op.path.startsWith('app.bsky.feed.post') && op.record?.reply)
+    .filter((op) => op.action === 'create' && op.path.startsWith('app.bsky.feed.post') && (op.record as any)?.reply)
     .map((op) => {
-      return { parent: op.record.reply.parent.uri, root: op.record.reply.root.uri }
+      return { parent: (op as any).record.reply.parent.uri, root: (op as any).record.reply.root.uri }
     })
     .map((elem) => [elem.parent, elem.root])
     .flat()

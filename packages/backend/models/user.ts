@@ -30,7 +30,7 @@ export interface UserAttributes {
   id?: string;
   createdAt?: Date;
   updatedAt?: Date;
-  email?: string;
+  email?: string | null;
   description?: string;
   descriptionMarkdown?: string;
   name?: string;
@@ -63,7 +63,7 @@ export interface UserAttributes {
   disableEmailNotifications?: boolean;
   enableBsky?: boolean;
   bskyAuthData?: string;
-  bskyDid?: string;
+  bskyDid?: string | null;
   lastActiveAt?: Date;
 }
 
@@ -84,7 +84,7 @@ export class User extends Model<UserAttributes, UserAttributes> implements UserA
     allowNull: true,
     type: DataType.STRING(768)
   })
-  declare email: string;
+  declare email: string | null;
 
   @Column({
     allowNull: true,
@@ -291,7 +291,7 @@ export class User extends Model<UserAttributes, UserAttributes> implements UserA
     allowNull: true,
     type: DataType.STRING(768)
   })
-  declare bskyDid: string;
+  declare bskyDid: string | null;
 
   @Column({
     allowNull: true,

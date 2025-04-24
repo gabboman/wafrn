@@ -19,12 +19,12 @@ const adminUser = User.findOne({
 })
 async function processFirehose(job: Job) {
   // FIRST VERSION. THIS IS GONA BE DIRTY
-  const remoteUser = await getAtprotoUser(job.data.repo, (await adminUser) as Model<any, any>)
+  const remoteUser = await getAtprotoUser(job.data.repo, await adminUser as User)
   const operation: RepoOp = job.data.operation
   if (remoteUser && operation) {
     switch (operation.action) {
       case 'create': {
-        const record = operation.record
+        const record = operation.record as any
         switch (record['$type']) {
           case 'app.bsky.feed.like': {
             let user = undefined
@@ -44,18 +44,20 @@ async function processFirehose(job: Job) {
                     }
                   })
                   const post = await Post.findByPk(postId)
-                  await createNotification(
-                    {
-                      notificationType: 'LIKE',
-                      postId: postId,
-                      userId: remoteUser.id,
-                      notifiedUserId: post?.userId
-                    },
-                    {
-                      postContent: post?.content,
-                      userUrl: remoteUser.url
-                    }
-                  )
+                  if (post) {
+                    await createNotification(
+                      {
+                        notificationType: 'LIKE',
+                        postId: postId,
+                        userId: remoteUser.id,
+                        notifiedUserId: post.userId
+                      },
+                      {
+                        postContent: post.content,
+                        userUrl: remoteUser.url
+                      }
+                    )
+                  }
                 }
               } else {
                 const postInDb = await Post.findOne({
@@ -121,7 +123,7 @@ async function processFirehose(job: Job) {
             break
           }
           case 'app.bsky.graph.follow': {
-            const userFollowed = await getAtprotoUser(record.subject, (await adminUser) as Model<any, any>)
+            const userFollowed = await getAtprotoUser(record.subject, await adminUser as User)
             if (userFollowed) {
               let tmp = await Follows.findOrCreate({
                 where: {

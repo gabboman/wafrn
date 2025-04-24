@@ -20,7 +20,7 @@ import { PostHostView } from "./postHostView.js";
 import { RemoteUserPostView } from "./remoteUserPostView.js";
 import { FederatedHost } from "./federatedHost.js";
 import { PostAncestor } from "./postAncestor.js";
-import { BelongsToManyGetAssociationsMixin, BelongsToSetAssociationMixin } from "sequelize";
+import { BelongsToManyGetAssociationsMixin, BelongsToSetAssociationMixin, HasManyGetAssociationsMixin, HasOneGetAssociationMixin } from "sequelize";
 
 export interface PostAttributes {
   id?: string;
@@ -168,6 +168,7 @@ export class Post extends Model<PostAttributes, PostAttributes> implements PostA
     sourceKey: "id"
   })
   declare ask: Ask;
+  declare getAsk: HasOneGetAssociationMixin<Ask>
 
   @HasOne(() => QuestionPoll, {
     sourceKey: "id"
@@ -212,6 +213,7 @@ export class Post extends Model<PostAttributes, PostAttributes> implements PostA
     sourceKey: "id"
   })
   declare postTags: PostTag[];
+  declare getPostTags: HasManyGetAssociationsMixin<PostTag>
 
   @BelongsTo(() => User)
   declare user: User;

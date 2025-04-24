@@ -10,13 +10,13 @@ import { tokenize } from '@atcute/bluesky-richtext-parser'
 import { removeMarkdown } from './removeMarkdown.js'
 import optimizeMedia from '../../utils/optimizeMedia.js'
 
-async function postToAtproto(post: Model<any, any>, agent: BskyAgent) {
+async function postToAtproto(post: Post, agent: BskyAgent) {
   let labels: any = undefined
-  const quotedPostId = (await Quotes.findOne({
+  const quotedPostId = await Quotes.findOne({
     where: {
       quoterPostId: post.id
     }
-  })) as Model<any, any>
+  })
   let bskyQuote
   let quotedPost
   if (quotedPostId) {
@@ -28,7 +28,7 @@ async function postToAtproto(post: Model<any, any>, agent: BskyAgent) {
         }
       ]
     })
-    if (quotedPost.bskyUri) {
+    if (quotedPost?.bskyUri) {
       bskyQuote = {
         $type: 'app.bsky.embed.record',
         record: {
@@ -56,27 +56,29 @@ async function postToAtproto(post: Model<any, any>, agent: BskyAgent) {
 
   for (const mentionedRelation of mentionedUserRelations) {
     const user = await User.findByPk(mentionedRelation.userId)
-    const escapedUrl = user.url.replaceAll(/[/\-\\^$*+?.()|[\]{}]/g, '\\$&')
-    let mentionRegex = new RegExp(`(?<=\\s|^)(@${escapedUrl})(?=\\s|$)`, 'gm')
+    if (user) {
+      const escapedUrl = user?.url.replaceAll(/[/\-\\^$*+?.()|[\]{}]/g, '\\$&')
+      let mentionRegex = new RegExp(`(?<=\\s|^)(@${escapedUrl})(?=\\s|$)`, 'gm')
 
-    // Fedi users
-    if (user.remoteMentionUrl) {
-      // A Fedi user url already has an @ in the start
-      mentionRegex = new RegExp(`(?<=\\s|^)(${escapedUrl})(?=\\s|$)`, 'gm')
-      postText = postText.replaceAll(mentionRegex, `[@${user.url.split('@')[1]}](${user.remoteMentionUrl})`)
-      continue
-    }
+      // Fedi users
+      if (user.remoteMentionUrl) {
+        // A Fedi user url already has an @ in the start
+        mentionRegex = new RegExp(`(?<=\\s|^)(${escapedUrl})(?=\\s|$)`, 'gm')
+        postText = postText.replaceAll(mentionRegex, `[@${user.url.split('@')[1]}](${user.remoteMentionUrl})`)
+        continue
+      }
 
-    // Local users
-    if (!user.isBlueskyUser) {
-      if (user.bskyDid && user.enableBsky) {
-        const response = await agent.getProfile({ actor: user.bskyDid })
-        if (response.data) postText = postText.replaceAll(mentionRegex, `@${response.data.handle}`)
-      } else {
-        postText = postText.replaceAll(
-          mentionRegex,
-          `[@${user.url}](${environment.frontendUrl}/fediverse/blog/${user.url.toLowerCase()})`
-        )
+      // Local users
+      if (!user.isBlueskyUser) {
+        if (user.bskyDid && user.enableBsky) {
+          const response = await agent.getProfile({ actor: user.bskyDid })
+          if (response.data) postText = postText.replaceAll(mentionRegex, `@${response.data.handle}`)
+        } else {
+          postText = postText.replaceAll(
+            mentionRegex,
+            `[@${user.url}](${environment.frontendUrl}/fediverse/blog/${user.url.toLowerCase()})`
+          )
+        }
       }
     }
   }
@@ -144,8 +146,8 @@ async function postToAtproto(post: Model<any, any>, agent: BskyAgent) {
     // Do not add facets representing links that were removed
     if (postShortened && facet.index.byteEnd > byteSliceLength) return
 
-    if (rt.facets) rt.facets.push(facet as Main)
-    else rt.facets = [facet as Main]
+    if (rt.facets) rt.facets.push((facet as unknown) as Main)
+    else rt.facets = [(facet as unknown) as Main]
   })
 
   let res: any = {
@@ -203,7 +205,7 @@ async function postToAtproto(post: Model<any, any>, agent: BskyAgent) {
 
   if (post.parentId) {
     // ok this post is in reply to something
-    const parent = (await Post.findByPk(post.parentId)) as Model<any, any>
+    const parent = await Post.findByPk(post.parentId)
     const ancestors = await post.getAncestors({
       where: {
         hierarchyLevel: 1
@@ -217,8 +219,8 @@ async function postToAtproto(post: Model<any, any>, agent: BskyAgent) {
         cid: rootPost.bskyCid
       },
       parent: {
-        uri: parent.bskyUri,
-        cid: parent.bskyCid
+        uri: parent?.bskyUri,
+        cid: parent?.bskyCid
       }
     }
   }

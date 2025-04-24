@@ -418,7 +418,7 @@ export default function userRoutes(app: Application) {
             }
           }
         })
-        if (userWithEmail) {
+        if (userWithEmail && userWithEmail.email) {
           const correctPassword = await bcrypt.compare(req.body.password, userWithEmail.password)
           if (correctPassword) {
             success = true
@@ -523,7 +523,7 @@ export default function userRoutes(app: Application) {
               token: jwt.sign(
                 {
                   userId: userWithEmail.id,
-                  email: userWithEmail.email.toLowerCase(),
+                  email: userWithEmail.email?.toLowerCase(),
                   birthDate: userWithEmail.birthDate,
                   url: userWithEmail.url,
                   role: userWithEmail.role

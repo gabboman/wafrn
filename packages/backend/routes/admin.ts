@@ -259,7 +259,7 @@ export default function adminRoutes(app: Application) {
   app.post('/api/admin/activateUser', authenticateToken, adminToken, async (req: AuthorizedRequest, res: Response) => {
     if (req.body.id) {
       const userToActivate = await User.findByPk(req.body.id)
-      if (userToActivate) {
+      if (userToActivate && userToActivate.email) {
         userToActivate.activated = true
         const emailPromise = sendActivationEmail(
           userToActivate.email,
@@ -276,7 +276,7 @@ export default function adminRoutes(app: Application) {
   app.post('/api/admin/userUsedVPN', authenticateToken, adminToken, async (req: AuthorizedRequest, res: Response) => {
     if (req.body.id) {
       const userToDelete = await User.findByPk(req.body.id)
-      if (userToDelete) {
+      if (userToDelete && userToDelete.email) {
         const emailPromise = sendActivationEmail(
           userToDelete.email,
           '',
@@ -301,7 +301,7 @@ export default function adminRoutes(app: Application) {
     async (req: AuthorizedRequest, res: Response) => {
       if (req.body.id) {
         const userToActivate = await User.findByPk(req.body.id)
-        if (userToActivate) {
+        if (userToActivate && userToActivate.email) {
           userToActivate.activated = null // little hack, not adding another thing to the db. we set it to null and remove notification
           userToActivate.banned = null
           const emailPromise = sendActivationEmail(
