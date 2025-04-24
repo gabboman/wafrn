@@ -32,7 +32,7 @@ import { EnvironmentService } from 'src/app/services/environment.service'
   standalone: false
 })
 export class PostComponent implements OnInit, OnDestroy, OnChanges {
-  @Input() post!: ProcessedPost[];
+  @Input() post!: ProcessedPost[]
   showFull: boolean = false
   postCanExpand = computed(() => {
     let textLength = 0
@@ -102,7 +102,7 @@ export class PostComponent implements OnInit, OnDestroy, OnChanges {
 
   constructor(
     public postService: PostsService,
-    private readonly loginService: LoginService,
+    private readonly loginService: LoginService
   ) {
     this.userLoggedIn = loginService.checkUserLoggedIn()
     if (this.userLoggedIn) {
@@ -154,14 +154,14 @@ export class PostComponent implements OnInit, OnDestroy, OnChanges {
 
   isEmptyReblog() {
     const finalOne = this.post[this.post.length - 1]
-    return (
-      this.post &&
-      finalOne.content == '' &&
-      finalOne.tags.length == 0 &&
-      finalOne.quotes.length == 0 &&
-      !finalOne.questionPoll &&
-      finalOne.medias?.length == 0
-    )
+    return !finalOne
+      ? true
+      : this.post &&
+          finalOne.content == '' &&
+          finalOne.tags.length == 0 &&
+          finalOne.quotes.length == 0 &&
+          !finalOne.questionPoll &&
+          finalOne.medias?.length == 0
   }
 
   ngOnChanges() {

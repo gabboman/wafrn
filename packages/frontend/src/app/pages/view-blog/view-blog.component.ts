@@ -183,14 +183,12 @@ export class ViewBlogComponent implements OnInit, OnDestroy, SnappyHide, SnappyS
 
 
   handleTheme(blogDetails: BlogDetails) {
-    console.log("Themeing");
     const userHasCustomTheme = !blogDetails.url.startsWith('@');
 
     if (userHasCustomTheme) {
       let userResponseToCustomThemes = this.themeService.hasUserAcceptedCustomThemes()
 
       if (userResponseToCustomThemes === 2) {
-        console.log("Themeing");
         this.themeService.setTheme(blogDetails.id)
       }
 

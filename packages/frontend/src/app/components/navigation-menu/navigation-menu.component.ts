@@ -146,7 +146,7 @@ export class NavigationMenuComponent implements OnInit, OnDestroy {
         icon: faUser,
         title: 'Register',
         visible: !this.jwtService.tokenValid(),
-        routerLink: '/',
+        routerLink: '/register',
         command: () => {
           this.hideMenu()
         }
