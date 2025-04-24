@@ -80,7 +80,7 @@ import { Dialog } from '@angular/cdk/dialog'
     MatDialogModule,
     TranslateModule,
     MatBadgeModule,
-    MatChipsModule,
+    MatChipsModule
   ],
   templateUrl: './new-editor.component.html',
   styleUrl: './new-editor.component.scss'
@@ -95,7 +95,7 @@ export class NewEditorComponent implements OnDestroy {
   ]
   quoteOpen = false
   data: EditorData | undefined
-  emojiDialog = inject(Dialog);
+  emojiDialog = inject(Dialog)
   editing = false
   baseMediaUrl = EnvironmentService.environment.baseMediaUrl
   cacheurl = EnvironmentService.environment.externalCacheurl
@@ -414,8 +414,13 @@ export class NewEditorComponent implements OnDestroy {
       // wait 500 milliseconds
       await new Promise((resolve) => setTimeout(resolve, 500))
     }
+    const mentionsToBeSent = this.mentionedUsers.map((elem) => elem.id)
+    if (this.data && this.data.quote) {
+      mentionsToBeSent.push(this.data.quote.userId)
+    }
     res = await this.editorService.createPost({
-      mentionedUsers: this.mentionedUsers.map((elem) => elem.id),
+      // deduplicate mentions too just in case
+      mentionedUsers: Array.from(new Set(mentionsToBeSent)),
       content: content,
       media: this.uploadedMedias,
       privacy: this.privacy,
@@ -462,19 +467,19 @@ export class NewEditorComponent implements OnDestroy {
     var copy = document.createElement('div')
     copy.textContent = textArea.value
     var style = getComputedStyle(textArea)
-      ;[
-        'fontFamily',
-        'fontSize',
-        'fontWeight',
-        'wordWrap',
-        'whiteSpace',
-        'borderLeftWidth',
-        'borderTopWidth',
-        'borderRightWidth',
-        'borderBottomWidth'
-      ].forEach(function (key: any) {
-        copy.style[key] = style[key]
-      })
+    ;[
+      'fontFamily',
+      'fontSize',
+      'fontWeight',
+      'wordWrap',
+      'whiteSpace',
+      'borderLeftWidth',
+      'borderTopWidth',
+      'borderRightWidth',
+      'borderBottomWidth'
+    ].forEach(function (key: any) {
+      copy.style[key] = style[key]
+    })
     copy.style.overflow = 'auto'
     copy.style.width = textArea.offsetWidth + 'px'
     copy.style.height = textArea.offsetHeight + 'px'
@@ -541,12 +546,12 @@ export class NewEditorComponent implements OnDestroy {
 
   openEmojiSelection(): void {
     const textarea = document.getElementById('postCreatorContent') as HTMLTextAreaElement
-    const pos = textarea.selectionStart;
-    const dialogRef = this.emojiDialog.open<Emoji>(EmojiPickerComponent);
+    const pos = textarea.selectionStart
+    const dialogRef = this.emojiDialog.open<Emoji>(EmojiPickerComponent)
 
-    dialogRef.closed.subscribe(result => {
+    dialogRef.closed.subscribe((result) => {
       if (result) {
-        textarea.value = textarea.value.slice(0, pos) + result.name + textarea.value.slice(pos);
+        textarea.value = textarea.value.slice(0, pos) + result.name + textarea.value.slice(pos)
       }
     })
   }
