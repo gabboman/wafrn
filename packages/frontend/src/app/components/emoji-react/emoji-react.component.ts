@@ -31,7 +31,9 @@ export class EmojiReactComponent {
     this.scrollStrategy = this.overlay.scrollStrategies.reposition()
   }
   openDialog(): void {
-    const dialogRef = this.dialog.open<Emoji>(EmojiPickerComponent)
+    const dialogRef = this.dialog.open<Emoji>(EmojiPickerComponent, {
+      autoFocus: false
+    });
 
     dialogRef.closed.subscribe((result) => {
       if (result) {
