@@ -42,7 +42,8 @@ export default async function getBlockedIds(
       .map((block: any) => (block.blockerId !== userId ? block.blockerId : block.blockedId))
       .concat((await mutes).map((mute: any) => mute.mutedId))
     redisCache.set(cacheKey + userId, JSON.stringify(res), 'EX', 600)
-    return res
+    // to avoid sequelize stuff. should add to other cachers too tbh
+    return res.length > 0 ? res : ['00000000-0000-0000-0000-000000000000']
   } catch (error) {
     return []
   }

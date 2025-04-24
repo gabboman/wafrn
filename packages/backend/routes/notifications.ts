@@ -43,6 +43,7 @@ export default function notificationRoutes(app: Application) {
           await usr.save()
         }
       })
+      const blockedUsers = await getBlockedIds(userId)
       let scrollDate = req.query?.date ? new Date(parseInt(req.query.date as string)) : new Date()
       if (isNaN(scrollDate.getTime())) {
         scrollDate = new Date()
@@ -60,7 +61,9 @@ export default function notificationRoutes(app: Application) {
               notificationType: 'FOLLOW'
             }
           ],
-
+          userId: {
+            [Op.notIn]: blockedUsers.concat([userId])
+          },
           notifiedUserId: userId,
           createdAt: {
             [Op.lt]: scrollDate
@@ -191,9 +194,8 @@ export default function notificationRoutes(app: Application) {
 
   app.get('/api/v2/notificationsCount', authenticateToken, async (req: AuthorizedRequest, res: Response) => {
     const userId = req.jwtData?.userId ? req.jwtData?.userId : '00000000-0000-0000-0000-000000000000'
-
-    //const blockedUsers = await getBlockedIds(userId)
-    const startCountDate = (await User.findByPk(userId)).lastTimeNotificationsCheck
+    const blockedUsers = await getBlockedIds(userId)
+    const startCountDate = (await User.findByPk(userId))?.lastTimeNotificationsCheck
     const mutedPostIds = (await getMutedPosts(userId)).concat(await getMutedPosts(userId, true))
     const notificationsCount = await Notification.count({
       where: {
@@ -208,6 +210,9 @@ export default function notificationRoutes(app: Application) {
             notificationType: 'FOLLOW'
           }
         ],
+        userId: {
+          [Op.notIn]: blockedUsers.concat([userId])
+        },
         createdAt: {
           [Op.gt]: startCountDate
         }
