@@ -3,7 +3,7 @@ import { adminToken, authenticateToken } from '../utils/authenticateToken.js'
 import AuthorizedRequest from '../interfaces/authorizedRequest.js'
 import { Queue } from 'bullmq'
 import { environment } from '../environment.js'
-import { FederatedHost } from '../db.js'
+import { FederatedHost } from '../models/index.js'
 
 export default function statusRoutes(app: Application) {
   app.get('/api/status/workerStats', authenticateToken, adminToken, async (req: AuthorizedRequest, res: Response) => {

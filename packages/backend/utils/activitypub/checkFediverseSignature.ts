@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from 'express'
-import { FederatedHost, User, sequelize } from '../../db.js'
+import { FederatedHost, User, sequelize } from '../../models/index.js'
 import { environment } from '../../environment.js'
 import { logger } from '../logger.js'
 import crypto from 'crypto'
@@ -38,7 +38,7 @@ function getCheckFediverseSignatureFucnction(force = false) {
         remoteUserUrl = sigHead.keyId.split('/main-key')[0]
       }
       hostUrl = new URL(remoteUserUrl).host
-      let bannedHostInCache = await redisCache.get('server:' + hostUrl)
+      let bannedHostInCache: string | null | undefined = await redisCache.get('server:' + hostUrl)
       if (bannedHostInCache === null || bannedHostInCache === undefined) {
         const newResult = await FederatedHost.findOne({
           where: {

@@ -1,5 +1,5 @@
 import { Op } from 'sequelize'
-import { Media, Post, PostTag, User } from '../../db.js'
+import { Media, Post, PostTag, User } from '../../models/index.js'
 import { environment } from '../../environment.js'
 import { fediverseTag } from '../../interfaces/fediverse/tags.js'
 import { activityPubObject } from '../../interfaces/fediverse/activityPubObject.js'
@@ -53,11 +53,9 @@ async function postToJSONLD(postId: string) {
   // we remove the wafrnmedia from the post for the outside world, as they get this on the attachments
   processedContent = processedContent.replaceAll(wafrnMediaRegex, '')
   if (ask) {
-    processedContent = `<p>${getUserName(userAsker)} asked </p> <blockquote>${
-      ask.question
-    }</blockquote> ${processedContent} <p>To properly see this ask, <a href="${
-      environment.frontendUrl + '/fediverse/post/' + post.id
-    }">check the post in the original instance</a></p>`
+    processedContent = `<p>${getUserName(userAsker)} asked </p> <blockquote>${ask.question
+      }</blockquote> ${processedContent} <p>To properly see this ask, <a href="${environment.frontendUrl + '/fediverse/post/' + post.id
+      }">check the post in the original instance</a></p>`
   }
   const mentions: string[] = post.mentionPost.map((elem: any) => elem.id)
   const fediMentions: fediverseTag[] = []
@@ -96,7 +94,7 @@ async function postToJSONLD(postId: string) {
   for await (const userId of mentions) {
     const user =
       (await User.findOne({ where: { id: userId } })) ||
-      (await User.findOne({ where: { url: environment.deletedUser } }))
+      (await User.findOne({ where: { url: environment.deletedUser } })) as User
     const url = user.url.startsWith('@') ? user.url : `@${user.url}@${environment.instanceUrl}`
     const remoteId = user.url.startsWith('@') ? user.remoteId : `${environment.frontendUrl}/fediverse/blog/${user.url}`
     if (remoteId) {
@@ -214,8 +212,8 @@ async function postToJSONLD(postId: string) {
         post.privacy / 1 === 10
           ? mentionedUsers
           : post.privacy / 1 === 0
-          ? ['https://www.w3.org/ns/activitystreams#Public']
-          : [stringMyFollowers],
+            ? ['https://www.w3.org/ns/activitystreams#Public']
+            : [stringMyFollowers],
       cc: [`${environment.frontendUrl}/fediverse/blog/${localUser.url.toLowerCase()}`, stringMyFollowers],
       object: parentPostString
     }
@@ -247,7 +245,7 @@ function getToAndCC(
       break
     }
     default: {
-      ;(to = mentionedUsers), (cc = [])
+      ; (to = mentionedUsers), (cc = [])
     }
   }
   return {

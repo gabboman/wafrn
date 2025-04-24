@@ -1,4 +1,4 @@
-import { UserOptions } from '../../db.js'
+import { UserOptions } from '../../models/index.js'
 import { redisCache } from '../redis.js'
 
 async function getUserOptions(userId: string): Promise<Array<{ optionName: string; optionValue: string }>> {

@@ -1,6 +1,6 @@
 import * as OTPAuth from 'otpauth'
 
-export default async function verifyTotp(mfaDetail, token: string) {
+export default async function verifyTotp(mfaDetail: any, token: string) {
   if (mfaDetail.type == "totp") {
     const totp = new OTPAuth.TOTP({
       algorithm: mfaDetail.data.algorithm,

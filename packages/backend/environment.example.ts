@@ -87,11 +87,11 @@ export const environment = {
   // you dont have an smtp server and you want to do a single user instance? set this to true!
   disableRequireSendEmail: ${{DISABLE_REQUIRE_SEND_EMAIL:-false}},
   // if someone is trying to scrap your place you can send a funny message in some petitions (attacks to the frontend)
-  blockedIps: ${{BLOCKED_IPS:-[]}},
+  blockedIps: ${{BLOCKED_IPS:-[]}} as string[],
   // do you want to manually review registrations or have them open? We advice to leave this one to true
   reviewRegistrations: ${{REVIEW_REGISTRATIONS:-true}},
   // if the blocklist youre using turns out to be biased you can tell the script that loads the block host to do not block these hosts
-  ignoreBlockHosts: ${{IGNORE_BLOCK_HOSTS:-[]}},
+  ignoreBlockHosts: ${{IGNORE_BLOCK_HOSTS:-[]}} as string[],
   // default SEO data that will be used when trying to load server data
   defaultSEOData: {
     title: '${{DOMAIN_NAME}}',

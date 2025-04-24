@@ -1,0 +1,32 @@
+name: "TypeScript"
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  check:
+    name: Test backend for TypeScript compliance
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - uses: actions/setup-node@v4
+      with:
+        node-version: 20
+
+    - name: Generate template config
+      working-directory: ./packages/backend
+      run: |
+        cp environment.example.ts environment.ts
+        perl -pi -e 's/\$\{\{([_A-Z]+):-(.*)\}\}/$ENV{$1}||$2/ge' environment.ts
+        perl -pi -e 's/\$\{\{([_A-Z]+)\}\}/$ENV{$1}/g' environment.ts
+
+    - run: npm install
+      working-directory: ./packages/backend
+
+    - run: npm run type-check
+      working-directory: ./packages/backend

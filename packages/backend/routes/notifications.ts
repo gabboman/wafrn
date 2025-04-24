@@ -18,7 +18,7 @@ import {
   User,
   UserEmojiRelation,
   UserLikesPostRelations
-} from '../db.js'
+} from '../models/index.js'
 import { authenticateToken } from '../utils/authenticateToken.js'
 
 import { environment } from '../environment.js'
@@ -194,8 +194,10 @@ export default function notificationRoutes(app: Application) {
 
   app.get('/api/v2/notificationsCount', authenticateToken, async (req: AuthorizedRequest, res: Response) => {
     const userId = req.jwtData?.userId ? req.jwtData?.userId : '00000000-0000-0000-0000-000000000000'
+
+    const user = await User.findByPk(userId)
     const blockedUsers = await getBlockedIds(userId)
-    const startCountDate = (await User.findByPk(userId))?.lastTimeNotificationsCheck
+    const startCountDate = user?.lastTimeNotificationsCheck
     const mutedPostIds = (await getMutedPosts(userId)).concat(await getMutedPosts(userId, true))
     const notificationsCount = await Notification.count({
       where: {
@@ -224,8 +226,8 @@ export default function notificationRoutes(app: Application) {
         accepted: false
       }
     })
-    let reports = 0
-    let usersAwaitingApproval = 0
+    let reports = Promise.resolve(0)
+    let usersAwaitingApproval = Promise.resolve(0)
 
     if (req.jwtData?.role === 10) {
       // well the user is an admin!

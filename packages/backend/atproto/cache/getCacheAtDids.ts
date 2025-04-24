@@ -1,4 +1,4 @@
-import { Follows, User } from '../../db.js'
+import { Follows, User } from '../../models/index.js'
 import { Op } from 'sequelize'
 import { getAllLocalUserIds } from '../../utils/cacheGetters/getAllLocalUserIds.js'
 import { cache } from 'sharp'
@@ -56,12 +56,12 @@ async function getCacheAtDids(
       }
     })
     const followedUsersLocalIds = new Set<string>(dids.map((elem) => elem.id).filter((elem) => elem != ''))
-    const localUserDids = new Set<string>(localUsersWithDid.map((elem) => elem.bskyDid).filter((elem) => elem != ''))
+    const localUserDids = new Set<string>(localUsersWithDid.map((elem) => elem.bskyDid || '').filter((elem) => elem != ''))
     const followedDids = new Set<string>(
-      dids
-        .map((elem) => elem.bskyDid)
-        .concat(localUserDids)
-        .filter((elem) => elem != '')
+      [...dids
+        .map((elem) => elem.bskyDid || '')
+        .filter((elem) => elem != ''),
+      ...localUserDids]
     )
 
     cacheResult = {

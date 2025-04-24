@@ -1,5 +1,5 @@
 import { Queue } from 'bullmq'
-import { User } from '../../db.js'
+import { User } from '../../models/index.js'
 import { getRemoteActor } from '../activitypub/getRemoteActor.js'
 import { redisCache } from '../redis.js'
 import { getUserIdFromRemoteId } from './getUserIdFromRemoteId.js'
@@ -26,7 +26,7 @@ async function getKey(remoteUserUrl: string, adminUser: any): Promise<{ key?: an
     const userId = await getUserIdFromRemoteId(remoteUserUrl)
     if (userId && userId !== '') {
       return {
-        key: (await User.findByPk(userId)).publicKey
+        key: (await User.findByPk(userId))?.publicKey
       }
     } else {
       await queue.add(

@@ -1,4 +1,4 @@
-import { Follows, Notification } from '../../../db.js'
+import { Follows, Notification } from '../../../models/index.js'
 import { activityPubObject } from '../../../interfaces/fediverse/activityPubObject.js'
 import { createNotification } from '../../pushNotifications.js'
 import { acceptRemoteFollow } from '../acceptRemoteFollow.js'

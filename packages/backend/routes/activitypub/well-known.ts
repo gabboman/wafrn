@@ -1,7 +1,7 @@
 import { Application, Request, Response } from 'express'
 import { Op } from 'sequelize'
 import sequelize from 'sequelize/lib/sequelize'
-import { User, Post } from '../../db.js'
+import { User, Post } from '../../models/index.js'
 import { environment } from '../../environment.js'
 import { getAllLocalUserIds } from '../../utils/cacheGetters/getAllLocalUserIds.js'
 import { return404 } from '../../utils/return404.js'
@@ -30,9 +30,7 @@ function wellKnownRoutes(app: Application) {
           ? urlQueryResource.slice(5).slice(0, -(environment.instanceUrl.length + 1))
           : urlQueryResource.slice(`acct:${environment.frontendUrl}/fediverse/blog/`.length)
         const user = await User.findOne({
-          where: {
-            literal: sequelize.where(sequelize.fn('lower', sequelize.col('url')), userUrl.toLowerCase())
-          }
+          where: sequelize.where(sequelize.fn('lower', sequelize.col('url')), userUrl.toLowerCase())
         })
         if (!user) {
           return404(res)

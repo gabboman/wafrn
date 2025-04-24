@@ -1,4 +1,4 @@
-import { Emoji, UserEmojiRelation } from '../../db.js'
+import { Emoji, UserEmojiRelation } from '../../models/index.js'
 
 async function processUserEmojis(user: any, fediEmojis: any[]) {
   await UserEmojiRelation.destroy({

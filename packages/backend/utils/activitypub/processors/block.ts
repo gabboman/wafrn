@@ -1,4 +1,4 @@
-import { Blocks } from '../../../db.js'
+import { Blocks } from '../../../models/index.js'
 import { activityPubObject } from '../../../interfaces/fediverse/activityPubObject.js'
 import { redisCache } from '../../redis.js'
 import { getPostThreadRecursive } from '../getPostThreadRecursive.js'

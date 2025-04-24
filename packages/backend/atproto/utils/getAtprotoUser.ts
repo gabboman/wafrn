@@ -1,5 +1,5 @@
 import { getAtProtoSession } from './getAtProtoSession.js'
-import { sequelize, User } from '../../db.js'
+import { sequelize, User } from '../../models/index.js'
 import { ProfileViewBasic } from '@atproto/api/dist/client/types/app/bsky/actor/defs.js'
 import { Model, Op } from 'sequelize'
 import { environment } from '../../environment.js'
@@ -7,7 +7,7 @@ import _ from 'underscore'
 import { wait } from '../../utils/wait.js'
 import { logger } from '../../utils/logger.js'
 
-async function forcePopulateUsers(dids: string[], localUser: Model<any, any>) {
+async function forcePopulateUsers(dids: string[], localUser: User) {
   const userFounds = await User.findAll({
     where: {
       bskyDid: {
@@ -47,23 +47,21 @@ async function forcePopulateUsers(dids: string[], localUser: Model<any, any>) {
   }
 }
 
-async function getAtprotoUser(handle: string, localUser: Model<any, any>, petitionData?: ProfileViewBasic) {
+async function getAtprotoUser(handle: string, localUser: User, petitionData?: ProfileViewBasic) {
   // we check if we found the user
   let userFound =
     handle == 'handle.invalid'
       ? undefined
       : await User.findOne({
-          where: {
-            [Op.or]: [
-              {
-                bskyDid: handle
-              },
-              {
-                literal: sequelize.where(sequelize.fn('lower', sequelize.col('url')), handle.toLowerCase())
-              }
-            ]
-          }
-        })
+        where: {
+          [Op.or]: [
+            {
+              bskyDid: handle
+            },
+            sequelize.where(sequelize.fn('lower', sequelize.col('url')), handle.toLowerCase())
+          ]
+        }
+      })
   // sometimes we can get the dids and if its a local user we just return it and thats it
   if (userFound && !userFound.url.startsWith('@')) {
     return userFound
@@ -78,9 +76,7 @@ async function getAtprotoUser(handle: string, localUser: Model<any, any>, petiti
       return
     }
     return User.findOne({
-      where: {
-        literal: sequelize.where(sequelize.fn('lower', sequelize.col('url')), userUrl)
-      }
+      where: sequelize.where(sequelize.fn('lower', sequelize.col('url')), userUrl)
     })
   }
   const agent = await getAtProtoSession(localUser)
@@ -104,10 +100,10 @@ async function getAtprotoUser(handle: string, localUser: Model<any, any>, petiti
       url: '@' + (data.handle === 'handle.invalid' ? `handle.invalid${data.did}` : data.handle),
       name: data.displayName ? data.displayName : data.handle,
       avatar: data.avatar,
-      description: data.description,
-      followingCount: data.followsCount,
-      followerCount: data.followersCount,
-      headerImage: data.banner,
+      description: data.description as string,
+      followingCount: data.followsCount as number,
+      followerCount: data.followersCount as number,
+      headerImage: data.banner as string,
       // bsky does not has this function lol
       manuallyAcceptsFollows: false,
       updatedAt: new Date(),
@@ -151,9 +147,7 @@ async function internalGetDBUser(did: string, url: string) {
         {
           bskyDid: did
         },
-        {
-          literal: sequelize.where(sequelize.fn('lower', sequelize.col('url')), url.toLowerCase())
-        }
+        sequelize.where(sequelize.fn('lower', sequelize.col('url')), url.toLowerCase())
       ]
     }
   })

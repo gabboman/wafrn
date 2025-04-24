@@ -17,7 +17,7 @@ import {
   UserBookmarkedPosts,
   UserEmojiRelation,
   UserLikesPostRelations
-} from '../db.js'
+} from '../models/index.js'
 import getPosstGroupDetails from './getPostGroupDetails.js'
 import getFollowedsIds from './cacheGetters/getFollowedsIds.js'
 import { Queue } from 'bullmq'
@@ -38,7 +38,7 @@ const updateMediaDataQueue = new Queue('processRemoteMediaData', {
 
 async function getQuotes(
   postIds: string[]
-): Promise<{ quoterPostId: string; quotedPostId: string; createdAt: Date }[]> {
+): Promise<Quotes[]> {
   return await Quotes.findAll({
     where: {
       quoterPostId: {
@@ -138,12 +138,12 @@ async function getBookmarks(postIds: string[], userId: string) {
 }
 
 async function getEmojis(input: { userIds: string[]; postIds: string[] }): Promise<{
-  userEmojiRelation: any[]
-  postEmojiRelation: any[]
-  postEmojiReactions: any[]
-  emojis: []
+  userEmojiRelation: UserEmojiRelation[]
+  postEmojiRelation: PostEmojiRelations[]
+  postEmojiReactions: EmojiReaction[]
+  emojis: Emoji[]
 }> {
-  let postEmojisIds = PostEmojiRelations.findAll({
+  let postEmojisIdsPromise = PostEmojiRelations.findAll({
     attributes: ['emojiId', 'postId'],
     where: {
       postId: {
@@ -152,7 +152,7 @@ async function getEmojis(input: { userIds: string[]; postIds: string[] }): Promi
     }
   })
 
-  let postEmojiReactions = EmojiReaction.findAll({
+  let postEmojiReactionsPromise = EmojiReaction.findAll({
     attributes: ['emojiId', 'postId', 'userId', 'content'],
     where: {
       postId: {
@@ -161,7 +161,7 @@ async function getEmojis(input: { userIds: string[]; postIds: string[] }): Promi
     }
   })
 
-  let userEmojiId = UserEmojiRelation.findAll({
+  let userEmojiIdPromise = UserEmojiRelation.findAll({
     attributes: ['emojiId', 'userId'],
     where: {
       userId: {
@@ -170,19 +170,19 @@ async function getEmojis(input: { userIds: string[]; postIds: string[] }): Promi
     }
   })
 
-  await Promise.all([postEmojisIds, userEmojiId, postEmojiReactions])
-  postEmojisIds = await postEmojisIds
-  userEmojiId = await userEmojiId
-  postEmojiReactions = await postEmojiReactions
+  await Promise.all([postEmojisIdsPromise, userEmojiIdPromise, postEmojiReactionsPromise])
+  let postEmojisIds = await postEmojisIdsPromise
+  let userEmojiId = await userEmojiIdPromise
+  let postEmojiReactions = await postEmojiReactionsPromise
 
-  const emojiIds = []
+  const emojiIds: string[] = ([] as string[])
     .concat(postEmojisIds.map((elem: any) => elem.emojiId))
     .concat(userEmojiId.map((elem: any) => elem.emojiId))
     .concat(postEmojiReactions.map((reaction: any) => reaction.emojiId))
   return {
-    userEmojiRelation: await userEmojiId,
-    postEmojiRelation: await postEmojisIds,
-    postEmojiReactions: await postEmojiReactions,
+    userEmojiRelation: userEmojiId,
+    postEmojiRelation: postEmojisIds,
+    postEmojiReactions: postEmojiReactions,
     emojis: await Emoji.findAll({
       attributes: ['id', 'url', 'external', 'name'],
       where: {
@@ -304,18 +304,18 @@ async function getUnjointedPosts(postIdsInput: string[], posterId: string) {
   })
   const postWithNotes = getPosstGroupDetails(posts)
   await Promise.all([emojis, users, polls, medias, tags, postWithNotes])
-  const hostsIds = (await users).filter((elem) => elem.federatedHostId).map((elem) => federatedHostId)
+  const hostsIds = (await users).filter((elem) => elem.federatedHostId).map((elem) => elem.federatedHostId)
   const blockedHosts = await FederatedHost.findAll({
     where: {
       id: {
-        [Op.in]: hostsIds
+        [Op.in]: hostsIds as string[]
       },
       blocked: true
     }
   })
   const blockedHostsIds = blockedHosts.map((elem) => elem.id)
   const bannedUserIds = (await users)
-    .filter((elem) => elem.banned || blockedHostsIds.includes(elem.federatedHostId))
+    .filter((elem) => elem.banned || elem.federatedHostId && blockedHostsIds.includes(elem.federatedHostId))
     .map((elem) => elem.id)
   const usersFollowedByPoster = await getFollowedsIds(posterId)
   const tagsAwaited = await tags

@@ -1,5 +1,5 @@
 import { Sequelize } from 'sequelize'
-import { User, sequelize } from '../db.js'
+import { User, sequelize } from '../models/index.js'
 import { Op } from 'sequelize'
 import { generateKeyPairSync } from 'crypto'
 

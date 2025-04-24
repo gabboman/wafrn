@@ -1,5 +1,5 @@
 import { Op } from 'sequelize'
-import { User } from '../../db.js'
+import { User } from '../../models/index.js'
 import { wait } from '../wait.js'
 import sendActivationEmail from '../sendActivationEmail.js'
 
@@ -18,6 +18,9 @@ async function sendMail() {
   })
 
   for await (const user of users) {
+    if (!user.email)
+      continue;
+
     const subject = `Wafrn monthly propaganda for ${user.url}! More themes! More jank! More herobrine!`
     const body = `
     <h1>Hello ${user.url}!</h1>

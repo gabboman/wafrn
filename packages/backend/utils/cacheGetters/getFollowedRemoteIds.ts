@@ -1,5 +1,5 @@
 import { Op } from 'sequelize'
-import { Follows, User } from '../../db.js'
+import { Follows, User } from '../../models/index.js'
 import { redisCache } from '../redis.js'
 import getFollowedsIds from './getFollowedsIds.js'
 import { environment } from '../../environment.js'

@@ -1,5 +1,5 @@
 import { Op } from 'sequelize'
-import { Blocks, Mutes, User } from '../../db.js'
+import { Blocks, Mutes, User } from '../../models/index.js'
 import { redisCache } from '../redis.js'
 
 export default async function getBlockedIds(
@@ -22,20 +22,20 @@ export default async function getBlockedIds(
           // if only user blocks we ask twice for the users that only the user has blocked
           onlyUserBlocks
             ? {
-                blockerId: userId
-              }
+              blockerId: userId
+            }
             : {
-                blockedId: userId
-              }
+              blockedId: userId
+            }
         ]
       }
     })
     const mutes = includeMutes
       ? Mutes.findAll({
-          where: {
-            muterId: userId
-          }
-        })
+        where: {
+          muterId: userId
+        }
+      })
       : []
     await Promise.all([blocks, mutes])
     const res = (await blocks)

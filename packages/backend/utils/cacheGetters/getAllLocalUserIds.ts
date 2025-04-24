@@ -1,5 +1,5 @@
 import { Op } from 'sequelize'
-import { User, sequelize } from '../../db.js'
+import { User, sequelize } from '../../models/index.js'
 import { redisCache } from '../redis.js'
 
 async function getAllLocalUserIds(): Promise<string[]> {

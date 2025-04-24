@@ -3,10 +3,9 @@
 // the MONSTER QUERY we are using now doesnt scale well on threads with lots of users
 
 import { Application, Response } from 'express'
-import { authenticateToken } from '../utils/authenticateToken.js'
 import optionalAuthentication from '../utils/optionalAuthentication.js'
 import AuthorizedRequest from '../interfaces/authorizedRequest.js'
-import { FederatedHost, Post, PostMentionsUserRelation, sequelize, User } from '../db.js'
+import { FederatedHost, Post, PostMentionsUserRelation, sequelize, User } from '../models/index.js'
 import { Op } from 'sequelize'
 import getStartScrollParam from '../utils/getStartScrollParam.js'
 import { environment } from '../environment.js'

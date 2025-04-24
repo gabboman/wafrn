@@ -1,5 +1,5 @@
 import { Application, Response } from 'express'
-import { User, Mutes, FederatedHost, ServerBlock } from '../db.js'
+import { User, Mutes, FederatedHost, ServerBlock } from '../models/index.js'
 import { authenticateToken } from '../utils/authenticateToken.js'
 import { logger } from '../utils/logger.js'
 import AuthorizedRequest from '../interfaces/authorizedRequest.js'
@@ -11,7 +11,7 @@ export default function blockUserServerRoutes(app: Application) {
     try {
       const posterId = req.jwtData?.userId
       const userBlocker = await User.findByPk(posterId)
-      if (req.body?.userId) {
+      if (userBlocker && req.body?.userId) {
         const userToGetServerBlocked = await User.findByPk(req.body.userId, {
           include: [
             {
@@ -41,10 +41,12 @@ export default function blockUserServerRoutes(app: Application) {
   app.post('/api/unblockUserServer', authenticateToken, async (req: AuthorizedRequest, res: Response) => {
     let success = false
     const posterId = req.jwtData?.userId
-    if (req.body?.userId) {
+    if (posterId && req.body?.userId) {
       const userUnmuted = await User.findByPk(req.body.userId)
-      userUnmuted.removeMuter(posterId)
-      success = true
+      if (userUnmuted) {
+        userUnmuted.removeMuter(posterId)
+        success = true
+      }
     }
     res.send({
       success
@@ -75,7 +77,7 @@ export default function blockUserServerRoutes(app: Application) {
   })
 
   app.post('/api/unblockServer', authenticateToken, async (req: AuthorizedRequest, res: Response) => {
-    const serverToBeUnblocked = req.query.id
+    const serverToBeUnblocked = req.query.id as string
     const userUnblocker = req.jwtData?.userId as string
     await ServerBlock.destroy({
       where: {

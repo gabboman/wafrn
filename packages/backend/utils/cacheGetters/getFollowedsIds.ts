@@ -1,5 +1,5 @@
 import { Op } from 'sequelize'
-import { Blocks, Follows, User } from '../../db.js'
+import { Blocks, Follows, User } from '../../models/index.js'
 import getBlockedIds from './getBlockedIds.js'
 import { redisCache } from '../redis.js'
 

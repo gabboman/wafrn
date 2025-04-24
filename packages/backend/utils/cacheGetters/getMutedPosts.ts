@@ -1,5 +1,5 @@
 import { Op } from 'sequelize'
-import { sequelize, SilencedPost } from '../../db.js'
+import { PostAncestor, sequelize, SilencedPost } from '../../models/index.js'
 import { redisCache } from '../redis.js'
 
 async function getMutedPosts(userId: string, superMute = false): Promise<Array<string>> {
@@ -14,8 +14,8 @@ async function getMutedPosts(userId: string, superMute = false): Promise<Array<s
         superMuted: superMute
           ? true
           : {
-              [Op.in]: [true, false, null, undefined] // yeah ok this is a bit dirty haha but its only one code path
-            }
+            [Op.in]: [true, false, null, undefined] as any // yeah ok this is a bit dirty haha but its only one code path
+          }
       },
       attributes: ['postId']
     })
@@ -24,7 +24,7 @@ async function getMutedPosts(userId: string, superMute = false): Promise<Array<s
       const muted = res.map((elem) => "'" + (elem ? elem : '00000000-0000-0000-0000-000000000000') + "'")
       const mutedPosts = await sequelize.query(
         `SELECT "postsId" FROM "postsancestors" where "ancestorId" IN (${muted})`
-      )
+      ) as PostAncestor[][]
       res = mutedPosts[0].map((elem) => elem.postsId)
     }
     await redisCache.set((superMute ? 'superMutedPosts:' : 'mutedPosts:') + userId, JSON.stringify(res), 'EX', 600)
@@ -69,7 +69,7 @@ async function getMutedPostsMultiple(userIds: string[], superMute = false) {
       if (superMute && newPostIds.length) {
         const mutedPosts = await sequelize.query(
           `SELECT "postsId" FROM "postsancestors" where "ancestorId" IN (${newPostIds.map((elem) => "'" + elem + "'")})`
-        )
+        ) as PostAncestor[][]
         newPostIds = mutedPosts[0].map((elem) => elem.postsId)
       }
       await redisCache.set(

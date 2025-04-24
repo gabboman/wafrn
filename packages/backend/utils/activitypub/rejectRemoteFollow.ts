@@ -1,5 +1,5 @@
 import { object } from 'underscore'
-import { Follows, User } from '../../db.js'
+import { Follows, User } from '../../models/index.js'
 import { environment } from '../../environment.js'
 import { activityPubObject } from '../../interfaces/fediverse/activityPubObject.js'
 import { postPetitionSigned } from './postPetitionSigned.js'
@@ -13,6 +13,9 @@ async function rejectremoteFollow(userId: string, remoteUserId: string) {
       followerId: remoteUserId
     }
   })
+
+  if (!localUser || !remoteUser || !followToBeDestroyed)
+    return;
 
   const apObj: activityPubObject = {
     '@context': 'https://www.w3.org/ns/activitystreams',

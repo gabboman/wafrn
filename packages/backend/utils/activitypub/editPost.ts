@@ -1,5 +1,5 @@
 import { Op } from 'sequelize'
-import { FederatedHost, PostHostView, RemoteUserPostView, User } from '../../db.js'
+import { FederatedHost, PostHostView, RemoteUserPostView, User } from '../../models/index.js'
 import { environment } from '../../environment.js'
 import { postToJSONLD } from './postToJSONLD.js'
 import { LdSignature } from './rsa2017.js'
@@ -21,6 +21,9 @@ const sendPostQueue = new Queue('sendPostToInboxes', {
 })
 async function federatePostHasBeenEdited(postToEdit: any) {
   const user = await User.findByPk(postToEdit.userId)
+  if (!user)
+    return;
+
   await redisCache.del('postAndUser:' + postToEdit.id)
   const postAsJSONLD = await postToJSONLD(postToEdit.id)
   const objectToSend = {
@@ -40,7 +43,7 @@ async function federatePostHasBeenEdited(postToEdit: any) {
       postId: postToEdit.id
     }
   })).map(elem => elem.federatedHostId);
-  let serversToSendThePost = FederatedHost.findAll({
+  let serversToSendThePostPromise = FederatedHost.findAll({
     where: {
       id: {
         [Op.in]: serversToSendThePostIds
@@ -52,16 +55,17 @@ async function federatePostHasBeenEdited(postToEdit: any) {
       postId: postToEdit.id
     }
   })).map(elem => elem.userId)
-  let usersToSendThePost = User.findAll({
+  let usersToSendThePostPromise = User.findAll({
     where: {
       id: {
         [Op.in]: usersToSendPostId
       }
     }
   })
-  await Promise.all([serversToSendThePost, usersToSendThePost])
-  serversToSendThePost = await serversToSendThePost
-  usersToSendThePost = await usersToSendThePost
+
+  await Promise.all([serversToSendThePostPromise, usersToSendThePostPromise])
+  let serversToSendThePost = await serversToSendThePostPromise
+  let usersToSendThePost = await usersToSendThePostPromise
   let urlsToSendPost: string[] = [];
 
   if (serversToSendThePost) {
@@ -70,6 +74,9 @@ async function federatePostHasBeenEdited(postToEdit: any) {
   if (usersToSendThePost) {
     urlsToSendPost = urlsToSendPost.concat(usersToSendThePost.map((usr: any) => usr.remoteInbox))
   }
+  if (!user.privateKey)
+    return;
+
   const ldSignature = new LdSignature()
   const bodySignature = await ldSignature.signRsaSignature2017(
     objectToSend,

@@ -1,5 +1,5 @@
 import { Op } from 'sequelize'
-import { Post, User } from '../../db.js'
+import { Post, User } from '../../models/index.js'
 import { environment } from '../../environment.js'
 import { redisCache } from '../redis.js'
 

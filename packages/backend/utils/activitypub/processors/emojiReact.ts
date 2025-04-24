@@ -1,4 +1,4 @@
-import { Emoji, EmojiReaction, Notification } from '../../../db.js'
+import { Emoji, EmojiReaction, Notification } from '../../../models/index.js'
 import { activityPubObject } from '../../../interfaces/fediverse/activityPubObject.js'
 import { createNotification } from '../../pushNotifications.js'
 import { getPostThreadRecursive } from '../getPostThreadRecursive.js'
@@ -14,18 +14,18 @@ async function EmojiReactActivity(body: activityPubObject, remoteUser: any, user
     emojiToAdd = existingEmoji
       ? existingEmoji
       : (
-          await Emoji.findOrCreate({
-            where: {
-              id: emojiRemote.id,
-              name: emojiRemote.name,
-              url: emojiRemote.icon?.url,
-              external: true
-            }
-          })
-        )[0]
+        await Emoji.findOrCreate({
+          where: {
+            id: emojiRemote.id,
+            name: emojiRemote.name,
+            url: emojiRemote.icon?.url,
+            external: true
+          }
+        })
+      )[0]
   }
   if (postToReact && apObject.content) {
-    const [created, reaction] = await EmojiReaction.findOrCreate({
+    const [reaction, created] = await EmojiReaction.findOrCreate({
       where: {
         remoteId: apObject.id
       },

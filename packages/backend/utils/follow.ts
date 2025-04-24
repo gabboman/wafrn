@@ -1,5 +1,5 @@
 import { Op } from 'sequelize'
-import { Blocks, Follows, Notification, User } from '../db.js'
+import { Blocks, Follows, Notification, User } from '../models/index.js'
 import { logger } from './logger.js'
 import { Response } from 'express'
 import { remoteFollow } from './activitypub/remoteFollow.js'
@@ -44,13 +44,13 @@ async function follow(
       res = false
       return res
     }
-    const existingFollow = await Follows.findOne({
+    const existingFollow = userFollowed && await Follows.findOne({
       where: {
         followerId: followerId,
         followedId: userFollowed.id
       }
     })
-    if (!existingFollow) {
+    if (userFollowed && !existingFollow) {
       const follow = await Follows.create({
         followerId: followerId,
         followedId: userFollowed.id,

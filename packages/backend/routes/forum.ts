@@ -2,7 +2,7 @@ import optionalAuthentication from '../utils/optionalAuthentication.js'
 import checkIpBlocked from '../utils/checkIpBlocked.js'
 import AuthorizedRequest from '../interfaces/authorizedRequest.js'
 import { Application, Request, Response } from 'express'
-import { Post, QuestionPoll, QuestionPollAnswer, QuestionPollQuestion, User, sequelize } from '../db.js'
+import { Post, QuestionPoll, QuestionPollAnswer, QuestionPollQuestion, User, sequelize } from '../models/index.js'
 import { Op, QueryTypes } from 'sequelize'
 import {
   getBookmarks,

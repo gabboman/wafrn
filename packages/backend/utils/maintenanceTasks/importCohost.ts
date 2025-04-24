@@ -5,7 +5,7 @@ import fs from 'fs/promises'
 import showdown from 'showdown'
 import optimizeMedia from '../optimizeMedia.js'
 import generateRandomString from '../generateRandomString.js'
-import { Ask, Media, Post } from '../../db.js'
+import { Ask, Media, Post } from '../../models/index.js'
 const markdownConverter = new showdown.Converter({
     simplifiedAutoLink: true,
     literalMidWordUnderscores: true,

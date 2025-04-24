@@ -1,6 +1,6 @@
 import { Job } from 'bullmq'
 import { logger } from '../logger.js'
-import { Blocks, Emoji, EmojiReaction, FederatedHost, Follows, Post, User, UserLikesPostRelations } from '../../db.js'
+import { Blocks, Emoji, EmojiReaction, FederatedHost, Follows, Post, User, UserLikesPostRelations } from '../../models/index.js'
 import { getRemoteActor } from '../activitypub/getRemoteActor.js'
 import { signAndAccept } from '../activitypub/signAndAccept.js'
 import { removeUser } from '../activitypub/removeUser.js'
@@ -27,6 +27,9 @@ import { flagActivity } from '../activitypub/processors/flag.js'
 async function inboxWorker(job: Job) {
   try {
     const user = await User.findByPk(job.data.petitionBy)
+    if (!user)
+      return
+
     const body = job.data.petition
     const req = { body: body }
     // little hack that should be fixed later
@@ -51,7 +54,7 @@ async function inboxWorker(job: Job) {
     const userBlocks: string[] = await getBlockedIds(user.id, false, true)
     const blocksExisting = userBlocks.includes(remoteUser.id) ? 1 : 0
     const blockedServersData = await getUserBlockedServers(user.id)
-    const blocksServers = blockedServersData.find((elem: any) => elem.id === host.id) ? 1 : 0
+    const blocksServers = blockedServersData.find((elem: any) => elem.id === host?.id) ? 1 : 0
     if (
       (!remoteUser?.banned && !host?.blocked && blocksExisting + blocksServers === 0) ||
       req.body.type === 'Undo' ||

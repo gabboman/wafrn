@@ -1,5 +1,5 @@
 /* eslint-disable guard-for-in */
-import { Post } from '../db.js'
+import { Post } from '../models/index.js'
 import { Op } from 'sequelize'
 
 export default async function getPosstGroupDetails(postGroup: any[]) {

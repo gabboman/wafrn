@@ -13,7 +13,7 @@ import {
   Media,
   Quotes,
   PostTag
-} from '../../db.js'
+} from '../../models/index.js'
 import { environment } from '../../environment.js'
 import { Job, Queue } from 'bullmq'
 import { Agent, BskyAgent, CredentialSession } from '@atproto/api'
@@ -51,11 +51,14 @@ async function prepareSendRemotePostWorker(job: Job) {
   // TODO fix this! this is dirtier than my unwashed gim clothes
   await wait(1500)
   //async function sendRemotePost(localUser: any, post: any) {
-  const post = await Post.findByPk(job.id) as Model<any, any>
-  const parent = post.parentId ? await Post.findByPk(post.parentId) as Model<any, any> : undefined;
+  const post = await Post.findByPk(job.id)
+  if (!post)
+    return
+
+  const parent = post.parentId ? await Post.findByPk(post.parentId) : undefined;
   const parentPoster = parent ? await User.findByPk(parent.userId) : undefined
-  const localUser = await User.findByPk(post.userId) as Model<any, any>
-  if (post.privacy === 0 && localUser.enableBsky && environment.enableBsky) {
+  const localUser = await User.findByPk(post.userId)
+  if (post.privacy === 0 && localUser?.enableBsky && environment.enableBsky) {
     try {
       // if parent has no bsky data we dont reblog
       if (!parent || parent.bskyUri) {
@@ -80,7 +83,7 @@ async function prepareSendRemotePostWorker(job: Job) {
           })
           if (mediaCount + quotesCount + tagsCount === 0) {
             isReblog = true;
-            if (parent.bskyUri) {
+            if (parent?.bskyUri) {
               const { uri } = await agent.repost(parent.bskyUri, parent.bskyCid)
               post.bskyUri = uri;
               await post.save();
@@ -102,9 +105,9 @@ async function prepareSendRemotePostWorker(job: Job) {
     }
   }
   // we check if we need to send the post to fedi
-  if (!parent || (!parent.bskyUri || !parentPoster.url.startsWith('@'))) {
+  if (localUser && (!parent || (!parent.bskyUri || !parentPoster?.url.startsWith('@')))) {
     // servers with shared inbox
-    let serversToSendThePost
+    let serversToSendThePost: FederatedHost[] = []
     const localUserFollowers = await localUser.getFollower()
     const followersServers = [...new Set(localUserFollowers.map((el: any) => el.federatedHostId))]
     // for servers with no shared inbox
@@ -209,50 +212,52 @@ async function prepareSendRemotePostWorker(job: Job) {
 
     const objectToSend = await postToJSONLD(post.id)
     const ldSignature = new LdSignature()
-    const bodySignature = await ldSignature.signRsaSignature2017(
-      objectToSend,
-      localUser.privateKey,
-      `${environment.frontendUrl}/fediverse/blog/${localUser.url.toLocaleLowerCase()}`,
-      environment.instanceUrl,
-      new Date(post.createdAt)
-    )
+    if (localUser.privateKey) {
+      const bodySignature = await ldSignature.signRsaSignature2017(
+        objectToSend,
+        localUser.privateKey,
+        `${environment.frontendUrl}/fediverse/blog/${localUser.url.toLocaleLowerCase()}`,
+        environment.instanceUrl,
+        new Date(post.createdAt)
+      )
 
-    const objectToSendComplete = { ...objectToSend, signature: bodySignature.signature }
-    if (mentionedUsers?.length > 0) {
-      const mentionedInboxes = mentionedUsers.map((elem: any) => elem.remoteInbox)
-      for await (const remoteInbox of mentionedInboxes) {
-        try {
-          const response = await postPetitionSigned(objectToSendComplete, localUser, remoteInbox)
-        } catch (error) {
-          logger.debug(error)
+      const objectToSendComplete = { ...objectToSend, signature: bodySignature.signature }
+      if (mentionedUsers?.length > 0) {
+        const mentionedInboxes = mentionedUsers.map((elem: any) => elem.remoteInbox)
+        for await (const remoteInbox of mentionedInboxes) {
+          try {
+            const response = await postPetitionSigned(objectToSendComplete, localUser, remoteInbox)
+          } catch (error) {
+            logger.debug(error)
+          }
         }
       }
-    }
 
-    if (serversToSendThePost?.length > 0 || usersToSendThePost?.length > 0) {
-      let inboxes: string[] = []
-      inboxes = inboxes.concat(serversToSendThePost.map((elem: any) => elem.publicInbox))
-      usersToSendThePost?.forEach((server: any) => {
-        inboxes = inboxes.concat(server.users.map((elem: any) => elem.remoteInbox))
-      })
-      const addSendPostToQueuePromises: Promise<any>[] = []
-      logger.debug(`Preparing send post. ${inboxes.length} inboxes`)
-      for (const inboxChunk of inboxes) {
-        addSendPostToQueuePromises.push(
-          sendPostQueue.add(
-            'sencChunk',
-            {
-              objectToSend: objectToSendComplete,
-              petitionBy: localUser.dataValues,
-              inboxList: inboxChunk
-            },
-            {
-              priority: 1
-            }
+      if (serversToSendThePost?.length > 0 || usersToSendThePost?.length > 0) {
+        let inboxes: string[] = []
+        inboxes = inboxes.concat(serversToSendThePost.map((elem: any) => elem.publicInbox))
+        usersToSendThePost?.forEach((server: any) => {
+          inboxes = inboxes.concat(server.users.map((elem: any) => elem.remoteInbox))
+        })
+        const addSendPostToQueuePromises: Promise<any>[] = []
+        logger.debug(`Preparing send post. ${inboxes.length} inboxes`)
+        for (const inboxChunk of inboxes) {
+          addSendPostToQueuePromises.push(
+            sendPostQueue.add(
+              'sencChunk',
+              {
+                objectToSend: objectToSendComplete,
+                petitionBy: localUser.dataValues,
+                inboxList: inboxChunk
+              },
+              {
+                priority: 1
+              }
+            )
           )
-        )
+        }
+        await Promise.allSettled(addSendPostToQueuePromises)
       }
-      await Promise.allSettled(addSendPostToQueuePromises)
     }
   }
 
