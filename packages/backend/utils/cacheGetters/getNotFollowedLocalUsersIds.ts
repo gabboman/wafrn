@@ -18,6 +18,10 @@ export default async function getNonFollowedLocalUsersIds(userId: string): Promi
         email: {
           [Op.ne]: null
         },
+        url: {
+          [Op.notLike]: '@%'
+        },
+
         banned: {
           [Op.ne]: true
         }
