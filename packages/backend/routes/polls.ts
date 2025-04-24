@@ -87,7 +87,7 @@ export default function pollRoutes(app: Application) {
               }
             ]
           })
-        ).post.user.url.startsWith('@')
+        )?.post.user.url.startsWith('@')
       ) {
         voteInPoll(posterId, parseInt(pollId))
       }

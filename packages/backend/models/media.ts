@@ -9,7 +9,7 @@ export interface MediaAttributes {
   createdAt?: Date;
   updatedAt?: Date;
   mediaOrder?: number;
-  nsfw?: boolean;
+  NSFW?: boolean;
   description?: string;
   url?: string;
   ipUpload?: string;
@@ -36,11 +36,10 @@ export class Media extends Model<MediaAttributes, MediaAttributes> implements Me
   declare mediaOrder: number;
 
   @Column({
-    field: "NSFW",
     allowNull: true,
     type: DataType.BOOLEAN
   })
-  declare nsfw: boolean;
+  declare NSFW: boolean;
 
   @Column({
     allowNull: true,

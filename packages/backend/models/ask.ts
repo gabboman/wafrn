@@ -9,10 +9,10 @@ export interface AskAttributes {
   createdAt?: Date;
   updatedAt?: Date;
   question?: string;
-  apObject?: string;
+  apObject?: string | null;
   creationIp?: string;
   answered?: boolean;
-  postId?: string;
+  postId?: string | null;
   userAsked?: string;
   userAsker?: string;
 }
@@ -33,7 +33,7 @@ export class Ask extends Model<AskAttributes, AskAttributes> implements AskAttri
     allowNull: true,
     type: DataType.STRING
   })
-  declare apObject: string;
+  declare apObject: string | null;
 
   @Column({
     allowNull: true,
@@ -52,7 +52,7 @@ export class Ask extends Model<AskAttributes, AskAttributes> implements AskAttri
     allowNull: true,
     type: DataType.UUID
   })
-  declare postId: string;
+  declare postId: string | null;
 
   @ForeignKey(() => User)
   @Column({

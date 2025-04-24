@@ -24,7 +24,7 @@ import { PostMentionsUserRelation } from "./postMentionsUserRelation.js";
 import { UserLikesPostRelations } from "./userLikesPostRelations.js";
 import { UserBookmarkedPosts } from "./userBookmarkedPosts.js";
 import { RemoteUserPostView } from "./remoteUserPostView.js";
-import { BelongsToManyAddAssociationMixin, BelongsToManyRemoveAssociationMixin, HasManyRemoveAssociationMixin } from "sequelize";
+import { BelongsToManyAddAssociationMixin, BelongsToManyGetAssociationsMixin, BelongsToManyRemoveAssociationMixin, BelongsToManyRemoveAssociationsMixin, BelongsToManySetAssociationsMixin, HasManyRemoveAssociationMixin } from "sequelize";
 
 export interface UserAttributes {
   id?: string;
@@ -35,19 +35,19 @@ export interface UserAttributes {
   descriptionMarkdown?: string;
   name?: string;
   url: string;
-  nsfw?: boolean;
+  NSFW?: boolean;
   avatar?: string;
   password?: string;
   birthDate?: Date;
   activated?: boolean | null;
-  requestedPasswordReset?: Date;
+  requestedPasswordReset?: Date | null;
   activationCode?: string;
   registerIp?: string;
   lastLoginIp?: string;
   lastTimeNotificationsCheck?: Date;
   privateKey?: string;
   publicKey?: string;
-  federatedHostId?: string;
+  federatedHostId?: string | null;
   remoteInbox?: string;
   remoteId?: string;
   remoteMentionUrl?: string;
@@ -110,12 +110,11 @@ export class User extends Model<UserAttributes, UserAttributes> implements UserA
   declare url: string;
 
   @Column({
-    field: "NSFW",
     allowNull: true,
     type: DataType.BOOLEAN,
     defaultValue: false
   })
-  declare nsfw: boolean;
+  declare NSFW: boolean;
 
   @Column({
     allowNull: true,
@@ -145,7 +144,7 @@ export class User extends Model<UserAttributes, UserAttributes> implements UserA
     allowNull: true,
     type: DataType.DATE
   })
-  declare requestedPasswordReset: Date;
+  declare requestedPasswordReset: Date | null;
 
   @Column({
     allowNull: true,
@@ -188,7 +187,7 @@ export class User extends Model<UserAttributes, UserAttributes> implements UserA
     allowNull: true,
     type: DataType.UUID
   })
-  declare federatedHostId: string;
+  declare federatedHostId: string | null;
 
   @Column({
     allowNull: true,
@@ -348,6 +347,8 @@ export class User extends Model<UserAttributes, UserAttributes> implements UserA
 
   @BelongsToMany(() => Emoji, () => UserEmojiRelation)
   declare emojis: Emoji[];
+  declare setEmojis: BelongsToManySetAssociationsMixin<Emoji, string>
+  declare removeEmojis: BelongsToManyRemoveAssociationsMixin<Emoji, string>
 
   @HasMany(() => Follows, {
     foreignKey: "followerId"
@@ -361,10 +362,12 @@ export class User extends Model<UserAttributes, UserAttributes> implements UserA
 
   @BelongsToMany(() => User, () => Follows, "followedId", "followerId")
   declare follower: User[]
+  declare getFollower: BelongsToManyGetAssociationsMixin<User>
   declare removeFollower: BelongsToManyRemoveAssociationMixin<User, string>
 
   @BelongsToMany(() => User, () => Follows, "followerId", "followedId")
   declare followed: User[]
+  declare getFollowed: BelongsToManyGetAssociationsMixin<User>
   declare removeFollowed: BelongsToManyRemoveAssociationMixin<User, string>
 
   @HasMany(() => Blocks, {
@@ -397,8 +400,8 @@ export class User extends Model<UserAttributes, UserAttributes> implements UserA
 
   @BelongsToMany(() => User, () => Mutes, "mutedId", "muterId")
   declare muter: User[]
-  declare removeMuter: BelongsToManyRemoveAssociationMixin<Mutes, string>
-
+  declare addMuter: BelongsToManyAddAssociationMixin<User, string>
+  declare removeMuter: BelongsToManyRemoveAssociationMixin<User, string>
 
   @BelongsToMany(() => User, () => Mutes, "muterId", "mutedId")
   declare muted: User[]

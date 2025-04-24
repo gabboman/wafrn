@@ -1,14 +1,12 @@
 import { Application, Response } from 'express'
-import { Model, Op, Sequelize } from 'sequelize'
+import { Model, Op } from 'sequelize'
 import {
   Ask,
   Blocks,
   BskyInviteCodes,
   Emoji,
-  EmojiCollection,
   FederatedHost,
   Follows,
-  MfaDetails,
   MfaDetails,
   Mutes,
   Post,
@@ -107,9 +105,7 @@ export default function userRoutes(app: Application) {
             where: {
               [Op.or]: [
                 { email: req.body.email.toLowerCase() },
-                {
-                  literal: sequelize.where(sequelize.fn('lower', sequelize.col('url')), req.body.url.toLowerCase())
-                }
+                sequelize.where(sequelize.fn('lower', sequelize.col('url')), req.body.url.toLowerCase())
               ]
             }
           })
@@ -217,12 +213,12 @@ export default function userRoutes(app: Application) {
       let success = false
       try {
         const posterId = req.jwtData?.userId as string
-        const user = (await User.findOne({
+        const user = await User.findOne({
           where: {
             id: posterId
           }
-        })) as Model<any, any>
-        if (req.body) {
+        })
+        if (req.body && user) {
           const { name, description, manuallyAcceptsFollows, options: optionJSON } = req.body
 
           const avaiableEmojis = await getAvaiableEmojis()
@@ -242,8 +238,8 @@ export default function userRoutes(app: Application) {
             userEmojis = userEmojis.concat(avaiableEmojis?.filter((emoji: any) => name.includes(emoji.name)))
           }
 
-          const avatar = req.files.avatar?.[0]
-          const headerImage = req.files.headerImage?.[0]
+          const avatar = (req?.files as any)?.avatar?.[0]
+          const headerImage = (req?.files as any)?.headerImage?.[0]
 
           if (avatar != null) {
             let url = `/${await optimizeMedia(avatar.path, { forceImageExtension: 'webp' })}`
@@ -489,7 +485,7 @@ export default function userRoutes(app: Application) {
     }
   })
 
-  app.post('/api/login/mfa', [loginRateLimiter, optionalAuthentication], async (req: AuthorizedRequest, res) => {
+  app.post('/api/login/mfa', [loginRateLimiter, optionalAuthentication], async (req: AuthorizedRequest, res: any) => {
     let success = false
     try {
       if (req.body?.token && req.jwtData?.mfaStep == 1 && req.jwtData?.email) {
@@ -586,7 +582,7 @@ export default function userRoutes(app: Application) {
   app.post('/api/user/mfa', authenticateToken, async (req: AuthorizedRequest, res) => {
     try {
       if (req.jwtData?.userId && req.body?.type == 'totp') {
-        const totpSettings = {
+        const totpSettings: any = {
           algorithm: 'SHA1',
           digits: 6,
           period: 30,
@@ -762,8 +758,8 @@ export default function userRoutes(app: Application) {
         })
         const serverBlockedQuery = await ServerBlock.count({
           where: {
-            userBlockerId: req.jwtData.userId,
-            blockedServerId: blog.federatedHostId
+            userBlockerId: req.jwtData.userId as string,
+            blockedServerId: blog.federatedHostId as string
           }
         })
         await Promise.all([mutedQuery, blockedQuery, serverBlockedQuery, followed, followers, publicOptions])
@@ -814,22 +810,21 @@ export default function userRoutes(app: Application) {
     const options = getUserOptions(userId)
     const localEmojis = getAvaiableEmojisCache()
     const mutedUsers = getMutedUsers(userId)
-    let user = User.findByPk(req.jwtData?.userId, {
+    let userPromise = User.findByPk(req.jwtData?.userId, {
       attributes: ['banned']
     })
     const silencedPosts = getMutedPosts(userId)
     Promise.all([
-      user,
+      userPromise,
       followedUsers,
       blockedUsers,
-      user,
       notAcceptedFollows,
       options,
       silencedPosts,
       localEmojis,
       mutedUsers
     ])
-    user = await user
+    const user = await userPromise
     if (!user || user.banned) {
       res.sendStatus(401)
     } else {
@@ -913,7 +908,7 @@ export default function userRoutes(app: Application) {
   app.get('/api/user/deleteFollow/:id', authenticateToken, async (req: AuthorizedRequest, res: Response) => {
     const userId = req.jwtData?.userId as string
     const forceUnfollowId = req.params?.id as string
-    let success = true
+    let success = false
     try {
       let follow = await Follows.findOne({
         where: {
@@ -921,14 +916,17 @@ export default function userRoutes(app: Application) {
           followedId: userId
         }
       })
-      if (follow.remoteFollowId) {
-        await rejectremoteFollow(userId, forceUnfollowId)
+      if (follow) {
+        if (follow.remoteFollowId) {
+          await rejectremoteFollow(userId, forceUnfollowId)
+        }
+        await redisCache.del('follows:local:' + forceUnfollowId)
+        await redisCache.del('follows:full:' + forceUnfollowId)
+        await redisCache.del('follows:local:' + userId)
+        await redisCache.del('follows:full:' + userId)
+        await follow.destroy()
+        success = true
       }
-      await redisCache.del('follows:local:' + forceUnfollowId)
-      await redisCache.del('follows:full:' + forceUnfollowId)
-      await redisCache.del('follows:local:' + userId)
-      await redisCache.del('follows:full:' + userId)
-      await follow.destroy()
     } catch (error) {
       logger.debug({
         message: `Remote force unfollow failed`,
@@ -951,15 +949,17 @@ export default function userRoutes(app: Application) {
           followedId: userId
         }
       })
-      if (follow.remoteFollowId) {
-        await acceptRemoteFollow(userId, approvedFollower)
+      if (follow) {
+        if (follow.remoteFollowId) {
+          await acceptRemoteFollow(userId, approvedFollower)
+        }
+        follow.accepted = true
+        await follow.save()
+        await redisCache.del('follows:local:' + approvedFollower)
+        await redisCache.del('follows:full:' + approvedFollower)
+        await redisCache.del('follows:local:' + userId)
+        await redisCache.del('follows:full:' + userId)
       }
-      follow.accepted = 1
-      await follow.save()
-      await redisCache.del('follows:local:' + approvedFollower)
-      await redisCache.del('follows:full:' + approvedFollower)
-      await redisCache.del('follows:local:' + userId)
-      await redisCache.del('follows:full:' + userId)
     } catch (error) {
       logger.debug({
         message: `Accept follow failed`,
@@ -976,9 +976,7 @@ export default function userRoutes(app: Application) {
     const followers = req.query?.followers === 'true'
     if (url) {
       const user = await User.findOne({
-        where: {
-          literal: sequelize.where(sequelize.fn('lower', sequelize.col('url')), url.toLowerCase())
-        }
+        where: sequelize.where(sequelize.fn('lower', sequelize.col('url')), url.toLowerCase())
       })
       if (user) {
         let responseData
@@ -1054,9 +1052,7 @@ export default function userRoutes(app: Application) {
     }
     const url = req.params?.url as string
     const userRecivingAsk = await User.findOne({
-      where: {
-        literal: sequelize.where(sequelize.fn('lower', sequelize.col('url')), url.toLowerCase())
-      }
+      where: sequelize.where(sequelize.fn('lower', sequelize.col('url')), url.toLowerCase())
     })
     if (!userRecivingAsk) {
       res.sendStatus(500)
@@ -1168,7 +1164,7 @@ export default function userRoutes(app: Application) {
   })
 }
 
-async function updateBlueskyProfile(agent: BskyAgent, user: Model<any, any>) {
+async function updateBlueskyProfile(agent: BskyAgent, user: User) {
   await forceUpdateCacheDidsAtThread()
   await getCacheAtDids(true)
   return await agent.upsertProfile(async (existingProfile) => {

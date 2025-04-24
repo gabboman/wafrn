@@ -13,7 +13,7 @@ export default function muteRoutes(app: Application) {
       const userMuter = await User.findByPk(posterId)
       if (req.body?.userId && req.body.userId != req.jwtData?.userId) {
         const userToBeMuted = await User.findByPk(req.body.userId)
-        if (userToBeMuted) {
+        if (userMuter && userToBeMuted) {
           userToBeMuted.addMuter(userMuter)
         }
         await redisCache.del('mutedUsers:' + posterId)
@@ -33,9 +33,11 @@ export default function muteRoutes(app: Application) {
     const posterId = req.jwtData?.userId
     if (req.body?.userId) {
       const userUnmuted = await User.findByPk(req.body.userId)
-      userUnmuted.removeMuter(posterId)
-      success = true
-      await redisCache.del('mutedUsers:' + posterId)
+      if (userUnmuted) {
+        userUnmuted.removeMuter(posterId)
+        success = true
+        await redisCache.del('mutedUsers:' + posterId)
+      }
     }
     res.send({
       success
@@ -65,7 +67,7 @@ export default function muteRoutes(app: Application) {
   })
 
   app.post('/api/unmute-user', authenticateToken, async (req: AuthorizedRequest, res: Response) => {
-    const userToBeUnmuted = req.query.id
+    const userToBeUnmuted = req.query.id as string
     const userUnmuterId = req.jwtData?.userId as string
     await Mutes.destroy({
       where: {

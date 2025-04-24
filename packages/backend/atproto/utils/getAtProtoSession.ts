@@ -1,8 +1,9 @@
 import { Model } from 'sequelize'
 import { environment } from '../../environment.js'
 import { BskyAgent } from '@atproto/api'
+import { User } from '../../models/index.js'
 
-async function getAtProtoSession(user?: Model<any, any>): Promise<BskyAgent> {
+async function getAtProtoSession(user?: User): Promise<BskyAgent> {
   const agent = new BskyAgent({
     service: 'https://' + environment.bskyPds
   })

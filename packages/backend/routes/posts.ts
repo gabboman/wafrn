@@ -76,18 +76,16 @@ export default function postsRoutes(app: Application) {
       const userUrl = req.params?.user
       const postTitle = req.params?.title.replaceAll('-', ' ')
       const user = await User.findOne({
-        where: {
-          literal: sequelize.where(sequelize.fn('lower', sequelize.col('url')), userUrl.toLowerCase())
-        }
+        where: sequelize.where(sequelize.fn('lower', sequelize.col('url')), userUrl.toLowerCase())
       })
       if (!user) {
         res.sendStatus(404)
       } else {
         const postFound = await Post.findOne({
-          where: {
-            userId: user.id,
-            literal: sequelize.where(sequelize.fn('lower', sequelize.col('title')), postTitle.toLowerCase())
-          }
+          where: sequelize.and(
+            sequelize.where(sequelize.fn('lower', sequelize.col('title')), postTitle.toLowerCase()),
+            sequelize.where(sequelize.col('userId'), user.id)
+          )
         })
         if (postFound) {
           res.redirect('/api/v2/post/' + postFound.id)
@@ -411,7 +409,7 @@ export default function postsRoutes(app: Application) {
         }
 
         const mentionRegex = /\s@[\w-\.]+@?[\w-\.]*/gm
-        let mentionsInPost: string[] = content.match(mentionRegex)
+        let mentionsInPost: string[] | null = content.match(mentionRegex)
         if (!mentionsInPost) {
           mentionsInPost = ['']
         }
@@ -432,9 +430,7 @@ export default function postsRoutes(app: Application) {
           dbFoundMentions = await User.findAll({
             where: {
               [Op.or]: [
-                {
-                  literal: sequelize.literal(`lower("url") IN (${urlsToSearch.join(',')})`)
-                },
+                sequelize.literal(`lower("url") IN (${urlsToSearch.join(',')})`),
                 {
                   id: {
                     [Op.in]: newMentionedUsers
@@ -554,7 +550,7 @@ export default function postsRoutes(app: Application) {
           await createNotification(
             {
               notificationType: 'REWOOT',
-              notifiedUserId: parent?.userId,
+              notifiedUserId: parent?.userId as string,
               userId: post.userId,
               postId: parent?.id
             },
@@ -716,20 +712,23 @@ export default function postsRoutes(app: Application) {
 
   app.get('/api/loadRemoteResponses', authenticateToken, async (req: AuthorizedRequest, res: Response) => {
     try {
-      const userId = req.jwtData?.userId
-      const postToGetRepliesFromId = req.query.id
-      let remotePost = Post.findByPk(postToGetRepliesFromId)
-      let user = User.findByPk(userId)
-      await Promise.all([user, remotePost])
-      user = await user
-      remotePost = await remotePost
-      if (remotePost.remotePostId) {
+      const userId = req.jwtData?.userId as string
+      const postToGetRepliesFromId = req.query.id as string
+      let remotePostPromise = Post.findByPk(postToGetRepliesFromId)
+      let userPromise = User.findByPk(userId)
+      await Promise.all([userPromise, remotePostPromise])
+
+      let user = await userPromise
+      let remotePost = await remotePostPromise
+
+      if (remotePost?.remotePostId) {
         // fedi post
         const postPetition = await getPetitionSigned(user, remotePost.remotePostId)
         if (postPetition) {
           if (postPetition.inReplyTo && remotePost.hierarchyLevel === 1) {
             const lostParent = await getPostThreadRecursive(user, postPetition.inReplyTo)
-            await remotePost.setParent(lostParent)
+            if (lostParent)
+              await remotePost.setParent(lostParent)
           }
           // next replies to process
           let next = postPetition.replies.first
@@ -740,7 +739,7 @@ export default function postsRoutes(app: Application) {
           }
         }
       }
-      if (remotePost.bskyUri) {
+      if (remotePost?.bskyUri) {
         await getAtProtoThread(remotePost.bskyUri, undefined, true)
       }
     } catch (error) {

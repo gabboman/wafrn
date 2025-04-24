@@ -20,6 +20,7 @@ import { PostHostView } from "./postHostView.js";
 import { RemoteUserPostView } from "./remoteUserPostView.js";
 import { FederatedHost } from "./federatedHost.js";
 import { PostAncestor } from "./postAncestor.js";
+import { BelongsToManyGetAssociationsMixin, BelongsToSetAssociationMixin } from "sequelize";
 
 export interface PostAttributes {
   id?: string;
@@ -146,12 +147,14 @@ export class Post extends Model<PostAttributes, PostAttributes> implements PostA
 
   @BelongsTo(() => Post, "parentId")
   declare parent: Post
+  declare setParent: BelongsToSetAssociationMixin<Post, string>
 
   @HasMany(() => Post, "parentId")
   declare children: Post[]
 
   @BelongsToMany(() => Post, () => PostAncestor, "postsId", "ancestorId")
   declare ancestors: Post[]
+  declare getAncestors: BelongsToManyGetAssociationsMixin<Post>
 
   @BelongsToMany(() => Post, () => PostAncestor, "ancestorId", "postsId")
   declare descendents: Post[]
