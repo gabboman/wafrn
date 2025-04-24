@@ -183,13 +183,13 @@ export default function postsRoutes(app: Application) {
         })
         const users = posts?.descendents?.length
           ? await User.findAll({
-            attributes: ['url', 'avatar', 'name', 'id'],
-            where: {
-              id: {
-                [Op.in]: posts?.descendents.map((elem: any) => elem.userId)
+              attributes: ['url', 'avatar', 'name', 'id'],
+              where: {
+                id: {
+                  [Op.in]: posts?.descendents.map((elem: any) => elem.userId)
+                }
               }
-            }
-          })
+            })
           : []
         res.send({
           posts: posts?.descendents?.length ? posts.descendents : [],
@@ -330,7 +330,7 @@ export default function postsRoutes(app: Application) {
               }
             })
             const ancestorUrls: string[] = ancestorPostsUsers.map((elem: any) => elem.url.toLowerCase())
-            if (ancestorUrls.some((elem) => elem.endsWith('threads.net'))) {
+            if (ancestorUrls.some((elem) => elem.endsWith('.threads.net'))) {
               success = false
               res.status(403)
               res.send({
@@ -352,19 +352,19 @@ export default function postsRoutes(app: Application) {
           // only count on reblogs
           const blocksExistingOnParents = parent
             ? await Blocks.count({
-              where: {
-                [Op.or]: [
-                  {
-                    blockerId: posterId,
-                    blockedId: parent.userId
-                  },
-                  {
-                    blockedId: posterId,
-                    blockerId: parent.userId
-                  }
-                ]
-              }
-            })
+                where: {
+                  [Op.or]: [
+                    {
+                      blockerId: posterId,
+                      blockedId: parent.userId
+                    },
+                    {
+                      blockedId: posterId,
+                      blockerId: parent.userId
+                    }
+                  ]
+                }
+              })
             : 0
           if (blocksExistingOnParents + bannedUsers > 0) {
             success = false
@@ -378,8 +378,8 @@ export default function postsRoutes(app: Application) {
         const content_warning = req.body.content_warning
           ? req.body.content_warning.trim()
           : posterUser?.NSFW
-            ? 'This user has been marked as NSFW and the post has been labeled automatically as NSFW'
-            : ''
+          ? 'This user has been marked as NSFW and the post has been labeled automatically as NSFW'
+          : ''
         let mediaToAdd: any[] = []
         const avaiableEmojis = await getAvaiableEmojis()
         // we parse the content and we search emojis:
@@ -450,7 +450,7 @@ export default function postsRoutes(app: Application) {
             (elem) => elem.optionName === 'wafrn.federateWithThreads' && elem.optionValue === 'true'
           )
           if (userFederatesWithThreads.length === 0) {
-            if (dbFoundMentions.some((usr: any) => usr.url.toLowerCase().endsWith('threads.net'))) {
+            if (dbFoundMentions.some((usr: any) => usr.url.toLowerCase().endsWith('.threads.net'))) {
               success = false
               res.status(403)
               res.send({
@@ -727,8 +727,7 @@ export default function postsRoutes(app: Application) {
         if (postPetition) {
           if (postPetition.inReplyTo && remotePost.hierarchyLevel === 1) {
             const lostParent = await getPostThreadRecursive(user, postPetition.inReplyTo)
-            if (lostParent)
-              await remotePost.setParent(lostParent)
+            if (lostParent) await remotePost.setParent(lostParent)
           }
           // next replies to process
           let next = postPetition.replies.first

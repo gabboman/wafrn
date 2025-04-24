@@ -35,9 +35,9 @@ export default function likeRoutes(app: Application) {
     })
     try {
       await Promise.all([userPromise, postPromise, likePromise])
-      const user = await userPromise;
-      const post = await postPromise;
-      const like = await likePromise;
+      const user = await userPromise
+      const post = await postPromise
+      const like = await likePromise
       if (userId && user && post && !like) {
         const options = await getUserOptions(user.id)
         const userFederatesWithThreads = options.filter(
@@ -45,7 +45,7 @@ export default function likeRoutes(app: Application) {
         )
         if (userFederatesWithThreads.length === 0) {
           const userPosterOfPostToBeLiked = await User.findByPk(post.userId)
-          if (userPosterOfPostToBeLiked?.url.toLowerCase().endsWith('threads.net')) {
+          if (userPosterOfPostToBeLiked?.url.toLowerCase().endsWith('.threads.net')) {
             res.status(403)
             res.send({ error: true, message: 'You do not have threads federation enabled' })
             return
@@ -113,7 +113,7 @@ export default function likeRoutes(app: Application) {
       }
     })
     if (like && like.bskyPath) {
-      const agent = await getAtProtoSession(await User.findByPk(userId) || undefined)
+      const agent = await getAtProtoSession((await User.findByPk(userId)) || undefined)
       await agent.deleteLike(like.bskyPath)
     }
     if (like) {

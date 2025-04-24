@@ -31,7 +31,7 @@ export default function followsRoutes(app: Application) {
       const userToBeFollowed = await User.findByPk(req.body.userId)
 
       if (userFederatesWithThreads.length === 0) {
-        if (userToBeFollowed?.url.toLowerCase().endsWith('threads.net')) {
+        if (userToBeFollowed?.url.toLowerCase().endsWith('.threads.net')) {
           res.status(403)
           res.send({
             error: true,
@@ -45,7 +45,7 @@ export default function followsRoutes(app: Application) {
         if (localUser?.enableBsky) {
           // follow on bsk
           const agent = await getAtProtoSession(localUser)
-          const followResult = await agent.follow(userToBeFollowed.bskyDid) as any
+          const followResult = (await agent.follow(userToBeFollowed.bskyDid)) as any
           if (followResult.validationStatus == 'valid') {
             await follow(posterId, req.body.userId, res, followResult)
             await forceUpdateCacheDidsAtThread()
