@@ -79,6 +79,7 @@
         "ariaLabelQuoteSetter": "Enable the quote setter",
         "uploadMediaTooltip": "Upload Media",
         "contentWarningTooltip": "Content Warning",
+        "insertEmojiTooltip": "Insert emoji",
         "hiddenMentionsTooltip": "Other mentioned users"
     },
     "profile": {

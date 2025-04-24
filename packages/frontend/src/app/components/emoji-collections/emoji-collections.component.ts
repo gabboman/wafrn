@@ -101,6 +101,11 @@ export class EmojiCollectionsComponent implements OnDestroy {
   }
 
   toggleCollection(index: number) {
+    if (index < 0) {
+      this.includedCollections.clear();
+      this.includedCollectionsSize.set(this.includedCollections.size);
+      return;
+    }
     if (this.includedCollections.has(index)) {
       this.includedCollections.delete(index);
       this.includedCollectionsSize.set(this.includedCollections.size);
