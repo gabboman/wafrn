@@ -10,7 +10,7 @@ export const environment = {
   logo: '/assets/logo.png',
   baseUrl: 'http://localhost:3001/api',
   baseMediaUrl: 'http://localhost:3001/api/uploads',
-  externalCacheurl: 'https://cdn.wafrn.net.net/api/cache/?media=',
+  externalCacheurl: 'https://localhost:3001/api/cache/?media=',
   frontUrl: 'http://localhost:4200',
   shortenPosts: 5,
   reviewRegistrations: true,

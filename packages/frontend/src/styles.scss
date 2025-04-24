@@ -168,7 +168,7 @@ body {
 }
 
 /* Small-Screen media queries. */
-/* Currently encompasses the bottom-sheet style for dialogs, as well as the full-width post style for narrow screens.*/ 
+/* Currently encompasses the bottom-sheet style for dialogs, as well as the full-width post style for narrow screens.*/
 @media screen and (max-width: 800px) {
   /* START bottom-sheet */
   :root {
@@ -200,7 +200,7 @@ body {
     margin-inline: 0px!important;
   }
   /* END fullwidth post style */
-  
+
 }
 
 .shortened-post {
@@ -265,4 +265,10 @@ body {
 
 mat-tab-header {
   margin-bottom: 12px;
+}
+
+// Workaround for bug with matTooltip
+.mat-mdc-tooltip-trigger {
+	touch-action: auto !important;
+	-webkit-user-drag: auto !important;
 }

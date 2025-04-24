@@ -13,6 +13,13 @@ const routes: Routes = [
     children: [
       {
         path: '',
+        redirectTo: '/dashboard/exploreLocal',
+        pathMatch: 'full'
+        //loadChildren: () => import('./pages/register/register.module').then((m) => m.RegisterModule)
+      },
+
+      {
+        path: 'register',
         loadChildren: () => import('./pages/register/register.module').then((m) => m.RegisterModule)
       },
       {
@@ -31,8 +38,7 @@ const routes: Routes = [
       },
       {
         path: 'mfaSetup',
-        loadChildren: () =>
-          import('./pages/mfa-setup/mfa-setup.module').then((m) => m.MfaSetupModule)
+        loadChildren: () => import('./pages/mfa-setup/mfa-setup.module').then((m) => m.MfaSetupModule)
       },
       {
         path: 'dashboard/search',
@@ -117,13 +123,11 @@ const routes: Routes = [
     RouterModule.forRoot(routes, {
       preloadingStrategy: PreloadAllModules,
       anchorScrolling: 'enabled',
-      scrollPositionRestoration: 'enabled',
+      scrollPositionRestoration: 'enabled'
     }),
     NavigationMenuModule
   ],
   providers: [{ provide: RouteReuseStrategy, useClass: CustomReuseStrategy }],
   exports: [RouterModule]
 })
-export class AppRoutingModule {
-
-}
+export class AppRoutingModule {}

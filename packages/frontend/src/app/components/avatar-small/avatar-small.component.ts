@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common'
-import { Component, OnInit, input } from '@angular/core'
+import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core'
 import { RouterModule } from '@angular/router'
 import { SimplifiedUser } from '../../interfaces/simplified-user'
 import { EnvironmentService } from '../../services/environment.service'
@@ -9,22 +9,20 @@ import { BlogLinkModule } from 'src/app/directives/blog-link/blog-link.module'
   selector: 'app-avatar-small',
   imports: [CommonModule, RouterModule, BlogLinkModule],
   templateUrl: './avatar-small.component.html',
-  styleUrl: './avatar-small.component.scss'
+  styleUrl: './avatar-small.component.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class AvatarSmallComponent implements OnInit {
-  readonly user = input.required<SimplifiedUser>();
+export class AvatarSmallComponent {
+  user = input.required<SimplifiedUser>();
   readonly disabled = input(false);
-  avatar: string = ''
-
-  ngOnInit(): void {
+  avatar = computed(() => {
     const user = this.user();
-    this.avatar =
-      EnvironmentService.environment.externalCacheurl +
+    return EnvironmentService.environment.externalCacheurl +
       encodeURIComponent(
         user.url.startsWith('@')
           ? user.avatar
           : EnvironmentService.environment.baseMediaUrl + user.avatar
       ) +
       '&avatar=true'
-  }
+  });
 }

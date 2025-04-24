@@ -35,7 +35,7 @@
         @case ('EMOJIREACT') {
           reacted with
           @if (emojiUrl) {
-            <img class="post-emoji" [src]="emojiUrl" [alt]="notification.emojiName" />
+            <img class="post-emoji" [src]="emojiUrl" [alt]="notification.emojiName" [title]="notification.emojiName"/>
           } @else {
             {{ notification.emojiName }}
           }

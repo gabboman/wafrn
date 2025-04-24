@@ -27,11 +27,17 @@
   [ngClass]="{ hidden: (fragment().content_warning || fragment().muted_words_cw) && !showSensitiveContent() }"
 >
   @for (quote of fragment().quotes; track $index) {
-    <div *ngIf="quote" class="quoted-post cursor-pointer" [ngClass]="{ 'quote-collapsed': !expandQuotes }">
+    <!-- We use routerlink instead of the data because quoted posts are incomplete in the frontend!-->
+    <div
+      *ngIf="quote"
+      [routerLink]="'/fediverse/post/' + quote.id"
+      class="quoted-post cursor-pointer"
+      [ngClass]="{ 'quote-collapsed': !expandQuotes }"
+    >
       <div class="flex">
         <app-post-header class="w-full" [fragment]="quote" [simplified]="true" [disableLink]="true"></app-post-header>
       </div>
-      <div class="cursor-pointer" [postLink]="quote">
+      <div class="cursor-pointer">
         <app-post-fragment [fragment]="quote"></app-post-fragment>
       </div>
     </div>
@@ -112,7 +118,7 @@
             } @else {
               <span class="force-comic-sans"> {{ emoji.content }}</span>
             }
-            @if (emoji.users.length !== 1) {
+            @if (emoji.users.length > 1) {
               <span> {{ emoji.users.length }}</span>
             }
           </span>
