@@ -4,14 +4,21 @@
       <input [(ngModel)]="filterText" matInput />
     </mat-form-field>
 
-  <div class="emoji-container">
+  <div #emojiContainer class="emoji-container">
     <div class="emoji-sidebar">
       <button
         [class.emoji-active-collection]="this.collectionHas(-1)"
         class="emoji-sidebar-child p-2 flex align-content-center justify-content-center cursor-pointer bg-transparent emoji-collection-button"
         (click)="this.toggleCollection(-1)"
       >
-        *
+        <span title="All emojis" class="post-emoji-header">*</span>
+      </button>
+      <button
+        [class.emoji-active-collection]="this.collectionHas(-2)"
+        class="emoji-sidebar-child p-2 flex align-content-center justify-content-center cursor-pointer bg-transparent emoji-collection-button"
+        (click)="this.toggleCollection(-2)"
+      >
+        <fa-icon class="post-emoji-header" title="Recent emojis" [icon]="clockIcon"></fa-icon>
       </button>
       @for (emojiCollection of emojiCollections; track $index) {
         @let emoji = emojiCollection.emojis[0];
@@ -26,25 +33,25 @@
           <img
             *ngIf="emoji.url"
             loading="lazy"
-            class="post-emoji-preview mr-2 ml-2"
+            class="post-emoji-header mr-2 ml-2"
             [src]="baseMediaUrl + emoji.url"
             [alt]="emojiCollection.name"
             [title]="emojiCollection.name"
           />
         </button>
       }
-      <hr />
     </div>
+    <hr />
 
-    <cdk-virtual-scroll-viewport itemSize="50" class="emoji-viewport" minBufferPx="300" maxBufferPx="400">
-      <div *cdkVirtualFor="let row of this.emojiRenderable()" class="emoji-row">
+    <cdk-virtual-scroll-viewport itemSize="50" class="emoji-viewport" minBufferPx="400" maxBufferPx="500">
+      <div *cdkVirtualFor="let row of this.emojiRenderable()" class="emoji-row" [class.emoji-header]="row.tag === 0">
         @if (row.tag === 0) {
-          {{ row.name }}
+          <span>{{ row.name }}</span>
         } @else {
           @for (emoji of row.emos; track $index) {
             <button
               mat-flat-button
-              [matTooltip]="emoji.name"
+              [title]="emoji.name"
               (click)="click(emoji)"
               class="p-2 flex align-content-center justify-content-center cursor-pointer bg-transparent emoji-item"
             >

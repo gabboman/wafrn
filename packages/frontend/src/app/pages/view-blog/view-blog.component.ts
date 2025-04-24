@@ -193,7 +193,9 @@ export class ViewBlogComponent implements OnInit, OnDestroy, SnappyHide, SnappyS
       }
 
       if (userResponseToCustomThemes === 0) {
-        const dialogRef = this.dialog.open(AcceptThemeComponent)
+        const dialogRef = this.dialog.open(AcceptThemeComponent, {
+          autoFocus: false
+        });
         dialogRef.afterClosed().subscribe(() => {
           userResponseToCustomThemes = this.themeService.hasUserAcceptedCustomThemes()
           if (userResponseToCustomThemes === 2) {
