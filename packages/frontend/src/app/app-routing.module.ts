@@ -5,6 +5,7 @@ import { NavigationMenuModule } from './components/navigation-menu/navigation-me
 import { isAdminGuard } from './guards/is-admin.guard'
 import { loginRequiredGuard } from './guards/login-required.guard'
 import { CustomReuseStrategy } from './services/routing.service'
+import { userLoggedGuard } from './guards/user-logged.guard'
 
 const routes: Routes = [
   {
@@ -13,13 +14,16 @@ const routes: Routes = [
     children: [
       {
         path: '',
-        redirectTo: '/dashboard/exploreLocal',
-        pathMatch: 'full'
-        //loadChildren: () => import('./pages/register/register.module').then((m) => m.RegisterModule)
+        pathMatch: 'full',
+        canActivate: [userLoggedGuard],
+        loadComponent: () =>
+          import('./components/home-redirector/home-redirector.component').then((m) => m.HomeRedirectorComponent)
+        //loadChildren: () =>
       },
 
       {
         path: 'register',
+        canActivate: [userLoggedGuard],
         loadChildren: () => import('./pages/register/register.module').then((m) => m.RegisterModule)
       },
       {
