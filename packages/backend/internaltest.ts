@@ -34,7 +34,7 @@ async function sendMail() {
     const subject = `Hello ${user.url}! Your wafrn account was activated!`
     const body = `Hello ${user.url}, your account has been reviewed by our team and is now activated! If you already got this email twice apologies, we got an issue with the email provider and we had to resend a few :(`
     console.log(`mailing ${user.url}`)
-    await sendActivationEmail(user.email, '', subject, body)
+    await sendActivationEmail(user.email || '', '', subject, body)
     await wait(1500)
   }
 }

@@ -94,7 +94,7 @@ async function postToJSONLD(postId: string) {
   for await (const userId of mentions) {
     const user =
       (await User.findOne({ where: { id: userId } })) ||
-      (await User.findOne({ where: { url: environment.deletedUser } }))
+      (await User.findOne({ where: { url: environment.deletedUser } })) as User
     const url = user.url.startsWith('@') ? user.url : `@${user.url}@${environment.instanceUrl}`
     const remoteId = user.url.startsWith('@') ? user.remoteId : `${environment.frontendUrl}/fediverse/blog/${user.url}`
     if (remoteId) {

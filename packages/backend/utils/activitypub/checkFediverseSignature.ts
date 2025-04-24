@@ -38,7 +38,7 @@ function getCheckFediverseSignatureFucnction(force = false) {
         remoteUserUrl = sigHead.keyId.split('/main-key')[0]
       }
       hostUrl = new URL(remoteUserUrl).host
-      let bannedHostInCache = await redisCache.get('server:' + hostUrl)
+      let bannedHostInCache: string | null | undefined = await redisCache.get('server:' + hostUrl)
       if (bannedHostInCache === null || bannedHostInCache === undefined) {
         const newResult = await FederatedHost.findOne({
           where: {

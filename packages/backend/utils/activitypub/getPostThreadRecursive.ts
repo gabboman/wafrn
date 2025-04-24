@@ -94,8 +94,9 @@ async function getPostThreadRecursive(
         }
       }
       const remoteUser = await getRemoteActor(postPetition.attributedTo, user)
-      const remoteUserServerBaned = (await FederatedHost.findByPk(remoteUser.federatedHostId)).blocked
-        ? (await FederatedHost.findByPk(remoteUser.federatedHostId)).blocked
+      const remoteHost = await FederatedHost.findByPk(remoteUser.federatedHostId)
+      const remoteUserServerBaned = remoteHost?.blocked
+        ? remoteHost.blocked
         : false
       // HACK: some implementations (GTS IM LOOKING AT YOU) may send a single element instead of an array
       // I should had used a funciton instead of this dirty thing, BUT you see, its late. Im eepy
@@ -128,7 +129,7 @@ async function getPostThreadRecursive(
             const wafrnMedia = await Media.create({
               url: remoteFile.url,
               NSFW: postPetition?.sensitive,
-              userId: remoteUserServerBaned || remoteUser.banned ? (await deletedUser).id : remoteUser.id,
+              userId: remoteUserServerBaned || remoteUser.banned ? (await deletedUser)?.id : remoteUser.id,
               description: remoteFile.name,
               ipUpload: 'IMAGE_FROM_OTHER_FEDIVERSE_INSTANCE',
               mediaOrder: postPetition.attachment.indexOf(remoteFile), // could be non consecutive but its ok
@@ -165,7 +166,7 @@ async function getPostThreadRecursive(
             : '',
         createdAt: new Date(postPetition.published),
         updatedAt: createdAt,
-        userId: remoteUserServerBaned || remoteUser.banned ? (await deletedUser).id : remoteUser.id,
+        userId: remoteUserServerBaned || remoteUser.banned ? (await deletedUser)?.id : remoteUser.id,
         remotePostId: postPetition.id,
         privacy: privacy
       }
@@ -181,13 +182,7 @@ async function getPostThreadRecursive(
             if (mention.href?.indexOf(environment.frontendUrl) !== -1) {
               const username = mention.href?.substring(`${environment.frontendUrl}/fediverse/blog/`.length) as string
               mentionedUser = await User.findOne({
-                where: {
-                  [Op.or]: [
-                    {
-                      literal: sequelize.where(sequelize.fn('lower', sequelize.col('url')), username.toLowerCase())
-                    }
-                  ]
-                }
+                where: sequelize.where(sequelize.fn('lower', sequelize.col('url')), username.toLowerCase())
               })
             } else {
               mentionedUser = await getRemoteActor(mention.href, user)
@@ -318,14 +313,14 @@ async function getPostThreadRecursive(
 async function addTagsToPost(post: any, tags: fediverseTag[]) {
   const res = await post.setPostTags([])
   return await PostTag.bulkCreate(
-    tags.map((elem) => {
-      if (elem.name && post.id) {
+    tags
+      .filter((elem) => (elem && post && elem.name && post.id))
+      .map((elem) => {
         return {
-          tagName: elem.name.replace('#', ''),
+          tagName: elem?.name?.replace('#', ''),
           postId: post.id
         }
-      }
-    })
+      })
   )
 }
 
@@ -351,7 +346,7 @@ async function processMentions(post: any, userIds: string[]) {
       userBlockerId: {
         [Op.in]: userIds
       },
-      blockedServerId: remoteUser.federatedHostId
+      blockedServerId: remoteUser?.federatedHostId || ''
     }
   })
   const blockerIds: string[] = blocks
@@ -368,7 +363,7 @@ async function processMentions(post: any, userIds: string[]) {
     })),
     {
       postContent: post.content,
-      userUrl: remoteUser.url
+      userUrl: remoteUser?.url
     }
   )
 

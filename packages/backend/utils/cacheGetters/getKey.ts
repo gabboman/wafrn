@@ -26,7 +26,7 @@ async function getKey(remoteUserUrl: string, adminUser: any): Promise<{ key?: an
     const userId = await getUserIdFromRemoteId(remoteUserUrl)
     if (userId && userId !== '') {
       return {
-        key: (await User.findByPk(userId)).publicKey
+        key: (await User.findByPk(userId))?.publicKey
       }
     } else {
       await queue.add(

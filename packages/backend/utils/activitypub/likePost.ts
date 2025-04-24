@@ -38,6 +38,10 @@ async function likePostRemote(like: any, dislike = false) {
       }
     ]
   })
+
+  if (!user || !likedPost)
+    return;
+
   const stringMyFollowers = `${environment.frontendUrl}/fediverse/blog/${user.url.toLowerCase()}/followers`
   const ownerOfLikedPost = likedPost.user.remoteId
     ? likedPost.user.remoteId
@@ -84,11 +88,9 @@ async function likePostRemote(like: any, dislike = false) {
       blocked: { [Op.ne]: true },
 
       [Op.or]: [
-        {
-          literal: sequelize.literal(
-            `"id" in (SELECT "federatedHostId" from "users" where "users"."id" IN (SELECT "followerId" from "follows" where "followedId" = '${like.userId}') and "federatedHostId" is not NULL)`
-          )
-        },
+        sequelize.literal(
+          `"id" in (SELECT "federatedHostId" from "users" where "users"."id" IN (SELECT "followerId" from "follows" where "followedId" = '${like.userId}') and "federatedHostId" is not NULL)`
+        ),
         {
           friendServer: true
         }
@@ -145,6 +147,9 @@ async function emojiReactRemote(react: any, undo = false) {
       }
     ]
   })
+  if (!user || !reactedPost)
+    return;
+
   const emoji = await Emoji.findByPk(react.emojiId)
   const stringMyFollowers = `${environment.frontendUrl}/fediverse/blog/${user.url.toLowerCase()}/followers`
   const ownerOfreactedPost = reactedPost.user.remoteId
@@ -194,11 +199,9 @@ async function emojiReactRemote(react: any, undo = false) {
       blocked: { [Op.ne]: true },
 
       [Op.or]: [
-        {
-          literal: sequelize.literal(
-            `"id" in (SELECT "federatedHostId" from "users" where "users"."id" IN (SELECT "followerId" from "follows" where "followedId" = '${react.userId}') and "federatedHostId" is not NULL)`
-          )
-        },
+        sequelize.literal(
+          `"id" in (SELECT "federatedHostId" from "users" where "users"."id" IN (SELECT "followerId" from "follows" where "followedId" = '${react.userId}') and "federatedHostId" is not NULL)`
+        ),
         {
           friendServer: true
         }

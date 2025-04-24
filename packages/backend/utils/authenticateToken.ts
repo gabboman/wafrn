@@ -12,7 +12,7 @@ function authenticateToken(req: Request, res: Response, next: NextFunction) {
 
   if (token == null) return res.sendStatus(401)
   // TODO make this code "a bit better" and less duplicate. Not big deal because this code should not be touched.... but you know
-  jwt.verify(token, environment.jwtSecret as string, async (err: any, jwtData: any) => {
+  jwt.verify(token, environment.jwtSecret, async (err: any, jwtData: any) => {
     if (err) {
       return res.sendStatus(401)
     }

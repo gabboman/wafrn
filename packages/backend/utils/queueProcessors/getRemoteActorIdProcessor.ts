@@ -26,7 +26,7 @@ import { getDeletedUser } from '../cacheGetters/getDeletedUser.js'
 async function getRemoteActorIdProcessor(job: Job) {
   const actorUrl: string = job.data.actorUrl
   const forceUpdate: boolean = job.data.forceUpdate
-  let res = await getUserIdFromRemoteId(actorUrl)
+  let res: string | User | undefined | null = await getUserIdFromRemoteId(actorUrl)
   let url = undefined
   try {
     url = new URL(actorUrl)
@@ -41,12 +41,10 @@ async function getRemoteActorIdProcessor(job: Job) {
   }
   if (res === '' || (forceUpdate && url != undefined)) {
     let federatedHost = await FederatedHost.findOne({
-      where: {
-        literal: sequelize.where(
-          sequelize.fn('lower', sequelize.col('displayName')),
-          url?.host ? url.host.toLowerCase() : ''
-        )
-      }
+      where: sequelize.where(
+        sequelize.fn('lower', sequelize.col('displayName')),
+        url?.host ? url.host.toLowerCase() : ''
+      )
     })
     const hostBanned = federatedHost?.blocked
     if (hostBanned) {
@@ -62,8 +60,9 @@ async function getRemoteActorIdProcessor(job: Job) {
           }
           federatedHost = (await FederatedHost.findOrCreate({ where: federatedHostToCreate }))[0]
         }
-        if (!url) {
+        if (!url || !federatedHost) {
           logger.warn({ message: 'Url is not valid wtf', trace: new Error().stack })
+          return await getDeletedUser();
         }
         const remoteMentionUrl = typeof userPetition.url === 'string' ? userPetition.url : ''
         let followers = 0
@@ -108,122 +107,122 @@ async function getRemoteActorIdProcessor(job: Job) {
         await federatedHost.save()
         let userRes
         const existingUsers = await User.findAll({
-          where: {
-            literal: sequelize.where(sequelize.fn('lower', sequelize.col('url')), userData.url.toLowerCase())
-          }
+          where: sequelize.where(sequelize.fn('lower', sequelize.col('url')), userData.url.toLowerCase())
         })
         if (res) {
           if (res !== (await getDeletedUser())) {
-            userRes = await User.findByPk(res)
+            userRes = await User.findByPk(res as string)
             if (existingUsers && existingUsers.length > 0 && existingUsers[0] && userRes?.id !== existingUsers[0]?.id) {
               const existingUser = existingUsers[0]
-              existingUser.activated = 0
+              existingUser.activated = false
               existingUser.remoteId = `${existingUser.remoteId}_OVERWRITTEN_ON${new Date().getTime()}`
               existingUser.url = `${existingUser.url}_OVERWRITTEN_ON${new Date().getTime()}`
               await existingUser.save()
-              const updates = [
-                Follows.update(
-                  {
-                    followerId: userRes.id
-                  },
-                  {
-                    where: {
-                      followerId: existingUser.id
+              if (userRes) {
+                const updates = [
+                  Follows.update(
+                    {
+                      followerId: userRes.id
+                    },
+                    {
+                      where: {
+                        followerId: existingUser.id
+                      }
                     }
-                  }
-                ),
-                Follows.update(
-                  {
-                    followedId: userRes.id
-                  },
-                  {
-                    where: {
-                      followedId: existingUser.id
+                  ),
+                  Follows.update(
+                    {
+                      followedId: userRes.id
+                    },
+                    {
+                      where: {
+                        followedId: existingUser.id
+                      }
                     }
-                  }
-                ),
-                Post.update(
-                  {
-                    userId: userRes.id
-                  },
-                  {
-                    where: {
-                      userId: existingUser.id
+                  ),
+                  Post.update(
+                    {
+                      userId: userRes.id
+                    },
+                    {
+                      where: {
+                        userId: existingUser.id
+                      }
                     }
-                  }
-                ),
-                UserLikesPostRelations.update(
-                  {
-                    userId: userRes.id
-                  },
-                  {
-                    where: {
-                      userId: existingUser.id
+                  ),
+                  UserLikesPostRelations.update(
+                    {
+                      userId: userRes.id
+                    },
+                    {
+                      where: {
+                        userId: existingUser.id
+                      }
                     }
-                  }
-                ),
-                EmojiReaction.update(
-                  {
-                    userId: userRes.id
-                  },
-                  {
-                    where: {
-                      userId: existingUser.id
+                  ),
+                  EmojiReaction.update(
+                    {
+                      userId: userRes.id
+                    },
+                    {
+                      where: {
+                        userId: existingUser.id
+                      }
                     }
-                  }
-                ),
-                Blocks.update(
-                  {
-                    blockedid: userRes.id
-                  },
-                  {
-                    where: {
-                      blockedid: existingUser.id
+                  ),
+                  Blocks.update(
+                    {
+                      blockedId: userRes.id
+                    },
+                    {
+                      where: {
+                        blockedId: existingUser.id
+                      }
                     }
-                  }
-                ),
-                Blocks.update(
-                  {
-                    blockerId: userRes.id
-                  },
-                  {
-                    where: {
-                      blockerId: existingUser.id
+                  ),
+                  Blocks.update(
+                    {
+                      blockerId: userRes.id
+                    },
+                    {
+                      where: {
+                        blockerId: existingUser.id
+                      }
                     }
-                  }
-                ),
-                Mutes.update(
-                  {
-                    muterid: userRes.id
-                  },
-                  {
-                    where: {
-                      muterid: existingUser.id
+                  ),
+                  Mutes.update(
+                    {
+                      muterId: userRes.id
+                    },
+                    {
+                      where: {
+                        muterId: existingUser.id
+                      }
                     }
-                  }
-                ),
-                Mutes.update(
-                  {
-                    mutedId: userRes.id
-                  },
-                  {
-                    where: {
-                      mutedId: existingUser.id
+                  ),
+                  Mutes.update(
+                    {
+                      mutedId: userRes.id
+                    },
+                    {
+                      where: {
+                        mutedId: existingUser.id
+                      }
                     }
-                  }
-                ),
-                PostMentionsUserRelation.update(
-                  {
-                    userid: userRes.id
-                  },
-                  {
-                    where: {
-                      userid: existingUser.id
+                  ),
+                  PostMentionsUserRelation.update(
+                    {
+                      userId: userRes.id
+                    },
+                    {
+                      where: {
+                        userId: existingUser.id
+                      }
                     }
-                  }
-                )
-              ]
-              await Promise.all(updates)
+                  )
+                ]
+                await Promise.all(updates)
+              }
               await redisCache.del('userRemoteId:' + existingUser.remoteId)
             }
             if (userRes) {

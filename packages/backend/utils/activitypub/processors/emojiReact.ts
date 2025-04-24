@@ -25,7 +25,7 @@ async function EmojiReactActivity(body: activityPubObject, remoteUser: any, user
       )[0]
   }
   if (postToReact && apObject.content) {
-    const [created, reaction] = await EmojiReaction.findOrCreate({
+    const [reaction, created] = await EmojiReaction.findOrCreate({
       where: {
         remoteId: apObject.id
       },

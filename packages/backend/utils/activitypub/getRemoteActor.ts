@@ -31,9 +31,7 @@ async function getRemoteActor(actorUrl: string, user: any, forceUpdate = false):
     if (actorUrl.toLowerCase().startsWith(environment.frontendUrl + '/fediverse/blog/')) {
       const urlToSearch = actorUrl.split(environment.frontendUrl + '/fediverse/blog/')[1].toLowerCase()
       return User.findOne({
-        where: {
-          literal: sequelize.where(sequelize.fn('lower', sequelize.col('url')), urlToSearch.toLowerCase())
-        }
+        where: sequelize.where(sequelize.fn('lower', sequelize.col('url')), urlToSearch.toLowerCase())
       })
     }
     let userId = await getUserIdFromRemoteId(actorUrl)

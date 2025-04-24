@@ -5,7 +5,7 @@ import { FederatedHost, User } from '../../models/index.js'
 import { environment } from '../../environment.js'
 import { getRemoteActorIdProcessor } from '../queueProcessors/getRemoteActorIdProcessor.js'
 
-let adminUser = User.findOne({
+let adminUserPromise = User.findOne({
   where: {
     url: environment.adminUser
   }
@@ -13,7 +13,7 @@ let adminUser = User.findOne({
 
 async function updateAllUsers() {
   console.log('lets a update all users that we caaaaaaaaan')
-  adminUser = await adminUser
+  let adminUser = await adminUserPromise
 
   const allRemoteUsers = await User.findAll({
     order: [['updatedAt', 'ASC']],
@@ -49,7 +49,7 @@ async function updateAllUsers() {
 async function processChunk(users: any[]) {
   const promises = users.map(async (actor: any) =>
     getRemoteActorIdProcessor({
-      data: { actorUrl: actor.remoteId, userId: (await adminUser).id, forceUpdate: true }
+      data: { actorUrl: actor.remoteId, userId: (await adminUserPromise)?.id, forceUpdate: true }
     } as Job)
   )
   try {

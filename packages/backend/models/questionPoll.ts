@@ -4,6 +4,7 @@ import {
 } from "sequelize-typescript";
 import { Post } from "./post.js";
 import { QuestionPollQuestion } from "./questionPollQuestion.js";
+import { HasManyGetAssociationsMixin } from "sequelize";
 
 export interface QuestionPollsAttributes {
   id?: number;
@@ -44,4 +45,5 @@ export class QuestionPoll extends Model<QuestionPollsAttributes, QuestionPollsAt
 
   @HasMany(() => QuestionPollQuestion)
   declare questionPollQuestions: QuestionPollQuestion[]
+  declare getQuestionPollQuestions: HasManyGetAssociationsMixin<QuestionPollQuestion>
 }

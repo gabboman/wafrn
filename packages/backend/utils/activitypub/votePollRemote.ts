@@ -38,6 +38,9 @@ const queueEvents = new QueueEvents('sendPostToInboxes', {
 })
 async function voteInPoll(userId: string, pollId: number) {
   const user = await User.findByPk(userId)
+  if (!user)
+    return
+
   const votesToSend = await QuestionPollQuestion.findAll({
     include: [
       {
@@ -70,10 +73,10 @@ async function voteInPoll(userId: string, pollId: number) {
     const voteObject = {
       '@context': ['https://www.w3.org/ns/activitystreams', `${environment.frontendUrl}/contexts/litepub-0.1.jsonld`],
       actor: `${environment.frontendUrl}/fediverse/blog/${user.url.toLowerCase()}`,
-      id: `${environment.frontendUrl}/fediverse/voteActivity/${userId}/${votesToSend.id}`,
+      id: `${environment.frontendUrl}/fediverse/voteActivity/${userId}/${vote.id}`,
       object: {
         attributedTo: `${environment.frontendUrl}/fediverse/blog/${user.url.toLowerCase()}`,
-        id: `${environment.frontendUrl}/fediverse/vote/${userId}/${votesToSend.id}`,
+        id: `${environment.frontendUrl}/fediverse/vote/${userId}/${vote.id}`,
         inReplyTo: vote.questionPoll.post.remotePostId,
         name: vote.questionText,
         to: vote.questionPoll.post.user.remoteId,

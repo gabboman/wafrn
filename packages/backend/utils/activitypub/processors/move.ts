@@ -11,18 +11,25 @@ async function MoveActivity(body: activityPubObject, remoteUser: any, user: any)
   // TODO get list of users who where following old account
   // then make them follow the new one, sending petition
   const apObject: activityPubObject = body
+  if (!apObject.target)
+    return;
+
   const newUser = await getRemoteActor(apObject.target, user)
   const oldUser = await User.findByPk(remoteUser.id) // a bit paranoid, innit?
   if (newUser && oldUser) {
     logger.debug({ message: `Moving ${oldUser.url} to ${newUser.url}` })
     const followsToMove = await Follows.findAll({
       where: {
-        followedId: oldUser.id,
-        accepted: true,
-        followerId: { [Op.in]: await getAllLocalUserIds() },
-        literal: sequelize.literal(
-          `"followerId" NOT IN (select "followerId" from "follows" where "followedId"='${newUser.id}')`
-        )
+        [Op.and]: [
+          {
+            followedId: oldUser.id,
+            accepted: true,
+            followerId: { [Op.in]: await getAllLocalUserIds() },
+          },
+          sequelize.literal(
+            `"followerId" NOT IN (select "followerId" from "follows" where "followedId"='${newUser.id}')`
+          )
+        ]
       }
     })
     if (followsToMove) {

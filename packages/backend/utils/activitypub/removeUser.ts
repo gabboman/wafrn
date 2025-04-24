@@ -25,6 +25,9 @@ async function removeUser(userId: string) {
           url: environment.deletedUser
         }
       })
+      if (!ownerOfDeletedPost)
+        return
+
       const postsIdsStringQuery = `"postId" IN (select "id" FROM "posts" WHERE "userId"='${userToRemove.id}')`
       userToRemove.activated = false
       await Post.update(
@@ -40,14 +43,10 @@ async function removeUser(userId: string) {
         }
       )
       await Media.destroy({
-        where: {
-          literal: sequelize.literal(postsIdsStringQuery)
-        }
+        where: sequelize.literal(postsIdsStringQuery)
       })
       await PostTag.destroy({
-        where: {
-          literal: sequelize.literal(postsIdsStringQuery)
-        }
+        where: sequelize.literal(postsIdsStringQuery)
       })
       await Follows.destroy({
         where: {

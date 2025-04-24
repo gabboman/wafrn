@@ -41,8 +41,8 @@ async function UndoActivity(body: activityPubObject, remoteUser: any, user: any)
         Notification.destroy({
           where: {
             notificationType: 'FOLLOW',
-            notifiedUserid: remoteFollow.followedId,
-            userId: followerId
+            notifiedUserId: remoteFollow.followedId,
+            userId: remoteFollow.followerId
           }
         })
         await remoteFollow.destroy()

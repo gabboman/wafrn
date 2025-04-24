@@ -4,7 +4,7 @@ import { logger } from '../logger.js'
 import _ from 'underscore'
 
 export default async function getRemoteFollowers(usr: any) {
-  let res = []
+  let res: any = []
   try {
     const followed = await usr.getFollowed({
       where: {

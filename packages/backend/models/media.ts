@@ -14,7 +14,7 @@ export interface MediaAttributes {
   url?: string;
   ipUpload?: string;
   external?: boolean;
-  mediaType?: string;
+  mediaType?: string | null;
   width?: number;
   height?: number;
   blurhash?: string;
@@ -69,7 +69,7 @@ export class Media extends Model<MediaAttributes, MediaAttributes> implements Me
     allowNull: true,
     type: DataType.STRING(255)
   })
-  declare mediaType: string;
+  declare mediaType: string | null;
 
   @Column({
     allowNull: true,

@@ -18,6 +18,9 @@ async function sendMail() {
   })
 
   for await (const user of users) {
+    if (!user.email)
+      continue;
+
     const subject = `Wafrn monthly propaganda for ${user.url}! More themes! More jank! More herobrine!`
     const body = `
     <h1>Hello ${user.url}!</h1>

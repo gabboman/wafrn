@@ -24,7 +24,7 @@ import { PostMentionsUserRelation } from "./postMentionsUserRelation.js";
 import { UserLikesPostRelations } from "./userLikesPostRelations.js";
 import { UserBookmarkedPosts } from "./userBookmarkedPosts.js";
 import { RemoteUserPostView } from "./remoteUserPostView.js";
-import { BelongsToManyAddAssociationMixin, BelongsToManyGetAssociationsMixin, BelongsToManyRemoveAssociationMixin, BelongsToManyRemoveAssociationsMixin, BelongsToManySetAssociationsMixin, HasManyRemoveAssociationMixin } from "sequelize";
+import { BelongsToGetAssociationMixin, BelongsToManyAddAssociationMixin, BelongsToManyGetAssociationsMixin, BelongsToManyRemoveAssociationMixin, BelongsToManyRemoveAssociationsMixin, BelongsToManySetAssociationsMixin, HasManyRemoveAssociationMixin } from "sequelize";
 
 export interface UserAttributes {
   id?: string;
@@ -45,7 +45,7 @@ export interface UserAttributes {
   registerIp?: string;
   lastLoginIp?: string;
   lastTimeNotificationsCheck?: Date;
-  privateKey?: string;
+  privateKey?: string | null;
   publicKey?: string;
   federatedHostId?: string | null;
   remoteInbox?: string;
@@ -174,7 +174,7 @@ export class User extends Model<UserAttributes, UserAttributes> implements UserA
     allowNull: true,
     type: DataType.STRING
   })
-  declare privateKey: string;
+  declare privateKey: string | null;
 
   @Column({
     allowNull: true,
@@ -438,6 +438,7 @@ export class User extends Model<UserAttributes, UserAttributes> implements UserA
     }
   })
   declare federatedHost: FederatedHost;
+  declare getFederatedHost: BelongsToGetAssociationMixin<FederatedHost>
 
   @HasMany(() => Post, {
     sourceKey: "id"

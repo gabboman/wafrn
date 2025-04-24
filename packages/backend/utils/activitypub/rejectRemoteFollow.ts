@@ -14,6 +14,9 @@ async function rejectremoteFollow(userId: string, remoteUserId: string) {
     }
   })
 
+  if (!localUser || !remoteUser || !followToBeDestroyed)
+    return;
+
   const apObj: activityPubObject = {
     '@context': 'https://www.w3.org/ns/activitystreams',
     actor: environment.frontendUrl + '/fediverse/blog/' + localUser.url.toLowerCase(),

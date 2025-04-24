@@ -308,14 +308,14 @@ async function getUnjointedPosts(postIdsInput: string[], posterId: string) {
   const blockedHosts = await FederatedHost.findAll({
     where: {
       id: {
-        [Op.in]: hostsIds
+        [Op.in]: hostsIds as string[]
       },
       blocked: true
     }
   })
   const blockedHostsIds = blockedHosts.map((elem) => elem.id)
   const bannedUserIds = (await users)
-    .filter((elem) => elem.banned || blockedHostsIds.includes(elem.federatedHostId))
+    .filter((elem) => elem.banned || elem.federatedHostId && blockedHostsIds.includes(elem.federatedHostId))
     .map((elem) => elem.id)
   const usersFollowedByPoster = await getFollowedsIds(posterId)
   const tagsAwaited = await tags

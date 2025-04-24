@@ -20,7 +20,7 @@ import { PostHostView } from "./postHostView.js";
 import { RemoteUserPostView } from "./remoteUserPostView.js";
 import { FederatedHost } from "./federatedHost.js";
 import { PostAncestor } from "./postAncestor.js";
-import { BelongsToManyGetAssociationsMixin, BelongsToSetAssociationMixin, HasManyGetAssociationsMixin, HasOneGetAssociationMixin } from "sequelize";
+import { BelongsToManyGetAssociationsMixin, BelongsToManySetAssociationsMixin, BelongsToSetAssociationMixin, HasManyGetAssociationsMixin, HasManyRemoveAssociationMixin, HasManyRemoveAssociationsMixin, HasManySetAssociationsMixin, HasOneGetAssociationMixin } from "sequelize";
 
 export interface PostAttributes {
   id?: string;
@@ -158,6 +158,7 @@ export class Post extends Model<PostAttributes, PostAttributes> implements PostA
 
   @BelongsToMany(() => Post, () => PostAncestor, "ancestorId", "postsId")
   declare descendents: Post[]
+  declare getDescendents: BelongsToManyGetAssociationsMixin<Post>
 
   @HasMany(() => Notification, {
     sourceKey: "id"
@@ -195,6 +196,7 @@ export class Post extends Model<PostAttributes, PostAttributes> implements PostA
 
   @BelongsToMany(() => Post, () => Quotes, "quoterPostId", "quotedPostId")
   declare quoted: Post[]
+  declare setQuoted: BelongsToManySetAssociationsMixin<Post, string>
 
   @BelongsToMany(() => Post, () => Quotes, "quotedPostId", "quoterPostId")
   declare quoter: Post[]
@@ -222,6 +224,9 @@ export class Post extends Model<PostAttributes, PostAttributes> implements PostA
     sourceKey: "id"
   })
   declare medias: Media[];
+  declare setMedias: HasManySetAssociationsMixin<Media, number>
+  declare getMedias: HasManyGetAssociationsMixin<Media>
+  declare removeMedias: HasManyRemoveAssociationsMixin<Media, number>
 
   @HasMany(() => PostMentionsUserRelation, {
     sourceKey: "id"
@@ -235,6 +240,7 @@ export class Post extends Model<PostAttributes, PostAttributes> implements PostA
 
   @BelongsToMany(() => User, () => PostMentionsUserRelation)
   declare mentionPost: User[];
+  declare getMentionPost: BelongsToManyGetAssociationsMixin<User>
 
   @HasMany(() => UserBookmarkedPosts, {
     sourceKey: "id"

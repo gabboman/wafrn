@@ -151,20 +151,22 @@ export default function deletePost(app: Application) {
           .concat(serversToSendThePost.map((elem: any) => elem.publicInbox))
           .concat(usersToSendThePost.map((usr: any) => usr.remoteInbox))
         const ldSignature = new LdSignature()
-        const bodySignature = await ldSignature.signRsaSignature2017(
-          objectToSend,
-          user.privateKey,
-          `${environment.frontendUrl}/fediverse/blog/${user.url.toLocaleLowerCase()}`,
-          environment.instanceUrl,
-          new Date()
-        )
-        if (postToDelete.privacy != 2) {
-          for await (const inboxChunk of _.chunk(inboxes, 1)) {
-            await deletePostQueue.add('sencChunk', {
-              objectToSend: { ...objectToSend, signature: bodySignature.signature },
-              petitionBy: user,
-              inboxList: inboxChunk
-            })
+        if (user.privateKey) {
+          const bodySignature = await ldSignature.signRsaSignature2017(
+            objectToSend,
+            user.privateKey,
+            `${environment.frontendUrl}/fediverse/blog/${user.url.toLocaleLowerCase()}`,
+            environment.instanceUrl,
+            new Date()
+          )
+          if (postToDelete.privacy != 2) {
+            for await (const inboxChunk of _.chunk(inboxes, 1)) {
+              await deletePostQueue.add('sencChunk', {
+                objectToSend: { ...objectToSend, signature: bodySignature.signature },
+                petitionBy: user,
+                inboxList: inboxChunk
+              })
+            }
           }
         }
         await redisCache.del('postAndUser:' + id)
@@ -267,23 +269,24 @@ export default function deletePost(app: Application) {
           .concat(serversToSendThePost.map((elem: any) => elem.publicInbox))
           .concat(usersToSendThePost.map((usr: any) => usr.remoteInbox))
 
-        for await (const objectToSend of objectsToSend) {
-          const ldSignature = new LdSignature()
-          const bodySignature = await ldSignature.signRsaSignature2017(
-            objectToSend,
-            user.privateKey,
-            `${environment.frontendUrl}/fediverse/blog/${user.url.toLocaleLowerCase()}`,
-            environment.instanceUrl,
-            new Date()
-          )
-          for await (const inboxChunk of inboxes) {
-            await deletePostQueue.add('sencChunk', {
-              objectToSend: { ...objectToSend, signature: bodySignature.signature },
-              petitionBy: user,
-              inboxList: inboxChunk
-            })
+        if (user.privateKey)
+          for await (const objectToSend of objectsToSend) {
+            const ldSignature = new LdSignature()
+            const bodySignature = await ldSignature.signRsaSignature2017(
+              objectToSend,
+              user.privateKey,
+              `${environment.frontendUrl}/fediverse/blog/${user.url.toLocaleLowerCase()}`,
+              environment.instanceUrl,
+              new Date()
+            )
+            for await (const inboxChunk of inboxes) {
+              await deletePostQueue.add('sencChunk', {
+                objectToSend: { ...objectToSend, signature: bodySignature.signature },
+                petitionBy: user,
+                inboxList: inboxChunk
+              })
+            }
           }
-        }
         reblogsToDelete.forEach(async (elem) => {
           await redisCache.del('postAndUser:' + elem)
         })

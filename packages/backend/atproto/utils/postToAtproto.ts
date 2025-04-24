@@ -183,7 +183,7 @@ async function postToAtproto(post: Post, agent: BskyAgent) {
           file = await fs.readFile('uploads/' + media.id + '_bsky.webp')
         }
         const image = Buffer.from(file)
-        const { data } = await agent.uploadBlob(image, { encoding: media.mediaType })
+        const { data } = await agent.uploadBlob(image, { encoding: media.mediaType || undefined })
         return {
           alt: media.description ? media.description : '',
           image: data.blob,
