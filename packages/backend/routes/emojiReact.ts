@@ -32,9 +32,9 @@ export default function emojiReactRoutes(app: Application) {
         emojiName.startsWith(':') && emojiName.endsWith(':')
           ? emojiOrig
           : {
-            id: emojiName,
-            name: null
-          }
+              id: emojiName,
+              name: null
+            }
       if (emoji) {
         try {
           const existing = EmojiReaction.findOne({
@@ -45,8 +45,8 @@ export default function emojiReactRoutes(app: Application) {
             }
           })
           await Promise.all([userPromise, postPromise, emoji, existing])
-          let user = await userPromise;
-          let post = await postPromise;
+          let user = await userPromise
+          let post = await postPromise
           if (userId && user && post && !(await existing)) {
             const options = await getUserOptions(user.id)
             const userFederatesWithThreads = options.filter(
@@ -54,7 +54,7 @@ export default function emojiReactRoutes(app: Application) {
             )
             if (userFederatesWithThreads.length === 0) {
               const userOfPostToBeReacted = await User.findByPk(post.userId)
-              if (userOfPostToBeReacted?.url.toLowerCase().endsWith('threads.net')) {
+              if (userOfPostToBeReacted?.url.toLowerCase().endsWith('.threads.net')) {
                 res.sendStatus(500)
                 return
               }
