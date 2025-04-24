@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common'
-import { Component, computed, ElementRef, HostListener, OnDestroy, ViewChild, ViewChildren } from '@angular/core'
+import { Component, HostListener, inject, OnDestroy, ViewChild } from '@angular/core'
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms'
 import { MatButtonModule } from '@angular/material/button'
 import { MatCardModule } from '@angular/material/card'
@@ -51,6 +51,9 @@ import { InfoCardComponent } from '../info-card/info-card.component'
 import { TranslateModule } from '@ngx-translate/core'
 import { SimplifiedUser } from 'src/app/interfaces/simplified-user'
 import { MatBadgeModule } from '@angular/material/badge'
+import { EmojiPickerComponent } from '../emoji-picker/emoji-picker.component'
+import { Emoji } from 'src/app/interfaces/emoji'
+import { Dialog } from '@angular/cdk/dialog'
 
 @Component({
   selector: 'app-new-editor',
@@ -77,7 +80,7 @@ import { MatBadgeModule } from '@angular/material/badge'
     MatDialogModule,
     TranslateModule,
     MatBadgeModule,
-    MatChipsModule
+    MatChipsModule,
   ],
   templateUrl: './new-editor.component.html',
   styleUrl: './new-editor.component.scss'
@@ -92,6 +95,7 @@ export class NewEditorComponent implements OnDestroy {
   ]
   quoteOpen = false
   data: EditorData | undefined
+  emojiDialog = inject(Dialog);
   editing = false
   baseMediaUrl = EnvironmentService.environment.baseMediaUrl
   cacheurl = EnvironmentService.environment.externalCacheurl
@@ -533,5 +537,17 @@ export class NewEditorComponent implements OnDestroy {
 
   removeMention(index: number) {
     this.mentionedUsers.splice(index, 1)
+  }
+
+  openEmojiSelection(): void {
+    const textarea = document.getElementById('postCreatorContent') as HTMLTextAreaElement
+    const pos = textarea.selectionStart;
+    const dialogRef = this.emojiDialog.open<Emoji>(EmojiPickerComponent);
+
+    dialogRef.closed.subscribe(result => {
+      if (result) {
+        textarea.value = textarea.value.slice(0, pos) + result.name + textarea.value.slice(pos);
+      }
+    })
   }
 }

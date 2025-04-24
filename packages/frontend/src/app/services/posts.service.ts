@@ -255,7 +255,8 @@ export class PostsService {
   }
 
   processPostNew(unlinked: unlinkedPosts): ProcessedPost[][] {
-    this.processedQuotes = unlinked.quotedPosts.map((quote) => this.processSinglePost({ ...unlinked, posts: [quote] }, this.processedQuotes));
+    const fake: ProcessedPost[] = [];
+    this.processedQuotes = unlinked.quotedPosts.map((quote) => this.processSinglePost({ ...unlinked, posts: [quote] }, fake));
     const res = unlinked.posts
       .filter((post) => !!post)
       .map((elem) => {
@@ -308,8 +309,8 @@ export class PostsService {
     const polls = elem ? unlinked.polls.filter((poll) => poll.postId === elem.id) : []
     const medias = elem
       ? unlinked.medias.filter((media) => {
-          return media.postId === elem.id
-        })
+        return media.postId === elem.id
+      })
       : []
     if (user.name) {
       user.name = user.name.replaceAll('‏', '')
@@ -324,26 +325,26 @@ export class PostsService {
     }
     const mentionedUsers = elem
       ? unlinked.mentions
-          .filter((mention) => mention.post === elem.id)
-          .map((mention) => unlinked.users.find((usr) => usr.id === mention.userMentioned))
-          .filter((mention) => mention !== undefined)
+        .filter((mention) => mention.post === elem.id)
+        .map((mention) => unlinked.users.find((usr) => usr.id === mention.userMentioned))
+        .filter((mention) => mention !== undefined)
       : []
     let emojiReactions: PostEmojiReaction[] = elem
       ? unlinked.emojiRelations.postEmojiReactions.filter((emoji) => emoji.postId === elem.id)
       : []
     const likesAsEmojiReactions: PostEmojiReaction[] = elem
       ? unlinked.likes
-          .filter((like) => like.postId === elem.id)
-          .map((likeUserId) => {
-            return {
-              emojiId: 'Like',
-              postId: elem.id,
-              userId: likeUserId.userId,
-              content: '♥️',
-              //emoji?: Emoji;
-              user: unlinked.users.find((usr) => usr.id === likeUserId.userId)
-            }
-          })
+        .filter((like) => like.postId === elem.id)
+        .map((likeUserId) => {
+          return {
+            emojiId: 'Like',
+            postId: elem.id,
+            userId: likeUserId.userId,
+            content: '♥️',
+            //emoji?: Emoji;
+            user: unlinked.users.find((usr) => usr.id === likeUserId.userId)
+          }
+        })
       : []
     emojiReactions = emojiReactions.map((react) => {
       return {
@@ -358,8 +359,8 @@ export class PostsService {
     const links = parsedAsHTML.getElementsByTagName('a')
     const quotes = elem
       ? unlinked.quotes
-          .filter((quote) => quote.quoterPostId === elem.id)
-          .map((quote) => this.processedQuotes.find((pst) => pst.id === quote.quotedPostId) as ProcessedPost)
+        .filter((quote) => quote.quoterPostId === elem.id)
+        .map((quote) => this.processedQuotes.find((pst) => pst.id === quote.quotedPostId) as ProcessedPost)
       : []
     Array.from(links).forEach((link, index) => {
       const youtubeMatch = Array.from(link.href.matchAll(this.youtubeRegex))
@@ -625,8 +626,8 @@ export class PostsService {
     const mentionRemoteUrls = post.mentionPost ? post.mentionPost?.map((elem) => elem.url) : []
     const mentionedHosts = post.mentionPost
       ? post.mentionPost?.map(
-          (elem) => this.getURL(elem.remoteId ? elem.remoteId : 'https://adomainthatdoesnotexist.google.com').hostname
-        )
+        (elem) => this.getURL(elem.remoteId ? elem.remoteId : 'https://adomainthatdoesnotexist.google.com').hostname
+      )
       : []
     const hostUrl = this.getURL(EnvironmentService.environment.frontUrl).hostname
     Array.from(links).forEach((link) => {
@@ -634,10 +635,9 @@ export class PostsService {
       if (link.innerText === link.href && youtubeMatch) {
         // NOTE: Since this should not be part of the image Viewer, we have to add then no-viewer class to be checked for later
         Array.from(youtubeMatch).forEach((youtubeString) => {
-          link.innerHTML = `<div class="watermark"><!-- Watermark container --><div class="watermark__inner"><!-- The watermark --><div class="watermark__body"><img alt="youtube logo" class="yt-watermark no-viewer" loading="lazy" src="/assets/img/youtube_logo.png"></div></div><img class="yt-thumbnail" src="${
-            EnvironmentService.environment.externalCacheurl +
+          link.innerHTML = `<div class="watermark"><!-- Watermark container --><div class="watermark__inner"><!-- The watermark --><div class="watermark__body"><img alt="youtube logo" class="yt-watermark no-viewer" loading="lazy" src="/assets/img/youtube_logo.png"></div></div><img class="yt-thumbnail" src="${EnvironmentService.environment.externalCacheurl +
             encodeURIComponent(`https://img.youtube.com/vi/${youtubeString[6]}/hqdefault.jpg`)
-          }" loading="lazy" alt="Thumbnail for video"></div>`
+            }" loading="lazy" alt="Thumbnail for video"></div>`
         })
       }
       // replace mentioned users with wafrn version of profile.
@@ -690,7 +690,11 @@ export class PostsService {
 
     sanitized = sanitized.replaceAll(this.wafrnMediaRegex, '')
 
+    let emojiset = new Set<string>();
     post.emojis.forEach((emoji) => {
+      // Post can include the same emoji more than once, causing recursive behaviour with alt/title text
+      if (emojiset.has(emoji.name)) return;
+      emojiset.add(emoji.name);
       const strToReplace = emoji.name.startsWith(':') ? emoji.name : `:${emoji.name}:`
       sanitized = sanitized.replaceAll(strToReplace, this.emojiToHtml(emoji))
     })
