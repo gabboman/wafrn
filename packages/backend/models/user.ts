@@ -24,6 +24,7 @@ import { PostMentionsUserRelation } from "./postMentionsUserRelation.js";
 import { UserLikesPostRelations } from "./userLikesPostRelations.js";
 import { UserBookmarkedPosts } from "./userBookmarkedPosts.js";
 import { RemoteUserPostView } from "./remoteUserPostView.js";
+import { BelongsToManyAddAssociationMixin, BelongsToManyRemoveAssociationMixin, HasManyRemoveAssociationMixin } from "sequelize";
 
 export interface UserAttributes {
   id?: string;
@@ -38,7 +39,7 @@ export interface UserAttributes {
   avatar?: string;
   password?: string;
   birthDate?: Date;
-  activated?: boolean;
+  activated?: boolean | null;
   requestedPasswordReset?: Date;
   activationCode?: string;
   registerIp?: string;
@@ -51,7 +52,7 @@ export interface UserAttributes {
   remoteId?: string;
   remoteMentionUrl?: string;
   isBot?: boolean;
-  banned?: boolean;
+  banned?: boolean | null;
   role?: number;
   manuallyAcceptsFollows?: boolean;
   headerImage?: string;
@@ -138,7 +139,7 @@ export class User extends Model<UserAttributes, UserAttributes> implements UserA
     allowNull: true,
     type: DataType.BOOLEAN
   })
-  declare activated: boolean;
+  declare activated: boolean | null;
 
   @Column({
     allowNull: true,
@@ -219,7 +220,7 @@ export class User extends Model<UserAttributes, UserAttributes> implements UserA
     type: DataType.BOOLEAN,
     defaultValue: false
   })
-  declare banned: boolean;
+  declare banned: boolean | null;
 
   @Column({
     allowNull: true,
@@ -360,9 +361,11 @@ export class User extends Model<UserAttributes, UserAttributes> implements UserA
 
   @BelongsToMany(() => User, () => Follows, "followedId", "followerId")
   declare follower: User[]
+  declare removeFollower: BelongsToManyRemoveAssociationMixin<User, string>
 
   @BelongsToMany(() => User, () => Follows, "followerId", "followedId")
   declare followed: User[]
+  declare removeFollowed: BelongsToManyRemoveAssociationMixin<User, string>
 
   @HasMany(() => Blocks, {
     foreignKey: "blockerId"
@@ -376,6 +379,8 @@ export class User extends Model<UserAttributes, UserAttributes> implements UserA
 
   @BelongsToMany(() => User, () => Blocks, "blockedId", "blockerId")
   declare blocker: User[]
+  declare addBlocker: BelongsToManyAddAssociationMixin<User, string>
+  declare removeBlocker: BelongsToManyRemoveAssociationMixin<User, string>
 
   @BelongsToMany(() => User, () => Blocks, "blockerId", "blockedId")
   declare blocked: User[]
@@ -392,6 +397,8 @@ export class User extends Model<UserAttributes, UserAttributes> implements UserA
 
   @BelongsToMany(() => User, () => Mutes, "mutedId", "muterId")
   declare muter: User[]
+  declare removeMuter: BelongsToManyRemoveAssociationMixin<Mutes, string>
+
 
   @BelongsToMany(() => User, () => Mutes, "muterId", "mutedId")
   declare muted: User[]

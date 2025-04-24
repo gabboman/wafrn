@@ -13,7 +13,7 @@ export interface FederatedHostAttributes {
   createdAt?: Date;
   updatedAt?: Date;
   displayName?: string;
-  publicInbox?: string;
+  publicInbox?: string | null;
   publicKey?: string;
   detail?: string;
   blocked?: boolean;
@@ -44,7 +44,7 @@ export class FederatedHost extends Model<FederatedHostAttributes, FederatedHostA
     allowNull: true,
     type: DataType.STRING
   })
-  declare publicInbox: string;
+  declare publicInbox: string | null;
 
   @Column({
     allowNull: true,

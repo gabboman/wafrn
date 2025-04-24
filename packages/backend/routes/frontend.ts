@@ -162,7 +162,8 @@ async function getPostSEOCache(id: string): Promise<{ title: string; description
           : sanitizeStringForSEO(post.content)
       ).substring(0, 190)
       const safeMedia = post.medias?.find((elem: any) => elem.NSFW === false && !elem.url.toLowerCase().endsWith('mp4'))
-      res.img = safeMedia?.url
+      if (safeMedia)
+        res.img = safeMedia?.url
       redisCache.set('postSeoCache:' + id, JSON.stringify(res), 'EX', 300)
     }
   } else {
@@ -176,12 +177,11 @@ async function getBlogSEOCache(url: string): Promise<{ title: string; descriptio
   let res = { ...environment.defaultSEOData }
   if (!resData) {
     const blog = await User.findOne({
-      where: {
-        literal: sequelize.where(sequelize.fn('lower', sequelize.col('url')), url.toLowerCase()),
-        email: {
-          [Op.ne]: null
-        }
-      }
+      where:
+        sequelize.and(
+          sequelize.where(sequelize.fn('lower', sequelize.col('url')), url.toLowerCase()),
+          sequelize.where(sequelize.col('email'), Op.ne, null)
+        )
     })
     if (blog) {
       const url = sanitizeStringForSEO(blog.url).substring(0, 65)

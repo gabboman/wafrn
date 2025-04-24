@@ -43,8 +43,8 @@ export default function deletePost(app: Application) {
     try {
       const id = req.query.id as string
       const posterId = req.jwtData?.userId
-      const user = (await User.findByPk(posterId)) as Model<any, any>
-      if (id) {
+      const user = await User.findByPk(posterId)
+      if (id && user) {
         let postToDelete = await Post.findOne({
           where: {
             id,
@@ -58,7 +58,8 @@ export default function deletePost(app: Application) {
                 id: id
               }
             })
-          } else {
+          }
+          if (!postToDelete) {
             res.sendStatus(500)
             return
           }
@@ -183,8 +184,8 @@ export default function deletePost(app: Application) {
     try {
       const id = req.query.id as string
       const posterId = req.jwtData?.userId
-      const user = (await User.findByPk(posterId)) as Model<any, any>
-      if (id) {
+      const user = await User.findByPk(posterId)
+      if (id && user) {
         let postsToDeleteUnfiltered = await Post.findAll({
           where: {
             parentId: id,
@@ -289,7 +290,7 @@ export default function deletePost(app: Application) {
         await Notification.destroy({
           where: {
             notificationType: 'REWOOT',
-            postId: req.query.id,
+            postId: req.query.id as string,
             userId: user.id
           }
         })

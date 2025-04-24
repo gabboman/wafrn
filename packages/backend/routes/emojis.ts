@@ -7,7 +7,6 @@ import fs from 'fs'
 import { Extract } from 'unzip-stream'
 import { Emoji, EmojiCollection } from '../models/index.js'
 import { logger } from '../utils/logger.js'
-import { wait } from '../utils/wait.js'
 import { redisCache } from '../utils/redis.js'
 const emojiStorage = multer.diskStorage({
   destination: '/tmp/',

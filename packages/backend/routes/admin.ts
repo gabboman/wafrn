@@ -151,15 +151,19 @@ export default function adminRoutes(app: Application) {
 
   app.post('/api/admin/closeReport', authenticateToken, adminToken, async (req: AuthorizedRequest, res: Response) => {
     const reportToBeClosed = await PostReport.findByPk(req.body.id)
-    reportToBeClosed.resolved = true
-    await reportToBeClosed.save()
+    if (reportToBeClosed) {
+      reportToBeClosed.resolved = true
+      await reportToBeClosed.save()
+    }
     res.send(await getReportList())
   })
 
   app.post('/api/admin/banUser', authenticateToken, adminToken, async (req: AuthorizedRequest, res: Response) => {
     const userToBeBanned = await User.findByPk(req.body.id)
-    userToBeBanned.banned = 1
-    await userToBeBanned.save()
+    if (userToBeBanned) {
+      userToBeBanned.banned = true
+      await userToBeBanned.save()
+    }
     // TOO fix this dirty thing oh my god
     const unsolvedReports = await PostReport.findAll({
       where: {
@@ -255,14 +259,16 @@ export default function adminRoutes(app: Application) {
   app.post('/api/admin/activateUser', authenticateToken, adminToken, async (req: AuthorizedRequest, res: Response) => {
     if (req.body.id) {
       const userToActivate = await User.findByPk(req.body.id)
-      userToActivate.activated = true
-      const emailPromise = sendActivationEmail(
-        userToActivate.email,
-        '',
-        `your account at ${environment.frontendUrl} has been activated`,
-        `Hello ${userToActivate.url}, your account has been reviewed by our team and is now activated! Congratulations`
-      )
-      Promise.allSettled([emailPromise, userToActivate.save()])
+      if (userToActivate) {
+        userToActivate.activated = true
+        const emailPromise = sendActivationEmail(
+          userToActivate.email,
+          '',
+          `your account at ${environment.frontendUrl} has been activated`,
+          `Hello ${userToActivate.url}, your account has been reviewed by our team and is now activated! Congratulations`
+        )
+        Promise.allSettled([emailPromise, userToActivate.save()])
+      }
     }
     res.send({ success: true })
   })
@@ -295,15 +301,17 @@ export default function adminRoutes(app: Application) {
     async (req: AuthorizedRequest, res: Response) => {
       if (req.body.id) {
         const userToActivate = await User.findByPk(req.body.id)
-        userToActivate.activate = null // little hack, not adding another thing to the db. we set it to null and remove notification
-        userToActivate.banned = null
-        const emailPromise = sendActivationEmail(
-          userToActivate.email,
-          '',
-          `Hello ${userToActivate.url}, before we can activate your account at ${environment.frontendUrl} we need you to reply to this email`,
-          `Hello ${userToActivate.url}, you recived this email because something might be off in your account. Usually is something like the email being in a strange provider or 'wow that email looks weird'. We just need a confirmation. Sorry for this and thanks.`
-        )
-        Promise.allSettled([userToActivate.save(), emailPromise])
+        if (userToActivate) {
+          userToActivate.activated = null // little hack, not adding another thing to the db. we set it to null and remove notification
+          userToActivate.banned = null
+          const emailPromise = sendActivationEmail(
+            userToActivate.email,
+            '',
+            `Hello ${userToActivate.url}, before we can activate your account at ${environment.frontendUrl} we need you to reply to this email`,
+            `Hello ${userToActivate.url}, you recived this email because something might be off in your account. Usually is something like the email being in a strange provider or 'wow that email looks weird'. We just need a confirmation. Sorry for this and thanks.`
+          )
+          Promise.allSettled([userToActivate.save(), emailPromise])
+        }
       }
       res.send({ success: true })
     }
