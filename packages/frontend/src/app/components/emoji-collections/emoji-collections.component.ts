@@ -14,15 +14,9 @@ import { EnvironmentService } from '../../services/environment.service'
 import { PostsService } from '../../services/posts.service'
 import { ScrollingModule } from '@angular/cdk/scrolling';
 
-export enum EmojiRenderType {
+enum EmojiRenderType {
   Header,
   Row,
-};
-
-export interface EmojiRow {
-  tag: EmojiRenderType,
-  emos: Emoji[],
-  name: string,
 };
 
 @Component({
@@ -44,71 +38,70 @@ export class EmojiCollectionsComponent implements AfterViewInit, OnDestroy {
   @ViewChild('emojiContainer')
   emojiElement!: ElementRef<HTMLElement>;
 
-  readonly emojiWidth = 58;
+  readonly emojiWidth = 55;
   readonly maxRecents = 32;
-  emojiPerRow = signal(4);
+  readonly narrow = 800;
+
+  virtualHeight = signal(300);
+
+  vcRows = computed<VirtualRows>(() => {
+    let recentEmoji: Emoji[] = [];
+    let filteredRecents: Emoji[] = [];
+    let filteredCollections: EmojiCollection[] = [];
+
+    // Our recent emojis are stored in local storage
+    // -2 is our sentinel value for recents
+    if (this.includedCollectionsSize() == 0 || this.includedCollections.has(-2)) {
+      let recents = localStorage.getItem("recentEmoji");
+      recents ??= "[]";
+      recentEmoji = JSON.parse(recents) as Emoji[];
+
+      if (recentEmoji) {
+        recentEmoji.reverse();
+      } else {
+        recentEmoji = [];
+      }
+      for (let r of recentEmoji) {
+        if (r.name.toLowerCase().includes(this.filterText().toLowerCase())) {
+          filteredRecents.push(r);
+        }
+      }
+    }
+
+    // If we don't need to manipulate arrays, don't!
+    if (this.filterText() == '' && this.includedCollectionsSize() == 0) {
+      return new VirtualRows(recentEmoji, this.emojiCollections, this.emojiPerRow());
+    }
+
+    for (let i = 0; i < this.emojiCollections.length; i++) {
+      let c = this.emojiCollections[i];
+      let newCollection: EmojiCollection = { name: c.name, comment: c.comment, emojis: [] };
+      if (this.includedCollectionsSize() == 0 || this.includedCollections.has(i)) {
+        for (let e of this.emojiCollections[i].emojis) {
+          if (e.name.toLowerCase().includes(this.filterText().toLowerCase())) {
+            newCollection.emojis.push(e);
+          }
+        }
+        if (newCollection.emojis.length > 0) { filteredCollections.push(newCollection); };
+      }
+    }
+
+    for (let i = 0; i < 5; i++) {
+      filteredCollections.push({ name: '', comment: '', emojis: [] });
+    }
+    return new VirtualRows(filteredRecents, filteredCollections, this.emojiPerRow());
+  })
 
   // No point having a reference as a signal.
   includedCollections: Set<number> = new Set();
   includedCollectionsSize = signal<number>(0);
+  emojiPerRow = signal(4);
   filterText = model<string>('');
 
-  // Computed upon changes to `includedCollectionsSize` and `filterText`
-  emojiRenderable = computed<EmojiRow[]>(() => {
-    const renderable: EmojiRow[] = [];
 
-    // Our recent emojis are stored in local storage
-    // -2 is our sentinel value for recents
-    if (this.includedCollectionsSize() === 0 || this.includedCollections.has(-2)) {
-      let recents = localStorage.getItem("recentEmoji");
-      recents ??= "[]";
-      let localEmos = JSON.parse(recents) as Emoji[];
-
-      if (localEmos) {
-        const header: EmojiRow = { tag: EmojiRenderType.Header, name: "Recent emojis", emos: [] };
-        renderable.push(header);
-        this.createEmojiRows(this.filterText(), localEmos, renderable, true);
-      }
-    }
-
-
-    for (let i = 0; i < this.emojiCollections.length; i++) {
-      // If we are not including any collections, we render everything!
-      if (this.includedCollectionsSize() != 0 && !this.includedCollections.has(i)) continue;
-
-      let collection = this.emojiCollections[i];
-
-      // Create a element for this collection's header
-      const header: EmojiRow = { tag: EmojiRenderType.Header, name: collection.name, emos: [] };
-      renderable.push(header);
-      this.createEmojiRows(this.filterText(), collection.emojis, renderable);
-    }
-    return renderable;
+  rowIterable = computed<AngularFor>(() => {
+    return new AngularFor(this.emojiPerRow() - 1);
   });
-
-  createEmojiRows(query: string, emojis: Emoji[], out: EmojiRow[], reverse: boolean = false) {
-    let count = 1;
-    let row = [];
-    // Create elements for each row of emoji
-    let i = reverse ? emojis.length - 1 : 0;
-    for (; reverse ? i >= 0 : i < emojis.length; reverse ? i-- : i++) {
-      let emoji = emojis[i];
-      if (!query || emoji.name.toLowerCase().includes(this.filterText().toLowerCase())) {
-        row.push(emoji);
-        if (++count > this.emojiPerRow()) {
-          const emojiRow: EmojiRow = { tag: EmojiRenderType.Row, emos: [...row], name: '' };
-          out.push(emojiRow);
-          count = 1;
-          row = [];
-        }
-      }
-    }
-    // Our row might not have been added!
-    if (row.length > 0) {
-      const emojiRow: EmojiRow = { tag: EmojiRenderType.Row, emos: [...row], name: '' };
-      out.push(emojiRow);
-    }
-  }
 
   copyIcon = faCopy
   clockIcon = faClock
@@ -189,11 +182,98 @@ export class EmojiCollectionsComponent implements AfterViewInit, OnDestroy {
   }
 
   updateDimensions() {
-    this.emojiPerRow.set(this.emojiElement.nativeElement.offsetWidth / this.emojiWidth);
+    this.emojiPerRow.set(Math.max(Math.floor(this.emojiElement.nativeElement.offsetWidth / this.emojiWidth) - 1, 1));
+    this.virtualHeight.set(window.innerWidth < this.narrow ? 700 : 300)
   }
 
   @HostListener('window:resize', ['$event'])
   onResize() {
     this.updateDimensions();
   }
+}
+
+interface EmojiRenderable {
+  tag: number,
+  index: number,
+  array: Emoji[],
+  name: string,
+}
+
+// I can't believe all solutions to this problem online are "Make and populate a new array!"
+class AngularFor implements Iterable<number> {
+  private readonly length: number;
+  constructor(length: number) {
+    this.length = length;
+  }
+  [Symbol.iterator](): Iterator<number> {
+    let count = 0;
+    return {
+      next: () => {
+        return {
+          done: count > this.length,
+          value: count++
+        }
+      }
+    }
+  }
+
+}
+
+class VirtualRows implements Iterable<EmojiRenderable> {
+  private readonly recents: Emoji[];
+  private readonly collections: EmojiCollection[];
+  private readonly perRow: number;
+
+  constructor(recents: Emoji[], collections: EmojiCollection[], perRow: number) {
+    this.recents = recents;
+    this.collections = collections;
+    this.perRow = perRow;
+  }
+
+  [Symbol.iterator](): Iterator<EmojiRenderable> {
+    let collection = this.recents.length > 0 ? -1 : 0;
+    let row = 0;
+    let headerResolved = false;
+    let skipNext = false;
+    let index = 0;
+    return {
+      next: () => {
+        if (!skipNext) {
+          index = row * this.perRow;
+          row++;
+          if (index >= (collection == -1 ? this.recents.length : this.collections[collection].emojis.length)) {
+            headerResolved = false;
+            collection++;
+            row = 1;
+            index = 0;
+          }
+        }
+        skipNext = false;
+
+        if (!headerResolved) {
+          headerResolved = true;
+          skipNext = true;
+          return {
+            done: collection >= this.collections.length as true,
+            value: {
+              tag: EmojiRenderType.Header,
+              name: collection == -1 ? "Recent emojis" : this.collections[Math.min(collection, this.collections.length - 1)].name,
+              index: 0,
+              array: []
+            }
+          }
+        }
+
+        return {
+          done: collection >= this.collections.length as true, // wtf is this typescript
+          value: {
+            tag: EmojiRenderType.Row,
+            index: index,
+            array: collection == -1 ? this.recents : this.collections[Math.min(collection, this.collections.length - 1)].emojis
+          }
+        }
+      }
+    }
+  }
+
 }

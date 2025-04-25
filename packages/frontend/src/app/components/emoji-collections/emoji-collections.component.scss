@@ -5,11 +5,9 @@ $narrow: 800px;
   height: 32px;
 }
 
-.emoji-position {
-  position: relative !important;
-}
-
 .emoji-container {
+  height: 100%;
+  justify-content: space-between;
   display: flex;
   flex-direction: row;
   @media (max-width: $narrow) {
@@ -28,12 +26,13 @@ $narrow: 800px;
   display: flex;
   flex-direction: column;
   row-gap: 5px;
+  padding-bottom: 500px;
 }
 
 .emoji-header {
   text-align: left;
   justify-content: end !important;
-  align-items:center;
+  align-items: center;
   padding-left: 1em;
   padding-right: 1em;
 }
@@ -68,6 +67,12 @@ $narrow: 800px;
     height: 64px;
     overflow-y: hidden;
     overflow-x: scroll;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background-color: var(--mat-sys-surface);
+    z-index: 99;
   }
 }
 .emoji-sidebar-child {
@@ -86,9 +91,12 @@ $narrow: 800px;
   display: flex;
   flex-direction: column;
   justify-content: center;
-  align-items: center;margin: auto;
+  align-items: center;
+  margin: auto;
 
-  span {
-    line-height:40px;
+  span,
+  img {
+    width: 25px;
+    height: 25px;
   }
 }
