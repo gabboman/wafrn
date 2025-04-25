@@ -54,7 +54,8 @@ export class EditProfileComponent implements OnInit {
     forceClassicMediaView: new FormControl(false),
     expandQuotes: new FormControl(false),
     defaultExploreLocal: new FormControl(false),
-    automaticalyExpandPosts: new FormControl(false)
+    automaticalyExpandPosts: new FormControl(false),
+    disableEmailNotifications: new FormControl(false)
   })
 
   constructor(

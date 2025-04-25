@@ -244,12 +244,13 @@ export class LoginService {
     }
 
     try {
-      const { name, description, manuallyAcceptsFollows, ...form } = updateProfileForm
+      const { name, description, manuallyAcceptsFollows, disableEmailNotifications, ...form } = updateProfileForm
 
       const payload = this.utils.objectToFormData({
         name,
         description,
-        manuallyAcceptsFollows
+        manuallyAcceptsFollows,
+        disableEmailNotifications
       })
 
       const options = []
@@ -269,7 +270,6 @@ export class LoginService {
       if (headerImg) {
         payload.append('headerImage', headerImg)
       }
-
       const petition: any = await firstValueFrom(
         this.http.post(`${EnvironmentService.environment.baseUrl}/editProfile`, payload)
       )

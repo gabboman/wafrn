@@ -8,7 +8,7 @@ import {
   faHeartBroken,
   faHome,
   faReply,
-  faTriangleExclamation,
+  faTriangleExclamation
 } from '@fortawesome/free-solid-svg-icons'
 import { Subscription } from 'rxjs'
 import { ProcessedPost } from 'src/app/interfaces/processed-post'
@@ -30,11 +30,11 @@ import { SnappyHide, SnappyShow } from 'src/app/components/snappy/snappy-life'
   selector: 'app-view-blog',
   templateUrl: './view-blog.component.html',
   styleUrls: ['./view-blog.component.scss'],
-  standalone: false,
+  standalone: false
 })
 export class ViewBlogComponent implements OnInit, OnDestroy, SnappyHide, SnappyShow {
-  loading = signal<boolean>(true);
-  loadingBlog = signal<boolean>(true);
+  loading = signal<boolean>(true)
+  loadingBlog = signal<boolean>(true)
   noMorePosts = false
   found = true
   viewedPosts = 0
@@ -42,15 +42,15 @@ export class ViewBlogComponent implements OnInit, OnDestroy, SnappyHide, SnappyS
   posts: ProcessedPost[][] = []
   blogUrl: string = ''
   avatarUrl = ''
-  blogDetails = signal<BlogDetails | undefined>(undefined);
+  blogDetails = signal<BlogDetails | undefined>(undefined)
   userLoggedIn = false
   paramSubscription!: Subscription
   showModalTheme = false
   viewedPostsIds: string[] = []
   intersectionObserverForLoadPosts!: IntersectionObserver
 
-  simpleUser?: SimplifiedUser;
-  useSimple = signal<boolean>(false);
+  simpleUser?: SimplifiedUser
+  useSimple = signal<boolean>(false)
 
   shareExternalIcon = faArrowUpRightFromSquare
   solidHeartIcon = faHeart
@@ -60,10 +60,10 @@ export class ViewBlogComponent implements OnInit, OnDestroy, SnappyHide, SnappyS
   reportIcon = faTriangleExclamation
   homeIcon = faHome
 
-  scrollId!: number;
-  viewingPost!: WritableSignal<boolean>;
+  scrollId!: number
+  viewingPost!: WritableSignal<boolean>
 
-  test = snappyInject(SnappyBlogData);
+  test = snappyInject(SnappyBlogData)
 
   constructor(
     private readonly activatedRoute: ActivatedRoute,
@@ -75,20 +75,23 @@ export class ViewBlogComponent implements OnInit, OnDestroy, SnappyHide, SnappyS
     private readonly themeService: ThemeService,
     public readonly blockService: BlocksService,
     private readonly dialog: MatDialog,
-    private readonly snappy: SnappyRouter,
+    private readonly snappy: SnappyRouter
   ) {
     this.userLoggedIn = loginService.checkUserLoggedIn()
   }
   snOnShow(): void {
-    const blogDetails = this.blogDetails();
+    const blogDetails = this.blogDetails()
     if (blogDetails) {
-      this.handleTheme(blogDetails);
+      this.handleTheme(blogDetails)
     }
   }
 
   snOnHide(): void {
-    if (this.userLoggedIn) { this.themeService.setMyTheme(); }
-    else { this.themeService.setTheme('') };
+    if (this.userLoggedIn) {
+      this.themeService.setMyTheme()
+    } else {
+      this.themeService.setTheme('')
+    }
   }
 
   ngOnDestroy(): void {
@@ -97,36 +100,36 @@ export class ViewBlogComponent implements OnInit, OnDestroy, SnappyHide, SnappyS
 
   async ngOnInit() {
     this.paramSubscription = this.activatedRoute.params.subscribe((e) => {
-      this.currentPage = 0;
-      this.blogUrl = '';
-      this.avatarUrl = '';
-      this.snappy.claim();
+      this.currentPage = 0
+      this.blogUrl = ''
+      this.avatarUrl = ''
+      this.snappy.claim()
 
-      let data = this.test(this.snappy)?.blog;
+      let data = this.test(this.snappy)?.blog
       if (data?.url) {
-        this.simpleUser = data;
+        this.simpleUser = data
       }
-      this.blogDetails.set(undefined);
+      this.blogDetails.set(undefined)
       if (this.simpleUser) {
-        const blogDetails = this.simpleToBlog(this.simpleUser);
-        this.blogDetails.set(blogDetails);
-        this.avatarUrl = this.getAvatarUrl(blogDetails);
-        this.useSimple.set(true);
+        const blogDetails = this.simpleToBlog(this.simpleUser)
+        this.blogDetails.set(blogDetails)
+        this.avatarUrl = this.getAvatarUrl(blogDetails)
+        this.useSimple.set(true)
       }
-      this.configureUser(true);
-    });
+      this.configureUser(true)
+    })
   }
 
   private getAvatarUrl(blogDetails: BlogDetails): string {
     return blogDetails.url.startsWith('@')
       ? EnvironmentService.environment.externalCacheurl + encodeURIComponent(blogDetails.avatar)
       : EnvironmentService.environment.externalCacheurl +
-      encodeURIComponent(EnvironmentService.environment.baseMediaUrl + blogDetails.avatar)
+          encodeURIComponent(EnvironmentService.environment.baseMediaUrl + blogDetails.avatar)
   }
 
   async configureUser(reload: boolean) {
-    this.loadingBlog.set(true);
-    this.loading.set(true);
+    this.loadingBlog.set(true)
+    this.loading.set(true)
 
     const blogUrl = this.activatedRoute.snapshot.paramMap.get('url')
     if (blogUrl) {
@@ -135,14 +138,14 @@ export class ViewBlogComponent implements OnInit, OnDestroy, SnappyHide, SnappyS
 
     const blogResponse = await this.dashboardService.getBlogDetails(this.blogUrl).catch(() => {
       this.found = false
-      this.loading.set(false);
+      this.loading.set(false)
     })
 
-    this.useSimple.set(false);
+    this.useSimple.set(false)
     if (blogResponse) {
-      const blogDetails = blogResponse;
-      this.blogDetails.set(blogDetails);
-      this.avatarUrl = this.getAvatarUrl(blogResponse);
+      const blogDetails = blogResponse
+      this.blogDetails.set(blogDetails)
+      this.avatarUrl = this.getAvatarUrl(blogResponse)
       this.titleService.setTitle(`${this.blogDetails()!.url}'s blog`)
       this.metaTagService.addTags([
         {
@@ -153,18 +156,18 @@ export class ViewBlogComponent implements OnInit, OnDestroy, SnappyHide, SnappyS
         { name: 'image', content: this.avatarUrl }
       ])
       if (reload) {
-        this.loading.set(false);
+        this.loading.set(false)
         this.reloadPosts()
       }
-      this.useSimple.set(false);
-      this.handleTheme(blogDetails);
+      this.useSimple.set(false)
+      this.handleTheme(blogDetails)
     }
 
     this.intersectionObserverForLoadPosts = new IntersectionObserver(
       (intersectionEntries: IntersectionObserverEntry[]) => {
         if (intersectionEntries[0].isIntersecting) {
           this.currentPage++
-          this.loadPosts(this.currentPage);
+          this.loadPosts(this.currentPage)
         }
       }
     )
@@ -178,12 +181,11 @@ export class ViewBlogComponent implements OnInit, OnDestroy, SnappyHide, SnappyS
       })
     })
 
-    this.loadingBlog.set(false);
+    this.loadingBlog.set(false)
   }
 
-
   handleTheme(blogDetails: BlogDetails) {
-    const userHasCustomTheme = !blogDetails.url.startsWith('@');
+    const userHasCustomTheme = !blogDetails.url.startsWith('@')
 
     if (userHasCustomTheme) {
       let userResponseToCustomThemes = this.themeService.hasUserAcceptedCustomThemes()
@@ -195,7 +197,7 @@ export class ViewBlogComponent implements OnInit, OnDestroy, SnappyHide, SnappyS
       if (userResponseToCustomThemes === 0) {
         const dialogRef = this.dialog.open(AcceptThemeComponent, {
           autoFocus: false
-        });
+        })
         dialogRef.afterClosed().subscribe(() => {
           userResponseToCustomThemes = this.themeService.hasUserAcceptedCustomThemes()
           if (userResponseToCustomThemes === 2) {
@@ -208,9 +210,8 @@ export class ViewBlogComponent implements OnInit, OnDestroy, SnappyHide, SnappyS
     }
   }
 
-
   reloadPosts() {
-    if (this.loading()) return;
+    if (this.loading()) return
     this.posts = []
     this.currentPage = 0
     this.viewedPosts = 0
@@ -219,15 +220,19 @@ export class ViewBlogComponent implements OnInit, OnDestroy, SnappyHide, SnappyS
   }
 
   async loadPosts(page: number) {
-    if (this.blogUrl === '') { return };
-    if (!this.blogDetails()) { return };
+    if (this.blogUrl === '') {
+      return
+    }
+    if (!this.blogDetails()) {
+      return
+    }
     if (!this.userLoggedIn && this.blogDetails()!.url.startsWith('@')) {
-      this.loading.set(false);
-      this.noMorePosts = true;
-      return;
+      this.loading.set(false)
+      this.noMorePosts = true
+      return
     }
 
-    this.loading.set(true);
+    this.loading.set(true)
 
     const tmpPosts = await this.dashboardService.getBlogPage(page, this.blogUrl)
     const filteredPosts = tmpPosts.filter((post: ProcessedPost[]) => {
@@ -244,7 +249,7 @@ export class ViewBlogComponent implements OnInit, OnDestroy, SnappyHide, SnappyS
     filteredPosts.forEach((post) => {
       this.posts.push(post)
     })
-    this.loading.set(false);
+    this.loading.set(false)
     if (tmpPosts.length === 0) {
       this.noMorePosts = true
     }
@@ -273,7 +278,8 @@ export class ViewBlogComponent implements OnInit, OnDestroy, SnappyHide, SnappyS
       followers: 0,
       publicOptions: [],
       postCount: 0,
-      isBlueskyUser: false
+      isBlueskyUser: false,
+      disableEmailNotifications: false
     }
   }
 }

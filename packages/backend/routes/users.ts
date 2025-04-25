@@ -227,6 +227,7 @@ export default function userRoutes(app: Application) {
           if (manuallyAcceptsFollows) {
             user.manuallyAcceptsFollows = manuallyAcceptsFollows
           }
+          user.disableEmailNotifications = req.body.disableEmailNotifications == 'true'
           if (description) {
             const descriptionHtml = markdownConverter.makeHtml(description)
             user.description = descriptionHtml
@@ -672,6 +673,7 @@ export default function userRoutes(app: Application) {
   app.get('/api/user', optionalAuthentication, async (req: AuthorizedRequest, res) => {
     let success = false
     if (req.query?.id) {
+      const userId = req.jwtData?.userId ? req.jwtData?.userId : '00000000-0000-0000-0000-000000000000'
       const blogId: string = (req.query.id || '').toString().toLowerCase().trim()
       const blog = await User.findOne({
         attributes: [
@@ -691,7 +693,8 @@ export default function userRoutes(app: Application) {
           'bskyDid',
           'isFediverseUser',
           'isBlueskyUser',
-          'enableBsky'
+          'enableBsky',
+          [sequelize.literal(`"id" = '${userId}' AND "disableEmailNotifications"`), 'disableEmailNotifications'] // To add the aggregation...
         ],
         include: [
           {
