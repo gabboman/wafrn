@@ -6,19 +6,3 @@ button {
 }
 
 
-.emojireact-overlay {
-  overflow-x: hidden;
-  overflow-y: auto;
-  background-color: var(--mat-sys-surface-container-high);
-  border-radius: var(--mat-sys-corner-small);
-  box-shadow: var(--mat-sys-level3);
-  overscroll-behavior: contain;
-  z-index: 9999
-}
-
-.emoji-away {
-  position: fixed;
-  inset: 0 0 0 0;
-  background-color: rgba(0, 0, 0, 0.3);
-  z-index: 999
-}
