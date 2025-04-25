@@ -5,6 +5,11 @@ $narrow: 800px;
   justify-content: space-between;
 }
 
+.emojireact-overlay {
+  height: 100%;
+  overflow: hidden;
+  overscroll-behavior: contain;
+}
 :host {
   width: 50vw;
   display: block;
@@ -16,6 +21,7 @@ $narrow: 800px;
   box-shadow: var(--mat-sys-level3);
   overscroll-behavior: contain;
   @media (max-width: $narrow) {
-    width: 100%;
+    width: 100vw;
+    height: 100vh;
   }
 }
