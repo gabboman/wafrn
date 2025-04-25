@@ -6,13 +6,12 @@ import { follow } from '../../follow.js'
 import { logger } from '../../logger.js'
 import { getRemoteActor } from '../getRemoteActor.js'
 
-async function MoveActivity(body: activityPubObject, remoteUser: any, user: any) {
+async function MoveActivity(body: activityPubObject, remoteUser: User, user: User) {
   // WIP move
   // TODO get list of users who where following old account
   // then make them follow the new one, sending petition
   const apObject: activityPubObject = body
-  if (!apObject.target)
-    return;
+  if (!apObject.target) return
 
   const newUser = await getRemoteActor(apObject.target, user)
   const oldUser = await User.findByPk(remoteUser.id) // a bit paranoid, innit?
@@ -24,7 +23,7 @@ async function MoveActivity(body: activityPubObject, remoteUser: any, user: any)
           {
             followedId: oldUser.id,
             accepted: true,
-            followerId: { [Op.in]: await getAllLocalUserIds() },
+            followerId: { [Op.in]: await getAllLocalUserIds() }
           },
           sequelize.literal(
             `"followerId" NOT IN (select "followerId" from "follows" where "followedId"='${newUser.id}')`

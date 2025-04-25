@@ -1,11 +1,11 @@
-import { Blocks } from '../../../models/index.js'
+import { Blocks, User } from '../../../models/index.js'
 import { activityPubObject } from '../../../interfaces/fediverse/activityPubObject.js'
 import { redisCache } from '../../redis.js'
 import { getPostThreadRecursive } from '../getPostThreadRecursive.js'
 import { getRemoteActor } from '../getRemoteActor.js'
 import { signAndAccept } from '../signAndAccept.js'
 
-async function BlockActivity(body: activityPubObject, remoteUser: any, user: any) {
+async function BlockActivity(body: activityPubObject, remoteUser: User, user: User) {
   const apObject: activityPubObject = body
   const userToBeBlocked = await getRemoteActor(apObject.object, user)
   await Blocks.create({

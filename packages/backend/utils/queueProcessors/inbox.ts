@@ -1,6 +1,15 @@
 import { Job } from 'bullmq'
 import { logger } from '../logger.js'
-import { Blocks, Emoji, EmojiReaction, FederatedHost, Follows, Post, User, UserLikesPostRelations } from '../../models/index.js'
+import {
+  Blocks,
+  Emoji,
+  EmojiReaction,
+  FederatedHost,
+  Follows,
+  Post,
+  User,
+  UserLikesPostRelations
+} from '../../models/index.js'
 import { getRemoteActor } from '../activitypub/getRemoteActor.js'
 import { signAndAccept } from '../activitypub/signAndAccept.js'
 import { removeUser } from '../activitypub/removeUser.js'
@@ -27,8 +36,9 @@ import { flagActivity } from '../activitypub/processors/flag.js'
 async function inboxWorker(job: Job) {
   try {
     const user = await User.findByPk(job.data.petitionBy)
-    if (!user)
+    if (!user) {
       return
+    }
 
     const body = job.data.petition
     const req = { body: body }

@@ -1,10 +1,10 @@
-import { Follows } from '../../../models/index.js'
+import { Follows, User } from '../../../models/index.js'
 import { activityPubObject } from '../../../interfaces/fediverse/activityPubObject.js'
 import { redisCache } from '../../redis.js'
 import { getRemoteActor } from '../getRemoteActor.js'
 import { signAndAccept } from '../signAndAccept.js'
 
-async function RejectActivity(body: activityPubObject, remoteUser: any, user: any) {
+async function RejectActivity(body: activityPubObject, remoteUser: User, user: User) {
   const apObject: activityPubObject = body
   // someone rejected your follow request :(
   const userWichFollowWasRejected = await getRemoteActor(apObject.object.actor, user)

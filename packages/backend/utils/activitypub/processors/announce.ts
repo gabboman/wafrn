@@ -1,4 +1,4 @@
-import { Notification, Post } from '../../../models/index.js'
+import { Notification, Post, User } from '../../../models/index.js'
 import { environment } from '../../../environment.js'
 import { activityPubObject } from '../../../interfaces/fediverse/activityPubObject.js'
 import { logger } from '../../logger.js'
@@ -7,7 +7,7 @@ import { getPostThreadRecursive } from '../getPostThreadRecursive.js'
 import { getApObjectPrivacy } from '../getPrivacy.js'
 import { signAndAccept } from '../signAndAccept.js'
 
-async function AnnounceActivity(body: activityPubObject, remoteUser: any, user: any) {
+async function AnnounceActivity(body: activityPubObject, remoteUser: User, user: User) {
   const apObject: activityPubObject = body
   // check if posthas been procesed already
   const existingPost = await Post.findOne({
@@ -23,8 +23,8 @@ async function AnnounceActivity(body: activityPubObject, remoteUser: any, user: 
     typeof apObject.object === 'string'
       ? apObject.object
       : apObject.object.object
-        ? apObject.object.object
-        : apObject.id
+      ? apObject.object.object
+      : apObject.id
   urlToGet = typeof urlToGet === 'string' ? urlToGet : urlToGet?.id
   if (!urlToGet) {
     const error = new Error()

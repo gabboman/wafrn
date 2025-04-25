@@ -1,11 +1,11 @@
-import { Emoji, EmojiReaction, Notification, UserLikesPostRelations } from '../../../models/index.js'
+import { Emoji, EmojiReaction, Notification, User, UserLikesPostRelations } from '../../../models/index.js'
 import { activityPubObject } from '../../../interfaces/fediverse/activityPubObject.js'
 import { logger } from '../../logger.js'
 import { createNotification } from '../../pushNotifications.js'
 import { getPostThreadRecursive } from '../getPostThreadRecursive.js'
 import { signAndAccept } from '../signAndAccept.js'
 
-async function LikeActivity(body: activityPubObject, remoteUser: any, user: any) {
+async function LikeActivity(body: activityPubObject, remoteUser: User, user: User) {
   const apObject: activityPubObject = body
   const postToBeLiked = await getPostThreadRecursive(user, apObject.object)
   if (postToBeLiked) {
@@ -21,11 +21,11 @@ async function LikeActivity(body: activityPubObject, remoteUser: any, user: any)
       const reaction = existingReaction
         ? existingReaction
         : await EmojiReaction.create({
-          remoteId: apObject.id,
-          content: apObject.content,
-          userId: remoteUser.id,
-          postId: postToBeLiked.id
-        })
+            remoteId: apObject.id,
+            content: apObject.content,
+            userId: remoteUser.id,
+            postId: postToBeLiked.id
+          })
       if (!reactionFound) {
         await createNotification(
           {
@@ -48,11 +48,11 @@ async function LikeActivity(body: activityPubObject, remoteUser: any, user: any)
         const emojiToAdd = existingEmoji
           ? existingEmoji
           : await Emoji.create({
-            id: emojiRemote.id,
-            name: emojiRemote.name,
-            url: emojiRemote.icon?.url,
-            external: true
-          })
+              id: emojiRemote.id,
+              name: emojiRemote.name,
+              url: emojiRemote.icon?.url,
+              external: true
+            })
         reaction.emojiId = emojiToAdd.id
         await reaction.save()
       }
