@@ -551,7 +551,10 @@ export class NewEditorComponent implements OnDestroy {
 
     dialogRef.closed.subscribe((result) => {
       if (result) {
-        textarea.value = textarea.value.slice(0, pos) + result.name + textarea.value.slice(pos)
+        // we use the reactform for this
+        this.postCreatorForm.controls['content'].patchValue(
+          textarea.value.slice(0, pos) + result.name + textarea.value.slice(pos)
+        )
       }
     })
   }
