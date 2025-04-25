@@ -1,10 +1,10 @@
-import { Emoji, EmojiReaction, Notification } from '../../../models/index.js'
+import { Emoji, EmojiReaction, Notification, User } from '../../../models/index.js'
 import { activityPubObject } from '../../../interfaces/fediverse/activityPubObject.js'
 import { createNotification } from '../../pushNotifications.js'
 import { getPostThreadRecursive } from '../getPostThreadRecursive.js'
 import { signAndAccept } from '../signAndAccept.js'
 
-async function EmojiReactActivity(body: activityPubObject, remoteUser: any, user: any) {
+async function EmojiReactActivity(body: activityPubObject, remoteUser: User, user: User) {
   const apObject: activityPubObject = body
   const postToReact = await getPostThreadRecursive(user, apObject.object)
   let emojiToAdd: any
@@ -14,15 +14,15 @@ async function EmojiReactActivity(body: activityPubObject, remoteUser: any, user
     emojiToAdd = existingEmoji
       ? existingEmoji
       : (
-        await Emoji.findOrCreate({
-          where: {
-            id: emojiRemote.id,
-            name: emojiRemote.name,
-            url: emojiRemote.icon?.url,
-            external: true
-          }
-        })
-      )[0]
+          await Emoji.findOrCreate({
+            where: {
+              id: emojiRemote.id,
+              name: emojiRemote.name,
+              url: emojiRemote.icon?.url,
+              external: true
+            }
+          })
+        )[0]
   }
   if (postToReact && apObject.content) {
     const [reaction, created] = await EmojiReaction.findOrCreate({
@@ -55,7 +55,6 @@ async function EmojiReactActivity(body: activityPubObject, remoteUser: any, user
       )
     }
   }
-  // await signAndAccept({ body: body }, remoteUser, user)
 }
 
 export { EmojiReactActivity }

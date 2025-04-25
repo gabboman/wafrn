@@ -20,8 +20,22 @@ export default function emojiReactRoutes(app: Application) {
       const emojiName = req.body.emojiName
       const undo = req.body.undo
       if (undo) {
-        // TODO not yet implemented lol
-        res.sendStatus(500)
+        const reaction = await EmojiReaction.findOne({
+          where: {
+            userId: userId,
+            postId: postId,
+            content: emojiName
+          }
+        })
+        if (reaction) {
+          await emojiReactRemote(reaction, true)
+          await reaction.destroy()
+          success = true
+        }
+
+        res.send({
+          success: success
+        })
         return
       }
 

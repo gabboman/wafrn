@@ -153,42 +153,43 @@ async function emojiReactRemote(react: EmojiReaction, undo = false) {
   const ownerOfreactedPost = reactedPost.user.remoteId
     ? reactedPost.user.remoteId
     : `${environment.frontendUrl}/fediverse/blog/${reactedPost.user.url}`
-  const likeObject: activityPubObject = !undo
-    ? {
-        '@context': ['https://www.w3.org/ns/activitystreams', `${environment.frontendUrl}/contexts/litepub-0.1.jsonld`],
-        actor: `${environment.frontendUrl}/fediverse/blog/${user.url.toLowerCase()}`,
-        to:
-          reactedPost.privacy / 1 === 10
-            ? [ownerOfreactedPost]
-            : reactedPost.privacy / 1 === 0
-            ? ['https://www.w3.org/ns/activitystreams#Public', stringMyFollowers]
-            : [stringMyFollowers],
-        cc: reactedPost.privacy / 1 === 0 ? [ownerOfreactedPost] : [],
-        id: `${environment.frontendUrl}/fediverse/emojiReact/${react.userId}/${react.postId}/${react.emojiId}`,
-        object: reactedPost.remotePostId
-          ? reactedPost.remotePostId
-          : `${environment.frontendUrl}/fediverse/post/${reactedPost.id}`,
-        tag: emoji ? [emojiToAPTag(emoji)] : undefined,
-        content: emoji ? emoji.name : react.content,
-        type: 'EmojiReact'
-      }
-    : {
-        '@context': ['https://www.w3.org/ns/activitystreams', `${environment.frontendUrl}/contexts/litepub-0.1.jsonld`],
-        actor: `${environment.frontendUrl}/fediverse/blog/${user.url.toLowerCase()}`,
-        to:
-          reactedPost.privacy / 1 === 10
-            ? [ownerOfreactedPost]
-            : reactedPost.privacy / 1 === 0
-            ? ['https://www.w3.org/ns/activitystreams#Public', stringMyFollowers]
-            : [stringMyFollowers],
-        cc: reactedPost.privacy / 1 === 0 ? [ownerOfreactedPost] : [],
-        id: `${environment.frontendUrl}/fediverse/undo/emojiReact/${react.userId}/${react.postId}/${react.emojiId}`,
-        object: `${environment.frontendUrl}/fediverse/emojiReact/${react.userId}/${react.postId}/${react.emojiId}`,
-        type: 'Undo'
-      }
+  let emojireactObject: activityPubObject = {
+    '@context': ['https://www.w3.org/ns/activitystreams', `${environment.frontendUrl}/contexts/litepub-0.1.jsonld`],
+    actor: `${environment.frontendUrl}/fediverse/blog/${user.url.toLowerCase()}`,
+    to:
+      reactedPost.privacy / 1 === 10
+        ? [ownerOfreactedPost]
+        : reactedPost.privacy / 1 === 0
+        ? ['https://www.w3.org/ns/activitystreams#Public', stringMyFollowers]
+        : [stringMyFollowers],
+    cc: reactedPost.privacy / 1 === 0 ? [ownerOfreactedPost] : [],
+    id: `${environment.frontendUrl}/fediverse/emojiReact/${react.userId}/${react.postId}/${react.emojiId}`,
+    object: reactedPost.remotePostId
+      ? reactedPost.remotePostId
+      : `${environment.frontendUrl}/fediverse/post/${reactedPost.id}`,
+    tag: emoji ? [emojiToAPTag(emoji)] : undefined,
+    content: emoji ? emoji.name : react.content,
+    type: 'EmojiReact'
+  }
+  if (undo) {
+    emojireactObject = {
+      '@context': ['https://www.w3.org/ns/activitystreams', `${environment.frontendUrl}/contexts/litepub-0.1.jsonld`],
+      actor: `${environment.frontendUrl}/fediverse/blog/${user.url.toLowerCase()}`,
+      to:
+        reactedPost.privacy / 1 === 10
+          ? [ownerOfreactedPost]
+          : reactedPost.privacy / 1 === 0
+          ? ['https://www.w3.org/ns/activitystreams#Public', stringMyFollowers]
+          : [stringMyFollowers],
+      cc: reactedPost.privacy / 1 === 0 ? [ownerOfreactedPost] : [],
+      id: `${environment.frontendUrl}/fediverse/undo/emojiReact/${react.userId}/${react.postId}/${react.emojiId}`,
+      object: emojireactObject,
+      type: 'Undo'
+    }
+  }
   // petition to owner of the post:
   const ownerOfPostLikePromise = reactedPost.user.remoteInbox
-    ? postPetitionSigned(likeObject, user, reactedPost.user.remoteInbox)
+    ? postPetitionSigned(emojireactObject, user, reactedPost.user.remoteInbox)
     : true
   // servers with shared inbox
   let serversToSendThePost = await FederatedHost.findAll({
@@ -226,7 +227,7 @@ async function emojiReactRemote(react: EmojiReaction, undo = false) {
       await sendPostQueue.add(
         'sencChunk',
         {
-          objectToSend: likeObject,
+          objectToSend: emojireactObject,
           petitionBy: user.dataValues,
           inboxList: inboxChunk
         },
