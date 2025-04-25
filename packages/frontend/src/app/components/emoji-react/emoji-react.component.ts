@@ -33,7 +33,7 @@ export class EmojiReactComponent {
   openDialog(): void {
     const dialogRef = this.dialog.open<Emoji>(EmojiPickerComponent, {
       autoFocus: false
-    });
+    })
 
     dialogRef.closed.subscribe((result) => {
       if (result) {
@@ -50,7 +50,7 @@ export class EmojiReactComponent {
       this.messages.add({
         severity: 'success',
         summary: `Reacted with ${emoji.name} succesfully`,
-        confettiEmojis: !disableConfetti && !emoji.url ? [] : [emoji.name]
+        confettiEmojis: !disableConfetti && !emoji.url ? [emoji.name] : []
       })
       this.isOpen = false
       this.loading = false

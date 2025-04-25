@@ -30,7 +30,7 @@ export class RegisterComponent {
   selectedFileName: string = ''
 
   genders: string[] = [
-    'All of the above',
+    'All of the above this one.',
     'Evil',
     'Alright, I guess...',
     'Cat',
@@ -130,6 +130,7 @@ export class RegisterComponent {
     'My glasses lens popped out again :`(',
     'RetroGamesWeDontOwn_Online.ru',
     'm',
+    'whatever it is, its MINE',
     'Quarter Circle Forward',
     "CHOOSING THIS GENDER REDIRECTS YOU TO *EVIL* WAFRN (no it fucking doesn't)",
     'The Wafrn Gender Selection Situation Is Crazy',
@@ -150,7 +151,7 @@ export class RegisterComponent {
   loginForm = new UntypedFormGroup({
     email: new UntypedFormControl('', [Validators.required, Validators.email]),
     password: new UntypedFormControl('', [Validators.required]),
-    url: new UntypedFormControl('', [Validators.required, Validators.pattern('^[a-z0-9_]+([\_-]+[a-z0-9_]+)*')]),
+    url: new UntypedFormControl('', [Validators.required, Validators.pattern('^[a-z0-9_A-Z]+([\_-]+[a-z0-9_A-Z]+)*')]),
     description: new UntypedFormControl('', [Validators.required]),
     birthDate: new UntypedFormControl('', [Validators.required]),
     captchaResponse: new UntypedFormControl('', []),

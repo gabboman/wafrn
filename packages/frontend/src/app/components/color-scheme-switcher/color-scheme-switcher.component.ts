@@ -32,7 +32,7 @@ const colorSchemeVariants = [
   'gold',
   'red',
   'pink',
-  'grey',
+  'purple',
   'rizzler',
   'wafrn98',
   'unwafrn',

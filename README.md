@@ -50,10 +50,6 @@ packages/
 
 ## Host Wafrn Yourself
 
-<details>
-
-<summary>If you're unhappy with my moderation style or you would like to host your own stuff, you can host your own version.</summary>
-
 ### What will you need
 
 Before trying to host your own wafrn, we advise you to please, very please, [join our discord channel](https://discord.gg/EXpCBpvM) to get support
@@ -159,7 +155,7 @@ To enable the BlueSky integration follow the steps below:
 
 4. Run `docker compose up` to make sure everything is running
 
-5. Run `./install/bsky/create-admin.sh`. This will create a user that the agent will use later and assign it to the admin account. If you use your admin account as your main (like on a single-user instance), then you can also provide a username to be generated (default is  `wafrnadmin`), e.g. `./install/bsky/create-admin.sh myuser`. Make sure the username you chose is not one of the reserved names that cannot be used: https://github.com/bluesky-social/atproto/blob/main/packages/pds/src/handle/reserved.ts
+5. Run `./install/bsky/create-admin.sh`. This will create a user that the agent will use later and assign it to the admin account. If you use your admin account as your main (like on a single-user instance), then you can also provide a username to be generated (default is `wafrnadmin`), e.g. `./install/bsky/create-admin.sh myuser`. Make sure the username you chose is not one of the reserved names that cannot be used: https://github.com/bluesky-social/atproto/blob/main/packages/pds/src/handle/reserved.ts
 
 6. If the previous call was successful now you can enable `ENABLE_BSKY=true` in your config
 
@@ -170,8 +166,6 @@ To enable the BlueSky integration follow the steps below:
 9. Use `./install/bsky/add-insert-code.sh` to add a new bluesky insert code to your system. You'll need to have one for any account you wish to enable bluesky for.
 
 10. Open up your selected account profile and click "Enable bluesky". If all goes well, this account will now be enabled and accessible on Bluesky. Do note that some names are reserved under Bluesky and you won't be able to create an account for them, even on a personal server. For the full list of reserved names please see https://github.com/bluesky-social/atproto/blob/main/packages/pds/src/handle/reserved.ts
-
-</details>
 
 ## Contributing
 

@@ -38,16 +38,16 @@ import { faBluesky } from '@fortawesome/free-brands-svg-icons'
     InfoCardComponent
   ],
   templateUrl: './blog-header.component.html',
-  styleUrl: './blog-header.component.scss',
+  styleUrl: './blog-header.component.scss'
 })
 export class BlogHeaderComponent implements OnChanges, OnDestroy {
   parser = new DOMParser()
-  blogDetails = input.required<BlogDetails>();
+  blogDetails = input.required<BlogDetails>()
   avatarUrl = computed<string>(() => {
     return this.blogDetails().url.startsWith('@')
       ? EnvironmentService.environment.externalCacheurl + encodeURIComponent(this.blogDetails().avatar)
       : EnvironmentService.environment.externalCacheurl +
-      encodeURIComponent(EnvironmentService.environment.baseMediaUrl + this.blogDetails().avatar)
+          encodeURIComponent(EnvironmentService.environment.baseMediaUrl + this.blogDetails().avatar)
   })
   headerUrl = ''
   userLoggedIn = false
@@ -65,15 +65,15 @@ export class BlogHeaderComponent implements OnChanges, OnDestroy {
   isBlueskyUser = false
   headerHTML = ''
 
-  fediComp = computed<{ name: string, value: string }[]>(() => {
+  fediComp = computed<{ name: string; value: string }[]>(() => {
     const fediAttachment = this.blogDetails().publicOptions.find(
       (elem) => elem.optionName == 'fediverse.public.attachment'
     )
     if (fediAttachment) {
       return JSON.parse(fediAttachment.optionValue)
     }
-    return [];
-  });
+    return []
+  })
 
   constructor(
     private loginService: LoginService,
@@ -91,7 +91,7 @@ export class BlogHeaderComponent implements OnChanges, OnDestroy {
       this.headerUrl = this.blogDetails().url.startsWith('@')
         ? EnvironmentService.environment.externalCacheurl + encodeURIComponent(this.blogDetails().headerImage)
         : EnvironmentService.environment.externalCacheurl +
-        encodeURIComponent(EnvironmentService.environment.baseMediaUrl + this.blogDetails().headerImage)
+          encodeURIComponent(EnvironmentService.environment.baseMediaUrl + this.blogDetails().headerImage)
       const askLevelOption = this.blogDetails().publicOptions.find((elem) => elem.optionName == 'wafrn.public.asks')
       let askLevel = askLevelOption ? parseInt(askLevelOption.optionValue) : 2
       if (this.blogDetails().url.startsWith('@')) {
@@ -116,7 +116,7 @@ export class BlogHeaderComponent implements OnChanges, OnDestroy {
     }
   }
 
-  ngOnDestroy(): void { }
+  ngOnDestroy(): void {}
 
   async unfollowUser(id: string) {
     const response = await this.postService.unfollowUser(id)
@@ -155,7 +155,7 @@ export class BlogHeaderComponent implements OnChanges, OnDestroy {
 
   async openAskDialog() {
     this.dialogService.open(await this.getAskDialogComponent(), {
-      data: { details: this.blogDetails },
+      data: { details: this.blogDetails() },
       width: '800px'
     })
   }
