@@ -1,3 +1,5 @@
 /cache
 /uploads
 environment.ts
+build
+node_modules
