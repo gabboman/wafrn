@@ -43,7 +43,6 @@ export default function dashboardRoutes(app: Application) {
           whereObject = {
             [Op.or]: [
               {
-                //local follows privacy 0 1 2
                 privacy: {
                   [Op.in]: [Privacy.Public, Privacy.FollowersOnly, Privacy.LocalOnly]
                 },
