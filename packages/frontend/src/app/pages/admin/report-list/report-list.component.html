@@ -17,7 +17,7 @@
     <ng-container matColumnDef="reportedUser">
       <th mat-header-cell *matHeaderCellDef>Reported user</th>
       <td mat-cell *matCellDef="let element">
-        <a [postLink]="element.post">
+        <a [routerLink]="['/fediverse/post/' + element.post.id]">
           <app-avatar-small [user]="element.post.user"></app-avatar-small>
           {{ element.post.user.url }}</a
         >
