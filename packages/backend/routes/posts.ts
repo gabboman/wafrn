@@ -118,7 +118,8 @@ export default function postsRoutes(app: Application) {
         }
 
         const mentions = unjointedPost.mentions.map((elem: any) => elem.userMentioned)
-        const userCanSeePost = post.userId === userId || mentions.includes(userId) || post.privacy !== Privacy.DirectMessage
+        const userCanSeePost =
+          post.userId === userId || mentions.includes(userId) || post.privacy !== Privacy.DirectMessage
 
         if (!userCanSeePost) {
           return res.status(403).send({ success: false, errorMessage: 'You are not authorized to read this post' })
@@ -300,7 +301,7 @@ export default function postsRoutes(app: Application) {
           return false
         }
 
-        bodyPrivacy = Math.max(parentPrivacy, bodyPrivacy, quotedPostPrivacy) as PrivacyType
+        bodyPrivacy = getPostPrivacy(bodyPrivacy, parentPrivacy, quotedPostPrivacy)
         // we check that the user is not reblogging a post by someone who blocked them or the other way arround
         if (parent) {
           // we check to add user mention if bsky id
@@ -425,6 +426,9 @@ export default function postsRoutes(app: Application) {
 
         let dbFoundMentions: any[] = []
         const newMentionedUsers = req.body.mentionedUsersIds || []
+        if (postToBeQuoted) {
+          newMentionedUsers.push(postToBeQuoted.userId)
+        }
         if (mentionsInPost?.length || newMentionedUsers.length) {
           const urlsToSearch = mentionsInPost.map((elem) => {
             // local users are stored without the @, so remove it from the query param
@@ -754,4 +758,19 @@ export default function postsRoutes(app: Application) {
     }
     res.send({})
   })
+
+  function getPostPrivacy(
+    bodyPrivacy: PrivacyType,
+    parentPrivacy: PrivacyType,
+    quotedPostPrivacy: PrivacyType
+  ): PrivacyType {
+    let result = Math.max(parentPrivacy, bodyPrivacy, quotedPostPrivacy) as PrivacyType
+    if (
+      (Privacy.LocalOnly == result || Privacy.Unlisted == result) &&
+      (Privacy.FollowersOnly == parentPrivacy || Privacy.FollowersOnly == quotedPostPrivacy)
+    ) {
+      result = Privacy.FollowersOnly
+    }
+    return result
+  }
 }

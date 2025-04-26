@@ -415,9 +415,6 @@ export class NewEditorComponent implements OnDestroy {
       await new Promise((resolve) => setTimeout(resolve, 500))
     }
     const mentionsToBeSent = this.mentionedUsers.map((elem) => elem.id)
-    if (this.data && this.data.quote) {
-      mentionsToBeSent.push(this.data.quote.userId)
-    }
     res = await this.editorService.createPost({
       // deduplicate mentions too just in case
       mentionedUsers: Array.from(new Set(mentionsToBeSent)),
