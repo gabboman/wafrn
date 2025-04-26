@@ -10,6 +10,7 @@ import { getCheckFediverseSignatureFucnction } from '../utils/activitypub/checkF
 import { SignedRequest } from '../interfaces/fediverse/signedRequest.js'
 import { handlePostRequest } from '../utils/activitypub/handlePostRequest.js'
 import { getUserOptions } from '../utils/cacheGetters/getUserOptions.js'
+import { Privacy } from '../models/post.js'
 
 const cacheOptions = {
   etag: false,
@@ -130,7 +131,7 @@ async function getPostSEOCache(id: string): Promise<{ title: string; description
       where: {
         id: id,
         privacy: {
-          [Op.in]: [0, 2, 3]
+          [Op.in]: [Privacy.Public, Privacy.LocalOnly, Privacy.Unlisted]
         },
         isDeleted: false,
         isReblog: false

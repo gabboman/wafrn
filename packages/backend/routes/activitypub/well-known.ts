@@ -8,6 +8,7 @@ import { return404 } from '../../utils/return404.js'
 
 // @ts-ignore cacher has no types
 import Cacher from 'cacher'
+import { Privacy } from '../../models/post.js'
 const cacher = new Cacher()
 
 function wellKnownRoutes(app: Application) {
@@ -149,7 +150,7 @@ function wellKnownRoutes(app: Application) {
             userId: {
               [Op.in]: localUsersIds
             },
-            privacy: 0
+            privacy: Privacy.Public
           }
         })
       },

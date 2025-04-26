@@ -44,6 +44,7 @@ import { forceUpdateLastActive } from '../utils/forceUpdateLastActive.js'
 import { bulkCreateNotifications, createNotification } from '../utils/pushNotifications.js'
 import { getAtProtoThread } from '../atproto/utils/getAtProtoThread.js'
 import dompurify from 'isomorphic-dompurify'
+import { Privacy, PrivacyType } from '../models/post.js'
 
 const markdownConverter = new showdown.Converter({
   simplifiedAutoLink: true,
@@ -117,7 +118,7 @@ export default function postsRoutes(app: Application) {
         }
 
         const mentions = unjointedPost.mentions.map((elem: any) => elem.userMentioned)
-        const userCanSeePost = post.userId === userId || mentions.includes(userId) || post.privacy !== 10
+        const userCanSeePost = post.userId === userId || mentions.includes(userId) || post.privacy !== Privacy.DirectMessage
 
         if (!userCanSeePost) {
           return res.status(403).send({ success: false, errorMessage: 'You are not authorized to read this post' })
@@ -159,21 +160,21 @@ export default function postsRoutes(app: Application) {
               as: 'descendents',
               where: {
                 privacy: {
-                  [Op.ne]: 10
+                  [Op.ne]: Privacy.DirectMessage
                 },
                 [Op.or]: [
                   {
                     userId: userId
                   },
                   {
-                    privacy: 1,
+                    privacy: Privacy.FollowersOnly,
                     userId: {
                       [Op.in]: await getFollowedsIds(userId, false)
                     }
                   },
                   {
                     privacy: {
-                      [Op.in]: [0, 2, 3]
+                      [Op.in]: [Privacy.Public, Privacy.LocalOnly, Privacy.Unlisted]
                     }
                   }
                 ]
@@ -222,7 +223,7 @@ export default function postsRoutes(app: Application) {
       }
       const blogId = blog?.id
       if (blogId) {
-        const privacyArray = [0, 2, 3]
+        const privacyArray: PrivacyType[] = [Privacy.Public, Privacy.LocalOnly, Privacy.Unlisted]
         if (
           req.jwtData?.userId === blogId ||
           (req.jwtData?.userId &&
@@ -234,7 +235,7 @@ export default function postsRoutes(app: Application) {
               }
             })))
         ) {
-          privacyArray.push(1)
+          privacyArray.push(Privacy.FollowersOnly)
         }
         const postIds = await Post.findAll({
           order: [['createdAt', 'DESC']],
@@ -289,10 +290,17 @@ export default function postsRoutes(app: Application) {
         }
 
         // we get the privacy of the parent and quoted post. Set body privacy to the max one
-        const parentPrivacy: number = parent ? parent.privacy : 0
-        let bodyPrivacy: number = req.body.privacy ? req.body.privacy : 0
-        const quotedPostPrivacy: number = postToBeQuoted ? postToBeQuoted.privacy : 0
-        bodyPrivacy = Math.max(parentPrivacy, bodyPrivacy, quotedPostPrivacy)
+        const parentPrivacy: PrivacyType = parent ? parent.privacy : Privacy.Public
+        let bodyPrivacy: PrivacyType = req.body.privacy ? req.body.privacy : Privacy.Public
+        const quotedPostPrivacy: PrivacyType = postToBeQuoted ? postToBeQuoted.privacy : Privacy.Public
+
+        if (!Object.values(Privacy).includes(bodyPrivacy)) {
+          res.status(422)
+          res.send({ success: false, message: 'invalid privacy setting' })
+          return false
+        }
+
+        bodyPrivacy = Math.max(parentPrivacy, bodyPrivacy, quotedPostPrivacy) as PrivacyType
         // we check that the user is not reblogging a post by someone who blocked them or the other way arround
         if (parent) {
           // we check to add user mention if bsky id
@@ -663,7 +671,7 @@ export default function postsRoutes(app: Application) {
         }
         res.send(post)
         await post.save()
-        if (post.privacy.toString() !== '2') {
+        if (+post.privacy !== Privacy.LocalOnly) {
           if (req.body.idPostToEdit) {
             await federatePostHasBeenEdited(post)
           } else {

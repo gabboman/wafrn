@@ -22,6 +22,16 @@ import { FederatedHost } from "./federatedHost.js";
 import { PostAncestor } from "./postAncestor.js";
 import { BelongsToManyGetAssociationsMixin, BelongsToManySetAssociationsMixin, BelongsToSetAssociationMixin, HasManyGetAssociationsMixin, HasManyRemoveAssociationMixin, HasManyRemoveAssociationsMixin, HasManySetAssociationsMixin, HasOneGetAssociationMixin } from "sequelize";
 
+export const Privacy = {
+  Public: 0,
+  FollowersOnly: 1,
+  LocalOnly: 2,
+  Unlisted: 3,
+  DirectMessage: 10
+} as const
+
+export type PrivacyType = typeof Privacy[keyof typeof Privacy]
+
 export interface PostAttributes {
   id?: string;
   createdAt?: Date;
@@ -33,7 +43,7 @@ export interface PostAttributes {
   remotePostId?: string;
   bskyUri?: string;
   bskyCid?: string;
-  privacy?: number;
+  privacy?: PrivacyType;
   featured?: boolean;
   isReblog?: boolean;
   isDeleted?: boolean;
@@ -102,7 +112,7 @@ export class Post extends Model<PostAttributes, PostAttributes> implements PostA
     allowNull: true,
     type: DataType.INTEGER
   })
-  declare privacy: number;
+  declare privacy: PrivacyType;
 
   @Column({
     allowNull: true,

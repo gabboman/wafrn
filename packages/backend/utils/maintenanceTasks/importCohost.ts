@@ -6,6 +6,7 @@ import showdown from 'showdown'
 import optimizeMedia from '../optimizeMedia.js'
 import generateRandomString from '../generateRandomString.js'
 import { Ask, Media, Post } from '../../models/index.js'
+import { Privacy } from '../../models/post.js'
 const markdownConverter = new showdown.Converter({
     simplifiedAutoLink: true,
     literalMidWordUnderscores: true,
@@ -108,7 +109,7 @@ for await (const postToImportFolder of postsToImportFolder) {
 
     }
     post.content = postContent
-    post.privacy = 0;
+    post.privacy = Privacy.Public;
     await post.save()
 }
 

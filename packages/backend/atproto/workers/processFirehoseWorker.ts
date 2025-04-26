@@ -11,6 +11,7 @@ import { deletePostCommon } from '../../utils/deletePost.js'
 import { redisCache } from '../../utils/redis.js'
 import { likePostRemote } from '../../utils/activitypub/likePost.js'
 import { createNotification } from '../../utils/pushNotifications.js'
+import { Privacy } from '../../models/post.js'
 
 const adminUser = User.findOne({
   where: {
@@ -116,7 +117,7 @@ async function processFirehose(job: Job) {
                 parentId: postToBeRewooted,
                 bskyUri: `at://${job.data.repo}/${operation.path}`,
                 bskyCid: operation.cid,
-                privacy: 0
+                privacy: Privacy.Public
               })
             }
 

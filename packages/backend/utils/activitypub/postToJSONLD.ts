@@ -7,6 +7,7 @@ import { emojiToAPTag } from './emojiToAPTag.js'
 import { getPostReplies } from './getPostReplies.js'
 import { getPostAndUserFromPostId } from '../cacheGetters/getPostAndUserFromPostId.js'
 import { logger } from '../logger.js'
+import { Privacy } from '../../models/post.js'
 
 async function postToJSONLD(postId: string) {
   const cacheData = await getPostAndUserFromPostId(postId)
@@ -209,9 +210,9 @@ async function postToJSONLD(postId: string) {
       actor: `${environment.frontendUrl}/fediverse/blog/${localUser.url.toLowerCase()}`,
       published: new Date(post.createdAt).toISOString(),
       to:
-        post.privacy / 1 === 10
+        post.privacy / 1 === Privacy.DirectMessage
           ? mentionedUsers
-          : post.privacy / 1 === 0
+          : post.privacy / 1 === Privacy.Public
             ? ['https://www.w3.org/ns/activitystreams#Public']
             : [stringMyFollowers],
       cc: [`${environment.frontendUrl}/fediverse/blog/${localUser.url.toLowerCase()}`, stringMyFollowers],

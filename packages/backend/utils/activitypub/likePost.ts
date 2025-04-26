@@ -7,6 +7,7 @@ import { logger } from '../logger.js'
 import { Queue } from 'bullmq'
 import _ from 'underscore'
 import { emojiToAPTag } from './emojiToAPTag.js'
+import { Privacy } from '../../models/post.js'
 
 const sendPostQueue = new Queue('sendPostToInboxes', {
   connection: environment.bullmqConnection,
@@ -50,12 +51,12 @@ async function likePostRemote(like: any, dislike = false) {
         '@context': ['https://www.w3.org/ns/activitystreams', `${environment.frontendUrl}/contexts/litepub-0.1.jsonld`],
         actor: `${environment.frontendUrl}/fediverse/blog/${user.url.toLowerCase()}`,
         to:
-          likedPost.privacy / 1 === 10
+          likedPost.privacy / 1 === Privacy.DirectMessage
             ? [ownerOfLikedPost]
-            : likedPost.privacy / 1 === 0
+            : likedPost.privacy / 1 === Privacy.Public
             ? ['https://www.w3.org/ns/activitystreams#Public', stringMyFollowers]
             : [stringMyFollowers],
-        cc: likedPost.privacy / 1 === 0 ? [ownerOfLikedPost] : [],
+        cc: likedPost.privacy / 1 === Privacy.Public ? [ownerOfLikedPost] : [],
         id: `${environment.frontendUrl}/fediverse/likes/${like.userId}/${like.postId}`,
         object: likedPost.remotePostId
           ? likedPost.remotePostId
@@ -66,12 +67,12 @@ async function likePostRemote(like: any, dislike = false) {
         '@context': ['https://www.w3.org/ns/activitystreams', `${environment.frontendUrl}/contexts/litepub-0.1.jsonld`],
         actor: `${environment.frontendUrl}/fediverse/blog/${user.url.toLowerCase()}`,
         to:
-          likedPost.privacy / 1 === 10
+          likedPost.privacy / 1 === Privacy.DirectMessage
             ? [ownerOfLikedPost]
-            : likedPost.privacy / 1 === 0
+            : likedPost.privacy / 1 === Privacy.Public
             ? ['https://www.w3.org/ns/activitystreams#Public', stringMyFollowers]
             : [stringMyFollowers],
-        cc: likedPost.privacy / 1 === 0 ? [ownerOfLikedPost] : [],
+        cc: likedPost.privacy / 1 === Privacy.Public ? [ownerOfLikedPost] : [],
         id: `${environment.frontendUrl}/fediverse/undo/likes/${like.userId}/${like.postId}`,
         object: `${environment.frontendUrl}/fediverse/likes/${like.userId}/${like.postId}`,
         type: 'Undo'
@@ -157,12 +158,12 @@ async function emojiReactRemote(react: EmojiReaction, undo = false) {
     '@context': ['https://www.w3.org/ns/activitystreams', `${environment.frontendUrl}/contexts/litepub-0.1.jsonld`],
     actor: `${environment.frontendUrl}/fediverse/blog/${user.url.toLowerCase()}`,
     to:
-      reactedPost.privacy / 1 === 10
+      reactedPost.privacy / 1 === Privacy.DirectMessage
         ? [ownerOfreactedPost]
-        : reactedPost.privacy / 1 === 0
+        : reactedPost.privacy / 1 === Privacy.Public
         ? ['https://www.w3.org/ns/activitystreams#Public', stringMyFollowers]
         : [stringMyFollowers],
-    cc: reactedPost.privacy / 1 === 0 ? [ownerOfreactedPost] : [],
+    cc: reactedPost.privacy / 1 === Privacy.Public ? [ownerOfreactedPost] : [],
     id: `${environment.frontendUrl}/fediverse/emojiReact/${react.userId}/${react.postId}/${react.emojiId}`,
     object: reactedPost.remotePostId
       ? reactedPost.remotePostId
@@ -176,12 +177,12 @@ async function emojiReactRemote(react: EmojiReaction, undo = false) {
       '@context': ['https://www.w3.org/ns/activitystreams', `${environment.frontendUrl}/contexts/litepub-0.1.jsonld`],
       actor: `${environment.frontendUrl}/fediverse/blog/${user.url.toLowerCase()}`,
       to:
-        reactedPost.privacy / 1 === 10
+        reactedPost.privacy / 1 === Privacy.DirectMessage
           ? [ownerOfreactedPost]
-          : reactedPost.privacy / 1 === 0
+          : reactedPost.privacy / 1 === Privacy.Public
           ? ['https://www.w3.org/ns/activitystreams#Public', stringMyFollowers]
           : [stringMyFollowers],
-      cc: reactedPost.privacy / 1 === 0 ? [ownerOfreactedPost] : [],
+      cc: reactedPost.privacy / 1 === Privacy.Public ? [ownerOfreactedPost] : [],
       id: `${environment.frontendUrl}/fediverse/undo/emojiReact/${react.userId}/${react.postId}/${react.emojiId}`,
       object: emojireactObject,
       type: 'Undo'
