@@ -103,7 +103,7 @@ services:
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
       POSTGRES_DB: ${POSTGRES_DBNAME}
     volumes:
-      - dbpg:/var/lib/postgresql
+      - dbpg:/var/lib/postgresql/data
 
   adminer:
     image: adminer
@@ -112,6 +112,8 @@ services:
   redis:
     image: redis:7.2.4
     restart: unless-stopped
+    volumes:
+      - redis:/data
 
   pds:
     image: ghcr.io/bluesky-social/pds:0.4
@@ -143,3 +145,4 @@ volumes:
   caddy:
   pds:
   frontend:
+  redis:
