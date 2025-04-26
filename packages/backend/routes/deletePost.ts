@@ -23,6 +23,7 @@ import { LdSignature } from '../utils/activitypub/rsa2017.js'
 import { deletePostCommon } from '../utils/deletePost.js'
 import { redisCache } from '../utils/redis.js'
 import { getAtProtoSession } from '../atproto/utils/getAtProtoSession.js'
+import { Privacy } from '../models/post.js'
 
 const deletePostQueue = new Queue('deletePostQueue', {
   connection: environment.bullmqConnection,
@@ -159,7 +160,7 @@ export default function deletePost(app: Application) {
             environment.instanceUrl,
             new Date()
           )
-          if (postToDelete.privacy != 2) {
+          if (postToDelete.privacy != Privacy.LocalOnly) {
             for await (const inboxChunk of _.chunk(inboxes, 1)) {
               await deletePostQueue.add('sencChunk', {
                 objectToSend: { ...objectToSend, signature: bodySignature.signature },

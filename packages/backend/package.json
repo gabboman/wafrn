@@ -6,7 +6,7 @@
   "type": "module",
   "scripts": {
     "start": "tsx index.ts",
-    "migration:generate": "tsx migrate.ts generate",
+    "migration:generate": "tsx migrate.ts create",
     "db:migrate:status": "tsx migrate.ts pending && echo '-----' && tsx migrate.ts executed",
     "db:migrate": "tsx migrate.ts up",
     "db:rollback": "tsx migrate.ts down",

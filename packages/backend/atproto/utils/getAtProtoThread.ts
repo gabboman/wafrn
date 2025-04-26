@@ -12,6 +12,7 @@ import { BskyAgent, RichText } from '@atproto/api'
 import showdown from 'showdown'
 import { bulkCreateNotifications, createNotification } from '../../utils/pushNotifications.js'
 import { getAllLocalUserIds } from '../../utils/cacheGetters/getAllLocalUserIds.js'
+import { Privacy } from '../../models/post.js'
 
 const markdownConverter = new showdown.Converter({
   simplifiedAutoLink: true,
@@ -212,7 +213,7 @@ async function processSinglePost(
       bskyUri: post.uri,
       content: postText,
       createdAt: new Date((post.record as any).createdAt),
-      privacy: 0,
+      privacy: Privacy.Public,
       parentId: parentId,
       content_warning: getPostLabels(post)
     }

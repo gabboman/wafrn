@@ -9,6 +9,7 @@ import { Queue } from 'bullmq'
 import { environment } from '../../environment.js'
 import { FederatedHost, Follows, User } from '../../models/index.js'
 import { Op } from 'sequelize'
+import { Privacy } from '../../models/post.js'
 
 const processPostViewQueue = new Queue('processRemoteView', {
   connection: environment.bullmqConnection,
@@ -64,11 +65,11 @@ async function handlePostRequest(req: SignedRequest, res: Response) {
           userId: federatedHost?.publicInbox ? '' : remoteActor.id
         })
       }
-      if (post.privacy === 10) {
+      if (post.privacy === Privacy.DirectMessage) {
         res.sendStatus(403)
         return
       }
-      if (post.privacy === 1) {
+      if (post.privacy === Privacy.FollowersOnly) {
         const followerIds = await getFollowerRemoteIds(user.id)
         try {
           if (remoteActor) {

@@ -24,6 +24,7 @@ import dompurify from 'isomorphic-dompurify'
 import { Queue } from 'bullmq'
 import { bulkCreateNotifications } from '../pushNotifications.js'
 import { getDeletedUser } from '../cacheGetters/getDeletedUser.js'
+import { Privacy } from '../../models/post.js'
 
 const updateMediaDataQueue = new Queue('processRemoteMediaData', {
   connection: environment.bullmqConnection,
@@ -229,7 +230,7 @@ async function getPostThreadRecursive(
       try {
         if (postPetition.quoteUrl) {
           const postToQuote = await getPostThreadRecursive(user, postPetition.quoteUrl)
-          if (postToQuote && postToQuote.privacy != 10) {
+          if (postToQuote && postToQuote.privacy != Privacy.DirectMessage) {
             quotes.push(postToQuote)
           }
           if (!postToQuote) {
