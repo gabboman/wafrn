@@ -6,7 +6,7 @@ source "${SCRIPT_DIR}/../../.env"
 
 DID=$1
 
-echo Deleting acount with DID $DID
+echo Deleting account with DID $DID
 
 curl \
   --silent \
@@ -16,3 +16,5 @@ curl \
   --header "Content-Type: application/json" \
   --data "{\"did\": \"$DID\"}" \
   "https://${PDS_DOMAIN_NAME}/xrpc/com.atproto.admin.deleteAccount"
+
+echo
