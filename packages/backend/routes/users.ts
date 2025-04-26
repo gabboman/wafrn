@@ -220,13 +220,12 @@ export default function userRoutes(app: Application) {
           }
         })
         if (req.body && user) {
-          const { name, description, manuallyAcceptsFollows, options: optionJSON } = req.body
+          const { hideFollows, name, description, manuallyAcceptsFollows, options: optionJSON } = req.body
 
           const avaiableEmojis = await getAvaiableEmojis()
           let userEmojis: any[] = []
-          if (manuallyAcceptsFollows) {
-            user.manuallyAcceptsFollows = manuallyAcceptsFollows
-          }
+          user.manuallyAcceptsFollows = !!manuallyAcceptsFollows
+          user.hideFollows = hideFollows == 'true'
           user.disableEmailNotifications = req.body.disableEmailNotifications == 'true'
           if (description) {
             const descriptionHtml = markdownConverter.makeHtml(description)
@@ -694,7 +693,8 @@ export default function userRoutes(app: Application) {
           'isFediverseUser',
           'isBlueskyUser',
           'enableBsky',
-          [sequelize.literal(`"id" = '${userId}' AND "disableEmailNotifications"`), 'disableEmailNotifications'] // To add the aggregation...
+          [sequelize.literal(`"id" = '${userId}' AND "disableEmailNotifications"`), 'disableEmailNotifications'], // To add the aggregation...
+          'hideFollows'
         ],
         include: [
           {
@@ -1004,9 +1004,13 @@ export default function userRoutes(app: Application) {
             attributes: ['id', 'url', 'avatar', 'description']
           })
         }
-        res.send(responseData)
+        if (user.hideFollows && user.url != req.jwtData?.url) {
+          res.sendStatus(403)
+        } else {
+          res.send(responseData)
+        }
       } else {
-        res.send(404)
+        res.sendStatus(404)
       }
     } else {
       res.sendStatus(404)

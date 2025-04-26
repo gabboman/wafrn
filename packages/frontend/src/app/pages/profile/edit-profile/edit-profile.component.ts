@@ -45,6 +45,7 @@ export class EditProfileComponent implements OnInit {
     disableForceAltText: new FormControl(false),
     forceClassicLogo: new FormControl(false),
     manuallyAcceptsFollows: new FormControl(false),
+    hideFollows: new FormControl(false),
     forceOldEditor: new FormControl(false),
     mutedWords: new FormControl(''),
     disableCW: new FormControl(false),

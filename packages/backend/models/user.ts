@@ -1,75 +1,83 @@
+import { Model, Table, Column, DataType, ForeignKey, HasMany, BelongsToMany, BelongsTo } from 'sequelize-typescript'
+import { MfaDetails } from './mfaDetails.js'
+import { Notification } from './notification.js'
+import { Ask } from './ask.js'
+import { QuestionPollAnswer } from './questionPollAnswer.js'
+import { EmojiReaction } from './emojiReaction.js'
+import { UserOptions } from './userOptions.js'
+import { PushNotificationToken } from './pushNotificationToken.js'
+import { Emoji } from './emoji.js'
+import { UserEmojiRelation } from './userEmojiRelation.js'
+import { Follows } from './follows.js'
+import { Blocks } from './blocks.js'
+import { Mutes } from './mutes.js'
+import { ServerBlock } from './serverBlock.js'
+import { PostReport } from './postReport.js'
+import { SilencedPost } from './silencedPost.js'
+import { UserReport } from './userReport.js'
+import { FederatedHost } from './federatedHost.js'
+import { Post } from './post.js'
+import { Media } from './media.js'
+import { PostMentionsUserRelation } from './postMentionsUserRelation.js'
+import { UserLikesPostRelations } from './userLikesPostRelations.js'
+import { UserBookmarkedPosts } from './userBookmarkedPosts.js'
+import { RemoteUserPostView } from './remoteUserPostView.js'
 import {
-  Model, Table, Column, DataType, ForeignKey, HasMany, BelongsToMany, BelongsTo
-} from "sequelize-typescript";
-import { MfaDetails } from "./mfaDetails.js";
-import { Notification } from "./notification.js";
-import { Ask } from "./ask.js";
-import { QuestionPollAnswer } from "./questionPollAnswer.js";
-import { EmojiReaction } from "./emojiReaction.js";
-import { UserOptions } from "./userOptions.js";
-import { PushNotificationToken } from "./pushNotificationToken.js";
-import { Emoji } from "./emoji.js";
-import { UserEmojiRelation } from "./userEmojiRelation.js";
-import { Follows } from "./follows.js";
-import { Blocks } from "./blocks.js";
-import { Mutes } from "./mutes.js";
-import { ServerBlock } from "./serverBlock.js";
-import { PostReport } from "./postReport.js";
-import { SilencedPost } from "./silencedPost.js";
-import { UserReport } from "./userReport.js";
-import { FederatedHost } from "./federatedHost.js";
-import { Post } from "./post.js";
-import { Media } from "./media.js";
-import { PostMentionsUserRelation } from "./postMentionsUserRelation.js";
-import { UserLikesPostRelations } from "./userLikesPostRelations.js";
-import { UserBookmarkedPosts } from "./userBookmarkedPosts.js";
-import { RemoteUserPostView } from "./remoteUserPostView.js";
-import { BelongsToGetAssociationMixin, BelongsToManyAddAssociationMixin, BelongsToManyGetAssociationsMixin, BelongsToManyRemoveAssociationMixin, BelongsToManyRemoveAssociationsMixin, BelongsToManySetAssociationsMixin, HasManyRemoveAssociationMixin } from "sequelize";
+  BelongsToGetAssociationMixin,
+  BelongsToManyAddAssociationMixin,
+  BelongsToManyGetAssociationsMixin,
+  BelongsToManyRemoveAssociationMixin,
+  BelongsToManyRemoveAssociationsMixin,
+  BelongsToManySetAssociationsMixin,
+  HasManyRemoveAssociationMixin
+} from 'sequelize'
+import { Col } from 'sequelize/lib/utils'
 
 export interface UserAttributes {
-  id?: string;
-  createdAt?: Date;
-  updatedAt?: Date;
-  email?: string | null;
-  description?: string;
-  descriptionMarkdown?: string;
-  name?: string;
-  url: string;
-  NSFW?: boolean;
-  avatar?: string;
-  password?: string;
-  birthDate?: Date;
-  activated?: boolean | null;
-  requestedPasswordReset?: Date | null;
-  activationCode?: string;
-  registerIp?: string;
-  lastLoginIp?: string;
-  lastTimeNotificationsCheck?: Date;
-  privateKey?: string | null;
-  publicKey?: string;
-  federatedHostId?: string | null;
-  remoteInbox?: string;
-  remoteId?: string;
-  remoteMentionUrl?: string;
-  isBot?: boolean;
-  banned?: boolean | null;
-  role?: number;
-  manuallyAcceptsFollows?: boolean;
-  headerImage?: string;
-  followersCollectionUrl?: string;
-  followingCollectionUrl?: string;
-  followerCount?: number;
-  followingCount?: number;
-  disableEmailNotifications?: boolean;
-  enableBsky?: boolean;
-  bskyAuthData?: string;
-  bskyDid?: string | null;
-  lastActiveAt?: Date;
+  id?: string
+  createdAt?: Date
+  updatedAt?: Date
+  email?: string | null
+  description?: string
+  descriptionMarkdown?: string
+  name?: string
+  url: string
+  NSFW?: boolean
+  avatar?: string
+  password?: string
+  birthDate?: Date
+  activated?: boolean | null
+  requestedPasswordReset?: Date | null
+  activationCode?: string
+  registerIp?: string
+  lastLoginIp?: string
+  lastTimeNotificationsCheck?: Date
+  privateKey?: string | null
+  publicKey?: string
+  federatedHostId?: string | null
+  remoteInbox?: string
+  remoteId?: string
+  remoteMentionUrl?: string
+  isBot?: boolean
+  banned?: boolean | null
+  role?: number
+  manuallyAcceptsFollows?: boolean
+  headerImage?: string
+  followersCollectionUrl?: string
+  followingCollectionUrl?: string
+  followerCount?: number
+  followingCount?: number
+  disableEmailNotifications?: boolean
+  enableBsky?: boolean
+  bskyAuthData?: string
+  bskyDid?: string | null
+  lastActiveAt?: Date
+  hideFollows: Boolean
 }
 
 @Table({
-  tableName: "users",
-  modelName: "users",
+  tableName: 'users',
+  modelName: 'users',
   timestamps: true
 })
 export class User extends Model<UserAttributes, UserAttributes> implements UserAttributes {
@@ -78,400 +86,407 @@ export class User extends Model<UserAttributes, UserAttributes> implements UserA
     type: DataType.UUID,
     defaultValue: DataType.UUIDV4
   })
-  declare id: string;
+  declare id: string
 
   @Column({
     allowNull: true,
     type: DataType.STRING(768)
   })
-  declare email: string | null;
+  declare email: string | null
 
   @Column({
     allowNull: true,
     type: DataType.STRING
   })
-  declare description: string;
+  declare description: string
 
   @Column({
     allowNull: true,
     type: DataType.STRING
   })
-  declare descriptionMarkdown: string;
+  declare descriptionMarkdown: string
 
   @Column({
     allowNull: true,
     type: DataType.STRING
   })
-  declare name: string;
+  declare name: string
 
   @Column({
     type: DataType.STRING(768)
   })
-  declare url: string;
+  declare url: string
 
   @Column({
     allowNull: true,
     type: DataType.BOOLEAN,
     defaultValue: false
   })
-  declare NSFW: boolean;
+  declare NSFW: boolean
 
   @Column({
     allowNull: true,
     type: DataType.STRING
   })
-  declare avatar: string;
+  declare avatar: string
 
   @Column({
     allowNull: true,
     type: DataType.STRING
   })
-  declare password: string;
+  declare password: string
 
   @Column({
     allowNull: true,
     type: DataType.DATE
   })
-  declare birthDate: Date;
+  declare birthDate: Date
 
   @Column({
     allowNull: true,
     type: DataType.BOOLEAN
   })
-  declare activated: boolean | null;
+  declare activated: boolean | null
 
   @Column({
     allowNull: true,
     type: DataType.DATE
   })
-  declare requestedPasswordReset: Date | null;
+  declare requestedPasswordReset: Date | null
 
   @Column({
     allowNull: true,
     type: DataType.STRING(255)
   })
-  declare activationCode: string;
+  declare activationCode: string
 
   @Column({
     allowNull: true,
     type: DataType.STRING(255)
   })
-  declare registerIp: string;
+  declare registerIp: string
 
   @Column({
     allowNull: true,
     type: DataType.STRING(255)
   })
-  declare lastLoginIp: string;
+  declare lastLoginIp: string
 
   @Column({
     type: DataType.DATE,
     defaultValue: new Date(0)
   })
-  declare lastTimeNotificationsCheck: Date;
+  declare lastTimeNotificationsCheck: Date
 
   @Column({
     allowNull: true,
     type: DataType.STRING
   })
-  declare privateKey: string | null;
+  declare privateKey: string | null
 
   @Column({
     allowNull: true,
     type: DataType.STRING
   })
-  declare publicKey: string;
+  declare publicKey: string
 
   @ForeignKey(() => FederatedHost)
   @Column({
     allowNull: true,
     type: DataType.UUID
   })
-  declare federatedHostId: string | null;
+  declare federatedHostId: string | null
 
   @Column({
     allowNull: true,
     type: DataType.STRING
   })
-  declare remoteInbox: string;
+  declare remoteInbox: string
 
   @Column({
     allowNull: true,
     type: DataType.STRING(768)
   })
-  declare remoteId: string;
+  declare remoteId: string
 
   @Column({
     allowNull: true,
     type: DataType.STRING
   })
-  declare remoteMentionUrl: string;
+  declare remoteMentionUrl: string
 
   @Column({
     allowNull: true,
     type: DataType.BOOLEAN,
     defaultValue: false
   })
-  declare isBot: boolean;
+  declare isBot: boolean
 
   @Column({
     allowNull: true,
     type: DataType.BOOLEAN,
     defaultValue: false
   })
-  declare banned: boolean | null;
+  declare banned: boolean | null
 
   @Column({
     allowNull: true,
     type: DataType.INTEGER,
     defaultValue: 0
   })
-  declare role: number;
+  declare role: number
 
   @Column({
     allowNull: true,
     type: DataType.BOOLEAN,
     defaultValue: false
   })
-  declare manuallyAcceptsFollows: boolean;
+  declare manuallyAcceptsFollows: boolean
 
   @Column({
     allowNull: true,
     type: DataType.STRING
   })
-  declare headerImage: string;
+  declare headerImage: string
 
   @Column({
     allowNull: true,
     type: DataType.STRING
   })
-  declare followersCollectionUrl: string;
+  declare followersCollectionUrl: string
 
   @Column({
     allowNull: true,
     type: DataType.STRING
   })
-  declare followingCollectionUrl: string;
+  declare followingCollectionUrl: string
 
   @Column({
     allowNull: true,
     type: DataType.INTEGER,
     defaultValue: 0
   })
-  declare followerCount: number;
+  declare followerCount: number
 
   @Column({
     allowNull: true,
     type: DataType.INTEGER,
     defaultValue: 0
   })
-  declare followingCount: number;
+  declare followingCount: number
 
   @Column({
     allowNull: true,
     type: DataType.BOOLEAN,
     defaultValue: false
   })
-  declare disableEmailNotifications: boolean;
+  declare disableEmailNotifications: boolean
 
   @Column({
     allowNull: true,
     type: DataType.BOOLEAN,
     defaultValue: false
   })
-  declare enableBsky: boolean;
+  declare enableBsky: boolean
 
   @Column({
     allowNull: true,
     type: DataType.STRING
   })
-  declare bskyAuthData: string;
+  declare bskyAuthData: string
 
   @Column({
     allowNull: true,
     type: DataType.STRING(768)
   })
-  declare bskyDid: string | null;
+  declare bskyDid: string | null
 
   @Column({
     allowNull: true,
     type: DataType.DATE,
     defaultValue: new Date(0)
   })
-  declare lastActiveAt: Date;
+  declare lastActiveAt: Date
+
+  @Column({
+    allowNull: false,
+    type: DataType.BOOLEAN,
+    defaultValue: false
+  })
+  declare hideFollows: Boolean
 
   @HasMany(() => MfaDetails, {
-    sourceKey: "id"
+    sourceKey: 'id'
   })
-  declare mfaDetails: MfaDetails[];
+  declare mfaDetails: MfaDetails[]
 
   @HasMany(() => Notification, {
-    foreignKey: "notifiedUserId"
+    foreignKey: 'notifiedUserId'
   })
-  declare incomingNotifications: Notification[];
+  declare incomingNotifications: Notification[]
 
   @HasMany(() => Notification, {
-    foreignKey: "userId"
+    foreignKey: 'userId'
   })
-  declare outgoingNotifications: Notification[];
+  declare outgoingNotifications: Notification[]
 
   @HasMany(() => Ask, {
-    foreignKey: "userAsker"
+    foreignKey: 'userAsker'
   })
-  declare userAsker: Ask[];
+  declare userAsker: Ask[]
 
   @HasMany(() => Ask, {
-    foreignKey: "userAsked"
+    foreignKey: 'userAsked'
   })
-  declare userAsked: Ask[];
+  declare userAsked: Ask[]
 
   @HasMany(() => QuestionPollAnswer, {
-    sourceKey: "id"
+    sourceKey: 'id'
   })
-  declare questionPollAnswers: QuestionPollAnswer[];
+  declare questionPollAnswers: QuestionPollAnswer[]
 
   @HasMany(() => EmojiReaction, {
-    sourceKey: "id"
+    sourceKey: 'id'
   })
-  declare emojiReacions: EmojiReaction[];
+  declare emojiReacions: EmojiReaction[]
 
   @HasMany(() => UserOptions, {
-    sourceKey: "id"
+    sourceKey: 'id'
   })
-  declare userOptions: UserOptions[];
+  declare userOptions: UserOptions[]
 
   @HasMany(() => PushNotificationToken, {
-    sourceKey: "id"
+    sourceKey: 'id'
   })
-  declare pushNotificationTokens: PushNotificationToken[];
+  declare pushNotificationTokens: PushNotificationToken[]
 
   @BelongsToMany(() => Emoji, () => UserEmojiRelation)
-  declare emojis: Emoji[];
+  declare emojis: Emoji[]
   declare setEmojis: BelongsToManySetAssociationsMixin<Emoji, string>
   declare removeEmojis: BelongsToManyRemoveAssociationsMixin<Emoji, string>
 
   @HasMany(() => Follows, {
-    foreignKey: "followerId"
+    foreignKey: 'followerId'
   })
-  declare followerFollows: Follows[];
+  declare followerFollows: Follows[]
 
   @HasMany(() => Follows, {
-    foreignKey: "followedId"
+    foreignKey: 'followedId'
   })
-  declare followedFollows: Follows[];
+  declare followedFollows: Follows[]
 
-  @BelongsToMany(() => User, () => Follows, "followedId", "followerId")
+  @BelongsToMany(() => User, () => Follows, 'followedId', 'followerId')
   declare follower: User[]
   declare getFollower: BelongsToManyGetAssociationsMixin<User>
   declare removeFollower: BelongsToManyRemoveAssociationMixin<User, string>
 
-  @BelongsToMany(() => User, () => Follows, "followerId", "followedId")
+  @BelongsToMany(() => User, () => Follows, 'followerId', 'followedId')
   declare followed: User[]
   declare getFollowed: BelongsToManyGetAssociationsMixin<User>
   declare removeFollowed: BelongsToManyRemoveAssociationMixin<User, string>
 
   @HasMany(() => Blocks, {
-    foreignKey: "blockerId"
+    foreignKey: 'blockerId'
   })
-  declare blockerBlocks: Blocks[];
+  declare blockerBlocks: Blocks[]
 
   @HasMany(() => Blocks, {
-    foreignKey: "blockedId"
+    foreignKey: 'blockedId'
   })
-  declare blockedBlocks: Blocks[];
+  declare blockedBlocks: Blocks[]
 
-  @BelongsToMany(() => User, () => Blocks, "blockedId", "blockerId")
+  @BelongsToMany(() => User, () => Blocks, 'blockedId', 'blockerId')
   declare blocker: User[]
   declare addBlocker: BelongsToManyAddAssociationMixin<User, string>
   declare removeBlocker: BelongsToManyRemoveAssociationMixin<User, string>
 
-  @BelongsToMany(() => User, () => Blocks, "blockerId", "blockedId")
+  @BelongsToMany(() => User, () => Blocks, 'blockerId', 'blockedId')
   declare blocked: User[]
 
   @HasMany(() => Mutes, {
-    foreignKey: "muterId"
+    foreignKey: 'muterId'
   })
-  declare muterMutes: Mutes[];
+  declare muterMutes: Mutes[]
 
   @HasMany(() => Mutes, {
-    foreignKey: "mutedId"
+    foreignKey: 'mutedId'
   })
-  declare mutedMutes: Mutes[];
+  declare mutedMutes: Mutes[]
 
-  @BelongsToMany(() => User, () => Mutes, "mutedId", "muterId")
+  @BelongsToMany(() => User, () => Mutes, 'mutedId', 'muterId')
   declare muter: User[]
   declare addMuter: BelongsToManyAddAssociationMixin<User, string>
   declare removeMuter: BelongsToManyRemoveAssociationMixin<User, string>
 
-  @BelongsToMany(() => User, () => Mutes, "muterId", "mutedId")
+  @BelongsToMany(() => User, () => Mutes, 'muterId', 'mutedId')
   declare muted: User[]
 
   @HasMany(() => ServerBlock, {
-    sourceKey: "id"
+    sourceKey: 'id'
   })
-  declare serverBlocks: ServerBlock[];
+  declare serverBlocks: ServerBlock[]
 
   @HasMany(() => PostReport, {
-    sourceKey: "id"
+    sourceKey: 'id'
   })
-  declare postReports: PostReport[];
+  declare postReports: PostReport[]
 
   @HasMany(() => SilencedPost, {
-    sourceKey: "id"
+    sourceKey: 'id'
   })
-  declare silencedPosts: SilencedPost[];
+  declare silencedPosts: SilencedPost[]
 
   @HasMany(() => UserReport, {
-    foreignKey: "ReportedId"
+    foreignKey: 'ReportedId'
   })
-  declare reportedReport: UserReport[];
+  declare reportedReport: UserReport[]
 
   @HasMany(() => UserReport, {
-    foreignKey: "ReporterId"
+    foreignKey: 'ReporterId'
   })
-  declare reporterReport: UserReport[];
+  declare reporterReport: UserReport[]
 
   @BelongsTo(() => FederatedHost, {
     foreignKey: {
-      name: "federatedHostId",
+      name: 'federatedHostId',
       allowNull: true
     }
   })
-  declare federatedHost: FederatedHost;
+  declare federatedHost: FederatedHost
   declare getFederatedHost: BelongsToGetAssociationMixin<FederatedHost>
 
   @HasMany(() => Post, {
-    sourceKey: "id"
+    sourceKey: 'id'
   })
-  declare posts: Post[];
+  declare posts: Post[]
 
   @HasMany(() => Media, {
-    sourceKey: "id"
+    sourceKey: 'id'
   })
-  declare medias: Media[];
+  declare medias: Media[]
 
   @HasMany(() => PostMentionsUserRelation, {
-    sourceKey: "id"
+    sourceKey: 'id'
   })
-  declare pMURs: PostMentionsUserRelation[];
+  declare pMURs: PostMentionsUserRelation[]
 
   @BelongsToMany(() => Post, () => PostMentionsUserRelation)
-  declare mentionPost: Post[];
+  declare mentionPost: Post[]
 
   @HasMany(() => UserLikesPostRelations, {
-    sourceKey: "id"
+    sourceKey: 'id'
   })
-  declare userLikesPostRelations: UserLikesPostRelations[];
+  declare userLikesPostRelations: UserLikesPostRelations[]
 
   @HasMany(() => UserBookmarkedPosts, {
-    sourceKey: "id"
+    sourceKey: 'id'
   })
-  declare userBookmarkedPosts: UserBookmarkedPosts[];
+  declare userBookmarkedPosts: UserBookmarkedPosts[]
 
   @HasMany(() => RemoteUserPostView, {
-    sourceKey: "id"
+    sourceKey: 'id'
   })
-  declare remoteUserPostViewList: RemoteUserPostView[];
+  declare remoteUserPostViewList: RemoteUserPostView[]
 
   @Column(DataType.VIRTUAL)
   get isBlueskyUser() {
