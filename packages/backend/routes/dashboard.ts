@@ -45,7 +45,7 @@ export default function dashboardRoutes(app: Application) {
               {
                 //local follows privacy 0 1 2
                 privacy: {
-                  [Op.in]: [Privacy.Public, Privacy.FollowersOnly, Privacy.LocalOnly, Privacy.Unlisted]
+                  [Op.in]: [Privacy.Public, Privacy.FollowersOnly, Privacy.LocalOnly]
                 },
                 userId: {
                   [Op.in]: await followedUsers
@@ -53,10 +53,16 @@ export default function dashboardRoutes(app: Application) {
               },
               {
                 privacy: {
-                  [Op.in]: req.jwtData?.userId ? [Privacy.Public, Privacy.LocalOnly, Privacy.Unlisted] : [Privacy.Public] // only display public if not logged in
+                  [Op.in]: req.jwtData?.userId ? [Privacy.Public, Privacy.LocalOnly] : [Privacy.Public] // only display public if not logged in
                 },
                 userId: {
                   [Op.in]: await nonFollowedUsers
+                }
+              },
+              {
+                userId: posterId,
+                privacy: {
+                  [Op.ne]: Privacy.DirectMessage
                 }
               }
             ]
