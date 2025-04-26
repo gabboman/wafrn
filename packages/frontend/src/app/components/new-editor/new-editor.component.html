@@ -95,6 +95,11 @@
       <app-info-card [type]="'caution'" addClass="mb-3">
         {{ 'editor.directMessageWarning' | translate }}
       </app-info-card>
+      @if (data?.quote) {
+        <app-info-card [type]="'caution'" addClass="mb-3">
+          {{ 'editor.directMessageWithQuoteWarning' | translate }}
+        </app-info-card>
+      }
     }
     @if (privacy === 3) {
       <app-info-card type="info" addClass="mb-3">
