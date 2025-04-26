@@ -21,6 +21,7 @@ import { wait } from '../wait.js'
 import dompurify from 'isomorphic-dompurify'
 import { postToAtproto } from "../../atproto/utils/postToAtproto.js";
 import { getAtProtoSession } from "../../atproto/utils/getAtProtoSession.js";
+import { Privacy } from '../../models/post.js'
 
 const processPostViewQueue = new Queue('processRemoteView', {
   connection: environment.bullmqConnection,
@@ -58,7 +59,7 @@ async function prepareSendRemotePostWorker(job: Job) {
   const parent = post.parentId ? await Post.findByPk(post.parentId) : undefined;
   const parentPoster = parent ? await User.findByPk(parent.userId) : undefined
   const localUser = await User.findByPk(post.userId)
-  if (post.privacy === 0 && localUser?.enableBsky && environment.enableBsky) {
+  if (post.privacy === Privacy.Public && localUser?.enableBsky && environment.enableBsky) {
     try {
       // if parent has no bsky data we dont reblog
       if (!parent || parent.bskyUri) {
@@ -133,10 +134,10 @@ async function prepareSendRemotePostWorker(job: Job) {
     // mentioned users
     const mentionedUsers = await post.getMentionPost()
     switch (post.privacy) {
-      case 2: {
+      case Privacy.LocalOnly: {
         break
       }
-      case 10: {
+      case Privacy.DirectMessage: {
         serversToSendThePost = []
         usersToSendThePost = []
         break

@@ -21,6 +21,7 @@ import { getUserEmojis } from '../utils/cacheGetters/getUserEmojis.js'
 import { getAtprotoUser } from '../atproto/utils/getAtprotoUser.js'
 import { getAtProtoThread } from '../atproto/utils/getAtProtoThread.js'
 import { logger } from '../utils/logger.js'
+import { Privacy } from '../models/post.js'
 export default function searchRoutes(app: Application) {
   app.get('/api/v2/search/', authenticateToken, async (req: AuthorizedRequest, res: Response) => {
     // const success = false;
@@ -49,13 +50,13 @@ export default function searchRoutes(app: Application) {
             where: {
               [Op.or]: [
                 {
-                  privacy: { [Op.in]: [0, 2] }
+                  privacy: { [Op.in]: [Privacy.Public, Privacy.LocalOnly] }
                 },
                 {
                   userId: {
                     [Op.in]: (await getFollowedsIds(posterId)).concat([posterId])
                   },
-                  privacy: 1
+                  privacy: Privacy.FollowersOnly
                 }
               ]
             }

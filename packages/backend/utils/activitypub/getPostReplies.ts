@@ -2,6 +2,7 @@ import { Op } from 'sequelize'
 import { Post, User } from '../../models/index.js'
 import { environment } from '../../environment.js'
 import { redisCache } from '../redis.js'
+import { Privacy } from '../../models/post.js'
 
 async function getPostReplies(postId: string) {
   let resString = await redisCache.get('postReplies:' + postId)
@@ -36,7 +37,7 @@ async function getPostReplies(postId: string) {
         isReblog: false,
         parentId: postId,
         privacy: {
-          [Op.notIn]: [2, 10]
+          [Op.notIn]: [Privacy.LocalOnly, Privacy.DirectMessage]
         }
       }
     })

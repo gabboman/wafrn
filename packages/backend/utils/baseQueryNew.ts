@@ -22,6 +22,7 @@ import getPosstGroupDetails from './getPostGroupDetails.js'
 import getFollowedsIds from './cacheGetters/getFollowedsIds.js'
 import { Queue } from 'bullmq'
 import { environment } from '../environment.js'
+import { Privacy } from '../models/post.js'
 
 const updateMediaDataQueue = new Queue('processRemoteMediaData', {
   connection: environment.bullmqConnection,
@@ -345,8 +346,8 @@ async function getUnjointedPosts(postIdsInput: string[], posterId: string) {
       post.content === '' &&
       !tagsAwaited.some((tag: any) => tag.postId === post.id) &&
       !mediasAwaited.some((media: any) => media.postId === post.id)
-    const validPrivacy = [0, 2, 3].includes(post.privacy)
-    const userFollowsPoster = usersFollowedByPoster.includes(post.userId) && post.privacy === 1
+    const validPrivacy = [Privacy.Public, Privacy.LocalOnly, Privacy.Unlisted].includes(post.privacy)
+    const userFollowsPoster = usersFollowedByPoster.includes(post.userId) && post.privacy === Privacy.FollowersOnly
     const userIsMentioned = postsMentioningUser.includes(post.id)
     return (
       !bannedUserIds.includes(post.userId) &&
