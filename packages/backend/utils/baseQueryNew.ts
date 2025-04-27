@@ -37,9 +37,7 @@ const updateMediaDataQueue = new Queue('processRemoteMediaData', {
   }
 })
 
-async function getQuotes(
-  postIds: string[]
-): Promise<Quotes[]> {
+async function getQuotes(postIds: string[]): Promise<Quotes[]> {
   return await Quotes.findAll({
     where: {
       quoterPostId: {
@@ -316,7 +314,7 @@ async function getUnjointedPosts(postIdsInput: string[], posterId: string) {
   })
   const blockedHostsIds = blockedHosts.map((elem) => elem.id)
   const bannedUserIds = (await users)
-    .filter((elem) => elem.banned || elem.federatedHostId && blockedHostsIds.includes(elem.federatedHostId))
+    .filter((elem) => elem.banned || (elem.federatedHostId && blockedHostsIds.includes(elem.federatedHostId)))
     .map((elem) => elem.id)
   const usersFollowedByPoster = await getFollowedsIds(posterId)
   const tagsAwaited = await tags
@@ -355,7 +353,9 @@ async function getUnjointedPosts(postIdsInput: string[], posterId: string) {
     )
   })
   const postIdsToFullySend: string[] = postsToFullySend.map((post: any) => post.id)
-  const postsToSend = (await postWithNotes).map((post: any) => filterPost(post, postIdsToFullySend))
+  const postsToSend = (await postWithNotes)
+    .map((post: any) => filterPost(post, postIdsToFullySend))
+    .filter((elem: any) => !!elem)
   const mediasToSend = (await medias).filter((elem: any) => {
     return postIdsToFullySend.includes(elem.postId)
   })
@@ -385,9 +385,16 @@ function filterPost(postToBeFilter: any, postIdsToFullySend: string[]): any {
     res = undefined
   }
   if (res) {
-    res.ancestors = res.ancestors ? res.ancestors.map((elem: any) => filterPost(elem, postIdsToFullySend)) : []
+    const ancestorsLength = res.ancestors ? res.ancestors.length : 0
+    res.ancestors = res.ancestors
+      ? res.ancestors.map((elem: any) => filterPost(elem, postIdsToFullySend)).filter((elem: any) => !!elem)
+      : []
     res.ancestors = res.ancestors.filter((elem: any) => !(elem == undefined))
+    if (ancestorsLength != res.ancestors.length) {
+      res = undefined
+    }
   }
+
   return res
 }
 
