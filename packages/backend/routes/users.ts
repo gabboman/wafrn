@@ -1021,7 +1021,7 @@ export default function userRoutes(app: Application) {
           })
         }
         if (user.hideFollows && user.url != req.jwtData?.url) {
-          res.sendStatus(403)
+          res.send([])
         } else {
           res.send(responseData)
         }
