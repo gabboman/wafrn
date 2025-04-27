@@ -292,6 +292,42 @@ export default function postsRoutes(app: Application) {
           return false
         }
 
+        // we check if this is in reply to bsky if user does not have bsky enabled
+        if (!posterUser?.enableBsky && parent) {
+          if (parent.bskyUri) {
+            const parentPoster = await User.findByPk(parent.userId)
+            if (parentPoster?.url.startsWith('@')) {
+              return res.status(403).send({ success: false, errorMessage: 'You need to enable bluesky' })
+            } else {
+              // we do same check for all parents
+              const ancestorIdsQuery = await sequelize.query(
+                `SELECT "ancestorId" FROM "postsancestors" where "postsId" = '${parent.id}'`
+              )
+              const ancestorIds: string[] = ancestorIdsQuery[0].map((elem: any) => elem.ancestorId)
+              if (ancestorIds.length > 0) {
+                const ancestors = await Post.findAll({
+                  include: [
+                    {
+                      model: User,
+                      as: 'user',
+                      attributes: ['url']
+                    }
+                  ],
+                  where: {
+                    id: {
+                      [Op.in]: ancestorIds
+                    }
+                  }
+                })
+                const parentsUserUrls = ancestors.map((elem) => elem.user.url)
+                if (parentsUserUrls.some((elem) => elem.startsWith('@'))) {
+                  return res.status(403).send({ success: false, errorMessage: 'You need to enable bluesky' })
+                }
+              }
+            }
+          }
+        }
+
         // we get the privacy of the parent and quoted post. Set body privacy to the max one
         const parentPrivacy: PrivacyType = parent ? parent.privacy : Privacy.Public
         let bodyPrivacy: PrivacyType = req.body.privacy ? req.body.privacy : Privacy.Public

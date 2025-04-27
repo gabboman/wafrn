@@ -444,11 +444,6 @@ export class NewEditorComponent implements OnDestroy {
         window.location.reload()
       }
       this.closeEditor()
-    } else {
-      this.messages.add({
-        severity: 'warn',
-        summary: 'Something went wrong and your woot was not published. Check your internet connection and try again'
-      })
     }
     this.postBeingSubmitted = false
   }
