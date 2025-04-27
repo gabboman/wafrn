@@ -244,15 +244,23 @@ export class LoginService {
     }
 
     try {
-      const { hideFollows, name, description, manuallyAcceptsFollows, disableEmailNotifications, ...form } =
-        updateProfileForm
+      const {
+        hideProfileNotLoggedIn,
+        hideFollows,
+        name,
+        description,
+        manuallyAcceptsFollows,
+        disableEmailNotifications,
+        ...form
+      } = updateProfileForm
 
       const payload = this.utils.objectToFormData({
         name,
         description,
         manuallyAcceptsFollows,
         disableEmailNotifications,
-        hideFollows
+        hideFollows,
+        hideProfileNotLoggedIn
       })
 
       const options = []

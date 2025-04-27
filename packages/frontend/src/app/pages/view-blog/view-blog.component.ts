@@ -280,7 +280,8 @@ export class ViewBlogComponent implements OnInit, OnDestroy, SnappyHide, SnappyS
       postCount: 0,
       isBlueskyUser: false,
       disableEmailNotifications: false,
-      hideFollows: false
+      hideFollows: false,
+      hideProfileNotLoggedIn: false
     }
   }
 }

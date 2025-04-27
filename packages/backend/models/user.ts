@@ -73,6 +73,7 @@ export interface UserAttributes {
   bskyDid?: string | null
   lastActiveAt?: Date
   hideFollows: Boolean
+  hideProfileNotLoggedIn: Boolean
 }
 
 @Table({
@@ -314,6 +315,13 @@ export class User extends Model<UserAttributes, UserAttributes> implements UserA
     defaultValue: false
   })
   declare hideFollows: Boolean
+
+  @Column({
+    allowNull: false,
+    type: DataType.BOOLEAN,
+    defaultValue: false
+  })
+  declare hideProfileNotLoggedIn: Boolean
 
   @HasMany(() => MfaDetails, {
     sourceKey: 'id'

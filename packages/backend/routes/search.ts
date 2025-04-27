@@ -73,6 +73,7 @@ export default function searchRoutes(app: Application) {
         offset: page * environment.postsPerPage,
         where: {
           activated: true,
+          hideProfileNotLoggedIn: false,
           [Op.and]: [
             {
               url: {
@@ -94,6 +95,7 @@ export default function searchRoutes(app: Application) {
             [Op.notIn]: await getallBlockedServers()
           },
           banned: false,
+          hideProfileNotLoggedIn: false,
           [Op.or]: [sequelize.literal(`lower("url") LIKE ${sequelize.escape('%' + searchTerm + '%')}`)]
         },
         attributes: ['name', 'url', 'avatar', 'id', 'remoteId', 'description']

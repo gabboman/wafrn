@@ -220,12 +220,20 @@ export default function userRoutes(app: Application) {
           }
         })
         if (req.body && user) {
-          const { hideFollows, name, description, manuallyAcceptsFollows, options: optionJSON } = req.body
+          const {
+            hideFollows,
+            hideProfileNotLoggedIn,
+            name,
+            description,
+            manuallyAcceptsFollows,
+            options: optionJSON
+          } = req.body
 
           const avaiableEmojis = await getAvaiableEmojis()
           let userEmojis: any[] = []
           user.manuallyAcceptsFollows = !!manuallyAcceptsFollows
           user.hideFollows = hideFollows == 'true'
+          user.hideProfileNotLoggedIn = hideProfileNotLoggedIn == 'true'
           user.disableEmailNotifications = req.body.disableEmailNotifications == 'true'
           if (description) {
             const descriptionHtml = markdownConverter.makeHtml(description)
@@ -692,9 +700,10 @@ export default function userRoutes(app: Application) {
           'bskyDid',
           'isFediverseUser',
           'isBlueskyUser',
-          'enableBsky',
-          [sequelize.literal(`"id" = '${userId}' AND "disableEmailNotifications"`), 'disableEmailNotifications'], // To add the aggregation...
-          'hideFollows'
+          [sequelize.literal(`"id" = '${userId}' AND "enableBsky"`), 'enableBsky'],
+          [sequelize.literal(`"id" = '${userId}' AND "disableEmailNotifications"`), 'disableEmailNotifications'],
+          [sequelize.literal(`"id" = '${userId}' AND "hideProfileNotLoggedIn"`), 'hideProfileNotLoggedIn'],
+          [sequelize.literal(`"id" = '${userId}' AND "hideFollows"`), 'hideFollows']
         ],
         include: [
           {
@@ -718,6 +727,13 @@ export default function userRoutes(app: Application) {
           }
         }
       })
+      if (blog && !req.jwtData) {
+        const user = await User.findByPk(blog.id, { attributes: ['hideProfileNotLoggedIn'] })
+        if (user?.hideProfileNotLoggedIn) {
+          res.sendStatus(404)
+          return
+        }
+      }
       if (!blog || blog.federatedHost?.blocked) {
         res.sendStatus(404)
         return

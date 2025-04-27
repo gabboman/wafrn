@@ -138,6 +138,13 @@
           <mat-checkbox formControlName="hideFollows"></mat-checkbox>
           <mat-label>Hide my follows and followers</mat-label>
         </div>
+        <div class="w-full">
+          <mat-checkbox formControlName="hideProfileNotLoggedIn"></mat-checkbox>
+          <mat-label
+            >Hide profile to not logged in users and search (this will only apply to your profile IN this wafrn, not to
+            your posts nor other fedi instances or bluesky)</mat-label
+          >
+        </div>
         {{ 'profile.security.header' | translate }}:
         <div class="flex align-items-center justify-content-between mt-2">
           <a
