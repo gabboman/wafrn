@@ -193,7 +193,7 @@ async function getEmojis(input: { userIds: string[]; postIds: string[] }): Promi
   }
 }
 
-async function getUnjointedPosts(postIdsInput: string[], posterId: string) {
+async function getUnjointedPosts(postIdsInput: string[], posterId: string, doNotFullyHide = false) {
   // we need a list of all the userId we just got from the post
   let userIds: string[] = []
   let postIds: string[] = []
@@ -354,7 +354,7 @@ async function getUnjointedPosts(postIdsInput: string[], posterId: string) {
   })
   const postIdsToFullySend: string[] = postsToFullySend.map((post: any) => post.id)
   const postsToSend = (await postWithNotes)
-    .map((post: any) => filterPost(post, postIdsToFullySend))
+    .map((post: any) => filterPost(post, postIdsToFullySend, doNotFullyHide))
     .filter((elem: any) => !!elem)
   const mediasToSend = (await medias).filter((elem: any) => {
     return postIdsToFullySend.includes(elem.postId)
@@ -374,12 +374,14 @@ async function getUnjointedPosts(postIdsInput: string[], posterId: string) {
     likes: likes.filter((elem) => !!elem),
     bookmarks: bookmarks,
     quotes: quotesFiltered.filter((elem) => !!elem),
-    quotedPosts: (await quotedPosts).map((elem: any) => filterPost(elem, postIdsToFullySend)).filter((elem) => !!elem),
+    quotedPosts: (await quotedPosts)
+      .map((elem: any) => filterPost(elem, postIdsToFullySend), doNotFullyHide)
+      .filter((elem) => !!elem),
     asks: asks.filter((elem) => !!elem)
   }
 }
 
-function filterPost(postToBeFilter: any, postIdsToFullySend: string[]): any {
+function filterPost(postToBeFilter: any, postIdsToFullySend: string[], donotHide = false): any {
   let res = postToBeFilter
   if (!postIdsToFullySend.includes(res.id)) {
     res = undefined
@@ -387,10 +389,10 @@ function filterPost(postToBeFilter: any, postIdsToFullySend: string[]): any {
   if (res) {
     const ancestorsLength = res.ancestors ? res.ancestors.length : 0
     res.ancestors = res.ancestors
-      ? res.ancestors.map((elem: any) => filterPost(elem, postIdsToFullySend)).filter((elem: any) => !!elem)
+      ? res.ancestors.map((elem: any) => filterPost(elem, postIdsToFullySend, donotHide)).filter((elem: any) => !!elem)
       : []
     res.ancestors = res.ancestors.filter((elem: any) => !(elem == undefined))
-    if (ancestorsLength != res.ancestors.length) {
+    if (ancestorsLength != res.ancestors.length && !donotHide) {
       res = undefined
     }
   }

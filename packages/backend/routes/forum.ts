@@ -11,8 +11,7 @@ import {
   getMedias,
   getMentionedUserIds,
   getQuotes,
-  getTags,
-  getUnjointedPosts
+  getTags
 } from '../utils/baseQueryNew.js'
 import getFollowedsIds from '../utils/cacheGetters/getFollowedsIds.js'
 import { Privacy } from '../models/post.js'
@@ -56,7 +55,9 @@ export default function forumRoutes(app: Application) {
             },
             {
               privacy: {
-                [Op.in]: req.jwtData?.userId ? [Privacy.Public, Privacy.LocalOnly, Privacy.Unlisted] : [Privacy.Public, Privacy.LocalOnly]
+                [Op.in]: req.jwtData?.userId
+                  ? [Privacy.Public, Privacy.LocalOnly, Privacy.Unlisted]
+                  : [Privacy.Public, Privacy.LocalOnly]
               }
             }
           ]

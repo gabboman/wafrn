@@ -94,9 +94,7 @@ export default function searchRoutes(app: Application) {
             [Op.notIn]: await getallBlockedServers()
           },
           banned: false,
-          [Op.or]: [
-            sequelize.literal(`lower("url") LIKE ${sequelize.escape('%' + searchTerm + '%')}`)
-          ]
+          [Op.or]: [sequelize.literal(`lower("url") LIKE ${sequelize.escape('%' + searchTerm + '%')}`)]
         },
         attributes: ['name', 'url', 'avatar', 'id', 'remoteId', 'description']
       })
@@ -128,8 +126,7 @@ export default function searchRoutes(app: Application) {
               let bskyUri = profileAndPost[1]
               if (!bskyProfile.startsWith('did:')) {
                 let profileToGet = await getAtprotoUser(`${bskyProfile}`, usr)
-                if (profileToGet && profileToGet.bskyDid)
-                  bskyProfile = profileToGet.bskyDid
+                if (profileToGet && profileToGet.bskyDid) bskyProfile = profileToGet.bskyDid
               }
               const uri = `at://${bskyProfile}/app.bsky.feed.post/${bskyUri}`
 
@@ -169,7 +166,7 @@ export default function searchRoutes(app: Application) {
       postIds = postIds.concat(taggedPostsIdValues.map((elem: any) => elem.postId))
     }
 
-    const posts = await getUnjointedPosts(postIds, posterId)
+    const posts = await getUnjointedPosts(postIds, posterId, true)
     remoteUsers = await remoteUsers
     localUsers = await localUsers
     users = await users
@@ -211,9 +208,7 @@ export default function searchRoutes(app: Application) {
       limit: 20,
       where: {
         activated: true,
-        [Op.and]: [
-          sequelize.literal(`lower("url") LIKE ${sequelize.escape('@%' + searchTerm + '%')}`),
-        ],
+        [Op.and]: [sequelize.literal(`lower("url") LIKE ${sequelize.escape('@%' + searchTerm + '%')}`)],
         banned: {
           [Op.ne]: true
         },

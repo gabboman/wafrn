@@ -110,7 +110,8 @@ export default function postsRoutes(app: Application) {
 
         const unjointedPost = await getUnjointedPosts(
           [postId],
-          userId ? userId : '00000000-0000-0000-0000-000000000000'
+          userId ? userId : '00000000-0000-0000-0000-000000000000',
+          true
         )
         const post = unjointedPost.posts[0]
         if (!post) {
@@ -252,7 +253,8 @@ export default function postsRoutes(app: Application) {
         })
         const postsByBlog = await getUnjointedPosts(
           postIds.map((post: any) => post.id),
-          req.jwtData?.userId ? req.jwtData.userId : '00000000-0000-0000-0000-000000000000'
+          req.jwtData?.userId ? req.jwtData.userId : '00000000-0000-0000-0000-000000000000',
+          true
         )
         success = true
         res.send(postsByBlog)
