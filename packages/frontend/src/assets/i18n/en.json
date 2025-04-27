@@ -81,7 +81,8 @@
         "uploadMediaTooltip": "Upload Media",
         "contentWarningTooltip": "Content Warning",
         "insertEmojiTooltip": "Insert emoji",
-        "hiddenMentionsTooltip": "Other mentioned users"
+        "hiddenMentionsTooltip": "Other mentioned users",
+        "editorGuide": "Doubts on how to format the text or how to start? Check <a target=\"_blank\" href=\"https://wafrn.net/faq/user\">the guide</a>"
     },
     "profile": {
         "security": {
