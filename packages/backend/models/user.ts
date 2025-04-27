@@ -72,8 +72,8 @@ export interface UserAttributes {
   bskyAuthData?: string
   bskyDid?: string | null
   lastActiveAt?: Date
-  hideFollows: Boolean
-  hideProfileNotLoggedIn: Boolean
+  hideFollows?: Boolean
+  hideProfileNotLoggedIn?: Boolean
 }
 
 @Table({
@@ -310,14 +310,14 @@ export class User extends Model<UserAttributes, UserAttributes> implements UserA
   declare lastActiveAt: Date
 
   @Column({
-    allowNull: false,
+    allowNull: true,
     type: DataType.BOOLEAN,
     defaultValue: false
   })
   declare hideFollows: Boolean
 
   @Column({
-    allowNull: false,
+    allowNull: true,
     type: DataType.BOOLEAN,
     defaultValue: false
   })

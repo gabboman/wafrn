@@ -27,6 +27,9 @@ async function forcePopulateUsers(dids: string[], localUser: User) {
         await User.bulkCreate(
           petition.data.profiles.map((data) => {
             return {
+              hideFollows: false,
+              // TODO hey you should check this
+              hideProfileNotLoggedIn: false,
               bskyDid: data.did,
               url: '@' + (data.handle === 'handle.invalid' ? `handle.invalid${data.did}` : data.handle),
               name: data.displayName ? data.displayName : data.handle,
@@ -53,15 +56,15 @@ async function getAtprotoUser(handle: string, localUser: User, petitionData?: Pr
     handle == 'handle.invalid'
       ? undefined
       : await User.findOne({
-        where: {
-          [Op.or]: [
-            {
-              bskyDid: handle
-            },
-            sequelize.where(sequelize.fn('lower', sequelize.col('url')), handle.toLowerCase())
-          ]
-        }
-      })
+          where: {
+            [Op.or]: [
+              {
+                bskyDid: handle
+              },
+              sequelize.where(sequelize.fn('lower', sequelize.col('url')), handle.toLowerCase())
+            ]
+          }
+        })
   // sometimes we can get the dids and if its a local user we just return it and thats it
   if (userFound && !userFound.url.startsWith('@')) {
     return userFound
@@ -96,6 +99,8 @@ async function getAtprotoUser(handle: string, localUser: User, petitionData?: Pr
   if (bskyUserResponse.success) {
     const data = bskyUserResponse.data
     const newData = {
+      hideProfileNotLoggedIn: false,
+      hideFollows: false,
       bskyDid: data.did,
       url: '@' + (data.handle === 'handle.invalid' ? `handle.invalid${data.did}` : data.handle),
       name: data.displayName ? data.displayName : data.handle,

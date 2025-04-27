@@ -62,7 +62,7 @@ async function getRemoteActorIdProcessor(job: Job) {
         }
         if (!url || !federatedHost) {
           logger.warn({ message: 'Url is not valid wtf', trace: new Error().stack })
-          return await getDeletedUser();
+          return await getDeletedUser()
         }
         const remoteMentionUrl = typeof userPetition.url === 'string' ? userPetition.url : ''
         let followers = 0
@@ -80,6 +80,8 @@ async function getRemoteActorIdProcessor(job: Job) {
           }
         }
         const userData = {
+          hideFollows: false,
+          hideProfileNotLoggedIn: false,
           url: `@${userPetition.preferredUsername}@${url?.host}`,
           name: userPetition.name ? userPetition.name : userPetition.preferredUsername,
           email: null,

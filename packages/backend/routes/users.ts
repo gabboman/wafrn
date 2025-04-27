@@ -135,7 +135,9 @@ export default function userRoutes(app: Application) {
               activationCode,
               isBot: false,
               lastTimeNotificationsCheck: new Date(0),
-              lastActiveAt: new Date(0)
+              lastActiveAt: new Date(0),
+              hideProfileNotLoggedIn: false,
+              hideFollows: false
             }
 
             const userWithEmail = User.create(user)
