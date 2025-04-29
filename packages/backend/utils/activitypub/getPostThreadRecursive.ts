@@ -96,9 +96,7 @@ async function getPostThreadRecursive(
       }
       const remoteUser = await getRemoteActor(postPetition.attributedTo, user)
       const remoteHost = await FederatedHost.findByPk(remoteUser.federatedHostId)
-      const remoteUserServerBaned = remoteHost?.blocked
-        ? remoteHost.blocked
-        : false
+      const remoteUserServerBaned = remoteHost?.blocked ? remoteHost.blocked : false
       // HACK: some implementations (GTS IM LOOKING AT YOU) may send a single element instead of an array
       // I should had used a funciton instead of this dirty thing, BUT you see, its late. Im eepy
       // also this code is CRITICAL. A failure here is a big problem. So this hack it is
@@ -107,7 +105,7 @@ async function getPostThreadRecursive(
       const fediTags: fediverseTag[] = [
         ...new Set<fediverseTag>(
           postPetition.tag
-            ?.filter((elem: fediverseTag) => elem.type === 'Hashtag')
+            ?.filter((elem: fediverseTag) => ['Hashtag', 'WafrnHashtag'].includes(elem.type))
             .map((elem: fediverseTag) => {
               return { href: elem.href, type: elem.type, name: elem.name }
             })
@@ -163,8 +161,8 @@ async function getPostThreadRecursive(
         content_warning: postPetition.summary
           ? postPetition.summary
           : remoteUser.NSFW
-            ? 'User is marked as NSFW by this instance staff. Possible NSFW without tagging'
-            : '',
+          ? 'User is marked as NSFW by this instance staff. Possible NSFW without tagging'
+          : '',
         createdAt: new Date(postPetition.published),
         updatedAt: createdAt,
         userId: remoteUserServerBaned || remoteUser.banned ? (await deletedUser)?.id : remoteUser.id,
@@ -313,9 +311,12 @@ async function getPostThreadRecursive(
 
 async function addTagsToPost(post: any, tags: fediverseTag[]) {
   const res = await post.setPostTags([])
+  if (tags.some((elem) => elem.name == 'WafrnHashtag')) {
+    tags = tags.filter((elem) => elem.name == 'WafrnHashtag')
+  }
   return await PostTag.bulkCreate(
     tags
-      .filter((elem) => (elem && post && elem.name && post.id))
+      .filter((elem) => elem && post && elem.name && post.id)
       .map((elem) => {
         return {
           tagName: elem?.name?.replace('#', ''),
