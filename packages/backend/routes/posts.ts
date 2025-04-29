@@ -442,13 +442,14 @@ export default function postsRoutes(app: Application) {
                 [Op.in]: mediaToAdd.map((media: any) => media.id)
               }
             }
-          }).then((mediasToUpdate: Array<any>) => {
+          }).then((mediasToUpdate) => {
             mediaToAdd.forEach(async (media, index) => {
               const mediaToUpdate = mediasToUpdate.find((el: any) => el.id === media.id)
               if (mediaToUpdate) {
-                mediaToUpdate.order = index
+                mediaToUpdate.mediaOrder = index
                 mediaToUpdate.description = media.description
                 mediaToUpdate.NSFW = media.NSFW
+                // POSSIBLE PERFORMANCE IMPROVEMENT: do all saves at the same time. convert this foreach into a for each
                 await mediaToUpdate.save()
               }
             })

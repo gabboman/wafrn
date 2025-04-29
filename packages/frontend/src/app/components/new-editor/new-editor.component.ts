@@ -88,9 +88,9 @@ import { Dialog } from '@angular/cdk/dialog'
 export class NewEditorComponent implements OnDestroy {
   privacyOptions = [
     { level: 0, name: 'Public', icon: faGlobe },
-    { level: 1, name: 'Followers only', icon: faUser },
-    { level: 2, name: 'This instance only', icon: faServer },
     { level: 3, name: 'Unlisted', icon: faUnlock },
+    { level: 2, name: 'This instance only', icon: faServer },
+    { level: 1, name: 'Followers only', icon: faUser },
     { level: 10, name: 'Direct Message', icon: faEnvelope }
   ]
   quoteOpen = false
@@ -182,9 +182,7 @@ export class NewEditorComponent implements OnDestroy {
       this.postCreatorForm.controls['content'].patchValue(this.data.post.markdownContent)
       this.contentWarning = this.data.post.content_warning
       this.tags = this.data.post.tags.map((tag) => tag.tagName).join(',')
-      this.uploadedMedias = this.data.post.medias
-        ? this.data.post.medias.filter((elem) => elem.mediaOrder != 9999999999999999)
-        : []
+      this.uploadedMedias = this.data.post.medias ? this.data.post.medias.filter((elem) => elem.mediaOrder > 9999) : []
       this.privacy = this.data.post.privacy
     }
   }
