@@ -687,7 +687,9 @@ export default function postsRoutes(app: Application) {
         )
 
         post.setEmojis(emojisToAdd)
-        const inlineTags = Array.from(dompurify.sanitize(post.content, { ALLOWED_TAGS: [] }).matchAll(/#[a-z0-9_]+/g))
+        const inlineTags = Array.from(
+          dompurify.sanitize(post.content, { ALLOWED_TAGS: [] }).matchAll(/#[a-zA-Z0-9_]+/gi)
+        )
           .join(',')
           .replaceAll('#', '')
         const bodyTags = req.body.tags ? req.body.tags + ',' + inlineTags : inlineTags
