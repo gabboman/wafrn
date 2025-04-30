@@ -22,7 +22,7 @@
           <span><fa-icon title="Recent emojis" [icon]="clockIcon"></fa-icon></span>
         </button>
         @for (emojiCollection of emojiCollections; track $index) {
-          @if (emojiCollection.emojis) {
+          @if (emojiCollection.emojis.length > 0) {
             @let emoji = emojiCollection.emojis[0];
             <button
               [class.emoji-active-collection]="this.collectionHas($index)"
