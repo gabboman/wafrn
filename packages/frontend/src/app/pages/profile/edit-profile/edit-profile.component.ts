@@ -57,7 +57,12 @@ export class EditProfileComponent implements OnInit {
     expandQuotes: new FormControl(false),
     defaultExploreLocal: new FormControl(false),
     automaticalyExpandPosts: new FormControl(false),
-    disableEmailNotifications: new FormControl(false)
+    disableEmailNotifications: new FormControl(false),
+    showNotificationsFrom: new FormControl(1),
+    notifyMentions: new FormControl(true),
+    notifyReactions: new FormControl(true),
+    notifyQuotes: new FormControl(true),
+    notifyFollows: new FormControl(true)
   })
 
   constructor(
@@ -133,6 +138,28 @@ export class EditProfileComponent implements OnInit {
           this.fediAttachments = JSON.parse(fediAttachments.optionValue)
         } catch (error) {}
       }
+      const localStorageNotificationsFrom = localStorage.getItem('notificationsFrom')
+      if (localStorageNotificationsFrom) {
+        this.editProfileForm.controls['showNotificationsFrom'].patchValue(parseInt(localStorageNotificationsFrom))
+      }
+      const localStorageNotifyQuotes = localStorage.getItem('notifyQuotes')
+      if (localStorageNotificationsFrom) {
+        this.editProfileForm.controls['notifyQuotes'].patchValue(localStorageNotifyQuotes == 'true')
+      }
+      const localStorageNotifyMentions = localStorage.getItem('notifyMentions')
+      if (localStorageNotificationsFrom) {
+        this.editProfileForm.controls['notifyMentions'].patchValue(localStorageNotifyMentions == 'true')
+      }
+      const localStorageNotifyReactions = localStorage.getItem('notifyReactions')
+      if (localStorageNotificationsFrom) {
+        this.editProfileForm.controls['notifyReactions'].patchValue(localStorageNotifyReactions == 'true')
+      }
+
+      const localStorageNotifyFollows = localStorage.getItem('notifyFollows')
+      if (localStorageNotifyFollows) {
+        this.editProfileForm.controls['notifyFollows'].patchValue(localStorageNotifyFollows == 'true')
+      }
+
       this.loading = false
     })
   }
