@@ -21,8 +21,8 @@
         >
           <span><fa-icon title="Recent emojis" [icon]="clockIcon"></fa-icon></span>
         </button>
-        @if (emojiCollections && emojiCollections.length) {
-          @for (emojiCollection of emojiCollections; track $index) {
+        @for (emojiCollection of emojiCollections; track $index) {
+          @if (emojiCollection.emojis) {
             @let emoji = emojiCollection.emojis[0];
             <button
               [class.emoji-active-collection]="this.collectionHas($index)"
