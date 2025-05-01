@@ -240,7 +240,12 @@ export class LoginService {
       expandQuotes: 'wafrn.expandQuotes',
       attachments: 'fediverse.public.attachment',
       alsoKnownAs: 'fediverse.public.alsoKnownAs',
-      defaultExploreLocal: 'wafrn.defaultExploreLocal'
+      defaultExploreLocal: 'wafrn.defaultExploreLocal',
+      showNotificationsFrom: 'wafrn.notificationsFrom',
+      notifyMentions: 'wafrn.notifyMentions',
+      notifyReactions: 'wafrn.notifyReactions',
+      notifyQuotes: 'wafrn.notifyQuotes',
+      notifyFollows: 'wafrn.notifyFollows'
     }
 
     try {

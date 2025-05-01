@@ -56,6 +56,34 @@
         <div [hidden]="loading" (click)="addFediAttachment()">+</div>
       </mat-tab>
       <mat-tab label="{{ 'profile.tabHeaders.preferences' | translate }}">
+        <h5 class="w-full">Notification filtering</h5>
+        <mat-form-field class="w-full">
+          <mat-label>Show notifications from</mat-label>
+          <mat-select formControlName="showNotificationsFrom">
+            <mat-option [value]="1">Everyone</mat-option>
+            <mat-option [value]="2">Followers</mat-option>
+            <mat-option [value]="3">People I follow</mat-option>
+            <mat-option [value]="4">Mutuals</mat-option>
+          </mat-select>
+        </mat-form-field>
+        <div class="w-full">
+          <!-- It would be possible that a user disabled all notifications. It would also be funny. -->
+          <mat-checkbox formControlName="notifyMentions"></mat-checkbox>
+          <mat-label>Mentions</mat-label>
+        </div>
+        <div class="w-full">
+          <mat-checkbox formControlName="notifyFollows"></mat-checkbox>
+          <mat-label>Follows</mat-label>
+        </div>
+        <div class="w-full">
+          <mat-checkbox formControlName="notifyReactions"></mat-checkbox>
+          <mat-label>Likes and EmojiReactions</mat-label>
+        </div>
+        <div class="w-full">
+          <mat-checkbox formControlName="notifyQuotes"></mat-checkbox>
+          <mat-label>Quotes</mat-label>
+        </div>
+        <hr class="w-full" />
         <div class="w-full">
           <mat-checkbox formControlName="manuallyAcceptsFollows"></mat-checkbox>
           <mat-label>Manually accept follows</mat-label>

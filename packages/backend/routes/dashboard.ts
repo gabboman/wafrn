@@ -79,7 +79,7 @@ export default function dashboardRoutes(app: Application) {
           whereObject = {
             privacy: Privacy.Public,
             isReblog: false,
-            '$user.federatedHost.friendServer$': true
+            '$user.federatedHost.bubbleTimeline$': true
           }
           break
         }
