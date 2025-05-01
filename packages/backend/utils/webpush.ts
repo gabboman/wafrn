@@ -6,8 +6,7 @@ import { environment } from '../environment.js'
 import WebPush from 'web-push'
 
 const adminLink = `https://${environment.instanceUrl}/blog/${environment.adminUser}`
-console.log(adminLink, environment.webPushPublicKey, environment.webPushPrivateKey)
-WebPush.setVapidDetails(adminLink, environment.webPushPublicKey, environment.webPushPrivateKey)
+WebPush.setVapidDetails(adminLink, environment.webpushPublicKey, environment.webpushPrivateKey)
 
 export async function sendWebPushNotifications(
   notifications: NotificationBody[],
