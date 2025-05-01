@@ -62,7 +62,8 @@ export class EditProfileComponent implements OnInit {
     notifyMentions: new FormControl(true),
     notifyReactions: new FormControl(true),
     notifyQuotes: new FormControl(true),
-    notifyFollows: new FormControl(true)
+    notifyFollows: new FormControl(true),
+    notifyRewoots: new FormControl(true)
   })
 
   constructor(
@@ -158,6 +159,11 @@ export class EditProfileComponent implements OnInit {
       const localStorageNotifyFollows = localStorage.getItem('notifyFollows')
       if (localStorageNotifyFollows) {
         this.editProfileForm.controls['notifyFollows'].patchValue(localStorageNotifyFollows == 'true')
+      }
+
+      const localStorageNotifyRewoots = localStorage.getItem('notifyRewoots')
+      if (localStorageNotifyRewoots) {
+        this.editProfileForm.controls['notifyRewoots'].patchValue(localStorageNotifyRewoots == 'true')
       }
 
       this.loading = false

@@ -289,7 +289,8 @@ export default function notificationRoutes(app: Application) {
             'wafrn.notifyMentions',
             'wafrn.notifyReactions',
             'wafrn.notifyQuotes',
-            'wafrn.notifyFollows'
+            'wafrn.notifyFollows',
+            'wafrn.notifyRewoots'
           ]
         }
       }
@@ -299,6 +300,8 @@ export default function notificationRoutes(app: Application) {
     const optionNotifyMentions = options.find((elem) => elem.optionName == 'wafrn.notifyMentions')
     const optionNotifyReactions = options.find((elem) => elem.optionName == 'wafrn.notifyReactions')
     const optionNotifyFollows = options.find((elem) => elem.optionName == 'wafrn.notifyFollows')
+    const optionNotifyRewoots = options.find((elem) => elem.optionName == 'wafrn.notifyRewoots')
+
     const notificationTypes = []
     if (!optionNotifyQuotes || optionNotifyQuotes.optionValue != 'false') {
       notificationTypes.push('QUOTE')
@@ -312,6 +315,9 @@ export default function notificationRoutes(app: Application) {
     }
     if (!optionNotifyFollows || optionNotifyFollows.optionValue != 'false') {
       notificationTypes.push('FOLLOW')
+    }
+    if (!optionNotifyRewoots || optionNotifyRewoots.optionValue != 'false') {
+      notificationTypes.push('REWOOT')
     }
 
     let res: any = {

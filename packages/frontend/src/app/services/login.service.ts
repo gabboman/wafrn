@@ -245,7 +245,8 @@ export class LoginService {
       notifyMentions: 'wafrn.notifyMentions',
       notifyReactions: 'wafrn.notifyReactions',
       notifyQuotes: 'wafrn.notifyQuotes',
-      notifyFollows: 'wafrn.notifyFollows'
+      notifyFollows: 'wafrn.notifyFollows',
+      notifyRewoots: 'wafrn.notifyRewoots'
     }
 
     try {
