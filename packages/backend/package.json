@@ -47,6 +47,7 @@
     "@types/validator": "^13.12.0",
     "@typescript-eslint/eslint-plugin": "^5.9.0",
     "@typescript-eslint/parser": "^5.9.0",
+    "@types/web-push": "^3.6.4",
     "atproto-firehose": "^0.2.2",
     "axios": "^1.8.2",
     "bcrypt": "^5.0.0",

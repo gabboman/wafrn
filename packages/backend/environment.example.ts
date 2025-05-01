@@ -102,6 +102,7 @@ export const environment = {
   bskyPds: '${{PDS_DOMAIN_NAME}}',
   // to generate these keys: npm install -g web-push then web-push generate-vapid-keys. Remember to do the environment one too!!
   webpushPrivateKey: '${{WEBPUSH_PRIVATE}}',
+  webPushPublicKey: '${{WEBPUSH_PUBLIC}}',
   frontendEnvironment: {
     logo: '${{FRONTEND_LOGO:-/assets/logo.png}}',
     frontUrl: '${{FRONTEND_FQDN_URL}}',

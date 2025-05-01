@@ -100,3 +100,31 @@ export async function handleDeliveryError(response: ExpoPushErrorTicket) {
     }
   }
 }
+
+const verbMap = {
+  LIKE: 'liked',
+  REWOOT: 'rewooted',
+  MENTION: 'replied to',
+  QUOTE: 'quoted',
+  EMOJIREACT: 'reacted to'
+}
+
+export function getNotificationTitle(notification: NotificationBody, context?: NotificationContext) {
+  if (notification.notificationType === 'FOLLOW') {
+    return 'New user followed you'
+  }
+
+  if (notification.notificationType === 'EMOJIREACT' && context?.emoji) {
+    return `${context?.userUrl || 'someone'} reacted with ${context.emoji} to your post`
+  }
+
+  return `${context?.userUrl || 'someone'} ${verbMap[notification.notificationType]} your post`
+}
+
+export function getNotificationBody(notification: NotificationBody, context?: NotificationContext) {
+  if (notification.notificationType === 'FOLLOW') {
+    return context?.userUrl ? `@${context?.userUrl.replace(/^@/, '')}` : ''
+  }
+
+  return `${context?.postContent}`
+}
