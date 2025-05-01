@@ -15,7 +15,7 @@ export const environment = {
     reviewRegistrations: true,
     disablePWA: false,
     maintenance: false,
-    webPushPublicKey: ''
+    webpushPublicKey: ''
   }
 }
 
