@@ -13,8 +13,6 @@ import {
   PostTag,
   PushNotificationToken,
   Quotes,
-  User,
-  UserEmojiRelation,
   UnifiedPushData,
   User,
   UserEmojiRelation,
