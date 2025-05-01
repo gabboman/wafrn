@@ -118,6 +118,8 @@ services:
   pds:
     image: ghcr.io/bluesky-social/pds:0.4
     restart: unless-stopped
+    profiles:
+      - bluesky
     environment:
       PDS_HOSTNAME: ${PDS_DOMAIN_NAME}
       PDS_JWT_SECRET: ${PDS_JWT_SECRET}
@@ -138,6 +140,8 @@ services:
 
   pds_worker:
     <<: *default_backend
+    profiles:
+      - bluesky
     command: "npm exec tsx atproto.ts"
 
 volumes:
