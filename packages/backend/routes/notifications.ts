@@ -287,6 +287,31 @@ export default function notificationRoutes(app: Application) {
     }
   })
 
+  app.post('/api/v3/unregisterNotificationToken', authenticateToken, async (req: AuthorizedRequest, res: Response) => {
+    const userId = req.jwtData?.userId
+    const { token } = req.body
+
+    if (!userId || !token) {
+      return res.status(400).send({
+        success: false,
+        error: 'Invalid request. Missing userId in token or token in request body.'
+      })
+    }
+    
+    try {
+      await PushNotificationToken.destroy({
+        where: {
+          token
+        }
+      })
+      res.send({ success: true, message: 'Notification token unregistered.' })
+    } catch (err) {
+      logger.error(err)
+      res.status(500).send({ success: false, error: 'Error unregistering notification token.' })
+    }
+  })
+
+
   app.post('/api/v3/registerUnifiedPushData', authenticateToken, async (req: AuthorizedRequest, res: Response) => {
     const userId = req.jwtData?.userId
     const { endpoint, deviceAuth, devicePublicKey } = req.body
