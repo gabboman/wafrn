@@ -22,24 +22,26 @@
           <span><fa-icon title="Recent emojis" [icon]="clockIcon"></fa-icon></span>
         </button>
         @for (emojiCollection of emojiCollections; track $index) {
-          @let emoji = emojiCollection.emojis[0];
-          <button
-            [class.emoji-active-collection]="this.collectionHas($index)"
-            class="emoji-sidebar-child p-2 flex align-content-center justify-content-center cursor-pointer bg-transparent emoji-collection-button"
-            (click)="toggleCollection($index)"
-          >
-            @if (!emoji.url) {
-              {{ emoji.id }}
-            }
-            <img
-              *ngIf="emoji.url"
-              loading="lazy"
-              class="mr-2 ml-2"
-              [src]="baseMediaUrl + emoji.url"
-              [alt]="emojiCollection.name"
-              [title]="emojiCollection.name"
-            />
-          </button>
+          @if (emojiCollection.emojis.length > 0) {
+            @let emoji = emojiCollection.emojis[0];
+            <button
+              [class.emoji-active-collection]="this.collectionHas($index)"
+              class="emoji-sidebar-child p-2 flex align-content-center justify-content-center cursor-pointer bg-transparent emoji-collection-button"
+              (click)="toggleCollection($index)"
+            >
+              @if (!emoji.url) {
+                {{ emoji.id }}
+              }
+              <img
+                *ngIf="emoji.url"
+                loading="lazy"
+                class="mr-2 ml-2"
+                [src]="baseMediaUrl + emoji.url"
+                [alt]="emojiCollection.name"
+                [title]="emojiCollection.name"
+              />
+            </button>
+          }
         }
       </div>
       <hr />

@@ -94,7 +94,12 @@ async function getPostThreadRecursive(
           return remotePostInDatabase
         }
       }
-      const remoteUser = await getRemoteActor(postPetition.attributedTo, user)
+      // peertube: what the fuck
+      let actorUrl = postPetition.attributedTo
+      if (Array.isArray(actorUrl)) {
+        actorUrl = actorUrl[0].id
+      }
+      const remoteUser = await getRemoteActor(actorUrl, user)
       const remoteHost = await FederatedHost.findByPk(remoteUser.federatedHostId)
       const remoteUserServerBaned = remoteHost?.blocked ? remoteHost.blocked : false
       // HACK: some implementations (GTS IM LOOKING AT YOU) may send a single element instead of an array
@@ -122,6 +127,10 @@ async function getPostThreadRecursive(
       const privacy = getApObjectPrivacy(postPetition, remoteUser)
 
       let postTextContent = `${postPetition.content ? postPetition.content : ''}` // Fix for bridgy giving this as undefined
+      if (postPetition.type == 'Video') {
+        // peertube federation. We just add a link to the video, federating this is HELL
+        postTextContent = postTextContent + ` <a href="${postPetition.id}" target="_blank">${postPetition.id}</a>`
+      }
       if (postPetition.attachment && postPetition.attachment.length > 0 && !remoteUser.banned) {
         for await (const remoteFile of postPetition.attachment) {
           if (remoteFile.type !== 'Link') {

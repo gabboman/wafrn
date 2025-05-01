@@ -13,9 +13,12 @@ import {
   PostTag,
   PushNotificationToken,
   Quotes,
+  User,
+  UserEmojiRelation,
   UnifiedPushData,
   User,
   UserEmojiRelation,
+  UserOptions
 } from '../models/index.js'
 import { authenticateToken } from '../utils/authenticateToken.js'
 
@@ -46,16 +49,10 @@ export default function notificationRoutes(app: Application) {
       const mutedPostIds = (await getMutedPosts(userId)).concat(await getMutedPosts(userId, true))
       const notifications = await Notification.findAll({
         where: {
-          [Op.or]: [
-            {
-              postId: {
-                [Op.notIn]: mutedPostIds?.length ? mutedPostIds : ['00000000-0000-0000-0000-000000000000']
-              }
-            },
-            {
-              notificationType: 'FOLLOW'
-            }
-          ],
+          [Op.or]: [await getNotificationOptions(userId)],
+          postId: {
+            [Op.notIn]: mutedPostIds?.length ? mutedPostIds : ['00000000-0000-0000-0000-000000000000']
+          },
           userId: {
             [Op.notIn]: blockedUsers.concat([userId])
           },
@@ -197,16 +194,10 @@ export default function notificationRoutes(app: Application) {
     const notificationsCount = await Notification.count({
       where: {
         notifiedUserId: userId,
-        [Op.or]: [
-          {
-            postId: {
-              [Op.notIn]: mutedPostIds?.length ? mutedPostIds : ['00000000-0000-0000-0000-000000000000']
-            }
-          },
-          {
-            notificationType: 'FOLLOW'
-          }
-        ],
+        [Op.or]: [await getNotificationOptions(userId)],
+        postId: {
+          [Op.notIn]: mutedPostIds?.length ? mutedPostIds : ['00000000-0000-0000-0000-000000000000']
+        },
         userId: {
           [Op.notIn]: blockedUsers.concat([userId])
         },
@@ -367,5 +358,97 @@ export default function notificationRoutes(app: Application) {
       res.status(500).send({ success: false, error: 'Error unregistering unified push data.' })
     }
   })
-}
 
+  async function getNotificationOptions(userId: string) {
+    const options = await UserOptions.findAll({
+      where: {
+        userId: userId,
+        optionName: {
+          [Op.in]: [
+            'wafrn.notificationsFrom',
+            'wafrn.notifyMentions',
+            'wafrn.notifyReactions',
+            'wafrn.notifyQuotes',
+            'wafrn.notifyFollows'
+          ]
+        }
+      }
+    })
+    const optionNotificationsFrom = options.find((elem) => elem.optionName == 'wafrn.notificationsFrom')
+    const optionNotifyQuotes = options.find((elem) => elem.optionName == 'wafrn.notifyQuotes')
+    const optionNotifyMentions = options.find((elem) => elem.optionName == 'wafrn.notifyMentions')
+    const optionNotifyReactions = options.find((elem) => elem.optionName == 'wafrn.notifyReactions')
+    const optionNotifyFollows = options.find((elem) => elem.optionName == 'wafrn.notifyFollows')
+    const notificationTypes = []
+    if (!optionNotifyQuotes || optionNotifyQuotes.optionValue != 'false') {
+      notificationTypes.push('QUOTE')
+    }
+    if (!optionNotifyMentions || optionNotifyMentions.optionValue != 'false') {
+      notificationTypes.push('MENTION')
+    }
+    if (!optionNotifyReactions || optionNotifyReactions.optionValue != 'false') {
+      notificationTypes.push('EMOJIREACT')
+      notificationTypes.push('LIKE')
+    }
+    if (!optionNotifyFollows || optionNotifyFollows.optionValue != 'false') {
+      notificationTypes.push('FOLLOW')
+    }
+
+    let res: any = {
+      notificationType: {
+        [Op.in]: notificationTypes
+      }
+    }
+
+    if (optionNotificationsFrom && optionNotificationsFrom.optionValue != '1') {
+      let validUsers: string[] = []
+      switch (optionNotificationsFrom.optionValue) {
+        case '2': // followers
+          validUsers = (
+            await Follows.findAll({
+              where: {
+                accepted: true,
+                followedId: userId
+              }
+            })
+          ).map((elem) => elem.followerId)
+        case '3': // followees
+          validUsers = (
+            await Follows.findAll({
+              where: {
+                accepted: true,
+                followerId: userId
+              }
+            })
+          ).map((elem) => elem.followedId)
+        case '4': // mutuals
+          const followerIds = (
+            await Follows.findAll({
+              where: {
+                accepted: true,
+                followedId: userId
+              }
+            })
+          ).map((elem) => elem.followerId)
+          validUsers = (
+            await Follows.findAll({
+              where: {
+                accepted: true,
+                followerId: userId,
+                followedId: {
+                  [Op.in]: followerIds
+                }
+              }
+            })
+          ).map((elem) => elem.followedId)
+      }
+      res = {
+        ...res,
+        userId: {
+          [Op.in]: validUsers
+        }
+      }
+    }
+    return res
+  }
+}
