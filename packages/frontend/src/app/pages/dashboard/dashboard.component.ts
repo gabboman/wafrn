@@ -32,11 +32,11 @@ export class DashboardComponent implements OnInit, OnDestroy, SnappyCreate, Snap
   reloadIcon = faArrowsRotate
   updateFollowersSubscription?: Subscription
   navigationSubscription!: Subscription
-  scroll = 0;
+  scroll = 0
 
   // I don't think this is actually needed, but just in case!
   // Would like to have this a bit more cleanly integrated though
-  snActive: boolean = false;
+  snActive: boolean = false
 
   constructor(
     private dashboardService: DashboardService,
@@ -47,7 +47,7 @@ export class DashboardComponent implements OnInit, OnDestroy, SnappyCreate, Snap
     private titleService: Title,
     private metaTagService: Meta,
     private themeService: ThemeService,
-    private readonly viewportScroller: ViewportScroller,
+    private readonly viewportScroller: ViewportScroller
   ) {
     this.titleService.setTitle('Wafrn - the social network that respects you')
     this.metaTagService.addTags([
@@ -62,14 +62,14 @@ export class DashboardComponent implements OnInit, OnDestroy, SnappyCreate, Snap
     ])
   }
   snOnHide(): void {
-    this.snActive = false;
+    this.snActive = false
   }
 
   snOnCreate(): void {
     const purePath = this.router.url.split('?')[0]
     if (purePath.endsWith('explore')) {
       this.level = 0
-      this.title = 'Explore the fediverse'
+      this.title = 'Wafrn and friends'
     }
     if (purePath.endsWith('exploreLocal')) {
       this.level = 2
@@ -90,7 +90,7 @@ export class DashboardComponent implements OnInit, OnDestroy, SnappyCreate, Snap
   }
 
   snOnShow(): void {
-    this.snActive = true;
+    this.snActive = true
   }
 
   ngOnDestroy(): void {
@@ -99,19 +99,17 @@ export class DashboardComponent implements OnInit, OnDestroy, SnappyCreate, Snap
   }
 
   ngOnInit(): void {
-
     // If the user clicks on the explore button while already on the page,
     // reload posts.
     this.navigationSubscription = this.router.events
       .pipe(filter((event) => event instanceof NavigationSkipped))
       .subscribe(() => {
         if (window.scrollY > 0) {
-          this.viewportScroller.scrollToPosition([0, 0]);
-          return;
+          this.viewportScroller.scrollToPosition([0, 0])
+          return
         }
         this.reloadPosts()
       })
-
 
     this.updateFollowersSubscription = this.postService.updateFollowers.subscribe(() => {
       if (this.postService.followedUserIds.length <= 1 && this.level === 1 && false) {
@@ -142,12 +140,11 @@ export class DashboardComponent implements OnInit, OnDestroy, SnappyCreate, Snap
     })
   }
 
-
   reloadPosts() {
     // Perhaps not a perfect solution, but without this guard currentPage and
     // startScroll may unexpectedly increase, leading to the dashboard
     // displaying posts that do not start from date.now
-    if (this.loadingPosts || !this.snActive) return;
+    if (this.loadingPosts || !this.snActive) return
     this.posts = []
     this.currentPage = 0
     this.viewedPostsNumber = 0
@@ -226,7 +223,7 @@ export class DashboardComponent implements OnInit, OnDestroy, SnappyCreate, Snap
           emojis: [],
           descendents: [],
           bookmarkers: [],
-          parentCollection: [],
+          parentCollection: []
         }
       ])
     }
