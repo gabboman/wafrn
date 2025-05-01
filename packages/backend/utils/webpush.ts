@@ -57,16 +57,18 @@ async function sendWebPushNotification(
   }
 }
 
+// TODO: need a simpler way to generate a unique number id from a string
+// maybe create the notification record in the db first and then send the notification to the devices
 function getNotificationId(notification: NotificationBody) {
   const key = `${notification.notifiedUserId}-${notification.userId}-${notification.notificationType}-${notification.postId}`
   return crypto.subtle.digest('SHA-256', new TextEncoder().encode(key)).then((hash) => {
-    return Buffer.from(hash).toString('binary')
+    return new Uint32Array(hash).at(0)!
   })
 }
 
-function getNotificationUrl(notification: NotificationBody) {
+function getNotificationUrl(notification: NotificationBody, context?: NotificationContext) {
   if (notification.notificationType === 'FOLLOW') {
-    return `wafrn://user/${notification.notifiedUserId}`
+    return `wafrn://user/${context?.userUrl}`
   } else {
     return `wafrn://post/${notification.postId}`
   }
@@ -75,7 +77,7 @@ function getNotificationUrl(notification: NotificationBody) {
 async function getNotificationPayload(notification: NotificationBody, context?: NotificationContext) {
   return {
     id: await getNotificationId(notification),
-    url: getNotificationUrl(notification),
+    url: getNotificationUrl(notification, context),
     title: getNotificationTitle(notification, context),
     body: getNotificationBody(notification, context),
   }
