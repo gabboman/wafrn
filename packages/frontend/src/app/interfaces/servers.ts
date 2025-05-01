@@ -6,4 +6,5 @@ export interface server {
   detail: string
   blocked: boolean
   friendServer: boolean
+  bubbleTimeline: boolean
 }

@@ -29,6 +29,7 @@ export default function adminRoutes(app: Application) {
       dbElements.forEach(async (elemToUpdate: any) => {
         const newValue = petitionBody.find((elem) => elem.id === elemToUpdate.id)
         if (newValue) {
+          elemToUpdate.bubbleTimeline = newValue.bubbleTimeline
           elemToUpdate.blocked = newValue.blocked
           elemToUpdate.detail = newValue.detail
           elemToUpdate.friendServer = newValue.friendServer
