@@ -5,8 +5,11 @@ import { getMutedPostsMultiple } from "./cacheGetters/getMutedPosts.js";
 import { environment } from '../environment.js'
 import WebPush from 'web-push'
 
-const adminLink = `https://${environment.instanceUrl}/blog/${environment.adminUser}`
-WebPush.setVapidDetails(adminLink, environment.webpushPublicKey, environment.webpushPrivateKey)
+WebPush.setVapidDetails(
+  environment.webpushEmail,
+  environment.webpushPublicKey,
+  environment.webpushPrivateKey
+)
 
 export async function sendWebPushNotifications(
   notifications: NotificationBody[],
