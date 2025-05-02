@@ -87,6 +87,7 @@ app.use('/api/uploads', express.static('uploads'))
 app.use('/api/environment', (req: Request, res: Response) => {
   res.send({
     ...environment.frontendEnvironment,
+    webpushPublicKey: environment.webpushPublicKey,
     reviewRegistrations: environment.reviewRegistrations,
     maxUploadSize: environment.uploadLimit
   })

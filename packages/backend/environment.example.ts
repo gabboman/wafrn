@@ -111,7 +111,6 @@ export const environment = {
     baseUrl: '${{FRONTEND_API_URL:-/api}}',
     baseMediaUrl: '${{FRONTEND_MEDIA_URL:-/api/uploads}}',
     externalCacheurl: '${{FRONTEND_CACHE_URL:-/api/cache?media=}}',
-    webpushPublicKey: '${{WEBPUSH_PUBLIC}}',
     shortenPosts: ${{FRONTEND_SHORTEN_POSTS:-3}},
     disablePWA: ${{FRONTEND_DISABLE_PWA:-false}},
     maintenance: ${{FRONTEND_MAINTENANCE:-false}}
