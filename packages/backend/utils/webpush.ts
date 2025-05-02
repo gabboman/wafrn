@@ -41,6 +41,8 @@ async function sendWebPushNotification(
   context?: NotificationContext
 ) {
   try {
+    const payload = await getNotificationPayload(notification, context)
+    console.log('Sending web push notification: ', payload)
     await WebPush.sendNotification(
       {
         endpoint: device.endpoint,
@@ -49,7 +51,7 @@ async function sendWebPushNotification(
           p256dh: device.devicePublicKey
         }
       },
-      JSON.stringify(getNotificationPayload(notification, context))
+      JSON.stringify(payload)
     )
   } catch (error) {
     console.error('Error sending web push notification: ', error)
