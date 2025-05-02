@@ -1,11 +1,12 @@
 import { Expo } from 'expo-server-sdk'
 import { PushNotificationToken } from '../../models/index.js'
 import { logger } from '../logger.js'
-import { handleDeliveryError, type NotificationBody, type NotificationContext } from '../pushNotifications.js'
+import { getNotificationBody, getNotificationTitle, handleDeliveryError, type NotificationBody, type NotificationContext } from '../pushNotifications.js'
 import { Job, Queue } from 'bullmq'
 import { environment } from '../../environment.js'
 import { Op } from 'sequelize'
 import { getMutedPosts } from '../cacheGetters/getMutedPosts.js'
+import { sendWebPushNotifications } from '../webpush.js'
 
 const deliveryCheckQueue = new Queue('checkPushNotificationDelivery', {
   connection: environment.bullmqConnection,
@@ -19,35 +20,7 @@ const deliveryCheckQueue = new Queue('checkPushNotificationDelivery', {
   }
 })
 
-const verbMap = {
-  LIKE: 'liked',
-  REWOOT: 'rewooted',
-  MENTION: 'replied to',
-  QUOTE: 'quoted',
-  EMOJIREACT: 'reacted to'
-}
-
 const expoClient = new Expo()
-
-function getNotificationTitle(notification: NotificationBody, context?: NotificationContext) {
-  if (notification.notificationType === 'FOLLOW') {
-    return 'New user followed you'
-  }
-
-  if (notification.notificationType === 'EMOJIREACT' && context?.emoji) {
-    return `${context?.userUrl || 'someone'} reacted with ${context.emoji} to your post`
-  }
-
-  return `${context?.userUrl || 'someone'} ${verbMap[notification.notificationType]} your post`
-}
-
-function getNotificationBody(notification: NotificationBody, context?: NotificationContext) {
-  if (notification.notificationType === 'FOLLOW') {
-    return context?.userUrl ? `@${context?.userUrl.replace(/^@/, '')}` : ''
-  }
-
-  return `${context?.postContent}`
-}
 
 type PushNotificationPayload = {
   notifications: NotificationBody[]
@@ -56,6 +29,14 @@ type PushNotificationPayload = {
 
 export async function sendPushNotification(job: Job<PushNotificationPayload>) {
   const { notifications, context } = job.data
+  await sendWebPushNotifications(notifications, context)
+  await sendExpoNotifications(notifications, context)
+}
+
+export async function sendExpoNotifications(
+  notifications: NotificationBody[],
+  context?: NotificationContext
+) {
   const userIds = notifications.map((elem) => elem.notifiedUserId)
   const tokenRows = await PushNotificationToken.findAll({
     where: {

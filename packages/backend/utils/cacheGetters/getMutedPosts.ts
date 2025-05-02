@@ -39,7 +39,7 @@ async function getMutedPostsMultiple(userIds: string[], superMute = false) {
 
   if (cacheResults.every((result) => !!result)) {
     const ids = cacheResults.map((result) => JSON.parse(result!) as string[])
-    return ids.flat()
+    return new Map(userIds.map((userId, index) => [userId, ids[index]]))
   }
 
   const where = {
@@ -57,28 +57,31 @@ async function getMutedPostsMultiple(userIds: string[], superMute = false) {
     attributes: ['postId', 'userId']
   })
 
-  let postIds: string[] = []
+  const postIds = new Map<string, string[]>()
   for (const result of cacheResults) {
-    if (result) {
-      postIds.push(...(JSON.parse(result) as string[]))
-    } else {
-      const index = cacheResults.indexOf(result)
-      const userId = userIds[index]
+    const index = cacheResults.indexOf(result)
+    const userId = userIds[index]
 
-      let newPostIds = mutedFirstIds.filter((elem) => elem.userId === userId).map((elem) => elem.postId)
-      if (superMute && newPostIds.length) {
+    if (result) {
+      postIds.set(userId, JSON.parse(result) as string[])
+    } else {
+      let mutedIds = mutedFirstIds.filter((elem) => elem.userId === userId).map((elem) => elem.postId)
+      
+      if (superMute && mutedIds.length) {
+        const formattedIds = mutedIds.map((elem) => "'" + elem + "'").join(',')
         const mutedPosts = await sequelize.query(
-          `SELECT "postsId" FROM "postsancestors" where "ancestorId" IN (${newPostIds.map((elem) => "'" + elem + "'")})`
-        ) as PostAncestor[][]
-        newPostIds = mutedPosts[0].map((elem) => elem.postsId)
+          `SELECT "postsId" FROM "postsancestors" where "ancestorId" IN (${formattedIds})`,
+        ) as [PostAncestor[], unknown]
+        mutedIds = mutedPosts[0].map((elem) => elem.postsId)
       }
+
       await redisCache.set(
         (superMute ? 'superMutedPosts:' : 'mutedPosts:') + userIds[index],
-        JSON.stringify(newPostIds),
+        JSON.stringify(mutedIds),
         'EX',
         600
       )
-      postIds.push(...newPostIds)
+      postIds.set(userId, mutedIds)
     }
   }
 

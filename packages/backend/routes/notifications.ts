@@ -1,5 +1,5 @@
 import { Application, Response } from 'express'
-import { Op, QueryTypes, Sequelize } from 'sequelize'
+import { Op } from 'sequelize'
 import {
   Ask,
   Emoji,
@@ -9,25 +9,22 @@ import {
   Notification,
   Post,
   PostEmojiRelations,
-  PostMentionsUserRelation,
   PostReport,
   PostTag,
   PushNotificationToken,
   Quotes,
+  UnifiedPushData,
   User,
   UserEmojiRelation,
   UserOptions
 } from '../models/index.js'
 import { authenticateToken } from '../utils/authenticateToken.js'
 
-import { environment } from '../environment.js'
 import AuthorizedRequest from '../interfaces/authorizedRequest.js'
 import { getMutedPosts } from '../utils/cacheGetters/getMutedPosts.js'
 import getBlockedIds from '../utils/cacheGetters/getBlockedIds.js'
-import { getMedias } from '../utils/baseQueryNew.js'
 import { forceUpdateLastActive } from '../utils/forceUpdateLastActive.js'
 import { logger } from '../utils/logger.js'
-import { Expo, ExpoPushErrorTicket } from 'expo-server-sdk'
 
 export default function notificationRoutes(app: Application) {
   app.get(
@@ -276,6 +273,87 @@ export default function notificationRoutes(app: Application) {
     } catch (error) {
       logger.error(error)
       res.status(500).send({ success: false, message: 'Error registering token.' })
+    }
+  })
+
+  app.post('/api/v3/unregisterNotificationToken', authenticateToken, async (req: AuthorizedRequest, res: Response) => {
+    const userId = req.jwtData?.userId
+    const { token } = req.body
+
+    if (!userId || !token) {
+      return res.status(400).send({
+        success: false,
+        error: 'Invalid request. Missing userId in token or token in request body.'
+      })
+    }
+    
+    try {
+      await PushNotificationToken.destroy({
+        where: {
+          token
+        }
+      })
+      res.send({ success: true, message: 'Notification token unregistered.' })
+    } catch (err) {
+      logger.error(err)
+      res.status(500).send({ success: false, error: 'Error unregistering notification token.' })
+    }
+  })
+
+
+  app.post('/api/v3/registerUnifiedPushData', authenticateToken, async (req: AuthorizedRequest, res: Response) => {
+    const userId = req.jwtData?.userId
+    const { endpoint, deviceAuth, devicePublicKey } = req.body
+
+    if (!userId || !endpoint || !deviceAuth || !devicePublicKey) {
+      return res.status(400).send({
+        success: false,
+        error: 'Invalid request. Missing userId in token or endpoint, deviceAuth, devicePublicKey in request body.'
+      })
+    }
+
+    try {
+      const existingToken = await UnifiedPushData.findOne({
+        where: {
+          userId,
+          endpoint
+        }
+      })
+
+      if (existingToken) {
+        return res.send({ success: true, message: 'Unified push endpoint already registered.' })
+      } else {
+        await UnifiedPushData.create({ userId, endpoint, deviceAuth, devicePublicKey })
+        res.send({ success: true, message: 'Unified push data registered.' })
+      }
+    } catch (err) {
+      logger.error(err)
+      res.status(500).send({ success: false, error: 'Error registering unified push data.' })
+    }
+  })
+  
+  app.post('/api/v3/unregisterUnifiedPushData', authenticateToken, async (req: AuthorizedRequest, res: Response) => {
+    const userId = req.jwtData?.userId
+    const { endpoint } = req.body
+  
+    if (!userId || !endpoint) {
+      return res.status(400).send({
+        success: false,
+        error: 'Invalid request. Missing userId in token or endpoint in request body.'
+      })
+    }
+  
+    try {
+      await UnifiedPushData.destroy({
+        where: {
+          userId,
+          endpoint
+        }
+      })
+      res.send({ success: true, message: 'Unified push data unregistered.' })
+    } catch (err) {
+      logger.error(err)
+      res.status(500).send({ success: false, error: 'Error unregistering unified push data.' })
     }
   })
 

@@ -100,15 +100,18 @@ export const environment = {
   },
   enableBsky: ${{ENABLE_BSKY:-false}},
   bskyPds: '${{PDS_DOMAIN_NAME}}',
-  // to generate these keys: npm install -g web-push then web-push generate-vapid-keys. Remember to do the environment one too!!
+  // to generate these keys use the following command: `npx web-push generate-vapid-keys`. Remember to do the environment one too!!
   webpushPrivateKey: '${{WEBPUSH_PRIVATE}}',
+  webpushPublicKey: '${{WEBPUSH_PUBLIC}}',
+  // this is a email that will be sent to the distribution services in the users devices in case the owner of the distribution service wants to contact the server that is sending the notifications
+  webpushEmail: '${{WEBPUSH_EMAIL}}',
   frontendEnvironment: {
     logo: '${{FRONTEND_LOGO:-/assets/logo.png}}',
     frontUrl: '${{FRONTEND_FQDN_URL}}',
     baseUrl: '${{FRONTEND_API_URL:-/api}}',
     baseMediaUrl: '${{FRONTEND_MEDIA_URL:-/api/uploads}}',
     externalCacheurl: '${{FRONTEND_CACHE_URL:-/api/cache?media=}}',
-    webPushPublicKey: '${{WEBPUSH_PUBLIC}}',
+    webpushPublicKey: '${{WEBPUSH_PUBLIC}}',
     shortenPosts: ${{FRONTEND_SHORTEN_POSTS:-3}},
     disablePWA: ${{FRONTEND_DISABLE_PWA:-false}},
     maintenance: ${{FRONTEND_MAINTENANCE:-false}}
