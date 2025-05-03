@@ -1,20 +1,19 @@
-import { Op } from "sequelize";
-import { getNotificationBody, getNotificationTitle, NotificationBody, NotificationContext } from "./pushNotifications.js";
-import { UnifiedPushData } from "../models/unifiedPushData.js";
-import { getMutedPostsMultiple } from "./cacheGetters/getMutedPosts.js";
+import { Op } from 'sequelize'
+import {
+  getNotificationBody,
+  getNotificationTitle,
+  NotificationBody,
+  NotificationContext
+} from './pushNotifications.js'
+import { UnifiedPushData } from '../models/unifiedPushData.js'
+import { getMutedPostsMultiple } from './cacheGetters/getMutedPosts.js'
 import { environment } from '../environment.js'
 import WebPush from 'web-push'
+import { logger } from './logger.js'
 
-WebPush.setVapidDetails(
-  environment.webpushEmail,
-  environment.webpushPublicKey,
-  environment.webpushPrivateKey
-)
+WebPush.setVapidDetails(environment.webpushEmail, environment.webpushPublicKey, environment.webpushPrivateKey)
 
-export async function sendWebPushNotifications(
-  notifications: NotificationBody[],
-  context?: NotificationContext
-) {
+export async function sendWebPushNotifications(notifications: NotificationBody[], context?: NotificationContext) {
   const userIds = notifications.map((elem) => elem.notifiedUserId)
   const pushDataRows = await UnifiedPushData.findAll({
     where: {
@@ -28,7 +27,7 @@ export async function sendWebPushNotifications(
   for (const notification of notifications) {
     const userId = notification.notifiedUserId
     const mutes = mutedPosts.get(userId)
-    const isMuted = (mutes && notification.postId) ? mutes.includes(notification.postId) : false
+    const isMuted = mutes && notification.postId ? mutes.includes(notification.postId) : false
     if (!isMuted) {
       const userDevices = pushDataRows.filter((p) => p.userId === userId)
       for (const device of userDevices) {
@@ -45,7 +44,6 @@ async function sendWebPushNotification(
 ) {
   try {
     const payload = await getNotificationPayload(notification, context)
-    console.log('Sending web push notification: ', payload)
     await WebPush.sendNotification(
       {
         endpoint: device.endpoint,
@@ -57,7 +55,7 @@ async function sendWebPushNotification(
       JSON.stringify(payload)
     )
   } catch (error) {
-    console.error('Error sending web push notification: ', error)
+    logger.error({ message: 'Error sending web push notification: ', error: error })
   }
 }
 
@@ -83,6 +81,6 @@ async function getNotificationPayload(notification: NotificationBody, context?: 
     id: await getNotificationId(notification),
     url: getNotificationUrl(notification, context),
     title: getNotificationTitle(notification, context),
-    body: getNotificationBody(notification, context),
+    body: getNotificationBody(notification, context)
   }
 }
