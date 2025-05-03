@@ -28,7 +28,7 @@ const adminUser = User.findOne({
     url: environment.adminUser
   }
 })
-const agent = environment.enableBsky ? await getAtProtoSession(await adminUser || undefined) : undefined
+const agent = environment.enableBsky ? await getAtProtoSession((await adminUser) || undefined) : undefined
 
 async function getAtProtoThread(
   uri: string,
@@ -44,7 +44,7 @@ async function getAtProtoThread(
     if (postExisting) {
       return postExisting.id
     } else {
-      let record = operation.operation.record as any;
+      let record = operation.operation.record as any
       const postObject: PostView = {
         record: record,
         cid: operation.operation.cid,
@@ -152,11 +152,9 @@ async function processSinglePost(
       return existingPost.id
     }
   }
-  const postCreator = await getAtprotoUser(post.author.did, await adminUser as User, post.author)
+  const postCreator = await getAtprotoUser(post.author.did, (await adminUser) as User, post.author)
   if (!postCreator || !post) {
-    const usr = postCreator
-      ? postCreator
-      : await User.findOne({ where: { url: environment.deletedUser } })
+    const usr = postCreator ? postCreator : await User.findOne({ where: { url: environment.deletedUser } })
 
     const invalidPost = await Post.create({
       userId: usr?.id,
@@ -195,11 +193,23 @@ async function processSinglePost(
       let text = ''
       for (const segment of rt.segments()) {
         if (segment.isLink()) {
-          text += `<a href="${segment.link?.uri}" target="_blank">${segment.text}</a>`
+          let linkOfSegment = segment.link?.uri
+          if (linkOfSegment) {
+            linkOfSegment = linkOfSegment.substring(0, linkOfSegment.length - 2)
+            const links: string[] = medias
+              .filter((elem: any) => elem.mediaType == 'text/html')
+              .map((elem: any) => elem.url)
+            let result = links.find((elem) => elem.startsWith(linkOfSegment))
+            linkOfSegment = result ? result : linkOfSegment
+          }
+          text += `<a href="${linkOfSegment}" target="_blank">${linkOfSegment}</a>`
         } else if (segment.isMention()) {
           text += `<a href="${environment.frontendUrl}/blog/${segment.mention?.did}" target="_blank">${segment.text}</a>`
         } else if (segment.isTag()) {
-          text += `<a href="${environment.frontendUrl}/search/${segment.text}" target="_blank">${segment.text}</a>`
+          text += `<a href="${environment.frontendUrl}/dashboard/search/${segment.text.substring(1)}" target="_blank">${
+            segment.text
+          }</a>`
+          tags.push(segment.text.substring(1))
         } else {
           text += segment.text
         }
