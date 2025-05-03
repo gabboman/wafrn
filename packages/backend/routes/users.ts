@@ -233,7 +233,7 @@ export default function userRoutes(app: Application) {
 
           const avaiableEmojis = await getAvaiableEmojis()
           let userEmojis: any[] = []
-          user.manuallyAcceptsFollows = !!manuallyAcceptsFollows
+          user.manuallyAcceptsFollows = manuallyAcceptsFollows == 'true'
           user.hideFollows = hideFollows == 'true'
           user.hideProfileNotLoggedIn = hideProfileNotLoggedIn == 'true'
           user.disableEmailNotifications = req.body.disableEmailNotifications == 'true'
