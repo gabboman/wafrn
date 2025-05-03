@@ -199,7 +199,7 @@ async function processSinglePost(
             const links: string[] = medias
               .filter((elem: any) => elem.mediaType == 'text/html')
               .map((elem: any) => elem.url)
-            let result = links.find((elem) => elem.startsWith(linkOfSegment))
+            let result = links.find((elem) => elem.startsWith(linkOfSegment as string))
             linkOfSegment = result ? result : linkOfSegment
           }
           text += `<a href="${linkOfSegment}" target="_blank">${linkOfSegment}</a>`
