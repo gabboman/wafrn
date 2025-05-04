@@ -121,6 +121,7 @@ export class RegisterComponent {
     'Cat with disturbingly human lips',
     'CRINGE CULTURE MADE MANIFEST',
     '[this option intentionally left blank]',
+    'Call me a deer the way I stare into the incoming light of a car',
     'Mile Smile',
     'NFC Compatible',
     '485.72 Hz',
