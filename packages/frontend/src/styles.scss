@@ -37,6 +37,7 @@ $theme: mat.define-theme((color: (primary: mat.$violet-palette )));
 
   --info-card-info-background: light-dark(#d5e3fe, #3a475d);
   --info-card-warning-background: light-dark(#d7c3b8, #52443c);
+  --mat-dialog-container-max-width: 960px
 }
 
 // Fonts overrides
