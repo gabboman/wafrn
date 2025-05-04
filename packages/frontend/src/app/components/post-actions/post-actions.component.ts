@@ -150,11 +150,6 @@ export class PostActionsComponent implements OnChanges {
           summary: 'You rewooted the woot!',
           confettiEmojis: disableConfetti ? [] : ['🔁']
         })
-      } else {
-        this.messages.add({
-          severity: 'error',
-          summary: 'Something went wrong! Check your internet conectivity and try again'
-        })
       }
     } else {
       this.messages.add({
