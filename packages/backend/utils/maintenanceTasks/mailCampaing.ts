@@ -18,6 +18,9 @@ async function sendMail() {
   })
 
   for await (const user of users) {
+    if (!user.email) {
+      continue
+    }
     const subject = `We have fixed jank at wafrn. We have also added more jank to wafrn!`
     const body = `
     <h1>Hello ${user.url}!</h1>
