@@ -13,6 +13,8 @@
         "loginButton": "Log in"
     },
     "menu": {
+        "login": "Log in",
+        "register": "Register",
         "dashboard": "Dashboard",
         "dashboardHover": "View dashboard",
         "writeWoot": "Write new woot",

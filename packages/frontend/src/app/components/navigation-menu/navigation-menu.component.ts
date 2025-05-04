@@ -99,6 +99,11 @@ export class NavigationMenuComponent implements OnInit, OnDestroy {
       }
     })
 
+    setTimeout(() => {
+      // TODO think of a better hack than wait 250 ms then redraw the menu for translations
+      this.drawMenu()
+    }, 250)
+
     this.scrollSubscription = this.dashboardService.scrollEventEmitter.subscribe(() => {
       this.updateNotifications('scroll')
     })
@@ -132,9 +137,9 @@ export class NavigationMenuComponent implements OnInit, OnDestroy {
   drawMenu() {
     this.menuItems = [
       {
-        label: 'Log in',
+        label: this.translateService.instant('menu.login'),
         icon: faHouse,
-        title: 'Log in',
+        title: this.translateService.instant('menu.login'),
         visible: !this.jwtService.tokenValid(),
         routerLink: '/login',
         command: () => {
@@ -142,9 +147,9 @@ export class NavigationMenuComponent implements OnInit, OnDestroy {
         }
       },
       {
-        label: 'Register',
+        label: this.translateService.instant('menu.register'),
         icon: faUser,
-        title: 'Register',
+        title: this.translateService.instant('menu.register'),
         visible: !this.jwtService.tokenValid(),
         routerLink: '/register',
         command: () => {
@@ -152,9 +157,9 @@ export class NavigationMenuComponent implements OnInit, OnDestroy {
         }
       },
       {
-        label: 'Explore without an account',
+        label: this.translateService.instant('menu.exploreWafrn'),
         icon: faCompass,
-        title: 'See ALL the posts that are public! Yes, you can be a lurker',
+        title: this.translateService.instant('menu.exploreWafrn'),
         visible: !this.jwtService.tokenValid(),
         routerLink: '/dashboard/exploreLocal',
         command: () => {
