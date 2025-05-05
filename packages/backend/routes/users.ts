@@ -137,18 +137,19 @@ export default function userRoutes(app: Application) {
               lastTimeNotificationsCheck: new Date(0),
               lastActiveAt: new Date(0),
               hideProfileNotLoggedIn: false,
-              hideFollows: false
+              hideFollows: false,
+              emailVerified: false
             }
 
             const userWithEmail = User.create(user)
-            const mailHeader = environment.reviewRegistrations
-              ? 'We are reviewing your profile'
-              : `Welcome to ${environment.instanceUrl}!`
-            const mailBody = environment.reviewRegistrations
-              ? `Hello ${req.body.url}, at this moment we are manually reviewing registrations. You will recive an email from us once it's accepted`
-              : `<h1>Welcome to ${environment.instanceUrl}</h1> To activate your account <a href="${
-                  environment.instanceUrl
-                }/activate/${encodeURIComponent(req.body.email.toLowerCase())}/${activationCode}">click here!</a>`
+            const mailHeader = `Welcome to ${environment.instanceUrl}, please verify your email!`
+            const mailBody = `<h1>Welcome to ${environment.instanceUrl}</h1> To verify your email <a href="${
+              environment.instanceUrl
+            }/activate/${encodeURIComponent(
+              req.body.email.toLowerCase()
+            )}/${activationCode}">click here!</a>. If you can not see the link correctly please copy this link:
+            ${environment.instanceUrl}/activate/${encodeURIComponent(req.body.email.toLowerCase())}/${activationCode}
+            `
             const emailSent = environment.disableRequireSendEmail
               ? true
               : sendActivationEmail(req.body.email.toLowerCase(), activationCode, mailHeader, mailBody)
@@ -359,7 +360,7 @@ export default function userRoutes(app: Application) {
 
   app.post('/api/activateUser', async (req, res) => {
     let success = false
-    if (req.body?.email && validateEmail(req.body.email) && req.body.code && !environment.reviewRegistrations) {
+    if (req.body?.email && validateEmail(req.body.email) && req.body.code) {
       const user = await User.findOne({
         where: {
           email: req.body.email.toLowerCase(),
@@ -367,8 +368,20 @@ export default function userRoutes(app: Application) {
         }
       })
       if (user) {
-        user.activated = true
-        user.save()
+        user.emailVerified = true
+        let emailBody = ''
+        let emailSubject = ''
+        if (!environment.reviewRegistrations) {
+          user.activated = true
+          emailSubject = 'Your wafrn account has been activated!'
+          emailBody = ';D'
+        } else {
+          emailBody =
+            'Hello, thanks for confirming your email address. The admin team will review your registration and will be aproved shortly'
+          emailSubject = 'Thanks for verifying your email, Our admin team will review your registration request soon!'
+        }
+
+        await Promise.all([user.save(), sendActivationEmail(req.body.email.toLowerCase(), '', emailSubject, emailBody)])
         success = true
       }
     }

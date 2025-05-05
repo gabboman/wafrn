@@ -74,6 +74,7 @@ export interface UserAttributes {
   lastActiveAt?: Date
   hideFollows?: Boolean
   hideProfileNotLoggedIn?: Boolean
+  emailVerified: Boolean | null
 }
 
 @Table({
@@ -148,6 +149,12 @@ export class User extends Model<UserAttributes, UserAttributes> implements UserA
     type: DataType.BOOLEAN
   })
   declare activated: boolean | null
+
+  @Column({
+    allowNull: true,
+    type: DataType.BOOLEAN
+  })
+  declare emailVerified: boolean | null
 
   @Column({
     allowNull: true,

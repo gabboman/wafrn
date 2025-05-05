@@ -246,6 +246,7 @@ export default function adminRoutes(app: Application) {
       const notActiveUsers = await User.findAll({
         where: {
           activated: false,
+          emailVerified: true,
           url: {
             [Op.notLike]: '%@%'
           },

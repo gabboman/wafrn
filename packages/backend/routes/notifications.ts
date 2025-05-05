@@ -223,6 +223,7 @@ export default function notificationRoutes(app: Application) {
       usersAwaitingApproval = User.count({
         where: {
           activated: false,
+          emailVerified: true,
           url: {
             [Op.notLike]: '%@%'
           },
@@ -286,7 +287,7 @@ export default function notificationRoutes(app: Application) {
         error: 'Invalid request. Missing userId in token or token in request body.'
       })
     }
-    
+
     try {
       await PushNotificationToken.destroy({
         where: {
@@ -299,7 +300,6 @@ export default function notificationRoutes(app: Application) {
       res.status(500).send({ success: false, error: 'Error unregistering notification token.' })
     }
   })
-
 
   app.post('/api/v3/registerUnifiedPushData', authenticateToken, async (req: AuthorizedRequest, res: Response) => {
     const userId = req.jwtData?.userId
@@ -331,18 +331,18 @@ export default function notificationRoutes(app: Application) {
       res.status(500).send({ success: false, error: 'Error registering unified push data.' })
     }
   })
-  
+
   app.post('/api/v3/unregisterUnifiedPushData', authenticateToken, async (req: AuthorizedRequest, res: Response) => {
     const userId = req.jwtData?.userId
     const { endpoint } = req.body
-  
+
     if (!userId || !endpoint) {
       return res.status(400).send({
         success: false,
         error: 'Invalid request. Missing userId in token or endpoint in request body.'
       })
     }
-  
+
     try {
       await UnifiedPushData.destroy({
         where: {
