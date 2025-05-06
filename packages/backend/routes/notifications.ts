@@ -1,5 +1,5 @@
 import { Application, Response } from 'express'
-import { Op } from 'sequelize'
+import { Op, WhereOptions } from 'sequelize'
 import {
   Ask,
   Emoji,
@@ -25,6 +25,8 @@ import { getMutedPosts } from '../utils/cacheGetters/getMutedPosts.js'
 import getBlockedIds from '../utils/cacheGetters/getBlockedIds.js'
 import { forceUpdateLastActive } from '../utils/forceUpdateLastActive.js'
 import { logger } from '../utils/logger.js'
+import { environment } from '../environment.js'
+import { UserAttributes } from '../models/user.js'
 
 export default function notificationRoutes(app: Application) {
   app.get(
@@ -220,15 +222,20 @@ export default function notificationRoutes(app: Application) {
           resolved: false
         }
       })
+
+      const whereConditions: WhereOptions<UserAttributes> = {
+        activated: false,
+        url: {
+          [Op.notLike]: '%@%'
+        },
+        banned: false
+      }
+      if (!environment.disableRequireSendEmail) {
+        whereConditions.emailVerified = true;
+      }
+
       usersAwaitingApproval = User.count({
-        where: {
-          activated: false,
-          emailVerified: true,
-          url: {
-            [Op.notLike]: '%@%'
-          },
-          banned: false
-        }
+        where: whereConditions
       })
     }
 
