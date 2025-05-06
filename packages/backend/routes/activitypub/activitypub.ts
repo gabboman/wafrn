@@ -1,5 +1,14 @@
 import { Application, Request, Response } from 'express'
-import { User, Follows, Post, Media, UserLikesPostRelations, Emoji, UserEmojiRelation, sequelize } from '../../models/index.js'
+import {
+  User,
+  Follows,
+  Post,
+  Media,
+  UserLikesPostRelations,
+  Emoji,
+  UserEmojiRelation,
+  sequelize
+} from '../../models/index.js'
 import { getCheckFediverseSignatureFucnction } from '../../utils/activitypub/checkFediverseSignature.js'
 import { environment } from '../../environment.js'
 import { return404 } from '../../utils/return404.js'
@@ -24,7 +33,7 @@ async function getLocalUserByUrl(url: string): Promise<any> {
   })
 }
 
-async function getLocalUserByUrlCache(url: string): Promise<any> {
+async function getLocalUserByUrlCache(url: string): Promise<User | undefined> {
   let cacheResult = await redisCache.get('localUserData:' + url)
   if (!cacheResult) {
     cacheResult = JSON.stringify((await getLocalUserByUrl(url))?.dataValues)
@@ -33,7 +42,7 @@ async function getLocalUserByUrlCache(url: string): Promise<any> {
     }
   }
   // this function can return undefined
-  return cacheResult ? JSON.parse(cacheResult) : cacheResult
+  return cacheResult ? JSON.parse(cacheResult) : undefined
 }
 
 const inboxQueue = new Queue('inbox', {
@@ -87,13 +96,15 @@ function activityPubRoutes(app: Application) {
               try {
                 const parsedValue = JSON.parse(alsoKnownAsList?.optionValue)
                 if (typeof parsedValue === 'string') {
-                  for (let elem of parsedValue.split(",")) {
-                    let url = new URL(elem);
-                    alsoKnownAs.push(url.toString());
+                  for (let elem of parsedValue.split(',')) {
+                    let url = new URL(elem)
+                    alsoKnownAs.push(url.toString())
                   }
                 }
-              } catch (_) {
-              }
+              } catch (_) {}
+            }
+            if (user.bskyDid) {
+              alsoKnownAs.push(`at://${user.bskyDid}`)
             }
             let attachments: { type: string; name: string; value: string }[] = []
             if (unprocessedAttachments) {
@@ -135,21 +146,21 @@ function activityPubRoutes(app: Application) {
               },
               ...(user.avatar
                 ? {
-                  icon: {
-                    type: 'Image',
-                    mediaType: 'image/webp',
-                    url: environment.mediaUrl + user.avatar
+                    icon: {
+                      type: 'Image',
+                      mediaType: 'image/webp',
+                      url: environment.mediaUrl + user.avatar
+                    }
                   }
-                }
                 : undefined),
               ...(user.headerImage
                 ? {
-                  image: {
-                    type: 'Image',
-                    mediaType: 'image/webp',
-                    url: environment.mediaUrl + user.headerImage
+                    image: {
+                      type: 'Image',
+                      mediaType: 'image/webp',
+                      url: environment.mediaUrl + user.headerImage
+                    }
                   }
-                }
                 : undefined),
               publicKey: {
                 id: `${environment.frontendUrl}/fediverse/blog/${user.url.toLowerCase()}#main-key`,
@@ -204,12 +215,14 @@ function activityPubRoutes(app: Application) {
               orderedItems: itemsToSend
             }
             if (page > 1) {
-              response['prev'] = `${environment.frontendUrl}/fediverse/blog/${user.url.toLowerCase()}/following?page=${page - 1
-                }`
+              response['prev'] = `${environment.frontendUrl}/fediverse/blog/${user.url.toLowerCase()}/following?page=${
+                page - 1
+              }`
             }
             if (followedUsers.length > pageSize * page) {
-              response['next'] = `${environment.frontendUrl}/fediverse/blog/${user.url.toLowerCase()}/following?page=${page + 1
-                }`
+              response['next'] = `${environment.frontendUrl}/fediverse/blog/${user.url.toLowerCase()}/following?page=${
+                page + 1
+              }`
             }
           } else {
             response = {
@@ -260,19 +273,22 @@ function activityPubRoutes(app: Application) {
             const itemsToSend = followers.slice((page - 1) * pageSize, page * pageSize)
             response = {
               '@context': 'https://www.w3.org/ns/activitystreams',
-              id: `${environment.frontendUrl}/fediverse/blog/${user.url.toLowerCase()}/followers?page=${req.query.page
-                }`,
+              id: `${environment.frontendUrl}/fediverse/blog/${user.url.toLowerCase()}/followers?page=${
+                req.query.page
+              }`,
               type: 'OrderedCollectionPage',
               orderedItems: itemsToSend,
               totalItems: followersNumber
             }
             if (page > 1) {
-              response['prev'] = `${environment.frontendUrl}/fediverse/blog/${user.url.toLowerCase()}/followers?page=${page - 1
-                }`
+              response['prev'] = `${environment.frontendUrl}/fediverse/blog/${user.url.toLowerCase()}/followers?page=${
+                page - 1
+              }`
             }
             if (followers.length > pageSize * page) {
-              response['next'] = `${environment.frontendUrl}/fediverse/blog/${user.url.toLowerCase()}/followers?page=${page + 1
-                }`
+              response['next'] = `${environment.frontendUrl}/fediverse/blog/${user.url.toLowerCase()}/followers?page=${
+                page + 1
+              }`
             }
           } else {
             response = {
