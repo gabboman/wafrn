@@ -397,7 +397,7 @@ async function processMentions(post: any, userIds: string[]) {
 async function processEmojis(post: any, fediEmojis: any[]) {
   let emojis: any[] = []
   let res: any
-  const emojiIds: string[] = fediEmojis.map((emoji: any) => emoji.id)
+  const emojiIds: string[] = Array.from(new Set(fediEmojis.map((emoji: any) => emoji.id)))
   const foundEmojis = await Emoji.findAll({
     where: {
       id: {
