@@ -318,7 +318,8 @@ async function getPostThreadRecursive(
   }
 }
 
-async function addTagsToPost(post: any, tags: fediverseTag[]) {
+async function addTagsToPost(post: any, originalTags: fediverseTag[]) {
+  let tags = [...originalTags]
   const res = await post.setPostTags([])
   if (tags.some((elem) => elem.name == 'WafrnHashtag')) {
     tags = tags.filter((elem) => elem.name == 'WafrnHashtag')
