@@ -85,10 +85,10 @@ export class EditorService implements OnDestroy {
         await new Promise((resolve) => setTimeout(resolve, 700))
       }
     } catch (exception: any) {
-      if (exception.error?.errorMessage) {
+      if (exception.error?.message) {
         this.messages.add({
           severity: 'warn',
-          summary: exception.error.errorMessage
+          summary: exception.error.message
         })
       } else {
         this.messages.add({

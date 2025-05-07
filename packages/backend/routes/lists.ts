@@ -68,7 +68,7 @@ export default function listRoutes(app: Application) {
         } catch (error: any) {
           res.send({
             success: false,
-            errorMessage: error.message
+            message: error.message
           })
           await fs.unlink(req.file.path)
         }

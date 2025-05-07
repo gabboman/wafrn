@@ -105,7 +105,7 @@ export default function postsRoutes(app: Application) {
         const userId = req.jwtData?.userId
         const postId = req.params?.id
         if (!postId) {
-          return res.status(400).send({ success: false, errorMessage: 'No post id received' })
+          return res.status(400).send({ success: false, message: 'No post id received' })
         }
 
         const unjointedPost = await getUnjointedPosts(
@@ -115,7 +115,7 @@ export default function postsRoutes(app: Application) {
         )
         const post = unjointedPost.posts[0]
         if (!post) {
-          return res.status(404).send({ success: false, errorMessage: 'Post not found' })
+          return res.status(404).send({ success: false, message: 'Post not found' })
         }
 
         const mentions = unjointedPost.mentions.map((elem: any) => elem.userMentioned)
@@ -123,13 +123,13 @@ export default function postsRoutes(app: Application) {
           post.userId === userId || mentions.includes(userId) || post.privacy !== Privacy.DirectMessage
 
         if (!userCanSeePost) {
-          return res.status(403).send({ success: false, errorMessage: 'You are not authorized to read this post' })
+          return res.status(403).send({ success: false, message: 'You are not authorized to read this post' })
         }
 
         return res.send(unjointedPost)
       } catch (err) {
         logger.error(err)
-        return res.status(500).send({ success: false, errorMessage: 'Internal server error' })
+        return res.status(500).send({ success: false, message: 'Internal server error' })
       }
     }
   )
@@ -297,7 +297,7 @@ export default function postsRoutes(app: Application) {
           if (parent.bskyUri) {
             const parentPoster = await User.findByPk(parent.userId)
             if (parentPoster?.url.startsWith('@')) {
-              return res.status(403).send({ success: false, errorMessage: 'You need to enable bluesky' })
+              return res.status(403).send({ success: false, message: 'You need to enable bluesky' })
             } else {
               // we do same check for all parents
               const ancestorIdsQuery = await sequelize.query(
@@ -321,7 +321,7 @@ export default function postsRoutes(app: Application) {
                 })
                 const parentsUserUrls = ancestors.map((elem) => elem.user.url)
                 if (parentsUserUrls.some((elem) => elem.startsWith('@'))) {
-                  return res.status(403).send({ success: false, errorMessage: 'You need to enable bluesky' })
+                  return res.status(403).send({ success: false, message: 'You need to enable bluesky' })
                 }
               }
             }
@@ -416,7 +416,7 @@ export default function postsRoutes(app: Application) {
           if (blocksExistingOnParents + bannedUsers > 0) {
             success = false
             res.status(403)
-            res.send({ success: false, errorMessage: 'You have no permission to reblog this post' })
+            res.send({ success: false, message: 'You have no permission to reblog this post' })
             return false
           }
         }
@@ -506,7 +506,7 @@ export default function postsRoutes(app: Application) {
               res.status(403)
               res.send({
                 success: false,
-                errorMessage: 'You do not federate with threads and this thread contains a post from threads'
+                message: 'You do not federate with threads and this thread contains a post from threads'
               })
               return false
             }
@@ -540,7 +540,7 @@ export default function postsRoutes(app: Application) {
             res.status(403)
             res.send({
               error: true,
-              errorMessage: 'You can not mention an user that you have blocked or has blocked you'
+              message: 'You can not mention an user that you have blocked or has blocked you'
             })
             return null
           }

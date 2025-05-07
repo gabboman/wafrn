@@ -490,7 +490,7 @@ export default function userRoutes(app: Application) {
             } else {
               res.send({
                 success: false,
-                errorMessage: 'Please activate your account! Check your email'
+                message: 'Please activate your account! Check your email'
               })
             }
           }
@@ -504,7 +504,7 @@ export default function userRoutes(app: Application) {
       // res.statusCode = 401;
       res.send({
         success: false,
-        errorMessage: 'Please recheck your email and password'
+        message: 'Please recheck your email and password'
       })
     }
   })
@@ -569,7 +569,7 @@ export default function userRoutes(app: Application) {
       // res.statusCode = 401;
       res.send({
         success: false,
-        errorMessage: 'Invalid code provided'
+        message: 'Invalid code provided'
       })
     }
   })

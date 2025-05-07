@@ -31,7 +31,7 @@ export class ImportFollowersComponent {
     newFollows: number
     alreadyFollowing: number
     errors: string[]
-    errorMessage?: string
+    message?: string
   } = {
     success: undefined,
     newFollows: 0,
