@@ -47,20 +47,28 @@ export default function notificationRoutes(app: Application) {
         scrollDate = new Date()
       }
       const mutedPostIds = (await getMutedPosts(userId)).concat(await getMutedPosts(userId, true))
-      const notifications = await Notification.findAll({
-        where: {
-          [Op.or]: [await getNotificationOptions(userId)],
-          postId: {
-            [Op.notIn]: mutedPostIds?.length ? mutedPostIds : ['00000000-0000-0000-0000-000000000000']
-          },
-          userId: {
-            [Op.notIn]: blockedUsers.concat([userId])
-          },
-          notifiedUserId: userId,
-          createdAt: {
-            [Op.lt]: scrollDate
-          }
+      let whereObject: any = {
+        [Op.or]: [await getNotificationOptions(userId)],
+        postId: {
+          [Op.or]: [
+            {
+              [Op.notIn]: mutedPostIds?.length ? mutedPostIds : ['00000000-0000-0000-0000-000000000000']
+            },
+            {
+              [Op.eq]: null
+            }
+          ]
         },
+        userId: {
+          [Op.notIn]: blockedUsers.concat([userId])
+        },
+        notifiedUserId: userId,
+        createdAt: {
+          [Op.lt]: scrollDate
+        }
+      }
+      const notifications = await Notification.findAll({
+        where: whereObject,
         order: [['createdAt', 'DESC']],
         limit: 20
       })
@@ -196,7 +204,14 @@ export default function notificationRoutes(app: Application) {
         notifiedUserId: userId,
         [Op.or]: [await getNotificationOptions(userId)],
         postId: {
-          [Op.notIn]: mutedPostIds?.length ? mutedPostIds : ['00000000-0000-0000-0000-000000000000']
+          [Op.or]: [
+            {
+              [Op.notIn]: mutedPostIds?.length ? mutedPostIds : ['00000000-0000-0000-0000-000000000000']
+            },
+            {
+              [Op.eq]: null
+            }
+          ]
         },
         userId: {
           [Op.notIn]: blockedUsers.concat([userId])
