@@ -1,6 +1,7 @@
 import { Op } from 'sequelize'
 import {
   Ask,
+  Blocks,
   Emoji,
   EmojiReaction,
   FederatedHost,
@@ -313,6 +314,23 @@ async function getUnjointedPosts(postIdsInput: string[], posterId: string, doNot
     }
   })
   const blockedHostsIds = blockedHosts.map((elem) => elem.id)
+  let blockedUsersSet: Set<string> = new Set()
+  const blockedUsersQuery = await Blocks.findAll({
+    where: {
+      [Op.or]: [
+        {
+          blockerId: posterId
+        },
+        {
+          blockedId: posterId
+        }
+      ]
+    }
+  })
+  for (const block of blockedUsersQuery) {
+    blockedUsersSet.add(block.blockedId)
+    blockedUsersSet.add(block.blockerId)
+  }
   const bannedUserIds = (await users)
     .filter((elem) => elem.banned || (elem.federatedHostId && blockedHostsIds.includes(elem.federatedHostId)))
     .map((elem) => elem.id)
@@ -352,7 +370,9 @@ async function getUnjointedPosts(postIdsInput: string[], posterId: string, doNot
       (postIsPostedByUser || validPrivacy || userFollowsPoster || userIsMentioned || isReblog)
     )
   })
-  const postIdsToFullySend: string[] = postsToFullySend.map((post: any) => post.id)
+  const postIdsToFullySend: string[] = postsToFullySend
+    .filter((elem) => !blockedUsersSet.has(elem.userId))
+    .map((post: any) => post.id)
   const postsToSend = (await postWithNotes)
     .map((post: any) => filterPost(post, postIdsToFullySend, doNotFullyHide))
     .filter((elem: any) => !!elem)
