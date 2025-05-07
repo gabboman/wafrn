@@ -416,7 +416,7 @@ export default function postsRoutes(app: Application) {
           if (blocksExistingOnParents + bannedUsers > 0) {
             success = false
             res.status(403)
-            res.send({ success: false, message: 'You have no permission to reblog this post' })
+            res.send({ success: false, errorMessage: 'You have no permission to reblog this post' })
             return false
           }
         }
@@ -506,7 +506,7 @@ export default function postsRoutes(app: Application) {
               res.status(403)
               res.send({
                 success: false,
-                message: 'You do not federate with threads and this thread contains a post from threads'
+                errorMessage: 'You do not federate with threads and this thread contains a post from threads'
               })
               return false
             }
@@ -540,7 +540,7 @@ export default function postsRoutes(app: Application) {
             res.status(403)
             res.send({
               error: true,
-              message: 'You can not mention an user that you have blocked or has blocked you'
+              errorMessage: 'You can not mention an user that you have blocked or has blocked you'
             })
             return null
           }
