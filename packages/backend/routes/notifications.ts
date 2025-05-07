@@ -73,13 +73,13 @@ export default function notificationRoutes(app: Application) {
         limit: 20
       })
       const userIds = notifications.map((elem) => elem.userId).concat(userId)
-      const postsIds = notifications.map((elem) => elem.postId)
+      const postsIds = notifications.map((elem) => elem.postId) as string[]
       const emojiReactionsIds = notifications.filter((elem) => elem.emojiReactionId).map((elem) => elem.emojiReactionId)
 
       const postsWithQuotes = await Quotes.findAll({
         where: {
           quoterPostId: {
-            [Op.in]: notifications.filter((elem) => elem.postId != undefined).map((elem) => elem.postId)
+            [Op.in]: notifications.filter((elem) => elem.postId != undefined).map((elem) => elem.postId as string)
           }
         }
       })

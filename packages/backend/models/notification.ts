@@ -12,7 +12,7 @@ export interface NotificationAttributes {
   notificationType?: string;
   notifiedUserId?: string;
   userId?: string;
-  postId?: string;
+  postId?: string | null;
   emojiReactionId?: string;
 }
 
@@ -47,7 +47,7 @@ export class Notification extends Model<NotificationAttributes, NotificationAttr
     allowNull: true,
     type: DataType.UUID
   })
-  declare postId: string;
+  declare postId: string | null;
 
   @ForeignKey(() => EmojiReaction)
   @Column({
