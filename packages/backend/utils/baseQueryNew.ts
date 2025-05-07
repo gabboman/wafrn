@@ -331,6 +331,7 @@ async function getUnjointedPosts(postIdsInput: string[], posterId: string, doNot
     blockedUsersSet.add(block.blockedId)
     blockedUsersSet.add(block.blockerId)
   }
+  blockedUsersSet.delete(posterId)
   const bannedUserIds = (await users)
     .filter((elem) => elem.banned || (elem.federatedHostId && blockedHostsIds.includes(elem.federatedHostId)))
     .map((elem) => elem.id)
