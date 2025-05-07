@@ -148,20 +148,34 @@ echo "---------------------"
 
 source install/env_secret_setup.sh
 
-# Build and start the apps
+echo
+echo "--------------------------"
+echo "Building and starting apps"
+echo "--------------------------"
 docker compose build
 docker compose up -d
 
-if [[ "$BLUESKY_SUPPORT" =~ ^[Yy]$ ]]; then
-  ./install/bsky/create-admin.sh $PDS_ADMIN_USERNAME
-  ./install/bsky/add-insert-code.sh
-  sed -i 's/ENABLE_BSKY=.*/ENABLE_BSKY=true/' .env
-  docker compose up --build -d
-fi
+case $BLUESKY_SUPPORT in
+  Y|y)
+    echo
+    echo "--------------------------"
+    echo "Setting up Bluesky support"
+    echo "--------------------------"
 
-echo "---------------------"
+    ./install/bsky/create-admin.sh $PDS_ADMIN_USERNAME
+    ./install/bsky/add-insert-code.sh
+    sed -i 's/ENABLE_BSKY=.*/ENABLE_BSKY=true/' .env
+    docker compose build
+    docker compose up -d
+  ;;
+esac
+
+POST_DOCKER
+
+echo "------------------"
 echo "Setting up backups"
-echo "---------------------"
+echo "------------------"
+
 cat <<CROND_FILE | sudo tee /etc/cron.d/wafrn-backup
 22 3 * * * $(whoami) $HOME/wafrn/install/manage.sh backup
 CROND_FILE
@@ -171,11 +185,11 @@ echo "----"
 echo "Done"
 echo "----"
 
+source $HOME/wafrn/.env
+
 echo "Well done. The database user and password have been introduced in the config file over at '~/wafrn/.env'"
 echo
-echo "You can log in at https://\${DOMAIN_NAME} with the email \${ADMIN_EMAIL} and the password \${ADMIN_PASSWORD}"
+echo "You can log in at https://${DOMAIN_NAME} with the email ${ADMIN_EMAIL} and the password ${ADMIN_PASSWORD}"
 echo
 echo "For the Bluesky integration to work make sure to read the docs on what to do as next steps."
 echo "Before doing any activity however it is **highly** advised to log out and log back in to the shell"
-
-POST_DOCKER
