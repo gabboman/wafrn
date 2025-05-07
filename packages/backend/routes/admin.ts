@@ -3,10 +3,11 @@ import { adminToken, authenticateToken } from '../utils/authenticateToken.js'
 import { Blocks, FederatedHost, Post, PostReport, ServerBlock, User, sequelize } from '../models/index.js'
 import AuthorizedRequest from '../interfaces/authorizedRequest.js'
 import { server } from '../interfaces/server.js'
-import { Op } from 'sequelize'
+import { Op, WhereOptions } from 'sequelize'
 import { redisCache } from '../utils/redis.js'
 import sendActivationEmail from '../utils/sendActivationEmail.js'
 import { environment } from '../environment.js'
+import { UserAttributes } from '../models/user.js'
 
 export default function adminRoutes(app: Application) {
   app.get('/api/admin/server-list', authenticateToken, adminToken, async (req: AuthorizedRequest, res: Response) => {
@@ -243,15 +244,18 @@ export default function adminRoutes(app: Application) {
     authenticateToken,
     adminToken,
     async (req: AuthorizedRequest, res: Response) => {
-      const notActiveUsers = await User.findAll({
-        where: {
-          activated: false,
-          emailVerified: true,
+      const whereConditions: WhereOptions<UserAttributes> = {
+        activated: false,
           url: {
             [Op.notLike]: '%@%'
           },
           banned: false
-        },
+      }
+      if (!environment.disableRequireSendEmail) {
+        whereConditions.emailVerified = true;
+      }
+      const notActiveUsers = await User.findAll({
+        where: whereConditions,
         attributes: ['id', 'url', 'avatar', 'description', 'email', 'registerIp']
       })
       res.send(notActiveUsers)
