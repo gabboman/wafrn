@@ -129,32 +129,9 @@
   }
 }
 
-/* hacks by @ribose@app.wafrn.net */ 
-/* Make sidenav smaller */
 
-
-mat-drawer.side-menu { 
-  font-size: 80% !important;
-  width: 230px;
-}
-img.instance-logo { 
-  max-width: 80% !important;
-}
 .mat-mdc-list-item { 
   height: 2rem !important;
 }
-app-menu-item:nth-of-type(15) span.menu-item-content { 
-  visibility: hidden;
-  position: relative; 
-}
-app-menu-item:nth-of-type(15) span.menu-item-content::after {
-  content: "FAQ";
-  visibility: visible;
-  position: absolute;
-  left: 0; top: 0; 
-}
-@media (min-width:993px) {
-  mat-drawer-content.mat-drawer-content { 
-      margin-left: 230px !important;
-  }
-}
+
+
