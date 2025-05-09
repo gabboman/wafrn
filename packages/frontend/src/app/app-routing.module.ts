@@ -5,6 +5,7 @@ import { NavigationMenuModule } from './components/navigation-menu/navigation-me
 import { isAdminGuard } from './guards/is-admin.guard'
 import { loginRequiredGuard } from './guards/login-required.guard'
 import { CustomReuseStrategy } from './services/routing.service'
+import { userLoggedGuard } from './guards/user-logged.guard'
 
 const routes: Routes = [
   {
@@ -13,6 +14,16 @@ const routes: Routes = [
     children: [
       {
         path: '',
+        pathMatch: 'full',
+        canActivate: [userLoggedGuard],
+        loadComponent: () =>
+          import('./components/home-redirector/home-redirector.component').then((m) => m.HomeRedirectorComponent)
+        //loadChildren: () =>
+      },
+
+      {
+        path: 'register',
+        canActivate: [userLoggedGuard],
         loadChildren: () => import('./pages/register/register.module').then((m) => m.RegisterModule)
       },
       {
@@ -31,8 +42,7 @@ const routes: Routes = [
       },
       {
         path: 'mfaSetup',
-        loadChildren: () =>
-          import('./pages/mfa-setup/mfa-setup.module').then((m) => m.MfaSetupModule)
+        loadChildren: () => import('./pages/mfa-setup/mfa-setup.module').then((m) => m.MfaSetupModule)
       },
       {
         path: 'dashboard/search',
@@ -117,13 +127,11 @@ const routes: Routes = [
     RouterModule.forRoot(routes, {
       preloadingStrategy: PreloadAllModules,
       anchorScrolling: 'enabled',
-      scrollPositionRestoration: 'disabled',
+      scrollPositionRestoration: 'enabled'
     }),
     NavigationMenuModule
   ],
   providers: [{ provide: RouteReuseStrategy, useClass: CustomReuseStrategy }],
   exports: [RouterModule]
 })
-export class AppRoutingModule {
-
-}
+export class AppRoutingModule {}

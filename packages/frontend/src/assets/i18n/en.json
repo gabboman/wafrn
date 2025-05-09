@@ -13,13 +13,15 @@
         "loginButton": "Log in"
     },
     "menu": {
+        "login": "Log in",
+        "register": "Register",
         "dashboard": "Dashboard",
         "dashboardHover": "View dashboard",
         "writeWoot": "Write new woot",
         "notifications": "Notifications",
         "explore": "Explore",
         "exploreWafrn": "Explore WAFRN",
-        "exploreFediverse": "Explore the Fediverse",
+        "exploreFediverse": "Wafrn & friends",
         "unansweredAsks": "Unanswered Asks",
         "privateMessages": "Private messages",
         "search": "Search",
@@ -60,7 +62,8 @@
         "quoteButton": "Quote a woot",
         "publishWoot": "Publish this woot",
         "directMessageWarning": "Admins of both your server and the external server can read these messages.",
-        "unlistedWarning": "This woot is set to be unlisted. It opts out of search, hashtags and other discovery features. This is not recommended for anything you want discoverable.",
+        "unlistedWarning": "Unlisted posts will get ignored by searches (TAGS INCLUDED), and will not show on explore local. but they will be shown to your followers. And if someone sends a link they will ve visible, unlike followers only. Basicaly, for when you want to post a lot but dont want to fill explore local.",
+        "directMessageWithQuoteWarning": "Quoted user will be notified of this as a mention too",
         "sensitivePlaceholder": "What is sensitive about this woot?",
         "wootQuoteBoxLabel": "Paste the URL of a woot to quote it. Can be the external url or the wafrn url",
         "wootQuoteBoxPlaceholder": "Just paste the woot url",
@@ -79,7 +82,9 @@
         "ariaLabelQuoteSetter": "Enable the quote setter",
         "uploadMediaTooltip": "Upload Media",
         "contentWarningTooltip": "Content Warning",
-        "hiddenMentionsTooltip": "Other mentioned users"
+        "insertEmojiTooltip": "Insert emoji",
+        "hiddenMentionsTooltip": "Other mentioned users",
+        "editorGuide": "Doubts on how to format the text or how to start? Check <a target=\"_blank\" href=\"https://wafrn.net/faq/user\">the guide</a>"
     },
     "profile": {
         "security": {

@@ -8,9 +8,11 @@ import { MatDialog } from '@angular/material/dialog'
 import { ProcessedPost } from '../interfaces/processed-post'
 import { Ask } from '../interfaces/ask'
 import { DashboardService } from './dashboard.service'
-import { Router } from '@angular/router'
 import { EditorData } from '../interfaces/editor-data'
 import { EnvironmentService } from './environment.service'
+
+import { NewEditorComponent } from '../components/new-editor/new-editor.component'
+import { MessageService } from './message.service'
 
 @Injectable({
   providedIn: 'any'
@@ -27,8 +29,8 @@ export class EditorService implements OnDestroy {
   constructor(
     private http: HttpClient,
     private dashboardService: DashboardService,
-    private router: Router,
-    private dialogService: MatDialog
+    private dialogService: MatDialog,
+    private messages: MessageService
   ) {
     this.editorSubscription = this.launchPostEditorEmitter.subscribe((data) => {
       if (data.action !== Action.None) {
@@ -82,8 +84,18 @@ export class EditorService implements OnDestroy {
         // HACK wait 0.7 seconds so post is fully processed?
         await new Promise((resolve) => setTimeout(resolve, 700))
       }
-    } catch (exception) {
-      console.log(exception)
+    } catch (exception: any) {
+      if (exception.error?.message) {
+        this.messages.add({
+          severity: 'warn',
+          summary: exception.error.message
+        })
+      } else {
+        this.messages.add({
+          severity: 'warn',
+          summary: 'Something went wrong and your woot was not published. Check your internet connection and try again'
+        })
+      }
     }
 
     return success
@@ -135,7 +147,7 @@ export class EditorService implements OnDestroy {
         scrollDate: this.dashboardService.startScrollDate,
         path: window.location.pathname
       }
-      this.dialogService.open(await this.getEditorComponent())
+      this.dialogService.open(NewEditorComponent)
     }
   }
 

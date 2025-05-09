@@ -1,6 +1,6 @@
 import { Job } from 'bullmq'
 import { getAtprotoUser } from '../utils/getAtprotoUser.js'
-import { Follows, Post, User, UserLikesPostRelations, PostTag, Media, Notification } from '../../db.js'
+import { Follows, Post, User, UserLikesPostRelations, PostTag, Media, Notification } from '../../models/index.js'
 import { environment } from '../../environment.js'
 import { Op, Model } from 'sequelize'
 import { logger } from '../../utils/logger.js'
@@ -11,6 +11,7 @@ import { deletePostCommon } from '../../utils/deletePost.js'
 import { redisCache } from '../../utils/redis.js'
 import { likePostRemote } from '../../utils/activitypub/likePost.js'
 import { createNotification } from '../../utils/pushNotifications.js'
+import { Privacy } from '../../models/post.js'
 
 const adminUser = User.findOne({
   where: {
@@ -19,12 +20,12 @@ const adminUser = User.findOne({
 })
 async function processFirehose(job: Job) {
   // FIRST VERSION. THIS IS GONA BE DIRTY
-  const remoteUser = await getAtprotoUser(job.data.repo, (await adminUser) as Model<any, any>)
+  const remoteUser = await getAtprotoUser(job.data.repo, await adminUser as User)
   const operation: RepoOp = job.data.operation
   if (remoteUser && operation) {
     switch (operation.action) {
       case 'create': {
-        const record = operation.record
+        const record = operation.record as any
         switch (record['$type']) {
           case 'app.bsky.feed.like': {
             let user = undefined
@@ -44,18 +45,20 @@ async function processFirehose(job: Job) {
                     }
                   })
                   const post = await Post.findByPk(postId)
-                  await createNotification(
-                    {
-                      notificationType: 'LIKE',
-                      postId: postId,
-                      userId: remoteUser.id,
-                      notifiedUserId: post?.userId
-                    },
-                    {
-                      postContent: post?.content,
-                      userUrl: remoteUser.url
-                    }
-                  )
+                  if (post) {
+                    await createNotification(
+                      {
+                        notificationType: 'LIKE',
+                        postId: postId,
+                        userId: remoteUser.id,
+                        notifiedUserId: post.userId
+                      },
+                      {
+                        postContent: post.content,
+                        userUrl: remoteUser.url
+                      }
+                    )
+                  }
                 }
               } else {
                 const postInDb = await Post.findOne({
@@ -114,14 +117,14 @@ async function processFirehose(job: Job) {
                 parentId: postToBeRewooted,
                 bskyUri: `at://${job.data.repo}/${operation.path}`,
                 bskyCid: operation.cid,
-                privacy: 0
+                privacy: Privacy.Public
               })
             }
 
             break
           }
           case 'app.bsky.graph.follow': {
-            const userFollowed = await getAtprotoUser(record.subject, (await adminUser) as Model<any, any>)
+            const userFollowed = await getAtprotoUser(record.subject, await adminUser as User)
             if (userFollowed) {
               let tmp = await Follows.findOrCreate({
                 where: {

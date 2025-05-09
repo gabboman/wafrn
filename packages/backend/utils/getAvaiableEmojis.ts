@@ -1,4 +1,4 @@
-import { Emoji } from '../db.js'
+import { Emoji } from '../models/index.js'
 
 async function getAvaiableEmojis(): Promise<any[]> {
   return await Emoji.findAll({

@@ -8,15 +8,7 @@ NEW_USERNAME=${1:-wafrnadmin}
 
 echo Generating new invite code
 
-NEW_CODE=$(curl \
-  --fail \
-  --silent \
-  --show-error \
-  --request POST \
-  --user "admin:${PDS_ADMIN_PASSWORD}" \
-  --header "Content-Type: application/json" \
-  --data '{"useCount": 1}' \
-  "https://${PDS_DOMAIN_NAME}/xrpc/com.atproto.server.createInviteCode" | jq --raw-output '.code')
+NEW_CODE=$(docker exec wafrn-pds-1 wget -q -O - --header "Content-Type: application/json" --post-data '{"useCount":1}' http://admin:${PDS_ADMIN_PASSWORD}@localhost:3000/xrpc/com.atproto.server.createInviteCode | jq --raw-output '.code')
 
 echo Invite code genrated: ${NEW_CODE}
 
@@ -25,15 +17,8 @@ PASSWORD=$(openssl rand -base64 24 | tr '+/' '_-')
 echo Password generated was "\"$PASSWORD\""
 
 echo Creating admin account
-RESULT="$(curl \
-    --silent \
-    --show-error \
-    --request POST \
-    --user "admin:${PDS_ADMIN_PASSWORD}" \
-    --header "Content-Type: application/json" \
-    --data "{\"email\":\"${ADMIN_USER}@${DOMAIN_NAME}\", \"handle\":\"${NEW_USERNAME}.${PDS_DOMAIN_NAME}\", \"password\":\"${PASSWORD}\", \"inviteCode\":\"${NEW_CODE}\"}" \
-    "https://${PDS_DOMAIN_NAME}/xrpc/com.atproto.server.createAccount"
-  )"
+
+RESULT=$(docker exec wafrn-pds-1 wget -q -O - --header "Content-Type: application/json" --post-data "{\"email\":\"${ADMIN_USER}@${DOMAIN_NAME}\", \"handle\":\"${NEW_USERNAME}.${PDS_DOMAIN_NAME}\", \"password\":\"${PASSWORD}\", \"inviteCode\":\"${NEW_CODE}\"}" http://admin:${PDS_ADMIN_PASSWORD}@localhost:3000/xrpc/com.atproto.server.createAccount)
 
 echo $RESULT
 
@@ -43,4 +28,4 @@ echo "Generated DID: ${DID}"
 
 echo "Updating database with details"
 
-docker exec -ti wafrn-db-1 psql -d ${POSTGRES_DBNAME} -c "UPDATE users SET \"bskyAuthData\"='${PASSWORD}', \"bskyDid\"='${DID}', \"enableBsky\"=TRUE WHERE url = '${ADMIN_USER}';"
+docker exec -i wafrn-db-1 psql -d ${POSTGRES_DBNAME} -c "UPDATE users SET \"bskyAuthData\"='${PASSWORD}', \"bskyDid\"='${DID}', \"enableBsky\"=TRUE WHERE url = '${ADMIN_USER}';"

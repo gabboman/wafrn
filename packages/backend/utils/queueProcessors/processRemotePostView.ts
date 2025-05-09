@@ -1,5 +1,5 @@
 import { Job } from 'bullmq'
-import { PostHostView, RemoteUserPostView } from '../../db.js'
+import { PostHostView, RemoteUserPostView } from '../../models/index.js'
 
 async function processRemotePostView(job: Job) {
   // we move this to a queue to avoid doing the job as soon as we recive it

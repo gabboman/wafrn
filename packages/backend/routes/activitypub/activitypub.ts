@@ -1,5 +1,14 @@
 import { Application, Request, Response } from 'express'
-import { User, Follows, Post, Media, UserLikesPostRelations, Emoji, UserEmojiRelation, sequelize } from '../../db.js'
+import {
+  User,
+  Follows,
+  Post,
+  Media,
+  UserLikesPostRelations,
+  Emoji,
+  UserEmojiRelation,
+  sequelize
+} from '../../models/index.js'
 import { getCheckFediverseSignatureFucnction } from '../../utils/activitypub/checkFediverseSignature.js'
 import { environment } from '../../environment.js'
 import { return404 } from '../../utils/return404.js'
@@ -20,13 +29,11 @@ import { logger } from '../../utils/logger.js'
 // we get the user from the memory cache. if does not exist we try to find it
 async function getLocalUserByUrl(url: string): Promise<any> {
   return await User.findOne({
-    where: {
-      literal: sequelize.where(sequelize.fn('lower', sequelize.col('url')), url.toLowerCase())
-    }
+    where: sequelize.where(sequelize.fn('lower', sequelize.col('url')), url.toLowerCase())
   })
 }
 
-async function getLocalUserByUrlCache(url: string): Promise<any> {
+async function getLocalUserByUrlCache(url: string): Promise<User | undefined> {
   let cacheResult = await redisCache.get('localUserData:' + url)
   if (!cacheResult) {
     cacheResult = JSON.stringify((await getLocalUserByUrl(url))?.dataValues)
@@ -35,7 +42,7 @@ async function getLocalUserByUrlCache(url: string): Promise<any> {
     }
   }
   // this function can return undefined
-  return cacheResult ? JSON.parse(cacheResult) : cacheResult
+  return cacheResult ? JSON.parse(cacheResult) : undefined
 }
 
 const inboxQueue = new Queue('inbox', {
@@ -83,6 +90,22 @@ function activityPubRoutes(app: Application) {
             const emojis = await getUserEmojis(user.id)
             const userOptions = await getUserOptions(user.id)
             let unprocessedAttachments = userOptions.find((elem) => elem.optionName === 'fediverse.public.attachment')
+            let alsoKnownAs: any[] = []
+            let alsoKnownAsList = userOptions.find((elem) => elem.optionName === 'fediverse.public.alsoKnownAs')
+            if (alsoKnownAsList?.optionValue) {
+              try {
+                const parsedValue = JSON.parse(alsoKnownAsList?.optionValue)
+                if (typeof parsedValue === 'string') {
+                  for (let elem of parsedValue.split(',')) {
+                    let url = new URL(elem)
+                    alsoKnownAs.push(url.toString())
+                  }
+                }
+              } catch (_) {}
+            }
+            if (user.bskyDid) {
+              alsoKnownAs.push(`at://${user.bskyDid}`)
+            }
             let attachments: { type: string; name: string; value: string }[] = []
             if (unprocessedAttachments) {
               try {
@@ -115,6 +138,7 @@ function activityPubRoutes(app: Application) {
               url: `${environment.frontendUrl}/fediverse/blog/${user.url.toLowerCase()}`,
               manuallyApprovesFollowers: user.manuallyAcceptsFollows,
               discoverable: true,
+              alsoKnownAs: alsoKnownAs,
               published: user.createdAt,
               tag: emojis.map((emoji: any) => emojiToAPTag(emoji)),
               endpoints: {

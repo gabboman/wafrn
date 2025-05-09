@@ -1,49 +1,49 @@
 import { CommonModule } from '@angular/common'
-import { Component, input, Input, OnChanges, signal, SimpleChanges } from '@angular/core'
+import { Component, Input, OnChanges, signal, SimpleChanges } from '@angular/core'
 import { MatButtonModule } from '@angular/material/button'
 import { MatTooltipModule } from '@angular/material/tooltip'
 import { RouterModule } from '@angular/router'
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome'
 import {
-  faShareNodes,
+  faArrowUpRightFromSquare,
+  faBookBookmark,
+  faBookmark,
+  faCheck,
   faChevronDown,
+  faClose,
+  faEnvelope,
+  faGlobe,
   faHeart,
   faHeartBroken,
-  faReply,
-  faRepeat,
-  faQuoteLeft,
-  faArrowUpRightFromSquare,
-  faTrash,
-  faClose,
-  faGlobe,
-  faUnlock,
-  faEnvelope,
-  faServer,
-  faUser,
   faPen,
-  faCheck,
-  faBookBookmark,
-  faBookmark
+  faQuoteLeft,
+  faRepeat,
+  faReply,
+  faServer,
+  faShareNodes,
+  faTrash,
+  faUnlock,
+  faUser
 } from '@fortawesome/free-solid-svg-icons'
-import { firstValueFrom, Observable } from 'rxjs'
+import { firstValueFrom } from 'rxjs'
+import { PostLinkModule } from 'src/app/directives/post-link/post-link.module'
 import { ProcessedPost } from 'src/app/interfaces/processed-post'
 import { DeletePostService } from 'src/app/services/delete-post.service'
 import { EditorService } from 'src/app/services/editor.service'
 import { LoginService } from 'src/app/services/login.service'
 import { MessageService } from 'src/app/services/message.service'
 import { PostsService } from 'src/app/services/posts.service'
-import { ScrollService } from 'src/app/services/scroll.service'
 
 @Component({
   selector: 'app-bottom-reply-bar',
-  imports: [CommonModule, RouterModule, FontAwesomeModule, MatButtonModule, MatTooltipModule],
+  imports: [CommonModule, RouterModule, FontAwesomeModule, MatButtonModule, MatTooltipModule, PostLinkModule],
   templateUrl: './bottom-reply-bar.component.html',
   styleUrl: './bottom-reply-bar.component.scss'
 })
 export class BottomReplyBarComponent implements OnChanges {
   @Input() fragment!: ProcessedPost
+  @Input() post!: ProcessedPost[]
   @Input() notes: string = ''
-  anchor = input<string>('')
   userLoggedIn = false
   isEmptyReblog = false
   myId = ''
@@ -73,13 +73,12 @@ export class BottomReplyBarComponent implements OnChanges {
   unbookmarkIcon = faBookBookmark
 
   constructor(
-    private loginService: LoginService,
-    private postService: PostsService,
-    private editorService: EditorService,
-    private deletePostService: DeletePostService,
-    private messages: MessageService,
-    private readonly editor: EditorService,
-    public scrollService: ScrollService
+    readonly loginService: LoginService,
+    private readonly postService: PostsService,
+    private readonly editorService: EditorService,
+    private readonly deletePostService: DeletePostService,
+    private readonly messages: MessageService,
+    private readonly editor: EditorService
   ) {
     this.userLoggedIn = loginService.checkUserLoggedIn()
     if (this.userLoggedIn) {
@@ -142,11 +141,11 @@ export class BottomReplyBarComponent implements OnChanges {
     this.loadingAction = true
     if (await this.postService.likePost(postToLike.id)) {
       postToLike.userLikesPostRelations.push(this.myId)
-      const enableConfetti = localStorage.getItem('enableConfetti') == 'true'
+      const disableConfetti = localStorage.getItem('disableConfetti') == 'true'
       this.messages.add({
         severity: 'success',
         summary: 'You successfully liked this woot',
-        confettiEmojis: enableConfetti ? ['❤️', '💚', '💙'] : []
+        confettiEmojis: disableConfetti ? [] : ['❤️', '💚', '💙']
       })
     } else {
       this.messages.add({
@@ -191,11 +190,11 @@ export class BottomReplyBarComponent implements OnChanges {
   async bookmarkPost() {
     if (await this.postService.bookmarkPost(this.fragment.id)) {
       this.fragment.bookmarkers.push(this.myId)
-      const enableConfetti = localStorage.getItem('enableConfetti') == 'true'
+      const disableConfetti = localStorage.getItem('disableConfetti') == 'true'
       this.messages.add({
         severity: 'success',
         summary: 'You successfully bookmarked this woot',
-        confettiEmojis: enableConfetti ? ['💾'] : []
+        confettiEmojis: disableConfetti ? [] : ['💾']
       })
       this.bookmarked.set(true)
     } else {
@@ -217,18 +216,13 @@ export class BottomReplyBarComponent implements OnChanges {
         media: []
       })
       if (response) {
-        const enableConfetti = localStorage.getItem('enableConfetti') == 'true'
+        const disableConfetti = localStorage.getItem('disableConfetti') == 'true'
 
         this.myRewootsIncludePost = true
         this.messages.add({
           severity: 'success',
           summary: 'You rewooted the woot!',
-          confettiEmojis: enableConfetti ? ['🔁'] : []
-        })
-      } else {
-        this.messages.add({
-          severity: 'error',
-          summary: 'Something went wrong! Check your internet conectivity and try again'
+          confettiEmojis: disableConfetti ? [] : ['🔁']
         })
       }
     } else {

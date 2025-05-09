@@ -1,6 +1,6 @@
 import { Op } from 'sequelize'
 import { getAllLocalUserIds } from '../cacheGetters/getAllLocalUserIds.js'
-import { Post, User } from '../../db.js'
+import { Post, User } from '../../models/index.js'
 
 const localUserIds = await getAllLocalUserIds()
 

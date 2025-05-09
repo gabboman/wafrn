@@ -1,13 +1,12 @@
 import { CommonModule } from '@angular/common'
-import { Component, computed, ElementRef, HostListener, OnDestroy, ViewChild, ViewChildren } from '@angular/core'
+import { Component, HostListener, inject, OnDestroy, ViewChild } from '@angular/core'
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms'
 import { MatButtonModule } from '@angular/material/button'
 import { MatCardModule } from '@angular/material/card'
 import { MatFormFieldModule } from '@angular/material/form-field'
 import { MatInputModule } from '@angular/material/input'
-import { Router } from '@angular/router'
 import { MatDialogModule, MatDialogRef } from '@angular/material/dialog'
-import { MatChipEditedEvent, MatChipInputEvent, MatChipsModule } from '@angular/material/chips'
+import { MatChipsModule } from '@angular/material/chips'
 import { FontAwesomeModule, IconDefinition } from '@fortawesome/angular-fontawesome'
 import {
   faClose,
@@ -52,6 +51,9 @@ import { InfoCardComponent } from '../info-card/info-card.component'
 import { TranslateModule } from '@ngx-translate/core'
 import { SimplifiedUser } from 'src/app/interfaces/simplified-user'
 import { MatBadgeModule } from '@angular/material/badge'
+import { EmojiPickerComponent } from '../emoji-picker/emoji-picker.component'
+import { Emoji } from 'src/app/interfaces/emoji'
+import { Dialog } from '@angular/cdk/dialog'
 
 @Component({
   selector: 'app-new-editor',
@@ -86,13 +88,14 @@ import { MatBadgeModule } from '@angular/material/badge'
 export class NewEditorComponent implements OnDestroy {
   privacyOptions = [
     { level: 0, name: 'Public', icon: faGlobe },
-    { level: 1, name: 'Followers only', icon: faUser },
-    { level: 2, name: 'This instance only', icon: faServer },
     { level: 3, name: 'Unlisted', icon: faUnlock },
+    { level: 2, name: 'This instance only', icon: faServer },
+    { level: 1, name: 'Followers only', icon: faUser },
     { level: 10, name: 'Direct Message', icon: faEnvelope }
   ]
   quoteOpen = false
   data: EditorData | undefined
+  emojiDialog = inject(Dialog)
   editing = false
   baseMediaUrl = EnvironmentService.environment.baseMediaUrl
   cacheurl = EnvironmentService.environment.externalCacheurl
@@ -179,9 +182,7 @@ export class NewEditorComponent implements OnDestroy {
       this.postCreatorForm.controls['content'].patchValue(this.data.post.markdownContent)
       this.contentWarning = this.data.post.content_warning
       this.tags = this.data.post.tags.map((tag) => tag.tagName).join(',')
-      this.uploadedMedias = this.data.post.medias
-        ? this.data.post.medias.filter((elem) => elem.mediaOrder != 9999999999999999)
-        : []
+      this.uploadedMedias = this.data.post.medias ? this.data.post.medias.filter((elem) => elem.mediaOrder < 9999) : []
       this.privacy = this.data.post.privacy
     }
   }
@@ -411,8 +412,10 @@ export class NewEditorComponent implements OnDestroy {
       // wait 500 milliseconds
       await new Promise((resolve) => setTimeout(resolve, 500))
     }
+    const mentionsToBeSent = this.mentionedUsers.map((elem) => elem.id)
     res = await this.editorService.createPost({
-      mentionedUsers: this.mentionedUsers.map((elem) => elem.id),
+      // deduplicate mentions too just in case
+      mentionedUsers: Array.from(new Set(mentionsToBeSent)),
       content: content,
       media: this.uploadedMedias,
       privacy: this.privacy,
@@ -426,11 +429,11 @@ export class NewEditorComponent implements OnDestroy {
     // its a great time to check notifications isnt it?
     this.dashboardService.scrollEventEmitter.emit('post')
     if (res) {
-      const enableConfetti = localStorage.getItem('enableConfetti') == 'true'
+      const disableConfetti = localStorage.getItem('disableConfetti') == 'true'
       this.messages.add({
         severity: 'success',
         summary: 'Your woot has been published!',
-        confettiEmojis: enableConfetti ? ['✏️', '🖍️', '✒️', '🖊️'] : []
+        confettiEmojis: disableConfetti ? [] : ['✏️', '🖍️', '✒️', '🖊️']
       })
       this.postCreatorForm.value.content = ''
       this.uploadedMedias = []
@@ -439,11 +442,6 @@ export class NewEditorComponent implements OnDestroy {
         window.location.reload()
       }
       this.closeEditor()
-    } else {
-      this.messages.add({
-        severity: 'warn',
-        summary: 'Something went wrong and your woot was not published. Check your internet connection and try again'
-      })
     }
     this.postBeingSubmitted = false
   }
@@ -534,5 +532,20 @@ export class NewEditorComponent implements OnDestroy {
 
   removeMention(index: number) {
     this.mentionedUsers.splice(index, 1)
+  }
+
+  openEmojiSelection(): void {
+    const textarea = document.getElementById('postCreatorContent') as HTMLTextAreaElement
+    const pos = textarea.selectionStart
+    const dialogRef = this.emojiDialog.open<Emoji>(EmojiPickerComponent)
+
+    dialogRef.closed.subscribe((result) => {
+      if (result) {
+        // we use the reactform for this
+        this.postCreatorForm.controls['content'].patchValue(
+          textarea.value.slice(0, pos) + result.name + textarea.value.slice(pos)
+        )
+      }
+    })
   }
 }

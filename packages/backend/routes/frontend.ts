@@ -1,7 +1,7 @@
 import express, { Application, Response } from 'express'
 import { environment } from '../environment.js'
 import { Op } from 'sequelize'
-import { Media, Post, User, sequelize } from '../db.js'
+import { Media, Post, User, sequelize } from '../models/index.js'
 import fs from 'fs'
 import dompurify from 'isomorphic-dompurify'
 import { redisCache } from '../utils/redis.js'
@@ -10,6 +10,7 @@ import { getCheckFediverseSignatureFucnction } from '../utils/activitypub/checkF
 import { SignedRequest } from '../interfaces/fediverse/signedRequest.js'
 import { handlePostRequest } from '../utils/activitypub/handlePostRequest.js'
 import { getUserOptions } from '../utils/cacheGetters/getUserOptions.js'
+import { Privacy } from '../models/post.js'
 
 const cacheOptions = {
   etag: false,
@@ -130,7 +131,7 @@ async function getPostSEOCache(id: string): Promise<{ title: string; description
       where: {
         id: id,
         privacy: {
-          [Op.in]: [0, 2, 3]
+          [Op.in]: [Privacy.Public, Privacy.LocalOnly, Privacy.Unlisted]
         },
         isDeleted: false,
         isReblog: false
@@ -162,7 +163,8 @@ async function getPostSEOCache(id: string): Promise<{ title: string; description
           : sanitizeStringForSEO(post.content)
       ).substring(0, 190)
       const safeMedia = post.medias?.find((elem: any) => elem.NSFW === false && !elem.url.toLowerCase().endsWith('mp4'))
-      res.img = safeMedia?.url
+      if (safeMedia)
+        res.img = safeMedia?.url
       redisCache.set('postSeoCache:' + id, JSON.stringify(res), 'EX', 300)
     }
   } else {
@@ -176,12 +178,11 @@ async function getBlogSEOCache(url: string): Promise<{ title: string; descriptio
   let res = { ...environment.defaultSEOData }
   if (!resData) {
     const blog = await User.findOne({
-      where: {
-        literal: sequelize.where(sequelize.fn('lower', sequelize.col('url')), url.toLowerCase()),
-        email: {
-          [Op.ne]: null
-        }
-      }
+      where:
+        sequelize.and(
+          sequelize.where(sequelize.fn('lower', sequelize.col('url')), url.toLowerCase()),
+          sequelize.where(sequelize.col('email'), Op.ne, null)
+        )
     })
     if (blog) {
       const url = sanitizeStringForSEO(blog.url).substring(0, 65)
@@ -224,11 +225,10 @@ function getIndexSeo(title: string, description: string, image?: string) {
     <meta property="description" content="${sanitizedDescription}">
     <meta property="og:description" content="${sanitizedDescription}">
     <meta name="twitter:description" content="${sanitizedDescription}">
-    ${
-      imgUrl
-        ? `<meta property="og:image" content="${imgUrl}">
+    ${imgUrl
+      ? `<meta property="og:image" content="${imgUrl}">
     <meta name="twitter:image" content="${imgUrl}">`
-        : ''
+      : ''
     }
     <meta property="og:site_name" content="${environment.instanceUrl}">
     <meta name="twitter:site" content="${environment.instanceUrl}">

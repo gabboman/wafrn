@@ -87,11 +87,11 @@ export const environment = {
   // you dont have an smtp server and you want to do a single user instance? set this to true!
   disableRequireSendEmail: ${{DISABLE_REQUIRE_SEND_EMAIL:-false}},
   // if someone is trying to scrap your place you can send a funny message in some petitions (attacks to the frontend)
-  blockedIps: ${{BLOCKED_IPS:-[]}},
+  blockedIps: ${{BLOCKED_IPS:-[]}} as string[],
   // do you want to manually review registrations or have them open? We advice to leave this one to true
   reviewRegistrations: ${{REVIEW_REGISTRATIONS:-true}},
   // if the blocklist youre using turns out to be biased you can tell the script that loads the block host to do not block these hosts
-  ignoreBlockHosts: ${{IGNORE_BLOCK_HOSTS:-[]}},
+  ignoreBlockHosts: ${{IGNORE_BLOCK_HOSTS:-[]}} as string[],
   // default SEO data that will be used when trying to load server data
   defaultSEOData: {
     title: '${{DOMAIN_NAME}}',
@@ -100,15 +100,17 @@ export const environment = {
   },
   enableBsky: ${{ENABLE_BSKY:-false}},
   bskyPds: '${{PDS_DOMAIN_NAME}}',
-  // to generate these keys: npm install -g web-push then web-push generate-vapid-keys. Remember to do the environment one too!!
+  // to generate these keys use the following command: `npx web-push generate-vapid-keys`. Remember to do the environment one too!!
   webpushPrivateKey: '${{WEBPUSH_PRIVATE}}',
+  webpushPublicKey: '${{WEBPUSH_PUBLIC}}',
+  // this is a email that will be sent to the distribution services in the users devices in case the owner of the distribution service wants to contact the server that is sending the notifications
+  webpushEmail: '${{WEBPUSH_EMAIL}}',
   frontendEnvironment: {
     logo: '${{FRONTEND_LOGO:-/assets/logo.png}}',
     frontUrl: '${{FRONTEND_FQDN_URL}}',
     baseUrl: '${{FRONTEND_API_URL:-/api}}',
     baseMediaUrl: '${{FRONTEND_MEDIA_URL:-/api/uploads}}',
     externalCacheurl: '${{FRONTEND_CACHE_URL:-/api/cache?media=}}',
-    webPushPublicKey: '${{WEBPUSH_PUBLIC}}',
     shortenPosts: ${{FRONTEND_SHORTEN_POSTS:-3}},
     disablePWA: ${{FRONTEND_DISABLE_PWA:-false}},
     maintenance: ${{FRONTEND_MAINTENANCE:-false}}

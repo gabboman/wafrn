@@ -13,5 +13,6 @@ logs
 /cache
 environment.prod.ts
 environment.dev.ts
+/build
 
 .env

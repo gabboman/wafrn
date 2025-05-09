@@ -1,4 +1,4 @@
-import { Notification, Post } from '../../../db.js'
+import { Notification, Post, User } from '../../../models/index.js'
 import { environment } from '../../../environment.js'
 import { activityPubObject } from '../../../interfaces/fediverse/activityPubObject.js'
 import { logger } from '../../logger.js'
@@ -7,7 +7,7 @@ import { getPostThreadRecursive } from '../getPostThreadRecursive.js'
 import { getApObjectPrivacy } from '../getPrivacy.js'
 import { signAndAccept } from '../signAndAccept.js'
 
-async function AnnounceActivity(body: activityPubObject, remoteUser: any, user: any) {
+async function AnnounceActivity(body: activityPubObject, remoteUser: User, user: User) {
   const apObject: activityPubObject = body
   // check if posthas been procesed already
   const existingPost = await Post.findOne({

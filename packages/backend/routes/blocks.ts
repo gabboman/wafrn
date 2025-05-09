@@ -1,5 +1,5 @@
 import { Application, Response } from 'express'
-import { User, Blocks } from '../db.js'
+import { User, Blocks } from '../models/index.js'
 import { authenticateToken } from '../utils/authenticateToken.js'
 import { logger } from '../utils/logger.js'
 import AuthorizedRequest from '../interfaces/authorizedRequest.js'
@@ -11,7 +11,7 @@ export default function blockRoutes(app: Application) {
     try {
       const posterId = req.jwtData?.userId
       const userBlocker = await User.findByPk(posterId)
-      if (req.body?.userId && req.body.userId != req.jwtData?.userId) {
+      if (req.body?.userId && req.body.userId != req.jwtData?.userId && userBlocker) {
         const userToBeBlocked = await User.findByPk(req.body.userId)
         if (userToBeBlocked) {
           userToBeBlocked.addBlocker(userBlocker)
@@ -48,7 +48,9 @@ export default function blockRoutes(app: Application) {
     const posterId = req.jwtData?.userId
     if (req.body?.userId) {
       const userUnblocked = await User.findByPk(req.body.userId)
-      userUnblocked.removeBlocker(posterId)
+      if (userUnblocked) {
+        userUnblocked.removeBlocker(posterId)
+      }
       success = true
     }
 
@@ -93,7 +95,7 @@ export default function blockRoutes(app: Application) {
   })
 
   app.post('/api/unblock-user', authenticateToken, async (req: AuthorizedRequest, res: Response) => {
-    const userToBeUnblockedId = req.query.id
+    const userToBeUnblockedId = req.query.id as string
     const userUnblockerId = req.jwtData?.userId as string
     const tmp = await Blocks.destroy({
       where: {

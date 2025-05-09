@@ -1,9 +1,9 @@
-<a class="avatar-container" [routerLink]="disabled() ? undefined : ['/blog', user().url]">
+<a class="avatar-container" [blogLink]="disabled() ? undefined : user()">
   <div
     class="avatar"
     [ngStyle]="{
-      background: 'url(' + avatar + ')',
-      'background-size': 'cover',
+      'background-image': 'url(' + avatar() + ')',
+      'background-size': 'contain',
       'background-repeat': 'no-repeat',
       'background-position': 'center'
     }"

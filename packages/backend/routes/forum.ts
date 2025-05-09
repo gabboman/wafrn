@@ -2,7 +2,7 @@ import optionalAuthentication from '../utils/optionalAuthentication.js'
 import checkIpBlocked from '../utils/checkIpBlocked.js'
 import AuthorizedRequest from '../interfaces/authorizedRequest.js'
 import { Application, Request, Response } from 'express'
-import { Post, QuestionPoll, QuestionPollAnswer, QuestionPollQuestion, User, sequelize } from '../db.js'
+import { Post, QuestionPoll, QuestionPollAnswer, QuestionPollQuestion, User, sequelize } from '../models/index.js'
 import { Op, QueryTypes } from 'sequelize'
 import {
   getBookmarks,
@@ -11,10 +11,10 @@ import {
   getMedias,
   getMentionedUserIds,
   getQuotes,
-  getTags,
-  getUnjointedPosts
+  getTags
 } from '../utils/baseQueryNew.js'
 import getFollowedsIds from '../utils/cacheGetters/getFollowedsIds.js'
+import { Privacy } from '../models/post.js'
 
 export default function forumRoutes(app: Application) {
   app.get('/api/forum/:id', optionalAuthentication, async (req: AuthorizedRequest, res: Response) => {
@@ -41,21 +41,23 @@ export default function forumRoutes(app: Application) {
             [Op.in]: [...new Set(postIds.concat([postId]))]
           },
           privacy: {
-            [Op.ne]: 10
+            [Op.ne]: Privacy.DirectMessage
           },
           [Op.or]: [
             {
               userId: userId
             },
             {
-              privacy: 1,
+              privacy: Privacy.FollowersOnly,
               userId: {
                 [Op.in]: await getFollowedsIds(userId, false)
               }
             },
             {
               privacy: {
-                [Op.in]: req.jwtData?.userId ? [0, 2, 3] : [0, 2]
+                [Op.in]: req.jwtData?.userId
+                  ? [Privacy.Public, Privacy.LocalOnly, Privacy.Unlisted]
+                  : [Privacy.Public, Privacy.LocalOnly]
               }
             }
           ]

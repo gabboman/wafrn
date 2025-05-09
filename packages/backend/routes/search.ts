@@ -1,7 +1,7 @@
 import { Application, Response } from 'express'
 import { Op, Sequelize } from 'sequelize'
-import { Emoji, Post, PostTag, User, UserEmojiRelation } from '../db.js'
-import { sequelize } from '../db.js'
+import { Emoji, Post, PostTag, User, UserEmojiRelation } from '../models/index.js'
+import { sequelize } from '../models/index.js'
 
 import getStartScrollParam from '../utils/getStartScrollParam.js'
 import getPosstGroupDetails from '../utils/getPostGroupDetails.js'
@@ -21,6 +21,7 @@ import { getUserEmojis } from '../utils/cacheGetters/getUserEmojis.js'
 import { getAtprotoUser } from '../atproto/utils/getAtprotoUser.js'
 import { getAtProtoThread } from '../atproto/utils/getAtProtoThread.js'
 import { logger } from '../utils/logger.js'
+import { Privacy } from '../models/post.js'
 export default function searchRoutes(app: Application) {
   app.get('/api/v2/search/', authenticateToken, async (req: AuthorizedRequest, res: Response) => {
     // const success = false;
@@ -40,9 +41,7 @@ export default function searchRoutes(app: Application) {
     if (searchTerm) {
       const page = Number(req?.query.page) || 0
       let taggedPostsId = PostTag.findAll({
-        where: {
-          literal: sequelize.where(sequelize.fn('lower', sequelize.col('tagName')), searchTerm.toLowerCase())
-        },
+        where: sequelize.where(sequelize.fn('lower', sequelize.col('tagName')), searchTerm.toLowerCase()),
         include: [
           {
             model: Post,
@@ -51,13 +50,13 @@ export default function searchRoutes(app: Application) {
             where: {
               [Op.or]: [
                 {
-                  privacy: { [Op.in]: [0, 2] }
+                  privacy: { [Op.in]: [Privacy.Public, Privacy.LocalOnly] }
                 },
                 {
                   userId: {
                     [Op.in]: (await getFollowedsIds(posterId)).concat([posterId])
                   },
-                  privacy: 1
+                  privacy: Privacy.FollowersOnly
                 }
               ]
             }
@@ -74,15 +73,14 @@ export default function searchRoutes(app: Application) {
         offset: page * environment.postsPerPage,
         where: {
           activated: true,
+          hideProfileNotLoggedIn: false,
           [Op.and]: [
             {
               url: {
                 [Op.notLike]: '@%'
               }
             },
-            {
-              literal: sequelize.literal(`lower("url") LIKE ${sequelize.escape('%' + searchTerm + '%')}`)
-            }
+            sequelize.literal(`lower("url") LIKE ${sequelize.escape('%' + searchTerm + '%')}`)
           ]
         },
         attributes: ['name', 'url', 'avatar', 'id', 'remoteId', 'description']
@@ -97,11 +95,8 @@ export default function searchRoutes(app: Application) {
             [Op.notIn]: await getallBlockedServers()
           },
           banned: false,
-          [Op.or]: [
-            {
-              literal: sequelize.literal(`lower("url") LIKE ${sequelize.escape('%' + searchTerm + '%')}`)
-            }
-          ]
+          hideProfileNotLoggedIn: false,
+          [Op.or]: [sequelize.literal(`lower("url") LIKE ${sequelize.escape('%' + searchTerm + '%')}`)]
         },
         attributes: ['name', 'url', 'avatar', 'id', 'remoteId', 'description']
       })
@@ -133,7 +128,7 @@ export default function searchRoutes(app: Application) {
               let bskyUri = profileAndPost[1]
               if (!bskyProfile.startsWith('did:')) {
                 let profileToGet = await getAtprotoUser(`${bskyProfile}`, usr)
-                bskyProfile = profileToGet.bskyDid
+                if (profileToGet && profileToGet.bskyDid) bskyProfile = profileToGet.bskyDid
               }
               const uri = `at://${bskyProfile}/app.bsky.feed.post/${bskyUri}`
 
@@ -150,9 +145,7 @@ export default function searchRoutes(app: Application) {
           } else {
             // fedi post
             const existingPost = await Post.findOne({
-              where: {
-                literal: sequelize.where(sequelize.fn('lower', sequelize.col('remotePostId')), searchTerm.toLowerCase())
-              }
+              where: sequelize.where(sequelize.fn('lower', sequelize.col('remotePostId')), searchTerm.toLowerCase())
             })
             if (existingPost) {
               // We have the post. We ask for an update of it!
@@ -171,11 +164,11 @@ export default function searchRoutes(app: Application) {
       if (remotePost && remotePost.id) {
         postIds.push(remotePost.id)
       }
-      taggedPostsId = await taggedPostsId
-      postIds = postIds.concat(taggedPostsId.map((elem: any) => elem.postId))
+      let taggedPostsIdValues = await taggedPostsId
+      postIds = postIds.concat(taggedPostsIdValues.map((elem: any) => elem.postId))
     }
 
-    const posts = await getUnjointedPosts(postIds, posterId)
+    const posts = await getUnjointedPosts(postIds, posterId, true)
     remoteUsers = await remoteUsers
     localUsers = await localUsers
     users = await users
@@ -217,7 +210,7 @@ export default function searchRoutes(app: Application) {
       limit: 20,
       where: {
         activated: true,
-        literal: sequelize.literal(`lower("url") LIKE ${sequelize.escape('@%' + searchTerm + '%')}`),
+        [Op.and]: [sequelize.literal(`lower("url") LIKE ${sequelize.escape('@%' + searchTerm + '%')}`)],
         banned: {
           [Op.ne]: true
         },
@@ -237,7 +230,7 @@ export default function searchRoutes(app: Application) {
       attributes: ['url', 'avatar', 'id', 'remoteId']
     })
 
-    let localUsers = User.findAll({
+    let localUsers: any = User.findAll({
       limit: 20,
       where: {
         activated: true,
@@ -247,10 +240,7 @@ export default function searchRoutes(app: Application) {
               [Op.notLike]: '@%'
             }
           },
-
-          {
-            literal: sequelize.literal(`lower("url") LIKE ${sequelize.escape('%' + searchTerm + '%')}`)
-          }
+          sequelize.literal(`lower("url") LIKE ${sequelize.escape('%' + searchTerm + '%')}`)
         ]
       },
       attributes: ['url', 'avatar', 'id', 'remoteId']

@@ -1,11 +1,11 @@
-import { Post } from '../../../db.js'
+import { Post, User } from '../../../models/index.js'
 import { activityPubObject } from '../../../interfaces/fediverse/activityPubObject.js'
 import { logger } from '../../logger.js'
 import { getPostThreadRecursive } from '../getPostThreadRecursive.js'
 import { getRemoteActor } from '../getRemoteActor.js'
 import { signAndAccept } from '../signAndAccept.js'
 
-async function UpdateActivity(body: activityPubObject, remoteUser: any, user: any) {
+async function UpdateActivity(body: activityPubObject, remoteUser: User, user: User) {
   const apObject: activityPubObject = body.object.id ? body.object : body
   // TODO divide this one in files too?
   switch (apObject.type) {

@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common'
-import { Component, Input, OnChanges, OnDestroy, SimpleChanges } from '@angular/core'
+import { Component, computed, input, OnChanges, OnDestroy, SimpleChanges } from '@angular/core'
 import { MatButtonModule } from '@angular/material/button'
 import { MatCardModule } from '@angular/material/card'
 import { MatDialog } from '@angular/material/dialog'
@@ -21,8 +21,6 @@ import { LoginService } from 'src/app/services/login.service'
 import { MessageService } from 'src/app/services/message.service'
 import { PostsService } from 'src/app/services/posts.service'
 import { MatTooltipModule } from '@angular/material/tooltip'
-
-import { AskDialogContentComponent } from '../ask-dialog-content/ask-dialog-content.component'
 import { EnvironmentService } from 'src/app/services/environment.service'
 import { InfoCardComponent } from '../info-card/info-card.component'
 import { faBluesky } from '@fortawesome/free-brands-svg-icons'
@@ -44,12 +42,16 @@ import { faBluesky } from '@fortawesome/free-brands-svg-icons'
 })
 export class BlogHeaderComponent implements OnChanges, OnDestroy {
   parser = new DOMParser()
-  @Input() blogDetails!: BlogDetails
-  avatarUrl = ''
+  blogDetails = input.required<BlogDetails>()
+  avatarUrl = computed<string>(() => {
+    return this.blogDetails().url.startsWith('@')
+      ? EnvironmentService.environment.externalCacheurl + encodeURIComponent(this.blogDetails().avatar)
+      : EnvironmentService.environment.externalCacheurl +
+          encodeURIComponent(EnvironmentService.environment.baseMediaUrl + this.blogDetails().avatar)
+  })
   headerUrl = ''
   userLoggedIn = false
   isMe = false
-  fediAttachment: { name: string; value: string }[] = []
   expandDownIcon = faChevronDown
   muteUserIcon = faVolumeMute
   unmuteUserIcon = faVolumeUp
@@ -62,6 +64,16 @@ export class BlogHeaderComponent implements OnChanges, OnDestroy {
   allowRemoteAsk = false
   isBlueskyUser = false
   headerHTML = ''
+
+  fediComp = computed<{ name: string; value: string }[]>(() => {
+    const fediAttachment = this.blogDetails().publicOptions.find(
+      (elem) => elem.optionName == 'fediverse.public.attachment'
+    )
+    if (fediAttachment) {
+      return JSON.parse(fediAttachment.optionValue)
+    }
+    return []
+  })
 
   constructor(
     private loginService: LoginService,
@@ -76,34 +88,24 @@ export class BlogHeaderComponent implements OnChanges, OnDestroy {
   }
   ngOnChanges(changes: SimpleChanges): void {
     if (this.blogDetails) {
-      this.avatarUrl = this.blogDetails.url.startsWith('@')
-        ? EnvironmentService.environment.externalCacheurl + encodeURIComponent(this.blogDetails.avatar)
+      this.headerUrl = this.blogDetails().url.startsWith('@')
+        ? EnvironmentService.environment.externalCacheurl + encodeURIComponent(this.blogDetails().headerImage)
         : EnvironmentService.environment.externalCacheurl +
-          encodeURIComponent(EnvironmentService.environment.baseMediaUrl + this.blogDetails.avatar)
-      this.headerUrl = this.blogDetails.url.startsWith('@')
-        ? EnvironmentService.environment.externalCacheurl + encodeURIComponent(this.blogDetails.headerImage)
-        : EnvironmentService.environment.externalCacheurl +
-          encodeURIComponent(EnvironmentService.environment.baseMediaUrl + this.blogDetails.headerImage)
-      const askLevelOption = this.blogDetails.publicOptions.find((elem) => elem.optionName == 'wafrn.public.asks')
+          encodeURIComponent(EnvironmentService.environment.baseMediaUrl + this.blogDetails().headerImage)
+      const askLevelOption = this.blogDetails().publicOptions.find((elem) => elem.optionName == 'wafrn.public.asks')
       let askLevel = askLevelOption ? parseInt(askLevelOption.optionValue) : 2
-      if (this.blogDetails.url.startsWith('@')) {
+      if (this.blogDetails().url.startsWith('@')) {
         askLevel = 3
       }
       this.allowAsk = this.loginService.checkUserLoggedIn() ? [1, 2].includes(askLevel) : askLevel == 1
-      this.allowAsk = this.allowAsk && this.loginService.getLoggedUserUUID() != this.blogDetails.id
-      this.allowRemoteAsk = askLevel != 3 && this.loginService.getLoggedUserUUID() != this.blogDetails.id
-      const fediAttachment = this.blogDetails.publicOptions.find(
-        (elem) => elem.optionName == 'fediverse.public.attachment'
-      )
-      if (fediAttachment) {
-        this.fediAttachment = JSON.parse(fediAttachment.optionValue)
-      }
-      this.isMe = this.blogDetails.id == this.loginService.getLoggedUserUUID()
+      this.allowAsk = this.allowAsk && this.loginService.getLoggedUserUUID() != this.blogDetails().id
+      this.allowRemoteAsk = askLevel != 3 && this.loginService.getLoggedUserUUID() != this.blogDetails().id
+      this.isMe = this.blogDetails().id == this.loginService.getLoggedUserUUID()
       let path = this.activatedRoute.snapshot.routeConfig?.path
       if (path && this.allowAsk && path.toLowerCase().endsWith('/ask')) {
         this.openAskDialog()
       }
-      const parsedAsHTML = this.parser.parseFromString(this.blogDetails.description, 'text/html')
+      const parsedAsHTML = this.parser.parseFromString(this.blogDetails().description, 'text/html')
       const imgs = parsedAsHTML.getElementsByTagName('img')
       Array.from(imgs).forEach((img, index) => {
         if (!img.src.startsWith(EnvironmentService.environment.externalCacheurl)) {
@@ -153,7 +155,7 @@ export class BlogHeaderComponent implements OnChanges, OnDestroy {
 
   async openAskDialog() {
     this.dialogService.open(await this.getAskDialogComponent(), {
-      data: { details: this.blogDetails },
+      data: { details: this.blogDetails() },
       width: '800px'
     })
   }

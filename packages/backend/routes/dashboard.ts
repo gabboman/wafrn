@@ -3,10 +3,9 @@
 // the MONSTER QUERY we are using now doesnt scale well on threads with lots of users
 
 import { Application, Response } from 'express'
-import { authenticateToken } from '../utils/authenticateToken.js'
 import optionalAuthentication from '../utils/optionalAuthentication.js'
 import AuthorizedRequest from '../interfaces/authorizedRequest.js'
-import { FederatedHost, Post, PostMentionsUserRelation, sequelize, User } from '../db.js'
+import { FederatedHost, Post, PostMentionsUserRelation, sequelize, User } from '../models/index.js'
 import { Op } from 'sequelize'
 import getStartScrollParam from '../utils/getStartScrollParam.js'
 import { environment } from '../environment.js'
@@ -16,6 +15,7 @@ import getBlockedIds from '../utils/cacheGetters/getBlockedIds.js'
 import { getUnjointedPosts } from '../utils/baseQueryNew.js'
 import { getMutedPosts } from '../utils/cacheGetters/getMutedPosts.js'
 import { navigationRateLimiter } from '../utils/rateLimiters.js'
+import { Privacy } from '../models/post.js'
 
 export default function dashboardRoutes(app: Application) {
   app.get(
@@ -34,7 +34,7 @@ export default function dashboardRoutes(app: Application) {
       }
 
       let whereObject: any = {
-        privacy: 0
+        privacy: Privacy.Public
       }
       switch (level) {
         case 2: {
@@ -43,9 +43,8 @@ export default function dashboardRoutes(app: Application) {
           whereObject = {
             [Op.or]: [
               {
-                //local follows privacy 0 1 2
                 privacy: {
-                  [Op.in]: [0, 1, 2, 3]
+                  [Op.in]: [Privacy.Public, Privacy.FollowersOnly, Privacy.LocalOnly]
                 },
                 userId: {
                   [Op.in]: await followedUsers
@@ -53,10 +52,16 @@ export default function dashboardRoutes(app: Application) {
               },
               {
                 privacy: {
-                  [Op.in]: req.jwtData?.userId ? [0, 2, 3] : [0] // only display public if not logged in
+                  [Op.in]: req.jwtData?.userId ? [Privacy.Public, Privacy.LocalOnly] : [Privacy.Public] // only display public if not logged in
                 },
                 userId: {
                   [Op.in]: await nonFollowedUsers
+                }
+              },
+              {
+                userId: posterId,
+                privacy: {
+                  [Op.ne]: Privacy.DirectMessage
                 }
               }
             ]
@@ -65,16 +70,16 @@ export default function dashboardRoutes(app: Application) {
         }
         case 1: {
           whereObject = {
-            privacy: { [Op.in]: [0, 1, 2, 3] },
+            privacy: { [Op.in]: [Privacy.Public, Privacy.FollowersOnly, Privacy.LocalOnly, Privacy.Unlisted] },
             userId: { [Op.in]: await getFollowedsIds(posterId) }
           }
           break
         }
         case 0: {
           whereObject = {
-            privacy: 0,
+            privacy: Privacy.Public,
             isReblog: false,
-            '$user.federatedHost.friendServer$': true
+            '$user.federatedHost.bubbleTimeline$': true
           }
           break
         }
@@ -92,7 +97,7 @@ export default function dashboardRoutes(app: Application) {
           const myPosts = await Post.findAll({
             where: {
               userId: posterId,
-              privacy: 10,
+              privacy: Privacy.DirectMessage,
               createdAt: {
                 [Op.lt]: getStartScrollParam(req)
               }
@@ -100,7 +105,7 @@ export default function dashboardRoutes(app: Application) {
           })
 
           whereObject = {
-            privacy: 10,
+            privacy: Privacy.DirectMessage,
             [Op.or]: [
               {
                 id: {

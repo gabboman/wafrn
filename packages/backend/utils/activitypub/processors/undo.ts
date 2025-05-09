@@ -1,4 +1,12 @@
-import { Blocks, EmojiReaction, Follows, Notification, Post, UserLikesPostRelations } from '../../../db.js'
+import {
+  Blocks,
+  EmojiReaction,
+  Follows,
+  Notification,
+  Post,
+  User,
+  UserLikesPostRelations
+} from '../../../models/index.js'
 import { activityPubObject } from '../../../interfaces/fediverse/activityPubObject.js'
 import { deletePostCommon } from '../../deletePost.js'
 import { logger } from '../../logger.js'
@@ -6,7 +14,7 @@ import { redisCache } from '../../redis.js'
 import { getPostThreadRecursive } from '../getPostThreadRecursive.js'
 import { signAndAccept } from '../signAndAccept.js'
 
-async function UndoActivity(body: activityPubObject, remoteUser: any, user: any) {
+async function UndoActivity(body: activityPubObject, remoteUser: User, user: User) {
   const apObject: activityPubObject = body.object?.id && body.object?.type ? body.object : body
   // TODO divide this one in files too
 
@@ -41,8 +49,8 @@ async function UndoActivity(body: activityPubObject, remoteUser: any, user: any)
         Notification.destroy({
           where: {
             notificationType: 'FOLLOW',
-            notifiedUserid: remoteFollow.followedId,
-            userId: followerId
+            notifiedUserId: remoteFollow.followedId,
+            userId: remoteFollow.followerId
           }
         })
         await remoteFollow.destroy()

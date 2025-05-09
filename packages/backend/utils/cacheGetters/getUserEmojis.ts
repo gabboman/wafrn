@@ -1,5 +1,5 @@
 import { Op } from 'sequelize'
-import { Emoji, UserEmojiRelation } from '../../db.js'
+import { Emoji, UserEmojiRelation } from '../../models/index.js'
 import { redisCache } from '../redis.js'
 
 async function getUserEmojis(id: string) {

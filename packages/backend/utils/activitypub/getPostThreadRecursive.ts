@@ -12,7 +12,7 @@ import {
   sequelize,
   Ask,
   Notification
-} from '../../db.js'
+} from '../../models/index.js'
 import { environment } from '../../environment.js'
 import { logger } from '../logger.js'
 import { getRemoteActor } from './getRemoteActor.js'
@@ -24,6 +24,7 @@ import dompurify from 'isomorphic-dompurify'
 import { Queue } from 'bullmq'
 import { bulkCreateNotifications } from '../pushNotifications.js'
 import { getDeletedUser } from '../cacheGetters/getDeletedUser.js'
+import { Privacy } from '../../models/post.js'
 
 const updateMediaDataQueue = new Queue('processRemoteMediaData', {
   connection: environment.bullmqConnection,
@@ -93,10 +94,14 @@ async function getPostThreadRecursive(
           return remotePostInDatabase
         }
       }
-      const remoteUser = await getRemoteActor(postPetition.attributedTo, user)
-      const remoteUserServerBaned = (await FederatedHost.findByPk(remoteUser.federatedHostId)).blocked
-        ? (await FederatedHost.findByPk(remoteUser.federatedHostId)).blocked
-        : false
+      // peertube: what the fuck
+      let actorUrl = postPetition.attributedTo
+      if (Array.isArray(actorUrl)) {
+        actorUrl = actorUrl[0].id
+      }
+      const remoteUser = await getRemoteActor(actorUrl, user)
+      const remoteHost = await FederatedHost.findByPk(remoteUser.federatedHostId)
+      const remoteUserServerBaned = remoteHost?.blocked ? remoteHost.blocked : false
       // HACK: some implementations (GTS IM LOOKING AT YOU) may send a single element instead of an array
       // I should had used a funciton instead of this dirty thing, BUT you see, its late. Im eepy
       // also this code is CRITICAL. A failure here is a big problem. So this hack it is
@@ -105,7 +110,7 @@ async function getPostThreadRecursive(
       const fediTags: fediverseTag[] = [
         ...new Set<fediverseTag>(
           postPetition.tag
-            ?.filter((elem: fediverseTag) => elem.type === 'Hashtag')
+            ?.filter((elem: fediverseTag) => ['Hashtag', 'WafrnHashtag'].includes(elem.type))
             .map((elem: fediverseTag) => {
               return { href: elem.href, type: elem.type, name: elem.name }
             })
@@ -122,13 +127,17 @@ async function getPostThreadRecursive(
       const privacy = getApObjectPrivacy(postPetition, remoteUser)
 
       let postTextContent = `${postPetition.content ? postPetition.content : ''}` // Fix for bridgy giving this as undefined
+      if (postPetition.type == 'Video') {
+        // peertube federation. We just add a link to the video, federating this is HELL
+        postTextContent = postTextContent + ` <a href="${postPetition.id}" target="_blank">${postPetition.id}</a>`
+      }
       if (postPetition.attachment && postPetition.attachment.length > 0 && !remoteUser.banned) {
         for await (const remoteFile of postPetition.attachment) {
           if (remoteFile.type !== 'Link') {
             const wafrnMedia = await Media.create({
               url: remoteFile.url,
               NSFW: postPetition?.sensitive,
-              userId: remoteUserServerBaned || remoteUser.banned ? (await deletedUser).id : remoteUser.id,
+              userId: remoteUserServerBaned || remoteUser.banned ? (await deletedUser)?.id : remoteUser.id,
               description: remoteFile.name,
               ipUpload: 'IMAGE_FROM_OTHER_FEDIVERSE_INSTANCE',
               mediaOrder: postPetition.attachment.indexOf(remoteFile), // could be non consecutive but its ok
@@ -165,7 +174,7 @@ async function getPostThreadRecursive(
           : '',
         createdAt: new Date(postPetition.published),
         updatedAt: createdAt,
-        userId: remoteUserServerBaned || remoteUser.banned ? (await deletedUser).id : remoteUser.id,
+        userId: remoteUserServerBaned || remoteUser.banned ? (await deletedUser)?.id : remoteUser.id,
         remotePostId: postPetition.id,
         privacy: privacy
       }
@@ -181,13 +190,7 @@ async function getPostThreadRecursive(
             if (mention.href?.indexOf(environment.frontendUrl) !== -1) {
               const username = mention.href?.substring(`${environment.frontendUrl}/fediverse/blog/`.length) as string
               mentionedUser = await User.findOne({
-                where: {
-                  [Op.or]: [
-                    {
-                      literal: sequelize.where(sequelize.fn('lower', sequelize.col('url')), username.toLowerCase())
-                    }
-                  ]
-                }
+                where: sequelize.where(sequelize.fn('lower', sequelize.col('url')), username.toLowerCase())
               })
             } else {
               mentionedUser = await getRemoteActor(mention.href, user)
@@ -234,7 +237,7 @@ async function getPostThreadRecursive(
       try {
         if (postPetition.quoteUrl) {
           const postToQuote = await getPostThreadRecursive(user, postPetition.quoteUrl)
-          if (postToQuote && postToQuote.privacy != 10) {
+          if (postToQuote && postToQuote.privacy != Privacy.DirectMessage) {
             quotes.push(postToQuote)
           }
           if (!postToQuote) {
@@ -315,17 +318,21 @@ async function getPostThreadRecursive(
   }
 }
 
-async function addTagsToPost(post: any, tags: fediverseTag[]) {
+async function addTagsToPost(post: any, originalTags: fediverseTag[]) {
+  let tags = [...originalTags]
   const res = await post.setPostTags([])
+  if (tags.some((elem) => elem.name == 'WafrnHashtag')) {
+    tags = tags.filter((elem) => elem.name == 'WafrnHashtag')
+  }
   return await PostTag.bulkCreate(
-    tags.map((elem) => {
-      if (elem.name && post.id) {
+    tags
+      .filter((elem) => elem && post && elem.name && post.id)
+      .map((elem) => {
         return {
-          tagName: elem.name.replace('#', ''),
+          tagName: elem?.name?.replace('#', ''),
           postId: post.id
         }
-      }
-    })
+      })
   )
 }
 
@@ -351,7 +358,7 @@ async function processMentions(post: any, userIds: string[]) {
       userBlockerId: {
         [Op.in]: userIds
       },
-      blockedServerId: remoteUser.federatedHostId
+      blockedServerId: remoteUser?.federatedHostId || ''
     }
   })
   const blockerIds: string[] = blocks
@@ -368,7 +375,7 @@ async function processMentions(post: any, userIds: string[]) {
     })),
     {
       postContent: post.content,
-      userUrl: remoteUser.url
+      userUrl: remoteUser?.url
     }
   )
 
@@ -390,7 +397,7 @@ async function processMentions(post: any, userIds: string[]) {
 async function processEmojis(post: any, fediEmojis: any[]) {
   let emojis: any[] = []
   let res: any
-  const emojiIds: string[] = fediEmojis.map((emoji: any) => emoji.id)
+  const emojiIds: string[] = Array.from(new Set(fediEmojis.map((emoji: any) => emoji.id)))
   const foundEmojis = await Emoji.findAll({
     where: {
       id: {

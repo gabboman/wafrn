@@ -14,10 +14,10 @@ import {
   Ask,
   Notification,
   UserEmojiRelation
-} from '../db.js'
+} from '../models/index.js'
 import { authenticateToken } from '../utils/authenticateToken.js'
 
-import { sequelize } from '../db.js'
+import { sequelize } from '../models/index.js'
 
 import getStartScrollParam from '../utils/getStartScrollParam.js'
 import getPosstGroupDetails from '../utils/getPostGroupDetails.js'
@@ -44,6 +44,7 @@ import { forceUpdateLastActive } from '../utils/forceUpdateLastActive.js'
 import { bulkCreateNotifications, createNotification } from '../utils/pushNotifications.js'
 import { getAtProtoThread } from '../atproto/utils/getAtProtoThread.js'
 import dompurify from 'isomorphic-dompurify'
+import { Privacy, PrivacyType } from '../models/post.js'
 
 const markdownConverter = new showdown.Converter({
   simplifiedAutoLink: true,
@@ -76,18 +77,16 @@ export default function postsRoutes(app: Application) {
       const userUrl = req.params?.user
       const postTitle = req.params?.title.replaceAll('-', ' ')
       const user = await User.findOne({
-        where: {
-          literal: sequelize.where(sequelize.fn('lower', sequelize.col('url')), userUrl.toLowerCase())
-        }
+        where: sequelize.where(sequelize.fn('lower', sequelize.col('url')), userUrl.toLowerCase())
       })
       if (!user) {
         res.sendStatus(404)
       } else {
         const postFound = await Post.findOne({
-          where: {
-            userId: user.id,
-            literal: sequelize.where(sequelize.fn('lower', sequelize.col('title')), postTitle.toLowerCase())
-          }
+          where: sequelize.and(
+            sequelize.where(sequelize.fn('lower', sequelize.col('title')), postTitle.toLowerCase()),
+            sequelize.where(sequelize.col('userId'), user.id)
+          )
         })
         if (postFound) {
           res.redirect('/api/v2/post/' + postFound.id)
@@ -106,29 +105,31 @@ export default function postsRoutes(app: Application) {
         const userId = req.jwtData?.userId
         const postId = req.params?.id
         if (!postId) {
-          return res.status(400).send({ success: false, errorMessage: 'No post id received' })
+          return res.status(400).send({ success: false, message: 'No post id received' })
         }
 
         const unjointedPost = await getUnjointedPosts(
           [postId],
-          userId ? userId : '00000000-0000-0000-0000-000000000000'
+          userId ? userId : '00000000-0000-0000-0000-000000000000',
+          true
         )
         const post = unjointedPost.posts[0]
         if (!post) {
-          return res.status(404).send({ success: false, errorMessage: 'Post not found' })
+          return res.status(404).send({ success: false, message: 'Post not found' })
         }
 
         const mentions = unjointedPost.mentions.map((elem: any) => elem.userMentioned)
-        const userCanSeePost = post.userId === userId || mentions.includes(userId) || post.privacy !== 10
+        const userCanSeePost =
+          post.userId === userId || mentions.includes(userId) || post.privacy !== Privacy.DirectMessage
 
         if (!userCanSeePost) {
-          return res.status(403).send({ success: false, errorMessage: 'You are not authorized to read this post' })
+          return res.status(403).send({ success: false, message: 'You are not authorized to read this post' })
         }
 
         return res.send(unjointedPost)
       } catch (err) {
         logger.error(err)
-        return res.status(500).send({ success: false, errorMessage: 'Internal server error' })
+        return res.status(500).send({ success: false, message: 'Internal server error' })
       }
     }
   )
@@ -161,21 +162,21 @@ export default function postsRoutes(app: Application) {
               as: 'descendents',
               where: {
                 privacy: {
-                  [Op.ne]: 10
+                  [Op.ne]: Privacy.DirectMessage
                 },
                 [Op.or]: [
                   {
                     userId: userId
                   },
                   {
-                    privacy: 1,
+                    privacy: Privacy.FollowersOnly,
                     userId: {
                       [Op.in]: await getFollowedsIds(userId, false)
                     }
                   },
                   {
                     privacy: {
-                      [Op.in]: [0, 2, 3]
+                      [Op.in]: [Privacy.Public, Privacy.LocalOnly, Privacy.Unlisted]
                     }
                   }
                 ]
@@ -224,7 +225,7 @@ export default function postsRoutes(app: Application) {
       }
       const blogId = blog?.id
       if (blogId) {
-        const privacyArray = [0, 2, 3]
+        const privacyArray: PrivacyType[] = [Privacy.Public, Privacy.LocalOnly, Privacy.Unlisted]
         if (
           req.jwtData?.userId === blogId ||
           (req.jwtData?.userId &&
@@ -236,7 +237,7 @@ export default function postsRoutes(app: Application) {
               }
             })))
         ) {
-          privacyArray.push(1)
+          privacyArray.push(Privacy.FollowersOnly)
         }
         const postIds = await Post.findAll({
           order: [['createdAt', 'DESC']],
@@ -252,7 +253,8 @@ export default function postsRoutes(app: Application) {
         })
         const postsByBlog = await getUnjointedPosts(
           postIds.map((post: any) => post.id),
-          req.jwtData?.userId ? req.jwtData.userId : '00000000-0000-0000-0000-000000000000'
+          req.jwtData?.userId ? req.jwtData.userId : '00000000-0000-0000-0000-000000000000',
+          true
         )
         success = true
         res.send(postsByBlog)
@@ -290,11 +292,54 @@ export default function postsRoutes(app: Application) {
           return false
         }
 
+        // we check if this is in reply to bsky if user does not have bsky enabled
+        if (!posterUser?.enableBsky && parent) {
+          if (parent.bskyUri) {
+            const parentPoster = await User.findByPk(parent.userId)
+            if (parentPoster?.url.startsWith('@')) {
+              return res.status(403).send({ success: false, message: 'You need to enable bluesky' })
+            } else {
+              // we do same check for all parents
+              const ancestorIdsQuery = await sequelize.query(
+                `SELECT "ancestorId" FROM "postsancestors" where "postsId" = '${parent.id}'`
+              )
+              const ancestorIds: string[] = ancestorIdsQuery[0].map((elem: any) => elem.ancestorId)
+              if (ancestorIds.length > 0) {
+                const ancestors = await Post.findAll({
+                  include: [
+                    {
+                      model: User,
+                      as: 'user',
+                      attributes: ['url']
+                    }
+                  ],
+                  where: {
+                    id: {
+                      [Op.in]: ancestorIds
+                    }
+                  }
+                })
+                const parentsUserUrls = ancestors.map((elem) => elem.user.url)
+                if (parentsUserUrls.some((elem) => elem.startsWith('@'))) {
+                  return res.status(403).send({ success: false, message: 'You need to enable bluesky' })
+                }
+              }
+            }
+          }
+        }
+
         // we get the privacy of the parent and quoted post. Set body privacy to the max one
-        const parentPrivacy: number = parent ? parent.privacy : 0
-        let bodyPrivacy: number = req.body.privacy ? req.body.privacy : 0
-        const quotedPostPrivacy: number = postToBeQuoted ? postToBeQuoted.privacy : 0
-        bodyPrivacy = Math.max(parentPrivacy, bodyPrivacy, quotedPostPrivacy)
+        const parentPrivacy: PrivacyType = parent ? parent.privacy : Privacy.Public
+        let bodyPrivacy: PrivacyType = req.body.privacy ? req.body.privacy : Privacy.Public
+        const quotedPostPrivacy: PrivacyType = postToBeQuoted ? postToBeQuoted.privacy : Privacy.Public
+
+        if (!Object.values(Privacy).includes(bodyPrivacy)) {
+          res.status(422)
+          res.send({ success: false, message: 'invalid privacy setting' })
+          return false
+        }
+
+        bodyPrivacy = getPostPrivacy(bodyPrivacy, parentPrivacy, quotedPostPrivacy)
         // we check that the user is not reblogging a post by someone who blocked them or the other way arround
         if (parent) {
           // we check to add user mention if bsky id
@@ -332,7 +377,7 @@ export default function postsRoutes(app: Application) {
               }
             })
             const ancestorUrls: string[] = ancestorPostsUsers.map((elem: any) => elem.url.toLowerCase())
-            if (ancestorUrls.some((elem) => elem.endsWith('threads.net'))) {
+            if (ancestorUrls.some((elem) => elem.endsWith('.threads.net'))) {
               success = false
               res.status(403)
               res.send({
@@ -397,13 +442,14 @@ export default function postsRoutes(app: Application) {
                 [Op.in]: mediaToAdd.map((media: any) => media.id)
               }
             }
-          }).then((mediasToUpdate: Array<any>) => {
+          }).then((mediasToUpdate) => {
             mediaToAdd.forEach(async (media, index) => {
               const mediaToUpdate = mediasToUpdate.find((el: any) => el.id === media.id)
               if (mediaToUpdate) {
-                mediaToUpdate.order = index
+                mediaToUpdate.mediaOrder = index
                 mediaToUpdate.description = media.description
                 mediaToUpdate.NSFW = media.NSFW
+                // POSSIBLE PERFORMANCE IMPROVEMENT: do all saves at the same time. convert this foreach into a for each
                 await mediaToUpdate.save()
               }
             })
@@ -411,7 +457,7 @@ export default function postsRoutes(app: Application) {
         }
 
         const mentionRegex = /\s@[\w-\.]+@?[\w-\.]*/gm
-        let mentionsInPost: string[] = content.match(mentionRegex)
+        let mentionsInPost: string[] | null = content.match(mentionRegex)
         if (!mentionsInPost) {
           mentionsInPost = ['']
         }
@@ -419,6 +465,9 @@ export default function postsRoutes(app: Application) {
 
         let dbFoundMentions: any[] = []
         const newMentionedUsers = req.body.mentionedUsersIds || []
+        if (postToBeQuoted) {
+          newMentionedUsers.push(postToBeQuoted.userId)
+        }
         if (mentionsInPost?.length || newMentionedUsers.length) {
           const urlsToSearch = mentionsInPost.map((elem) => {
             // local users are stored without the @, so remove it from the query param
@@ -432,9 +481,7 @@ export default function postsRoutes(app: Application) {
           dbFoundMentions = await User.findAll({
             where: {
               [Op.or]: [
-                {
-                  literal: sequelize.literal(`lower("url") IN (${urlsToSearch.join(',')})`)
-                },
+                sequelize.literal(`lower("url") IN (${urlsToSearch.join(',')})`),
                 {
                   id: {
                     [Op.in]: newMentionedUsers
@@ -454,7 +501,7 @@ export default function postsRoutes(app: Application) {
             (elem) => elem.optionName === 'wafrn.federateWithThreads' && elem.optionValue === 'true'
           )
           if (userFederatesWithThreads.length === 0) {
-            if (dbFoundMentions.some((usr: any) => usr.url.toLowerCase().endsWith('threads.net'))) {
+            if (dbFoundMentions.some((usr: any) => usr.url.toLowerCase().endsWith('.threads.net'))) {
               success = false
               res.status(403)
               res.send({
@@ -554,7 +601,7 @@ export default function postsRoutes(app: Application) {
           await createNotification(
             {
               notificationType: 'REWOOT',
-              notifiedUserId: parent?.userId,
+              notifiedUserId: parent?.userId as string,
               userId: post.userId,
               postId: parent?.id
             },
@@ -640,7 +687,9 @@ export default function postsRoutes(app: Application) {
         )
 
         post.setEmojis(emojisToAdd)
-        const inlineTags = Array.from(dompurify.sanitize(post.content, { ALLOWED_TAGS: [] }).matchAll(/#[a-z0-9_]+/g))
+        const inlineTags = Array.from(
+          dompurify.sanitize(post.content, { ALLOWED_TAGS: [] }).matchAll(/#[a-zA-Z0-9_]+/gi)
+        )
           .join(',')
           .replaceAll('#', '')
         const bodyTags = req.body.tags ? req.body.tags + ',' + inlineTags : inlineTags
@@ -667,7 +716,7 @@ export default function postsRoutes(app: Application) {
         }
         res.send(post)
         await post.save()
-        if (post.privacy.toString() !== '2') {
+        if (+post.privacy !== Privacy.LocalOnly) {
           if (req.body.idPostToEdit) {
             await federatePostHasBeenEdited(post)
           } else {
@@ -716,20 +765,22 @@ export default function postsRoutes(app: Application) {
 
   app.get('/api/loadRemoteResponses', authenticateToken, async (req: AuthorizedRequest, res: Response) => {
     try {
-      const userId = req.jwtData?.userId
-      const postToGetRepliesFromId = req.query.id
-      let remotePost = Post.findByPk(postToGetRepliesFromId)
-      let user = User.findByPk(userId)
-      await Promise.all([user, remotePost])
-      user = await user
-      remotePost = await remotePost
-      if (remotePost.remotePostId) {
+      const userId = req.jwtData?.userId as string
+      const postToGetRepliesFromId = req.query.id as string
+      let remotePostPromise = Post.findByPk(postToGetRepliesFromId)
+      let userPromise = User.findByPk(userId)
+      await Promise.all([userPromise, remotePostPromise])
+
+      let user = await userPromise
+      let remotePost = await remotePostPromise
+
+      if (remotePost?.remotePostId) {
         // fedi post
         const postPetition = await getPetitionSigned(user, remotePost.remotePostId)
         if (postPetition) {
           if (postPetition.inReplyTo && remotePost.hierarchyLevel === 1) {
             const lostParent = await getPostThreadRecursive(user, postPetition.inReplyTo)
-            await remotePost.setParent(lostParent)
+            if (lostParent) await remotePost.setParent(lostParent)
           }
           // next replies to process
           let next = postPetition.replies.first
@@ -740,7 +791,7 @@ export default function postsRoutes(app: Application) {
           }
         }
       }
-      if (remotePost.bskyUri) {
+      if (remotePost?.bskyUri) {
         await getAtProtoThread(remotePost.bskyUri, undefined, true)
       }
     } catch (error) {
@@ -748,4 +799,19 @@ export default function postsRoutes(app: Application) {
     }
     res.send({})
   })
+
+  function getPostPrivacy(
+    bodyPrivacy: PrivacyType,
+    parentPrivacy: PrivacyType,
+    quotedPostPrivacy: PrivacyType
+  ): PrivacyType {
+    let result = Math.max(parentPrivacy, bodyPrivacy, quotedPostPrivacy) as PrivacyType
+    if (
+      (Privacy.LocalOnly == result || Privacy.Unlisted == result) &&
+      (Privacy.FollowersOnly == parentPrivacy || Privacy.FollowersOnly == quotedPostPrivacy)
+    ) {
+      result = Privacy.FollowersOnly
+    }
+    return result
+  }
 }

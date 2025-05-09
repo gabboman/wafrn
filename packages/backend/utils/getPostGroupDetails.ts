@@ -1,6 +1,7 @@
 /* eslint-disable guard-for-in */
-import { Post } from '../db.js'
+import { Post } from '../models/index.js'
 import { Op } from 'sequelize'
+import { Privacy } from '../models/post.js'
 
 export default async function getPosstGroupDetails(postGroup: any[]) {
   const getPostFirstParentId = (post: any) => {
@@ -32,7 +33,7 @@ export default async function getPosstGroupDetails(postGroup: any[]) {
         attributes: ['id'],
         where: {
           privacy: {
-            [Op.ne]: 10
+            [Op.ne]: Privacy.DirectMessage
           }
         }
       }

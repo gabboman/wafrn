@@ -1,5 +1,5 @@
 import { Op } from 'sequelize'
-import { Follows } from '../../db.js'
+import { Follows } from '../../models/index.js'
 import { getAllLocalUserIds } from '../cacheGetters/getAllLocalUserIds.js'
 import { acceptRemoteFollow } from '../activitypub/acceptRemoteFollow.js'
 

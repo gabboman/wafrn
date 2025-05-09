@@ -1,5 +1,5 @@
 import { Op } from 'sequelize'
-import { FederatedHost, User } from '../../db.js'
+import { FederatedHost, User } from '../../models/index.js'
 import { removeUser } from '../activitypub/removeUser.js'
 
 async function nukeUsersFromBlockedHosts() {

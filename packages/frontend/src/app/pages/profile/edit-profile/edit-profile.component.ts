@@ -41,18 +41,29 @@ export class EditProfileComponent implements OnInit {
     asksLevel: new UntypedFormControl(2, []),
     description: new FormControl('', Validators.required),
     federateWithThreads: new FormControl(false),
+    alsoKnownAs: new FormControl(''),
     disableForceAltText: new FormControl(false),
     forceClassicLogo: new FormControl(false),
     manuallyAcceptsFollows: new FormControl(false),
+    hideFollows: new FormControl(false),
+    hideProfileNotLoggedIn: new FormControl(false),
     forceOldEditor: new FormControl(false),
     mutedWords: new FormControl(''),
     disableCW: new FormControl(false),
     forceClassicAudioPlayer: new FormControl(false),
     forceClassicVideoPlayer: new FormControl(false),
-    enableConfetti: new FormControl(false),
+    disableConfetti: new FormControl(false),
     forceClassicMediaView: new FormControl(false),
+    expandQuotes: new FormControl(false),
     defaultExploreLocal: new FormControl(false),
-    automaticalyExpandPosts: new FormControl(false)
+    automaticalyExpandPosts: new FormControl(false),
+    disableEmailNotifications: new FormControl(false),
+    showNotificationsFrom: new FormControl(1),
+    notifyMentions: new FormControl(true),
+    notifyReactions: new FormControl(true),
+    notifyQuotes: new FormControl(true),
+    notifyFollows: new FormControl(true),
+    notifyRewoots: new FormControl(true)
   })
 
   constructor(
@@ -85,6 +96,10 @@ export class EditProfileComponent implements OnInit {
       const forceOldEditor = localStorage.getItem('forceOldEditor') === 'true'
       this.editProfileForm.controls['forceOldEditor'].patchValue(forceOldEditor)
       const publicOptions = blogDetails.publicOptions
+      const alsoKnownAs = publicOptions.find((elem) => elem.optionName == 'fediverse.public.alsoKnownAs')
+      try {
+        this.editProfileForm.controls['alsoKnownAs'].patchValue(JSON.parse(alsoKnownAs?.optionValue || ''))
+      } catch (_) {}
       const askLevel = publicOptions.find((elem) => elem.optionName == 'wafrn.public.asks')
       this.editProfileForm.controls['asksLevel'].patchValue(askLevel ? parseInt(askLevel.optionValue) : 2)
       this.editProfileForm.controls['forceClassicAudioPlayer'].patchValue(
@@ -93,10 +108,11 @@ export class EditProfileComponent implements OnInit {
       this.editProfileForm.controls['forceClassicVideoPlayer'].patchValue(
         this.mediaService.checkForceClassicVideoPlayer()
       )
-      this.editProfileForm.controls['enableConfetti'].patchValue(localStorage.getItem('enableConfetti') == 'true')
+      this.editProfileForm.controls['disableConfetti'].patchValue(localStorage.getItem('disableConfetti') == 'true')
       this.editProfileForm.controls['forceClassicMediaView'].patchValue(
         localStorage.getItem('forceClassicMediaView') == 'true'
       )
+      this.editProfileForm.controls['expandQuotes'].patchValue(localStorage.getItem('expandQuotes') == 'true')
 
       this.editProfileForm.controls['defaultExploreLocal'].patchValue(
         localStorage.getItem('defaultExploreLocal') == 'true'
@@ -123,6 +139,33 @@ export class EditProfileComponent implements OnInit {
           this.fediAttachments = JSON.parse(fediAttachments.optionValue)
         } catch (error) {}
       }
+      const localStorageNotificationsFrom = localStorage.getItem('notificationsFrom')
+      if (localStorageNotificationsFrom) {
+        this.editProfileForm.controls['showNotificationsFrom'].patchValue(parseInt(localStorageNotificationsFrom))
+      }
+      const localStorageNotifyQuotes = localStorage.getItem('notifyQuotes')
+      if (localStorageNotificationsFrom) {
+        this.editProfileForm.controls['notifyQuotes'].patchValue(localStorageNotifyQuotes == 'true')
+      }
+      const localStorageNotifyMentions = localStorage.getItem('notifyMentions')
+      if (localStorageNotificationsFrom) {
+        this.editProfileForm.controls['notifyMentions'].patchValue(localStorageNotifyMentions == 'true')
+      }
+      const localStorageNotifyReactions = localStorage.getItem('notifyReactions')
+      if (localStorageNotificationsFrom) {
+        this.editProfileForm.controls['notifyReactions'].patchValue(localStorageNotifyReactions == 'true')
+      }
+
+      const localStorageNotifyFollows = localStorage.getItem('notifyFollows')
+      if (localStorageNotifyFollows) {
+        this.editProfileForm.controls['notifyFollows'].patchValue(localStorageNotifyFollows == 'true')
+      }
+
+      const localStorageNotifyRewoots = localStorage.getItem('notifyRewoots')
+      if (localStorageNotifyRewoots) {
+        this.editProfileForm.controls['notifyRewoots'].patchValue(localStorageNotifyRewoots == 'true')
+      }
+
       this.loading = false
     })
   }

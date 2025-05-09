@@ -1,6 +1,6 @@
 import { Expo, type ExpoPushErrorTicket } from 'expo-server-sdk'
 import { logger } from './logger.js'
-import { Notification, PushNotificationToken } from '../db.js'
+import { Notification, PushNotificationToken } from '../models/index.js'
 import { Queue } from 'bullmq'
 import { environment } from '../environment.js'
 import { getAllLocalUserIds } from './cacheGetters/getAllLocalUserIds.js'
@@ -79,9 +79,9 @@ export async function createNotification(notification: NotificationBody, context
     const sendNotification =
       timeDiff < 3600 * 1000
         ? sendPushNotificationQueue.add('sendPushNotification', {
-            notifications: [notification],
-            context
-          })
+          notifications: [notification],
+          context
+        })
         : null
     await Promise.all([Notification.create(notification), sendNotification])
   }
@@ -99,4 +99,32 @@ export async function handleDeliveryError(response: ExpoPushErrorTicket) {
       await deleteToken(token)
     }
   }
+}
+
+const verbMap = {
+  LIKE: 'liked',
+  REWOOT: 'rewooted',
+  MENTION: 'replied to',
+  QUOTE: 'quoted',
+  EMOJIREACT: 'reacted to'
+}
+
+export function getNotificationTitle(notification: NotificationBody, context?: NotificationContext) {
+  if (notification.notificationType === 'FOLLOW') {
+    return 'New user followed you'
+  }
+
+  if (notification.notificationType === 'EMOJIREACT' && context?.emoji) {
+    return `${context?.userUrl || 'someone'} reacted with ${context.emoji} to your post`
+  }
+
+  return `${context?.userUrl || 'someone'} ${verbMap[notification.notificationType]} your post`
+}
+
+export function getNotificationBody(notification: NotificationBody, context?: NotificationContext) {
+  if (notification.notificationType === 'FOLLOW') {
+    return context?.userUrl ? `@${context?.userUrl.replace(/^@/, '')}` : ''
+  }
+
+  return `${context?.postContent}`
 }

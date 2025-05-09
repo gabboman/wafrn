@@ -15,6 +15,7 @@ import { AvatarSmallComponent } from '../avatar-small/avatar-small.component'
 import { PostHeaderComponent } from './post-header/post-header.component'
 import { BottomReplyBarComponent } from '../bottom-reply-bar/bottom-reply-bar.component'
 import { PostRibbonComponent } from '../post-ribbon/post-ribbon.component'
+import { BlogLinkModule } from 'src/app/directives/blog-link/blog-link.module'
 
 @NgModule({
   declarations: [PostComponent],
@@ -32,9 +33,10 @@ import { PostRibbonComponent } from '../post-ribbon/post-ribbon.component'
     AvatarSmallComponent,
     PostHeaderComponent,
     BottomReplyBarComponent,
-    PostRibbonComponent
+    PostRibbonComponent,
+    BlogLinkModule
   ],
   exports: [PostComponent],
   providers: [ReportService]
 })
-export class PostModule {}
+export class PostModule { }

@@ -1,6 +1,7 @@
 import { Op } from 'sequelize'
-import { Ask, Emoji, EmojiReaction, Media, Post, PostTag, User, UserLikesPostRelations } from '../../db.js'
+import { Ask, Emoji, EmojiReaction, Media, Post, PostTag, User, UserLikesPostRelations } from '../../models/index.js'
 import { redisCache } from '../redis.js'
+import { Privacy } from '../../models/post.js';
 
 async function getPostAndUserFromPostId(postId: string): Promise<{ found: boolean; data?: any }> {
   const cacheResult = await redisCache.get('postAndUser:' + postId)
@@ -73,7 +74,7 @@ async function getPostAndUserFromPostId(postId: string): Promise<{ found: boolea
         id: postId,
         isDeleted: false,
         privacy: {
-          [Op.notIn]: [2]
+          [Op.notIn]: [Privacy.LocalOnly]
         }
       }
     })

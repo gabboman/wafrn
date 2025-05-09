@@ -1,15 +1,16 @@
-import { NgModule } from '@angular/core'
 import { CommonModule } from '@angular/common'
-import { NavigationMenuComponent } from './navigation-menu.component'
-import { RouterModule } from '@angular/router'
-import { MatSidenavModule } from '@angular/material/sidenav'
-import { MatListModule } from '@angular/material/list'
-import { MenuItemComponent } from '../menu-item/menu-item.component'
+import { NgModule } from '@angular/core'
 import { MatBadgeModule } from '@angular/material/badge'
 import { MatButtonModule } from '@angular/material/button'
-import { FontAwesomeModule } from '@fortawesome/angular-fontawesome'
 import { MatDialogModule } from '@angular/material/dialog'
+import { MatListModule } from '@angular/material/list'
+import { MatSidenavModule } from '@angular/material/sidenav'
+import { RouterModule } from '@angular/router'
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome'
 import { ColorSchemeSwitcherComponent } from '../color-scheme-switcher/color-scheme-switcher.component'
+import { MenuItemComponent } from '../menu-item/menu-item.component'
+import { SnappyRouter } from '../snappy/snappy-router.component'
+import { NavigationMenuComponent } from './navigation-menu.component'
 
 @NgModule({
   declarations: [NavigationMenuComponent],
@@ -23,8 +24,9 @@ import { ColorSchemeSwitcherComponent } from '../color-scheme-switcher/color-sch
     FontAwesomeModule,
     MatButtonModule,
     MatDialogModule,
-    ColorSchemeSwitcherComponent
+    ColorSchemeSwitcherComponent,
+    SnappyRouter
   ],
   exports: [NavigationMenuComponent]
 })
-export class NavigationMenuModule {}
+export class NavigationMenuModule { }

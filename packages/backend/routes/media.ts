@@ -1,6 +1,6 @@
 /* eslint-disable max-len */
 import { Application, Response } from 'express'
-import { Media } from '../db.js'
+import { Media } from '../models/index.js'
 import uploadHandler from '../utils/uploads.js'
 import { authenticateToken } from '../utils/authenticateToken.js'
 
@@ -81,16 +81,16 @@ export default function mediaRoutes(app: Application) {
     let success = false
     try {
       const posterId = req.jwtData?.userId
-      if (req.query?.id) {
+      if (req.query?.id && +req.query.id) {
         const mediaToUpdate = await Media.findOne({
           where: {
-            id: req.query.id,
+            id: +req.query.id,
             userId: posterId
           }
         })
         if (mediaToUpdate) {
           mediaToUpdate.NSFW = req.query.NSFW === 'true'
-          mediaToUpdate.description = req.query.description
+          mediaToUpdate.description = req.query.description as string
           await mediaToUpdate.save()
           success = true
         }

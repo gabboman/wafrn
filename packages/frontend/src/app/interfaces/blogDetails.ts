@@ -26,4 +26,7 @@ export interface BlogDetails {
   publicOptions: PublicOption[]
   postCount: number
   isBlueskyUser: boolean
+  disableEmailNotifications: boolean // do not worry the backend checks if the user asking is you or not
+  hideFollows: boolean
+  hideProfileNotLoggedIn: boolean
 }

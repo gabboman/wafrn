@@ -1,5 +1,5 @@
 import { Op } from 'sequelize'
-import { Media, Post, PostTag, User } from '../../db.js'
+import { Media, Post, PostTag, User } from '../../models/index.js'
 import { environment } from '../../environment.js'
 import { fediverseTag } from '../../interfaces/fediverse/tags.js'
 import { activityPubObject } from '../../interfaces/fediverse/activityPubObject.js'
@@ -7,6 +7,7 @@ import { emojiToAPTag } from './emojiToAPTag.js'
 import { getPostReplies } from './getPostReplies.js'
 import { getPostAndUserFromPostId } from '../cacheGetters/getPostAndUserFromPostId.js'
 import { logger } from '../logger.js'
+import { Privacy } from '../../models/post.js'
 
 async function postToJSONLD(postId: string) {
   const cacheData = await getPostAndUserFromPostId(postId)
@@ -90,13 +91,14 @@ async function postToJSONLD(postId: string) {
     })
     fediTags.push({
       type: 'WafrnHashtag',
+      href: link,
       name: tag.tagName.replaceAll('"', "'")
     })
   }
   for await (const userId of mentions) {
     const user =
       (await User.findOne({ where: { id: userId } })) ||
-      (await User.findOne({ where: { url: environment.deletedUser } }))
+      ((await User.findOne({ where: { url: environment.deletedUser } })) as User)
     const url = user.url.startsWith('@') ? user.url : `@${user.url}@${environment.instanceUrl}`
     const remoteId = user.url.startsWith('@') ? user.remoteId : `${environment.frontendUrl}/fediverse/blog/${user.url}`
     if (remoteId) {
@@ -211,9 +213,9 @@ async function postToJSONLD(postId: string) {
       actor: `${environment.frontendUrl}/fediverse/blog/${localUser.url.toLowerCase()}`,
       published: new Date(post.createdAt).toISOString(),
       to:
-        post.privacy / 1 === 10
+        post.privacy / 1 === Privacy.DirectMessage
           ? mentionedUsers
-          : post.privacy / 1 === 0
+          : post.privacy / 1 === Privacy.Public
           ? ['https://www.w3.org/ns/activitystreams#Public']
           : [stringMyFollowers],
       cc: [`${environment.frontendUrl}/fediverse/blog/${localUser.url.toLowerCase()}`, stringMyFollowers],

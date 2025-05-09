@@ -1,7 +1,7 @@
 // returns the post id
 import { getAtProtoSession } from './getAtProtoSession.js'
 import { QueryParams } from '@atproto/sync/dist/firehose/lexicons.js'
-import { Media, Notification, Post, PostMentionsUserRelation, PostTag, Quotes, User } from '../../db.js'
+import { Media, Notification, Post, PostMentionsUserRelation, PostTag, Quotes, User } from '../../models/index.js'
 import { environment } from '../../environment.js'
 import { Model, Op } from 'sequelize'
 import { PostView, ThreadViewPost } from '@atproto/api/dist/client/types/app/bsky/feed/defs.js'
@@ -12,6 +12,7 @@ import { BskyAgent, RichText } from '@atproto/api'
 import showdown from 'showdown'
 import { bulkCreateNotifications, createNotification } from '../../utils/pushNotifications.js'
 import { getAllLocalUserIds } from '../../utils/cacheGetters/getAllLocalUserIds.js'
+import { Privacy } from '../../models/post.js'
 
 const markdownConverter = new showdown.Converter({
   simplifiedAutoLink: true,
@@ -27,11 +28,11 @@ const adminUser = User.findOne({
     url: environment.adminUser
   }
 })
-const agent = environment.enableBsky ? await getAtProtoSession((await adminUser) as Model<any, any>) : undefined
+const agent = environment.enableBsky ? await getAtProtoSession((await adminUser) || undefined) : undefined
 
 async function getAtProtoThread(
   uri: string,
-  operation?: { operation: CreateOrUpdateOp; remoteUser: Model<any, any> },
+  operation?: { operation: CreateOrUpdateOp; remoteUser: User },
   forceUpdate?: boolean
 ): Promise<string | undefined> {
   if (operation) {
@@ -43,29 +44,30 @@ async function getAtProtoThread(
     if (postExisting) {
       return postExisting.id
     } else {
+      let record = operation.operation.record as any
       const postObject: PostView = {
-        record: operation.operation.record,
+        record: record,
         cid: operation.operation.cid,
         uri: uri,
-        labels: operation.operation.record.labels ? operation.operation.record.labels.values : [],
+        labels: record.labels ? record.labels.values : [],
         indexedAt: new Date().toISOString(),
         author: {
-          did: operation.remoteUser.bskyDid,
+          did: operation.remoteUser.bskyDid as string,
           handle: operation.remoteUser.url.split('@')[1],
           displayName: operation.remoteUser.name
         }
       }
-      if (postObject.record.reply) {
+      if (record.reply) {
         const parentFound = await Post.findOne({
           where: {
-            bskyUri: postObject.record.reply.parent.uri
+            bskyUri: record.reply.parent.uri
           }
         })
         if (parentFound) {
           return (await processSinglePost(postObject, parentFound.id)) as string
         } else {
           const thread = await getPostThreadSafe(agent, {
-            uri: postObject.record.reply.parent.uri,
+            uri: record.reply.parent.uri,
             depth: 0,
             parentHeight: 1000
           })
@@ -150,13 +152,12 @@ async function processSinglePost(
       return existingPost.id
     }
   }
-  const postCreator = await getAtprotoUser(post.author.did, (await adminUser) as Model<any, any>, post.author)
+  const postCreator = await getAtprotoUser(post.author.did, (await adminUser) as User, post.author)
   if (!postCreator || !post) {
-    const usr = postCreator
-      ? postCreator
-      : ((await User.findOne({ where: { url: environment.deletedUser } })) as Model<any, any>)
+    const usr = postCreator ? postCreator : await User.findOne({ where: { url: environment.deletedUser } })
+
     const invalidPost = await Post.create({
-      userId: usr.id,
+      userId: usr?.id,
       content: `Failed to get atproto post`,
       parentId: parentId
     })
@@ -166,13 +167,14 @@ async function processSinglePost(
     const medias = getPostMedias(post)
     let tags: string[] = []
     let mentions: string[] = []
-    let postText = post.record.text
-    if (post.record.facets && post.record.facets.length > 0 && agent) {
+    let record = post.record as any
+    let postText = record.text
+    if (record.facets && record.facets.length > 0 && agent) {
       // lets get mentions
-      const mentionedDids = post.record.facets
-        .flatMap((elem) => elem.features)
-        .map((elem) => elem.did)
-        .filter((elem) => elem)
+      const mentionedDids = record.facets
+        .flatMap((elem: any) => elem.features)
+        .map((elem: any) => elem.did)
+        .filter((elem: any) => elem)
       if (mentionedDids && mentionedDids.length > 0) {
         const mentionedUsers = await User.findAll({
           where: {
@@ -191,11 +193,23 @@ async function processSinglePost(
       let text = ''
       for (const segment of rt.segments()) {
         if (segment.isLink()) {
-          text += `<a href="${segment.link?.uri}" target="_blank">${segment.text}</a>`
+          let linkOfSegment = segment.link?.uri
+          if (linkOfSegment) {
+            linkOfSegment = linkOfSegment.substring(0, linkOfSegment.length - 2)
+            const links: string[] = medias
+              .filter((elem: any) => elem.mediaType == 'text/html')
+              .map((elem: any) => elem.url)
+            let result = links.find((elem) => elem.startsWith(linkOfSegment as string))
+            linkOfSegment = result ? result : linkOfSegment
+          }
+          text += `<a href="${linkOfSegment}" target="_blank">${linkOfSegment}</a>`
         } else if (segment.isMention()) {
           text += `<a href="${environment.frontendUrl}/blog/${segment.mention?.did}" target="_blank">${segment.text}</a>`
         } else if (segment.isTag()) {
-          text += `<a href="${environment.frontendUrl}/search/${segment.text}" target="_blank">${segment.text}</a>`
+          text += `<a href="${environment.frontendUrl}/dashboard/search/${segment.text.substring(1)}" target="_blank">${
+            segment.text
+          }</a>`
+          tags.push(segment.text.substring(1))
         } else {
           text += segment.text
         }
@@ -208,8 +222,8 @@ async function processSinglePost(
       bskyCid: post.cid,
       bskyUri: post.uri,
       content: postText,
-      createdAt: new Date(post.record.createdAt),
-      privacy: 0,
+      createdAt: new Date((post.record as any).createdAt),
+      privacy: Privacy.Public,
       parentId: parentId,
       content_warning: getPostLabels(post)
     }
@@ -302,25 +316,27 @@ async function processSinglePost(
       if (quotedPostUri) {
         const quotedPostId = await getAtProtoThread(quotedPostUri)
         if (quotedPostId) {
-          const quotedPost = (await Post.findByPk(quotedPostId)) as Model<any, any>
-          await createNotification(
-            {
-              notificationType: 'QUOTE',
-              notifiedUserId: quotedPost.userId,
-              userId: postToProcess.userId,
-              postId: postToProcess.id
-            },
-            {
-              postContent: postToProcess.content,
-              userUrl: postCreator?.url
-            }
-          )
-          await Quotes.findOrCreate({
-            where: {
-              quoterPostId: postToProcess.id,
-              quotedPostId: quotedPostId
-            }
-          })
+          const quotedPost = await Post.findByPk(quotedPostId)
+          if (quotedPost) {
+            await createNotification(
+              {
+                notificationType: 'QUOTE',
+                notifiedUserId: quotedPost.userId,
+                userId: postToProcess.userId,
+                postId: postToProcess.id
+              },
+              {
+                postContent: postToProcess.content,
+                userUrl: postCreator?.url
+              }
+            )
+            await Quotes.findOrCreate({
+              where: {
+                quoterPostId: postToProcess.id,
+                quotedPostId: quotedPostId
+              }
+            })
+          }
         }
       }
     }
@@ -330,8 +346,8 @@ async function processSinglePost(
 }
 
 function getPostMedias(post: PostView) {
-  let res = []
-  const embed = post.record.embed
+  let res: any = []
+  const embed = (post.record as any).embed
   if (embed) {
     if (embed.external) {
       res = res.concat([
@@ -359,7 +375,7 @@ function getPostMedias(post: PostView) {
       } else {
         const thingToProcess = embed.images ? embed.images : embed.media.images
         if (thingToProcess) {
-          const toConcat = thingToProcess.map((media, index) => {
+          const toConcat = thingToProcess.map((media: any, index: any) => {
             const cid = media.image.ref['$link'] ? media.image.ref['$link'] : media.image.ref.toString()
             const did = post.author.did
             return {
@@ -402,7 +418,7 @@ function getPostMedias(post: PostView) {
 
 function getQuotedPostUri(post: PostView): string | undefined {
   let res: string | undefined = undefined
-  const embed = post.record.embed
+  const embed = (post.record as any).embed
   if (embed && ['app.bsky.embed.record'].includes(embed['$type'])) {
     res = embed.record.uri
   }

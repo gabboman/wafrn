@@ -1,8 +1,8 @@
-import { Emoji, EmojiCollection } from '../../db.js'
+import { Emoji, EmojiCollection } from '../../models/index.js'
 import { redisCache } from '../redis.js'
 
 async function getAvaiableEmojisCache(): Promise<Array<string>> {
-  let res: string[] = []
+  let res: any[] = []
   const cacheResult = await redisCache.get('avaiableEmojis')
   if (cacheResult) {
     res = JSON.parse(cacheResult)

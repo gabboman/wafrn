@@ -1,0 +1,7 @@
+<div class="p-1 emojireact-overlay">
+  <div class="emojireact-overlay-header">
+    <p class="text-xs"><i>Mastodon does not support emoji reactions yet</i></p>
+    <button title="Close" mat-flat-button (click)="closeDialog()">X</button>
+  </div>
+  <app-emoji-collections (emoji)="reactToPost($event)"></app-emoji-collections>
+</div>

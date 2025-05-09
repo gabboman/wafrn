@@ -1,7 +1,7 @@
 import { Op } from 'sequelize'
 import getFollowedsIds from './getFollowedsIds.js'
 import getBlockedIds from './getBlockedIds.js'
-import { User } from '../../db.js'
+import { User } from '../../models/index.js'
 
 export default async function getNonFollowedLocalUsersIds(userId: string): Promise<string[]> {
   // TODO If we wanted to add cache to this, we would need to CLEAR LOCAL CACHE when registering a new user.
@@ -18,6 +18,10 @@ export default async function getNonFollowedLocalUsersIds(userId: string): Promi
         email: {
           [Op.ne]: null
         },
+        url: {
+          [Op.notLike]: '@%'
+        },
+
         banned: {
           [Op.ne]: true
         }

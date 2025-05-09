@@ -1,5 +1,5 @@
 import { Job, Queue, QueueEvents } from 'bullmq'
-import { sequelize, User } from '../../db.js'
+import { sequelize, User } from '../../models/index.js'
 import { environment } from '../../environment.js'
 
 import { logger } from '../logger.js'
@@ -24,16 +24,14 @@ const queueEvents = new QueueEvents('getRemoteActorId', {
 async function getRemoteActor(actorUrl: string, user: any, forceUpdate = false): Promise<any> {
   let remoteUser
   if (!actorUrl) {
-    return await getDeletedUser();
+    return await getDeletedUser()
   }
   try {
     // we check its a string. A little bit dirty but could be worse
     if (actorUrl.toLowerCase().startsWith(environment.frontendUrl + '/fediverse/blog/')) {
       const urlToSearch = actorUrl.split(environment.frontendUrl + '/fediverse/blog/')[1].toLowerCase()
       return User.findOne({
-        where: {
-          literal: sequelize.where(sequelize.fn('lower', sequelize.col('url')), urlToSearch.toLowerCase())
-        }
+        where: sequelize.where(sequelize.fn('lower', sequelize.col('url')), urlToSearch.toLowerCase())
       })
     }
     let userId = await getUserIdFromRemoteId(actorUrl)

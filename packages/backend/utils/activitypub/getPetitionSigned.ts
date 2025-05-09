@@ -2,7 +2,7 @@ import { createHash, createSign } from 'node:crypto'
 import { environment } from '../../environment.js'
 import axios from 'axios'
 import { logger } from '../logger.js'
-import { User } from '../../db.js'
+import { User } from '../../models/index.js'
 import { removeUser } from './removeUser.js'
 import { Op } from 'sequelize'
 

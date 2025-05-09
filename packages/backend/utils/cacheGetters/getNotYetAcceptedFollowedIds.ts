@@ -1,5 +1,5 @@
 import { Op } from 'sequelize'
-import { Follows, User } from '../../db.js'
+import { Follows, User } from '../../models/index.js'
 import { redisCache } from '../redis.js'
 
 async function getNotYetAcceptedFollowedids(userId: string): Promise<Array<string>> {

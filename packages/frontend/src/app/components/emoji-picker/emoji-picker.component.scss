@@ -1,0 +1,27 @@
+$narrow: 800px;
+.emojireact-overlay-header {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.emojireact-overlay {
+  height: 100%;
+  overflow: hidden;
+  overscroll-behavior: contain;
+}
+:host {
+  width: 50vw;
+  display: block;
+  padding: 8px 16px;
+  overflow-x: hidden;
+  overflow-y: hidden;
+  background-color: var(--mat-sys-surface-container-high);
+  border-radius: var(--mat-sys-corner-small);
+  box-shadow: var(--mat-sys-level3);
+  overscroll-behavior: contain;
+  @media (max-width: $narrow) {
+    width: 100vw;
+    height: 100vh;
+  }
+}

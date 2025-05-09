@@ -24,7 +24,7 @@ export class LoginService {
     private postsService: PostsService,
     private messagesService: MessageService,
     private translate: TranslateService
-  ) { }
+  ) {}
 
   checkUserLoggedIn(): boolean {
     return this.jwt.tokenValid()
@@ -39,8 +39,8 @@ export class LoginService {
       if (petition.success) {
         localStorage.setItem('authToken', petition.token)
         if (petition.mfaRequired) {
-          console.log("MFA Route")
-          success = true;
+          console.log('MFA Route')
+          success = true
           this.router.navigate(['/login/mfa'])
         } else {
           await this.handleSuccessfulLogin()
@@ -54,7 +54,7 @@ export class LoginService {
   }
 
   async logInMfa(loginMfaForm: UntypedFormGroup): Promise<boolean> {
-    let success = false;
+    let success = false
     try {
       const petition: any = await this.http
         .post(`${EnvironmentService.environment.baseUrl}/login/mfa`, loginMfaForm.value)
@@ -144,11 +144,9 @@ export class LoginService {
   }
 
   async getUserMfaList() {
-    const response: any = await this.http
-      .get(`${EnvironmentService.environment.baseUrl}/user/mfa`)
-      .toPromise()
+    const response: any = await this.http.get(`${EnvironmentService.environment.baseUrl}/user/mfa`).toPromise()
     if (response?.success) {
-      return response.mfa;
+      return response.mfa
     }
     this.translate.get('profile.security.mfa.errorMessageGeneric').subscribe((res: string) => {
       this.messagesService.add({
@@ -156,7 +154,7 @@ export class LoginService {
         summary: res
       })
     })
-    return false;
+    return false
   }
 
   async deleteMfa(mfaId: string) {
@@ -170,7 +168,7 @@ export class LoginService {
           summary: res
         })
       })
-      return true;
+      return true
     } else {
       this.translate.get('profile.security.mfa.errorMessageGeneric').subscribe((res: string) => {
         this.messagesService.add({
@@ -179,7 +177,7 @@ export class LoginService {
         })
       })
     }
-    return false;
+    return false
   }
 
   async createNewMfa(mfaForm: UntypedFormGroup): Promise<any> {
@@ -187,7 +185,7 @@ export class LoginService {
       .post(`${EnvironmentService.environment.baseUrl}/user/mfa`, mfaForm.value)
       .toPromise()
     if (response?.success && response?.mfa?.id) {
-      return response.mfa;
+      return response.mfa
     } else {
       this.translate.get('profile.security.mfa.errorMessageGeneric').subscribe((res: string) => {
         this.messagesService.add({
@@ -196,7 +194,7 @@ export class LoginService {
         })
       })
     }
-    return false;
+    return false
   }
 
   async verifyMfa(mfaId: string, mfaVerifyForm: UntypedFormGroup) {
@@ -210,7 +208,7 @@ export class LoginService {
           summary: res
         })
       })
-      return true;
+      return true
     } else {
       this.translate.get('profile.security.mfa.verifyFailed').subscribe((res: string) => {
         this.messagesService.add({
@@ -219,7 +217,7 @@ export class LoginService {
         })
       })
     }
-    return false;
+    return false
   }
 
   async updateProfile(updateProfileForm: any, img: File | undefined, headerImg: File | undefined): Promise<boolean> {
@@ -237,19 +235,38 @@ export class LoginService {
       disableCW: 'wafrn.disableCW',
       forceClassicVideoPlayer: 'wafrn.forceClassicVideoPlayer',
       forceClassicAudioPlayer: 'wafrn.forceClassicAudioPlayer',
-      enableConfetti: 'wafrn.enableConfetti',
+      disableConfetti: 'wafrn.disableConfetti',
       forceClassicMediaView: 'wafrn.forceClassicMediaView',
+      expandQuotes: 'wafrn.expandQuotes',
       attachments: 'fediverse.public.attachment',
-      defaultExploreLocal: 'wafrn.defaultExploreLocal'
+      alsoKnownAs: 'fediverse.public.alsoKnownAs',
+      defaultExploreLocal: 'wafrn.defaultExploreLocal',
+      showNotificationsFrom: 'wafrn.notificationsFrom',
+      notifyMentions: 'wafrn.notifyMentions',
+      notifyReactions: 'wafrn.notifyReactions',
+      notifyQuotes: 'wafrn.notifyQuotes',
+      notifyFollows: 'wafrn.notifyFollows',
+      notifyRewoots: 'wafrn.notifyRewoots'
     }
 
     try {
-      const { name, description, manuallyAcceptsFollows, ...form } = updateProfileForm
+      const {
+        hideProfileNotLoggedIn,
+        hideFollows,
+        name,
+        description,
+        manuallyAcceptsFollows,
+        disableEmailNotifications,
+        ...form
+      } = updateProfileForm
 
       const payload = this.utils.objectToFormData({
         name,
         description,
-        manuallyAcceptsFollows
+        manuallyAcceptsFollows,
+        disableEmailNotifications,
+        hideFollows,
+        hideProfileNotLoggedIn
       })
 
       const options = []
@@ -269,7 +286,6 @@ export class LoginService {
       if (headerImg) {
         payload.append('headerImage', headerImg)
       }
-
       const petition: any = await firstValueFrom(
         this.http.post(`${EnvironmentService.environment.baseUrl}/editProfile`, payload)
       )

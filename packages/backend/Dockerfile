@@ -53,6 +53,7 @@ ARG BLOCKED_IPS
 ARG REVIEW_REGISTRATIONS
 ARG IGNORE_BLOCK_HOSTS
 
+ARG WEBPUSH_EMAIL
 ARG WEBPUSH_PRIVATE
 ARG WEBPUSH_PUBLIC
 ARG FRONTEND_LOGO
@@ -78,6 +79,8 @@ COPY environment.example.ts environment.ts
 # use sed to replace the environment variables in the environment.ts file
 RUN perl -pi -e 's/\$\{\{([_A-Z]+):-(.*)\}\}/$ENV{$1}||$2/ge' environment.ts && \
   perl -pi -e 's/\$\{\{([_A-Z]+)\}\}/$ENV{$1}/g' environment.ts
+
+RUN npm run type-check
 
 # expose port from environment.ts
 EXPOSE ${PORT}

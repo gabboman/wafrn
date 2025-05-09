@@ -1,6 +1,6 @@
 import { Firehose } from '@skyware/firehose'
 import { getCacheAtDids } from './atproto/cache/getCacheAtDids.js'
-import { Queue, Worker } from 'bullmq'
+import { Job, Queue, Worker } from 'bullmq'
 import { environment } from './environment.js'
 import { checkCommitMentions } from './atproto/utils/checkCommitMentions.js'
 import { logger } from './utils/logger.js'

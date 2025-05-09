@@ -1,6 +1,7 @@
 import { Op } from 'sequelize'
 import {
   Ask,
+  Blocks,
   Emoji,
   EmojiReaction,
   FederatedHost,
@@ -17,11 +18,12 @@ import {
   UserBookmarkedPosts,
   UserEmojiRelation,
   UserLikesPostRelations
-} from '../db.js'
+} from '../models/index.js'
 import getPosstGroupDetails from './getPostGroupDetails.js'
 import getFollowedsIds from './cacheGetters/getFollowedsIds.js'
 import { Queue } from 'bullmq'
 import { environment } from '../environment.js'
+import { Privacy } from '../models/post.js'
 
 const updateMediaDataQueue = new Queue('processRemoteMediaData', {
   connection: environment.bullmqConnection,
@@ -36,9 +38,7 @@ const updateMediaDataQueue = new Queue('processRemoteMediaData', {
   }
 })
 
-async function getQuotes(
-  postIds: string[]
-): Promise<{ quoterPostId: string; quotedPostId: string; createdAt: Date }[]> {
+async function getQuotes(postIds: string[]): Promise<Quotes[]> {
   return await Quotes.findAll({
     where: {
       quoterPostId: {
@@ -138,12 +138,12 @@ async function getBookmarks(postIds: string[], userId: string) {
 }
 
 async function getEmojis(input: { userIds: string[]; postIds: string[] }): Promise<{
-  userEmojiRelation: any[]
-  postEmojiRelation: any[]
-  postEmojiReactions: any[]
-  emojis: []
+  userEmojiRelation: UserEmojiRelation[]
+  postEmojiRelation: PostEmojiRelations[]
+  postEmojiReactions: EmojiReaction[]
+  emojis: Emoji[]
 }> {
-  let postEmojisIds = PostEmojiRelations.findAll({
+  let postEmojisIdsPromise = PostEmojiRelations.findAll({
     attributes: ['emojiId', 'postId'],
     where: {
       postId: {
@@ -152,7 +152,7 @@ async function getEmojis(input: { userIds: string[]; postIds: string[] }): Promi
     }
   })
 
-  let postEmojiReactions = EmojiReaction.findAll({
+  let postEmojiReactionsPromise = EmojiReaction.findAll({
     attributes: ['emojiId', 'postId', 'userId', 'content'],
     where: {
       postId: {
@@ -161,7 +161,7 @@ async function getEmojis(input: { userIds: string[]; postIds: string[] }): Promi
     }
   })
 
-  let userEmojiId = UserEmojiRelation.findAll({
+  let userEmojiIdPromise = UserEmojiRelation.findAll({
     attributes: ['emojiId', 'userId'],
     where: {
       userId: {
@@ -170,19 +170,19 @@ async function getEmojis(input: { userIds: string[]; postIds: string[] }): Promi
     }
   })
 
-  await Promise.all([postEmojisIds, userEmojiId, postEmojiReactions])
-  postEmojisIds = await postEmojisIds
-  userEmojiId = await userEmojiId
-  postEmojiReactions = await postEmojiReactions
+  await Promise.all([postEmojisIdsPromise, userEmojiIdPromise, postEmojiReactionsPromise])
+  let postEmojisIds = await postEmojisIdsPromise
+  let userEmojiId = await userEmojiIdPromise
+  let postEmojiReactions = await postEmojiReactionsPromise
 
-  const emojiIds = []
+  const emojiIds: string[] = ([] as string[])
     .concat(postEmojisIds.map((elem: any) => elem.emojiId))
     .concat(userEmojiId.map((elem: any) => elem.emojiId))
     .concat(postEmojiReactions.map((reaction: any) => reaction.emojiId))
   return {
-    userEmojiRelation: await userEmojiId,
-    postEmojiRelation: await postEmojisIds,
-    postEmojiReactions: await postEmojiReactions,
+    userEmojiRelation: userEmojiId,
+    postEmojiRelation: postEmojisIds,
+    postEmojiReactions: postEmojiReactions,
     emojis: await Emoji.findAll({
       attributes: ['id', 'url', 'external', 'name'],
       where: {
@@ -194,7 +194,7 @@ async function getEmojis(input: { userIds: string[]; postIds: string[] }): Promi
   }
 }
 
-async function getUnjointedPosts(postIdsInput: string[], posterId: string) {
+async function getUnjointedPosts(postIdsInput: string[], posterId: string, doNotFullyHide = false) {
   // we need a list of all the userId we just got from the post
   let userIds: string[] = []
   let postIds: string[] = []
@@ -304,18 +304,36 @@ async function getUnjointedPosts(postIdsInput: string[], posterId: string) {
   })
   const postWithNotes = getPosstGroupDetails(posts)
   await Promise.all([emojis, users, polls, medias, tags, postWithNotes])
-  const hostsIds = (await users).filter((elem) => elem.federatedHostId).map((elem) => federatedHostId)
+  const hostsIds = (await users).filter((elem) => elem.federatedHostId).map((elem) => elem.federatedHostId)
   const blockedHosts = await FederatedHost.findAll({
     where: {
       id: {
-        [Op.in]: hostsIds
+        [Op.in]: hostsIds as string[]
       },
       blocked: true
     }
   })
   const blockedHostsIds = blockedHosts.map((elem) => elem.id)
+  let blockedUsersSet: Set<string> = new Set()
+  const blockedUsersQuery = await Blocks.findAll({
+    where: {
+      [Op.or]: [
+        {
+          blockerId: posterId
+        },
+        {
+          blockedId: posterId
+        }
+      ]
+    }
+  })
+  for (const block of blockedUsersQuery) {
+    blockedUsersSet.add(block.blockedId)
+    blockedUsersSet.add(block.blockerId)
+  }
+  blockedUsersSet.delete(posterId)
   const bannedUserIds = (await users)
-    .filter((elem) => elem.banned || blockedHostsIds.includes(elem.federatedHostId))
+    .filter((elem) => elem.banned || (elem.federatedHostId && blockedHostsIds.includes(elem.federatedHostId)))
     .map((elem) => elem.id)
   const usersFollowedByPoster = await getFollowedsIds(posterId)
   const tagsAwaited = await tags
@@ -345,16 +363,20 @@ async function getUnjointedPosts(postIdsInput: string[], posterId: string) {
       post.content === '' &&
       !tagsAwaited.some((tag: any) => tag.postId === post.id) &&
       !mediasAwaited.some((media: any) => media.postId === post.id)
-    const validPrivacy = [0, 2, 3].includes(post.privacy)
-    const userFollowsPoster = usersFollowedByPoster.includes(post.userId) && post.privacy === 1
+    const validPrivacy = [Privacy.Public, Privacy.LocalOnly, Privacy.Unlisted].includes(post.privacy)
+    const userFollowsPoster = usersFollowedByPoster.includes(post.userId) && post.privacy === Privacy.FollowersOnly
     const userIsMentioned = postsMentioningUser.includes(post.id)
     return (
       !bannedUserIds.includes(post.userId) &&
       (postIsPostedByUser || validPrivacy || userFollowsPoster || userIsMentioned || isReblog)
     )
   })
-  const postIdsToFullySend: string[] = postsToFullySend.map((post: any) => post.id)
-  const postsToSend = (await postWithNotes).map((post: any) => filterPost(post, postIdsToFullySend))
+  const postIdsToFullySend: string[] = postsToFullySend
+    .filter((elem) => !blockedUsersSet.has(elem.userId))
+    .map((post: any) => post.id)
+  const postsToSend = (await postWithNotes)
+    .map((post: any) => filterPost(post, postIdsToFullySend, doNotFullyHide))
+    .filter((elem: any) => !!elem)
   const mediasToSend = (await medias).filter((elem: any) => {
     return postIdsToFullySend.includes(elem.postId)
   })
@@ -373,20 +395,29 @@ async function getUnjointedPosts(postIdsInput: string[], posterId: string) {
     likes: likes.filter((elem) => !!elem),
     bookmarks: bookmarks,
     quotes: quotesFiltered.filter((elem) => !!elem),
-    quotedPosts: (await quotedPosts).map((elem: any) => filterPost(elem, postIdsToFullySend)).filter((elem) => !!elem),
+    quotedPosts: (await quotedPosts)
+      .map((elem: any) => filterPost(elem, postIdsToFullySend), doNotFullyHide)
+      .filter((elem) => !!elem),
     asks: asks.filter((elem) => !!elem)
   }
 }
 
-function filterPost(postToBeFilter: any, postIdsToFullySend: string[]): any {
+function filterPost(postToBeFilter: any, postIdsToFullySend: string[], donotHide = false): any {
   let res = postToBeFilter
   if (!postIdsToFullySend.includes(res.id)) {
     res = undefined
   }
   if (res) {
-    res.ancestors = res.ancestors ? res.ancestors.map((elem: any) => filterPost(elem, postIdsToFullySend)) : []
+    const ancestorsLength = res.ancestors ? res.ancestors.length : 0
+    res.ancestors = res.ancestors
+      ? res.ancestors.map((elem: any) => filterPost(elem, postIdsToFullySend, donotHide)).filter((elem: any) => !!elem)
+      : []
     res.ancestors = res.ancestors.filter((elem: any) => !(elem == undefined))
+    if (ancestorsLength != res.ancestors.length && !donotHide) {
+      res = undefined
+    }
   }
+
   return res
 }
 

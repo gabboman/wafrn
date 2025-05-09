@@ -1,5 +1,5 @@
 import { Op } from 'sequelize'
-import { Blocks, Mutes, User } from '../../db.js'
+import { Blocks, Mutes, User } from '../../models/index.js'
 import { redisCache } from '../redis.js'
 
 export default async function getBlockedIds(
@@ -22,27 +22,28 @@ export default async function getBlockedIds(
           // if only user blocks we ask twice for the users that only the user has blocked
           onlyUserBlocks
             ? {
-                blockerId: userId
-              }
+              blockerId: userId
+            }
             : {
-                blockedId: userId
-              }
+              blockedId: userId
+            }
         ]
       }
     })
     const mutes = includeMutes
       ? Mutes.findAll({
-          where: {
-            muterId: userId
-          }
-        })
+        where: {
+          muterId: userId
+        }
+      })
       : []
     await Promise.all([blocks, mutes])
     const res = (await blocks)
       .map((block: any) => (block.blockerId !== userId ? block.blockerId : block.blockedId))
       .concat((await mutes).map((mute: any) => mute.mutedId))
     redisCache.set(cacheKey + userId, JSON.stringify(res), 'EX', 600)
-    return res
+    // to avoid sequelize stuff. should add to other cachers too tbh
+    return res.length > 0 ? res : ['00000000-0000-0000-0000-000000000000']
   } catch (error) {
     return []
   }

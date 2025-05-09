@@ -1,5 +1,5 @@
 import { Op } from 'sequelize'
-import { Blocks, Follows, User } from '../../db.js'
+import { Blocks, Follows, User } from '../../models/index.js'
 import getBlockedIds from './getBlockedIds.js'
 import { redisCache } from '../redis.js'
 
@@ -15,11 +15,6 @@ export default async function getFollowedsIds(userId: string, local = false): Pr
       accepted: true,
       followedId: {
         [Op.notIn]: usersWithBlocks
-      }
-    }
-    if (local) {
-      whereObject['$follower.url$'] = {
-        [Op.notLike]: '@%'
       }
     }
     const followed = await Follows.findAll({
@@ -38,8 +33,23 @@ export default async function getFollowedsIds(userId: string, local = false): Pr
       ],
       where: whereObject
     })
-    const result = followed.map((followed: any) => followed.followedId)
+    let result = followed.map((followed: any) => followed.followedId)
     result.push(userId)
+    // TODO this is sub optimal. I mean we do two queries instead of one EVERY 10 MINUTES OH MY GOD
+    // obviously is not the end of the world. but its still suboptimal
+    if (local) {
+      const localUsers = await User.findAll({
+        where: {
+          id: {
+            [Op.in]: result
+          },
+          email: {
+            [Op.ne]: undefined
+          }
+        }
+      })
+      result = localUsers.map((usr) => usr.id)
+    }
     redisCache.set(local ? 'follows:local:' + userId : 'follows:full:' + userId, JSON.stringify(result), 'EX', 600)
     return result as string[]
   } catch (error) {

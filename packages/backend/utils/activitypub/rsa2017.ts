@@ -1,5 +1,5 @@
 import * as crypto from 'node:crypto'
-import jsonld from 'jsonld'
+import jsonld, { Options } from 'jsonld'
 import axios from 'axios'
 import { environment } from '../../environment.js'
 import { logger } from '../logger.js'
@@ -11,7 +11,7 @@ import { JsonLd, RemoteDocument } from 'jsonld/jsonld-spec.js'
 // RsaSignature2017 based from https://github.com/transmute-industries/RsaSignature2017
 
 export class LdSignature {
-  constructor() {}
+  constructor() { }
 
   public async signRsaSignature2017(
     data: any,
@@ -84,7 +84,7 @@ export class LdSignature {
 
   public async normalize(data: any) {
     // TODO improve this so we get some cache or something
-    const res = await jsonld.normalize(data, { documentLoader: this.getLoader(), safe: false })
+    const res = await jsonld.normalize(data, { documentLoader: this.getLoader(), safe: false } as Options.Normalize)
     return res
   }
 

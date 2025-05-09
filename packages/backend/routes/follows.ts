@@ -1,5 +1,5 @@
 import { Application, Response } from 'express'
-import { Blocks, Follows, Notification, User } from '../db.js'
+import { Blocks, Follows, Notification, User } from '../models/index.js'
 import { authenticateToken } from '../utils/authenticateToken.js'
 
 import getBlockedIds from '../utils/cacheGetters/getBlockedIds.js'
@@ -28,10 +28,10 @@ export default function followsRoutes(app: Application) {
       const userFederatesWithThreads = options.filter(
         (elem) => elem.optionName === 'wafrn.federateWithThreads' && elem.optionValue === 'true'
       )
-      const userToBeFollowed = (await User.findByPk(req.body.userId)) as Model<any, any>
+      const userToBeFollowed = await User.findByPk(req.body.userId)
 
       if (userFederatesWithThreads.length === 0) {
-        if (userToBeFollowed.url.toLowerCase().endsWith('threads.net')) {
+        if (userToBeFollowed?.url.toLowerCase().endsWith('.threads.net')) {
           res.status(403)
           res.send({
             error: true,
@@ -40,12 +40,12 @@ export default function followsRoutes(app: Application) {
         }
       }
       // bsky user
-      if (userToBeFollowed.url.split('@').length === 2 && userToBeFollowed.bskyDid) {
-        const localUser = (await User.findByPk(posterId)) as Model<any, any>
-        if (localUser.enableBsky) {
+      if (userToBeFollowed?.url.split('@').length === 2 && userToBeFollowed.bskyDid) {
+        const localUser = await User.findByPk(posterId)
+        if (localUser?.enableBsky) {
           // follow on bsk
           const agent = await getAtProtoSession(localUser)
-          const followResult = await agent.follow(userToBeFollowed.bskyDid)
+          const followResult = (await agent.follow(userToBeFollowed.bskyDid)) as any
           if (followResult.validationStatus == 'valid') {
             await follow(posterId, req.body.userId, res, followResult)
             await forceUpdateCacheDidsAtThread()
@@ -80,40 +80,45 @@ export default function followsRoutes(app: Application) {
     try {
       const posterId = req.jwtData?.userId
       if (req.body?.userId) {
-        const userUnfollowed = (await User.findByPk(req.body.userId)) as Model<any, any>
-        await Notification.destroy({
-          where: {
-            notificationType: 'FOLLOW',
-            userId: posterId,
-            notifiedUserId: userUnfollowed.id
+        const userUnfollowed = await User.findByPk(req.body.userId)
+        if (userUnfollowed) {
+          await Notification.destroy({
+            where: {
+              notificationType: 'FOLLOW',
+              userId: posterId,
+              notifiedUserId: userUnfollowed.id
+            }
+          })
+          if (userUnfollowed.remoteId) {
+            const localUser = await User.findOne({ where: { id: posterId } })
+            remoteUnfollow(localUser, userUnfollowed)
+              //.then(() => {})
+              .catch((error) => {
+                logger.info('error unfollowing remote user')
+              })
           }
-        })
-        if (userUnfollowed.remoteId) {
-          const localUser = await User.findOne({ where: { id: posterId } })
-          remoteUnfollow(localUser, userUnfollowed)
-            //.then(() => {})
-            .catch((error) => {
-              logger.info('error unfollowing remote user')
-            })
-        }
 
-        const follow = (await Follows.findOne({
-          where: {
-            followerId: posterId,
-            followedId: userUnfollowed.id
+          const follow = await Follows.findOne({
+            where: {
+              followerId: posterId,
+              followedId: userUnfollowed.id
+            }
+          })
+          if (follow?.bskyUri) {
+            const user = await User.findByPk(posterId)
+            if (user) {
+              const agent = await getAtProtoSession(user)
+              await agent.deleteFollow(follow.bskyUri)
+              await forceUpdateCacheDidsAtThread()
+              await getCacheAtDids(true)
+            }
           }
-        })) as Model<any, any>
-        if (follow?.bskyUri) {
-          const agent = await getAtProtoSession(await User.findByPk(posterId))
-          await agent.deleteFollow(follow.bskyUri)
-          await forceUpdateCacheDidsAtThread()
-          await getCacheAtDids(true)
+          userUnfollowed.removeFollower(posterId)
+          redisCache.del('follows:full:' + posterId)
+          redisCache.del('follows:local:' + posterId)
+          redisCache.del('follows:notYetAcceptedFollows:' + posterId)
+          success = true
         }
-        userUnfollowed.removeFollower(posterId)
-        redisCache.del('follows:full:' + posterId)
-        redisCache.del('follows:local:' + posterId)
-        redisCache.del('follows:notYetAcceptedFollows:' + posterId)
-        success = true
       }
     } catch (error) {
       logger.error(error)

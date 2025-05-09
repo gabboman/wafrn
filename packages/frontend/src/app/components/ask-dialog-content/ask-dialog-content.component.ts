@@ -59,7 +59,12 @@ export class AskDialogContentComponent implements OnInit {
   async onSubmit() {
     const res: any = await this.blogService.askuser(this.data.details.url, this.askForm.value)
     if (res.success) {
-      this.messages.add({ severity: 'success', summary: 'You asked the user!', confettiEmojis: ['❓', '⁉️'] })
+      const disableConfetti = localStorage.getItem('disableConfetti') == 'true'
+      this.messages.add({
+        severity: 'success',
+        summary: 'You asked the user!',
+        confettiEmojis: disableConfetti ? [] : ['❓', '⁉️']
+      })
       this.dialogRef.close()
     } else {
       this.messages.add({ severity: 'error', summary: 'Something went wrong' })

@@ -32,7 +32,7 @@ const colorSchemeVariants = [
   'gold',
   'red',
   'pink',
-  'grey',
+  'purple',
   'rizzler',
   'wafrn98',
   'unwafrn',
@@ -117,14 +117,14 @@ export class ColorSchemeSwitcherComponent {
     if (forceLightModeThemes.includes(scheme)) {
       await this.setTheme('light')
     }
-    if (forceUpdate) {
+    if (forceUpdate && this.loginService.checkUserLoggedIn()) {
       await this.loginService.updateUserOptions([{ name: 'wafrn.colorScheme', value: scheme }])
     }
   }
 
   async updateCenterLayout(forceUpdate = false) {
     this.centerLayoutMode = !this.centerLayoutMode
-    if (forceUpdate) {
+    if (forceUpdate && this.loginService.checkUserLoggedIn()) {
       await this.loginService.updateUserOptions([
         { name: 'wafrn.centerLayout', value: this.centerLayoutMode.toString() }
       ])

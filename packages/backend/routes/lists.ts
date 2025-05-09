@@ -4,7 +4,7 @@ import { authenticateToken } from '../utils/authenticateToken.js'
 import uploadHandler from '../utils/uploads.js'
 import fs from 'fs/promises'
 import { environment } from '../environment.js'
-import { Follows, User, sequelize } from '../db.js'
+import { Follows, User, sequelize } from '../models/index.js'
 import { Op } from 'sequelize'
 import { searchRemoteUser } from '../utils/activitypub/searchRemoteUser.js'
 import { follow } from '../utils/follow.js'
@@ -68,7 +68,7 @@ export default function listRoutes(app: Application) {
         } catch (error: any) {
           res.send({
             success: false,
-            errorMessage: error.message
+            message: error.message
           })
           await fs.unlink(req.file.path)
         }

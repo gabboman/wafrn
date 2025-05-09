@@ -5,13 +5,4 @@ button {
   border-radius: var(--mat-sys-corner-small);
 }
 
-.emojireact-overlay {
-  max-width: 16rem;
-  max-height: 16rem;
-  overflow-x: hidden;
-  overflow-y: auto;
-  background-color: var(--mat-sys-surface-container-high);
-  border-radius: var(--mat-sys-corner-small);
-  box-shadow: var(--mat-sys-level3);
-  overscroll-behavior: contain;
-}
+

@@ -1,14 +1,12 @@
 import { Application, Response } from 'express'
-import { Model, Op, Sequelize } from 'sequelize'
+import { Model, Op } from 'sequelize'
 import {
   Ask,
   Blocks,
   BskyInviteCodes,
   Emoji,
-  EmojiCollection,
   FederatedHost,
   Follows,
-  MfaDetails,
   MfaDetails,
   Mutes,
   Post,
@@ -17,7 +15,7 @@ import {
   UserBookmarkedPosts,
   UserEmojiRelation,
   UserOptions
-} from '../db.js'
+} from '../models/index.js'
 import { authenticateToken } from '../utils/authenticateToken.js'
 
 import generateRandomString from '../utils/generateRandomString.js'
@@ -26,7 +24,7 @@ import sendActivationEmail from '../utils/sendActivationEmail.js'
 import validateEmail from '../utils/validateEmail.js'
 import bcrypt from 'bcrypt'
 import jwt from 'jsonwebtoken'
-import { sequelize } from '../db.js'
+import { sequelize } from '../models/index.js'
 
 import optimizeMedia from '../utils/optimizeMedia.js'
 import uploadHandler from '../utils/uploads.js'
@@ -93,7 +91,7 @@ export default function userRoutes(app: Application) {
         if (
           req.body?.email &&
           req.body.url &&
-          req.body.url.match(/^[a-z0-9_]+([_-]+[a-z0-9_]+)*$/i) &&
+          req.body.url.match(/^[a-z0-9_A-Z]+([\_-]+[a-z0-9_A-Z]+)*$/i) &&
           validateEmail(req.body.email)
         ) {
           const birthDate = new Date(req.body.birthDate)
@@ -107,9 +105,7 @@ export default function userRoutes(app: Application) {
             where: {
               [Op.or]: [
                 { email: req.body.email.toLowerCase() },
-                {
-                  literal: sequelize.where(sequelize.fn('lower', sequelize.col('url')), req.body.url.toLowerCase())
-                }
+                sequelize.where(sequelize.fn('lower', sequelize.col('url')), req.body.url.toLowerCase())
               ]
             }
           })
@@ -139,18 +135,21 @@ export default function userRoutes(app: Application) {
               activationCode,
               isBot: false,
               lastTimeNotificationsCheck: new Date(0),
-              lastActiveAt: new Date(0)
+              lastActiveAt: new Date(0),
+              hideProfileNotLoggedIn: false,
+              hideFollows: false,
+              emailVerified: false
             }
 
             const userWithEmail = User.create(user)
-            const mailHeader = environment.reviewRegistrations
-              ? 'We are reviewing your profile'
-              : `Welcome to ${environment.instanceUrl}!`
-            const mailBody = environment.reviewRegistrations
-              ? `Hello ${req.body.url}, at this moment we are manually reviewing registrations. You will recive an email from us once it's accepted`
-              : `<h1>Welcome to ${environment.instanceUrl}</h1> To activate your account <a href="${
-                  environment.instanceUrl
-                }/activate/${encodeURIComponent(req.body.email.toLowerCase())}/${activationCode}">click here!</a>`
+            const mailHeader = `Welcome to ${environment.instanceUrl}, please verify your email!`
+            const mailBody = `<h1>Welcome to ${environment.instanceUrl}</h1> To verify your email <a href="${
+              environment.instanceUrl
+            }/activate/${encodeURIComponent(
+              req.body.email.toLowerCase()
+            )}/${activationCode}">click here!</a>. If you can not see the link correctly please copy this link:
+            ${environment.instanceUrl}/activate/${encodeURIComponent(req.body.email.toLowerCase())}/${activationCode}
+            `
             const emailSent = environment.disableRequireSendEmail
               ? true
               : sendActivationEmail(req.body.email.toLowerCase(), activationCode, mailHeader, mailBody)
@@ -218,19 +217,27 @@ export default function userRoutes(app: Application) {
       let success = false
       try {
         const posterId = req.jwtData?.userId as string
-        const user = (await User.findOne({
+        const user = await User.findOne({
           where: {
             id: posterId
           }
-        })) as Model<any, any>
-        if (req.body) {
-          const { name, description, manuallyAcceptsFollows, options: optionJSON } = req.body
+        })
+        if (req.body && user) {
+          const {
+            hideFollows,
+            hideProfileNotLoggedIn,
+            name,
+            description,
+            manuallyAcceptsFollows,
+            options: optionJSON
+          } = req.body
 
           const avaiableEmojis = await getAvaiableEmojis()
           let userEmojis: any[] = []
-          if (manuallyAcceptsFollows) {
-            user.manuallyAcceptsFollows = manuallyAcceptsFollows
-          }
+          user.manuallyAcceptsFollows = manuallyAcceptsFollows == 'true'
+          user.hideFollows = hideFollows == 'true'
+          user.hideProfileNotLoggedIn = hideProfileNotLoggedIn == 'true'
+          user.disableEmailNotifications = req.body.disableEmailNotifications == 'true'
           if (description) {
             const descriptionHtml = markdownConverter.makeHtml(description)
             user.description = descriptionHtml
@@ -243,8 +250,8 @@ export default function userRoutes(app: Application) {
             userEmojis = userEmojis.concat(avaiableEmojis?.filter((emoji: any) => name.includes(emoji.name)))
           }
 
-          const avatar = req.files.avatar?.[0]
-          const headerImage = req.files.headerImage?.[0]
+          const avatar = (req?.files as any)?.avatar?.[0]
+          const headerImage = (req?.files as any)?.headerImage?.[0]
 
           if (avatar != null) {
             let url = `/${await optimizeMedia(avatar.path, { forceImageExtension: 'webp' })}`
@@ -353,7 +360,7 @@ export default function userRoutes(app: Application) {
 
   app.post('/api/activateUser', async (req, res) => {
     let success = false
-    if (req.body?.email && validateEmail(req.body.email) && req.body.code && !environment.reviewRegistrations) {
+    if (req.body?.email && validateEmail(req.body.email) && req.body.code) {
       const user = await User.findOne({
         where: {
           email: req.body.email.toLowerCase(),
@@ -361,8 +368,20 @@ export default function userRoutes(app: Application) {
         }
       })
       if (user) {
-        user.activated = true
-        user.save()
+        user.emailVerified = true
+        let emailBody = ''
+        let emailSubject = ''
+        if (!environment.reviewRegistrations) {
+          user.activated = true
+          emailSubject = 'Your wafrn account has been activated!'
+          emailBody = ';D'
+        } else {
+          emailBody =
+            'Hello, thanks for confirming your email address. The admin team will review your registration and will be aproved shortly'
+          emailSubject = 'Thanks for verifying your email, Our admin team will review your registration request soon!'
+        }
+
+        await Promise.all([user.save(), sendActivationEmail(req.body.email.toLowerCase(), '', emailSubject, emailBody)])
         success = true
       }
     }
@@ -423,7 +442,7 @@ export default function userRoutes(app: Application) {
             }
           }
         })
-        if (userWithEmail) {
+        if (userWithEmail && userWithEmail.email) {
           const correctPassword = await bcrypt.compare(req.body.password, userWithEmail.password)
           if (correctPassword) {
             success = true
@@ -471,7 +490,7 @@ export default function userRoutes(app: Application) {
             } else {
               res.send({
                 success: false,
-                errorMessage: 'Please activate your account! Check your email'
+                message: 'Please activate your account! Check your email'
               })
             }
           }
@@ -485,12 +504,12 @@ export default function userRoutes(app: Application) {
       // res.statusCode = 401;
       res.send({
         success: false,
-        errorMessage: 'Please recheck your email and password'
+        message: 'Please recheck your email and password'
       })
     }
   })
 
-  app.post('/api/login/mfa', [loginRateLimiter, optionalAuthentication], async (req: AuthorizedRequest, res) => {
+  app.post('/api/login/mfa', [loginRateLimiter, optionalAuthentication], async (req: AuthorizedRequest, res: any) => {
     let success = false
     try {
       if (req.body?.token && req.jwtData?.mfaStep == 1 && req.jwtData?.email) {
@@ -528,7 +547,7 @@ export default function userRoutes(app: Application) {
               token: jwt.sign(
                 {
                   userId: userWithEmail.id,
-                  email: userWithEmail.email.toLowerCase(),
+                  email: userWithEmail.email?.toLowerCase(),
                   birthDate: userWithEmail.birthDate,
                   url: userWithEmail.url,
                   role: userWithEmail.role
@@ -550,7 +569,7 @@ export default function userRoutes(app: Application) {
       // res.statusCode = 401;
       res.send({
         success: false,
-        errorMessage: 'Invalid code provided'
+        message: 'Invalid code provided'
       })
     }
   })
@@ -587,7 +606,7 @@ export default function userRoutes(app: Application) {
   app.post('/api/user/mfa', authenticateToken, async (req: AuthorizedRequest, res) => {
     try {
       if (req.jwtData?.userId && req.body?.type == 'totp') {
-        const totpSettings = {
+        const totpSettings: any = {
           algorithm: 'SHA1',
           digits: 6,
           period: 30,
@@ -676,6 +695,7 @@ export default function userRoutes(app: Application) {
   app.get('/api/user', optionalAuthentication, async (req: AuthorizedRequest, res) => {
     let success = false
     if (req.query?.id) {
+      const userId = req.jwtData?.userId ? req.jwtData?.userId : '00000000-0000-0000-0000-000000000000'
       const blogId: string = (req.query.id || '').toString().toLowerCase().trim()
       const blog = await User.findOne({
         attributes: [
@@ -695,7 +715,10 @@ export default function userRoutes(app: Application) {
           'bskyDid',
           'isFediverseUser',
           'isBlueskyUser',
-          'enableBsky'
+          [sequelize.literal(`"id" = '${userId}' AND "enableBsky"`), 'enableBsky'],
+          [sequelize.literal(`"id" = '${userId}' AND "disableEmailNotifications"`), 'disableEmailNotifications'],
+          [sequelize.literal(`"id" = '${userId}' AND "hideProfileNotLoggedIn"`), 'hideProfileNotLoggedIn'],
+          [sequelize.literal(`"id" = '${userId}' AND "hideFollows"`), 'hideFollows']
         ],
         include: [
           {
@@ -719,6 +742,13 @@ export default function userRoutes(app: Application) {
           }
         }
       })
+      if (blog && !req.jwtData) {
+        const user = await User.findByPk(blog.id, { attributes: ['hideProfileNotLoggedIn'] })
+        if (user?.hideProfileNotLoggedIn) {
+          res.sendStatus(404)
+          return
+        }
+      }
       if (!blog || blog.federatedHost?.blocked) {
         res.sendStatus(404)
         return
@@ -763,8 +793,8 @@ export default function userRoutes(app: Application) {
         })
         const serverBlockedQuery = await ServerBlock.count({
           where: {
-            userBlockerId: req.jwtData.userId,
-            blockedServerId: blog.federatedHostId
+            userBlockerId: req.jwtData.userId as string,
+            blockedServerId: blog.federatedHostId as string
           }
         })
         await Promise.all([mutedQuery, blockedQuery, serverBlockedQuery, followed, followers, publicOptions])
@@ -815,22 +845,21 @@ export default function userRoutes(app: Application) {
     const options = getUserOptions(userId)
     const localEmojis = getAvaiableEmojisCache()
     const mutedUsers = getMutedUsers(userId)
-    let user = User.findByPk(req.jwtData?.userId, {
+    let userPromise = User.findByPk(req.jwtData?.userId, {
       attributes: ['banned']
     })
     const silencedPosts = getMutedPosts(userId)
     Promise.all([
-      user,
+      userPromise,
       followedUsers,
       blockedUsers,
-      user,
       notAcceptedFollows,
       options,
       silencedPosts,
       localEmojis,
       mutedUsers
     ])
-    user = await user
+    const user = await userPromise
     if (!user || user.banned) {
       res.sendStatus(401)
     } else {
@@ -914,7 +943,7 @@ export default function userRoutes(app: Application) {
   app.get('/api/user/deleteFollow/:id', authenticateToken, async (req: AuthorizedRequest, res: Response) => {
     const userId = req.jwtData?.userId as string
     const forceUnfollowId = req.params?.id as string
-    let success = true
+    let success = false
     try {
       let follow = await Follows.findOne({
         where: {
@@ -922,14 +951,17 @@ export default function userRoutes(app: Application) {
           followedId: userId
         }
       })
-      if (follow.remoteFollowId) {
-        await rejectremoteFollow(userId, forceUnfollowId)
+      if (follow) {
+        if (follow.remoteFollowId) {
+          await rejectremoteFollow(userId, forceUnfollowId)
+        }
+        await redisCache.del('follows:local:' + forceUnfollowId)
+        await redisCache.del('follows:full:' + forceUnfollowId)
+        await redisCache.del('follows:local:' + userId)
+        await redisCache.del('follows:full:' + userId)
+        await follow.destroy()
+        success = true
       }
-      await redisCache.del('follows:local:' + forceUnfollowId)
-      await redisCache.del('follows:full:' + forceUnfollowId)
-      await redisCache.del('follows:local:' + userId)
-      await redisCache.del('follows:full:' + userId)
-      await follow.destroy()
     } catch (error) {
       logger.debug({
         message: `Remote force unfollow failed`,
@@ -952,15 +984,17 @@ export default function userRoutes(app: Application) {
           followedId: userId
         }
       })
-      if (follow.remoteFollowId) {
-        await acceptRemoteFollow(userId, approvedFollower)
+      if (follow) {
+        if (follow.remoteFollowId) {
+          await acceptRemoteFollow(userId, approvedFollower)
+        }
+        follow.accepted = true
+        await follow.save()
+        await redisCache.del('follows:local:' + approvedFollower)
+        await redisCache.del('follows:full:' + approvedFollower)
+        await redisCache.del('follows:local:' + userId)
+        await redisCache.del('follows:full:' + userId)
       }
-      follow.accepted = 1
-      await follow.save()
-      await redisCache.del('follows:local:' + approvedFollower)
-      await redisCache.del('follows:full:' + approvedFollower)
-      await redisCache.del('follows:local:' + userId)
-      await redisCache.del('follows:full:' + userId)
     } catch (error) {
       logger.debug({
         message: `Accept follow failed`,
@@ -977,9 +1011,7 @@ export default function userRoutes(app: Application) {
     const followers = req.query?.followers === 'true'
     if (url) {
       const user = await User.findOne({
-        where: {
-          literal: sequelize.where(sequelize.fn('lower', sequelize.col('url')), url.toLowerCase())
-        }
+        where: sequelize.where(sequelize.fn('lower', sequelize.col('url')), url.toLowerCase())
       })
       if (user) {
         let responseData
@@ -1003,9 +1035,13 @@ export default function userRoutes(app: Application) {
             attributes: ['id', 'url', 'avatar', 'description']
           })
         }
-        res.send(responseData)
+        if (user.hideFollows && user.url != req.jwtData?.url) {
+          res.send([])
+        } else {
+          res.send(responseData)
+        }
       } else {
-        res.send(404)
+        res.sendStatus(404)
       }
     } else {
       res.sendStatus(404)
@@ -1055,10 +1091,15 @@ export default function userRoutes(app: Application) {
     }
     const url = req.params?.url as string
     const userRecivingAsk = await User.findOne({
-      where: {
-        literal: sequelize.where(sequelize.fn('lower', sequelize.col('url')), url.toLowerCase())
-      }
+      where: sequelize.where(sequelize.fn('lower', sequelize.col('url')), url.toLowerCase())
     })
+    if (!userRecivingAsk) {
+      res.sendStatus(500)
+      logger.warn({
+        message: `Ask invalid user: ${url}`
+      })
+      return
+    }
     const userAskLevelDBOption = await UserOptions.findOne({
       where: {
         userId: userRecivingAsk.id,
@@ -1162,7 +1203,7 @@ export default function userRoutes(app: Application) {
   })
 }
 
-async function updateBlueskyProfile(agent: BskyAgent, user: Model<any, any>) {
+async function updateBlueskyProfile(agent: BskyAgent, user: User) {
   await forceUpdateCacheDidsAtThread()
   await getCacheAtDids(true)
   return await agent.upsertProfile(async (existingProfile) => {

@@ -24,6 +24,7 @@ services:
         POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
         POSTGRES_DBNAME: ${POSTGRES_DBNAME}
 
+        WEBPUSH_EMAIL: ${WEBPUSH_EMAIL}
         WEBPUSH_PRIVATE: ${WEBPUSH_PRIVATE}
         WEBPUSH_PUBLIC: ${WEBPUSH_PUBLIC}
 
@@ -49,9 +50,14 @@ services:
         FRONTEND_DISABLE_PWA: ${FRONTEND_DISABLE_PWA:-}
         FRONTEND_MAINTENANCE: ${FRONTEND_MAINTENANCE:-}
     depends_on:
-      - db
-      - redis
-      - frontend
+      db:
+        condition: service_started
+      redis:
+        condition: service_started
+      frontend:
+        condition: service_started
+      migration:
+        condition: service_completed_successfully
     restart: unless-stopped
     environment:
       - NODE_ENV=production
@@ -59,6 +65,18 @@ services:
       - ./packages/backend/uploads:/wafrn/uploads
       - ./packages/backend/cache:/wafrn/cache
       - frontend:/wafrn/packages/frontend:ro
+
+  migration:
+    <<: *default_backend
+    depends_on:
+      db:
+        condition: service_started
+      redis:
+        condition: service_started
+      frontend:
+        condition: service_started
+    restart: no
+    command: "npm exec tsx migrate.ts init-container"
 
   frontend:
     restart: unless-stopped
@@ -86,7 +104,7 @@ services:
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
       POSTGRES_DB: ${POSTGRES_DBNAME}
     volumes:
-      - dbpg:/var/lib/postgresql
+      - dbpg:/var/lib/postgresql/data
 
   adminer:
     image: adminer
@@ -95,10 +113,14 @@ services:
   redis:
     image: redis:7.2.4
     restart: unless-stopped
+    volumes:
+      - redis:/data
 
   pds:
     image: ghcr.io/bluesky-social/pds:0.4
     restart: unless-stopped
+    profiles:
+      - bluesky
     environment:
       PDS_HOSTNAME: ${PDS_DOMAIN_NAME}
       PDS_JWT_SECRET: ${PDS_JWT_SECRET}
@@ -119,6 +141,8 @@ services:
 
   pds_worker:
     <<: *default_backend
+    profiles:
+      - bluesky
     command: "npm exec tsx atproto.ts"
 
 volumes:
@@ -126,3 +150,4 @@ volumes:
   caddy:
   pds:
   frontend:
+  redis:

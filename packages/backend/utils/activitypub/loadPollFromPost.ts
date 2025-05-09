@@ -1,4 +1,4 @@
-import { QuestionPoll, QuestionPollQuestion } from '../../db.js'
+import { QuestionPoll, QuestionPollQuestion } from '../../models/index.js'
 import { logger } from '../logger.js'
 
 async function loadPoll(apObj: any, internalPostObject: any, user: any) {
@@ -28,10 +28,10 @@ async function loadPoll(apObj: any, internalPostObject: any, user: any) {
     const poll = existingPoll
       ? existingPoll
       : await QuestionPoll.create({
-          postId: internalPostObject.id,
-          endDate: endDate,
-          multiChoice: multiChoice
-        })
+        postId: internalPostObject.id,
+        endDate: endDate,
+        multiChoice: multiChoice
+      })
     const questions = existingPoll?.questionPollQuestions
       ? existingPoll.questionPollQuestions
       : await poll.getQuestionPollQuestions()

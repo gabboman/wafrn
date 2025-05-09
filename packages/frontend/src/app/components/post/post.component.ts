@@ -5,27 +5,25 @@ import { PostsService } from 'src/app/services/posts.service'
 
 import {
   faArrowUpRightFromSquare,
+  faCheck,
   faChevronDown,
+  faClose,
+  faEnvelope,
+  faGlobe,
   faHeart,
   faHeartBroken,
+  faPen,
+  faQuoteLeft,
+  faRepeat,
+  faReply,
+  faServer,
   faShareNodes,
   faTrash,
-  faGlobe,
-  faEnvelope,
-  faServer,
-  faUser,
   faUnlock,
-  faPen,
-  faClose,
-  faReply,
-  faRepeat,
-  faQuoteLeft,
-  faCheck
+  faUser
 } from '@fortawesome/free-solid-svg-icons'
-import { EnvironmentService } from 'src/app/services/environment.service'
 import { SimplifiedUser } from 'src/app/interfaces/simplified-user'
-import { environment } from 'src/environments/environment'
-import { ScrollService } from 'src/app/services/scroll.service'
+import { EnvironmentService } from 'src/app/services/environment.service'
 
 @Component({
   selector: 'app-post',
@@ -34,7 +32,7 @@ import { ScrollService } from 'src/app/services/scroll.service'
   standalone: false
 })
 export class PostComponent implements OnInit, OnDestroy, OnChanges {
-  @Input() post!: ProcessedPost[];
+  @Input() post!: ProcessedPost[]
   showFull: boolean = false
   postCanExpand = computed(() => {
     let textLength = 0
@@ -67,7 +65,6 @@ export class PostComponent implements OnInit, OnDestroy, OnChanges {
   // 0 no display at all 1 display like 2 display dislike
   showLikeFinalPost: number = 0
   finalPost!: ProcessedPost
-  anchorBase: string = '';
 
   // icons
   shareIcon = faShareNodes
@@ -105,8 +102,7 @@ export class PostComponent implements OnInit, OnDestroy, OnChanges {
 
   constructor(
     public postService: PostsService,
-    private readonly loginService: LoginService,
-    public scrollService: ScrollService
+    private readonly loginService: LoginService
   ) {
     this.userLoggedIn = loginService.checkUserLoggedIn()
     if (this.userLoggedIn) {
@@ -136,7 +132,6 @@ export class PostComponent implements OnInit, OnDestroy, OnChanges {
   }
 
   ngOnInit(): void {
-    this.anchorBase = this.scrollService.getNext().toString() + "-id-";
     this.followedUsers = this.postService.followedUserIds
     this.notYetAcceptedFollows = this.postService.notYetAcceptedFollowedUsersIds
     this.originalPostContent = this.post
@@ -159,14 +154,14 @@ export class PostComponent implements OnInit, OnDestroy, OnChanges {
 
   isEmptyReblog() {
     const finalOne = this.post[this.post.length - 1]
-    return (
-      this.post &&
-      finalOne.content == '' &&
-      finalOne.tags.length == 0 &&
-      finalOne.quotes.length == 0 &&
-      !finalOne.questionPoll &&
-      finalOne.medias?.length == 0
-    )
+    return !finalOne
+      ? true
+      : this.post &&
+          finalOne.content == '' &&
+          finalOne.tags.length == 0 &&
+          finalOne.quotes.length == 0 &&
+          !finalOne.questionPoll &&
+          finalOne.medias?.length == 0
   }
 
   ngOnChanges() {

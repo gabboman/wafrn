@@ -1,7 +1,7 @@
 import { Application, Response } from 'express'
 import AuthorizedRequest from '../interfaces/authorizedRequest.js'
 import { authenticateToken } from '../utils/authenticateToken.js'
-import { Post, QuestionPoll, QuestionPollAnswer, QuestionPollQuestion, User } from '../db.js'
+import { Post, QuestionPoll, QuestionPollAnswer, QuestionPollQuestion, User } from '../models/index.js'
 import { Op } from 'sequelize'
 import { voteInPoll } from '../utils/activitypub/votePollRemote.js'
 export default function pollRoutes(app: Application) {
@@ -87,7 +87,7 @@ export default function pollRoutes(app: Application) {
               }
             ]
           })
-        ).post.user.url.startsWith('@')
+        )?.post.user.url.startsWith('@')
       ) {
         voteInPoll(posterId, parseInt(pollId))
       }

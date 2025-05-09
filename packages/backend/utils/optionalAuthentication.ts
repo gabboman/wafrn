@@ -7,7 +7,7 @@ export default function optionalAuthentication(req: Request, res: Response, next
     const authHeader = req.headers.authorization
     const token = authHeader?.split(' ')[1]
 
-    jwt.verify(token!, environment.jwtSecret as string, (err: any, jwtData: any) => {
+    jwt.verify(token!, environment.jwtSecret, (err: any, jwtData: any) => {
       if (err) {
         ; (req as any).jwtData = false
       }
