@@ -13,13 +13,15 @@
         "loginButton": "Пријави се"
     },
     "menu": {
+        "login": "Пријави се",
+        "register": "Региструј се",
         "dashboard": "Дешборд",
         "dashboardHover": "Погледај дешборд",
         "writeWoot": "Напиши нови woot",
         "notifications": "Нотификације",
         "explore": "Истражи",
         "exploreWafrn": "Истражи WAFRN",
-        "exploreFediverse": "Истражи Федиверс",
+        "exploreFediverse": "Wafrn и пријатељи",
         "unansweredAsks": "Неодговорена питања",
         "privateMessages": "Приватне поруке",
         "search": "Претрага",
@@ -29,11 +31,11 @@
         "patreon": "Патреон",
         "kofi": "Ко-фи",
         "logout": "Одјави се",
-        "faq": "Frequently Asked Questions",
+        "faq": "Често постављена питања",
         "settings": {
             "title": "Подешавања",
             "follows": "Управљај пратиоцима",
-            "enableBluesky": "Укључи Блускај",
+            "enableBluesky": "Укључи Bluesky",
             "editProfile": "Измени профил",
             "themeEditor": "Измени тему",
             "mutedUsers": "Утишани корисници",
@@ -60,7 +62,8 @@
         "quoteButton": "Цитирај woot",
         "publishWoot": "Објави овај woot",
         "directMessageWarning": "Администратори од твог сервера и сервера где се налазе други корисници у конверзацији могу да виде ове поруке.",
-        "unlistedWarning": "Овај woot је подешен као неизлистан. Неће се појавити у претрази, хасхтаг-овима и другим функцијама проналазка. Ово није препоручено за било шта што желиш да буде далеко пронађено.",
+        "unlistedWarning": "Овај woot је подешен као неизлистан. Неће се појавити у претрази, хештег-овима и другим функцијама проналазка. Ово није препоручено за било шта што желиш да буде далеко пронађено.",
+        "directMessageWithQuoteWarning": "И цитирани корисник ће бити нотифициран о овој објави као помињање",
         "sensitivePlaceholder": "Шта је осетљиво око овог woot-а?",
         "wootQuoteBoxLabel": "Налепите URL woot-a да би га цитирали. Може да буде спољни URL или WAFRN URL",
         "wootQuoteBoxPlaceholder": "Само налепи линк до woot-а",
@@ -70,16 +73,18 @@
         "altTextFieldLabel": "Дескрипција слике",
         "altTextFieldPlaceholder": "Дескрипција. Молимо да ПОПУНИТЕ ОВО",
         "isNSFWToggle": "Сензитивно",
-        "mediaCountMastodonWarning": "ATTENTION! ANY FURTHER MEDIA UPLOADED WILL NOT BE DISPLAYED ON MASTODON",
-        "altTextWarning": "Please fill in the media descriptions. If you want to disable this check, you can do so in the settings.",
-        "quoteTitle": "Quoting:",
-        "tagFieldLabel": "Tags",
-        "tagSeparationNotice": "Separated by commas",
-        "ariaLabelWootPrivacy": "Edit privacy of woot",
-        "ariaLabelQuoteSetter": "Enable the quote setter",
-        "uploadMediaTooltip": "Upload Media",
+        "mediaCountMastodonWarning": "ПАЖЊА! ДАЉИ ОТПРЕМЉЕНИ МЕДИЈИ НЕЋЕ БИТИ ПРИКАЗАНИ НА МАСТОДОНУ",
+        "altTextWarning": "Молимо вас да попуните описе медија. Ако желите да онемогућите ову проверу, то можете учинити у подешавањима.",
+        "quoteTitle": "Цитирано:",
+        "tagFieldLabel": "Таг-ови",
+        "tagSeparationNotice": "Одвојено зарезима",
+        "ariaLabelWootPrivacy": "Измени приватност woot-а",
+        "ariaLabelQuoteSetter": "Омогући постављач за цитате",
+        "uploadMediaTooltip": "Отпреми медије",
         "contentWarningTooltip": "Content Warning",
-        "hiddenMentionsTooltip": "Other mentioned users"
+        "insertEmojiTooltip": "Убаци emoji",
+        "hiddenMentionsTooltip": "Други поменути корисници",
+        "editorGuide": "Doubts on how to format the text or how to start? Check <a target=\"_blank\" href=\"https://wafrn.net/faq/user\">the guide</a>"
     },
     "profile": {
         "security": {
@@ -111,10 +116,10 @@
             }
         },
         "tabHeaders": {
-            "profile": "Profile",
-            "preferences": "Preferences",
-            "privacySecurity": "Privacy and Security",
-            "misc": "Miscellaneous"
+            "profile": "Профил",
+            "preferences": "Преференце",
+            "privacySecurity": "Приватност и безбедност",
+            "misc": "Разно"
         }
     },
     "ask-dialog-content": {
