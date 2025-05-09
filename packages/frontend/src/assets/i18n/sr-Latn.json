@@ -28,11 +28,12 @@
         "source": "Pogledaj izvorni kod!",
         "patreon": "Patreon",
         "kofi": "Ko-fi",
-        "logout": "Odjaссvi se",
+        "logout": "Odjavi se",
+        "faq": "Frequently Asked Questions",
         "settings": {
             "title": "Podešavanja",
             "follows": "Upravljaj pratiocima",
-            "enableBluesky": "Uključi Bluesky",
+            "enableBluesky": "Uključi Bluskaj",
             "editProfile": "Izmeni profil",
             "themeEditor": "Izmeni temu",
             "mutedUsers": "Utišani korisnici",
@@ -44,7 +45,7 @@
             "superSecretMenu": "Super Tajni Meni"
         },
         "admin": {
-            "title": "Administrator",
+            "title": "Administracija",
             "serverList": "Lista servera",
             "addEmojis": "Dodaj emoji-e",
             "reports": "Tužbe",
@@ -59,16 +60,16 @@
         "quoteButton": "Citiraj woot",
         "publishWoot": "Objavi ovaj woot",
         "directMessageWarning": "Administratori od tvog servera i servera gde se nalaze drugi korisnici u konverzaciji mogu da vide ove poruke.",
-        "unlistedWarning": "Ovaj woot je podešen kao neizlistian. Neće se pojaviti u pretrzi, hashtag-ovima i drugim funkcijama pronalazka. Ovo nije preporučeno za biko šta što želiš da bude daleko pronađeno.",
+        "unlistedWarning": "Ovaj woot je podešen kao neizlistan. Neće se pojaviti u pretrazi, hashtag-ovima i drugim funkcijama pronalazka. Ovo nije preporučeno za bilo šta što želiš da bude daleko pronađeno.",
         "sensitivePlaceholder": "Šta je osetljivo oko ovog woot-a?",
         "wootQuoteBoxLabel": "Nalepite URL woot-a da bi ga citirali. Može da bude spoljni URL ili WAFRN URL",
-        "wootQuoteBoxPlaceholder": "Samo nalepi link to woot-a",
+        "wootQuoteBoxPlaceholder": "Samo nalepi link do woot-a",
         "wootQuoteConfirmButton": "Dodaj woot kao citat",
         "wootTextLabel": "Woot tekst",
         "wootTextPlaceholder": "Počnite da pišete...",
         "altTextFieldLabel": "Deskripcija slike",
         "altTextFieldPlaceholder": "Deskripcija. Molimo da POPUNITE OVO",
-        "isNSFWToggle": "NSFW",
+        "isNSFWToggle": "Senzitivno",
         "mediaCountMastodonWarning": "ATTENTION! ANY FURTHER MEDIA UPLOADED WILL NOT BE DISPLAYED ON MASTODON",
         "altTextWarning": "Please fill in the media descriptions. If you want to disable this check, you can do so in the settings.",
         "quoteTitle": "Quoting:",
@@ -77,7 +78,44 @@
         "ariaLabelWootPrivacy": "Edit privacy of woot",
         "ariaLabelQuoteSetter": "Enable the quote setter",
         "uploadMediaTooltip": "Upload Media",
-        "contentWarningTooltip": "Content Warning"
+        "contentWarningTooltip": "Content Warning",
+        "hiddenMentionsTooltip": "Other mentioned users"
+    },
+    "profile": {
+        "security": {
+            "header": "Security Settings",
+            "passwordChange": "Reset Password",
+            "mfa": {
+                "header": "Two Factor Authentication",
+                "setup": "Setup Two Factor Authentication",
+                "addNew": "Add new Two Factor Authenticator",
+                "friendlyNameLabel": "Friendly name, e.g. 'Work Phone' or 'Aegis'",
+                "typeLabel": "Two factor type",
+                "setupNewButton": "Set up new authenticator",
+                "tokenLabel": "Token",
+                "deleteLabel": "Delete",
+                "scanInstructions": "Scan the code below in your Authenticator application, and enter the code shown",
+                "installInstructions": "If you don't have an Authenticator app yet we suggest <a href=\"https://getaegis.app/\" target=\"_blank\">Aegis</a> (Android) or <a href=\"https://2fas.com/\" target=\"_blank\">2FAS</a> (iOS/Android)",
+                "imageAltSecret": "Authentication secret is '{{ secret }}'",
+                "secretFallback": "If you cannot read the QR code you can use code '{{ secret }}' manually in your app",
+                "confirmDeleteMessage": "Are you sure you want to delete this MFA provider? Note: deleting all MFA providers will disable MFA on your account",
+                "deleteSuccess": "MFA provider successfully removed",
+                "verifySuccess": "Success, your MFA is now enabled",
+                "verifyFailed": "Verification failed. Check your token, or if the problem persists ask an Administrator",
+                "errorMessageGeneric": "There was an issue with your request. Try again, or ask an Administrator for help",
+                "noMfa": "You do not have MFA enabled on your account",
+                "mfaList": "You have the following MFA providers set up",
+                "type": {
+                    "totpLabel": "Authenticator App"
+                }
+            }
+        },
+        "tabHeaders": {
+            "profile": "Profile",
+            "preferences": "Preferences",
+            "privacySecurity": "Privacy and Security",
+            "misc": "Miscellaneous"
+        }
     },
     "ask-dialog-content": {
     		"askAnonymously": "Učini pitanje anonimnim",

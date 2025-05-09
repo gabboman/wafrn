@@ -29,6 +29,7 @@
         "patreon": "Патреон",
         "kofi": "Ко-фи",
         "logout": "Одјави се",
+        "faq": "Frequently Asked Questions",
         "settings": {
             "title": "Подешавања",
             "follows": "Управљај пратиоцима",
@@ -44,31 +45,31 @@
             "superSecretMenu": "Супер Тајни Мени"
         },
         "admin": {
-            "title": "Administrator",
-            "serverList": "Lista servera",
-            "addEmojis": "Dodaj emoji-e",
-            "reports": "Tužbe",
-            "bans": "Korisnici sa zabranom",
-            "blocklist": "Blokirani korisnici",
-            "stats": "Statistike",
-            "awaitingAproval": "Čekanje za dozvolu"
+            "title": "Администрација",
+            "serverList": "Листа сервера",
+            "addEmojis": "Додај emoji-е",
+            "reports": "Тужбе",
+            "bans": "Корисници са забраном",
+            "blocklist": "Блокирани корисници",
+            "stats": "Статистике",
+            "awaitingAproval": "Чекање за дозволу"
         }
     },
     "editor": {
-        "inReplyTo": "Kao odgovor na:",
-        "quoteButton": "Citiraj woot",
-        "publishWoot": "Objavi ovaj woot",
-        "directMessageWarning": "Administratori od tvog servera i servera gde se nalaze drugi korisnici u konverzaciji mogu da vide ove poruke.",
-        "unlistedWarning": "Ovaj woot je podešen kao neizlistian. Neće se pojaviti u pretrzi, hashtag-ovima i drugim funkcijama pronalazka. Ovo nije preporučeno za biko šta što želiš da bude daleko pronađeno.",
-        "sensitivePlaceholder": "Šta je osetljivo oko ovog woot-a?",
-        "wootQuoteBoxLabel": "Nalepite URL woot-a da bi ga citirali. Može da bude spoljni URL ili WAFRN URL",
-        "wootQuoteBoxPlaceholder": "Just paste the woot url",
-        "wootQuoteConfirmButton": "Add woot as quote",
-        "wootTextLabel": "Woot text",
-        "wootTextPlaceholder": "Start writing...",
-        "altTextFieldLabel": "Image Description",
-        "altTextFieldPlaceholder": "Description. Please FILL THIS",
-        "isNSFWToggle": "NSFW",
+        "inReplyTo": "Као одговор на:",
+        "quoteButton": "Цитирај woot",
+        "publishWoot": "Објави овај woot",
+        "directMessageWarning": "Администратори од твог сервера и сервера где се налазе други корисници у конверзацији могу да виде ове поруке.",
+        "unlistedWarning": "Овај woot је подешен као неизлистан. Неће се појавити у претрази, хасхтаг-овима и другим функцијама проналазка. Ово није препоручено за било шта што желиш да буде далеко пронађено.",
+        "sensitivePlaceholder": "Шта је осетљиво око овог woot-а?",
+        "wootQuoteBoxLabel": "Налепите URL woot-a да би га цитирали. Може да буде спољни URL или WAFRN URL",
+        "wootQuoteBoxPlaceholder": "Само налепи линк до woot-а",
+        "wootQuoteConfirmButton": "Додај woot као цитат",
+        "wootTextLabel": "Woot текст",
+        "wootTextPlaceholder": "Почните да пишете...",
+        "altTextFieldLabel": "Дескрипција слике",
+        "altTextFieldPlaceholder": "Дескрипција. Молимо да ПОПУНИТЕ ОВО",
+        "isNSFWToggle": "Сензитивно",
         "mediaCountMastodonWarning": "ATTENTION! ANY FURTHER MEDIA UPLOADED WILL NOT BE DISPLAYED ON MASTODON",
         "altTextWarning": "Please fill in the media descriptions. If you want to disable this check, you can do so in the settings.",
         "quoteTitle": "Quoting:",
@@ -77,11 +78,48 @@
         "ariaLabelWootPrivacy": "Edit privacy of woot",
         "ariaLabelQuoteSetter": "Enable the quote setter",
         "uploadMediaTooltip": "Upload Media",
-        "contentWarningTooltip": "Content Warning"
+        "contentWarningTooltip": "Content Warning",
+        "hiddenMentionsTooltip": "Other mentioned users"
+    },
+    "profile": {
+        "security": {
+            "header": "Security Settings",
+            "passwordChange": "Reset Password",
+            "mfa": {
+                "header": "Two Factor Authentication",
+                "setup": "Setup Two Factor Authentication",
+                "addNew": "Add new Two Factor Authenticator",
+                "friendlyNameLabel": "Friendly name, e.g. 'Work Phone' or 'Aegis'",
+                "typeLabel": "Two factor type",
+                "setupNewButton": "Set up new authenticator",
+                "tokenLabel": "Token",
+                "deleteLabel": "Delete",
+                "scanInstructions": "Scan the code below in your Authenticator application, and enter the code shown",
+                "installInstructions": "If you don't have an Authenticator app yet we suggest <a href=\"https://getaegis.app/\" target=\"_blank\">Aegis</a> (Android) or <a href=\"https://2fas.com/\" target=\"_blank\">2FAS</a> (iOS/Android)",
+                "imageAltSecret": "Authentication secret is '{{ secret }}'",
+                "secretFallback": "If you cannot read the QR code you can use code '{{ secret }}' manually in your app",
+                "confirmDeleteMessage": "Are you sure you want to delete this MFA provider? Note: deleting all MFA providers will disable MFA on your account",
+                "deleteSuccess": "MFA provider successfully removed",
+                "verifySuccess": "Success, your MFA is now enabled",
+                "verifyFailed": "Verification failed. Check your token, or if the problem persists ask an Administrator",
+                "errorMessageGeneric": "There was an issue with your request. Try again, or ask an Administrator for help",
+                "noMfa": "You do not have MFA enabled on your account",
+                "mfaList": "You have the following MFA providers set up",
+                "type": {
+                    "totpLabel": "Authenticator App"
+                }
+            }
+        },
+        "tabHeaders": {
+            "profile": "Profile",
+            "preferences": "Preferences",
+            "privacySecurity": "Privacy and Security",
+            "misc": "Miscellaneous"
+        }
     },
     "ask-dialog-content": {
-    		"askAnonymously": "Make question anonymous",
-    		"askFormLabel": "Question",
-    		"askButtonText": "Ask"
+    		"askAnonymously": "Учини питање анонимним",
+    		"askFormLabel": "Питање",
+    		"askButtonText": "Питај"
     }
 }
