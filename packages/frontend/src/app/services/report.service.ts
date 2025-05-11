@@ -18,14 +18,14 @@ export class ReportService {
     private dialogService: MatDialog
   ) {}
 
-  async reportPost(post: ProcessedPost[], report: UntypedFormGroup): Promise<boolean> {
+  async reportPost(post: ProcessedPost[] | undefined, report: UntypedFormGroup, userId: string): Promise<boolean> {
     let success = false
     try {
       const formData = {
         ...report.value,
-        postId: post[post.length - 1].id
+        userId: userId,
+        postId: post ? post[post.length - 1].id : undefined
       }
-      //formData.severity = formData.severity.value;
       await this.http.post(`${EnvironmentService.environment.baseUrl}/reportPost`, formData).toPromise()
       success = true
     } catch (error) {
@@ -41,9 +41,9 @@ export class ReportService {
     return ReportPostComponent
   }
 
-  async openReportPostDialog(post: ProcessedPost) {
+  async openReportPostDialog(data: { post: ProcessedPost } | { userId: string }) {
     this.dialogService.open(await this.getReportComponent(), {
-      data: { post }
+      data: { data }
     })
   }
 }

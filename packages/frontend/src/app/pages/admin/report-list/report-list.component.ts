@@ -31,6 +31,7 @@ export class ReportListComponent implements OnInit {
       this.dataSource.data = response.map((elem: any) => {
         return elem
       })
+      console.log(this.dataSource.data)
       this.ready = true
     })
   }

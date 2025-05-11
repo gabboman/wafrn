@@ -120,8 +120,9 @@ export default function adminRoutes(app: Application) {
     })
   })
 
-  function getReportList() {
-    return PostReport.findAll({
+  async function getReportList() {
+    // god forgive me for the any
+    let res = await PostReport.findAll({
       include: [
         {
           model: User,
@@ -145,6 +146,40 @@ export default function adminRoutes(app: Application) {
         }
       ]
     })
+    // this is not the best way to do this. But this code doesnt get caled that much
+    // also im sleepy and i have other things to do
+    // so
+    // TODO make this in a better way. You, unsuspecting person, do this properly!
+    const reportsWithoutPost = res.filter((elem) => !elem.post)
+    const usersToFillIds = reportsWithoutPost.map((elem) => elem.reportedUserId).filter((elem) => !!elem)
+    const usersToFill = await User.findAll({
+      attributes: ['url', 'avatar', 'id'],
+      where: {
+        id: {
+          [Op.in]: usersToFillIds
+        }
+      }
+    })
+    const userMap: Map<string, User> = new Map()
+    usersToFill.forEach((elem) => {
+      userMap.set(elem.id, elem)
+    })
+
+    return res.map((elem) => {
+      let reporteduser = elem.post ? elem.post.user : (userMap.get(elem.reportedUserId) as User)
+      return {
+        id: elem.id,
+        resolved: elem.resolved,
+        severity: elem.severity,
+        description: elem.description,
+        userId: elem.userId,
+        user: elem.user,
+        postId: elem.postId,
+        post: elem.post,
+        reportedUserId: elem.reportedUserId ? elem.reportedUserId : elem.post.userId,
+        reportedUser: reporteduser
+      }
+    })
   }
 
   app.get('/api/admin/reportList', authenticateToken, adminToken, async (req: AuthorizedRequest, res: Response) => {
@@ -162,32 +197,33 @@ export default function adminRoutes(app: Application) {
 
   app.post('/api/admin/banUser', authenticateToken, adminToken, async (req: AuthorizedRequest, res: Response) => {
     const userToBeBanned = await User.findByPk(req.body.id)
-    if (userToBeBanned) {
+    if (userToBeBanned && userToBeBanned.role != 10) {
       userToBeBanned.banned = true
       await userToBeBanned.save()
-    }
-    // TOO fix this dirty thing oh my god
-    const unsolvedReports = await PostReport.findAll({
-      where: {
-        resolved: false
-      },
-      include: [
-        {
-          model: Post,
-          where: {
-            userId: req.body.id
+      // TOO fix this dirty thing oh my god
+      const unsolvedReports = await PostReport.findAll({
+        where: {
+          resolved: false
+        },
+        include: [
+          {
+            model: Post,
+            where: {
+              userId: req.body.id
+            }
           }
-        }
-      ]
-    })
-    if (unsolvedReports) {
-      await Promise.allSettled(
-        unsolvedReports.map((elem: any) => {
-          elem.resolved = true
-          return elem.save()
-        })
-      )
+        ]
+      })
+      if (unsolvedReports) {
+        await Promise.allSettled(
+          unsolvedReports.map((elem: any) => {
+            elem.resolved = true
+            return elem.save()
+          })
+        )
+      }
     }
+
     res.send({
       success: true
     })
@@ -246,13 +282,13 @@ export default function adminRoutes(app: Application) {
     async (req: AuthorizedRequest, res: Response) => {
       const whereConditions: WhereOptions<UserAttributes> = {
         activated: false,
-          url: {
-            [Op.notLike]: '%@%'
-          },
-          banned: false
+        url: {
+          [Op.notLike]: '%@%'
+        },
+        banned: false
       }
       if (!environment.disableRequireSendEmail) {
-        whereConditions.emailVerified = true;
+        whereConditions.emailVerified = true
       }
       const notActiveUsers = await User.findAll({
         where: whereConditions,

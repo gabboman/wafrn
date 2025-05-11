@@ -17,9 +17,9 @@
     <ng-container matColumnDef="reportedUser">
       <th mat-header-cell *matHeaderCellDef>Reported user</th>
       <td mat-cell *matCellDef="let element">
-        <a [routerLink]="['/fediverse/post/' + element.post.id]">
-          <app-avatar-small [user]="element.post.user"></app-avatar-small>
-          {{ element.post.user.url }}</a
+        <a [routerLink]="element.post ? ['/fediverse/post/' + element.post.id] : ['/blog/' + element.reportedUser.url]">
+          <app-avatar-small [user]="element.reportedUser"></app-avatar-small>
+          {{ element.reportedUser.url }}</a
         >
       </td>
     </ng-container>

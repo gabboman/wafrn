@@ -742,13 +742,14 @@ export default function postsRoutes(app: Application) {
     let report
     try {
       const posterId = req.jwtData?.userId
-      if (req.body?.postId && req.body.severity && req.body.description) {
+      if ((req.body.userId || req.body?.postId) && req.body.severity && req.body.description) {
         report = await PostReport.create({
           resolved: false,
           severity: req.body.severity,
           description: req.body.description,
           userId: posterId,
-          postId: req.body.postId
+          postId: req.body.postId,
+          reportedUserId: req.body.userId ? req.body.userId : undefined
         })
         success = true
         res.send(report)

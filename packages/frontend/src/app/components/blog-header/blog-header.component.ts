@@ -13,7 +13,8 @@ import {
   faUserSlash,
   faVolumeMute,
   faVolumeUp,
-  faUsers
+  faUsers,
+  faTriangleExclamation
 } from '@fortawesome/free-solid-svg-icons'
 import { BlogDetails } from 'src/app/interfaces/blogDetails'
 import { BlocksService } from 'src/app/services/blocks.service'
@@ -24,6 +25,7 @@ import { MatTooltipModule } from '@angular/material/tooltip'
 import { EnvironmentService } from 'src/app/services/environment.service'
 import { InfoCardComponent } from '../info-card/info-card.component'
 import { faBluesky } from '@fortawesome/free-brands-svg-icons'
+import { ReportService } from 'src/app/services/report.service'
 
 @Component({
   selector: 'app-blog-header',
@@ -55,6 +57,8 @@ export class BlogHeaderComponent implements OnChanges, OnDestroy {
   expandDownIcon = faChevronDown
   muteUserIcon = faVolumeMute
   unmuteUserIcon = faVolumeUp
+  reportUserIcon = faTriangleExclamation
+
   userIcon = faUser
   bskyIcon = faBluesky
   usersIcon = faUsers
@@ -82,7 +86,8 @@ export class BlogHeaderComponent implements OnChanges, OnDestroy {
     public blockService: BlocksService,
     public dialogService: MatDialog,
     public activatedRoute: ActivatedRoute,
-    public environmentService: EnvironmentService
+    public environmentService: EnvironmentService,
+    public reportService: ReportService
   ) {
     this.userLoggedIn = loginService.checkUserLoggedIn()
   }

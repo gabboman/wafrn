@@ -451,16 +451,6 @@ export class User extends Model<UserAttributes, UserAttributes> implements UserA
   })
   declare silencedPosts: SilencedPost[]
 
-  @HasMany(() => UserReport, {
-    foreignKey: 'ReportedId'
-  })
-  declare reportedReport: UserReport[]
-
-  @HasMany(() => UserReport, {
-    foreignKey: 'ReporterId'
-  })
-  declare reporterReport: UserReport[]
-
   @BelongsTo(() => FederatedHost, {
     foreignKey: {
       name: 'federatedHostId',
