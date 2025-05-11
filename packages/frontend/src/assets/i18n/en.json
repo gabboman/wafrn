@@ -10,6 +10,8 @@
         "mfaToken": "Token",
         "mfaTokenEnter": "Enter your token from your Authenticator application",
         "forgottenPassword": "Forgot password? Click here!",
+        "showPassword": "Show password",
+        "hidePassword": "Hide password",
         "loginButton": "Log in"
     },
     "menu": {
