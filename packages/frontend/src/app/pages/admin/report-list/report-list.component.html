@@ -39,7 +39,7 @@
         <button mat-flat-button color="primary" *ngIf="!element.resolved" (click)="ignore(element.id)">
           Ignore report
         </button>
-        <button mat-flat-button color="warn" *ngIf="!element.resolved" (click)="ban(element.post.user.id)">
+        <button mat-flat-button color="warn" *ngIf="!element.resolved" (click)="ban(element.reportedUser.id)">
           Ban user
         </button>
       </td>
