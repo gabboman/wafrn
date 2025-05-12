@@ -4,6 +4,7 @@ import { LoginService } from './services/login.service'
 import { EnvironmentService } from './services/environment.service'
 import { TranslateService } from '@ngx-translate/core'
 import { SwPush } from '@angular/service-worker'
+import { DOCUMENT } from '@angular/common'
 
 @Component({
   selector: 'app-root',
