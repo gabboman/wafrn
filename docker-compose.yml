@@ -95,6 +95,7 @@ services:
     volumes:
       - "caddy:/data"
       - "frontend:/var/www/html/frontend"
+      - ./packages/backend/uploads:/var/www/html/uploads
 
   db:
     image: postgres:17
