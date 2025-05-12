@@ -19,8 +19,7 @@ ${{MEDIA_DOMAIN}} {
 }
 
 ${{CACHE_DOMAIN}} {
-    handle {
-        rewrite * /api/cache{uri}
+    handle /api/cache* {
         reverse_proxy backend:9000
     }
 }

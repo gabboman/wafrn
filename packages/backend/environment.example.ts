@@ -4,10 +4,10 @@ export const environment = {
   logSQLQueries: ${{LOG_SQL_QUERIES:-false}},
   workers: {
     // if you set this to true, workers will start in the main thread. no need for starting the utils/workers.ts in other tmux tab
-    mainThread: true,
-    low: 5,
-    medium: 10,
-    high: 100
+    mainThread: ${{USE_WORKERS:-true}},
+    low: ${{WORKERS_LOW:-5}},
+    medium: ${{WORKERS_MEDIUM:-10}},
+    high: ${{WORKERS_HIGH:-100}}
   },
   // this was a dev thing. leave to true unless you are doing stuff in local or your media url is yourinstance/uploads (not recomended)
   removeFolderNameFromFileUploads: true,

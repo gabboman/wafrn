@@ -106,7 +106,7 @@ export CACHE_DOMAIN=cdn.${DOMAIN_NAME}
 export MEDIA_DOMAIN=media.${DOMAIN_NAME}
 export ACME_EMAIL=${ADMIN_EMAIL}
 export FRONTEND_MEDIA_URL=https://${MEDIA_DOMAIN}
-export FRONTEND_CACHE_URL=https://${CACHE_DOMAIN}/?media=
+export FRONTEND_CACHE_URL=https://${CACHE_DOMAIN}/api/cache?media=
 
 echo
 echo "-------------------"
@@ -149,6 +149,7 @@ echo "Setting up the config"
 echo "---------------------"
 
 source install/env_secret_setup.sh
+cp docker-compose.simple.yml docker-compose.yml
 
 echo
 echo "--------------------------"
@@ -180,6 +181,14 @@ echo "------------------"
 
 cat <<CROND_FILE | sudo tee /etc/cron.d/wafrn-backup
 22 3 * * * $(whoami) $HOME/wafrn/install/manage.sh backup
+CROND_FILE
+
+echo "-------------------------"
+echo "Setting up cache cleanups"
+echo "-------------------------"
+
+cat <<CROND_FILE | sudo tee /etc/cron.d/wafrn-cleanup
+22 4 * * * $(whoami) $HOME/wafrn/install/manage.sh clean
 CROND_FILE
 
 echo
