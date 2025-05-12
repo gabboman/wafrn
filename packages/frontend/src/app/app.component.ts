@@ -1,4 +1,4 @@
-import { Component, Injector, OnInit } from '@angular/core'
+import { Component, Injector, Inject, OnInit } from '@angular/core'
 import { SwUpdate } from '@angular/service-worker'
 import { LoginService } from './services/login.service'
 import { EnvironmentService } from './services/environment.service'
@@ -21,6 +21,7 @@ export class AppComponent implements OnInit {
     private injector: Injector,
     private loginService: LoginService,
     private environmentService: EnvironmentService,
+    @Inject(DOCUMENT) private document: Document,
     private translate: TranslateService
   ) {
     this.translate.addLangs(['en', 'pl'])
@@ -76,5 +77,10 @@ export class AppComponent implements OnInit {
           console.log(notificationSubscription)
         })
     }
+    const currentLang = this.translate.currentLang || this.translate.getDefaultLang() || 'en';
+    this.document.documentElement.lang = currentLang;
+    this.translate.onLangChange.subscribe((event) => {
+      this.document.documentElement.lang = event.lang;
+    });
   }
 }
