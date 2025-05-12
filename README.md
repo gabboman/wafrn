@@ -121,9 +121,13 @@ Next you'll need to fill in all of the details of your domain. For example if yo
 
 ```sh
 DOMAIN_NAME=wafrn.example.com
-CACHE_DOMAIN=wafrn.example.com
-MEDIA_DOMAIN=wafrn.example.com
+CACHE_DOMAIN=cache.wafrn.example.com
+MEDIA_DOMAIN=media.wafrn.example.com
 PDS_DOMAIN_NAME=bsky.example.com
+
+# use the same domains as set above for MEDIA and CACHE
+FRONTEND_MEDIA_URL="https://media.wafrn.example.com"
+FRONTEND_CACHE_URL="https://cache.wafrn.example.com/api/cache?media="
 
 ACME_EMAIL=admin@example.com
 ```

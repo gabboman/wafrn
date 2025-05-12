@@ -1,17 +1,31 @@
 {
     email ${{ACME_EMAIL}}
 
+    log {
+
+    }
+
     on_demand_tls {
 		ask http://pds:3000/tls-check
 	}
 }
 
+${{MEDIA_DOMAIN}} {
+    handle {
+        root * /var/www/html/uploads/
+        try_files {path} /index.html
+        file_server
+    }
+}
+
+${{CACHE_DOMAIN}} {
+    handle /api/cache* {
+        reverse_proxy ${{CACHE_HOST:-backend:9000}}
+    }
+}
+
 ${{DOMAIN_NAME}} {
     @api path /api* /fediverse* /contexts* /post* /blog* /.well-known*
-
-    log {
-
-    }
 
     handle @api {
         header {
