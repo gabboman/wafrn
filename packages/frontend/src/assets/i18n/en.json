@@ -14,6 +14,10 @@
         "hidePassword": "Hide password",
         "loginButton": "Log in"
     },
+	"notifications": {
+		"loadingMore": "Loading more notifications",
+		"refresh": "Refresh"
+	},
     "menu": {
         "login": "Log in",
         "register": "Register",
