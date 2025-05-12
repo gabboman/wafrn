@@ -21,7 +21,7 @@
     <mat-form-field class="w-full">
       <mat-label>{{ 'login.password' | translate }}</mat-label>
       <input formControlName="password" [type]="showPassword ? 'text' : 'password'" name="password" matInput />
-      <button mat-icon-button matSuffix type="button" (click)="togglePasswordVisibility()">
+      <button mat-icon-button matSuffix type="button" (click)="togglePasswordVisibility()" [attr.aria-label]="showPassword ? ('login.hidePassword' | translate) : ('login.showPassword' | translate)" [attr.aria-pressed]="showPassword">
         <fa-icon [icon]="showPassword ? faEyeSlash : faEye"></fa-icon>
       </button>
       <mat-hint>
