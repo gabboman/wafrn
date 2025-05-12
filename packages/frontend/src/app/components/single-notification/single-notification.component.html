@@ -1,4 +1,7 @@
-<mat-card *ngIf="notification" class="wafrn-container post-card">
+<mat-card *ngIf="notification" class="wafrn-container post-card" role="article" [attr.aria-labelledby]="'notification-title-' + notification.url">
+  <h4 class="sr-only" [attr.id]="'notification-title-' + notification.url">
+    {{ notification.userName }}
+  </h4>
   <app-post-ribbon
     [user]="{
       avatar: notification.avatar,

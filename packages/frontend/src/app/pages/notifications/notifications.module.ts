@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core'
 import { CommonModule } from '@angular/common'
+import { TranslateModule } from '@ngx-translate/core'
 import { NotificationsComponent } from './notifications.component'
 import { Route, RouterModule } from '@angular/router'
 import { loginRequiredGuard } from 'src/app/guards/login-required.guard'
@@ -19,6 +20,7 @@ const routes: Route[] = [
   declarations: [NotificationsComponent],
   imports: [
     CommonModule,
+    TranslateModule,
     SingleNotificationComponent,
     RouterModule.forChild(routes),
     FontAwesomeModule,

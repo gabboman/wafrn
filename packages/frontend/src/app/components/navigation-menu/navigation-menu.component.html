@@ -1,29 +1,19 @@
 <mat-drawer-container>
-  <mat-drawer
-    style="position: fixed"
-    class="side-menu"
-    [mode]="mobile ? 'over' : 'side'"
-    [opened]="menuVisible || !mobile"
-    (closed)="hideMenu()"
-  >
+  <mat-drawer style="position: fixed" class="side-menu" [mode]="mobile ? 'over' : 'side'"
+    [opened]="menuVisible || !mobile" (closed)="hideMenu()">
     <a [href]="'/'" class="block" (click)="hideMenu()">
-      <img
-        [src]="logo"
-        class="instance-logo block mx-auto mt-3"
-        alt="instance logo"
-        width="200"
-        style="aspect-ratio: 3 / 1; object-fit: contain"
-      />
+      <img [src]="logo" class="instance-logo block mx-auto mt-3" alt="instance logo" width="200"
+        style="aspect-ratio: 3 / 1; object-fit: contain" />
     </a>
     <hr />
     <nav aria-label="Navigation menu">
       <mat-nav-list>
         @for (link of menuItems; track $index) {
-          @if (link.divider) {
-            <hr />
-          } @else {
-            <app-menu-item [item]="link"></app-menu-item>
-          }
+        @if (link.divider) {
+        <hr />
+        } @else {
+        <app-menu-item [item]="link"></app-menu-item>
+        }
         }
       </mat-nav-list>
     </nav>
@@ -32,36 +22,22 @@
     </div>
   </mat-drawer>
   <mat-drawer-content>
-    <button
-      style="position: fixed; z-index: 500; top: 1em; left: 1em"
-      mat-mini-fab
-      color="primary"
-      [hidden]="!mobile"
-      type="button"
-      class="show-sidebar-menu-button"
-      (click)="showMenu()"
+    <button style="position: fixed; z-index: 500; top: 1em; left: 1em" mat-mini-fab color="primary" [hidden]="!mobile"
+      type="button" class="show-sidebar-menu-button" (click)="showMenu()"
       [matBadge]="notifications + adminNotifications + usersAwaitingApproval + followsAwaitingApproval + awaitingAsks"
       [matBadgeHidden]="
         notifications + adminNotifications + usersAwaitingApproval + followsAwaitingApproval + awaitingAsks === 0
-      "
-      matBadgePosition="below"
-    >
+      " matBadgePosition="below">
       <fa-icon [icon]="hamburguerIcon"></fa-icon>
     </button>
-    <button
-      style="position: fixed; z-index: 500; bottom: 1em; right: 1em"
-      mat-fab
-      color="primary"
-      [hidden]="!mobile || !jwtService.tokenValid() || currentRoute === '/editor'"
-      type="button"
-      class="show-sidebar-menu-button create-post-button"
-      (click)="this.hideMenu(); this.openEditor()"
-    >
+    <button style="position: fixed; z-index: 500; bottom: 1em; right: 1em" mat-fab color="primary"
+      [hidden]="!mobile || !jwtService.tokenValid() || currentRoute === '/editor'" type="button"
+      class="show-sidebar-menu-button create-post-button" (click)="this.hideMenu(); this.openEditor()">
       <fa-icon [icon]="pencilIcon"></fa-icon>
     </button>
-    <div class="wafrn-content">
+    <main id="main-content" class="wafrn-content">
       <div *ngIf="maintenanceMode" [innerHtml]="maintenanceMessage"></div>
       <snappy-router> </snappy-router>
-    </div>
+    </main>
   </mat-drawer-content>
 </mat-drawer-container>

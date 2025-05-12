@@ -1,4 +1,4 @@
-<main class="wafrn-container">
+<div class="wafrn-container">
   <!-- SEARCH FORM -->
   <div class="pb-4 lg:px-4">
     <mat-card>
@@ -31,45 +31,30 @@
     <mat-tab *ngIf="users().length > 0" label="Users">
       <div class="mt-4">
         @for (user of users(); track $index) {
-          <mat-card mat-list-item class="user-preview text-center p-4 m-4">
-            <img
-              [alt]="user.name + ' avatar'"
-              [src]="getAvatar(user.url)"
-              loading="lazy"
-              width="80"
-              height="80"
-              class="block mx-auto my-2 border-round-md"
-            />
-            <div class="flex-grow-1 p-2">
-              <button
-                mat-raised-button
-                color="primary"
-                *ngIf="followedUsers.indexOf(user.id) === -1 && userLoggedIn"
-                (click)="followUser(user.id)"
-                class="mb-4"
-              >
-                Follow
-              </button>
-              <button
-                mat-raised-button
-                color="primary"
-                *ngIf="followedUsers.indexOf(user.id) !== -1 && userLoggedIn"
-                (click)="unfollowUser(user.id)"
-              >
-                Unfollow
-              </button>
-              <p>{{ user.name }}</p>
-              <p>
-                <a [blogLink]="user">{{ user.url }}</a>
-              </p>
-              <div class="mb-3" [innerHTML]="user.description"></div>
-            </div>
-          </mat-card>
+        <mat-card mat-list-item class="user-preview text-center p-4 m-4">
+          <img [alt]="user.name + ' avatar'" [src]="getAvatar(user.url)" loading="lazy" width="80" height="80"
+            class="block mx-auto my-2 border-round-md" />
+          <div class="flex-grow-1 p-2">
+            <button mat-raised-button color="primary" *ngIf="followedUsers.indexOf(user.id) === -1 && userLoggedIn"
+              (click)="followUser(user.id)" class="mb-4">
+              Follow
+            </button>
+            <button mat-raised-button color="primary" *ngIf="followedUsers.indexOf(user.id) !== -1 && userLoggedIn"
+              (click)="unfollowUser(user.id)">
+              Unfollow
+            </button>
+            <p>{{ user.name }}</p>
+            <p>
+              <a [blogLink]="user">{{ user.url }}</a>
+            </p>
+            <div class="mb-3" [innerHTML]="user.description"></div>
+          </div>
+        </mat-card>
         }
       </div>
     </mat-tab>
   </mat-tab-group>
-</main>
+</div>
 
 <footer id="if-you-see-this-load-more-posts" *ngIf="atLeastOneSearchDone" class="p-4 flex gap-3 align-items-center">
   <mat-spinner *ngIf="loading()" diameter="24"></mat-spinner>
