@@ -90,6 +90,7 @@ services:
         CACHE_DOMAIN: ${CACHE_DOMAIN}
         MEDIA_DOMAIN: ${MEDIA_DOMAIN}
         ACME_EMAIL: ${ACME_EMAIL}
+        CACHE_HOST: "cache:9000"
     ports:
       - 80:80
       - 443:443

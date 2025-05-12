@@ -31,6 +31,8 @@ ARG MEDIA_DOMAIN
 ARG ACME_EMAIL
 ARG DOMAIN_NAME
 
+ARG CACHE_HOST
+
 COPY Caddyfile.example /app/Caddyfile
 
 RUN perl -pi -e 's/\$\{\{([_A-Z]+):-(.*)\}\}/$ENV{$1}||$2/ge' /app/Caddyfile && \

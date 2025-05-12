@@ -20,7 +20,7 @@ ${{MEDIA_DOMAIN}} {
 
 ${{CACHE_DOMAIN}} {
     handle /api/cache* {
-        reverse_proxy backend:9000
+        reverse_proxy ${{CACHE_HOST:-backend:9000}}
     }
 }
 
