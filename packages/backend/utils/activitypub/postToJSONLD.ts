@@ -186,7 +186,8 @@ async function postToJSONLD(postId: string) {
         first: {
           type: 'CollectionPage',
           partOf: `${environment.frontendUrl}/fediverse/post/${post.id}/replies`,
-          items: await getPostReplies(post.id)
+          next: `${environment.frontendUrl}/fediverse/post/${post.id}/replies?page=1`,
+          items: []
         }
       }
     }
