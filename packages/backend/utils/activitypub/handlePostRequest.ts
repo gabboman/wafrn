@@ -112,6 +112,9 @@ async function handlePostRequest(req: SignedRequest, res: Response) {
         }
       }
       const response = await postToJSONLD(post.id)
+      if (!response) {
+        return res.sendStatus(404)
+      }
       res.set({
         'content-type': 'application/activity+json'
       })

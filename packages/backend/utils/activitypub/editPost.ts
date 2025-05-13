@@ -6,6 +6,7 @@ import { LdSignature } from './rsa2017.js'
 import _ from 'underscore'
 import { Queue } from 'bullmq'
 import { redisCache } from '../redis.js'
+import { activityPubObject } from '../../interfaces/fediverse/activityPubObject.js'
 
 const sendPostQueue = new Queue('sendPostToInboxes', {
   connection: environment.bullmqConnection,
@@ -21,11 +22,13 @@ const sendPostQueue = new Queue('sendPostToInboxes', {
 })
 async function federatePostHasBeenEdited(postToEdit: any) {
   const user = await User.findByPk(postToEdit.userId)
-  if (!user)
-    return;
+  if (!user) return
 
   await redisCache.del('postAndUser:' + postToEdit.id)
   const postAsJSONLD = await postToJSONLD(postToEdit.id)
+  if (!postAsJSONLD) {
+    return
+  }
   const objectToSend = {
     '@context': [`${environment.frontendUrl}/contexts/litepub-0.1.jsonld`],
     actor: `${environment.frontendUrl}/fediverse/blog/${user.url.toLowerCase()}`,
@@ -38,11 +41,13 @@ async function federatePostHasBeenEdited(postToEdit: any) {
     type: 'Update'
   }
 
-  let serversToSendThePostIds = (await PostHostView.findAll({
-    where: {
-      postId: postToEdit.id
-    }
-  })).map(elem => elem.federatedHostId);
+  let serversToSendThePostIds = (
+    await PostHostView.findAll({
+      where: {
+        postId: postToEdit.id
+      }
+    })
+  ).map((elem) => elem.federatedHostId)
   let serversToSendThePostPromise = FederatedHost.findAll({
     where: {
       id: {
@@ -50,11 +55,13 @@ async function federatePostHasBeenEdited(postToEdit: any) {
       }
     }
   })
-  let usersToSendPostId = (await RemoteUserPostView.findAll({
-    where: {
-      postId: postToEdit.id
-    }
-  })).map(elem => elem.userId)
+  let usersToSendPostId = (
+    await RemoteUserPostView.findAll({
+      where: {
+        postId: postToEdit.id
+      }
+    })
+  ).map((elem) => elem.userId)
   let usersToSendThePostPromise = User.findAll({
     where: {
       id: {
@@ -66,7 +73,7 @@ async function federatePostHasBeenEdited(postToEdit: any) {
   await Promise.all([serversToSendThePostPromise, usersToSendThePostPromise])
   let serversToSendThePost = await serversToSendThePostPromise
   let usersToSendThePost = await usersToSendThePostPromise
-  let urlsToSendPost: string[] = [];
+  let urlsToSendPost: string[] = []
 
   if (serversToSendThePost) {
     urlsToSendPost = urlsToSendPost.concat(serversToSendThePost.map((server: any) => server.publicInbox))
@@ -74,8 +81,7 @@ async function federatePostHasBeenEdited(postToEdit: any) {
   if (usersToSendThePost) {
     urlsToSendPost = urlsToSendPost.concat(usersToSendThePost.map((usr: any) => usr.remoteInbox))
   }
-  if (!user.privateKey)
-    return;
+  if (!user.privateKey) return
 
   const ldSignature = new LdSignature()
   const bodySignature = await ldSignature.signRsaSignature2017(

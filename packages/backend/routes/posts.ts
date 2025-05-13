@@ -320,7 +320,7 @@ export default function postsRoutes(app: Application) {
                   }
                 })
                 const parentsUserUrls = ancestors.map((elem) => elem.user.url)
-                if (parentsUserUrls.some((elem) => elem.startsWith('@'))) {
+                if (parentsUserUrls.some((elem) => elem.split('@').length == 2)) {
                   return res.status(403).send({ success: false, message: 'You need to enable bluesky' })
                 }
               }
