@@ -8,8 +8,13 @@ import { getPostReplies } from './getPostReplies.js'
 import { getPostAndUserFromPostId } from '../cacheGetters/getPostAndUserFromPostId.js'
 import { logger } from '../logger.js'
 import { Privacy } from '../../models/post.js'
+import { redisCache } from '../redis.js'
 
 async function postToJSONLD(postId: string): Promise<activityPubObject | undefined> {
+  let resFromCacheString = await redisCache.get('postToJsonLD:' + postId)
+  if (resFromCacheString) {
+    return JSON.parse(resFromCacheString) as activityPubObject
+  }
   const cacheData = await getPostAndUserFromPostId(postId)
   const post = cacheData.data
   const localUser = post.user
@@ -250,6 +255,7 @@ async function postToJSONLD(postId: string): Promise<activityPubObject | undefin
       object: parentPostString
     }
   }
+  await redisCache.set('postToJsonLD:' + postId, JSON.stringify(postAsJSONLD), 'EX', 300)
   return postAsJSONLD
 }
 
