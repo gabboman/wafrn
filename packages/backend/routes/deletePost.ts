@@ -66,7 +66,7 @@ export default function deletePost(app: Application) {
           }
         }
         // bsky delete
-        if (postToDelete.bskyUri) {
+        if (postToDelete.bskyUri && user.enableBsky) {
           const agent = await getAtProtoSession(user)
           if (postToDelete.bskyCid) {
             await agent.deletePost(postToDelete.bskyUri)
