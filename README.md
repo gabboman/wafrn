@@ -52,7 +52,7 @@ packages/
 
 ### What will you need
 
-Before trying to host your own wafrn, we advise you to please, very please, [join our discord channel](https://discord.gg/EXpCBpvM) to get support
+Before trying to host your own wafrn, we advise you to please, very please, join our Discord channel to get support. You can always find the latest invite [on our website](https://wafrn.net)
 
 Prerequisites:
 
