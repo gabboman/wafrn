@@ -4,10 +4,10 @@ export const environment = {
   logSQLQueries: ${{LOG_SQL_QUERIES:-false}},
   workers: {
     // if you set this to true, workers will start in the main thread. no need for starting the utils/workers.ts in other tmux tab
-    mainThread: true,
-    low: 5,
-    medium: 10,
-    high: 100
+    mainThread: ${{USE_WORKERS:-true}},
+    low: ${{WORKERS_LOW:-5}},
+    medium: ${{WORKERS_MEDIUM:-10}},
+    high: ${{WORKERS_HIGH:-100}}
   },
   // this was a dev thing. leave to true unless you are doing stuff in local or your media url is yourinstance/uploads (not recomended)
   removeFolderNameFromFileUploads: true,
@@ -28,9 +28,9 @@ export const environment = {
   // app.wafrn.net
   instanceUrl: '${{DOMAIN_NAME}}',
   // https://media.wafrn.net
-  mediaUrl: 'https://${{DOMAIN_NAME}}/api/uploads',
+  mediaUrl: '${{FRONTEND_MEDIA_URL}}',
   // You should run also this project github.com/gabboman/fediversemediacacher. In my case, https://cache.wafrn.net/?media= The cache is there because at some point in the past I configured it to precache images. No need for it to be honest
-  externalCacheurl: 'https://${{DOMAIN_NAME}}/api/cache/?media=',
+  externalCacheurl: '${{FRONTEND_CACHE_URL}}',
   // after the first run, create the admin user. and a deleted user. You will have to edit the user url in db so it starts with an @
   adminUser: '${{ADMIN_USER}}',
   // admin email wich you will recive things like "someone registred and you need to review this"
@@ -109,8 +109,8 @@ export const environment = {
     logo: '${{FRONTEND_LOGO:-/assets/logo.png}}',
     frontUrl: '${{FRONTEND_FQDN_URL}}',
     baseUrl: '${{FRONTEND_API_URL:-/api}}',
-    baseMediaUrl: '${{FRONTEND_MEDIA_URL:-/api/uploads}}',
-    externalCacheurl: '${{FRONTEND_CACHE_URL:-/api/cache?media=}}',
+    baseMediaUrl: '${{FRONTEND_MEDIA_URL}}',
+    externalCacheurl: '${{FRONTEND_CACHE_URL}}',
     shortenPosts: ${{FRONTEND_SHORTEN_POSTS:-3}},
     disablePWA: ${{FRONTEND_DISABLE_PWA:-false}},
     maintenance: ${{FRONTEND_MAINTENANCE:-false}}

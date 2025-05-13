@@ -44,3 +44,6 @@ Thumbs.db
 
 # lite editor
 .lite_workspace.lua
+
+# default docker compose
+docker-compose.yml
