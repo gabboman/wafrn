@@ -35,9 +35,7 @@
             ],
             "tsConfig": "tsconfig.app.json",
             "inlineStyleLanguage": "scss",
-            "allowedCommonJsDependencies": [
-
-            ],
+            "allowedCommonJsDependencies": [],
             "assets": [
               "src/favicon.ico",
               "src/assets",
@@ -130,6 +128,18 @@
                 }
               ]
             },
+            "devlocal": {
+              "optimization": false,
+              "extractLicenses": false,
+              "sourceMap": true,
+              "namedChunks": true,
+              "fileReplacements": [
+                {
+                  "replace": "src/environments/environment.ts",
+                  "with": "src/environments/environment.devlocal.ts"
+                }
+              ]
+            },
             "devprod": {
               "optimization": false,
               "extractLicenses": false,
@@ -153,6 +163,10 @@
             },
             "development": {
               "buildTarget": "wafrn:build:development",
+              "proxyConfig": "src/proxy.conf.json"
+            },
+            "devlocal": {
+              "buildTarget": "wafrn:build:devlocal",
               "proxyConfig": "src/proxy.conf.json"
             },
             "devprod": {

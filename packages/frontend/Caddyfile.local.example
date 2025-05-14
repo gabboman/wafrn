@@ -1,0 +1,30 @@
+{
+    email wafrn@example.com
+
+    admin 0.0.0.0:2019
+
+    log {
+
+    }
+}
+
+localhost {
+    @api path /api* /fediverse* /contexts* /post* /blog* /.well-known*
+
+    handle @api {
+        header {
+            Access-Control-Allow-Origin *
+            Content-Security-Policy default-src 'self' 'unsafe-inline' 'unsafe-eval' localhost; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' localhost; img-src 'self' localhost; font-src 'self' localhost; object-src 'none'; frame-src 'none'; frame-ancestors 'none'; upgrade-insecure-requests; block-all-mixed-content
+        }
+
+        reverse_proxy host.docker.internal:9000
+    }
+
+    handle_path /adminer* {
+        reverse_proxy adminer:8080
+    }
+
+    handle {
+        reverse_proxy host.docker.internal:4200
+    }
+}
