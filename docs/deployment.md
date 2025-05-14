@@ -2,7 +2,7 @@
 
 ## What will you need
 
-Before trying to host your own wafrn, we advise you to please, very please, [join our discord channel](https://discord.gg/EXpCBpvM) to get support
+If you need support you can also always find the latest Discord invite [on our website](https://wafrn.net)
 
 Prerequisites:
 

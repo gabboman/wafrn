@@ -1,5 +1,5 @@
 import { Op } from 'sequelize'
-import { Media, Post, PostTag, User } from '../../models/index.js'
+import { Media, Post, PostTag, sequelize, User } from '../../models/index.js'
 import { environment } from '../../environment.js'
 import { fediverseTag } from '../../interfaces/fediverse/tags.js'
 import { activityPubObject } from '../../interfaces/fediverse/activityPubObject.js'
@@ -8,8 +8,13 @@ import { getPostReplies } from './getPostReplies.js'
 import { getPostAndUserFromPostId } from '../cacheGetters/getPostAndUserFromPostId.js'
 import { logger } from '../logger.js'
 import { Privacy } from '../../models/post.js'
+import { redisCache } from '../redis.js'
 
-async function postToJSONLD(postId: string) {
+async function postToJSONLD(postId: string): Promise<activityPubObject | undefined> {
+  let resFromCacheString = await redisCache.get('postToJsonLD:' + postId)
+  if (resFromCacheString) {
+    return JSON.parse(resFromCacheString) as activityPubObject
+  }
   const cacheData = await getPostAndUserFromPostId(postId)
   const post = cacheData.data
   const localUser = post.user
@@ -29,6 +34,33 @@ async function postToJSONLD(postId: string) {
 
   if (post.parentId) {
     let dbPost = (await getPostAndUserFromPostId(post.parentId)).data
+    if (post.bskyDid) {
+      // we do same check for all parents
+      const ancestorIdsQuery = await sequelize.query(
+        `SELECT "ancestorId" FROM "postsancestors" where "postsId" = '${post.parentId}'`
+      )
+      const ancestorIds: string[] = ancestorIdsQuery[0].map((elem: any) => elem.ancestorId)
+      if (ancestorIds.length > 0) {
+        const ancestors = await Post.findAll({
+          include: [
+            {
+              model: User,
+              as: 'user',
+              attributes: ['url']
+            }
+          ],
+          where: {
+            id: {
+              [Op.in]: ancestorIds
+            }
+          }
+        })
+        const parentsUserUrls = ancestors.map((elem) => elem.user.url)
+        if (parentsUserUrls.some((elem) => elem.split('@').length == 2)) {
+          return undefined
+        }
+      }
+    }
     while (
       dbPost &&
       dbPost.content === '' &&
@@ -186,7 +218,8 @@ async function postToJSONLD(postId: string) {
         first: {
           type: 'CollectionPage',
           partOf: `${environment.frontendUrl}/fediverse/post/${post.id}/replies`,
-          items: await getPostReplies(post.id)
+          next: `${environment.frontendUrl}/fediverse/post/${post.id}/replies?page=1`,
+          items: []
         }
       }
     }
@@ -222,6 +255,7 @@ async function postToJSONLD(postId: string) {
       object: parentPostString
     }
   }
+  await redisCache.set('postToJsonLD:' + postId, JSON.stringify(postAsJSONLD), 'EX', 300)
   return postAsJSONLD
 }
 

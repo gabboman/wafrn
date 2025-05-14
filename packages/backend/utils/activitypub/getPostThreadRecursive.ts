@@ -35,7 +35,7 @@ const updateMediaDataQueue = new Queue('processRemoteMediaData', {
       type: 'exponential',
       delay: 1000
     },
-    removeOnFail: 25000
+    removeOnFail: true
   }
 })
 
@@ -288,7 +288,9 @@ async function getPostThreadRecursive(
       } catch (error) {
         logger.info('problem processing tags')
       }
-      await processMentions(newPost, mentionedUsersIds)
+      if (mentionedUsersIds.length != 0) {
+        await processMentions(newPost, mentionedUsersIds)
+      }
       await loadPoll(remotePostObject, newPost, user)
       const postCleanContent = dompurify.sanitize(newPost.content, { ALLOWED_TAGS: [] }).trim()
       const mentions = await newPost.getMentionPost()

@@ -148,7 +148,8 @@ export class PostActionsComponent implements OnChanges {
         this.messages.add({
           severity: 'success',
           summary: 'You rewooted the woot!',
-          confettiEmojis: disableConfetti ? [] : ['🔁']
+          confettiEmojis: disableConfetti ? [] : ['🔁'],
+          soundUrl: '/assets/sounds/2.ogg'
         })
       }
     } else {
@@ -186,7 +187,8 @@ export class PostActionsComponent implements OnChanges {
       this.messages.add({
         severity: 'success',
         summary: 'You successfully liked this woot',
-        confettiEmojis: disableConfetti ? [] : ['❤️', '💚', '💙']
+        confettiEmojis: disableConfetti ? [] : ['❤️', '💚', '💙'],
+        soundUrl: '/assets/sounds/1.ogg'
       })
     } else {
       this.messages.add({

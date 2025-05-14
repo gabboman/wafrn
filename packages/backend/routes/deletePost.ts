@@ -34,7 +34,7 @@ const deletePostQueue = new Queue('deletePostQueue', {
       type: 'exponential',
       delay: 1000
     },
-    removeOnFail: 25000
+    removeOnFail: true
   }
 })
 
@@ -66,7 +66,7 @@ export default function deletePost(app: Application) {
           }
         }
         // bsky delete
-        if (postToDelete.bskyUri) {
+        if (postToDelete.bskyUri && user.enableBsky) {
           const agent = await getAtProtoSession(user)
           if (postToDelete.bskyCid) {
             await agent.deletePost(postToDelete.bskyUri)

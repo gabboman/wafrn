@@ -22,6 +22,8 @@ The "main" wafrn app is located at [app.wafrn.net](https://app.wafrn.net).
 * [Development documentation](./docs/development.md)
 * [Deployment documentation](./docs/deployment.md)
 
+If you need support you can also always find the latest Discord invite [on our website](https://wafrn.net)
+
 ## License
 
 The frontend uses [Apache License 2.0](https://choosealicense.com/licenses/apache-2.0/).

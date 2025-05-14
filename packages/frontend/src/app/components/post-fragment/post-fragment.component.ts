@@ -341,7 +341,8 @@ export class PostFragmentComponent implements OnChanges, OnDestroy {
         if (response) {
           this.messages.add({
             severity: 'success',
-            summary: `Reacted with ${emojiReaction.name} successfully`
+            summary: `Reacted with ${emojiReaction.name} successfully`,
+            soundUrl: '/assets/sounds/1.ogg'
           })
         }
 

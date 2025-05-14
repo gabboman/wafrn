@@ -19,8 +19,8 @@ import { Job, Queue } from 'bullmq'
 import { Agent, BskyAgent, CredentialSession } from '@atproto/api'
 import { wait } from '../wait.js'
 import dompurify from 'isomorphic-dompurify'
-import { postToAtproto } from "../../atproto/utils/postToAtproto.js";
-import { getAtProtoSession } from "../../atproto/utils/getAtProtoSession.js";
+import { postToAtproto } from '../../atproto/utils/postToAtproto.js'
+import { getAtProtoSession } from '../../atproto/utils/getAtProtoSession.js'
 import { Privacy } from '../../models/post.js'
 
 const processPostViewQueue = new Queue('processRemoteView', {
@@ -32,7 +32,7 @@ const processPostViewQueue = new Queue('processRemoteView', {
       type: 'exponential',
       delay: 25000
     },
-    removeOnFail: 25000
+    removeOnFail: true
   }
 })
 
@@ -45,7 +45,7 @@ const sendPostQueue = new Queue('sendPostToInboxes', {
       type: 'fixed',
       delay: 25000
     },
-    removeOnFail: 25000
+    removeOnFail: true
   }
 })
 async function prepareSendRemotePostWorker(job: Job) {
@@ -53,10 +53,9 @@ async function prepareSendRemotePostWorker(job: Job) {
   await wait(1500)
   //async function sendRemotePost(localUser: any, post: any) {
   const post = await Post.findByPk(job.id)
-  if (!post)
-    return
+  if (!post) return
 
-  const parent = post.parentId ? await Post.findByPk(post.parentId) : undefined;
+  const parent = post.parentId ? await Post.findByPk(post.parentId) : undefined
   const parentPoster = parent ? await User.findByPk(parent.userId) : undefined
   const localUser = await User.findByPk(post.userId)
   if (post.privacy === Privacy.Public && localUser?.enableBsky && environment.enableBsky) {
@@ -65,8 +64,8 @@ async function prepareSendRemotePostWorker(job: Job) {
       if (!parent || parent.bskyUri) {
         // ok the user has bluesky time to send the post
         const agent = await getAtProtoSession(localUser)
-        let isReblog = false;
-        if (post.content == '' && post.content_warning == "" && post.parentId) {
+        let isReblog = false
+        if (post.content == '' && post.content_warning == '' && post.parentId) {
           const mediaCount = await Media.count({
             where: {
               postId: post.id
@@ -83,21 +82,21 @@ async function prepareSendRemotePostWorker(job: Job) {
             }
           })
           if (mediaCount + quotesCount + tagsCount === 0) {
-            isReblog = true;
+            isReblog = true
             if (parent?.bskyUri) {
               const { uri } = await agent.repost(parent.bskyUri, parent.bskyCid)
-              post.bskyUri = uri;
-              await post.save();
+              post.bskyUri = uri
+              await post.save()
             }
           }
-        } if (!isReblog) {
-          const bskyPost = await agent.post(await postToAtproto(post, agent));
-          post.bskyUri = bskyPost.uri;
-          post.bskyCid = bskyPost.cid;
-          await post.save();
+        }
+        if (!isReblog) {
+          const bskyPost = await agent.post(await postToAtproto(post, agent))
+          post.bskyUri = bskyPost.uri
+          post.bskyCid = bskyPost.cid
+          await post.save()
         }
       }
-
     } catch (error) {
       logger.warn({
         message: 'Error while posting to bsky',
@@ -106,7 +105,7 @@ async function prepareSendRemotePostWorker(job: Job) {
     }
   }
   // we check if we need to send the post to fedi
-  if (localUser && (!parent || (!parent.bskyUri || !parentPoster?.url.startsWith('@')))) {
+  if (localUser && (!parent || !parent.bskyUri || !parentPoster?.url.startsWith('@'))) {
     // servers with shared inbox
     let serversToSendThePost: FederatedHost[] = []
     const localUserFollowers = await localUser.getFollower()
@@ -179,7 +178,6 @@ async function prepareSendRemotePostWorker(job: Job) {
         })
       )
 
-
     // we store the fact that we have sent the post in a queue
     await processPostViewQueue.addBulk(
       serversToSendThePost.map((host: any) => {
@@ -212,6 +210,9 @@ async function prepareSendRemotePostWorker(job: Job) {
     })
 
     const objectToSend = await postToJSONLD(post.id)
+    if (!objectToSend) {
+      return
+    }
     const ldSignature = new LdSignature()
     if (localUser.privateKey) {
       const bodySignature = await ldSignature.signRsaSignature2017(
@@ -261,7 +262,6 @@ async function prepareSendRemotePostWorker(job: Job) {
       }
     }
   }
-
 }
 
 export { prepareSendRemotePostWorker }
