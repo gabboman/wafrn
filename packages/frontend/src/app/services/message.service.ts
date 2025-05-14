@@ -17,7 +17,7 @@ export class MessageService {
     confettiEmojis?: string[]
     soundUrl?: string
   }) {
-    if (true && message.soundUrl) {
+    if (localStorage.getItem('disableSounds') != 'true' && message.soundUrl) {
       const audio = new Audio(message.soundUrl)
       audio.play()
     }

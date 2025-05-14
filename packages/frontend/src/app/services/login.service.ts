@@ -246,7 +246,8 @@ export class LoginService {
       notifyReactions: 'wafrn.notifyReactions',
       notifyQuotes: 'wafrn.notifyQuotes',
       notifyFollows: 'wafrn.notifyFollows',
-      notifyRewoots: 'wafrn.notifyRewoots'
+      notifyRewoots: 'wafrn.notifyRewoots',
+      disableSounds: 'wafrn.disableSounds'
     }
 
     try {
