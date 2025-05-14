@@ -223,7 +223,8 @@ export class BottomReplyBarComponent implements OnChanges {
         this.messages.add({
           severity: 'success',
           summary: 'You rewooted the woot!',
-          confettiEmojis: disableConfetti ? [] : ['🔁']
+          confettiEmojis: disableConfetti ? [] : ['🔁'],
+          soundUrl: '/assets/sounds/2.ogg'
         })
       }
     } else {
