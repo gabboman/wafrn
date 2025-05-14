@@ -16,7 +16,7 @@ export default function statusRoutes(app: Application) {
           type: 'exponential',
           delay: 1000
         },
-        removeOnFail: 25000
+        removeOnFail: true
       }
     })
     const prepareSendPostQueue = new Queue('prepareSendPost', {
@@ -28,7 +28,7 @@ export default function statusRoutes(app: Application) {
           type: 'exponential',
           delay: 1000
         },
-        removeOnFail: 25000
+        removeOnFail: true
       }
     })
 
@@ -41,7 +41,7 @@ export default function statusRoutes(app: Application) {
           type: 'exponential',
           delay: 1000
         },
-        removeOnFail: 25000
+        removeOnFail: true
       }
     })
 
@@ -54,7 +54,7 @@ export default function statusRoutes(app: Application) {
           type: 'exponential',
           delay: 1000
         },
-        removeOnFail: 25000
+        removeOnFail: true
       }
     })
     const firehoseQueue = new Queue('firehoseQueue', {
@@ -66,7 +66,7 @@ export default function statusRoutes(app: Application) {
           type: 'exponential',
           delay: 25000
         },
-        removeOnFail: 25000
+        removeOnFail: true
       }
     })
     const workerGenerateUserKeyPair = new Queue('generateUserKeyPair', {

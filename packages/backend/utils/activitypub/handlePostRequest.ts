@@ -20,7 +20,7 @@ const processPostViewQueue = new Queue('processRemoteView', {
       type: 'exponential',
       delay: 25000
     },
-    removeOnFail: 25000
+    removeOnFail: true
   }
 })
 

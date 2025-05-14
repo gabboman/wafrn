@@ -18,7 +18,7 @@ const sendPostQueue = new Queue('sendPostToInboxes', {
       type: 'exponential',
       delay: 1000
     },
-    removeOnFail: 25000
+    removeOnFail: true
   }
 })
 

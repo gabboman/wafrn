@@ -54,7 +54,7 @@ const inboxQueue = new Queue('inbox', {
       type: 'exponential',
       delay: 1000
     },
-    removeOnFail: 25000
+    removeOnFail: true
   }
 })
 

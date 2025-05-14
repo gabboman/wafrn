@@ -32,7 +32,7 @@ const processPostViewQueue = new Queue('processRemoteView', {
       type: 'exponential',
       delay: 25000
     },
-    removeOnFail: 25000
+    removeOnFail: true
   }
 })
 
@@ -45,7 +45,7 @@ const sendPostQueue = new Queue('sendPostToInboxes', {
       type: 'fixed',
       delay: 25000
     },
-    removeOnFail: 25000
+    removeOnFail: true
   }
 })
 async function prepareSendRemotePostWorker(job: Job) {
