@@ -433,7 +433,8 @@ export class NewEditorComponent implements OnDestroy {
       this.messages.add({
         severity: 'success',
         summary: 'Your woot has been published!',
-        confettiEmojis: disableConfetti ? [] : ['✏️', '🖍️', '✒️', '🖊️']
+        confettiEmojis: disableConfetti ? [] : ['✏️', '🖍️', '✒️', '🖊️'],
+        soundUrl: '/assets/sounds/2.ogg'
       })
       this.postCreatorForm.value.content = ''
       this.uploadedMedias = []

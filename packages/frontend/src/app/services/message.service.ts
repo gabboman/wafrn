@@ -15,8 +15,12 @@ export class MessageService {
     severity: 'error' | 'success' | 'warn' | 'info'
     summary: string
     confettiEmojis?: string[]
-    //detail?: string;
+    soundUrl?: string
   }) {
+    if (true && message.soundUrl) {
+      const audio = new Audio(message.soundUrl)
+      audio.play()
+    }
     let icon = ''
     switch (message.severity) {
       case 'warn':
