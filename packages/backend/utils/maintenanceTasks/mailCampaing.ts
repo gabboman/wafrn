@@ -25,7 +25,8 @@ async function sendMail() {
     const body = `
     <h1>Hello ${user.url}!</h1>
 <a  target="_blank" href="https://app.wafrn.net"><img style="width:100%" src="https://app.wafrn.net/assets/logo.png" /> </a>
-<p>Ok so we moved the server from Marseille (France) to Amsterdam. Inside the european union. Same regulations apply. Wont sell your data or anything like that! Gona be honest I am not sure if legaly I have to send this email so just in case I send it!</p>
+<p>Remember to put something funy and then attach snazzypurpleman image do not leave this text on the next campaign but do leave the image</p>
+<a href="https://app.wafrn.net/fediverse/post/b4529df6-7567-40d8-b97c-5e7251341b11" target="_blank><img style="width:100%" src="https://media.wafrn.net/1747230486580_3f20adffb3717316b4531fa80ccab363e2ddbbe9_processed.webp"></a>
 <p>We did a <a href="https://app.wafrn.net/fediverse/post/f6a643dc-4f7d-439b-8bb9-39cf1ac08439" target="_blank">"please give me money for a new server"</a>  yesterday and as you can see for the thread!</p>
 <p>20€ is the amount of money we needed for the server, and we got it! Yep, more or less thats what hosting wafrn costs! And if you check the patreon you'll see its more than enough right now. But we needed to have the new machine at the same time than the other ones, hence why we asked for moneys</p>
 <p>The wafrn team has grown up, its a lot more than just gabboman... Thats why, in the part of these emails where I said "give me money", I am going to say "give money to the team!"</p>
