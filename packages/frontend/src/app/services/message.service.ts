@@ -1,13 +1,17 @@
 import { Injectable } from '@angular/core'
 import { MatSnackBar } from '@angular/material/snack-bar'
 import JSConfetti from 'js-confetti'
+import { AudioService } from './audio.service'
 
 @Injectable({
   providedIn: 'root'
 })
 export class MessageService {
   confetti: JSConfetti
-  constructor(private snackBar: MatSnackBar) {
+  constructor(
+    private snackBar: MatSnackBar,
+    private audioService: AudioService
+  ) {
     this.confetti = new JSConfetti()
   }
 
@@ -18,8 +22,7 @@ export class MessageService {
     soundUrl?: string
   }) {
     if (localStorage.getItem('disableSounds') != 'true' && message.soundUrl) {
-      const audio = new Audio(message.soundUrl)
-      audio.play()
+      this.audioService.playSound(message.soundUrl)
     }
     let icon = ''
     switch (message.severity) {
