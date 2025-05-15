@@ -1,7 +1,7 @@
 @if (item.visible) {
   @if (item.items) {
     <a mat-list-item (click)="expanded = !expanded" (keydown)="handleKey($event)" tabIndex="0">
-      <div class="h-3rem flex align-items-center justify-content-start">
+      <div class="h-3rem flex align-items-center justify-content-start navigation-menu-button">
         <span
           [matBadge]="item.badge"
           [matBadgeHidden]="item.badge === 0"
@@ -32,7 +32,7 @@
       (keydown)="handleKey($event)"
       tabIndex="0"
     >
-      <div class="h-3rem flex align-items-center justify-content-start">
+      <div class="h-3rem flex align-items-center justify-content-start navigation-menu-button">
         <span
           [matBadge]="item.badge"
           [matBadgeHidden]="item.badge === 0"
