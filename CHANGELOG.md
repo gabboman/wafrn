@@ -44,3 +44,9 @@ WEBPUSH_EMAIL=mailto:<your_admin_email>
 WEBPUSH_PRIVATE=<private_key_from_above>
 WEBPUSH_PUBLIC=<public_key_from_above>
 ```
+
+If you have Bluesky enabled ou will also need to add the following to your `.env` file:
+
+```sh
+COMPOSE_PROFILES=bluesky
+```
