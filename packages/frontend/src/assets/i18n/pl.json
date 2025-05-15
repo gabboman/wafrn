@@ -81,30 +81,30 @@
     },
     "profile": {
         "security": {
-            "header": "Security Settings",
-            "passwordChange": "Reset Password",
+            "header": "Bezpieczeństwo",
+            "passwordChange": "Zresetuj hasło",
             "mfa": {
-                "header": "Two Factor Authentication",
-                "setup": "Setup Two Factor Authentication",
-                "addNew": "Add new Two Factor Authenticator",
-                "friendlyNameLabel": "Friendly name, e.g. 'Work Phone' or 'Aegis'",
-                "typeLabel": "Two factor type",
-                "setupNewButton": "Set up new authenticator",
+                "header": "Uwierzytelnianie dwuskładnikowe",
+                "setup": "Ustaw uwierzytelnianie dwuskładnikowe",
+                "addNew": "Dodaj nowe urządzenie 2FA",
+                "friendlyNameLabel": "Znajoma nazwa, np. 'Telefon służbowy' lub 'Orzeł'",
+                "typeLabel": "Typ dwuskładnikowy",
+                "setupNewButton": "Ustaw nowy token",
                 "tokenLabel": "Token",
-                "deleteLabel": "Delete",
-                "scanInstructions": "Scan the code below in your Authenticator application, and enter the code shown",
-                "installInstructions": "If you don't have an Authenticator app yet we suggest <a href=\"https://getaegis.app/\" target=\"_blank\">Aegis</a> (Android) or <a href=\"https://2fas.com/\" target=\"_blank\">2FAS</a> (iOS/Android)",
-                "imageAltSecret": "Authentication secret is '{{ secret }}'",
-                "secretFallback": "If you cannot read the QR code you can use code '{{ secret }}' manually in your app",
-                "confirmDeleteMessage": "Are you sure you want to delete this MFA provider? Note: deleting all MFA providers will disable MFA on your account",
-                "deleteSuccess": "MFA provider successfully removed",
-                "verifySuccess": "Success, your MFA is now enabled",
-                "verifyFailed": "Verification failed. Check your token, or if the problem persists ask an Administrator",
-                "errorMessageGeneric": "There was an issue with your request. Try again, or ask an Administrator for help",
-                "noMfa": "You do not have MFA enabled on your account",
-                "mfaList": "You have the following MFA providers set up",
+                "deleteLabel": "Usuń",
+                "scanInstructions": "Zeskanuj poniższy kod w swojej aplikacji 2FA i wpisz pokazany kod",
+                "installInstructions": "Jeśli nie masz aplikacji uwierzytelniającej, zalecamy użycie <a href=\"https://getaegis.app/\" target=\"_blank\">Aegis</a> (Android) lub <a href=\"https://2fas.com/\" target=\"_blank\">2FAS</a> (iOS/Android)",
+                "imageAltSecret": "Sekretny kod do uwierzytelnienia to '{{ secret }}'",
+                "secretFallback": "Jeśli nie możesz zeskanować kodu QR, użyj sekretnego kodu '{{ secret }}' w swojej aplikacji",
+                "confirmDeleteMessage": "Czy napewno chcesz usunąć ten token? Uwaga: Usunięcie wszystkich tokenów wyłączy MFA na twoim koncie",
+                "deleteSuccess": "Token usunięty",
+                "verifySuccess": "Gratulacje, MFA zostało włączone na twoim koncie",
+                "verifyFailed": "Weryfikacja nieudana. Sprawdź swój token, a jeśli dalej masz problem, skontaktuj się z administracją",
+                "errorMessageGeneric": "Wystąpił błąd. Spróbuj ponownie, lub poproś administrację o pomoc",
+                "noMfa": "MFA nie jest włączone na twoim koncie",
+                "mfaList": "Ustawiłoś poniższe tokeny:",
                 "type": {
-                    "totpLabel": "Authenticator App"
+                    "totpLabel": "Token"
                 }
             }
         }
