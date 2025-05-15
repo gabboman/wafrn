@@ -1,0 +1,43 @@
+services:
+  frontend:
+    image: caddy:2
+    restart: unless-stopped
+    command: caddy run --config ${PWD}/packages/frontend/Caddyfile --adapter caddyfile
+    ports:
+      - 80:80
+      - 443:443
+      - 2019:2019
+    volumes:
+      - "caddy:/data"
+      - ${PWD}/packages:${PWD}/packages
+
+  db:
+    image: postgres:17
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: root
+      POSTGRES_DB: wafrn
+    ports:
+      - 5432:5432
+    volumes:
+      - dbpg:/var/lib/postgresql/data
+
+  adminer:
+    image: adminer
+    restart: unless-stopped
+
+  redis:
+    image: redis:7.2.4
+    restart: unless-stopped
+    ports:
+      - 6379:6379
+    volumes:
+      - redis:/data
+
+volumes:
+  dbpg:
+  caddy:
+  pds:
+  frontend:
+  redis:
