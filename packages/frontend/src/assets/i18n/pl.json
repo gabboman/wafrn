@@ -107,6 +107,12 @@
                     "totpLabel": "Token"
                 }
             }
+        },
+        "tabHeaders": {
+            "profile": "Profil",
+            "preferences": "Preferencje",
+            "privacySecurity": "Prywatność i Bezpieczeństwo",
+            "misc": "Inne"
         }
     },
     "ask-dialog-content": {
