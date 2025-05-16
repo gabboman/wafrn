@@ -7,7 +7,7 @@ async function CreateActivity(body: activityPubObject, remoteUser: User, user: U
   const apObject: activityPubObject = body
   // Create new post
   const postRecived = body.object
-  await getPostThreadRecursive(user, postRecived.id, postRecived)
+  return await getPostThreadRecursive(user, postRecived.id, postRecived)
   // await signAndAccept({ body: body }, remoteUser, user)
 }
 

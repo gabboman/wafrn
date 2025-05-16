@@ -209,7 +209,7 @@ export default function deletePost(app: Application) {
           postsToDeleteUnfiltered
             .filter((elem) => elem.bskyUri && !elem.bskyCid)
             .forEach((elem) => {
-              agent.deleteRepost(elem.bskyUri)
+              agent.deleteRepost(elem.bskyUri as string)
             })
         }
 

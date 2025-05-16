@@ -84,7 +84,7 @@ async function prepareSendRemotePostWorker(job: Job) {
           if (mediaCount + quotesCount + tagsCount === 0) {
             isReblog = true
             if (parent?.bskyUri) {
-              const { uri } = await agent.repost(parent.bskyUri, parent.bskyCid)
+              const { uri } = await agent.repost(parent.bskyUri, parent.bskyCid as string)
               post.bskyUri = uri
               await post.save()
             }
