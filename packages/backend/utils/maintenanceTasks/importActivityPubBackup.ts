@@ -26,7 +26,10 @@ async function importBackup(fileName: string, userUrl: string) {
 
   if (backupData.orderedItems && user) {
     for (const item of backupData.orderedItems) {
-      console.log(`Importing ${item.id}`);
+      console.log(`Importing ${item.type} / ${item.id}`);
+      if (item.type.toLowerCase() !== "create") {
+        continue;
+      }
       try {
         const post = await CreateActivity(item, user, user);
         if (post) {

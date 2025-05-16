@@ -1,7 +1,13 @@
 import { Expo } from 'expo-server-sdk'
-import { PushNotificationToken } from '../../models/index.js'
+import { Follows, Notification, PushNotificationToken, UserOptions } from '../../models/index.js'
 import { logger } from '../logger.js'
-import { getNotificationBody, getNotificationTitle, handleDeliveryError, type NotificationBody, type NotificationContext } from '../pushNotifications.js'
+import {
+  getNotificationBody,
+  getNotificationTitle,
+  handleDeliveryError,
+  type NotificationBody,
+  type NotificationContext
+} from '../pushNotifications.js'
 import { Job, Queue } from 'bullmq'
 import { environment } from '../../environment.js'
 import { Op } from 'sequelize'
@@ -29,14 +35,113 @@ type PushNotificationPayload = {
 
 export async function sendPushNotification(job: Job<PushNotificationPayload>) {
   const { notifications, context } = job.data
-  await sendWebPushNotifications(notifications, context)
-  await sendExpoNotifications(notifications, context)
+  let notificationsToSend: NotificationBody[] = []
+  for await (const notification of notifications) {
+    const mutedPosts = new Set(
+      (await getMutedPosts(notification.notifiedUserId, false)).concat(
+        await getMutedPosts(notification.notifiedUserId, true)
+      )
+    )
+    if (!mutedPosts.has(notification.postId ? notification.postId : '')) {
+      // TODO this part of code is repeated. take it to a function another day
+      const options = await UserOptions.findAll({
+        where: {
+          userId: notification.notifiedUserId,
+          optionName: {
+            [Op.in]: [
+              'wafrn.notificationsFrom',
+              'wafrn.notifyMentions',
+              'wafrn.notifyReactions',
+              'wafrn.notifyQuotes',
+              'wafrn.notifyFollows',
+              'wafrn.notifyRewoots'
+            ]
+          }
+        }
+      })
+      const optionNotificationsFrom = options.find((elem) => elem.optionName == 'wafrn.notificationsFrom')
+      const optionNotifyQuotes = options.find((elem) => elem.optionName == 'wafrn.notifyQuotes')
+      const optionNotifyMentions = options.find((elem) => elem.optionName == 'wafrn.notifyMentions')
+      const optionNotifyReactions = options.find((elem) => elem.optionName == 'wafrn.notifyReactions')
+      const optionNotifyFollows = options.find((elem) => elem.optionName == 'wafrn.notifyFollows')
+      const optionNotifyRewoots = options.find((elem) => elem.optionName == 'wafrn.notifyRewoots')
+
+      const notificationTypes = []
+      if (!optionNotifyQuotes || optionNotifyQuotes.optionValue != 'false') {
+        notificationTypes.push('QUOTE')
+      }
+      if (!optionNotifyMentions || optionNotifyMentions.optionValue != 'false') {
+        notificationTypes.push('MENTION')
+      }
+      if (!optionNotifyReactions || optionNotifyReactions.optionValue != 'false') {
+        notificationTypes.push('EMOJIREACT')
+        notificationTypes.push('LIKE')
+      }
+      if (!optionNotifyFollows || optionNotifyFollows.optionValue != 'false') {
+        notificationTypes.push('FOLLOW')
+      }
+      if (!optionNotifyRewoots || optionNotifyRewoots.optionValue != 'false') {
+        notificationTypes.push('REWOOT')
+      }
+      if (notificationTypes.includes(notification.notificationType)) {
+        if (optionNotificationsFrom && optionNotificationsFrom.optionValue != '1') {
+          let validUsers: string[] = []
+          switch (optionNotificationsFrom.optionValue) {
+            case '2': // followers
+              validUsers = (
+                await Follows.findAll({
+                  where: {
+                    accepted: true,
+                    followedId: notification.notifiedUserId
+                  }
+                })
+              ).map((elem) => elem.followerId)
+            case '3': // followees
+              validUsers = (
+                await Follows.findAll({
+                  where: {
+                    accepted: true,
+                    followerId: notification.notifiedUserId
+                  }
+                })
+              ).map((elem) => elem.followedId)
+            case '4': // mutuals
+              const followerIds = (
+                await Follows.findAll({
+                  where: {
+                    accepted: true,
+                    followedId: notification.notifiedUserId
+                  }
+                })
+              ).map((elem) => elem.followerId)
+              validUsers = (
+                await Follows.findAll({
+                  where: {
+                    accepted: true,
+                    followerId: notification.notifiedUserId,
+                    followedId: {
+                      [Op.in]: followerIds
+                    }
+                  }
+                })
+              ).map((elem) => elem.followedId)
+              if (validUsers.includes(notification.userId)) {
+                notificationsToSend.push(notification)
+              }
+              continue
+          }
+        } else {
+          notificationsToSend.push(notification)
+          continue
+        }
+      }
+    }
+  }
+  await sendWebPushNotifications(notificationsToSend, context)
+  await sendExpoNotifications(notificationsToSend, context)
 }
 
-export async function sendExpoNotifications(
-  notifications: NotificationBody[],
-  context?: NotificationContext
-) {
+export async function sendExpoNotifications(notifications: NotificationBody[], context?: NotificationContext) {
   const userIds = notifications.map((elem) => elem.notifiedUserId)
   const tokenRows = await PushNotificationToken.findAll({
     where: {
@@ -50,15 +155,7 @@ export async function sendExpoNotifications(
     return
   }
   const payloads = notifications.map((notification) => {
-    const tokens = tokenRows
-      .filter((row) => row.userId === notification.notifiedUserId)
-      .filter(async (row) => {
-        const mutedPosts = (await getMutedPosts(notification.notifiedUserId, false)).concat(
-          await getMutedPosts(notification.notifiedUserId, true)
-        )
-        return !mutedPosts.includes(notification.postId ? notification.postId : '')
-      })
-      .map((row) => row.token)
+    const tokens = tokenRows.filter((row) => row.userId === notification.notifiedUserId).map((row) => row.token)
 
     // send the same notification to all the devices of each notified user
     return {
