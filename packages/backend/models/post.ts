@@ -40,9 +40,9 @@ export interface PostAttributes {
   content?: string;
   markdownContent?: string;
   title?: string;
-  remotePostId?: string;
-  bskyUri?: string;
-  bskyCid?: string;
+  remotePostId?: string | null;
+  bskyUri?: string | null;
+  bskyCid?: string | null;
   privacy?: PrivacyType;
   featured?: boolean;
   isReblog?: boolean;
@@ -94,19 +94,19 @@ export class Post extends Model<PostAttributes, PostAttributes> implements PostA
     allowNull: true,
     type: DataType.STRING(768)
   })
-  declare remotePostId: string;
+  declare remotePostId: string | null;
 
   @Column({
     allowNull: true,
     type: DataType.STRING(768)
   })
-  declare bskyUri: string;
+  declare bskyUri: string | null;
 
   @Column({
     allowNull: true,
     type: DataType.STRING(768)
   })
-  declare bskyCid: string;
+  declare bskyCid: string | null;
 
   @Column({
     allowNull: true,

@@ -43,24 +43,35 @@ If you want to setup both the backend and frontend locally there are a couple of
 
 > **Note:** If you are running Caddy manually, or you are not using Docker Desktop but a more native docker installation, you will need to edit `packages/frontend/Caddyfile` and replace `host.docker.internal` with `localhost` for it to work properly.
 
-3. Start up the backend:
+3. Set up the the backend:
 
 ```sh
 cd packages/backend
 npm i
 npm run db:migrate
-NODE_TLS_REJECT_UNAUTHORIZED=0 npm start
 ```
 
-4. Start up the frontend:
+4. Set up the frontend:
 
 ```sh
 cd packages/frontend
 npm i
+npm exec -- ng build --configuration=devlocal
+```
+
+5. Start backend & frontend
+
+```sh
+cd packages/backend
+NODE_TLS_REJECT_UNAUTHORIZED=0 npm start
+```
+
+```sh
+cd packages/frontend
 npm exec -- ng serve --host 0.0.0.0 --configuration=devlocal
 ```
 
-5. IF all is well go to `https://localhost` to see your app
+6. If all is well go to `https://localhost` to see your app
 
 The default username/password for local installation is: `admin@example.com` / `Password1!`
 

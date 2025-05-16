@@ -61,7 +61,7 @@ export default function likeRoutes(app: Application) {
         } else {
           if (user.enableBsky && post.bskyUri) {
             const agent = await getAtProtoSession(user)
-            const { uri } = await agent.like(post.bskyUri, post.bskyCid)
+            const { uri } = await agent.like(post.bskyUri, post.bskyCid as string)
             bskyUri = uri
           }
         }
