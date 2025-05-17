@@ -41,10 +41,13 @@ const updateMediaDataQueue = new Queue('processRemoteMediaData', {
 
 async function getPostThreadRecursive(
   user: any,
-  remotePostId: string,
+  remotePostId: string | null,
   remotePostObject?: any,
   localPostToForceUpdate?: string
 ) {
+  if (remotePostId === null)
+    return;
+
   const deletedUser = getDeletedUser()
   try {
     remotePostId.startsWith(`${environment.frontendUrl}/fediverse/post/`)
@@ -72,9 +75,11 @@ async function getPostThreadRecursive(
     }
   })
   if (postInDatabase && !localPostToForceUpdate) {
-    const parentPostPetition = await getPetitionSigned(user, postInDatabase.remotePostId)
-    if (parentPostPetition) {
-      await loadPoll(parentPostPetition, postInDatabase, user)
+    if (postInDatabase.remotePostId) {
+      const parentPostPetition = await getPetitionSigned(user, postInDatabase.remotePostId)
+      if (parentPostPetition) {
+        await loadPoll(parentPostPetition, postInDatabase, user)
+      }
     }
     return postInDatabase
   } else {
@@ -87,9 +92,11 @@ async function getPostThreadRecursive(
           }
         })
         if (remotePostInDatabase) {
-          const parentPostPetition = await getPetitionSigned(user, remotePostInDatabase.remotePostId)
-          if (parentPostPetition) {
-            await loadPoll(parentPostPetition, remotePostInDatabase, user)
+          if (remotePostInDatabase.remotePostId) {
+            const parentPostPetition = await getPetitionSigned(user, remotePostInDatabase.remotePostId)
+            if (parentPostPetition) {
+              await loadPoll(parentPostPetition, remotePostInDatabase, user)
+            }
           }
           return remotePostInDatabase
         }
@@ -158,7 +165,6 @@ async function getPostThreadRecursive(
           }
         }
       }
-
       const lemmyName = postPetition.name ? postPetition.name : ''
       postTextContent = postTextContent ? postTextContent : `<p>${lemmyName}</p>`
       let createdAt = new Date(postPetition.published)
@@ -170,8 +176,8 @@ async function getPostThreadRecursive(
         content_warning: postPetition.summary
           ? postPetition.summary
           : remoteUser.NSFW
-          ? 'User is marked as NSFW by this instance staff. Possible NSFW without tagging'
-          : '',
+            ? 'User is marked as NSFW by this instance staff. Possible NSFW without tagging'
+            : '',
         createdAt: new Date(postPetition.published),
         updatedAt: createdAt,
         userId: remoteUserServerBaned || remoteUser.banned ? (await deletedUser)?.id : remoteUser.id,
