@@ -12,7 +12,7 @@ import { AdminService } from 'src/app/services/admin.service'
 export class ReportListComponent implements OnInit {
   @ViewChild(MatPaginator) paginator!: MatPaginator
   dataSource!: MatTableDataSource<any, MatPaginator>
-  displayedColumns = ['user', 'reportedUser', 'report', 'solved', 'actions']
+  displayedColumns = ['user', 'reportedUser', 'report', 'solved', 'actions', 'banActions']
 
   ready = false
   constructor(private adminService: AdminService) {
