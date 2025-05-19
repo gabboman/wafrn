@@ -1,0 +1,6 @@
+- name: wafrn
+  conn_str: postgresql://${{POSTGRES_USER}}:${{POSTGRES_PASSWORD}}@db/${{POSTGRES_DB}}
+  preset_metrics: exhaustive
+  is_enabled: true
+  is_superuser: true
+  group: default

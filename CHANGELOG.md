@@ -1,6 +1,23 @@
 
 # Changelog
 
+## 2025-05-19
+
+Support has been added to turn on metrics / monitoring using Prometheus, pgwatch and Grafana
+
+To turn it on, replace your `docker-compose.yml` file with one of the others supporting `metrics`, like `docker-compose.simple.metrics.yml`.
+
+You also need to set a few new environment variables, add the following to your `.env` files:
+
+```sh
+POSTGRES_METRICS_USER=pgwatch
+POSTGRES_METRICS_PASSWORD=<some_random_password>
+POSTGRES_METRICS_DBNAME=pgwatch_metrics
+GF_SECURITY_ADMIN_PASSWORD=<some_other_random_password>
+```
+
+Once you run `docker compose up --build -d` you should be able to check your metrics at `https://monitoring.<your_wafrn_domain>`
+
 ## 2025-05-13
 
 **BREAKING CHANGE**
