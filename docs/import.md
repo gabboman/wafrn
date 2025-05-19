@@ -15,14 +15,17 @@ To import follow the steps:
 3. Run the following command:
 
 ```sh
-cd packages/backend
-npm exec tsx utils/maintenanceTasks/importActivityPubBackup.ts <filename.zip> <local_username>
+cp <filename.zip> packages/backend/uploads
+docker exec -ti wafrn-backend-1 npm exec tsx utils/maintenanceTasks/importActivityPubBackup.ts uploads/<filename.zip> <local_username>
+rm packages/backend/uploads/archive.zip
 ```
 
 for example if your backup is called `archive.zip` and the user you created locally is `awesomeuser`:
 
 ```sh
-npm exec tsx utils/maintenanceTasks/importActivityPubBackup.ts archive.zip awesomeuser
+cp archive.zip packages/backend/uploads
+docker exec -ti wafrn-backend-1 npm exec tsx utils/maintenanceTasks/importActivityPubBackup.ts uploads/archive.zip awesomeuser
+rm packages/backend/uploads/archive.zip
 ```
 
 ## Importing Tumblr backups

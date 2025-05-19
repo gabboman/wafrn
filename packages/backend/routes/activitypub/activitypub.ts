@@ -1,12 +1,7 @@
 import { Application, Request, Response } from 'express'
 import {
   User,
-  Follows,
-  Post,
-  Media,
-  UserLikesPostRelations,
   Emoji,
-  UserEmojiRelation,
   sequelize
 } from '../../models/index.js'
 import { getCheckFediverseSignatureFucnction } from '../../utils/activitypub/checkFediverseSignature.js'
@@ -14,17 +9,12 @@ import { environment } from '../../environment.js'
 import { return404 } from '../../utils/return404.js'
 import { Queue } from 'bullmq'
 import { SignedRequest } from '../../interfaces/fediverse/signedRequest.js'
-import { emojiToAPTag } from '../../utils/activitypub/emojiToAPTag.js'
 import { getPostReplies } from '../../utils/activitypub/getPostReplies.js'
 import { redisCache } from '../../utils/redis.js'
-import { getUserEmojis } from '../../utils/cacheGetters/getUserEmojis.js'
 import { getFollowedRemoteIds } from '../../utils/cacheGetters/getFollowedRemoteIds.js'
 import { getFollowerRemoteIds } from '../../utils/cacheGetters/getFollowerRemoteIds.js'
 import { checkuserAllowsThreads } from '../../utils/checkUserAllowsThreads.js'
-import { handlePostRequest } from '../../utils/activitypub/handlePostRequest.js'
-import { getPostSEOCache, getIndexSeo } from '../frontend.js'
-import { getUserOptions } from '../../utils/cacheGetters/getUserOptions.js'
-import { logger } from '../../utils/logger.js'
+import { userToJSONLD } from '../../utils/activitypub/userToJSONLD.js'
 
 // we get the user from the memory cache. if does not exist we try to find it
 async function getLocalUserByUrl(url: string): Promise<any> {
@@ -82,94 +72,7 @@ function activityPubRoutes(app: Application) {
             res.sendStatus(403)
             return
           }
-          const userCacheResult = await redisCache.get('fediverse:user:base:' + user.id)
-          let userForFediverse
-          if (userCacheResult) {
-            userForFediverse = JSON.parse(userCacheResult)
-          } else {
-            const emojis = await getUserEmojis(user.id)
-            const userOptions = await getUserOptions(user.id)
-            let unprocessedAttachments = userOptions.find((elem) => elem.optionName === 'fediverse.public.attachment')
-            let alsoKnownAs: any[] = []
-            let alsoKnownAsList = userOptions.find((elem) => elem.optionName === 'fediverse.public.alsoKnownAs')
-            if (alsoKnownAsList?.optionValue) {
-              try {
-                const parsedValue = JSON.parse(alsoKnownAsList?.optionValue)
-                if (typeof parsedValue === 'string') {
-                  for (let elem of parsedValue.split(',')) {
-                    let url = new URL(elem)
-                    alsoKnownAs.push(url.toString())
-                  }
-                }
-              } catch (_) {}
-            }
-            if (user.bskyDid) {
-              alsoKnownAs.push(`at://${user.bskyDid}`)
-            }
-            let attachments: { type: string; name: string; value: string }[] = []
-            if (unprocessedAttachments) {
-              try {
-                const attachmentsArray: { name: string; value: string }[] = JSON.parse(
-                  unprocessedAttachments.optionValue
-                )
-                attachments = attachmentsArray.map((elem) => {
-                  return { ...elem, type: 'PropertyValue' }
-                })
-              } catch (error) {
-                logger.debug({
-                  message: `Error parsing attachment for user ${user.url}`,
-                  error: error
-                })
-              }
-            }
-            userForFediverse = {
-              '@context': ['https://www.w3.org/ns/activitystreams', 'https://w3id.org/security/v1'],
-              id: `${environment.frontendUrl}/fediverse/blog/${user.url.toLowerCase()}`,
-              type: 'Person',
-              attachment: attachments,
-              following: `${environment.frontendUrl}/fediverse/blog/${user.url.toLowerCase()}/following`,
-              followers: `${environment.frontendUrl}/fediverse/blog/${user.url.toLowerCase()}/followers`,
-              featured: `${environment.frontendUrl}/fediverse/blog/${user.url.toLowerCase()}/featured`,
-              inbox: `${environment.frontendUrl}/fediverse/blog/${user.url.toLowerCase()}/inbox`,
-              outbox: `${environment.frontendUrl}/fediverse/blog/${user.url.toLowerCase()}/outbox`,
-              preferredUsername: user.url.toLowerCase(),
-              name: user.name,
-              summary: user.description,
-              url: `${environment.frontendUrl}/fediverse/blog/${user.url.toLowerCase()}`,
-              manuallyApprovesFollowers: user.manuallyAcceptsFollows,
-              discoverable: true,
-              alsoKnownAs: alsoKnownAs,
-              published: user.createdAt,
-              tag: emojis.map((emoji: any) => emojiToAPTag(emoji)),
-              endpoints: {
-                sharedInbox: `${environment.frontendUrl}/fediverse/sharedInbox`
-              },
-              ...(user.avatar
-                ? {
-                    icon: {
-                      type: 'Image',
-                      mediaType: 'image/webp',
-                      url: environment.mediaUrl + user.avatar
-                    }
-                  }
-                : undefined),
-              ...(user.headerImage
-                ? {
-                    image: {
-                      type: 'Image',
-                      mediaType: 'image/webp',
-                      url: environment.mediaUrl + user.headerImage
-                    }
-                  }
-                : undefined),
-              publicKey: {
-                id: `${environment.frontendUrl}/fediverse/blog/${user.url.toLowerCase()}#main-key`,
-                owner: `${environment.frontendUrl}/fediverse/blog/${user.url.toLowerCase()}`,
-                publicKeyPem: user.publicKey
-              }
-            }
-            redisCache.set('fediverse:user:base:' + user.id, JSON.stringify(userForFediverse), 'EX', 300)
-          }
+          const userForFediverse = await userToJSONLD(user);
           res
             .set({
               'content-type': 'application/activity+json'
@@ -215,14 +118,12 @@ function activityPubRoutes(app: Application) {
               orderedItems: itemsToSend
             }
             if (page > 1) {
-              response['prev'] = `${environment.frontendUrl}/fediverse/blog/${user.url.toLowerCase()}/following?page=${
-                page - 1
-              }`
+              response['prev'] = `${environment.frontendUrl}/fediverse/blog/${user.url.toLowerCase()}/following?page=${page - 1
+                }`
             }
             if (followedUsers.length > pageSize * page) {
-              response['next'] = `${environment.frontendUrl}/fediverse/blog/${user.url.toLowerCase()}/following?page=${
-                page + 1
-              }`
+              response['next'] = `${environment.frontendUrl}/fediverse/blog/${user.url.toLowerCase()}/following?page=${page + 1
+                }`
             }
           } else {
             response = {
@@ -273,22 +174,19 @@ function activityPubRoutes(app: Application) {
             const itemsToSend = followers.slice((page - 1) * pageSize, page * pageSize)
             response = {
               '@context': 'https://www.w3.org/ns/activitystreams',
-              id: `${environment.frontendUrl}/fediverse/blog/${user.url.toLowerCase()}/followers?page=${
-                req.query.page
-              }`,
+              id: `${environment.frontendUrl}/fediverse/blog/${user.url.toLowerCase()}/followers?page=${req.query.page
+                }`,
               type: 'OrderedCollectionPage',
               orderedItems: itemsToSend,
               totalItems: followersNumber
             }
             if (page > 1) {
-              response['prev'] = `${environment.frontendUrl}/fediverse/blog/${user.url.toLowerCase()}/followers?page=${
-                page - 1
-              }`
+              response['prev'] = `${environment.frontendUrl}/fediverse/blog/${user.url.toLowerCase()}/followers?page=${page - 1
+                }`
             }
             if (followers.length > pageSize * page) {
-              response['next'] = `${environment.frontendUrl}/fediverse/blog/${user.url.toLowerCase()}/followers?page=${
-                page + 1
-              }`
+              response['next'] = `${environment.frontendUrl}/fediverse/blog/${user.url.toLowerCase()}/followers?page=${page + 1
+                }`
             }
           } else {
             response = {

@@ -1,14 +1,17 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-// imports a ZIP file containing Tumblr API dumps in JSON format into the database
-import fs from "fs";
+// imports a user from an Activity Pub compatible ZIP backup file
 import Zip from "node-stream-zip";
 import { activityPubObject } from "../../interfaces/fediverse/activityPubObject.js";
 import { CreateActivity } from "../activitypub/processors/create.js";
-import { Post, User } from "../../models/index.js";
+import { Post, User, UserBookmarkedPosts, UserLikesPostRelations } from "../../models/index.js";
+import { AnnounceActivity } from "../activitypub/processors/announce.js";
+import { getPostThreadRecursive } from "../activitypub/getPostThreadRecursive.js";
 
 async function importBackup(fileName: string, userUrl: string) {
   const zip = new Zip.async({ file: fileName });
   let backupData: { orderedItems?: activityPubObject[] } = {};
+  let likeData: { orderedItems?: string[] } = {};
+  let bookmarkData: { orderedItems?: string[] } = {};
   const mediaFiles: Record<string, boolean> = {};
 
   for (const entry of Object.values(await zip.entries())) {
@@ -16,7 +19,15 @@ async function importBackup(fileName: string, userUrl: string) {
       backupData = JSON.parse(
         (await zip.entryData(entry)).toString("utf8").replaceAll("\\u0000", ""),
       );
-    } else if (entry.name.indexOf("media_attachments/files") !== -1 && entry.isFile) {
+    } else if (entry.name == "likes.json") {
+      likeData = JSON.parse(
+        (await zip.entryData(entry)).toString("utf8").replaceAll("\\u0000", ""),
+      );
+    } else if (entry.name == "bookmarks.json") {
+      bookmarkData = JSON.parse(
+        (await zip.entryData(entry)).toString("utf8").replaceAll("\\u0000", ""),
+      );
+    } else if (entry.isFile) {
       mediaFiles[entry.name] = true;
     }
   }
@@ -24,42 +35,89 @@ async function importBackup(fileName: string, userUrl: string) {
   const user = await User.findOne({ where: { url: userUrl } });
   const generatedPosts: Post[] = [];
 
-  if (backupData.orderedItems && user) {
-    for (const item of backupData.orderedItems) {
-      console.log(`Importing ${item.type} / ${item.id}`);
-      if (item.type.toLowerCase() !== "create") {
-        continue;
-      }
-      try {
-        const post = await CreateActivity(item, user, user);
-        if (post) {
-          generatedPosts.push(post);
+  if (user) {
+    if (backupData?.orderedItems) {
+      for (const item of backupData.orderedItems) {
+        console.log(`Importing ${item.type} / ${item.id}`);
+        if (item.type.toLowerCase() === "create") {
+          try {
+            const post = await CreateActivity(item, user, user);
+            if (post) {
+              generatedPosts.push(post);
+            }
+          } catch (e) {
+            console.log(e);
+          }
+        } else if (item.type.toLowerCase() === "announce") {
+          try {
+            const post = await AnnounceActivity(item, user, user);
+            if (post) {
+              generatedPosts.push(post);
+            }
+          } catch (e) {
+            console.log(e);
+          }
         }
-      } catch (e) {
-        console.log(e);
+      }
+
+      for (const post of generatedPosts) {
+        console.log(`Processing ${post.id}`);
+        post.remotePostId = null;
+        post.userId = user.id;
+        await post.save();
+
+        const medias = post.medias || await post.getMedias();
+        for (const media of medias) {
+          let oldMediaUrl = media.url.startsWith('/') ? media.url.substring(1) : media.url;
+          if (mediaFiles[oldMediaUrl]) {
+            let newMediaUrl = oldMediaUrl.replaceAll('/', '_');
+            await zip.extract(oldMediaUrl, `uploads/${newMediaUrl}`);
+            media.url = `/${newMediaUrl}`;
+            media.external = false;
+            await media.save();
+          } else {
+            console.log(`Missing media file from dump: ${oldMediaUrl}`);
+          }
+        }
       }
     }
 
-    for (const post of generatedPosts) {
-      console.log(`Processing ${post.id}`);
-      post.remotePostId = null;
-      post.userId = user.id;
-      await post.save();
+    if (likeData?.orderedItems) {
+      for (const like of likeData.orderedItems) {
+        const post = await getPostThreadRecursive(user, like);
+        if (post) {
+          try {
+            await UserLikesPostRelations.create({
+              userId: user.id,
+              postId: post.id
+            });
+          } catch (error) {
+            console.log(`Could not like post ${like}`);
+          }
+        } else {
+          console.log(`Did not find post to like ${like}`);
+        }
+      }
+    }
 
-      const medias = post.medias || await post.getMedias();
-      for (const media of medias) {
-        let oldMediaUrl = media.url.substring(1);
-        if (mediaFiles[oldMediaUrl]) {
-          let newMediaUrl = oldMediaUrl.replaceAll('/', '_');
-          await zip.extract(oldMediaUrl, `uploads/${newMediaUrl}`);
-          media.url = `/${newMediaUrl}`;
-          media.external = false;
-          await media.save();
+    if (bookmarkData?.orderedItems) {
+      for (const bookmark of bookmarkData.orderedItems) {
+        const post = await getPostThreadRecursive(user, bookmark);
+        if (post) {
+          try {
+            await UserBookmarkedPosts.create({
+              userId: user.id,
+              postId: post.id
+            });
+          } catch (error) {
+            console.log(`Error during bookmark post ${bookmark}`);
+          }
+        } else {
+          console.log(`Did not find post to bookmark ${bookmark}`);
         }
       }
     }
   }
-
   await zip.close();
 }
 

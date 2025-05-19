@@ -28,6 +28,7 @@ import {
   BelongsToManyRemoveAssociationMixin,
   BelongsToManyRemoveAssociationsMixin,
   BelongsToManySetAssociationsMixin,
+  HasManyGetAssociationsMixin,
   HasManyRemoveAssociationMixin
 } from 'sequelize'
 import { Col } from 'sequelize/lib/utils'
@@ -463,6 +464,7 @@ export class User extends Model<UserAttributes, UserAttributes> implements UserA
     sourceKey: 'id'
   })
   declare posts: Post[]
+  declare getPosts: HasManyGetAssociationsMixin<Post>
 
   @HasMany(() => Media, {
     sourceKey: 'id'
@@ -481,11 +483,13 @@ export class User extends Model<UserAttributes, UserAttributes> implements UserA
     sourceKey: 'id'
   })
   declare userLikesPostRelations: UserLikesPostRelations[]
+  declare getUserLikesPostRelations: HasManyGetAssociationsMixin<UserLikesPostRelations>
 
   @HasMany(() => UserBookmarkedPosts, {
     sourceKey: 'id'
   })
   declare userBookmarkedPosts: UserBookmarkedPosts[]
+  declare getUserBookmarkedPosts: HasManyGetAssociationsMixin<UserBookmarkedPosts>
 
   @HasMany(() => RemoteUserPostView, {
     sourceKey: 'id'
