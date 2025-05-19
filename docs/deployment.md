@@ -67,6 +67,13 @@ There is a convenience script that will generate secret values appropriately. To
 bash install/env_secret_setup.sh
 ```
 
+Next you'll need to choose between one of the `docker-compose.*.yml` files:
+
+1. `simple`: Basic installation, this is the least resource heavy option.
+2. `simple.metrics`: Basic installation with Grafana support. Uses more resources.
+3. `advanced`: Advanced installation with multiple separate workers running for better load distribution. Uses more resources
+4. `advanced.metrics`: Advanced installation with Grafana suppport. The most complete, but also more resource intense option.
+
 Next you'll need to fill in all of the details of your domain. For example if you're trying to run your website under `wafrn.example.com` (and your DNS is already pointing to the computer running docker) you'll need to update the following details:
 
 ```sh
@@ -75,7 +82,7 @@ CACHE_DOMAIN=cache.wafrn.example.com
 MEDIA_DOMAIN=media.wafrn.example.com
 PDS_DOMAIN_NAME=bsky.example.com
 
- use the same domains as set above for MEDIA and CACHE
+# use the same domains as set above for MEDIA and CACHE
 FRONTEND_MEDIA_URL="https://media.wafrn.example.com"
 FRONTEND_CACHE_URL="https://cache.wafrn.example.com/api/cache?media="
 
@@ -91,7 +98,7 @@ You'll also need to fill in the `SMTP` settings for emails to work.
 Next to run the setup just call
 
 ```
-docker compose build && docker compose up
+docker compose up --build -d
 ```
 
 Once the scripts run and everything is okay you should be able to access your website at `https://wafrn.example.com`
