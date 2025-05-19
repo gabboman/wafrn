@@ -26,22 +26,6 @@
   class="flex flex-column gap-3 post-content"
   [ngClass]="{ hidden: (fragment().content_warning || fragment().muted_words_cw) && !showSensitiveContent() }"
 >
-  @for (quote of fragment().quotes; track $index) {
-    <!-- We use routerlink instead of the data because quoted posts are incomplete in the frontend!-->
-    <div
-      *ngIf="quote"
-      [routerLink]="'/fediverse/post/' + quote.id"
-      class="quoted-post cursor-pointer"
-      [ngClass]="{ 'quote-collapsed': !expandQuotes }"
-    >
-      <div class="flex">
-        <app-post-header class="w-full" [fragment]="quote" [simplified]="true" [disableLink]="true"></app-post-header>
-      </div>
-      <div class="cursor-pointer">
-        <app-post-fragment [fragment]="quote"></app-post-fragment>
-      </div>
-    </div>
-  }
   @for (block of wafrnFormattedContent(); track $index) {
     <div #mediaInline class="fragment-content overflow-hidden">
       <div [injectHTML]="block" class="post-text"></div>
@@ -78,6 +62,22 @@
       }
     }
   </section>
+  @for (quote of fragment().quotes; track $index) {
+    <!-- We use routerlink instead of the data because quoted posts are incomplete in the frontend!-->
+    <div
+      *ngIf="quote"
+      [routerLink]="'/fediverse/post/' + quote.id"
+      class="quoted-post cursor-pointer"
+      [ngClass]="{ 'quote-collapsed': !expandQuotes }"
+    >
+      <div class="flex">
+        <app-post-header class="w-full" [fragment]="quote" [simplified]="true" [disableLink]="true"></app-post-header>
+      </div>
+      <div class="cursor-pointer">
+        <app-post-fragment [fragment]="quote"></app-post-fragment>
+      </div>
+    </div>
+  }
   <div class="flex flex-wrap gap-2 tag-list" *ngIf="fragment().tags && fragment().tags.length">
     @for (tag of fragment().tags; track $index) {
       <a class="tag" [routerLink]="'/dashboard/search/' + tag.tagName"> #{{ tag.tagName }} </a>
