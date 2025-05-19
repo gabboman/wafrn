@@ -62,6 +62,11 @@
       }
     }
   </section>
+  <div class="flex flex-wrap gap-2 tag-list" *ngIf="fragment().tags && fragment().tags.length">
+    @for (tag of fragment().tags; track $index) {
+      <a class="tag" [routerLink]="'/dashboard/search/' + tag.tagName"> #{{ tag.tagName }} </a>
+    }
+  </div>
   @for (quote of fragment().quotes; track $index) {
     <!-- We use routerlink instead of the data because quoted posts are incomplete in the frontend!-->
     <div
@@ -78,11 +83,6 @@
       </div>
     </div>
   }
-  <div class="flex flex-wrap gap-2 tag-list" *ngIf="fragment().tags && fragment().tags.length">
-    @for (tag of fragment().tags; track $index) {
-      <a class="tag" [routerLink]="'/dashboard/search/' + tag.tagName"> #{{ tag.tagName }} </a>
-    }
-  </div>
   <section class="mt-3" class="flex flex-wrap gap-1 emoji-reactions">
     @for (emoji of emojiCollection(); track $index) {
       @if (availableEmojiNames.includes(emoji.name) || !emoji.img) {
