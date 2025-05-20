@@ -464,7 +464,7 @@ export default function postsRoutes(app: Application) {
         content = content.replaceAll(mentionRegex, (userUrl: string) => userUrl.toLowerCase())
 
         let dbFoundMentions: any[] = []
-        const newMentionedUsers = req.body.mentionedUsersIds || []
+        const newMentionedUsers = req.body.mentionedUserIds || req.body.mentionedUsersIds || []
         if (postToBeQuoted) {
           newMentionedUsers.push(postToBeQuoted.userId)
         }

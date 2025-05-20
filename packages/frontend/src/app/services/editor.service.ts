@@ -75,7 +75,7 @@ export class EditorService implements OnDestroy {
         idPostToEdit: options.idPostToEdit,
         postToQuote: options.idPosToQuote,
         ask: options.ask?.id,
-        mentionedUsersIds: mentionedUsers
+        mentionedUserIds: mentionedUsers
       }
       const url = `${this.base_url}/v3/createPost`
       const petitionResponse: any = await this.http.post(url, formdata).toPromise()
