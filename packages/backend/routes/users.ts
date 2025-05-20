@@ -1208,11 +1208,11 @@ async function updateBlueskyProfile(agent: BskyAgent, user: User) {
   await getCacheAtDids(true)
   return await agent.upsertProfile(async (existingProfile) => {
     const profile = existingProfile ?? {}
-    const fullProfileString = `\nView full profile at ${environment.frontendUrl}/blog/${user.url}`
+    const fullProfileString = `\n\nView full profile at ${environment.frontendUrl}/blog/${user.url}`
     profile.displayName = user.name.substring(0, 63)
     profile.description =
-      dompurify.sanitize(user.descriptionMarkdown.substring(0, 256 - fullProfileString.length), { ALLOWED_TAGS: [] }) +
-      fullProfileString
+      dompurify.sanitize(user.descriptionMarkdown.substring(0, 248 - fullProfileString.length), { ALLOWED_TAGS: [] }) +
+      "[...]" + fullProfileString
     if (user.avatar) {
       let pngAvatar = await optimizeMedia('uploads' + user.avatar, {
         forceImageExtension: 'png',
