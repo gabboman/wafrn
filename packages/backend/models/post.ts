@@ -20,7 +20,7 @@ import { PostHostView } from "./postHostView.js";
 import { RemoteUserPostView } from "./remoteUserPostView.js";
 import { FederatedHost } from "./federatedHost.js";
 import { PostAncestor } from "./postAncestor.js";
-import { BelongsToManyGetAssociationsMixin, BelongsToManySetAssociationsMixin, BelongsToSetAssociationMixin, HasManyGetAssociationsMixin, HasManyRemoveAssociationMixin, HasManyRemoveAssociationsMixin, HasManySetAssociationsMixin, HasOneGetAssociationMixin } from "sequelize";
+import { BelongsToGetAssociationMixin, BelongsToManyGetAssociationsMixin, BelongsToManySetAssociationsMixin, BelongsToSetAssociationMixin, HasManyGetAssociationsMixin, HasManyRemoveAssociationMixin, HasManyRemoveAssociationsMixin, HasManySetAssociationsMixin, HasOneGetAssociationMixin } from "sequelize";
 
 export const Privacy = {
   Public: 0,
@@ -157,6 +157,7 @@ export class Post extends Model<PostAttributes, PostAttributes> implements PostA
 
   @BelongsTo(() => Post, "parentId")
   declare parent: Post
+  declare getParent: BelongsToGetAssociationMixin<Post>
   declare setParent: BelongsToSetAssociationMixin<Post, string>
 
   @HasMany(() => Post, "parentId")
@@ -228,7 +229,8 @@ export class Post extends Model<PostAttributes, PostAttributes> implements PostA
   declare getPostTags: HasManyGetAssociationsMixin<PostTag>
 
   @BelongsTo(() => User)
-  declare user: User;
+  declare user: User
+  declare getUser: BelongsToGetAssociationMixin<User>
 
   @HasMany(() => Media, {
     sourceKey: "id"
