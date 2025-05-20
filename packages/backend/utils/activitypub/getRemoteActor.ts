@@ -5,6 +5,7 @@ import { environment } from '../../environment.js'
 import { logger } from '../logger.js'
 import { getUserIdFromRemoteId } from '../cacheGetters/getUserIdFromRemoteId.js'
 import { getDeletedUser } from '../cacheGetters/getDeletedUser.js'
+import { forcePopulateUsers } from '../../atproto/utils/getAtprotoUser.js'
 
 const queue = new Queue('getRemoteActorId', {
   connection: environment.bullmqConnection,
@@ -33,6 +34,20 @@ async function getRemoteActor(actorUrl: string, user: any, forceUpdate = false):
       return User.findOne({
         where: sequelize.where(sequelize.fn('lower', sequelize.col('url')), urlToSearch.toLowerCase())
       })
+    }
+    if (environment.enableBsky && actorUrl.toLowerCase().startsWith('at://')) {
+      // Bluesky user. This should only happen through an import
+      const adminUser = await User.findOne({
+        where: {
+          url: environment.adminUser
+        }
+      }) as User;
+      await forcePopulateUsers([actorUrl.slice(5)], adminUser)
+      return User.findOne({
+        where: {
+          bskyDid: actorUrl.slice(5)
+        }
+      }) || await getDeletedUser();
     }
     let userId = await getUserIdFromRemoteId(actorUrl)
     if (userId === '') {

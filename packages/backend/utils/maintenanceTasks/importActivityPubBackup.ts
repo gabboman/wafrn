@@ -6,12 +6,14 @@ import { CreateActivity } from "../activitypub/processors/create.js";
 import { Post, User, UserBookmarkedPosts, UserLikesPostRelations } from "../../models/index.js";
 import { AnnounceActivity } from "../activitypub/processors/announce.js";
 import { getPostThreadRecursive } from "../activitypub/getPostThreadRecursive.js";
+import { getAtProtoThread } from "../../atproto/utils/getAtProtoThread.js";
 
 async function importBackup(fileName: string, userUrl: string) {
   const zip = new Zip.async({ file: fileName });
   let backupData: { orderedItems?: activityPubObject[] } = {};
   let likeData: { orderedItems?: string[] } = {};
   let bookmarkData: { orderedItems?: string[] } = {};
+  let actorData: any = {};
   const mediaFiles: Record<string, boolean> = {};
 
   for (const entry of Object.values(await zip.entries())) {
@@ -27,12 +29,17 @@ async function importBackup(fileName: string, userUrl: string) {
       bookmarkData = JSON.parse(
         (await zip.entryData(entry)).toString("utf8").replaceAll("\\u0000", ""),
       );
+    } else if (entry.name == "actor.json") {
+      actorData = JSON.parse(
+        (await zip.entryData(entry)).toString("utf8").replaceAll("\\u0000", ""),
+      );
     } else if (entry.isFile) {
       mediaFiles[entry.name] = true;
     }
   }
 
   const user = await User.findOne({ where: { url: userUrl } });
+  const actor = actorData.id;
   const generatedPosts: Post[] = [];
 
   if (user) {
@@ -41,7 +48,7 @@ async function importBackup(fileName: string, userUrl: string) {
         console.log(`Importing ${item.type} / ${item.id}`);
         if (item.type.toLowerCase() === "create") {
           try {
-            const post = await CreateActivity(item, user, user);
+            const post = await getPostThreadRecursive(user, item.object.id, item.object, undefined, { allowMediaFromBanned: true });
             if (post) {
               generatedPosts.push(post);
             }
@@ -62,9 +69,11 @@ async function importBackup(fileName: string, userUrl: string) {
 
       for (const post of generatedPosts) {
         console.log(`Processing ${post.id}`);
-        post.remotePostId = null;
-        post.userId = user.id;
-        await post.save();
+        if ((await post.getUser()).remoteId == actor) {
+          post.remotePostId = null;
+          post.userId = user.id;
+          await post.save();
+        }
 
         const medias = post.medias || await post.getMedias();
         for (const media of medias) {

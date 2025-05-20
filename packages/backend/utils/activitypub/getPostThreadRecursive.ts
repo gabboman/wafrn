@@ -25,6 +25,7 @@ import { Queue } from 'bullmq'
 import { bulkCreateNotifications } from '../pushNotifications.js'
 import { getDeletedUser } from '../cacheGetters/getDeletedUser.js'
 import { Privacy } from '../../models/post.js'
+import { getAtProtoThread } from '../../atproto/utils/getAtProtoThread.js'
 
 const updateMediaDataQueue = new Queue('processRemoteMediaData', {
   connection: environment.bullmqConnection,
@@ -43,7 +44,8 @@ async function getPostThreadRecursive(
   user: any,
   remotePostId: string | null,
   remotePostObject?: any,
-  localPostToForceUpdate?: string
+  localPostToForceUpdate?: string,
+  options?: any
 ) {
   if (remotePostId === null)
     return;
@@ -68,6 +70,20 @@ async function getPostThreadRecursive(
         id: postId
       }
     })
+  }
+  if (environment.enableBsky && remotePostId.startsWith('at://')) {
+    // Bluesky post. Likely coming from an import
+    const postInDatabase = await Post.findOne({
+      where: {
+        bskyUri: remotePostId
+      }
+    })
+    if (postInDatabase) {
+      return postInDatabase;
+    } else if (!remotePostObject) {
+      const postId = await getAtProtoThread(remotePostId);
+      return await Post.findByPk(postId);
+    }
   }
   const postInDatabase = await Post.findOne({
     where: {
@@ -138,7 +154,7 @@ async function getPostThreadRecursive(
         // peertube federation. We just add a link to the video, federating this is HELL
         postTextContent = postTextContent + ` <a href="${postPetition.id}" target="_blank">${postPetition.id}</a>`
       }
-      if (postPetition.attachment && postPetition.attachment.length > 0 && !remoteUser.banned) {
+      if (postPetition.attachment && postPetition.attachment.length > 0 && (!remoteUser.banned || options?.allowMediaFromBanned)) {
         for await (const remoteFile of postPetition.attachment) {
           if (remoteFile.type !== 'Link') {
             const wafrnMedia = await Media.create({

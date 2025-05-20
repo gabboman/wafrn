@@ -16,7 +16,7 @@ async function AnnounceActivity(body: activityPubObject, remoteUser: User, user:
     }
   })
   if (existingPost) {
-    return
+    return existingPost
   }
   // LEMMY HACK
   let urlToGet =

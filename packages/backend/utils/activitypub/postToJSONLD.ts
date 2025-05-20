@@ -86,11 +86,9 @@ async function postToJSONLD(postId: string): Promise<activityPubObject | undefin
   // we remove the wafrnmedia from the post for the outside world, as they get this on the attachments
   processedContent = processedContent.replaceAll(wafrnMediaRegex, '')
   if (ask) {
-    processedContent = `<p>${getUserName(userAsker)} asked </p> <blockquote>${
-      ask.question
-    }</blockquote> ${processedContent} <p>To properly see this ask, <a href="${
-      environment.frontendUrl + '/fediverse/post/' + post.id
-    }">check the post in the original instance</a></p>`
+    processedContent = `<p>${getUserName(userAsker)} asked </p> <blockquote>${ask.question
+      }</blockquote> ${processedContent} <p>To properly see this ask, <a href="${environment.frontendUrl + '/fediverse/post/' + post.id
+      }">check the post in the original instance</a></p>`
   }
   const mentions: string[] = post.mentionPost.map((elem: any) => elem.id)
   const fediMentions: fediverseTag[] = []
@@ -200,13 +198,13 @@ async function postToJSONLD(postId: string): Promise<activityPubObject | undefin
       // conversation: conversationString,
       content: (processedContent + tagsAndQuotes).replace(lineBreaksAtEndRegex, ''),
       attachment: postMedias
-        ?.sort((a: any, b: any) => a.mediaOrder - b.mediaOrder)
-        .map((media: any) => {
+        ?.sort((a: Media, b: Media) => a.mediaOrder - b.mediaOrder)
+        .map((media: Media) => {
           const extension = media.url.split('.')[media.url.split('.').length - 1].toLowerCase()
           return {
             type: 'Document',
             mediaType: media.mediaType,
-            url: environment.mediaUrl + media.url,
+            url: media.external ? media.url : environment.mediaUrl + media.url,
             sensitive: media.NSFW ? true : false,
             name: media.description
           }
@@ -249,8 +247,8 @@ async function postToJSONLD(postId: string): Promise<activityPubObject | undefin
         post.privacy / 1 === Privacy.DirectMessage
           ? mentionedUsers
           : post.privacy / 1 === Privacy.Public
-          ? ['https://www.w3.org/ns/activitystreams#Public']
-          : [stringMyFollowers],
+            ? ['https://www.w3.org/ns/activitystreams#Public']
+            : [stringMyFollowers],
       cc: [`${environment.frontendUrl}/fediverse/blog/${localUser.url.toLowerCase()}`, stringMyFollowers],
       object: parentPostString
     }
@@ -283,7 +281,7 @@ function getToAndCC(
       break
     }
     default: {
-      ;(to = mentionedUsers), (cc = [])
+      ; (to = mentionedUsers), (cc = [])
     }
   }
   return {
