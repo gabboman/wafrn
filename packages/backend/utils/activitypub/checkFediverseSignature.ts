@@ -85,7 +85,7 @@ function getCheckFediverseSignatureFucnction(force = false) {
           return
         } else {
           // ok you cornered me. forced to fetch the remote actor
-          const tmpUser = await getRemoteActor(remoteUserUrl, adminUser)
+          const tmpUser = await getRemoteActor(remoteUserUrl, await adminUser)
           remoteKey = await getKey(remoteUserUrl, await adminUser)
           if (remoteKey) {
             remoteKey = remoteKey.key
@@ -115,7 +115,7 @@ function getCheckFediverseSignatureFucnction(force = false) {
         success = success && remoteUserUrl.toLowerCase() === req.body.actor.toLowerCase()
         if (!success && req.body.signature && req.body.signature.type === 'RsaSignature2017') {
           const signature = req.body.signature
-          const remoteActor = await getRemoteActor(signature.creator.split('#')[0], adminUser)
+          const remoteActor = await getRemoteActor(signature.creator.split('#')[0], await adminUser)
           const jsonld = new LdSignature()
           success = !!(await jsonld.verifyRsaSignature2017(req.body, remoteActor.publicKey).catch((error) => {
             logger.debug({
