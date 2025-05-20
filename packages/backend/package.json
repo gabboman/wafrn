@@ -78,7 +78,6 @@
     "mariadb": "^2.5.5",
     "mfm-js": "^0.24.0",
     "multer": "^2.0.0",
-    "mysql2": "^3.9.8",
     "node-stream-zip": "^1.15.0",
     "nodemailer": "^6.7.2",
     "otpauth": "^9.4.0",
