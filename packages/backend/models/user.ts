@@ -75,6 +75,8 @@ export interface UserAttributes {
   hideFollows?: Boolean
   hideProfileNotLoggedIn?: Boolean
   emailVerified: Boolean | null
+  selfDeleted: Boolean | null
+  userMigratedTo: String | null
 }
 
 @Table({
