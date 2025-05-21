@@ -6,6 +6,7 @@ import { logger } from '../logger.js'
 import { getUserIdFromRemoteId } from '../cacheGetters/getUserIdFromRemoteId.js'
 import { getDeletedUser } from '../cacheGetters/getDeletedUser.js'
 import { forcePopulateUsers } from '../../atproto/utils/getAtprotoUser.js'
+import { redisCache } from '../redis.js'
 
 const queue = new Queue('getRemoteActorId', {
   connection: environment.bullmqConnection,
@@ -97,6 +98,9 @@ async function getRemoteActor(actorUrl: string, user: User | null, forceUpdate =
         }
       )
     }
+  }
+  if (remoteUser) {
+    await redisCache.del('key:' + remoteUser.remoteId)
   }
   return remoteUser ? remoteUser : await getDeletedUser()
 }
