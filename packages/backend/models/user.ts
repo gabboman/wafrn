@@ -498,6 +498,19 @@ export class User extends Model<UserAttributes, UserAttributes> implements UserA
   })
   declare remoteUserPostViewList: RemoteUserPostView[]
 
+  @Column({
+    allowNull: true,
+    type: DataType.BOOLEAN,
+    defaultValue: false
+  })
+  declare selfDeleted: boolean
+
+  @Column({
+    allowNull: true,
+    type: DataType.STRING(768)
+  })
+  declare userMigratedTo: string
+
   @Column(DataType.VIRTUAL)
   get isBlueskyUser() {
     return !!(this.url.split('@').length == 2 && this.bskyDid)
