@@ -5,11 +5,9 @@ import { Media, Post, User, sequelize } from '../models/index.js'
 import fs from 'fs'
 import dompurify from 'isomorphic-dompurify'
 import { redisCache } from '../utils/redis.js'
-import { logger } from '../utils/logger.js'
-import { getCheckFediverseSignatureFucnction } from '../utils/activitypub/checkFediverseSignature.js'
+import { getCheckFediverseSignatureFunction } from '../utils/activitypub/checkFediverseSignature.js'
 import { SignedRequest } from '../interfaces/fediverse/signedRequest.js'
 import { handlePostRequest } from '../utils/activitypub/handlePostRequest.js'
-import { getUserOptions } from '../utils/cacheGetters/getUserOptions.js'
 import { Privacy } from '../models/post.js'
 
 const cacheOptions = {
@@ -39,7 +37,7 @@ function frontend(app: Application) {
     }
   )
 
-  app.get('/post/:id', getCheckFediverseSignatureFucnction(false), async function (req: SignedRequest, res) {
+  app.get('/post/:id', getCheckFediverseSignatureFunction(false), async function (req: SignedRequest, res) {
     //res.redirect(`/fediverse${req.url}`)
     res.send(
       `<script>
@@ -93,7 +91,7 @@ function frontend(app: Application) {
 
   app.get(
     ['/fediverse/post/:id', '/fediverse/activity/post/:id'],
-    getCheckFediverseSignatureFucnction(false),
+    getCheckFediverseSignatureFunction(false),
     async (req: SignedRequest, res: Response) => {
       if (req.fediData?.valid) {
         await handlePostRequest(req, res)
