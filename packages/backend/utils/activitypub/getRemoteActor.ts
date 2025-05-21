@@ -22,7 +22,13 @@ const queue = new Queue('getRemoteActorId', {
 const queueEvents = new QueueEvents('getRemoteActorId', {
   connection: environment.bullmqConnection
 })
-async function getRemoteActor(actorUrl: string, user: any, forceUpdate = false): Promise<any> {
+async function getRemoteActor(actorUrl: string, user: User | null, forceUpdate = false): Promise<any> {
+  if (!user) {
+    logger.debug({
+      message: `caled getremoteactor with null`
+    })
+    return
+  }
   let remoteUser
   if (!actorUrl) {
     return await getDeletedUser()
@@ -37,17 +43,19 @@ async function getRemoteActor(actorUrl: string, user: any, forceUpdate = false):
     }
     if (environment.enableBsky && actorUrl.toLowerCase().startsWith('at://')) {
       // Bluesky user. This should only happen through an import
-      const adminUser = await User.findOne({
+      const adminUser = (await User.findOne({
         where: {
           url: environment.adminUser
         }
-      }) as User;
+      })) as User
       await forcePopulateUsers([actorUrl.slice(5)], adminUser)
-      return User.findOne({
-        where: {
-          bskyDid: actorUrl.slice(5)
-        }
-      }) || await getDeletedUser();
+      return (
+        User.findOne({
+          where: {
+            bskyDid: actorUrl.slice(5)
+          }
+        }) || (await getDeletedUser())
+      )
     }
     let userId = await getUserIdFromRemoteId(actorUrl)
     if (userId === '') {

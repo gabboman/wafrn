@@ -72,7 +72,7 @@ function getCheckFediverseSignatureFunction(force = false) {
         valid: false
       }
       let remoteKeyData = await getKey(remoteUserUrl, await adminUser)
-      let remoteKey;
+      let remoteKey
       if (remoteKeyData.key) {
         remoteKey = remoteKeyData.key
       } else {
@@ -121,11 +121,14 @@ function getCheckFediverseSignatureFunction(force = false) {
         }
       }
 
-      success = false;
+      success = false
 
       if (req.method === 'POST') {
         if (verifyDigest(req.rawBody ? req.rawBody : '', req.headers.digest)) {
-          if (httpSignature.verifySignature(sigHead, remoteKey) && remoteUserUrl.toLowerCase() === req.body.actor.toLowerCase()) {
+          if (
+            httpSignature.verifySignature(sigHead, remoteKey) &&
+            remoteUserUrl.toLowerCase() === req.body.actor.toLowerCase()
+          ) {
             success = true
           } else if (req.body.signature && req.body.signature.type === 'RsaSignature2017') {
             // Mastodon allows two kind of signatures on POST bodys, if the http one fails we can check if there's a JSON-LD one, and if it is valid we pass it
@@ -133,21 +136,26 @@ function getCheckFediverseSignatureFunction(force = false) {
             const remoteActor = await getRemoteActor(signature.creator.split('#')[0], await adminUser)
             const jsonld = new LdSignature()
 
-            if (await jsonld.verifyRsaSignature2017(req.body, remoteActor.publicKey).catch((error) => {
-              logger.debug({
-                message: `Problem with jsonld signature ${hostUrl}: ${remoteUserUrl}`,
-                error: error
+            if (
+              await jsonld.verifyRsaSignature2017(req.body, remoteActor.publicKey).catch((error) => {
+                logger.debug({
+                  message: `Problem with jsonld signature ${hostUrl}: ${remoteUserUrl}`,
+                  error: error
+                })
               })
-            })) {
+            ) {
               success = true
             } else {
-              logger.debug(`POST Signature verifications failed for ${hostUrl}: ${remoteUserUrl}`);
+              logger.debug(`POST Signature verifications failed for ${hostUrl}: ${remoteUserUrl}`)
+              getRemoteActor(remoteUserUrl, await adminUser, true)
+                .catch(() => {})
+                .then(() => {})
             }
           } else {
-            logger.debug(`No valid POST signatures found ${hostUrl}: ${remoteUserUrl}`);
+            logger.debug(`No valid POST signatures found ${hostUrl}: ${remoteUserUrl}`)
           }
         } else {
-          logger.debug(`POST Digest verification failed for ${hostUrl}: ${remoteUserUrl}`);
+          logger.debug(`POST Digest verification failed for ${hostUrl}: ${remoteUserUrl}`)
         }
       } else {
         // GET calls
@@ -159,7 +167,9 @@ function getCheckFediverseSignatureFunction(force = false) {
         const now = new Date()
         if (now.getTime() - lastUpdate.getTime() > 24 * 3600 * 1000) {
           // while we will still fail this request, we do initiate an async forced update, so if the client retries it'll likely have an updated signature by that time
-          getRemoteActor(remoteUserUrl, await adminUser, true).catch(() => { }).then(() => { })
+          getRemoteActor(remoteUserUrl, await adminUser, true)
+            .catch(() => {})
+            .then(() => {})
         }
       }
 
