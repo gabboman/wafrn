@@ -4,7 +4,7 @@ import {
   Emoji,
   sequelize
 } from '../../models/index.js'
-import { getCheckFediverseSignatureFucnction } from '../../utils/activitypub/checkFediverseSignature.js'
+import { getCheckFediverseSignatureFunction } from '../../utils/activitypub/checkFediverseSignature.js'
 import { environment } from '../../environment.js'
 import { return404 } from '../../utils/return404.js'
 import { Queue } from 'bullmq'
@@ -54,7 +54,7 @@ function activityPubRoutes(app: Application) {
   // Get blog for fediverse
   app.get(
     '/fediverse/blog/:url',
-    getCheckFediverseSignatureFucnction(false),
+    getCheckFediverseSignatureFunction(false),
     async (req: SignedRequest, res: Response) => {
       const url = req.params.url.toLowerCase()
       if (req.headers['accept']?.includes('*')) {
@@ -90,7 +90,7 @@ function activityPubRoutes(app: Application) {
 
   app.get(
     '/fediverse/blog/:url/following',
-    getCheckFediverseSignatureFucnction(false),
+    getCheckFediverseSignatureFunction(false),
     async (req: SignedRequest, res: Response) => {
       if (req.params?.url) {
         const url = req.params.url.toLowerCase()
@@ -151,7 +151,7 @@ function activityPubRoutes(app: Application) {
 
   app.get(
     '/fediverse/blog/:url/followers',
-    getCheckFediverseSignatureFucnction(false),
+    getCheckFediverseSignatureFunction(false),
     async (req: SignedRequest, res: Response) => {
       if (req.params?.url) {
         const url = req.params.url.toLowerCase()
@@ -213,7 +213,7 @@ function activityPubRoutes(app: Application) {
 
   app.get(
     '/fediverse/blog/:url/featured',
-    getCheckFediverseSignatureFucnction(true),
+    getCheckFediverseSignatureFunction(true),
     async (req: SignedRequest, res: Response) => {
       if (req.params?.url) {
         const url = req.params.url.toLowerCase()
@@ -250,7 +250,7 @@ function activityPubRoutes(app: Application) {
   // HERE is where the meat and potatoes are. This endpoint is what we use to recive stuff
   app.post(
     ['/fediverse/blog/:url/inbox', '/fediverse/sharedInbox'],
-    getCheckFediverseSignatureFucnction(true),
+    getCheckFediverseSignatureFunction(true),
     async (req: SignedRequest, res: Response) => {
       const urlToSearch = req.params?.url ? req.params.url : environment.adminUser
       const url = urlToSearch.toLowerCase()
@@ -275,7 +275,7 @@ function activityPubRoutes(app: Application) {
 
   app.get(
     '/fediverse/blog/:url/outbox',
-    getCheckFediverseSignatureFucnction(false),
+    getCheckFediverseSignatureFunction(false),
     async (req: SignedRequest, res: Response) => {
       if (req.params?.url) {
         const url = req.params.url.toLowerCase()

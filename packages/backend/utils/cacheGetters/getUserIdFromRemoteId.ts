@@ -1,4 +1,4 @@
-import { User, sequelize } from '../../models/index.js'
+import { User } from '../../models/index.js'
 import { environment } from '../../environment.js'
 import { redisCache } from '../redis.js'
 
