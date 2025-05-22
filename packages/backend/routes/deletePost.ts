@@ -93,7 +93,7 @@ export default function deletePost(app: Application) {
         // if the post is previous to the new functionality of storing who has seen the post, send to everyone
         // or NUKE has been requested
         if (new Date(postToDelete.createdAt).getTime() < 1721437200091 || req.query?.nuke) {
-          serversToSendThePost = FederatedHost.findAll({
+          serversToSendThePost = await FederatedHost.findAll({
             where: {
               publicInbox: { [Op.ne]: null },
               blocked: false

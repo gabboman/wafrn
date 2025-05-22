@@ -67,6 +67,8 @@ export class EditProfileComponent implements OnInit {
     notifyRewoots: new FormControl(true)
   })
 
+  password = ''
+
   constructor(
     private jwtService: JwtService,
     private dashboardService: DashboardService,
@@ -229,5 +231,17 @@ export class EditProfileComponent implements OnInit {
     this.loginService.enableBluesky().then(() => {
       this.loading = false
     })
+  }
+
+  async requestDeleteAccount() {
+    this.loading = true
+    let success = await this.loginService.deleteAccount(this.password)
+    if (success) {
+      this.messages.add({ severity: 'success', summary: 'goodbye' })
+      setTimeout(() => {
+        this.loginService.logOut()
+        window.location.reload()
+      }, 1000)
+    }
   }
 }

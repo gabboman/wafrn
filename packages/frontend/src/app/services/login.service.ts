@@ -332,6 +332,28 @@ export class LoginService {
     return
   }
 
+  async deleteAccount(password: string): Promise<boolean> {
+    let res = false
+    let message = 'Something went wrong! Is the password the correct one?'
+    let body = {
+      password: password
+    }
+    try {
+      let petition = await firstValueFrom(
+        this.http.post<{ success: boolean }>(`${EnvironmentService.environment.baseUrl}/user/selfDeactivate`, body)
+      )
+      if (petition.success) {
+        res = true
+      }
+    } catch (error) {
+      message = 'Something went wrong. Please try again or contact an administrator'
+    }
+    if (!res) {
+      this.messagesService.add({ severity: 'error', summary: message })
+    }
+    return res
+  }
+
   async handleSuccessfulLogin() {
     await this.postsService.loadFollowers()
     this.loginEventEmitter.emit('logged in')

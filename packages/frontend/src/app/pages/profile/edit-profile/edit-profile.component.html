@@ -249,6 +249,19 @@
       </p>
       <button [disabled]="loading" (click)="enableBluesky()" mat-flat-button class="w-full">Enable bluesky</button>
     </mat-tab>
+    <mat-tab label="Delete account">
+      <p>We will mark your account as deactivated and after 30 days it will be IRREVERSIBLY DELETED.</p>
+      <p>To confirm it's you, please fill your password</p>
+      <form>
+        <mat-form-field class="w-full">
+          <mat-label>{{ 'login.password' | translate }}</mat-label>
+          <input [(ngModel)]="password" [type]="'password'" name="password" matInput />
+        </mat-form-field>
+        <button (click)="requestDeleteAccount()" mat-flat-button style="background-color: red" class="w-full">
+          DELETE ACCOUNT
+        </button>
+      </form>
+    </mat-tab>
   </mat-tab-group>
 
   <!--

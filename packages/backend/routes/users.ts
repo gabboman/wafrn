@@ -1201,6 +1201,37 @@ export default function userRoutes(app: Application) {
       success: success
     })
   })
+
+  app.post('/api/user/selfDeactivate', authenticateToken, async (req: AuthorizedRequest, res: Response) => {
+    // frontend will warn user. User will recive email.
+    let success = false
+    const userId = req.jwtData?.userId as string
+    const user = (await User.findByPk(userId)) as User
+    const password = req.body.password
+    if (req.body.password && (await bcrypt.compare(req.body.password, user.password))) {
+      user.selfDeleted = true
+      user.activated = false
+      user.updatedAt = new Date()
+      user.banned = true
+      await user.save()
+      await sendActivationEmail(
+        user.email as string,
+        '',
+        `We have marked your ${environment.instanceUrl} for deletion`,
+        `
+            <h1>We are sad to see you go</h1>
+            <p>
+             We have recived your request to delete your account. It will still ve visible for a few moments. In 30 days or less we will complete the destruction process and at that point there will be no going back</p>
+             <p>This is a slow process on our side and thats why its not done imediately</p>
+             <p>We will send to every fedi server that has ever seen a post of yours a "PLEASE DELETE. NOW". This task takes time and slows down the server. We run this task weekly more or less. But just in case, "30 days"</p>.
+            `
+      )
+    }
+
+    res.send({
+      success: success
+    })
+  })
 }
 
 async function updateBlueskyProfile(agent: BskyAgent, user: User) {
@@ -1212,7 +1243,8 @@ async function updateBlueskyProfile(agent: BskyAgent, user: User) {
     profile.displayName = user.name.substring(0, 63)
     profile.description =
       dompurify.sanitize(user.descriptionMarkdown.substring(0, 248 - fullProfileString.length), { ALLOWED_TAGS: [] }) +
-      "[...]" + fullProfileString
+      '[...]' +
+      fullProfileString
     if (user.avatar) {
       let pngAvatar = await optimizeMedia('uploads' + user.avatar, {
         forceImageExtension: 'png',
