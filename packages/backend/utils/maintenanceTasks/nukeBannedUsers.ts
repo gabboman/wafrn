@@ -35,6 +35,9 @@ const deletePostQueue = new Queue('deletePostQueue', {
 const users = await User.findAll({
   where: {
     banned: true,
+    id: {
+      [Op.ne]: ((await getDeletedUser()) as User).id
+    },
     email: {
       [Op.ne]: null
     }
