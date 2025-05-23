@@ -1,4 +1,4 @@
- /*
+/*
 theme by vv0ltz
 https://app.wafrn.net/blog/vv0ltz
  */
@@ -15,15 +15,15 @@ https://app.wafrn.net/blog/vv0ltz
 
   --link-textcolor: #00f;
 
-  --link-textcolor-hover: #00f
+  --link-textcolor-hover: #00f;
 
-  --link-textcolor-visited: #00f;
+  --link-textcolor-visited: #452a73;
 
   --button-bgcolor: silver;
 
   --button-bgcolor-hover: silver;
 
-  --button-accent-color: #00f;
+  --button-accent-color: navy;
 
   --button-accent-color-hover: #00f;
 
@@ -31,9 +31,9 @@ https://app.wafrn.net/blog/vv0ltz
 
   --username-textcolor: #00f;
 
-  --username-textcolor-hover: #00f
+  --username-textcolor-hover: navy;
 
-  --url-textcolor: #00f;
+  --url-textcolor: navy;
 
   --popup-textcolor: black;
 
@@ -75,7 +75,7 @@ https://app.wafrn.net/blog/vv0ltz
     
   --mat-sys-on-surface: black; 
   
-  --mat-sys-secondary-container: #00f;
+  --mat-sys-secondary-container: navy;
     
   --mat-sys-surface-container: silver;
     
@@ -128,6 +128,8 @@ a:hover {
 a:active {
   color: var(--link-textcolor-hover);
 }
+    
+
 
 /* BUTTONS - these may be overwritten by the class of the button, see below */
 
@@ -709,7 +711,7 @@ app-wafrn-media {
 /* IMAGES */
 
 app-wafrn-media img {
-  filter: brightness(0.7);
+  filter: brightness(1);
 
   transition: var(--image-transoff);
 }
@@ -772,20 +774,43 @@ a.tag:hover {
     a.tag:active {
         box-shadow: inset -1px -1px #ffffff, inset 1px 1px #0a0a0a, inset -2px -2px #dfdfdf, inset 2px 2px #808080;
     }
+    
+/* QUOTE POSTS */
+    
+    /* Button in quotes */
+
+   .quoted-post .mat-mdc-button-touch-target {
+        background: var(--button-bgcolor);
+        box-shadow: inset -1px -1px #0a0a0a,inset 1px 1px #fff,inset -2px -2px grey,inset 2px 2px #dfdfdf;
+    }
 
 /* container of quoted post */
+    
+    .quoted-post.quote-collapsed::before{
+        
+        box-shadow: none !important;
+    }
 
 div.quoted-post {
-  border-width: 2px;
-
-  border-color: var(--button-accent-color);
-
-  border-style: dotted;
-
-  box-shadow: none;
+  border: 0 !important;
     
   border-radius: 0;
+    
+  background: white;
+    
+  box-shadow: inset -1px -1px #fff,inset 1px 1px grey,inset -2px -2px #dfdfdf,inset 2px 2px #0a0a0a !important;
 }
+    
+/* CODE CONTAINER IN A POST */
+    
+    pre {
+        
+        background-color: white !important;
+        
+        box-shadow: inset -1px -1px #fff,inset 1px 1px grey,inset -2px -2px #dfdfdf,inset 2px 2px #0a0a0a !important;
+        
+        border: 0 !important;
+    }
 
 /* REACTS */
 
@@ -926,6 +951,8 @@ fa-icon[mattooltip="Delete woot"]:hover {
 
   transition: var(--color-trans);
 }
+    
+    /* The specific part below has a problem causing white on silver text when you go inside the post and see rewoots, the code below applies effect on the feed and notifications rather than opened posts. If you have ideas how to solve this I'll be glad */
 
 /* "USER REWOOTED/REPLIED POST DIV" */
     .nudge-left {
@@ -940,4 +967,12 @@ fa-icon[mattooltip="Delete woot"]:hover {
 }
     .nudge-left .user-name, .post-action, .ribbon-date, .ribbon-icon {
         color: white !important;
+    }
+
+
+    
+/* IMAGE CW TEXT BACKGROUND */
+    
+    .image-cw-text {
+        background: #808080 !important;
     }
