@@ -206,7 +206,7 @@ if (users.length > 0) {
         }
       }
     }
-  ).then((editedData) => {
+  ).then(async (editedData) => {
     console.log(`--- Nuking posts Completed ---`)
     console.log(editedData)
     await User.destroy({
