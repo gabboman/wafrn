@@ -179,7 +179,7 @@ export default function deletePost(app: Application) {
       success = false
     }
 
-    res.send(success)
+    res.send({ success })
   })
 
   app.delete('/api/deleteRewoots', authenticateToken, async (req: AuthorizedRequest, res: Response) => {
@@ -202,7 +202,7 @@ export default function deletePost(app: Application) {
         const reblogsToDelete = unfilteredPostIds
 
         if (!reblogsToDelete) {
-          return res.send(true)
+          return res.send({ success: true })
         }
         if (user.enableBsky) {
           const agent = await getAtProtoSession(user)
@@ -315,6 +315,6 @@ export default function deletePost(app: Application) {
       success = false
     }
 
-    res.send(success)
+    res.send({ success })
   })
 }
