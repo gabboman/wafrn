@@ -8,7 +8,7 @@ export interface activityPubObject {
   id: string
   type: string
   published?: Date | string
-  object?: any
+  object: any
   tag?: fediverseTag[]
   content?: string
   target?: string

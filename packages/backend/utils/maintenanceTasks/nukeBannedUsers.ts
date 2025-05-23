@@ -211,6 +211,7 @@ if (users.length > 0) {
       '@context': [`${environment.frontendUrl}/contexts/litepub-0.1.jsonld`],
       actor: `${environment.frontendUrl}/fediverse/blog/${user.url.toLowerCase()}`,
       id: `${environment.frontendUrl}/fediverse/blog/${user.url.toLowerCase()}#deleteUser`,
+      object: `${environment.frontendUrl}/fediverse/blog/${user.url.toLowerCase()}`,
       type: 'Delete'
     }
     const ldSignature = new LdSignature()
