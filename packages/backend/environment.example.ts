@@ -31,6 +31,9 @@ export const environment = {
   mediaUrl: '${{FRONTEND_MEDIA_URL}}',
   // You should run also this project github.com/gabboman/fediversemediacacher. In my case, https://cache.wafrn.net/?media= The cache is there because at some point in the past I configured it to precache images. No need for it to be honest
   externalCacheurl: '${{FRONTEND_CACHE_URL}}',
+  // If main cache fails due to IP limits you can install additional proxies, and use them here. The cache will try these as well before failing.
+  // You can deploy https://github.com/sztupy/did-decoder-lambda this project to Netlify or Vercel as a backup for example
+  externalCacheBackups: [${{FRONTEND_CACHE_BACKUP_URLS:-}}],
   // after the first run, create the admin user. and a deleted user. You will have to edit the user url in db so it starts with an @
   adminUser: '${{ADMIN_USER}}',
   // admin email wich you will recive things like "someone registred and you need to review this"
