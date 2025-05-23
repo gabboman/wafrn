@@ -732,6 +732,10 @@ export default function postsRoutes(app: Application) {
       }
       if (!success) {
         res.statusCode = 400
+        logger.debug({
+          message: `Failed to create post`,
+          body: req.body
+        })
         res.send({ success: false })
       }
     }
