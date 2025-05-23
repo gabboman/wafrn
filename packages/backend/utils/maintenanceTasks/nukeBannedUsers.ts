@@ -195,7 +195,7 @@ if (users.length > 0) {
   })
 
   console.log('--- Nuking posts ---')
-  await Post.update(
+  const updatePosts = Post.update(
     {
       userId: ((await getDeletedUser()) as User).id
     },
@@ -206,7 +206,17 @@ if (users.length > 0) {
         }
       }
     }
-  )
+  ).then((editedData) => {
+    console.log(`--- Nuking posts Completed ---`)
+    console.log(editedData)
+    await User.destroy({
+      where: {
+        id: {
+          [Op.in]: usersToNukeIds
+        }
+      }
+    })
+  })
   console.log('--- starting sending deletions to everyone ---')
   for await (const user of users) {
     console.log(`Preparing queue of mass delete for ${user.url}`)
@@ -233,12 +243,4 @@ if (users.length > 0) {
       })
     }
   }
-
-  await User.destroy({
-    where: {
-      id: {
-        [Op.in]: usersToNukeIds
-      }
-    }
-  })
 }
