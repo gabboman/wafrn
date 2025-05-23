@@ -173,8 +173,20 @@ async function postToAtproto(post: Post, agent: BskyAgent) {
       .filter((elem: any, index) => !mediasToNotSend.includes(index))
       .map(async (media) => {
         let file = await fs.readFile('uploads/' + media.url)
+        // yeah, 1 millon bytes is officially the limit:
+        // https://github.com/bluesky-social/atproto/blob/80ada8f47628f55f3074cd16a52857e98d117e14/lexicons/app/bsky/embed/images.json#L24
         if (file.length > 1000000) {
           // well this image is TOO BIG. time to convert it
+          const localFilename = await optimizeMedia('uploads/' + media.url, {
+            outPath: 'uploads/' + media.id + '_bsky',
+            // bluesky CDN resizes images to 2000 on the long end, try that first
+            maxSize: 2000,
+            keep: true
+          })
+          file = await fs.readFile('uploads/' + media.id + '_bsky.webp')
+        }
+        if (file.length > 1000000) {
+          // still too big?! okay well let's crunch it
           const localFilename = await optimizeMedia('uploads/' + media.url, {
             outPath: 'uploads/' + media.id + '_bsky',
             maxSize: 768,
