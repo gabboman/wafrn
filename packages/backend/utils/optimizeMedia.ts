@@ -98,8 +98,17 @@ export default async function optimizeMedia(
         }
       }
       if (fileAndExtension[1] == 'webp') {
+        let lossless = false
+        // if the input is PNG we probably want the output to be lossless too
+        // also allow GIFs under 2MB to be kept as lossless
+        // (smaller GIFs are likely to be something like pixel art
+        // where we want to keep fine detail)
+        const lower = inputPath.toLowerCase()
+        if (lower.endsWith('png') || (lower.endsWith('gif') && metadata.size && metadata.size <= 1024**2*2)) {
+          lossless = true
+        }
         conversion.webp({
-          lossless: inputPath.toLowerCase().endsWith('png')
+          lossless: lossless
         })
       }
       await conversion.toFile(outputPath)
