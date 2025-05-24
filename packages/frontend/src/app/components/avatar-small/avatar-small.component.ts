@@ -13,16 +13,16 @@ import { BlogLinkModule } from 'src/app/directives/blog-link/blog-link.module'
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AvatarSmallComponent {
-  user = input.required<SimplifiedUser>();
-  readonly disabled = input(false);
+  user = input.required<SimplifiedUser>()
+  readonly disabled = input(false)
   avatar = computed(() => {
-    const user = this.user();
-    return EnvironmentService.environment.externalCacheurl +
+    const user = this.user()
+    return (
+      EnvironmentService.environment.externalCacheurl +
       encodeURIComponent(
-        user.url.startsWith('@')
-          ? user.avatar
-          : EnvironmentService.environment.baseMediaUrl + user.avatar
+        user.url.startsWith('@') ? user.avatar : EnvironmentService.environment.baseMediaUrl + user.avatar
       ) +
       '&avatar=true'
-  });
+    )
+  })
 }
