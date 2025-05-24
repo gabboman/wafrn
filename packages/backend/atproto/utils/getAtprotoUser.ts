@@ -98,13 +98,20 @@ async function getAtprotoUser(handle: string, localUser: User, petitionData?: Pr
   }
   if (bskyUserResponse.success) {
     const data = bskyUserResponse.data
+    let avatarString = ``
+    if (data.avatar) {
+      let avatarCID = data.avatar.split('/')[7]
+      if (avatarCID) {
+        avatarString = `?cid=${avatarCID.split('@jpeg')[0]}&did=${data.did}`
+      }
+    }
     const newData = {
       hideProfileNotLoggedIn: false,
       hideFollows: false,
       bskyDid: data.did,
       url: '@' + (data.handle === 'handle.invalid' ? `handle.invalid${data.did}` : data.handle),
       name: data.displayName ? data.displayName : data.handle,
-      avatar: data.avatar,
+      avatar: avatarString,
       description: data.description as string,
       followingCount: data.followsCount as number,
       followerCount: data.followersCount as number,
