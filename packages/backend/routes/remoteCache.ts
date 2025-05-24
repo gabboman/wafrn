@@ -50,7 +50,7 @@ export default function cacheRoutes(app: Application) {
     try {
       // TODO: to support bluesky images, we should receive full URLs built on frontend and not just cids
       if (mediaUrl.startsWith('?cid=')) {
-        let fileName;
+        let fileName
         try {
           const did = decodeURIComponent(mediaUrl.split('&did=')[1])
           const cid = decodeURIComponent(mediaUrl.split('&did=')[0].split('?cid=')[1])
@@ -83,9 +83,9 @@ export default function cacheRoutes(app: Application) {
             return sendWithCache(res, fileName)
           }
         } catch (error) {
-
           if (fileName && environment.externalCacheBackups?.length > 0) {
-            const backupServer = environment.externalCacheBackups[Math.floor(Math.random() * environment.externalCacheBackups.length)]
+            const backupServer =
+              environment.externalCacheBackups[Math.floor(Math.random() * environment.externalCacheBackups.length)]
 
             try {
               const remoteResponse = await axios.get(backupServer + encodeURIComponent(mediaUrl), {
@@ -100,7 +100,7 @@ export default function cacheRoutes(app: Application) {
             }
           }
 
-          logger.trace({
+          logger.debug({
             message: 'error on cache with dids',
             url: req.query?.media,
             error: error
@@ -149,7 +149,7 @@ export default function cacheRoutes(app: Application) {
 
       return sendWithCache(res, localFileName)
     } catch (error) {
-      logger.trace({
+      logger.debug({
         message: 'error on cache',
         url: mediaUrl,
         error: error
@@ -173,7 +173,7 @@ export default function cacheRoutes(app: Application) {
           followRedirects: 'follow',
           headers: { 'User-Agent': environment.instanceUrl }
         })
-      } catch (error) { }
+      } catch (error) {}
       // we cache the url 24 hours if success, 5 minutes if not
       await redisCache.set('linkPreviewCache:' + urlHash, JSON.stringify(result), 'EX', result ? 3600 * 24 : 300)
       res.send(result)
