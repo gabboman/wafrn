@@ -201,14 +201,10 @@
       </mat-tab>
       <mat-tab label="{{ 'profile.tabHeaders.misc' | translate }}">
         <section id="tags" class="mt-2 w-full flex-row">
-          <mat-form-field class="w-full">
-            <mat-label>Moving from a different account</mat-label>
-            <input
-              formControlName="alsoKnownAs"
-              placeholder="https://your.old.fedi.server/users/your_username"
-              matNativeControl
-            />
-          </mat-form-field>
+          <app-user-selector
+            (optionSelected)="userAliasSelected($event)"
+            [controlText]="'Moving from a different account (without the @)'"
+          ></app-user-selector>
         </section>
         <hr />
         <section id="tags" class="mt-2 w-full flex-row">

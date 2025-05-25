@@ -1,0 +1,18 @@
+<div class="w-full">
+  <form [formGroup]="form">
+    <mat-form-field class="w-full">
+      <mat-label>{{ controlText }}</mat-label>
+      <input formControlName="userSearcher" matNativeControl [matAutocomplete]="auto" />
+    </mat-form-field>
+
+    <mat-autocomplete (optionSelected)="optionSelected.emit($event.option.value)" #auto="matAutocomplete">
+      @for (user of usersAutocompleteOptions; track user) {
+        <mat-option [value]="user.remoteId">
+          <div class="flex gap-2 align-items-center suggestion-item">
+            <app-avatar-small [user]="user"></app-avatar-small> {{ user.url }}
+          </div></mat-option
+        >
+      }
+    </mat-autocomplete>
+  </form>
+</div>

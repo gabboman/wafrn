@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core'
 import { FormControl, UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms'
 import { BlogDetails } from 'src/app/interfaces/blogDetails'
 import { Emoji } from 'src/app/interfaces/emoji'
+import { SimplifiedUser } from 'src/app/interfaces/simplified-user'
 import { DashboardService } from 'src/app/services/dashboard.service'
 import { JwtService } from 'src/app/services/jwt.service'
 import { LoginService } from 'src/app/services/login.service'
@@ -243,5 +244,9 @@ export class EditProfileComponent implements OnInit {
         window.location.reload()
       }, 1000)
     }
+  }
+
+  userAliasSelected(data: string) {
+    this.editProfileForm.controls['alsoKnownAs'].patchValue(data)
   }
 }
