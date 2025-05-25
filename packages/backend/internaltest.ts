@@ -34,6 +34,7 @@ const adminuser = (await User.findOne({
 })) as User
 console.log(`starting updates`)
 for await (const user of users) {
+  console.log(`For started`)
   console.log(`Updating ${user.url}`)
   await getAtprotoUser(user.url, adminuser)
 }
