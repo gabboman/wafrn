@@ -7,6 +7,7 @@ const usersNotVerified = await User.findAll({
   where: {
     activated: false,
     emailVerified: false,
+    banned: false,
     email: {
       [Op.ne]: null
     }
