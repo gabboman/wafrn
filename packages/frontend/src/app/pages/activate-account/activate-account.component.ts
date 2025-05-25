@@ -12,7 +12,7 @@ import { MessageService } from 'src/app/services/message.service'
 })
 export class ActivateAccountComponent implements OnInit {
   logo = EnvironmentService.environment.logo
-
+  message = 'loading'
   constructor(
     private activeRoute: ActivatedRoute,
     private loginService: LoginService,
@@ -20,12 +20,21 @@ export class ActivateAccountComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.activateAccount().then(() => {
-      this.messageService.add({
-        severity: 'success',
-        summary: 'Your email was verified'
+    this.activateAccount()
+      .then(() => {
+        this.messageService.add({
+          severity: 'success',
+          summary: 'Your email was verified'
+        })
+        this.message = 'Your email was verified!'
       })
-    })
+      .catch((error) => {
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Something went wrong'
+        })
+        this.message = `Something went wrong! Try again in a few minutes and if it does not work please send an email to the administrator of the instance`
+      })
   }
 
   async activateAccount() {

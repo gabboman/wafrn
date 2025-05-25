@@ -380,10 +380,26 @@ export default function userRoutes(app: Application) {
             'Hello, thanks for confirming your email address. The admin team will review your registration and will be aproved shortly'
           emailSubject = 'Thanks for verifying your email, Our admin team will review your registration request soon!'
         }
-
-        await Promise.all([user.save(), sendActivationEmail(req.body.email.toLowerCase(), '', emailSubject, emailBody)])
-        success = true
+        try {
+          await Promise.all([
+            user.save(),
+            sendActivationEmail(req.body.email.toLowerCase(), '', emailSubject, emailBody)
+          ])
+          success = true
+        } catch (error) {
+          logger.info({
+            message: `Error while activating account`,
+            error: error
+          })
+        }
       }
+    }
+
+    if (!success) {
+      logger.info({
+        message: `Success marked as false on activate account!`,
+        body: req.body
+      })
     }
 
     res.send({
