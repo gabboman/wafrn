@@ -17,9 +17,8 @@ import { getCacheAtDids } from './atproto/cache/getCacheAtDids.js'
 import { getAtprotoUser } from './atproto/utils/getAtprotoUser.js'
 
 const cacheDids = await getCacheAtDids(true)
-
 const followedDids = cacheDids.followedUsersLocalIds
-
+console.log(`Need to update ${followedDids.size}`)
 const users = await User.findAll({
   where: {
     bskyDid: {
@@ -33,8 +32,10 @@ const adminuser = (await User.findOne({
     url: environment.adminUser
   }
 })) as User
-
+console.log(`starting updates`)
 for await (const user of users) {
   console.log(`Updating ${user.url}`)
   await getAtprotoUser(user.url, adminuser)
 }
+
+console.log(`update ended`)
