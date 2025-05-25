@@ -21,7 +21,7 @@ const followedDids = cacheDids.followedUsersLocalIds
 console.log(`Need to update ${followedDids.size}`)
 const users = await User.findAll({
   where: {
-    bskyDid: {
+    id: {
       [Op.in]: Array.from(followedDids)
     }
   }
@@ -32,7 +32,7 @@ const adminuser = (await User.findOne({
     url: environment.adminUser
   }
 })) as User
-console.log(`starting updates`)
+console.log(`starting updates of ${users.length}`)
 for await (const user of users) {
   console.log(`For started`)
   console.log(`Updating ${user.url}`)
