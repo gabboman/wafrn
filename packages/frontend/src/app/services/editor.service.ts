@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http'
 import { Injectable, OnDestroy } from '@angular/core'
-import { BehaviorSubject, Subscription } from 'rxjs'
+import { BehaviorSubject, firstValueFrom, Subscription } from 'rxjs'
 
 import { WafrnMedia } from '../interfaces/wafrn-media'
 import { Action, EditorLauncherData } from '../interfaces/editor-launcher-data'
@@ -13,6 +13,7 @@ import { EnvironmentService } from './environment.service'
 
 import { NewEditorComponent } from '../components/new-editor/new-editor.component'
 import { MessageService } from './message.service'
+import { SimplifiedUser } from '../interfaces/simplified-user'
 
 @Injectable({
   providedIn: 'any'
@@ -121,10 +122,13 @@ export class EditorService implements OnDestroy {
     return res
   }
 
-  async searchUser(url: string) {
-    return await this.http
-      .get(`${EnvironmentService.environment.baseUrl}/userSearch/${encodeURIComponent(url)}`)
-      .toPromise()
+  async searchUser(url: string): Promise<{ users: SimplifiedUser[] }> {
+    let result = await firstValueFrom(
+      this.http.get<{
+        users: SimplifiedUser[]
+      }>(`${EnvironmentService.environment.baseUrl}/userSearch/${encodeURIComponent(url)}`)
+    )
+    return result || { users: [] }
   }
 
   public async replyPost(post: ProcessedPost, edit = false) {
