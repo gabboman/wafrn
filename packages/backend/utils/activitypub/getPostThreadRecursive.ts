@@ -47,8 +47,7 @@ async function getPostThreadRecursive(
   localPostToForceUpdate?: string,
   options?: any
 ) {
-  if (remotePostId === null)
-    return;
+  if (remotePostId === null) return
 
   const deletedUser = getDeletedUser()
   try {
@@ -79,10 +78,10 @@ async function getPostThreadRecursive(
       }
     })
     if (postInDatabase) {
-      return postInDatabase;
+      return postInDatabase
     } else if (!remotePostObject) {
-      const postId = await getAtProtoThread(remotePostId);
-      return await Post.findByPk(postId);
+      const postId = await getAtProtoThread(remotePostId)
+      return await Post.findByPk(postId)
     }
   }
   const postInDatabase = await Post.findOne({
@@ -154,7 +153,11 @@ async function getPostThreadRecursive(
         // peertube federation. We just add a link to the video, federating this is HELL
         postTextContent = postTextContent + ` <a href="${postPetition.id}" target="_blank">${postPetition.id}</a>`
       }
-      if (postPetition.attachment && postPetition.attachment.length > 0 && (!remoteUser.banned || options?.allowMediaFromBanned)) {
+      if (
+        postPetition.attachment &&
+        postPetition.attachment.length > 0 &&
+        (!remoteUser.banned || options?.allowMediaFromBanned)
+      ) {
         for await (const remoteFile of postPetition.attachment) {
           if (remoteFile.type !== 'Link') {
             const wafrnMedia = await Media.create({
@@ -192,13 +195,17 @@ async function getPostThreadRecursive(
         content_warning: postPetition.summary
           ? postPetition.summary
           : remoteUser.NSFW
-            ? 'User is marked as NSFW by this instance staff. Possible NSFW without tagging'
-            : '',
+          ? 'User is marked as NSFW by this instance staff. Possible NSFW without tagging'
+          : '',
         createdAt: new Date(postPetition.published),
         updatedAt: createdAt,
         userId: remoteUserServerBaned || remoteUser.banned ? (await deletedUser)?.id : remoteUser.id,
         remotePostId: postPetition.id,
         privacy: privacy
+      }
+
+      if (postPetition.name) {
+        postToCreate.title = postPetition.name
       }
 
       const mentionedUsersIds: string[] = []
