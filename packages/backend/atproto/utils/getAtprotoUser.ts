@@ -26,6 +26,13 @@ async function forcePopulateUsers(dids: string[], localUser: User) {
       if (petition.data.profiles && petition.data.profiles.length > 0) {
         await User.bulkCreate(
           petition.data.profiles.map((data) => {
+            let avatarString = ``
+            if (data.avatar) {
+              let avatarCID = data.avatar.split('/')[7]
+              if (avatarCID) {
+                avatarString = `?cid=${avatarCID.split('@jpeg')[0]}&did=${data.did}`
+              }
+            }
             return {
               hideFollows: false,
               // TODO hey you should check this
@@ -33,7 +40,7 @@ async function forcePopulateUsers(dids: string[], localUser: User) {
               bskyDid: data.did,
               url: '@' + (data.handle === 'handle.invalid' ? `handle.invalid${data.did}` : data.handle),
               name: data.displayName ? data.displayName : data.handle,
-              avatar: data.avatar,
+              avatar: avatarString,
               description: data.description,
               followingCount: data.followsCount,
               followerCount: data.followersCount,
