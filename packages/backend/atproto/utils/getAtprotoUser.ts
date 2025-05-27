@@ -59,6 +59,8 @@ async function forcePopulateUsers(dids: string[], localUser: User) {
 
 async function getAtprotoUser(handle: string, localUser: User, petitionData?: ProfileViewBasic) {
   // we check if we found the user
+  let avatarString = ``
+
   let userFound =
     handle == 'handle.invalid'
       ? undefined
@@ -73,8 +75,11 @@ async function getAtprotoUser(handle: string, localUser: User, petitionData?: Pr
           }
         })
   // sometimes we can get the dids and if its a local user we just return it and thats it
-  if (userFound && !userFound.url.startsWith('@')) {
+  if (userFound && userFound.email) {
     return userFound
+  }
+  if (userFound) {
+    avatarString = userFound.avatar
   }
   // We check if the user is local.
   if (handle.endsWith('.' + environment.bskyPds)) {
@@ -105,7 +110,6 @@ async function getAtprotoUser(handle: string, localUser: User, petitionData?: Pr
   }
   if (bskyUserResponse.success) {
     const data = bskyUserResponse.data
-    let avatarString = ``
     if (data.avatar) {
       let avatarCID = data.avatar.split('/')[7]
       if (avatarCID) {
