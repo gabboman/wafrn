@@ -195,12 +195,14 @@ async function processSinglePost(
         if (segment.isLink()) {
           let linkOfSegment = segment.link?.uri
           if (linkOfSegment) {
-            linkOfSegment = linkOfSegment.substring(0, linkOfSegment.length - 2)
+            linkOfSegment = linkOfSegment.endsWith('...')
+              ? linkOfSegment.substring(0, linkOfSegment.length - 2)
+              : linkOfSegment
             const links: string[] = medias
               .filter((elem: any) => elem.mediaType == 'text/html')
               .map((elem: any) => elem.url)
             let result = links.find((elem) => elem.startsWith(linkOfSegment as string))
-            linkOfSegment = result ? result : linkOfSegment
+            linkOfSegment = result ? result : segment.link?.uri
           }
           text += `<a href="${linkOfSegment}" target="_blank">${linkOfSegment}</a>`
         } else if (segment.isMention()) {
