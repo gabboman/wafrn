@@ -1,14 +1,14 @@
-import { environment } from "../../environment.js"
-import { User } from "../../models/index.js"
-import { getUserEmojis } from "../cacheGetters/getUserEmojis.js"
-import { getUserOptions } from "../cacheGetters/getUserOptions.js"
-import { logger } from "../logger.js"
-import { redisCache } from "../redis.js"
-import { emojiToAPTag } from "./emojiToAPTag.js"
+import { environment } from '../../environment.js'
+import { User } from '../../models/index.js'
+import { getUserEmojis } from '../cacheGetters/getUserEmojis.js'
+import { getUserOptions } from '../cacheGetters/getUserOptions.js'
+import { logger } from '../logger.js'
+import { redisCache } from '../redis.js'
+import { emojiToAPTag } from './emojiToAPTag.js'
 
 export async function userToJSONLD(user: User) {
   const userCacheResult = await redisCache.get('fediverse:user:base:' + user.id)
-  let userForFediverse
+  let userForFediverse: any
   if (userCacheResult) {
     userForFediverse = JSON.parse(userCacheResult)
   } else {
@@ -26,7 +26,7 @@ export async function userToJSONLD(user: User) {
             alsoKnownAs.push(url.toString())
           }
         }
-      } catch (_) { }
+      } catch (_) {}
     }
     if (user.bskyDid) {
       alsoKnownAs.push(`at://${user.bskyDid}`)
@@ -34,9 +34,7 @@ export async function userToJSONLD(user: User) {
     let attachments: { type: string; name: string; value: string }[] = []
     if (unprocessedAttachments) {
       try {
-        const attachmentsArray: { name: string; value: string }[] = JSON.parse(
-          unprocessedAttachments.optionValue
-        )
+        const attachmentsArray: { name: string; value: string }[] = JSON.parse(unprocessedAttachments.optionValue)
         attachments = attachmentsArray.map((elem) => {
           return { ...elem, type: 'PropertyValue' }
         })
@@ -71,21 +69,21 @@ export async function userToJSONLD(user: User) {
       },
       ...(user.avatar
         ? {
-          icon: {
-            type: 'Image',
-            mediaType: 'image/webp',
-            url: environment.mediaUrl + user.avatar
+            icon: {
+              type: 'Image',
+              mediaType: 'image/webp',
+              url: environment.mediaUrl + user.avatar
+            }
           }
-        }
         : undefined),
       ...(user.headerImage
         ? {
-          image: {
-            type: 'Image',
-            mediaType: 'image/webp',
-            url: environment.mediaUrl + user.headerImage
+            image: {
+              type: 'Image',
+              mediaType: 'image/webp',
+              url: environment.mediaUrl + user.headerImage
+            }
           }
-        }
         : undefined),
       publicKey: {
         id: `${environment.frontendUrl}/fediverse/blog/${user.url.toLowerCase()}#main-key`,
@@ -93,7 +91,11 @@ export async function userToJSONLD(user: User) {
         publicKeyPem: user.publicKey
       }
     }
+
+    if (user.userMigratedTo) {
+      userForFediverse.migratedTo = user.userMigratedTo
+    }
     redisCache.set('fediverse:user:base:' + user.id, JSON.stringify(userForFediverse), 'EX', 300)
   }
-  return userForFediverse;
+  return userForFediverse
 }

@@ -97,13 +97,14 @@ async function getRemoteActorIdProcessor(job: Job) {
           remoteMentionUrl: remoteMentionUrl,
           followersCollectionUrl: userPetition.followers,
           followingCollectionUrl: userPetition.following,
-          isBot: userPetition.type != 'Person' && url?.host.toLowerCase() != 'bsky.brid.gy',
+          isBot: userPetition.type != 'Person',
           followerCount: followers,
           followingCount: followed,
           createdAt: userPetition.published ? new Date(userPetition.published) : new Date(),
           updatedAt: new Date(),
           NSFW: false,
-          birthDate: new Date()
+          birthDate: new Date(),
+          userMigratedTo: userPetition.movedTo || ''
         }
         federatedHost.publicInbox = userPetition.endpoints?.sharedInbox
         await federatedHost.save()
