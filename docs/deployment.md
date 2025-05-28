@@ -11,11 +11,11 @@ Prerequisites:
 
 To set up wafrn you have three options:
 
-1. Use the automated scripts that set up wafrn on Oracle Cloud's Always Free infrastructure automatically. Also it's free<sup>*<sup>
+1. Use the automated scripts that set up wafrn on Oracle Cloud's Always Free infrastructure automatically. Also it's free<sup>\*<sup>
 2. Already have a Debian / Ubuntu based computer in the cloud, and use the installer script to set up wafrn
 3. Have a modern Linux based box lying around somewhere and you want to install wafrn on it manually
 
-<sup>*</sup>: You do need to accept Oracle's T&C, which might or might not contain crazy stuff. Also you'll need a Debit/Credit card for verification.
+<sup>\*</sup>: You do need to accept Oracle's T&C, which might or might not contain crazy stuff. Also you'll need a Debit/Credit card for verification.
 
 ## Oracle Cloud
 
@@ -27,7 +27,7 @@ Documentation for the OCI integration [can be found in a separate repository](ht
 
 ## Installer
 
-Alternatively, you will need a Debian 12 VPS. The cheap Contabo one can do the trick with no problem. Maybe even the OVH one that costs 3 euros too. But I advise as a minimum the Contabo one.
+Alternatively, you will need a Debian 12 VPS. The cheap Netcup ARM one can do the trick with no problem. Maybe even the OVH one that costs 3 euros too. But I advise as a minimum the Netcup ARM one. (Contabo is no longer recomended)
 
 You will also need a way of sending emails to the people registering. An SMTP server or a free Brevo account with SMTP enabled can do the trick.
 
