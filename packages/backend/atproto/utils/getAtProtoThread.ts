@@ -194,24 +194,14 @@ async function processSinglePost(
 
       for (const segment of rt.segments()) {
         if (segment.isLink()) {
-          let linkOfSegment = segment.link?.uri
-          if (linkOfSegment) {
-            linkOfSegment = linkOfSegment.endsWith('...')
-              ? linkOfSegment.substring(0, linkOfSegment.length - 2)
-              : linkOfSegment
-            const links: string[] = medias
-              .filter((elem: any) => elem.mediaType == 'text/html')
-              .map((elem: any) => elem.url)
-            let result = links.find((elem) => elem.startsWith(linkOfSegment as string))
-            linkOfSegment = result ? result : segment.link?.uri
-          }
-          text += `<a href="${linkOfSegment}" target="_blank">${linkOfSegment}</a>`
+          const href = segment.link?.uri
+          text += `<a href="${href}" target="_blank">${href}</a>`
         } else if (segment.isMention()) {
-          text += `<a href="${environment.frontendUrl}/blog/${segment.mention?.did}" target="_blank">${segment.text}</a>`
+          const href = `${environment.frontendUrl}/blog/${segment.mention?.did}`
+          text += `<a href="${href}" target="_blank">${segment.text}</a>`
         } else if (segment.isTag()) {
-          text += `<a href="${environment.frontendUrl}/dashboard/search/${segment.text.substring(1)}" target="_blank">${
-            segment.text
-          }</a>`
+          const href = `${environment.frontendUrl}/dashboard/search/${segment.text.substring(1)}`
+          text += `<a href="${href}" target="_blank">${segment.text}</a>`
           tags.push(segment.text.substring(1))
         } else {
           text += segment.text
