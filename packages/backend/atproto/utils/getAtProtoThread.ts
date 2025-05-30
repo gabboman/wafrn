@@ -187,10 +187,11 @@ async function processSinglePost(
       }
 
       const rt = new RichText({
-        text: postText
+        text: postText,
+        facets: record.facets
       })
-      await rt.detectFacets(agent)
       let text = ''
+
       for (const segment of rt.segments()) {
         if (segment.isLink()) {
           let linkOfSegment = segment.link?.uri
