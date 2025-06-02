@@ -4,8 +4,8 @@ import sharp from 'sharp'
 
 /* eslint-disable max-len */
 import fs from 'fs'
-// @ts-ignore no types for fluent-ffmpeg
 import FfmpegCommand from 'fluent-ffmpeg'
+
 export default async function optimizeMedia(
   inputPath: string,
   options?: { outPath?: string; maxSize?: number; keep?: boolean; forceImageExtension?: string }
@@ -20,6 +20,7 @@ export default async function optimizeMedia(
       break
     case 'mp4':
       fileAndExtension[0] = fileAndExtension[0] + '_processed'
+      break;
     case 'webm':
     case 'ogg':
     case 'aac':
@@ -34,7 +35,7 @@ export default async function optimizeMedia(
       outputPath = fileAndExtension.join('.')
       // eslint-disable-next-line no-unused-vars
 
-      new FfmpegCommand(inputPath).ffprobe(function (err: any, data: any) {
+      FfmpegCommand(inputPath).ffprobe(function (err: any, data: any) {
         const stream = data.streams.find((stream: any) => stream.coded_height)
         let horizontalResolution = stream ? stream.coded_width : 1280
         let verticalResolution = stream ? stream.coded_height : 1280
@@ -43,7 +44,7 @@ export default async function optimizeMedia(
         const resolutionString =
           horizontalResolution > verticalResolution ? `${horizontalResolution}x?` : `?x${verticalResolution}`
         const videoCodec = stream.codec_name == 'h264' ? 'copy' : 'libx264'
-        const command = new FfmpegCommand(inputPath)
+        const command = FfmpegCommand(inputPath)
         if (videoCodec != 'copy') {
           command.size(resolutionString)
           command.videoBitrate('3500')

@@ -53,7 +53,9 @@ async function prepareSendRemotePostWorker(job: Job) {
   await wait(1500)
   //async function sendRemotePost(localUser: any, post: any) {
   const post = await Post.findByPk(job.id)
-  if (!post) return
+  if (!post) {
+    return
+  }
 
   const parent = post.parentId ? await Post.findByPk(post.parentId) : undefined
   const parentPoster = parent ? await User.findByPk(parent.userId) : undefined

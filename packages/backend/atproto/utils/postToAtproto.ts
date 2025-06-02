@@ -9,6 +9,27 @@ import { Main } from '@atproto/api/dist/client/types/app/bsky/richtext/facet.js'
 import { tokenize } from '@atcute/bluesky-richtext-parser'
 import { removeMarkdown } from './removeMarkdown.js'
 import optimizeMedia from '../../utils/optimizeMedia.js'
+import ffmpeg from 'fluent-ffmpeg'
+
+export async function getVideoAspectRatio(fileName: string) {
+  return new Promise((resolve, reject) => {
+    ffmpeg.ffprobe(fileName, (err, metadata) => {
+      if (err) {
+        reject(err)
+      } else {
+        const stream = metadata.streams.find((s) => s.codec_type === 'video')
+        if (stream) {
+          resolve({
+            width: stream.width,
+            height: stream.height,
+          })
+        } else {
+          reject(new Error('No video stream found'))
+        }
+      }
+    })
+  })
+}
 
 async function postToAtproto(post: Post, agent: BskyAgent) {
   let labels: any = undefined
@@ -118,17 +139,9 @@ async function postToAtproto(post: Post, agent: BskyAgent) {
     }
   }
 
-  const mediasToNotSend: number[] = []
-  for await (const [index, media] of medias.entries()) {
-    const data = await fs.stat('uploads/' + media.url)
-    if (media.url.endsWith('mp4')) {
-      mediasToNotSend.push(index)
-    }
-  }
-
   const tmpRichText = new RichText({ text: postText })
   let postShortened: boolean = false
-  if (tmpRichText.length > 300 || medias.length > 4 || mediasToNotSend.length > 0) {
+  if (tmpRichText.length > 300 || medias.length > 4) {
     postText =
       // Slice a bit more to account for unicode and such
       postText.slice(0, 290) + '[...]'
@@ -169,48 +182,66 @@ async function postToAtproto(post: Post, agent: BskyAgent) {
       }
     }
   } else {
-    const bskyMedias = medias
-      .filter((elem: any, index) => !mediasToNotSend.includes(index))
+    const bskyMediaPromises= medias
       .map(async (media) => {
         let file = await fs.readFile('uploads/' + media.url)
-        // yeah, 1 millon bytes is officially the limit:
-        // https://github.com/bluesky-social/atproto/blob/80ada8f47628f55f3074cd16a52857e98d117e14/lexicons/app/bsky/embed/images.json#L24
-        if (file.length > 1000000) {
-          // well this image is TOO BIG. time to convert it
-          const localFilename = await optimizeMedia('uploads/' + media.url, {
-            outPath: 'uploads/' + media.id + '_bsky',
-            // bluesky CDN resizes images to 2000 on the long end, try that first
-            maxSize: 2000,
-            keep: true
-          })
-          file = await fs.readFile('uploads/' + media.id + '_bsky.webp')
-        }
-        if (file.length > 1000000) {
-          // still too big?! okay well let's crunch it
-          const localFilename = await optimizeMedia('uploads/' + media.url, {
-            outPath: 'uploads/' + media.id + '_bsky',
-            maxSize: 768,
-            keep: true
-          })
-          file = await fs.readFile('uploads/' + media.id + '_bsky.webp')
-        }
-        const image = Buffer.from(file)
-        const { data } = await agent.uploadBlob(image, { encoding: media.mediaType || undefined })
-        return {
-          alt: media.description ? media.description : '',
-          image: data.blob,
-          labels: labels ? labels : undefined,
-          aspectRatio: {
-            width: media.width,
-            height: media.height
+        const isVideo = media.mediaType?.startsWith('video/')
+        
+        if (!isVideo) {
+          // yeah, 1 millon bytes is officially the limit:
+          // https://github.com/bluesky-social/atproto/blob/80ada8f47628f55f3074cd16a52857e98d117e14/lexicons/app/bsky/embed/images.json#L24
+          if (file.length > 1000000) {
+            // well this image is TOO BIG. time to convert it
+            await optimizeMedia('uploads/' + media.url, {
+              outPath: 'uploads/' + media.id + '_bsky',
+              // bluesky CDN resizes images to 2000 on the long end, try that first
+              maxSize: 2000,
+              keep: true
+            })
+            file = await fs.readFile('uploads/' + media.id + '_bsky.webp')
+          }
+          if (file.length > 1000000) {
+            // still too big?! okay well let's crunch it
+            await optimizeMedia('uploads/' + media.url, {
+              outPath: 'uploads/' + media.id + '_bsky',
+              maxSize: 768,
+              keep: true
+            })
+            file = await fs.readFile('uploads/' + media.id + '_bsky.webp')
           }
         }
+        
+        const { data } = await agent.uploadBlob(
+          Buffer.from(file),
+          { encoding: media.mediaType || undefined }
+        )
+        return { media, blob: data.blob }
       })
 
-    if (bskyMedias.length) {
-      res.embed = {
-        $type: 'app.bsky.embed.images',
-        images: await Promise.all(bskyMedias)
+    if (bskyMediaPromises.length) {
+      const bskyMedias = await Promise.all(bskyMediaPromises)
+      const video = bskyMedias.find((media) => media.media.mediaType?.startsWith('video/'))
+      if (video) {
+        res.embed = {
+          $type: 'app.bsky.embed.video',
+          video: video.blob,
+          alt: video.media.description ? video.media.description : '',
+          labels,
+          aspectRatio: await getVideoAspectRatio('uploads/' + video.media.url)
+        }
+      } else {
+        res.embed = {
+          $type: 'app.bsky.embed.images',
+          images: bskyMedias.map((m) => ({
+            labels,
+            image: m.blob,
+            alt: m.media.description ? m.media.description : '',
+            aspectRatio: {
+              width: m.media.width,
+              height: m.media.height
+            }
+          }))
+        }
       }
     }
   }
