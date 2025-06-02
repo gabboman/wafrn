@@ -106,6 +106,7 @@
     "web-push": "^3.6.7"
   },
   "devDependencies": {
+    "@types/fluent-ffmpeg": "^2.1.27",
     "eslint": "^8.6.0",
     "eslint-config-google": "^0.14.0",
     "eslint-config-prettier": "^8.8.0",
