@@ -10,6 +10,7 @@ import { firstValueFrom } from 'rxjs'
 import { EnvironmentService } from './environment.service'
 import { MessageService } from './message.service'
 import { TranslateService } from '@ngx-translate/core'
+import { environment } from 'src/environments/environment'
 
 @Injectable({
   providedIn: 'root'
@@ -373,5 +374,15 @@ export class LoginService {
   getForceClassicLogo(): boolean {
     const res = localStorage.getItem('forceClassicLogo')
     return res == 'true'
+  }
+
+  async migrate(target: string): Promise<{ success: boolean; message: string }> {
+    const res = await firstValueFrom(
+      this.http.post<{ success: boolean; message: string }>(
+        EnvironmentService.environment.baseUrl + '/user/migrateOut',
+        { target }
+      )
+    )
+    return res
   }
 }

@@ -9,6 +9,7 @@ import { Main } from '@atproto/api/dist/client/types/app/bsky/richtext/facet.js'
 import { tokenize } from '@atcute/bluesky-richtext-parser'
 import { removeMarkdown } from './removeMarkdown.js'
 import optimizeMedia from '../../utils/optimizeMedia.js'
+import dompurify from 'isomorphic-dompurify'
 import ffmpeg from 'fluent-ffmpeg'
 
 export async function getVideoAspectRatio(fileName: string) {
@@ -62,7 +63,9 @@ async function postToAtproto(post: Post, agent: BskyAgent) {
 
   const contentWarning = post.content_warning ? `[${post.content_warning.trim()}]\n` : ''
   const tags = (await post.getPostTags()).map((elem) => `#${elem.tagName.trim().replaceAll(' ', '-')}`).join(' ')
-  let postText: string = (contentWarning + post.markdownContent.trim() + ' ' + tags).trim()
+  let postText: string = dompurify.sanitize((contentWarning + post.markdownContent.trim() + ' ' + tags).trim(), {
+    ALLOWED_TAGS: []
+  })
 
   if (quotedPost && !bskyQuote) {
     const remoteId = getPostUrlForQuote(quotedPost)
@@ -159,15 +162,16 @@ async function postToAtproto(post: Post, agent: BskyAgent) {
     // Do not add facets representing links that were removed
     if (postShortened && facet.index.byteEnd > byteSliceLength) return
 
-    if (rt.facets) rt.facets.push((facet as unknown) as Main)
-    else rt.facets = [(facet as unknown) as Main]
+    if (rt.facets) rt.facets.push(facet as unknown as Main)
+    else rt.facets = [facet as unknown as Main]
   })
 
+  const sanitizedText = dompurify.sanitize(post.content, { ALLOWED_TAGS: [] })
   let res: any = {
     text: rt.text,
     facets: rt.facets,
     createdAt: new Date(post.createdAt).toISOString(),
-    fullText: post.content,
+    fullText: sanitizedText,
     fullTags: tags,
     fediverseId: `${environment.frontendUrl}/fediverse/post/${post.id}`
   }

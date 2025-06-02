@@ -34,7 +34,9 @@ const colorSchemeVariants = [
   'pink',
   'purple',
   'rizzler',
+  'contrastWater',
   'wafrn98',
+  'aqua',
   'unwafrn',
   'wafrnverse',
   'fan'
@@ -83,7 +85,12 @@ export class ColorSchemeSwitcherComponent {
 
   constructor(private loginService: LoginService) {
     const colorScheme = localStorage.getItem('colorScheme')
-    if (colorScheme !== null && colorScheme !== 'rizzler' && isColorScheme(colorScheme)) {
+    if (
+      colorScheme !== null &&
+      colorScheme !== 'rizzler' &&
+      colorScheme !== 'contrastWater' &&
+      isColorScheme(colorScheme)
+    ) {
       this.setColorScheme(colorScheme)
     }
     const chromeVersionForCompatibilityReasons = this.getChromeVersion()
