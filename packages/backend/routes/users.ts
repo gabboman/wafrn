@@ -55,6 +55,8 @@ import dompurify from 'isomorphic-dompurify'
 import { Queue } from 'bullmq'
 import * as OTPAuth from 'otpauth'
 import verifyTotp from '../utils/verifyTotp.js'
+import { getPetitionSigned } from '../utils/activitypub/getPetitionSigned.js'
+import { isArray } from 'underscore'
 
 const markdownConverter = new showdown.Converter({
   simplifiedAutoLink: true,
@@ -731,6 +733,7 @@ export default function userRoutes(app: Application) {
           'bskyDid',
           'isFediverseUser',
           'isBlueskyUser',
+          'userMigratedTo',
           [sequelize.literal(`"id" = '${userId}' AND "enableBsky"`), 'enableBsky'],
           [sequelize.literal(`"id" = '${userId}' AND "disableEmailNotifications"`), 'disableEmailNotifications'],
           [sequelize.literal(`"id" = '${userId}' AND "hideProfileNotLoggedIn"`), 'hideProfileNotLoggedIn'],
@@ -1246,6 +1249,40 @@ export default function userRoutes(app: Application) {
 
     res.send({
       success: success
+    })
+  })
+
+  // TODO still not finished
+  app.post('/api/user/migrateOut', authenticateToken, async (req: AuthorizedRequest, res: Response) => {
+    let success = false
+    const newUserRemoteId: string = req.body.target
+    const localUser = await User.findByPk(req.jwtData?.userId)
+    let message = `User not yet found`
+    if (newUserRemoteId && localUser) {
+      message = `User found but new account doesnt seems to have an alias pointing towards you`
+      try {
+        const localUser = (await User.findByPk(req.jwtData?.userId)) as User
+        const petitionData = await getPetitionSigned(localUser, newUserRemoteId)
+        if (petitionData && petitionData.alsoKnownAs) {
+          const aliasList = isArray(petitionData.alsoKnownAs)
+            ? petitionData.alsoKnownAs.map((elem: string) => elem.toLowerCase())
+            : [petitionData.alsoKnownAs.toLowerCase()]
+          if (aliasList.includes(`${environment.frontendUrl}/fediverse/blog/${localUser.url}`)) {
+            // TIME TO MOVE OUT
+            // FIRST STEP: followers. send message to each follower. a move object
+            // second step: local followers here: create a follow request to new account
+            // third step: return data and set message to succ ess
+          } else {
+            message = `Alias not detected`
+          }
+        }
+      } catch (error) {}
+    }
+
+    res.status(success ? 200 : 500)
+    res.send({
+      success,
+      message
     })
   })
 }
