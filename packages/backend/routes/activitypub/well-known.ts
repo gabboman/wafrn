@@ -155,7 +155,9 @@ function wellKnownRoutes(app: Application) {
         })
       },
       openRegistrations: true,
-      metadata: {}
+      metadata: {
+        themeColor: '#96d8d1'
+      }
     })
     res.end()
   })
