@@ -20,7 +20,6 @@ export default async function optimizeMedia(
       break
     case 'mp4':
       fileAndExtension[0] = fileAndExtension[0] + '_processed'
-      break;
     case 'webm':
     case 'ogg':
     case 'aac':
@@ -106,7 +105,7 @@ export default async function optimizeMedia(
         // (smaller GIFs are likely to be something like pixel art
         // where we want to keep fine detail)
         const lower = inputPath.toLowerCase()
-        if (lower.endsWith('png') || (lower.endsWith('gif') && stat.size <= 1024**2*2)) {
+        if (lower.endsWith('png') || (lower.endsWith('gif') && stat.size <= 1024 ** 2 * 2)) {
           lossless = true
         }
         conversion.webp({
