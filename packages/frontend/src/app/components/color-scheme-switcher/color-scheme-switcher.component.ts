@@ -36,6 +36,7 @@ const colorSchemeVariants = [
   'rizzler',
   'contrastWater',
   'wafrn98',
+  'aqua',
   'unwafrn',
   'wafrnverse',
   'fan'
