@@ -236,7 +236,7 @@ if (users.length > 0) {
       new Date()
     )
     for await (const inboxChunk of inboxes) {
-      await deletePostQueue.add('sencChunk', {
+      await deletePostQueue.add('sendChunk', {
         objectToSend: { ...objectToSend, signature: bodySignature.signature },
         petitionBy: user,
         inboxList: inboxChunk

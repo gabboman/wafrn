@@ -248,7 +248,7 @@ async function prepareSendRemotePostWorker(job: Job) {
         for (const inboxChunk of inboxes) {
           addSendPostToQueuePromises.push(
             sendPostQueue.add(
-              'sencChunk',
+              'sendChunk',
               {
                 objectToSend: objectToSendComplete,
                 petitionBy: localUser.dataValues,

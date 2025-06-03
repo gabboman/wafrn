@@ -162,7 +162,7 @@ export default function deletePost(app: Application) {
           )
           if (postToDelete.privacy != Privacy.LocalOnly) {
             for await (const inboxChunk of _.chunk(inboxes, 1)) {
-              await deletePostQueue.add('sencChunk', {
+              await deletePostQueue.add('sendChunk', {
                 objectToSend: { ...objectToSend, signature: bodySignature.signature },
                 petitionBy: user,
                 inboxList: inboxChunk
@@ -281,7 +281,7 @@ export default function deletePost(app: Application) {
               new Date()
             )
             for await (const inboxChunk of inboxes) {
-              await deletePostQueue.add('sencChunk', {
+              await deletePostQueue.add('sendChunk', {
                 objectToSend: { ...objectToSend, signature: bodySignature.signature },
                 petitionBy: user,
                 inboxList: inboxChunk

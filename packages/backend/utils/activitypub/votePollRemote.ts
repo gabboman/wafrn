@@ -86,7 +86,7 @@ async function voteInPoll(userId: string, pollId: number) {
     }
     const inboxes = vote.questionPoll.post.user.remoteInbox
     const sendVoteJob = await sendPostQueue.add(
-      'sencChunk',
+      'sendChunk',
       {
         objectToSend: voteObject,
         petitionBy: user.dataValues,

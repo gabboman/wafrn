@@ -57,6 +57,8 @@ import * as OTPAuth from 'otpauth'
 import verifyTotp from '../utils/verifyTotp.js'
 import { getPetitionSigned } from '../utils/activitypub/getPetitionSigned.js'
 import { isArray } from 'underscore'
+import { follow } from '../utils/follow.js'
+import { activityPubObject } from '../interfaces/fediverse/activityPubObject.js'
 
 const markdownConverter = new showdown.Converter({
   simplifiedAutoLink: true,
@@ -69,6 +71,19 @@ const markdownConverter = new showdown.Converter({
 const forbiddenCharacters = [':', '@', '/', '<', '>', '"', '&', '?']
 
 const generateUserKeyPairQueue = new Queue('generateUserKeyPair', {
+  connection: environment.bullmqConnection,
+  defaultJobOptions: {
+    removeOnComplete: true,
+    attempts: 3,
+    backoff: {
+      type: 'exponential',
+      delay: 1000
+    },
+    removeOnFail: true
+  }
+})
+
+const deletePostQueue = new Queue('deletePostQueue', {
   connection: environment.bullmqConnection,
   defaultJobOptions: {
     removeOnComplete: true,
@@ -1270,8 +1285,61 @@ export default function userRoutes(app: Application) {
           if (aliasList.includes(`${environment.frontendUrl}/fediverse/blog/${localUser.url}`)) {
             // TIME TO MOVE OUT
             // FIRST STEP: followers. send message to each follower. a move object
+            const followerIds = await Follows.findAll({
+              attributes: ['followerId'],
+              where: {
+                followedId: localUser.id
+              }
+            })
+            const followers = await User.findAll({
+              where: {
+                id: {
+                  [Op.in]: followerIds.map((elem) => elem.followerId)
+                }
+              }
+            })
+            const moveObjectToSend: activityPubObject = {
+              '@context': 'https://www.w3.org/ns/activitystreams',
+              id:
+                environment.frontendUrl +
+                '/fediverse/blogMove/' +
+                localUser.url.toLowerCase() +
+                '/' +
+                new Date().getTime(),
+              actor: environment.frontendUrl + '/fediverse/blog/' + localUser.url.toLowerCase(),
+              type: 'Move',
+              object: environment.frontendUrl + '/fediverse/blog/' + localUser.url.toLowerCase(),
+              target: newUserRemoteId
+            }
+            for await (const remoteFollower of followers.filter((elem) => !!elem.remoteId)) {
+              await deletePostQueue.add('sendChunk', {
+                objectToSend: moveObjectToSend,
+                petitionBy: localUser,
+                inboxList: [remoteFollower.remoteInbox]
+              })
+            }
+
             // second step: local followers here: create a follow request to new account
+            const localFollows = await User.findAll({
+              where: {
+                id: {
+                  [Op.in]: followerIds.map((elem) => elem.followerId)
+                },
+                email: {
+                  [Op.ne]: null
+                }
+              }
+            })
+            for await (const localFollow of localFollows) {
+              try {
+                await follow(localFollow.id, localUser.id)
+              } catch (error) {}
+            }
             // third step: return data and set message to succ ess
+            localUser.userMigratedTo = newUserRemoteId
+            await localUser.save()
+            message = `Operation successful!`
+            success = true
           } else {
             message = `Alias not detected`
           }
