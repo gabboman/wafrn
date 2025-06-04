@@ -203,9 +203,7 @@ function getIndexSeo(title: string, description: string, image?: string) {
   const sanitizedDescription = description.replaceAll('"', "'").substring(0, 500)
   let imgUrl = ''
   if (image) {
-    imgUrl = image.toLowerCase().startsWith('https')
-      ? environment.externalCacheurl + encodeURIComponent(image)
-      : environment.mediaUrl + image
+    imgUrl = image.toLowerCase().startsWith('https') ? image : environment.mediaUrl + image
   }
   imgUrl = sanitizeStringForSEO(imgUrl)
   let indexWithSeo = fs.readFileSync(`${environment.frontedLocation}/index.html`).toString()
