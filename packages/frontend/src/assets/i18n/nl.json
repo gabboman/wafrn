@@ -54,7 +54,7 @@
         },
         "admin": {
             "title": "Beheerder",
-            "serverList": "Server list",
+            "serverList": "Server lijst",
             "addEmojis": "Emojis toevoegen",
             "reports": "Rapporten",
             "bans": "Banned users",
