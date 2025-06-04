@@ -37,7 +37,7 @@
         "patreon": "Patreon",
         "kofi": "Ko-fi",
         "logout": "Uitloggen",
-        "faq": "Frequently Asked Questions",
+        "faq": "FAQ",
         "settings": {
             "title": "Instellingen",
             "follows": "Manage followers",
@@ -53,7 +53,7 @@
             "superSecretMenu": "Super Secret Menu"
         },
         "admin": {
-            "title": "Admin",
+            "title": "Beheerder",
             "serverList": "Server list",
             "addEmojis": "Emojis toevoegen",
             "reports": "Reports",
