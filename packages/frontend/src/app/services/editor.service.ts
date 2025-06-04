@@ -14,6 +14,7 @@ import { EnvironmentService } from './environment.service'
 import { NewEditorComponent } from '../components/new-editor/new-editor.component'
 import { MessageService } from './message.service'
 import { SimplifiedUser } from '../interfaces/simplified-user'
+import { Router } from '@angular/router'
 
 @Injectable({
   providedIn: 'any'
@@ -31,7 +32,8 @@ export class EditorService implements OnDestroy {
     private http: HttpClient,
     private dashboardService: DashboardService,
     private dialogService: MatDialog,
-    private messages: MessageService
+    private messages: MessageService,
+    private router: Router
   ) {
     this.editorSubscription = this.launchPostEditorEmitter.subscribe((data) => {
       if (data.action !== Action.None) {
@@ -151,7 +153,7 @@ export class EditorService implements OnDestroy {
         scrollDate: this.dashboardService.startScrollDate,
         path: window.location.pathname
       }
-      this.dialogService.open(NewEditorComponent)
+      this.router.navigate(['/editor'])
     }
   }
 
