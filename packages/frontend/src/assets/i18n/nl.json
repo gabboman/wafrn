@@ -40,7 +40,7 @@
         "faq": "FAQ",
         "settings": {
             "title": "Instellingen",
-            "follows": "Manage followers",
+            "follows": "Beheer volgers",
             "enableBluesky": "Enable Bluesky",
             "editProfile": "Preferences and Profile",
             "themeEditor": "Theme editor",
