@@ -20,7 +20,7 @@ const adminUser = User.findOne({
 })
 async function processFirehose(job: Job) {
   // FIRST VERSION. THIS IS GONA BE DIRTY
-  const remoteUser = await getAtprotoUser(job.data.repo, await adminUser as User)
+  const remoteUser = await getAtprotoUser(job.data.repo, (await adminUser) as User)
   const operation: RepoOp = job.data.operation
   if (remoteUser && operation) {
     switch (operation.action) {
@@ -110,21 +110,26 @@ async function processFirehose(job: Job) {
           case 'app.bsky.feed.repost': {
             const postToBeRewooted = await getAtProtoThread(record.subject.uri)
             if (postToBeRewooted) {
-              const rewootCreated = await Post.create({
-                content: '',
-                isReblog: true,
-                userId: remoteUser.id,
-                parentId: postToBeRewooted,
-                bskyUri: `at://${job.data.repo}/${operation.path}`,
-                bskyCid: operation.cid,
-                privacy: Privacy.Public
+              await Post.findOrCreate({
+                where: {
+                  bskyUri: `at://${job.data.repo}/${operation.path}`,
+                  bskyCid: operation.cid
+                },
+                defaults: {
+                  content: '',
+                  isReblog: true,
+                  userId: remoteUser.id,
+                  parentId: postToBeRewooted,
+                  bskyUri: `at://${job.data.repo}/${operation.path}`,
+                  bskyCid: operation.cid,
+                  privacy: Privacy.Public
+                }
               })
             }
-
             break
           }
           case 'app.bsky.graph.follow': {
-            const userFollowed = await getAtprotoUser(record.subject, await adminUser as User)
+            const userFollowed = await getAtprotoUser(record.subject, (await adminUser) as User)
             if (userFollowed) {
               let tmp = await Follows.findOrCreate({
                 where: {
