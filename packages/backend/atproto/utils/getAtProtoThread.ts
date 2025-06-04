@@ -13,6 +13,7 @@ import showdown from 'showdown'
 import { bulkCreateNotifications, createNotification } from '../../utils/pushNotifications.js'
 import { getAllLocalUserIds } from '../../utils/cacheGetters/getAllLocalUserIds.js'
 import { Privacy } from '../../models/post.js'
+import { wait } from '../../utils/wait.js'
 
 const markdownConverter = new showdown.Converter({
   simplifiedAutoLink: true,
@@ -222,6 +223,13 @@ async function processSinglePost(
     }
     if (!parentId) {
       delete newData.parentId
+    }
+
+    // very dirty thing but at times somehting can happen that a post gets through the firehose before than the db.
+    // this is dirty but we dont get the bsky uri until we post there...
+    // so as a temporary hack, if user is local we wait 2 seconds
+    if ((await getAllLocalUserIds()).includes(newData.userId)) {
+      await wait(2000)
     }
     let [postToProcess, created] = await Post.findOrCreate({ where: { bskyUri: post.uri }, defaults: newData })
     // do not update existing posts. But what if local user creates a post through bsky? then we force updte i guess
