@@ -37,10 +37,10 @@
         "patreon": "Patreon",
         "kofi": "Ko-fi",
         "logout": "Uitloggen",
-        "faq": "Frequently Asked Questions",
+        "faq": "FAQ",
         "settings": {
             "title": "Instellingen",
-            "follows": "Manage followers",
+            "follows": "Beheer volgers",
             "enableBluesky": "Enable Bluesky",
             "editProfile": "Preferences and Profile",
             "themeEditor": "Theme editor",
@@ -50,13 +50,13 @@
             "myBlockedUsers": "Geblokkeerde gebruikers",
             "myBlockedServers": "Geblokkeerde servers",
             "importFollows": "Import followers",
-            "superSecretMenu": "Super Secret Menu"
+            "superSecretMenu": "Supergeheime Menu"
         },
         "admin": {
-            "title": "Admin",
-            "serverList": "Server list",
+            "title": "Beheerder",
+            "serverList": "Server lijst",
             "addEmojis": "Emojis toevoegen",
-            "reports": "Reports",
+            "reports": "Rapporten",
             "bans": "Banned users",
             "blocklist": "Blocked users",
             "stats": "Stats",
