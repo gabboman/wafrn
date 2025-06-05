@@ -95,7 +95,8 @@
 
 /* WAFRN LOGO --------------------------------------------------------------- */
 .instance-logo {
-  filter: hue-rotate(270deg);
+  /* filter: hue-rotate(270deg); */
+  content: url("https://cdn.wafrn.net/api/cache/?media=https%3A%2F%2Fmedia.wafrn.net%2F1749063617775_1512bf9dc76e226a08df0ece5da0bd11ce5f5c2a_processed.webp");
 }
 
 /* LINKS -------------------------------------------------------------------- */
