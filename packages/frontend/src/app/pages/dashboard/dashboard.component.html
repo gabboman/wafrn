@@ -9,7 +9,7 @@
 <app-loader *ngIf="loadingPosts">posts</app-loader>
 
 <mat-card *ngIf="noMorePosts" class="mx-3 lg:mx-4 wafrn-container">
-  <h2>Oh no! No more posts found</h2>
+  <h2>You dont seem to be following anyone yet!</h2>
   <h3>
     Consider taking a look at the <a [routerLink]="'/dashboard/exploreLocal'">local dashboard</a> or
     <a [routerLink]="'/dashboard/explore'">explore the fediverse</a>
