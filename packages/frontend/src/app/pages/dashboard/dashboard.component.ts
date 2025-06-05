@@ -211,7 +211,12 @@ export class DashboardComponent implements OnInit, OnDestroy, SnappyCreate, Snap
             return text
           })
           .join()
-
+        if (
+          superMutedWords.length > 0 &&
+          superMutedWords.some((supermuteWord) => textOfPosts.includes(supermuteWord))
+        ) {
+          return true
+        }
         // we set the scroll date to the oldest post we got here
         const postDate = new Date(post[post.length - 1].createdAt).getTime()
         this.timestamp = postDate < this.timestamp ? postDate : this.timestamp
@@ -225,12 +230,6 @@ export class DashboardComponent implements OnInit, OnDestroy, SnappyCreate, Snap
             this.viewedPostsIds.push(component.id)
           }
         })
-        if (
-          superMutedWords.length > 0 &&
-          superMutedWords.some((supermuteWord) => textOfPosts.includes(supermuteWord))
-        ) {
-          allFragmentsSeen = true
-        }
         return !allFragmentsSeen
       })
       .map((elem) => elem.sort((a, b) => a.hierarchyLevel - b.hierarchyLevel))
