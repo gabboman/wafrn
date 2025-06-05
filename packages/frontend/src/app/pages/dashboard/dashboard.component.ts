@@ -184,7 +184,7 @@ export class DashboardComponent implements OnInit, OnDestroy, SnappyCreate, Snap
           if (superMutedWordsRaw && superMutedWordsRaw.trim().length > 0) {
             superMutedWords = JSON.parse(superMutedWordsRaw)
               .split(',')
-              .map((word: string) => word.trim())
+              .map((word: string) => word.trim().toLowerCase())
               .filter((word: string) => word.length > 0)
           }
         } catch (error) {
@@ -211,6 +211,7 @@ export class DashboardComponent implements OnInit, OnDestroy, SnappyCreate, Snap
             return text
           })
           .join()
+          .toLowerCase()
         if (
           superMutedWords.length > 0 &&
           superMutedWords.some((supermuteWord) => textOfPosts.includes(supermuteWord))
