@@ -207,14 +207,27 @@
           ></app-user-selector>
         </section>
         <hr />
-        <section id="tags" class="mt-2 w-full flex-row">
+        <section id="mutedWords" class="mt-2 w-full flex-row">
           <mat-form-field class="w-full">
-            <mat-label>Muted words separated by commas</mat-label>
+            <mat-label>Words that will add cw to post</mat-label>
             <input formControlName="mutedWords" placeholder="Separated by commas" matNativeControl />
           </mat-form-field>
           <div *ngIf="editProfileForm.value.mutedWords.split(',').length > 0" class="taglist flex flex-wrap mb-2">
-            Muted phrases:
             @for (tag of editProfileForm.value.mutedWords.split(','); track $index) {
+              <div *ngIf="tag && tag !== '' && tag.trim() !== ''" class="tag">
+                {{ tag.trim() }}
+              </div>
+            }
+          </div>
+        </section>
+        <hr />
+        <section id="superMutedwWords" class="mt-2 w-full flex-row">
+          <mat-form-field class="w-full">
+            <mat-label>phrases that will not show a post with them (BE CAREFUL WITH THESE)</mat-label>
+            <input formControlName="superMutedWords" placeholder="Separated by commas" matNativeControl />
+          </mat-form-field>
+          <div *ngIf="editProfileForm.value.superMutedWords.split(',').length > 0" class="taglist flex flex-wrap mb-2">
+            @for (tag of editProfileForm.value.superMutedWords.split(','); track $index) {
               <div *ngIf="tag && tag !== '' && tag.trim() !== ''" class="tag">
                 {{ tag.trim() }}
               </div>

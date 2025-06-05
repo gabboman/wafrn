@@ -50,6 +50,7 @@ export class EditProfileComponent implements OnInit {
     hideProfileNotLoggedIn: new FormControl(false),
     forceOldEditor: new FormControl(false),
     mutedWords: new FormControl(''),
+    superMutedWords: new FormControl(''),
     disableCW: new FormControl(false),
     forceClassicAudioPlayer: new FormControl(false),
     forceClassicVideoPlayer: new FormControl(false),
@@ -130,6 +131,14 @@ export class EditProfileComponent implements OnInit {
           this.editProfileForm.controls['mutedWords'].patchValue(JSON.parse(mutedWords))
         } catch (error) {
           this.messages.add({ severity: 'error', summary: 'Something wrong with your muted words!' })
+        }
+      }
+      const superMutedWords = localStorage.getItem('superMutedWords')
+      if (superMutedWords && superMutedWords.trim().length) {
+        try {
+          this.editProfileForm.controls['superMutedWords'].patchValue(JSON.parse(superMutedWords))
+        } catch (error) {
+          this.messages.add({ severity: 'error', summary: 'Something wrong with your superMuted words!' })
         }
       }
       const disableCW = localStorage.getItem('disableCW') == 'true'

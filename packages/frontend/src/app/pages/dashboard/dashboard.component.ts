@@ -178,6 +178,40 @@ export class DashboardComponent implements OnInit, OnDestroy, SnappyCreate, Snap
     // we do the filtering here to avoid repeating posts. Also by doing it here we avoid flickering
     const filteredPosts = tmpPosts
       .filter((post: ProcessedPost[]) => {
+        const superMutedWordsRaw = localStorage.getItem('superMutedWords')
+        let superMutedWords: string[] = []
+        try {
+          if (superMutedWordsRaw && superMutedWordsRaw.trim().length > 0) {
+            superMutedWords = JSON.parse(superMutedWordsRaw)
+              .split(',')
+              .map((word: string) => word.trim())
+              .filter((word: string) => word.length > 0)
+          }
+        } catch (error) {
+          this.messages.add({ severity: 'error', summary: 'Something wrong with your supermuted words!' })
+        }
+
+        // textOfPosts
+        let textOfPosts = post
+          .map((elem) => {
+            let text = '' + elem.content
+            if (elem.content_warning) {
+              text = text + ' ' + elem.content_warning
+            }
+            if (elem.tags && elem.tags.length > 0) {
+              elem.tags.forEach((tag) => {
+                text = text + ' ' + tag
+              })
+            }
+            if (elem.medias && elem.medias.length > 0) {
+              elem.medias.forEach((media) => {
+                text = text + ' ' + media.description
+              })
+            }
+            return text
+          })
+          .join()
+
         // we set the scroll date to the oldest post we got here
         const postDate = new Date(post[post.length - 1].createdAt).getTime()
         this.timestamp = postDate < this.timestamp ? postDate : this.timestamp
@@ -191,6 +225,12 @@ export class DashboardComponent implements OnInit, OnDestroy, SnappyCreate, Snap
             this.viewedPostsIds.push(component.id)
           }
         })
+        if (
+          superMutedWords.length > 0 &&
+          superMutedWords.some((supermuteWord) => textOfPosts.includes(supermuteWord))
+        ) {
+          allFragmentsSeen = true
+        }
         return !allFragmentsSeen
       })
       .map((elem) => elem.sort((a, b) => a.hierarchyLevel - b.hierarchyLevel))

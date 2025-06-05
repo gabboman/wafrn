@@ -233,6 +233,7 @@ export class LoginService {
       forceClassicLogo: 'wafrn.forceClassicLogo',
       defaultPostEditorPrivacy: 'wafrn.defaultPostEditorPrivacy',
       mutedWords: 'wafrn.mutedWords',
+      superMutedWords: 'wafrn.superMutedWords',
       disableCW: 'wafrn.disableCW',
       forceClassicVideoPlayer: 'wafrn.forceClassicVideoPlayer',
       forceClassicAudioPlayer: 'wafrn.forceClassicAudioPlayer',
