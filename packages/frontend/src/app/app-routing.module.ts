@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core'
-import { PreloadAllModules, RouteReuseStrategy, RouterModule, Routes } from '@angular/router'
+import { RouteReuseStrategy, RouterModule, Routes } from '@angular/router'
 import { NavigationMenuComponent } from './components/navigation-menu/navigation-menu.component'
 import { NavigationMenuModule } from './components/navigation-menu/navigation-menu.module'
 import { isAdminGuard } from './guards/is-admin.guard'
@@ -125,7 +125,7 @@ const routes: Routes = [
 @NgModule({
   imports: [
     RouterModule.forRoot(routes, {
-      preloadingStrategy: PreloadAllModules,
+      // preloadingStrategy: PreloadAllModules,
       anchorScrolling: 'enabled',
       scrollPositionRestoration: 'enabled'
     }),
