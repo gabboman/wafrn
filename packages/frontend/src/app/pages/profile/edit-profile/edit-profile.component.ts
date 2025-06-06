@@ -67,7 +67,8 @@ export class EditProfileComponent implements OnInit {
     notifyQuotes: new FormControl(true),
     notifyFollows: new FormControl(true),
     notifyRewoots: new FormControl(true),
-    replaceAIWithCocaine: new FormControl(false)
+    replaceAIWithCocaine: new FormControl(false),
+    replaceAIWord: new FormControl('cocaine')
   })
 
   password = ''
@@ -127,6 +128,10 @@ export class EditProfileComponent implements OnInit {
       )
       this.editProfileForm.controls['replaceAIWithCocaine'].patchValue(
         localStorage.getItem('replaceAIWithCocaine') == 'true'
+      )
+
+      this.editProfileForm.controls['replaceAIWord'].patchValue(
+        localStorage.getItem('replaceAIWord') ? JSON.parse(localStorage.getItem('replaceAIWord') as string) : 'cocaine'
       )
 
       const mutedWords = localStorage.getItem('mutedWords')

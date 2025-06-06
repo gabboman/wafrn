@@ -134,8 +134,12 @@
         </div>
         <div class="w-full">
           <mat-checkbox formControlName="replaceAIWithCocaine"></mat-checkbox>
-          <mat-label>Replace the word artificial intelligence with cocaine</mat-label>
+          <mat-label>Replace the word artificial intelligence with custom word (cocaine?)</mat-label>
         </div>
+        <mat-form-field class="w-full">
+          <mat-label>Custom word for AI replacement</mat-label>
+          <input formControlName="replaceAIWord" placeholder="custom word. requires enable replace" matNativeControl />
+        </mat-form-field>
         <mat-accordion>
           <mat-expansion-panel hideToggle>
             <mat-expansion-panel-header>
