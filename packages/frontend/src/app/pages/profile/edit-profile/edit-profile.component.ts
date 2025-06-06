@@ -66,7 +66,8 @@ export class EditProfileComponent implements OnInit {
     notifyReactions: new FormControl(true),
     notifyQuotes: new FormControl(true),
     notifyFollows: new FormControl(true),
-    notifyRewoots: new FormControl(true)
+    notifyRewoots: new FormControl(true),
+    replaceAIWithCocaine: new FormControl(false)
   })
 
   password = ''
@@ -123,6 +124,9 @@ export class EditProfileComponent implements OnInit {
 
       this.editProfileForm.controls['defaultExploreLocal'].patchValue(
         localStorage.getItem('defaultExploreLocal') == 'true'
+      )
+      this.editProfileForm.controls['replaceAIWithCocaine'].patchValue(
+        localStorage.getItem('replaceAIWithCocaine') == 'true'
       )
 
       const mutedWords = localStorage.getItem('mutedWords')

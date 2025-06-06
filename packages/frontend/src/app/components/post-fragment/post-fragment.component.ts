@@ -70,6 +70,17 @@ export class PostFragmentComponent implements OnChanges, OnDestroy {
   wafrnFormattedContent = computed(() => {
     let processedBlock: Array<string | WafrnMedia> = []
     this.sanitizedContent = this.postService.getPostHtml(this.fragment())
+    // wafrn silly feature
+    if (localStorage.getItem('replaceAIWithCocaine') === 'true') {
+      let artificialInteligenceRegexps = [
+        new RegExp(' artificial intelligence ', 'gi'),
+        new RegExp(' artificial inteligence ', 'gi'),
+        new RegExp(' ai ', 'gi')
+      ]
+      for (const regexp of artificialInteligenceRegexps) {
+        this.sanitizedContent = this.sanitizedContent.replaceAll(regexp, ' cocaine ')
+      }
+    }
     this.noTagsContent = this.postService.getPostHtml(this.fragment(), [])
     if (this.fragment().medias && this.fragment().medias?.length > 0) {
       const mediaDetectorRegex = /\!\[media\-([0-9]+)]/gm
