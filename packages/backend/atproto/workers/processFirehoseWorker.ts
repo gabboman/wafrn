@@ -110,21 +110,30 @@ async function processFirehose(job: Job) {
           case 'app.bsky.feed.repost': {
             const postToBeRewooted = await getAtProtoThread(record.subject.uri)
             if (postToBeRewooted) {
-              await Post.findOrCreate({
-                where: {
-                  bskyUri: `at://${job.data.repo}/${operation.path}`,
-                  bskyCid: operation.cid
-                },
-                defaults: {
-                  content: '',
-                  isReblog: true,
-                  userId: remoteUser.id,
-                  parentId: postToBeRewooted,
-                  bskyUri: `at://${job.data.repo}/${operation.path}`,
-                  bskyCid: operation.cid,
-                  privacy: Privacy.Public
-                }
-              })
+              try {
+                let [post, created] = await Post.findOrCreate({
+                  where: {
+                    bskyUri: `at://${job.data.repo}/${operation.path}`,
+                    bskyCid: operation.cid
+                  },
+                  defaults: {
+                    content: '',
+                    isReblog: true,
+                    userId: remoteUser.id,
+                    parentId: postToBeRewooted,
+                    bskyUri: `at://${job.data.repo}/${operation.path}`,
+                    bskyCid: operation.cid,
+                    privacy: Privacy.Public
+                  }
+                })
+              } catch (error) {
+                logger.info({
+                  message: `Error with bsky rewoot`,
+                  repo: job.data?.repo,
+                  operation: operation,
+                  error: error
+                })
+              }
             }
             break
           }
