@@ -170,7 +170,6 @@ export class DashboardComponent implements OnInit, OnDestroy, SnappyCreate, Snap
     }
     const tmpPosts = await this.dashboardService.getDashboardPage(scrollDate, this.level)
     this.noMorePosts = tmpPosts.length === 0
-    console.log(this.level)
     if (this.noMorePosts && page == 0 && this.level === 1) {
       // no posts, no followers no nothing. lets a go to explore local
       this.router.navigate(['/dashboard/exploreLocal'])
