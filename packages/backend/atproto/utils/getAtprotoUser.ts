@@ -81,19 +81,6 @@ async function getAtprotoUser(handle: string, localUser: User, petitionData?: Pr
   if (userFound) {
     avatarString = userFound.avatar
   }
-  // We check if the user is local.
-  if (handle.endsWith('.' + environment.bskyPds)) {
-    let userUrl = handle.split('.' + environment.bskyPds)[0]
-    if (userUrl.startsWith('@')) {
-      userUrl = userUrl.split('@')[1]
-    }
-    if (userUrl.includes('.')) {
-      return
-    }
-    return User.findOne({
-      where: sequelize.where(sequelize.fn('lower', sequelize.col('url')), userUrl)
-    })
-  }
   const agent = await getAtProtoSession(localUser)
   // TODO check if current user exist
   let bskyUserResponse = petitionData ? { success: true, data: petitionData } : undefined
