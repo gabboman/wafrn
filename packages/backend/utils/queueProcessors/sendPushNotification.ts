@@ -26,6 +26,18 @@ const deliveryCheckQueue = new Queue('checkPushNotificationDelivery', {
   }
 })
 
+const websocketQueue = new Queue('updateNotificationsSocket', {
+  connection: environment.bullmqConnection,
+  defaultJobOptions: {
+    removeOnComplete: true,
+    attempts: 3,
+    backoff: {
+      type: 'exponential',
+      delay: 1000
+    }
+  }
+})
+
 const expoClient = new Expo()
 
 type PushNotificationPayload = {
@@ -139,6 +151,7 @@ export async function sendPushNotification(job: Job<PushNotificationPayload>) {
   }
   await sendWebPushNotifications(notificationsToSend, context)
   await sendExpoNotifications(notificationsToSend, context)
+  await sendWsNotifications(notificationsToSend, context)
 }
 
 export async function sendExpoNotifications(notifications: NotificationBody[], context?: NotificationContext) {
@@ -207,4 +220,14 @@ export async function sendExpoNotifications(notifications: NotificationBody[], c
 function scheduleNotificationCheck(ticketIds: string[]) {
   const delay = 1000 * 60 * 30 // 30 minutes
   return deliveryCheckQueue.add('checkPushNotificationDelivery', { ticketIds }, { delay })
+}
+
+async function sendWsNotifications(notifications: NotificationBody[], context?: NotificationContext){
+  await websocketQueue.addBulk( notifications.map(elem => {
+    // we just tell the user to update the notifications
+    return {
+      name: 'updateNotificationsSocket',
+      data: {userId: elem.notifiedUserId}
+    }
+  }) )
 }

@@ -5,6 +5,7 @@ import { EnvironmentService } from './services/environment.service'
 import { TranslateService } from '@ngx-translate/core'
 import { SwPush } from '@angular/service-worker'
 import { DOCUMENT } from '@angular/common'
+import { WebsocketService } from './services/websocket.service'
 
 @Component({
   selector: 'app-root',
@@ -22,7 +23,8 @@ export class AppComponent implements OnInit {
     private loginService: LoginService,
     private environmentService: EnvironmentService,
     @Inject(DOCUMENT) private document: Document,
-    private translate: TranslateService
+    private translate: TranslateService,
+    private websocketService: WebsocketService
   ) {
     this.translate.addLangs(['en', 'pl'])
     this.translate.setDefaultLang('en')
@@ -77,10 +79,10 @@ export class AppComponent implements OnInit {
           console.log(notificationSubscription)
         })
     }
-    const currentLang = this.translate.currentLang || this.translate.getDefaultLang() || 'en';
-    this.document.documentElement.lang = currentLang;
+    const currentLang = this.translate.currentLang || this.translate.getDefaultLang() || 'en'
+    this.document.documentElement.lang = currentLang
     this.translate.onLangChange.subscribe((event) => {
-      this.document.documentElement.lang = event.lang;
-    });
+      this.document.documentElement.lang = event.lang
+    })
   }
 }
