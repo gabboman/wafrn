@@ -67,6 +67,7 @@
     "expo-server-sdk": "^3.14.0",
     "express": "^4.21.2",
     "express-rate-limit": "^6.7.0",
+    "express-ws": "^5.0.2",
     "file-type": "^19.5.0",
     "fluent-ffmpeg": "^2.1.2",
     "fs-extra": "^11.2.0",
