@@ -46,6 +46,7 @@ import { MatDialog } from '@angular/material/dialog'
 import { EnvironmentService } from 'src/app/services/environment.service'
 import { faBluesky } from '@fortawesome/free-brands-svg-icons'
 import { TranslateService } from '@ngx-translate/core'
+import { AudioService } from 'src/app/services/audio.service'
 
 @Component({
   selector: 'app-navigation-menu',
@@ -84,7 +85,8 @@ export class NavigationMenuComponent implements OnInit, OnDestroy {
     private adminService: AdminService,
     private dashboardService: DashboardService,
     private dialogService: MatDialog,
-    private translateService: TranslateService
+    private translateService: TranslateService,
+    private audioService: AudioService
   ) {
     this.loginSubscription = this.loginSubscription = this.loginService.loginEventEmitter.subscribe(() => {
       this.drawMenu()
@@ -538,6 +540,8 @@ export class NavigationMenuComponent implements OnInit, OnDestroy {
 
   async updateNotifications(url: string) {
     if (this.jwtService.tokenValid()) {
+      const previousNotifications =
+        this.adminNotifications + this.usersAwaitingApproval + this.followsAwaitingApproval + this.awaitingAsks
       const response = await this.notificationsService.getUnseenNotifications()
       if (url === '/dashboard/notifications') {
         this.notifications = 0
@@ -548,6 +552,11 @@ export class NavigationMenuComponent implements OnInit, OnDestroy {
       this.usersAwaitingApproval = response.usersAwaitingApproval
       this.followsAwaitingApproval = response.followsAwaitingApproval
       this.awaitingAsks = response.asks
+      const newNotifications =
+        this.adminNotifications + this.usersAwaitingApproval + this.followsAwaitingApproval + this.awaitingAsks
+      if (previousNotifications != newNotifications && localStorage.getItem('disableSounds') != 'true') {
+        this.audioService.playSound('/assets/sounds/4.ogg')
+      }
       this.drawMenu()
       this.cdr.detectChanges()
     }
