@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common'
+
 import { Component, EventEmitter, Output, input } from '@angular/core'
 import { FormsModule } from '@angular/forms'
 import { MatButtonModule } from '@angular/material/button'
@@ -20,7 +20,7 @@ enum UploadStatus {
   selector: 'app-file-upload',
   templateUrl: './file-upload.component.html',
   styleUrls: ['./file-upload.component.scss'],
-  imports: [CommonModule, FormsModule, FontAwesomeModule, MatButtonModule, MatProgressSpinnerModule]
+  imports: [FormsModule, FontAwesomeModule, MatButtonModule, MatProgressSpinnerModule]
 })
 export class FileUploadComponent {
   readonly disabled = input(false);

@@ -1,10 +1,10 @@
-import { Component, Injector, Inject, OnInit } from '@angular/core'
+import { Component, Injector, Inject, OnInit, DOCUMENT } from '@angular/core'
 import { SwUpdate } from '@angular/service-worker'
 import { LoginService } from './services/login.service'
 import { EnvironmentService } from './services/environment.service'
 import { TranslateService } from '@ngx-translate/core'
 import { SwPush } from '@angular/service-worker'
-import { DOCUMENT } from '@angular/common'
+
 import { WebsocketService } from './services/websocket.service'
 
 @Component({

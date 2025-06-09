@@ -1,4 +1,4 @@
-import { CommonModule, Location } from '@angular/common'
+import { Location } from '@angular/common';
 import { Component, HostListener, inject, OnDestroy, ViewChild } from '@angular/core'
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms'
 import { MatButtonModule } from '@angular/material/button'
@@ -58,7 +58,6 @@ import { Router } from '@angular/router'
 @Component({
   selector: 'app-new-editor',
   imports: [
-    CommonModule,
     FormsModule,
     ReactiveFormsModule,
     MatCardModule,
@@ -80,7 +79,7 @@ import { Router } from '@angular/router'
     TranslateModule,
     MatBadgeModule,
     MatChipsModule
-  ],
+],
   templateUrl: './new-editor.component.html',
   styleUrl: './new-editor.component.scss'
 })

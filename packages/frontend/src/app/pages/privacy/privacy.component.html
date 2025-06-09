@@ -43,19 +43,25 @@
     <p class="mb-3">Do not give me a huge headache repeatedly</p>
   </div>
 
-  <button *ngIf="!loaded && !loading" (click)="loadBlockedServers()" color="primary" mat-stroked-button class="w-full">
-    Show list of blocked servers
-  </button>
+  @if (!loaded && !loading) {
+    <button (click)="loadBlockedServers()" color="primary" mat-stroked-button class="w-full">
+      Show list of blocked servers
+    </button>
+  }
 
-  <app-loader *ngIf="loading">blocked servers</app-loader>
+  @if (loading) {
+    <app-loader>blocked servers</app-loader>
+  }
 
-  <div *ngIf="loaded">
-    <h2>Blocked servers</h2>
-    <p class="mb-3">In case of possible error, please contact the admin team by email</p>
-    <ul>
-      @for (server of blockedServers; track $index) {
-        <li class="mb-3">{{ server }}</li>
-      }
-    </ul>
-  </div>
+  @if (loaded) {
+    <div>
+      <h2>Blocked servers</h2>
+      <p class="mb-3">In case of possible error, please contact the admin team by email</p>
+      <ul>
+        @for (server of blockedServers; track $index) {
+          <li class="mb-3">{{ server }}</li>
+        }
+      </ul>
+    </div>
+  }
 </mat-card>

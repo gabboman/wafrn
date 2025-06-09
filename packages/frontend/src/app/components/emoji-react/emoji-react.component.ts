@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common'
+
 import { Component, inject, input } from '@angular/core'
 import { Overlay, OverlayModule } from '@angular/cdk/overlay'
 import { MatButtonModule } from '@angular/material/button'
@@ -12,7 +12,7 @@ import { EmojiPickerComponent } from '../emoji-picker/emoji-picker.component'
 
 @Component({
   selector: 'app-emoji-react',
-  imports: [CommonModule, MatButtonModule, FontAwesomeModule, OverlayModule, MatTooltipModule],
+  imports: [MatButtonModule, FontAwesomeModule, OverlayModule, MatTooltipModule],
   templateUrl: './emoji-react.component.html',
   styleUrl: './emoji-react.component.scss'
 })

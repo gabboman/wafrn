@@ -1,4 +1,6 @@
-<app-loader *ngIf="this.loadingBlog() && !this.useSimple()"></app-loader>
+@if (this.loadingBlog() && !this.useSimple()) {
+  <app-loader></app-loader>
+}
 @if (!loading() && !found) {
   <app-pagenotfound />
 }
@@ -8,40 +10,44 @@
     <ng-template></ng-template>
     <app-post [post]="post"></app-post>
   }
-  <app-loader *ngIf="loading()">posts</app-loader>
+  @if (loading()) {
+    <app-loader>posts</app-loader>
+  }
   <footer class="p-4 text-center wafrn-container">
     <div [hidden]="loading() || noMorePosts" id="if-you-see-this-load-more-posts"></div>
-    <div *ngIf="noMorePosts">
-      <p class="mb-4 text-lg">No more posts...</p>
-      @if (blogDetails()!.url.startsWith('@')) {
-        <app-info-card [type]="userLoggedIn ? 'info' : 'caution'">
-          {{
+    @if (noMorePosts) {
+      <div>
+        <p class="mb-4 text-lg">No more posts...</p>
+        @if (blogDetails()!.url.startsWith('@')) {
+          <app-info-card [type]="userLoggedIn ? 'info' : 'caution'">
+            {{
             userLoggedIn
-              ? 'As this user is from a remote instance, the shown information may be incomplete.'
-              : 'To see external users you need to be logged in. You can check the user in their original instance'
-          }}
-          <a
+            ? 'As this user is from a remote instance, the shown information may be incomplete.'
+            : 'To see external users you need to be logged in. You can check the user in their original instance'
+            }}
+            <a
             [href]="
               blogDetails()!.url.split('@').length === 3
                 ? blogDetails()!.remoteId
                 : 'https://bsky.app/profile/' + blogDetails()!.url.split('@')[1]
             "
-            target="_blank"
-            >View on remote instance</a
-          >
-        </app-info-card>
+              target="_blank"
+              >View on remote instance</a
+              >
+            </app-info-card>
+          }
+        </div>
       }
-    </div>
-  </footer>
-}
+    </footer>
+  }
 
-<button
-  [routerLink]="'/'"
-  mat-mini-fab
-  color="default"
-  aria-label="Go back to the dashboard"
-  style="position: fixed; z-index: 500; top: 1em; right: 1em"
->
-  <fa-icon [icon]="homeIcon" />
-</button>
+  <button
+    [routerLink]="'/'"
+    mat-mini-fab
+    color="default"
+    aria-label="Go back to the dashboard"
+    style="position: fixed; z-index: 500; top: 1em; right: 1em"
+    >
+    <fa-icon [icon]="homeIcon" />
+  </button>
 

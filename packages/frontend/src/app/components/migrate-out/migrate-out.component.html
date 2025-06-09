@@ -1,5 +1,7 @@
 <mat-card class="p-3 mb-6 lg:mx-4 wafrn-container">
-  <app-loader *ngIf="loading"></app-loader>
+  @if (loading) {
+    <app-loader></app-loader>
+  }
   <div [hidden]="loading">
     <h1>Migrate out</h1>
     <p>You need to first create an alias on the new fedi account you are moving to</p>

@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common'
+
 import { Component } from '@angular/core'
 import { FormsModule } from '@angular/forms'
 import { MatButtonModule } from '@angular/material/button'
@@ -11,14 +11,13 @@ import { LoaderComponent } from '../loader/loader.component'
 @Component({
   selector: 'app-migrate-out',
   imports: [
-    CommonModule,
     MatCardModule,
     FormsModule,
     MatButtonModule,
     MatInputModule,
     UserSelectorComponent,
     LoaderComponent
-  ],
+],
   templateUrl: './migrate-out.component.html',
   styleUrl: './migrate-out.component.scss'
 })

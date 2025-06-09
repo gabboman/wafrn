@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common'
+
 import { Component } from '@angular/core'
 import { MatCardModule } from '@angular/material/card'
 import { statsReply } from 'src/app/interfaces/statsReply'
@@ -6,7 +6,7 @@ import { AdminService } from 'src/app/services/admin.service'
 
 @Component({
   selector: 'app-stats',
-  imports: [CommonModule, MatCardModule],
+  imports: [MatCardModule],
   templateUrl: './stats.component.html',
   styleUrl: './stats.component.scss'
 })

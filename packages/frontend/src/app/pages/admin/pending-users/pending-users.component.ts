@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common'
+
 import { Component } from '@angular/core'
 import { MatButtonModule } from '@angular/material/button'
 import { MatCardModule } from '@angular/material/card'
@@ -8,7 +8,7 @@ import { EnvironmentService } from 'src/app/services/environment.service'
 
 @Component({
   selector: 'app-pending-users',
-  imports: [CommonModule, MatButtonModule, MatCardModule],
+  imports: [MatButtonModule, MatCardModule],
   templateUrl: './pending-users.component.html',
   styleUrl: './pending-users.component.scss'
 })

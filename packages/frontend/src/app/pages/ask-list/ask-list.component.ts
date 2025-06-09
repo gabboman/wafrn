@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common'
+
 import { Component } from '@angular/core'
 import { MatButtonModule } from '@angular/material/button'
 import { MatCardModule } from '@angular/material/card'
@@ -11,7 +11,7 @@ import { LoaderComponent } from 'src/app/components/loader/loader.component'
 
 @Component({
   selector: 'app-ask-list',
-  imports: [CommonModule, SingleAskComponent, MatButtonModule, MatCardModule, LoaderComponent],
+  imports: [SingleAskComponent, MatButtonModule, MatCardModule, LoaderComponent],
   templateUrl: './ask-list.component.html',
   styleUrl: './ask-list.component.scss'
 })

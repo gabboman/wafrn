@@ -12,7 +12,7 @@
             accept="image/jpeg,image/png,image/webp,image/gif"
             (change)="imgSelected($event)"
             class="w-full mb-3"
-          />
+            />
         </div>
         <div class="pt-2 px-3 border-round-md mb-4" style="border: 1px solid var(--mat-sys-outline-variant)">
           <label for="avatar" class="block font-medium mb-2">Choose header image</label>
@@ -22,7 +22,7 @@
             accept="image/jpeg,image/png,image/webp,image/gif"
             (change)="headerImgSelected($event)"
             class="w-full mb-3"
-          />
+            />
         </div>
         <mat-form-field class="w-full" appearance="outline">
           <mat-label>Display name (can contain emoji codes)</mat-label>
@@ -187,127 +187,135 @@
           <mat-label
             >Hide profile to not logged in users and search (this will only apply to your profile IN this wafrn, not to
             your posts nor other fedi instances or bluesky)</mat-label
-          >
-        </div>
-        {{ 'profile.security.header' | translate }}:
-        <div class="flex align-items-center justify-content-between mt-2">
-          <a
-            routerLink="/recoverPassword"
-            class="font-medium no-underline ml-2 mdc-button w-full mat-primary mat-mdc-unelevated-button cursor-pointer"
-          >
-            {{ 'profile.security.passwordChange' | translate }}
-          </a>
-        </div>
-        <div class="flex align-items-center justify-content-between mt-2">
-          <a
-            routerLink="/mfaSetup"
-            class="font-medium no-underline ml-2 mdc-button w-full mat-primary mat-mdc-unelevated-button cursor-pointer"
-          >
-            {{ 'profile.security.mfa.setup' | translate }}
-          </a>
-        </div>
-      </mat-tab>
-      <mat-tab label="{{ 'profile.tabHeaders.misc' | translate }}">
-        <section id="tags" class="mt-2 w-full flex-row">
-          <app-user-selector
-            (optionSelected)="userAliasSelected($event)"
-            [controlText]="'Moving from a different account (without the @)'"
-          ></app-user-selector>
-        </section>
-        <hr />
-        <section id="mutedWords" class="mt-2 w-full flex-row">
-          <mat-form-field class="w-full">
-            <mat-label>Words that will add cw to post</mat-label>
-            <input formControlName="mutedWords" placeholder="Separated by commas" matNativeControl />
-          </mat-form-field>
-          <div *ngIf="editProfileForm.value.mutedWords.split(',').length > 0" class="taglist flex flex-wrap mb-2">
-            @for (tag of editProfileForm.value.mutedWords.split(','); track $index) {
-              <div *ngIf="tag && tag !== '' && tag.trim() !== ''" class="tag">
-                {{ tag.trim() }}
+            >
+          </div>
+          {{ 'profile.security.header' | translate }}:
+          <div class="flex align-items-center justify-content-between mt-2">
+            <a
+              routerLink="/recoverPassword"
+              class="font-medium no-underline ml-2 mdc-button w-full mat-primary mat-mdc-unelevated-button cursor-pointer"
+              >
+              {{ 'profile.security.passwordChange' | translate }}
+            </a>
+          </div>
+          <div class="flex align-items-center justify-content-between mt-2">
+            <a
+              routerLink="/mfaSetup"
+              class="font-medium no-underline ml-2 mdc-button w-full mat-primary mat-mdc-unelevated-button cursor-pointer"
+              >
+              {{ 'profile.security.mfa.setup' | translate }}
+            </a>
+          </div>
+        </mat-tab>
+        <mat-tab label="{{ 'profile.tabHeaders.misc' | translate }}">
+          <section id="tags" class="mt-2 w-full flex-row">
+            <app-user-selector
+              (optionSelected)="userAliasSelected($event)"
+              [controlText]="'Moving from a different account (without the @)'"
+            ></app-user-selector>
+          </section>
+          <hr />
+          <section id="mutedWords" class="mt-2 w-full flex-row">
+            <mat-form-field class="w-full">
+              <mat-label>Words that will add cw to post</mat-label>
+              <input formControlName="mutedWords" placeholder="Separated by commas" matNativeControl />
+            </mat-form-field>
+            @if (editProfileForm.value.mutedWords.split(',').length > 0) {
+              <div class="taglist flex flex-wrap mb-2">
+                @for (tag of editProfileForm.value.mutedWords.split(','); track $index) {
+                  @if (tag && tag !== '' && tag.trim() !== '') {
+                    <div class="tag">
+                      {{ tag.trim() }}
+                    </div>
+                  }
+                }
               </div>
             }
-          </div>
-        </section>
-        <hr />
-        <section id="superMutedwWords" class="mt-2 w-full flex-row">
-          <mat-form-field class="w-full">
-            <mat-label>phrases that will not show a post with them (BE CAREFUL WITH THESE)</mat-label>
-            <input formControlName="superMutedWords" placeholder="Separated by commas" matNativeControl />
-          </mat-form-field>
-          <div *ngIf="editProfileForm.value.superMutedWords.split(',').length > 0" class="taglist flex flex-wrap mb-2">
-            @for (tag of editProfileForm.value.superMutedWords.split(','); track $index) {
-              <div *ngIf="tag && tag !== '' && tag.trim() !== ''" class="tag">
-                {{ tag.trim() }}
+          </section>
+          <hr />
+          <section id="superMutedwWords" class="mt-2 w-full flex-row">
+            <mat-form-field class="w-full">
+              <mat-label>phrases that will not show a post with them (BE CAREFUL WITH THESE)</mat-label>
+              <input formControlName="superMutedWords" placeholder="Separated by commas" matNativeControl />
+            </mat-form-field>
+            @if (editProfileForm.value.superMutedWords.split(',').length > 0) {
+              <div class="taglist flex flex-wrap mb-2">
+                @for (tag of editProfileForm.value.superMutedWords.split(','); track $index) {
+                  @if (tag && tag !== '' && tag.trim() !== '') {
+                    <div class="tag">
+                      {{ tag.trim() }}
+                    </div>
+                  }
+                }
               </div>
             }
-          </div>
-        </section>
-        <hr />
-        <mat-accordion>
-          <mat-expansion-panel hideToggle>
-            <mat-expansion-panel-header>
-              <mat-panel-title> available emojis </mat-panel-title>
-            </mat-expansion-panel-header>
-            <app-emoji-collections (emoji)="emojiClicked($event)"></app-emoji-collections>
-          </mat-expansion-panel>
-        </mat-accordion>
-      </mat-tab>
-    </form>
-    <mat-tab label="Bluesky">
-      <!-- I swear I'll translate this, don't merge before I do! -->
-      <p>Bluesky integration is still very experimental! Things will absolutely break!</p>
-      <p>
-        Please refer to <a href="https://wafrn.net/faq/user.html#blueskyIntegration">the FAQ</a> to find out what
-        does/doesn't work generally speaking.
-      </p>
-      <p>
-        In the future, we aim to have Bluesky-Specific settings in here, like the ability to change the Bluesky
-        username.
-      </p>
-      <button [disabled]="loading" (click)="enableBluesky()" mat-flat-button class="w-full">Enable bluesky</button>
-    </mat-tab>
-    <mat-tab label="Migrate out">
-      <p>
-        To migrate to another server please create an alias and click <a [routerLink]="'/profile/migrate-out'">here</a>
-      </p></mat-tab
-    >
-    <mat-tab label="Delete account">
-      <p>We will mark your account as deactivated and after 30 days it will be IRREVERSIBLY DELETED.</p>
-      <p>To confirm it's you, please fill your password</p>
-      <form>
-        <mat-form-field class="w-full">
-          <mat-label>{{ 'login.password' | translate }}</mat-label>
-          <input [(ngModel)]="password" [type]="'password'" name="password" matInput />
-        </mat-form-field>
-        <button (click)="requestDeleteAccount()" mat-flat-button style="background-color: red" class="w-full">
-          DELETE ACCOUNT
-        </button>
+          </section>
+          <hr />
+          <mat-accordion>
+            <mat-expansion-panel hideToggle>
+              <mat-expansion-panel-header>
+                <mat-panel-title> available emojis </mat-panel-title>
+              </mat-expansion-panel-header>
+              <app-emoji-collections (emoji)="emojiClicked($event)"></app-emoji-collections>
+            </mat-expansion-panel>
+          </mat-accordion>
+        </mat-tab>
       </form>
-    </mat-tab>
-  </mat-tab-group>
+      <mat-tab label="Bluesky">
+        <!-- I swear I'll translate this, don't merge before I do! -->
+        <p>Bluesky integration is still very experimental! Things will absolutely break!</p>
+        <p>
+          Please refer to <a href="https://wafrn.net/faq/user.html#blueskyIntegration">the FAQ</a> to find out what
+          does/doesn't work generally speaking.
+        </p>
+        <p>
+          In the future, we aim to have Bluesky-Specific settings in here, like the ability to change the Bluesky
+          username.
+        </p>
+        <button [disabled]="loading" (click)="enableBluesky()" mat-flat-button class="w-full">Enable bluesky</button>
+      </mat-tab>
+      <mat-tab label="Migrate out">
+        <p>
+          To migrate to another server please create an alias and click <a [routerLink]="'/profile/migrate-out'">here</a>
+        </p></mat-tab
+        >
+        <mat-tab label="Delete account">
+          <p>We will mark your account as deactivated and after 30 days it will be IRREVERSIBLY DELETED.</p>
+          <p>To confirm it's you, please fill your password</p>
+          <form>
+            <mat-form-field class="w-full">
+              <mat-label>{{ 'login.password' | translate }}</mat-label>
+              <input [(ngModel)]="password" [type]="'password'" name="password" matInput />
+            </mat-form-field>
+            <button (click)="requestDeleteAccount()" mat-flat-button style="background-color: red" class="w-full">
+              DELETE ACCOUNT
+            </button>
+          </form>
+        </mat-tab>
+      </mat-tab-group>
 
-  <!--
-    <div class="w-full">
-      <mat-checkbox formControlName="federateWithThreads"></mat-checkbox>
-      <mat-label>Enable federation with Threads (meta/facebook)</mat-label>
-    </div>
-    <mat-card appearance="outlined" class="my-4">
-      <mat-card-content
-        >Threads is a microblogging platform by Meta (formerly Facebook). We understand not everyone will want to make
-        their content available there. By default meta will not see you, unless you enable this
-        option.</mat-card-content
-      >
-    </mat-card>
-    -->
+      <!--
+      <div class="w-full">
+        <mat-checkbox formControlName="federateWithThreads"></mat-checkbox>
+        <mat-label>Enable federation with Threads (meta/facebook)</mat-label>
+      </div>
+      <mat-card appearance="outlined" class="my-4">
+        <mat-card-content
+          >Threads is a microblogging platform by Meta (formerly Facebook). We understand not everyone will want to make
+          their content available there. By default meta will not see you, unless you enable this
+          option.</mat-card-content
+          >
+        </mat-card>
+        -->
 
-  <button
-    (click)="onSubmit()"
-    [disabled]="!editProfileForm.valid"
-    mat-raised-button
-    color="primary"
-    icon="pi pi-user"
-    class="w-full mt-4"
-  >
-    Update profile
-  </button>
-</mat-card>
+        <button
+          (click)="onSubmit()"
+          [disabled]="!editProfileForm.valid"
+          mat-raised-button
+          color="primary"
+          icon="pi pi-user"
+          class="w-full mt-4"
+          >
+          Update profile
+        </button>
+      </mat-card>

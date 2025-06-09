@@ -1,5 +1,9 @@
-<app-loader *ngIf="loading"></app-loader>
-<app-blog-header *ngIf="!loading" [blogDetails]="blogDetails"></app-blog-header>
+@if (loading) {
+  <app-loader></app-loader>
+}
+@if (!loading) {
+  <app-blog-header [blogDetails]="blogDetails"></app-blog-header>
+}
 <mat-card class="p-3 mb-6 lg:mx-4 wafrn-container">
   <mat-form-field class="w-full">
     <mat-label>Search user</mat-label>
@@ -33,7 +37,7 @@
             color="accent"
             class="follow-button flex-shrink-0"
             (click)="postService.followUser(element.id)"
-          >
+            >
             Follow user
           </button>
         }
@@ -43,7 +47,7 @@
             color="accent"
             class="follow-button flex-shrink-0"
             (click)="postService.unfollowUser(element.id)"
-          >
+            >
             Awaiting approval
           </button>
         }
@@ -54,7 +58,7 @@
       <td *matCellDef="let element">
         @if (
           activatedRoute.snapshot.routeConfig?.path?.toLowerCase()?.endsWith('followers') && blogDetails.id === myId
-        ) {
+          ) {
           @if (!element.follows.accepted) {
             <button mat-mini-fab (mouseup)="acceptFollower(element)">
               <fa-icon size="lg" class="cursor-pointer" [icon]="acceptIcon" matTooltip="Accept this follower"></fa-icon>
@@ -75,6 +79,6 @@
     [pageSizeOptions]="[10, 25, 50, 100]"
     showFirstLastButtons
     aria-label="Select page of periodic elements"
-  >
+    >
   </mat-paginator>
 </mat-card>

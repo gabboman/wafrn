@@ -1,4 +1,4 @@
-import { CommonModule, NgClass } from '@angular/common'
+import { CommonModule, NgClass } from '@angular/common';
 import { Component, linkedSignal, signal } from '@angular/core'
 import { MatButtonModule } from '@angular/material/button'
 import { MatCheckboxModule } from '@angular/material/checkbox'

@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common'
+
 import { Component, OnInit } from '@angular/core'
 import { FormsModule, ReactiveFormsModule } from '@angular/forms'
 import { MatButton, MatButtonModule } from '@angular/material/button'
@@ -10,7 +10,6 @@ import { MatSelectModule } from '@angular/material/select'
 @Component({
   selector: 'app-aac-for-alex',
   imports: [
-    CommonModule,
     MatButtonModule,
     MatCardModule,
     FormsModule,
@@ -18,7 +17,7 @@ import { MatSelectModule } from '@angular/material/select'
     MatInputModule,
     MatFormFieldModule,
     MatSelectModule
-  ],
+],
   templateUrl: './aac-for-alex.component.html',
   styleUrl: './aac-for-alex.component.scss'
 })
