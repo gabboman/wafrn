@@ -3,13 +3,13 @@ import { WebSocketSubject, webSocket } from 'rxjs/webSocket'
 import { EnvironmentService } from './environment.service'
 import { LoginService } from './login.service'
 import { DashboardService } from './dashboard.service'
+import { retry, Subject } from 'rxjs'
 
 @Injectable({
   providedIn: 'root'
 })
 export class WebsocketService {
-  private socket$: WebSocketSubject<any> | undefined
-
+  private socket$!: WebSocketSubject<any>
   constructor(
     private loginService: LoginService,
     private dashboardService: DashboardService
@@ -21,25 +21,40 @@ export class WebsocketService {
 
   connectSocket() {
     try {
+      const onSocketConnect = new Subject()
       const url =
         EnvironmentService.environment.baseUrl.replace('http://', 'ws://').replace('https://', 'wss://') +
         '/notifications/socket'
-      console.log(url)
-      this.socket$ = webSocket(url)
-      this.socket$.subscribe((obs: { message: 'update_notifications' }) => {
-        try {
-          switch (obs.message) {
-            case 'update_notifications': {
-              this.dashboardService.scrollEventEmitter.next('scroll')
-            }
-          }
-        } catch (error) {
-          console.error(error)
-        }
+      this.socket$ = webSocket({
+        url: url,
+        WebSocketCtor: WebSocket,
+        openObserver: onSocketConnect,
+        protocol: 'server'
       })
-      this.socket$.next({
-        type: 'auth',
-        object: localStorage.getItem('authToken') as string
+      this.socket$
+        .pipe(
+          retry({
+            delay: 3000
+          })
+        )
+        .subscribe((obs: { message: 'update_notifications' }) => {
+          try {
+            switch (obs.message) {
+              case 'update_notifications': {
+                this.dashboardService.scrollEventEmitter.next('scroll')
+              }
+            }
+          } catch (error) {
+            console.error(error)
+          }
+        })
+      if (this.socket$) {
+      }
+      onSocketConnect.subscribe((data) => {
+        this.socket$.next({
+          type: 'auth',
+          object: localStorage.getItem('authToken') as string
+        })
       })
     } catch (error) {
       console.log('error conecting websocket')
