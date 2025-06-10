@@ -55,6 +55,7 @@ export class WebsocketService {
           type: 'auth',
           object: localStorage.getItem('authToken') as string
         })
+        this.dashboardService.scrollEventEmitter.next('scroll')
       })
     } catch (error) {
       console.log('error conecting websocket')
