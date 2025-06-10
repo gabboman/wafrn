@@ -1,4 +1,4 @@
-import { NgModule, isDevMode } from '@angular/core'
+import { NgModule, isDevMode, provideZonelessChangeDetection } from '@angular/core'
 import { BrowserModule } from '@angular/platform-browser'
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations'
 import { HTTP_INTERCEPTORS, provideHttpClient, withInterceptorsFromDi } from '@angular/common/http'
@@ -54,7 +54,8 @@ const globalRippleConfig: RippleGlobalOptions = {
     provideHttpClient(withInterceptorsFromDi()),
     { provide: HTTP_INTERCEPTORS, useClass: WafrnAuthInterceptor, multi: true },
     { provide: MAT_RIPPLE_GLOBAL_OPTIONS, useValue: globalRippleConfig },
-    provideHttpClient(withInterceptorsFromDi())
+    provideHttpClient(withInterceptorsFromDi()),
+    provideZonelessChangeDetection()
   ]
 })
 export class AppModule {}
