@@ -13,6 +13,7 @@ import { environment } from '../../environment.js'
 import { Op } from 'sequelize'
 import { getMutedPosts } from '../cacheGetters/getMutedPosts.js'
 import { sendWebPushNotifications } from '../webpush.js'
+import getBlockedIds from '../cacheGetters/getBlockedIds.js'
 
 const deliveryCheckQueue = new Queue('checkPushNotificationDelivery', {
   connection: environment.bullmqConnection,
@@ -55,6 +56,11 @@ export async function sendPushNotification(job: Job<PushNotificationPayload>) {
       )
     )
     if (!mutedPosts.has(notification.postId ? notification.postId : '')) {
+      const blockedUsers = await getBlockedIds(notification.notifiedUserId) // do not push notification if muted user
+      if( notification.userId == notification.notifiedUserId ||  blockedUsers.includes(notification.userId)) {
+        // this is from a blocked user or same user. do not notify
+        continue;
+      }
       // TODO this part of code is repeated. take it to a function another day
       const options = await UserOptions.findAll({
         where: {
