@@ -344,7 +344,7 @@ div.quoted-post,
 .emojireact-button {
   background-image: var(--percentage-gradient-bottom);
   transition: var(--color-trans);
-  --mdc-protected-button-container-shape: 10px;
+  --mat-button-protected-container-shape: 10px;
 }
 
 .emojireact-button.reacted {
@@ -363,7 +363,7 @@ div.quoted-post,
 
 .external-emoji {
   background-color: light-dark(#bbbbbb, #121212) !important;
-  --mdc-protected-button-container-shape: 10px;
+  --mat-button-protected-container-shape: 10px;
 }
 
 /* Media container (Images, videos, etc) */
