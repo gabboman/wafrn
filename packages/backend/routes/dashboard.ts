@@ -96,6 +96,7 @@ export default function dashboardRoutes(app: Application) {
 
           const lastDmDate: Date = dms.length > 0 ? new Date(dms[dms.length -1].createdAt) : new Date(0)
           const myPosts = await Post.findAll({
+            // TODO fix this! there is a THEORETICAL posibility of something going wrong. using all user dms can be too much but just get them between here and last post...
             order: [['createdAt', 'DESC']],
             limit: POSTS_PER_PAGE * 10,
             where: {
