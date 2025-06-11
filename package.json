@@ -1,6 +1,6 @@
 {
   "name": "wafrn",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "description": "wafrn monorepo",
   "main": "index.ts",
   "scripts": {
