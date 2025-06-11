@@ -1,6 +1,7 @@
 import { Op } from 'sequelize'
 import { PostAncestor, sequelize, SilencedPost } from '../../models/index.js'
 import { redisCache } from '../redis.js'
+import { logger } from '../logger.js'
 
 async function getMutedPosts(userId: string, superMute = false): Promise<Array<string>> {
   let res: string[] = []
@@ -33,9 +34,23 @@ async function getMutedPosts(userId: string, superMute = false): Promise<Array<s
 }
 
 async function getMutedPostsMultiple(userIds: string[], superMute = false) {
-  const cacheResults = await redisCache.mget(
+  if(userIds.length == 0) {
+    return []
+  }
+  let cacheResults: (string | null) [] = []
+  try {
+    cacheResults = await redisCache.mget(
     userIds.map((userId) => (superMute ? 'superMutedPosts:' : 'mutedPosts:') + userId)
   )
+  } catch(error) {
+    logger.error({
+      message: `Error getMutedPostsMultiple`,
+      userIds,
+      superMute,
+      error
+    })
+  }
+  
 
   if (cacheResults.every((result) => !!result)) {
     const ids = cacheResults.map((result) => JSON.parse(result!) as string[])

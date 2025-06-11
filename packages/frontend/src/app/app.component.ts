@@ -6,6 +6,8 @@ import { TranslateService } from '@ngx-translate/core'
 import { SwPush } from '@angular/service-worker'
 
 import { WebsocketService } from './services/websocket.service'
+import { NavigationError, Router } from '@angular/router'
+import { filter, map } from 'rxjs'
 
 @Component({
   selector: 'app-root',
@@ -24,7 +26,8 @@ export class AppComponent implements OnInit {
     private environmentService: EnvironmentService,
     @Inject(DOCUMENT) private document: Document,
     private translate: TranslateService,
-    private websocketService: WebsocketService
+    private websocketService: WebsocketService,
+    private router: Router
   ) {
     this.translate.addLangs(['en', 'pl'])
     this.translate.setDefaultLang('en')
@@ -33,6 +36,24 @@ export class AppComponent implements OnInit {
     } catch (error) {
       // probably lang not avaiable
     }
+    router.events
+      .pipe(
+        filter((evt) => evt instanceof NavigationError),
+        map((evt) => evt as NavigationError)
+      )
+      .subscribe((evt) => {
+        if (evt.error instanceof Error && evt.error.name == 'ChunkLoadError') {
+          window.location.assign(evt.url)
+        }
+      })
+    swUpdate.unrecoverable.subscribe((event) => {
+      navigator.serviceWorker.getRegistrations().then(function (registrations) {
+        for (const registration of registrations) {
+          registration.unregister()
+        }
+        window.location.reload()
+      })
+    })
   }
 
   ngOnInit() {

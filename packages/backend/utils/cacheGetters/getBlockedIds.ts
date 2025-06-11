@@ -47,6 +47,6 @@ export default async function getBlockedIds(
     return res.length > 0 ? res : ['00000000-0000-0000-0000-000000000000']
   } catch (error) {
     logger.error(error)
-    return []
+    return ['00000000-0000-0000-0000-000000000000']
   }
 }
