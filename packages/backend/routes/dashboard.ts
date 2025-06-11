@@ -94,12 +94,14 @@ export default function dashboardRoutes(app: Application) {
             }
           })
 
+          const lastDmDate: Date = dms.length > 0 ? new Date(dms[dms.length -1].createdAt) : new Date(0)
           const myPosts = await Post.findAll({
             where: {
               userId: posterId,
               privacy: Privacy.DirectMessage,
               createdAt: {
-                [Op.lt]: getStartScrollParam(req)
+                [Op.lt]: getStartScrollParam(req),
+                [Op.gt]: lastDmDate
               }
             }
           })
