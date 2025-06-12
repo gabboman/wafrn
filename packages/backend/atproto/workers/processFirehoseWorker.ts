@@ -113,8 +113,14 @@ async function processFirehose(job: Job) {
               try {
                 let [post, created] = await Post.findOrCreate({
                   where: {
-                    bskyUri: `at://${job.data.repo}/${operation.path}`,
-                    bskyCid: operation.cid
+                    [Op.or]: [
+                      {
+                        bskyUri: `at://${job.data.repo}/${operation.path}`
+                      },
+                      {
+                        bskyCid: operation.cid
+                      }
+                    ]
                   },
                   defaults: {
                     content: '',
