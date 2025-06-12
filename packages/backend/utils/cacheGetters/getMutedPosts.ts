@@ -34,14 +34,11 @@ async function getMutedPosts(userId: string, superMute = false): Promise<Array<s
 }
 
 async function getMutedPostsMultiple(userIds: string[], superMute = false) {
-  if(userIds.length == 0) {
-    return []
-  }
   let cacheResults: (string | null) [] = []
   try {
     cacheResults = await redisCache.mget(
-    userIds.map((userId) => (superMute ? 'superMutedPosts:' : 'mutedPosts:') + userId)
-  )
+      userIds.map((userId) => (superMute ? 'superMutedPosts:' : 'mutedPosts:') + userId)
+    )
   } catch(error) {
     logger.error({
       message: `Error getMutedPostsMultiple`,
@@ -50,7 +47,6 @@ async function getMutedPostsMultiple(userIds: string[], superMute = false) {
       error
     })
   }
-  
 
   if (cacheResults.every((result) => !!result)) {
     const ids = cacheResults.map((result) => JSON.parse(result!) as string[])

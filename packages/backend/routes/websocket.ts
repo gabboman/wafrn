@@ -10,43 +10,44 @@ import {BehaviorSubject, debounceTime, filter, Subscription} from 'rxjs'
 
 export default function websocketRoutes(app: Application) {
     const notificationEmitter: BehaviorSubject<string> = new BehaviorSubject('')
-    const  notificationCreatedWorker = new Worker(
-  'updateNotificationsSocket',
-  async (job: Job) => {
-    // TODO send notifications!
-    const userId = job.data.userId ? job.data.userId : '';
-    notificationEmitter.next(userId)
-  },
-  {
-    connection: environment.bullmqConnection,
-    concurrency: 1,
-    lockDuration: 120000
-  }
-)
+    new Worker(
+        'updateNotificationsSocket',
+        async (job: Job) => {
+            // TODO send notifications!
+            const userId = job.data.userId ? job.data.userId : '';
+            notificationEmitter.next(userId)
+        },
+        {
+            connection: environment.bullmqConnection,
+            concurrency: 1,
+            lockDuration: 120000
+        }
+    )
     app.ws('/api/notifications/socket', async (ws: WebSocket , req: Request) => {
         let authorized = false;
         let procesingAuth = false;
         let userId: string | undefined
         let subscriptions: Subscription[] = []
+
         ws.on('message', (msg: string) => {
             let msgAsObject: {type: 'auth' | 'NOTVALID', object: any } = {type: 'NOTVALID', object: null}
             // we try to convert the object to something valid
-            try  {
+            try {
                 msgAsObject = JSON.parse(msg)
-            }catch(error) {
+            } catch (error) {
                 logger.debug({
                     message: `Socket message not valid json`,
                     error: error,
                     socketMsg: msg
                 })
             }
-            if(msgAsObject && msgAsObject.type && msgAsObject.object){
-                switch(msgAsObject.type){
+            if (msgAsObject && msgAsObject.type && msgAsObject.object) {
+                switch (msgAsObject.type) {
                     // yep we are gona go fedi inbox type as this seems the only way.
                     // For now we will only recive one type of action from the client through websocket
                     case 'auth': {
                         // the object is the bearer token
-                        if(typeof(msgAsObject.object) === 'string'){
+                        if (typeof msgAsObject.object === 'string') {
                             const token = msgAsObject.object;
                             jwt.verify(token, environment.jwtSecret, async (err: any, jwtData: any) => {
                                 if (err) {
@@ -54,7 +55,7 @@ export default function websocketRoutes(app: Application) {
                                 }
                                 if (!jwtData?.userId) {
                                   ws.close()
-                                } else{
+                                } else {
                                     authorized = true;
                                     userId = jwtData.userId
                                     const myNotifications = notificationEmitter.pipe(filter(userIdFromNotification => userId === userIdFromNotification))
@@ -63,21 +64,19 @@ export default function websocketRoutes(app: Application) {
                                     }))
                                 }
                             })
-
                         } else {
                             ws.close();
                         }
-                    break;
-                }
-                default: {
-                    logger.debug({
-                        message: `Socket invalid message type: ${msgAsObject.type}`,
-                        socketMessage: msg
-                    })
+                        break;
+                    }
+                    default: {
+                        logger.debug({
+                            message: `Socket invalid message type: ${msgAsObject.type}`,
+                            socketMessage: msg
+                        })
+                    }
                 }
             }
-            }
-            
         })
 
         ws.on('close', (msg: string) => {

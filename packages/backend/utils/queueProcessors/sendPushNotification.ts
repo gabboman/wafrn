@@ -155,9 +155,12 @@ export async function sendPushNotification(job: Job<PushNotificationPayload>) {
       }
     }
   }
-  await sendWebPushNotifications(notificationsToSend, context)
-  await sendExpoNotifications(notificationsToSend, context)
-  await sendWsNotifications(notificationsToSend, context)
+
+  if (notificationsToSend.length > 0) {
+    await sendWebPushNotifications(notificationsToSend, context)
+    await sendExpoNotifications(notificationsToSend, context)
+    await sendWsNotifications(notificationsToSend, context)
+  }
 }
 
 export async function sendExpoNotifications(notifications: NotificationBody[], context?: NotificationContext) {
