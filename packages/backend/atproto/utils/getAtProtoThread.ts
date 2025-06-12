@@ -444,7 +444,7 @@ async function getPostThreadSafe(agent: BskyAgent | undefined, options: any) {
     try {
       return await agent.getPostThread(options)
     } catch (error) {
-      logger.debug({
+      logger.trace({
         message: `Error trying to get atproto thread`,
         options: options,
         error: error
