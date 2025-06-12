@@ -6,6 +6,7 @@ import { environment } from '../../environment.js'
 import _ from 'underscore'
 import { wait } from '../../utils/wait.js'
 import { logger } from '../../utils/logger.js'
+import { getDeletedUser } from '../../utils/cacheGetters/getDeletedUser.js'
 
 async function forcePopulateUsers(dids: string[], localUser: User) {
   const userFounds = await User.findAll({
@@ -60,6 +61,9 @@ async function forcePopulateUsers(dids: string[], localUser: User) {
 async function getAtprotoUser(handle: string, localUser: User, petitionData?: ProfileViewBasic) {
   // we check if we found the user
   let avatarString = ``
+  if(!handle && !petitionData) {
+    return await getDeletedUser()
+  }
 
   let userFound =
     handle == 'handle.invalid'
