@@ -40,8 +40,8 @@ async function getMutedPostsMultiple(userIds: string[], superMute = false) {
   let cacheResults: (string | null) [] = []
   try {
     cacheResults = await redisCache.mget(
-    userIds.map((userId) => (superMute ? 'superMutedPosts:' : 'mutedPosts:') + userId)
-  )
+      userIds.map((userId) => (superMute ? 'superMutedPosts:' : 'mutedPosts:') + userId)
+    )
   } catch(error) {
     logger.error({
       message: `Error getMutedPostsMultiple`,
