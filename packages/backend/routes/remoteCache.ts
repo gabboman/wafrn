@@ -149,7 +149,7 @@ export default function cacheRoutes(app: Application) {
 
       return sendWithCache(res, localFileName)
     } catch (error) {
-      logger.debug({
+      logger.trace({
         message: 'error on cache',
         url: mediaUrl,
         error: error
