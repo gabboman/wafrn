@@ -58,13 +58,16 @@ async function forcePopulateUsers(dids: string[], localUser: User) {
   }
 }
 
-async function getAtprotoUser(handle: string, localUser: User, petitionData?: ProfileViewBasic) {
+async function getAtprotoUser(inputHandle: string, localUser: User, petitionData?: ProfileViewBasic) {
   // we check if we found the user
   let avatarString = ``
-  if(!handle && !petitionData) {
+  if(!inputHandle && !petitionData) {
     return await getDeletedUser()
   }
-
+  let handle = inputHandle
+  if(!inputHandle && petitionData?.did) {
+    handle = petitionData.did
+  }
   let userFound =
     handle == 'handle.invalid'
       ? undefined
