@@ -100,7 +100,7 @@ export default function cacheRoutes(app: Application) {
             }
           }
 
-          logger.debug({
+          logger.trace({
             message: 'error on cache with dids',
             url: req.query?.media,
             error: error
