@@ -96,7 +96,8 @@ async function processFirehose(job: Job) {
                 message: `Error creating bluesky like`,
                 user,
                 likedPostId,
-                record
+                record,
+                error
               })
             }
 
