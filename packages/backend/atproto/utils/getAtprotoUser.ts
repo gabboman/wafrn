@@ -58,11 +58,11 @@ async function forcePopulateUsers(dids: string[], localUser: User) {
   }
 }
 
-async function getAtprotoUser(inputHandle: string, localUser: User, petitionData?: ProfileViewBasic) {
+async function getAtprotoUser(inputHandle: string, localUser: User, petitionData?: ProfileViewBasic): Promise<User | undefined> {
   // we check if we found the user
   let avatarString = ``
   if(!inputHandle && !petitionData) {
-    return await getDeletedUser()
+    return await getDeletedUser() as User
   }
   let handle = inputHandle
   if(!inputHandle && petitionData?.did) {

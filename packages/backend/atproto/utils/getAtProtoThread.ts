@@ -153,7 +153,18 @@ async function processSinglePost(
       return existingPost.id
     }
   }
-  const postCreator = await getAtprotoUser(post.author.did, (await adminUser) as User, post.author)
+  let postCreator: User | undefined
+  try {
+    postCreator = await getAtprotoUser(post.author.did, (await adminUser) as User, post.author)
+  } catch (error) {
+    logger.debug({
+      message: `Problem obtaining user from post`,
+      post,
+      parentId,
+      forceUpdate,
+      error
+    })
+  }
   if (!postCreator || !post) {
     const usr = postCreator ? postCreator : await User.findOne({ where: { url: environment.deletedUser } })
 
