@@ -1,4 +1,3 @@
-
 import { Component } from '@angular/core'
 import { FormsModule } from '@angular/forms'
 import { MatCardModule } from '@angular/material/card'
@@ -14,6 +13,6 @@ import { LoaderComponent } from 'src/app/components/loader/loader.component'
 })
 export class EmojiUploaderComponent {
   onEmojiUpload(evt: any) {
-    console.log(evt)
+    window.location.reload()
   }
 }

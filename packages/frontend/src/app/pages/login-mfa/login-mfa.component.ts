@@ -19,16 +19,16 @@ export class LoginMfaComponent implements OnInit {
   faUser = faUser
 
   loginMfaForm = new UntypedFormGroup({
-    token: new UntypedFormControl('', [Validators.required]),
+    token: new UntypedFormControl('', [Validators.required])
   })
 
   constructor(
     private loginService: LoginService,
     private messages: MessageService,
     private router: Router
-  ) { }
+  ) {}
 
-  ngOnInit(): void { }
+  ngOnInit(): void {}
 
   async onSubmit() {
     this.loading = true
@@ -41,7 +41,7 @@ export class LoginMfaComponent implements OnInit {
         })
       }
     } catch (exception) {
-      console.log(exception)
+      console.error(exception)
       this.messages.add({
         severity: 'error',
         summary: 'Something failed!'

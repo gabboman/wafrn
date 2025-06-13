@@ -276,7 +276,6 @@ export class NewEditorComponent implements OnDestroy {
   }
 
   async uploadImage(media: WafrnMedia) {
-    console.log(media)
     try {
       media.url =
         EnvironmentService.environment.externalCacheurl +
@@ -350,7 +349,7 @@ export class NewEditorComponent implements OnDestroy {
         })
       }
     } catch (error) {
-      console.log(error)
+      console.error(error)
       this.messages.add({
         severity: 'error',
         summary: 'Something went wrong when trying to load this.'

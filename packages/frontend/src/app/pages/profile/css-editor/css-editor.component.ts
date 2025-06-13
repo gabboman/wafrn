@@ -1,4 +1,3 @@
-
 import { Component } from '@angular/core'
 import { FormsModule } from '@angular/forms'
 import { MatButtonModule } from '@angular/material/button'
@@ -47,7 +46,7 @@ export class CssEditorComponent {
         this.router.navigate(['/dashboard'])
       })
       .catch((error: any) => {
-        console.log(error)
+        console.error(error)
         this.ready = true
         this.messages.add({
           severity: 'error',

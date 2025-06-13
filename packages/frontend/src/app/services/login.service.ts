@@ -40,7 +40,6 @@ export class LoginService {
       if (petition.success) {
         localStorage.setItem('authToken', petition.token)
         if (petition.mfaRequired) {
-          console.log('MFA Route')
           success = true
           this.router.navigate(['/login/mfa'])
         } else {
@@ -316,7 +315,7 @@ export class LoginService {
         await this.postsService.loadFollowers()
       }
     } catch (error) {
-      console.log(error)
+      console.error(error)
     }
 
     return success

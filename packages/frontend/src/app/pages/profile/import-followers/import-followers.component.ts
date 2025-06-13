@@ -57,8 +57,8 @@ export class ImportFollowersComponent {
           notFoundUsers: string[]
         }>(uploadFollowListUrl, formdata)
       ).catch((error: any) => {
-        console.log('error uploading')
-        console.warn(error)
+        console.error('error uploading')
+        console.error(error)
       })
       if (petition) {
         this.response = petition

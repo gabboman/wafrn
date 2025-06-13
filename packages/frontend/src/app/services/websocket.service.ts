@@ -58,7 +58,7 @@ export class WebsocketService {
         this.dashboardService.scrollEventEmitter.next('scroll')
       })
     } catch (error) {
-      console.log('error conecting websocket')
+      console.error('error conecting websocket')
       console.error(error)
     }
   }

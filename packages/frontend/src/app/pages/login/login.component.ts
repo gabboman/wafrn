@@ -46,7 +46,7 @@ export class LoginComponent implements OnInit {
         })
       }
     } catch (exception) {
-      console.log(exception)
+      console.error(exception)
       this.messages.add({
         severity: 'error',
         summary: 'Something failed!'

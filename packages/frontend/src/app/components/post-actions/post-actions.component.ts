@@ -103,7 +103,6 @@ export class PostActionsComponent implements OnChanges {
   shareOriginalPost() {
     let remoteId = this.content.remotePostId
     if (this.content.bskyUri) {
-      console.log(this.content.bskyUri)
       const parts = this.content.bskyUri.split('/app.bsky.feed.post/')
       const userDid = parts[0].split('at://')[1]
       remoteId = `https://bsky.app/profile/${userDid}/post/${parts[1]}`
