@@ -16,7 +16,7 @@
     },
 	"notifications": {
 		"loadingMore": "Loading more notifications",
-		"refresh": "Refresh"
+		"refresh": "Herladen"
 	},
     "menu": {
         "login": "Inloggen",
@@ -41,15 +41,15 @@
         "settings": {
             "title": "Instellingen",
             "follows": "Beheer volgers",
-            "enableBluesky": "Enable Bluesky",
+            "enableBluesky": "Bluesky inschakelen",
             "editProfile": "Preferences and Profile",
-            "themeEditor": "Theme editor",
+            "themeEditor": "Thema editor",
             "mutedUsers": "Genegeerde gebruikers",
             "mutedPosts": "Genegeerde posts",
-            "bookmarkedPosts": "Bookmarked posts",
+            "bookmarkedPosts": "Bladwijzers",
             "myBlockedUsers": "Geblokkeerde gebruikers",
             "myBlockedServers": "Geblokkeerde servers",
-            "importFollows": "Import followers",
+            "importFollows": "Volgers importeren",
             "superSecretMenu": "Supergeheime Menu"
         },
         "admin": {
@@ -58,7 +58,7 @@
             "addEmojis": "Emojis toevoegen",
             "reports": "Rapporten",
             "bans": "Banned users",
-            "blocklist": "Blocked users",
+            "blocklist": "Geblokkeerde gebruikers",
             "stats": "Stats",
             "awaitingAproval": "Awaiting approval"
         }
@@ -84,11 +84,11 @@
         "quoteTitle": "Quoting:",
         "tagFieldLabel": "Tags",
         "tagSeparationNotice": "Separated by commas",
-        "ariaLabelWootPrivacy": "Edit privacy of woot",
+        "ariaLabelWootPrivacy": "Woot zichtbaarheid aanpassen",
         "ariaLabelQuoteSetter": "Enable the quote setter",
-        "uploadMediaTooltip": "Upload Media",
+        "uploadMediaTooltip": "Media toevoegen",
         "contentWarningTooltip": "Inhoudswaarschuwing",
-        "insertEmojiTooltip": "Insert emoji",
+        "insertEmojiTooltip": "Emojis toevoegen",
         "hiddenMentionsTooltip": "Other mentioned users",
         "editorGuide": "Doubts on how to format the text or how to start? Check <a target=\"_blank\" href=\"https://wafrn.net/faq/user\">the guide</a>"
     },
@@ -97,8 +97,8 @@
             "header": "Security Settings",
             "passwordChange": "Wachtwoord opnieuw instellen",
             "mfa": {
-                "header": "Two Factor Authentication",
-                "setup": "Setup Two Factor Authentication",
+                "header": "Tweestapsverificatie",
+                "setup": "Tweestapsverificatie instellen",
                 "addNew": "Add new Two Factor Authenticator",
                 "friendlyNameLabel": "Friendly name, e.g. 'Work Phone' or 'Aegis'",
                 "typeLabel": "Two factor type",
