@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core'
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core'
 import { faArrowsRotate } from '@fortawesome/free-solid-svg-icons'
 import { Follower } from 'src/app/interfaces/follower'
 import { ProcessedPost } from 'src/app/interfaces/processed-post'
@@ -37,7 +37,8 @@ export class NotificationsComponent implements OnInit {
 
   constructor(
     private notificationsService: NotificationsService,
-    private themeService: ThemeService
+    private themeService: ThemeService,
+    private cdr: ChangeDetectorRef
   ) {
     this.themeService.setMyTheme()
     this.observer = new IntersectionObserver((intersectionEntries: IntersectionObserverEntry[]) => {
@@ -74,6 +75,7 @@ export class NotificationsComponent implements OnInit {
         console.log('observer not ready')
       }
     })
+    this.cdr.detectChanges()
   }
 
   reblogToNotification(

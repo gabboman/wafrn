@@ -27,7 +27,7 @@ $theme: mat.define-theme((color: (primary: mat.$violet-palette )));
 @include mat.typography-hierarchy($theme);
 
 :root {
-  @include mat.badge-overrides((background-color: var(--mdc-filled-button-container-color, var(--mat-sys-primary))));
+  @include mat.badge-overrides((background-color: var(--mat-button-filled-container-color, var(--mat-sys-primary))));
 }
 
 // Variables
@@ -173,7 +173,7 @@ body {
 @media screen and (max-width: 800px) {
   /* START bottom-sheet */
   :root {
-    --mdc-dialog-container-shape: 16px 16px 0px 0px;
+    --mat-dialog-container-shape: 16px 16px 0px 0px;
   }
 
   .cdk-global-overlay-wrapper {

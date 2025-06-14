@@ -1,7 +1,7 @@
-import { NgModule, isDevMode } from '@angular/core'
+import { NgModule, isDevMode, provideZonelessChangeDetection } from '@angular/core'
 import { BrowserModule } from '@angular/platform-browser'
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations'
-import { HTTP_INTERCEPTORS, provideHttpClient, withInterceptorsFromDi, HttpClient } from '@angular/common/http'
+import { HTTP_INTERCEPTORS, provideHttpClient, withInterceptorsFromDi } from '@angular/common/http'
 import { CommonModule } from '@angular/common'
 import { AppRoutingModule } from './app-routing.module'
 import { AppComponent } from './app.component'
@@ -13,6 +13,7 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome'
 import { MatSnackBarModule } from '@angular/material/snack-bar'
 import { TranslateHttpLoader } from '@ngx-translate/http-loader'
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core'
+import { HttpClient } from '@angular/common/http'
 
 const globalRippleConfig: RippleGlobalOptions = {
   disabled: true,
@@ -54,9 +55,10 @@ const globalRippleConfig: RippleGlobalOptions = {
     { provide: HTTP_INTERCEPTORS, useClass: WafrnAuthInterceptor, multi: true },
     { provide: MAT_RIPPLE_GLOBAL_OPTIONS, useValue: globalRippleConfig },
     provideHttpClient(withInterceptorsFromDi()),
+    provideZonelessChangeDetection()
   ]
 })
-export class AppModule { }
+export class AppModule {}
 
 export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
   return new TranslateHttpLoader(http, '/assets/i18n/', '.json')

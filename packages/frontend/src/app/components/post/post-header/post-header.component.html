@@ -6,51 +6,59 @@
         <a
           class="flex flex-column min-w-0 user-link"
           [blogLink]="!disableLink() ? fragment.user : null"
-        >
+          >
           <span class="no-underline user-name"
             ><span [innerHTML]="fragment.user.name"></span>
             <span class="text-sm post-action">{{ headerText() }}</span></span
-          >
-          <span class="text-sm user-url" [innerText]="fragment.user.url"></span>
-        </a>
+            >
+            <span class="text-sm user-url" [innerText]="fragment.user.url"></span>
+          </a>
+        </div>
       </div>
+      @if (!simplified()) {
+        <div class="flex align-items-center date-line">
+          <span class="text-sm" matTooltip="{{ fragment.createdAt | date: 'short' }}">
+            <a [postLink]="fragment" style="color: var(--mat-sys-outline)">{{ this.timeAgo }}</a>
+          </span>
+          @if (edited) {
+            <span matTooltip="Edited {{ fragment.updatedAt | date: 'short' }}" class="text-xs">
+              <fa-icon [icon]="editedIcon"></fa-icon>
+            </span>
+          }
+          <span class="text-xs" matTooltip="{{ privacyOptions[fragment.privacy].name }}">
+            <fa-icon [icon]="privacyOptions[fragment.privacy].icon"></fa-icon>
+          </span>
+        </div>
+      }
     </div>
-    <div *ngIf="!simplified()" class="flex align-items-center date-line">
-      <span class="text-sm" matTooltip="{{ fragment.createdAt | date: 'short' }}">
-        <a [postLink]="fragment" style="color: var(--mat-sys-outline)">{{ this.timeAgo }}</a>
-      </span>
-      <span *ngIf="edited" matTooltip="Edited {{ fragment.updatedAt | date: 'short' }}" class="text-xs">
-        <fa-icon [icon]="editedIcon"></fa-icon>
-      </span>
-      <span class="text-xs" matTooltip="{{ privacyOptions[fragment.privacy].name }}">
-        <fa-icon [icon]="privacyOptions[fragment.privacy].icon"></fa-icon>
-      </span>
-    </div>
-  </div>
-  <div class="flex flex-column align-items-center">
-    <app-post-actions *ngIf="!simplified()" [content]="fragment" class="align-self-end"></app-post-actions>
-    <button
-      mat-button
-      color="accent"
-      *ngIf="
+    <div class="flex flex-column align-items-center">
+      @if (!simplified()) {
+        <app-post-actions [content]="fragment" class="align-self-end"></app-post-actions>
+      }
+      @if (
         !postService.notYetAcceptedFollowedUsersIds.includes(fragment.userId) &&
         !postService.followedUserIds.includes(fragment.userId) &&
         userLoggedIn
-      "
-      class="text-sm follow-button"
-      style="text-wrap: nowrap"
-      (click)="followUser(fragment.userId)"
-    >
-      Follow
-    </button>
-    <button
-      mat-button
-      color="accent"
-      *ngIf="postService.notYetAcceptedFollowedUsersIds.includes(fragment.userId) && userLoggedIn"
-      class="text-sm follow-button"
-      (click)="unfollowUser(fragment.userId)"
-    >
-      Awaiting approval
-    </button>
+        ) {
+        <button
+          mat-button
+          color="accent"
+          class="text-sm follow-button"
+          style="text-wrap: nowrap"
+          (click)="followUser(fragment.userId)"
+          >
+          Follow
+        </button>
+      }
+      @if (postService.notYetAcceptedFollowedUsersIds.includes(fragment.userId) && userLoggedIn) {
+        <button
+          mat-button
+          color="accent"
+          class="text-sm follow-button"
+          (click)="unfollowUser(fragment.userId)"
+          >
+          Awaiting approval
+        </button>
+      }
+    </div>
   </div>
-</div>

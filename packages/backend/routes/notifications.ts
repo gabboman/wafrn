@@ -41,7 +41,7 @@ function notificationRoutes(app: Application) {
           await usr.save()
         }
       })
-      const blockedUsers = await getBlockedIds(userId)
+      const blockedUsers = await getBlockedIds(userId, false)
       let scrollDate = req.query?.date ? new Date(parseInt(req.query.date as string)) : new Date()
       if (isNaN(scrollDate.getTime())) {
         scrollDate = new Date()
@@ -196,7 +196,7 @@ function notificationRoutes(app: Application) {
     const userId = req.jwtData?.userId ? req.jwtData?.userId : '00000000-0000-0000-0000-000000000000'
 
     const user = await User.findByPk(userId)
-    const blockedUsers = await getBlockedIds(userId)
+    const blockedUsers = await getBlockedIds(userId, false)
     const startCountDate = user?.lastTimeNotificationsCheck
     const mutedPostIds = (await getMutedPosts(userId)).concat(await getMutedPosts(userId, true))
     const notificationsCount = await Notification.count({

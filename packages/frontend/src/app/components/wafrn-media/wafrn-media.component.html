@@ -1,11 +1,13 @@
 @if (mimeType().toLowerCase() == 'text/html' && !data().url.startsWith('https://media.tenor.com/')) {
-  <app-link-preview *ngIf="displayUrl()" [link]="displayUrl()"></app-link-preview>
+  @if (displayUrl()) {
+    <app-link-preview [link]="displayUrl()"></app-link-preview>
+  }
 } @else {
   <div class="media-container" [ngClass]="{ 'always-show-alt': alwaysShowAlt() }">
     <div class="media-content-container">
       @if (
         (!extensionsToHideImgTag.includes(extension()) || mimeType() === 'UNKNOWN') && !mimeType().startsWith('video')
-      ) {
+        ) {
         @let forceImg = displayUrl();
         <img
           [src]="forceImg"
@@ -16,7 +18,7 @@
             'displayed-image': true,
             nsfw: nsfw
           }"
-        />
+          />
       }
 
       @if (mimeType().startsWith('video')) {
@@ -31,7 +33,7 @@
           width="{{ width() }}"
           height="{{ height() }}"
           [controls]="enableVideoControls()"
-        >
+          >
           <source [src]="displayUrl()" [type]="mimeType()" />
         </video>
       }
@@ -60,7 +62,7 @@
             (click)="descriptionVisible = !descriptionVisible"
             title="Show alt text"
             [ariaDescription]="'Show alt text'"
-          >
+            >
             ALT
           </button>
         }
@@ -76,11 +78,13 @@
           (click)="$event.stopPropagation(); nsfw = !nsfw"
           title="Hide image"
           [ariaDescription]="'Hide image'"
-        >
+          >
           <fa-icon [icon]="hideIcon"></fa-icon>
         </button>
       }
     }
-    <a *ngIf="errorMode" [href]="data().url" target="_blank"> {{ data().description + ': ' + data().url }}</a>
+    @if (errorMode) {
+      <a [href]="data().url" target="_blank"> {{ data().description + ': ' + data().url }}</a>
+    }
   </div>
 }

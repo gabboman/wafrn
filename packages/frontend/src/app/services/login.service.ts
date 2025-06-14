@@ -40,7 +40,6 @@ export class LoginService {
       if (petition.success) {
         localStorage.setItem('authToken', petition.token)
         if (petition.mfaRequired) {
-          console.log('MFA Route')
           success = true
           this.router.navigate(['/login/mfa'])
         } else {
@@ -233,6 +232,7 @@ export class LoginService {
       forceClassicLogo: 'wafrn.forceClassicLogo',
       defaultPostEditorPrivacy: 'wafrn.defaultPostEditorPrivacy',
       mutedWords: 'wafrn.mutedWords',
+      superMutedWords: 'wafrn.superMutedWords',
       disableCW: 'wafrn.disableCW',
       forceClassicVideoPlayer: 'wafrn.forceClassicVideoPlayer',
       forceClassicAudioPlayer: 'wafrn.forceClassicAudioPlayer',
@@ -248,7 +248,9 @@ export class LoginService {
       notifyQuotes: 'wafrn.notifyQuotes',
       notifyFollows: 'wafrn.notifyFollows',
       notifyRewoots: 'wafrn.notifyRewoots',
-      disableSounds: 'wafrn.disableSounds'
+      disableSounds: 'wafrn.disableSounds',
+      replaceAIWithCocaine: 'wafrn.replaceAIWithCocaine',
+      replaceAIWord: 'wafrn.replaceAIWord'
     }
 
     try {
@@ -313,7 +315,7 @@ export class LoginService {
         await this.postsService.loadFollowers()
       }
     } catch (error) {
-      console.log(error)
+      console.error(error)
     }
 
     return success

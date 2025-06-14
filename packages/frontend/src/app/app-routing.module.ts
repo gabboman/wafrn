@@ -125,6 +125,7 @@ const routes: Routes = [
 @NgModule({
   imports: [
     RouterModule.forRoot(routes, {
+      // tried not using this but in some circumstances is slow
       preloadingStrategy: PreloadAllModules,
       anchorScrolling: 'enabled',
       scrollPositionRestoration: 'enabled'

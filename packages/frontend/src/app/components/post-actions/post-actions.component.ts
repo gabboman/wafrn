@@ -26,7 +26,7 @@ import { MatMenuModule } from '@angular/material/menu'
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome'
 import { EditorService } from '../../services/editor.service'
 import { LoginService } from '../../services/login.service'
-import { CommonModule } from '@angular/common'
+
 import { ReportService } from '../../services/report.service'
 import { DeletePostService } from '../../services/delete-post.service'
 import { PostsService } from '../../services/posts.service'
@@ -36,7 +36,7 @@ import { firstValueFrom } from 'rxjs'
 import { faBluesky } from '@fortawesome/free-brands-svg-icons'
 @Component({
   selector: 'app-post-actions',
-  imports: [CommonModule, MatButtonModule, MatMenuModule, FontAwesomeModule],
+  imports: [MatButtonModule, MatMenuModule, FontAwesomeModule],
   templateUrl: './post-actions.component.html',
   styleUrl: './post-actions.component.scss'
 })
@@ -103,7 +103,6 @@ export class PostActionsComponent implements OnChanges {
   shareOriginalPost() {
     let remoteId = this.content.remotePostId
     if (this.content.bskyUri) {
-      console.log(this.content.bskyUri)
       const parts = this.content.bskyUri.split('/app.bsky.feed.post/')
       const userDid = parts[0].split('at://')[1]
       remoteId = `https://bsky.app/profile/${userDid}/post/${parts[1]}`

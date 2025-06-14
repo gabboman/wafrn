@@ -95,7 +95,8 @@
 
 /* WAFRN LOGO --------------------------------------------------------------- */
 .instance-logo {
-  filter: hue-rotate(270deg);
+  /* filter: hue-rotate(270deg); */
+  content: url("https://cdn.wafrn.net/api/cache/?media=https%3A%2F%2Fmedia.wafrn.net%2F1749063617775_1512bf9dc76e226a08df0ece5da0bd11ce5f5c2a_processed.webp");
 }
 
 /* LINKS -------------------------------------------------------------------- */
@@ -343,7 +344,7 @@ div.quoted-post,
 .emojireact-button {
   background-image: var(--percentage-gradient-bottom);
   transition: var(--color-trans);
-  --mdc-protected-button-container-shape: 10px;
+  --mat-button-protected-container-shape: 10px;
 }
 
 .emojireact-button.reacted {
@@ -362,7 +363,7 @@ div.quoted-post,
 
 .external-emoji {
   background-color: light-dark(#bbbbbb, #121212) !important;
-  --mdc-protected-button-container-shape: 10px;
+  --mat-button-protected-container-shape: 10px;
 }
 
 /* Media container (Images, videos, etc) */

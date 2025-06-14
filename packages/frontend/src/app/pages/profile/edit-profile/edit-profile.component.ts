@@ -50,6 +50,7 @@ export class EditProfileComponent implements OnInit {
     hideProfileNotLoggedIn: new FormControl(false),
     forceOldEditor: new FormControl(false),
     mutedWords: new FormControl(''),
+    superMutedWords: new FormControl(''),
     disableCW: new FormControl(false),
     forceClassicAudioPlayer: new FormControl(false),
     forceClassicVideoPlayer: new FormControl(false),
@@ -65,7 +66,9 @@ export class EditProfileComponent implements OnInit {
     notifyReactions: new FormControl(true),
     notifyQuotes: new FormControl(true),
     notifyFollows: new FormControl(true),
-    notifyRewoots: new FormControl(true)
+    notifyRewoots: new FormControl(true),
+    replaceAIWithCocaine: new FormControl(false),
+    replaceAIWord: new FormControl('cocaine')
   })
 
   password = ''
@@ -123,6 +126,13 @@ export class EditProfileComponent implements OnInit {
       this.editProfileForm.controls['defaultExploreLocal'].patchValue(
         localStorage.getItem('defaultExploreLocal') == 'true'
       )
+      this.editProfileForm.controls['replaceAIWithCocaine'].patchValue(
+        localStorage.getItem('replaceAIWithCocaine') == 'true'
+      )
+
+      this.editProfileForm.controls['replaceAIWord'].patchValue(
+        localStorage.getItem('replaceAIWord') ? JSON.parse(localStorage.getItem('replaceAIWord') as string) : 'cocaine'
+      )
 
       const mutedWords = localStorage.getItem('mutedWords')
       if (mutedWords && mutedWords.trim().length) {
@@ -130,6 +140,14 @@ export class EditProfileComponent implements OnInit {
           this.editProfileForm.controls['mutedWords'].patchValue(JSON.parse(mutedWords))
         } catch (error) {
           this.messages.add({ severity: 'error', summary: 'Something wrong with your muted words!' })
+        }
+      }
+      const superMutedWords = localStorage.getItem('superMutedWords')
+      if (superMutedWords && superMutedWords.trim().length) {
+        try {
+          this.editProfileForm.controls['superMutedWords'].patchValue(JSON.parse(superMutedWords))
+        } catch (error) {
+          this.messages.add({ severity: 'error', summary: 'Something wrong with your superMuted words!' })
         }
       }
       const disableCW = localStorage.getItem('disableCW') == 'true'

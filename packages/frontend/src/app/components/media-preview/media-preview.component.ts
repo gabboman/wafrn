@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common'
+
 import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core'
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner'
 import { WafrnMedia } from 'src/app/interfaces/wafrn-media'
@@ -8,7 +8,7 @@ import { EnvironmentService } from 'src/app/services/environment.service'
   selector: 'app-media-preview',
   templateUrl: './media-preview.component.html',
   styleUrls: ['./media-preview.component.scss'],
-  imports: [CommonModule, MatProgressSpinnerModule]
+  imports: [MatProgressSpinnerModule]
 })
 export class MediaPreviewComponent implements OnInit {
   @Input() media!: WafrnMedia

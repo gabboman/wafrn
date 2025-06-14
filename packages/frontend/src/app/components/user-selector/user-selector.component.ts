@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common'
+
 import { Component, EventEmitter, Input, OnDestroy, Output } from '@angular/core'
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms'
 import { MatFormFieldModule } from '@angular/material/form-field'
@@ -12,14 +12,13 @@ import { AvatarSmallComponent } from '../avatar-small/avatar-small.component'
 @Component({
   selector: 'app-user-selector',
   imports: [
-    CommonModule,
     FormsModule,
     ReactiveFormsModule,
     MatFormFieldModule,
     MatInputModule,
     MatAutocompleteModule,
     AvatarSmallComponent
-  ],
+],
   templateUrl: './user-selector.component.html',
   styleUrl: './user-selector.component.scss'
 })

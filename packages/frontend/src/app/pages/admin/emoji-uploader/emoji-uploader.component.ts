@@ -1,4 +1,3 @@
-import { CommonModule } from '@angular/common'
 import { Component } from '@angular/core'
 import { FormsModule } from '@angular/forms'
 import { MatCardModule } from '@angular/material/card'
@@ -8,12 +7,12 @@ import { LoaderComponent } from 'src/app/components/loader/loader.component'
 
 @Component({
   selector: 'app-emoji-uploader',
-  imports: [CommonModule, FormsModule, MatCardModule, FileUploadComponent, EmojiCollectionsComponent],
+  imports: [FormsModule, MatCardModule, FileUploadComponent, EmojiCollectionsComponent],
   templateUrl: './emoji-uploader.component.html',
   styleUrl: './emoji-uploader.component.scss'
 })
 export class EmojiUploaderComponent {
   onEmojiUpload(evt: any) {
-    console.log(evt)
+    window.location.reload()
   }
 }

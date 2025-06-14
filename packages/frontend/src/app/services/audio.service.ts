@@ -24,12 +24,16 @@ export class AudioService {
   }
 
   playSound(name: string, volume = 0.3) {
-    let audio = this.audios.get(name)
-    if (!audio) {
-      audio = new Audio(name)
-      this.audios.set(name, audio)
+    try {
+      let audio = this.audios.get(name)
+      if (!audio) {
+        audio = new Audio(name)
+        this.audios.set(name, audio)
+      }
+      audio.volume = volume
+      audio.play()
+    } catch (error) {
+      console.error(error)
     }
-    audio.volume = volume
-    audio.play()
   }
 }

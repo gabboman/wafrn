@@ -1,4 +1,4 @@
-import { CommonModule, Location } from '@angular/common'
+import { Location } from '@angular/common';
 import { Component, HostListener, inject, OnDestroy, ViewChild } from '@angular/core'
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms'
 import { MatButtonModule } from '@angular/material/button'
@@ -58,7 +58,6 @@ import { Router } from '@angular/router'
 @Component({
   selector: 'app-new-editor',
   imports: [
-    CommonModule,
     FormsModule,
     ReactiveFormsModule,
     MatCardModule,
@@ -80,7 +79,7 @@ import { Router } from '@angular/router'
     TranslateModule,
     MatBadgeModule,
     MatChipsModule
-  ],
+],
   templateUrl: './new-editor.component.html',
   styleUrl: './new-editor.component.scss'
 })
@@ -277,7 +276,6 @@ export class NewEditorComponent implements OnDestroy {
   }
 
   async uploadImage(media: WafrnMedia) {
-    console.log(media)
     try {
       media.url =
         EnvironmentService.environment.externalCacheurl +
@@ -351,7 +349,7 @@ export class NewEditorComponent implements OnDestroy {
         })
       }
     } catch (error) {
-      console.log(error)
+      console.error(error)
       this.messages.add({
         severity: 'error',
         summary: 'Something went wrong when trying to load this.'

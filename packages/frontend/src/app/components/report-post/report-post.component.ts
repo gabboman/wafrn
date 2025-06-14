@@ -4,7 +4,7 @@ import { FormsModule, ReactiveFormsModule, UntypedFormBuilder, UntypedFormGroup,
 import { ProcessedPost } from 'src/app/interfaces/processed-post'
 import { BlocksService } from 'src/app/services/blocks.service'
 import { MessageService } from 'src/app/services/message.service'
-import { CommonModule } from '@angular/common'
+
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog'
 import { MatInputModule } from '@angular/material/input'
 import { MatSelectModule } from '@angular/material/select'
@@ -15,14 +15,13 @@ import { MatButtonModule } from '@angular/material/button'
   templateUrl: './report-post.component.html',
   styleUrls: ['./report-post.component.scss'],
   imports: [
-    CommonModule,
     FormsModule,
     ReactiveFormsModule,
     MatInputModule,
     MatSelectModule,
     MatCheckboxModule,
     MatButtonModule
-  ]
+]
 })
 export class ReportPostComponent implements OnDestroy {
   loading = false

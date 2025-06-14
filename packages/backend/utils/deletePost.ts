@@ -43,7 +43,6 @@ async function deletePostCommon(id: string) {
     if (quotesToDelete) {
       Promise.all(quotesToDelete.map((qte: any) => qte.destroy()))
     }
-    const children = await postToDelete.getDescendents()
     postToDelete.removeMedias(await postToDelete.getMedias())
     await PostTag.destroy({
       where: {
@@ -61,16 +60,14 @@ async function deletePostCommon(id: string) {
         postId: postToDelete.id
       }
     })
-    if (children.length === 0) {
-      await postToDelete.destroy()
-    } else {
+
       postToDelete.content_warning = ''
       postToDelete.content = '<p>This post has been deleted</p>'
       postToDelete.isDeleted = true
       const deletedUser = (await getDeletedUser()) as User
       postToDelete.userId = deletedUser.id
       await postToDelete.save()
-    }
+    
   }
 }
 

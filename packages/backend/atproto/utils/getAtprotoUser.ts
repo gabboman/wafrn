@@ -6,6 +6,7 @@ import { environment } from '../../environment.js'
 import _ from 'underscore'
 import { wait } from '../../utils/wait.js'
 import { logger } from '../../utils/logger.js'
+import { getDeletedUser } from '../../utils/cacheGetters/getDeletedUser.js'
 
 async function forcePopulateUsers(dids: string[], localUser: User) {
   const userFounds = await User.findAll({
@@ -57,10 +58,16 @@ async function forcePopulateUsers(dids: string[], localUser: User) {
   }
 }
 
-async function getAtprotoUser(handle: string, localUser: User, petitionData?: ProfileViewBasic) {
+async function getAtprotoUser(inputHandle: string, localUser: User, petitionData?: ProfileViewBasic): Promise<User | undefined> {
   // we check if we found the user
   let avatarString = ``
-
+  if(!inputHandle && !petitionData) {
+    return await getDeletedUser() as User
+  }
+  let handle = inputHandle
+  if(!inputHandle && petitionData?.did) {
+    handle = petitionData.did
+  }
   let userFound =
     handle == 'handle.invalid'
       ? undefined
@@ -80,19 +87,6 @@ async function getAtprotoUser(handle: string, localUser: User, petitionData?: Pr
   }
   if (userFound) {
     avatarString = userFound.avatar
-  }
-  // We check if the user is local.
-  if (handle.endsWith('.' + environment.bskyPds)) {
-    let userUrl = handle.split('.' + environment.bskyPds)[0]
-    if (userUrl.startsWith('@')) {
-      userUrl = userUrl.split('@')[1]
-    }
-    if (userUrl.includes('.')) {
-      return
-    }
-    return User.findOne({
-      where: sequelize.where(sequelize.fn('lower', sequelize.col('url')), userUrl)
-    })
   }
   const agent = await getAtProtoSession(localUser)
   // TODO check if current user exist

@@ -11,18 +11,22 @@
           class="file-input"
           (change)="onFileSelected($event)"
           #fileUpload
-        />
+          />
 
-        <div *ngIf="!uploading" class="file-upload">
-          <button mat-flat-button color="accent" class="upload-btn w-full" (click)="fileUpload.click()">
-            Upload CSV
-          </button>
-        </div>
+        @if (!uploading) {
+          <div class="file-upload">
+            <button mat-flat-button color="accent" class="upload-btn w-full" (click)="fileUpload.click()">
+              Upload CSV
+            </button>
+          </div>
+        }
 
-        <div *ngIf="uploading" class="w-full flex flex-column align-items-center gap-3">
-          <mat-spinner color="accent" diameter="32"></mat-spinner>
-          <p class="m-0 text-lg text-600">Uploading... This might take some time</p>
-        </div>
+        @if (uploading) {
+          <div class="w-full flex flex-column align-items-center gap-3">
+            <mat-spinner color="accent" diameter="32"></mat-spinner>
+            <p class="m-0 text-lg text-600">Uploading... This might take some time</p>
+          </div>
+        }
       }
       @case (1) {
         <button (click)="followEveryone()" mat-flat-button class="w-full" color="primary">Follow all users</button>

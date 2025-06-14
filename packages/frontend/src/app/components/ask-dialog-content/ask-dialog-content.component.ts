@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common'
+
 import { Component, Inject, OnInit } from '@angular/core'
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, UntypedFormGroup, Validators } from '@angular/forms'
 import { MatButtonModule } from '@angular/material/button'
@@ -16,7 +16,6 @@ import { MatCheckboxModule } from '@angular/material/checkbox'
 @Component({
   selector: 'app-ask-dialog-content',
   imports: [
-    CommonModule,
     FormsModule,
     ReactiveFormsModule,
     MatInput,
@@ -24,7 +23,7 @@ import { MatCheckboxModule } from '@angular/material/checkbox'
     MatButtonModule,
     TranslateModule,
     MatCheckboxModule
-  ],
+],
   templateUrl: './ask-dialog-content.component.html',
   styleUrl: './ask-dialog-content.component.scss'
 })

@@ -70,6 +70,23 @@ export class PostFragmentComponent implements OnChanges, OnDestroy {
   wafrnFormattedContent = computed(() => {
     let processedBlock: Array<string | WafrnMedia> = []
     this.sanitizedContent = this.postService.getPostHtml(this.fragment())
+    // wafrn silly feature
+    if (localStorage.getItem('replaceAIWithCocaine') === 'true') {
+      // TODO this should be done in a better way but because we are playing with html... AAAA
+      const replaceAIWord = localStorage.getItem('replaceAIWord')
+        ? JSON.parse(localStorage.getItem('replaceAIWord') as string)
+        : 'cocaine'
+      const wordsToReplace = ['ai', 'artificial intelligence', 'artificial inteligence', 'llm']
+      let regexpString = wordsToReplace.map((elem) => `\\s${elem}\\s|^${elem}\\s|${elem}$`).join('|')
+      let regexp = new RegExp(regexpString, 'gi')
+      this.sanitizedContent = this.sanitizedContent.replaceAll(regexp, ` ${replaceAIWord} `)
+      regexpString = wordsToReplace.map((elem) => `>${elem}`).join('|')
+      regexp = new RegExp(regexpString, 'gi')
+      this.sanitizedContent = this.sanitizedContent.replaceAll(regexp, `>${replaceAIWord}`)
+      regexpString = wordsToReplace.map((elem) => `${elem}<`).join('|')
+      regexp = new RegExp(regexpString, 'gi')
+      this.sanitizedContent = this.sanitizedContent.replaceAll(regexp, `${replaceAIWord}<`)
+    }
     this.noTagsContent = this.postService.getPostHtml(this.fragment(), [])
     if (this.fragment().medias && this.fragment().medias?.length > 0) {
       const mediaDetectorRegex = /\!\[media\-([0-9]+)]/gm

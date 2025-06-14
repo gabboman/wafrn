@@ -15,7 +15,7 @@
       aria-labelledby="example-radio-group-label"
       class="example-radio-group"
       formControlName="singleValue"
-    >
+      >
       @for (option of poll().questionPollQuestions; track $index) {
         <div class="w-full">
           <mat-radio-button [value]="option.id">{{ option.questionText }}</mat-radio-button>
@@ -30,13 +30,14 @@
   }
 </form>
 
-<button
-  *ngIf="!alreadyVoted && this.userLoggedIn && this.openPoll"
-  mat-flat-button
-  color="primary"
-  class="w-full mt-2"
-  [disabled]="!form.valid"
-  (click)="vote()"
->
-  Vote
-</button>
+@if (!alreadyVoted && this.userLoggedIn && this.openPoll) {
+  <button
+    mat-flat-button
+    color="primary"
+    class="w-full mt-2"
+    [disabled]="!form.valid"
+    (click)="vote()"
+    >
+    Vote
+  </button>
+}

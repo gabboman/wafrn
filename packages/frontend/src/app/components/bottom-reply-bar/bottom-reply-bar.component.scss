@@ -1,7 +1,7 @@
 :host {
-  --mdc-text-button-container-height: 2.25rem;
-  --mdc-outlined-button-container-height: 2.25rem;
-  --mdc-outlined-button-outline-color: var(--mat-sys-outline-variant);
+  --mat-button-text-container-height: 2.25rem;
+  --mat-button-outlined-container-height: 2.25rem;
+  --mat-button-outlined-outline-color: var(--mat-sys-outline-variant);
 }
 
 [mat-stroked-button].notes-link {

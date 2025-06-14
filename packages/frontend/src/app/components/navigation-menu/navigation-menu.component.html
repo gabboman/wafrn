@@ -5,7 +5,7 @@
     [mode]="mobile ? 'over' : 'side'"
     [opened]="menuVisible || !mobile"
     (closed)="hideMenu()"
-  >
+    >
     <a [href]="'/'" class="block" (click)="hideMenu()">
       <img
         [src]="logo"
@@ -13,7 +13,7 @@
         alt="instance logo"
         width="200"
         style="object-fit: contain"
-      />
+        />
     </a>
     <hr />
     <nav aria-label="Navigation menu">
@@ -45,7 +45,7 @@
         notifications + adminNotifications + usersAwaitingApproval + followsAwaitingApproval + awaitingAsks === 0
       "
       matBadgePosition="below"
-    >
+      >
       <fa-icon [icon]="hamburguerIcon"></fa-icon>
     </button>
     <button
@@ -56,11 +56,13 @@
       type="button"
       class="show-sidebar-menu-button create-post-button"
       (click)="this.hideMenu(); this.openEditor()"
-    >
+      >
       <fa-icon [icon]="pencilIcon"></fa-icon>
     </button>
     <main id="main-content" class="wafrn-content">
-      <div *ngIf="maintenanceMode" [innerHtml]="maintenanceMessage"></div>
+      @if (maintenanceMode) {
+        <div [innerHtml]="maintenanceMessage"></div>
+      }
       <snappy-router> </snappy-router>
     </main>
   </mat-drawer-content>
