@@ -275,9 +275,20 @@ async function processFirehose(job: Job) {
               }
               break
             }
+            case 'feed.repost': {
+              const post = await Post.findOne({
+                where: {
+                  bskyUri: `at://${job.data.repo}/${operation.path}`
+                }
+              })
+              if (post) {
+                await post.destroy()
+              }
+              break
+            }
             default: {
               logger.info({
-                message: `Bsky deleted type not implemented: ${deleteOperation.path}`,
+                message: `Bsky delete type not implemented: ${deleteOperation.path}`,
                 operation: deleteOperation
               })
             }
