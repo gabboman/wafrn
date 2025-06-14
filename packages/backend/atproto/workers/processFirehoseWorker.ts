@@ -1,6 +1,15 @@
 import { Job } from 'bullmq'
 import { getAtprotoUser } from '../utils/getAtprotoUser.js'
-import { Follows, Post, User, UserLikesPostRelations, PostTag, Media, Notification } from '../../models/index.js'
+import {
+  Follows,
+  Post,
+  User,
+  UserLikesPostRelations,
+  PostTag,
+  Media,
+  Notification,
+  Blocks
+} from '../../models/index.js'
 import { environment } from '../../environment.js'
 import { Op, Model } from 'sequelize'
 import { logger } from '../../utils/logger.js'
@@ -167,6 +176,17 @@ async function processFirehose(job: Job) {
                   userUrl: remoteUser.url
                 }
               )
+            }
+            break
+          }
+          case 'app.bsky.graph.block': {
+            const userBlocked = await getAtprotoUser(record.subject, (await adminUser) as User)
+            if (userBlocked) {
+              await Blocks.create({
+                blockedId: userBlocked.id,
+                blockerId: remoteUser.id,
+                bskyPath: operation.path
+              })
             }
             break
           }
