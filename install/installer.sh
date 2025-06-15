@@ -136,7 +136,7 @@ echo "Installing packages"
 echo "-------------------"
 
 sudo apt update
-sudo apt install -y git postgresql-client curl lsb-release wget build-essential sudo
+sudo apt install -y git postgresql-client curl lsb-release wget build-essential sudo jq xxd
 
 echo
 echo "-----------------"
