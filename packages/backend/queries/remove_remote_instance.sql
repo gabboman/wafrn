@@ -1,4 +1,4 @@
--- so turns out that an instnace is pure shit. Or that you got yourself your instance to refer itself somehow. well fuck--
+-- so turns out that an instance is pure shit. Or that you got yourself your instance to refer itself somehow. well fuck--
 -- we need the id of the instance to remove and the id of the "removed user" that all post with no user go to.
 
 select * from federatedHosts where displayName like 'PROBLEMATIC_INSTANCE_HERE'
