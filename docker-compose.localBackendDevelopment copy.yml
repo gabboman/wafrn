@@ -1,0 +1,32 @@
+services:
+  db:
+    image: postgres:17
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: root
+      POSTGRES_PASSWORD: root
+      POSTGRES_DB: wafrn
+    volumes:
+      - dbpg:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+
+  adminer:
+    image: adminer
+    restart: unless-stopped
+    ports:
+      - "8080:8080"
+
+  redis:
+    image: redis:7.2.4
+    restart: unless-stopped
+    volumes:
+      - redis:/data
+    ports:
+      - "8001:8001"
+      - "8070:8070"
+      - "6379:6379"
+
+volumes:
+  dbpg:
+  redis:

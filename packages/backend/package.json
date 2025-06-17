@@ -99,7 +99,7 @@
     "sshpk": "^1.17.0",
     "swagger-autogen": "^2.21.5",
     "swagger-ui-express": "^4.5.0",
-    "tsx": "^4.19.1",
+    "tsx": "^4.20.3",
     "turndown": "^7.2.0",
     "typescript": "^5.8.0",
     "umzug": "^3.8.2",
