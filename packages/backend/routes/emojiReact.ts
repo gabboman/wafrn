@@ -19,6 +19,13 @@ export default function emojiReactRoutes(app: Application) {
       const postId = req.body.postId
       const emojiName = req.body.emojiName
       const undo = req.body.undo
+      if(emojiName.length > 768) {
+        res.status(400)
+        return res.send({
+          success: false,
+          message: `You sent an emojireact with a lenght of ${emojiName.lenght}`
+        })
+      }
       if (undo) {
         const reaction = await EmojiReaction.findOne({
           where: {
