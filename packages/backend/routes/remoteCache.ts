@@ -10,12 +10,14 @@ import { getResolver } from 'plc-did-resolver'
 import { redisCache } from '../utils/redis.js'
 import { getLinkPreview } from 'link-preview-js'
 import { linkPreviewRateLimiter } from '../utils/rateLimiters.js'
-
-function extensionFromMimeType(mime: string) {
-  return mime.split('/').pop()?.replace('jpeg', 'jpg').replace('svg+xml', 'svg').replace('x-icon', 'ico') || ''
-}
+import { getMimeType } from 'stream-mime-type'
 
 function sendWithCache(res: Response, localFileName: string) {
+  // Does the .mime file exist?
+  if(fs.existsSync(localFileName + '.mime')){
+    let mime = fs.readFileSync(localFileName + '.mime').toString()
+    res.contentType(mime)
+  }
   // 1 hour of cache
   res.set('Cache-control', 'public, max-age=3600')
   res.set('Content-Disposition', `inline; filename="${localFileName.split('/').pop()}"`)
@@ -23,8 +25,9 @@ function sendWithCache(res: Response, localFileName: string) {
 }
 
 // converting the stream parsing to a promise to be able to use async/await and catch the errors with the try/catch blocks
-function writeStream(stream: AxiosResponse, localFileName: string) {
+function writeStream(stream: NodeJS.ReadableStream, localFileName: string, mime: string) {
   const writeStream = fs.createWriteStream(localFileName)
+  fs.writeFileSync(localFileName + '.mime', mime)
   return new Promise((resolve, reject) => {
     writeStream.on('finish', async () => {
       writeStream.close()
@@ -33,7 +36,7 @@ function writeStream(stream: AxiosResponse, localFileName: string) {
     writeStream.on('error', (error) => {
       return reject(error)
     })
-    stream.data.pipe(writeStream)
+    stream.pipe(writeStream)
   })
 }
 
@@ -80,9 +83,10 @@ export default function cacheRoutes(app: Application) {
           responseType: 'stream',
           headers: { 'User-Agent': 'wafrnCacher' }
         })
-
-        response.data.pipe(res)
-        await writeStream(response, localFileName)
+        const { stream, mime } = await getMimeType( response.data );
+        res.contentType(mime)
+        stream.pipe(res)
+        await writeStream(stream, localFileName, mime)
       } catch (error) {
         return res.sendStatus(500)
       }
