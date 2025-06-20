@@ -52,17 +52,27 @@ export default function likeRoutes(app: Application) {
           }
         }
         if (!user.enableBsky && post.bskyUri) {
-          const userPosterOfPostToBeLiked = await User.findByPk(post.userId)
-          if (userPosterOfPostToBeLiked?.url.startsWith('@')) {
+          const userPosterOfPostToBeLiked = await User.findByPk(post.userId) as User
+          if (userPosterOfPostToBeLiked.url.startsWith('@')) {
             res.status(403)
             res.send({ error: true, message: 'You do not have bluesky federation enabled' })
             return
           }
         } else {
           if (user.enableBsky && post.bskyUri) {
-            const agent = await getAtProtoSession(user)
-            const { uri } = await agent.like(post.bskyUri, post.bskyCid as string)
-            bskyUri = uri
+            try {
+              const agent = await getAtProtoSession(user)
+              const { uri } = await agent.like(post.bskyUri, post.bskyCid as string)
+              bskyUri = uri
+            } catch (error) {
+              logger.debug({
+                message: `Error while sending a bluesky post`,
+                postId: post.id,
+                user: user.url,
+                error: error
+              })
+            }
+            
           }
         }
         const likedPost = await UserLikesPostRelations.create({
