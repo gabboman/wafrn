@@ -323,11 +323,11 @@ export default function adminRoutes(app: Application) {
           userToDelete.email,
           '',
           `Registrations at ${environment.frontendUrl} with vpn are not allowed`,
-          `<h1>Hello ${userToDelete.url}, we got a lot of abusers registering with vpns and for our users and my safety I can not allow that.</h1>
-          <p>There is a quantity of gore you can see before you say “fuck this shit”</p>
-          <p>I am sorry. I promise I wont do evil shit with your data, wont sell it or anything. But yeah.</p>
+          `<h1>Hello ${userToDelete.url}, we have got a lot of abusers registering with vpns and for our users and my safety I can not allow this.</h1>
+          <p>There is only so much gore you can see before you say “fuck this shit”</p>
+          <p>I am sorry. I promise that I won't do evil shit with your data, nor will i sell it or anything.</p>
           <p>I have freed up your email if you want to join again without a vpn.</p>
-          <p>Thanks for your understanding and Im sorry</p>`
+          <p>Thanks for your understanding and I'm sorry</p>`
         )
         await userToDelete.destroy()
         Promise.allSettled([emailPromise])
