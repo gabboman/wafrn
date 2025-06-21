@@ -20,6 +20,8 @@ import { EmojiReactComponent } from '../emoji-react/emoji-react.component'
 import { PostHeaderComponent } from '../post/post-header/post-header.component'
 import { SingleAskComponent } from '../single-ask/single-ask.component'
 
+import { TranslateModule } from '@ngx-translate/core'
+
 import { Subscription } from 'rxjs'
 import { PostLinkModule } from 'src/app/directives/post-link/post-link.module'
 import Viewer from 'viewerjs'
@@ -48,7 +50,8 @@ type EmojiReaction = {
     InjectHtmlModule,
     PostHeaderComponent,
     SingleAskComponent,
-    PostLinkModule
+    PostLinkModule,
+    TranslateModule
   ],
   templateUrl: './post-fragment.component.html',
   styleUrl: './post-fragment.component.scss'
@@ -58,10 +61,12 @@ export class PostFragmentComponent implements OnChanges, OnDestroy {
   forceExpand = output<boolean>()
   showSensitiveContent = signal<boolean>(false)
   emojiCollection = signal<EmojiReaction[]>([])
+  isLocalUser = true
   likeSubscription!: Subscription
   emojiSubscription!: Subscription
   followsSubscription!: Subscription
   userId!: string
+  mentionPosts: any
   availableEmojiNames: string[] = []
 
   reactionLoading = signal<boolean>(false)
@@ -160,6 +165,11 @@ export class PostFragmentComponent implements OnChanges, OnDestroy {
         this.renderEmojiReact(emojiEvent)
       }
     })
+
+    // it is a shame that I can't just do this DIRECTLY in the template
+    // it took me embarassingly long to figure out
+    // - alexia
+    this.mentionPosts = this.fragment().mentionPost?.map((post) => post.url)
     this.initializeContent()
   }
 
