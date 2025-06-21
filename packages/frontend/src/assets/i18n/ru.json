@@ -1,0 +1,139 @@
+{
+  "login": {
+    "welcomeBack": "С возвращением!",
+    "exploreWithoutAccount": "Нажмите здесь, чтобы просмотреть сайт без аккаунта!",
+    "dontHaveAccount": "Нет аккаунта?",
+    "register": "Зарегистрируйтесь сейчас!",
+    "checkSpam": "Если есть проблемы, проверьте папку спама!",
+    "email": "Электронная почта",
+    "password": "Пароль",
+    "mfaToken": "Токен",
+    "mfaTokenEnter": "Введите токен с вашего приложения-аутентификатора",
+    "forgottenPassword": "Забыли пароль? Нажмите сюда!",
+    "showPassword": "Показать пароль",
+    "hidePassword": "Скрыть пароль",
+    "loginButton": "Войти в аккаунт"
+  },
+  "notifications": {
+    "loadingMore": "Загрузка остальных уведомлений",
+    "refresh": "Обновить"
+  },
+  "menu": {
+    "login": "Войти в аккаунт",
+    "register": "Зарегистрироваться",
+    "dashboard": "Главная",
+    "dashboardHover": "Увидеть главную страницу",
+    "writeWoot": "Написать новый вут",
+    "notifications": "Уведомления",
+    "explore": "Обзор",
+    "exploreWafrn": "Обзор WAFRN",
+    "exploreFediverse": "Wafrn и друзья",
+    "unansweredAsks": "Неотвеченные вопросы",
+    "privateMessages": "Личные сообщения",
+    "search": "Поиск",
+    "myBlog": "Мой блог",
+    "privacy": "Политика конфиденциальности",
+    "source": "Просмотреть источник!",
+    "patreon": "Patreon",
+    "kofi": "Ko-fi",
+    "logout": "Выйти из аккаунта",
+    "faq": "Часто задаваемые вопросы",
+    "settings": {
+      "title": "Настройки",
+      "follows": "Управление подписчиками",
+      "enableBluesky": "Подключить Bluesky",
+      "editProfile": "Настройки профиля",
+      "themeEditor": "Редактор темы",
+      "mutedUsers": "Замьюченные пользователи",
+      "mutedPosts": "Замьюченные посты",
+      "bookmarkedPosts": "Закладки",
+      "myBlockedUsers": "Заблокированные пользователи",
+      "myBlockedServers": "Заблокированные сервера",
+      "importFollows": "Импорт подписчиков",
+      "superSecretMenu": "Супер секретное меню"
+    },
+    "admin": {
+      "title": "Администрация",
+      "serverList": "Лист серверов",
+      "addEmojis": "Добавить эмоджи",
+      "reports": "Репорты",
+      "bans": "Забаненные пользователи",
+      "blocklist": "Заблокированные пользователи",
+      "stats": "Статистика",
+      "awaitingAproval": "Ожидание подтверждения"
+    }
+  },
+  "editor": {
+    "inReplyTo": "В ответ на:",
+    "quoteButton": "Цитировать вут",
+    "publishWoot": "Опубликовать вут",
+    "directMessageWarning": "Админы вашего и других серверов могут читать эти сообщения.",
+    "unlistedWarning": "Непубличные посты будут проигнорированы поиском (ВКЛЮЧАЯ ТЕГИ) и не будут отображены на локальной ленте. но они будут отображены для ваших подписчиков. И если кто-то отправит ссылку, эти посты будут видны, в отличие от \"только для подписчиков\". По сути, когда вы хотите много запостить, но не хотите нагружать локальную ленту.",
+    "directMessageWithQuoteWarning": "Цитируемый пользователь будет также уведомлен в качестве упомянания",
+    "sensitivePlaceholder": "Что в этом вуте деликантного?",
+    "wootQuoteBoxLabel": "Вставьте ссылку на вут, чтобы цитировать его. Разрешены внешние и wafrn ссылки",
+    "wootQuoteBoxPlaceholder": "Просто вставьте ссылку на вут",
+    "wootQuoteConfirmButton": "Добавить вут как цитату",
+    "wootTextLabel": "Текст вута",
+    "wootTextPlaceholder": "Начните писать...",
+    "altTextFieldLabel": "Описание изображения",
+    "altTextFieldPlaceholder": "Описание. Заполните это, ПОЖАЛУЙСТА",
+    "isNSFWToggle": "NSFW",
+    "mediaCountMastodonWarning": "ВНИМАНИЕ! ВСЕ СЛЕДУЮЩИЕ ЗАГРУЖЕННЫЕ МЕДИА НЕ БУДУТ ОТОБРАЖЕНЫ В МАСТОДОНЕ",
+    "altTextWarning": "Пожалуйста, заполните все описания медиа. Если вы хотите отключить эту проверку, вы можете это сделать в настройках.",
+    "quoteTitle": "Цитата:",
+    "tagFieldLabel": "Теги",
+    "tagSeparationNotice": "Разделены запятыми",
+    "ariaLabelWootPrivacy": "Настройки приватности вута",
+    "ariaLabelQuoteSetter": "Включить установщик цитат",
+    "uploadMediaTooltip": "Загрузить медиа",
+    "contentWarningTooltip": "Предупреждение о содержании",
+    "insertEmojiTooltip": "Вставить эмоджи",
+    "hiddenMentionsTooltip": "Другие упомянутые пользователи",
+    "editorGuide": "Сомневаетесь насчет форматирования текста или не знаете, с чего начать? Посмотрите <a target=\"_blank\" href=\"https://wafrn.net/faq/user\">этот гайд</a>"
+  },
+  "profile": {
+    "security": {
+      "header": "Настройки безопасности",
+      "passwordChange": "Сбросить пароль",
+      "mfa": {
+        "header": "Двухфакторная аутентификация",
+        "setup": "Настроить двухфакторную аутентификацию",
+        "addNew": "Добавить новую двухфакторную аутентификацию",
+        "friendlyNameLabel": "Дружеское имя, например 'Work Phone' или 'Aegis'",
+        "typeLabel": "Тип аутентификации",
+        "setupNewButton": "Настроить новый аутентификатор",
+        "tokenLabel": "Токен",
+        "deleteLabel": "Удалить",
+        "scanInstructions": "Отсканируйте код ниже в вашем приложении-аутентификаторе, и введите сгенерированный код",
+        "installInstructions": "Если у вас нет приложения-аутентификатора, мы рекомендуем <a href=\"https://getaegis.app/\" target=\"_blank\">Aegis</a> (Android) или <a href=\"https://2fas.com/\" target=\"_blank\">2FAS</a> (iOS/Android)",
+        "imageAltSecret": "Секретный ключ это '{{ secret }}'",
+        "secretFallback": "Если вы не можете прочитать QR код, вы можете ввести код '{{ secret }}' в вашем приложении вручную",
+        "confirmDeleteMessage": "Вы уверены, что хотите удалить этот MFA провайдер? Примечание: при удалении всех MFA провайдеров, вы отключите MFA на вашем аккаунте",
+        "deleteSuccess": "MFA провайдер успешно удален",
+        "verifySuccess": "Успех, вы подключили MFA",
+        "verifyFailed": "Верификация не удалась. Проверьте ваш токен или, если проблема не решена, спросите у администратора",
+        "errorMessageGeneric": "Возникла проблема с вашим запросом. Попробуйте еще раз или обратитесь за помощью к администратору",
+        "noMfa": "MFA не подключен на вашем аккаунте",
+        "mfaList": "У вас настроены следующие MFA провайдеры",
+        "type": {
+          "totpLabel": "Приложение-аутентификатор"
+        }
+      }
+    },
+    "tabHeaders": {
+      "profile": "Профиль",
+      "preferences": "Предпочтения",
+      "privacySecurity": "Конфиденциальность и безопасность",
+      "misc": "Разное"
+    }
+  },
+  "ask-dialog-content": {
+    "askAnonymously": "Сделать вопрос анонимным",
+    "askFormLabel": "Вопрос",
+    "askButtonText": "Задать вопрос"
+  },
+  "post-fragment": {
+    "replyingTo": "отвечая на: "
+  }
+}
