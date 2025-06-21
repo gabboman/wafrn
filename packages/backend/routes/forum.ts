@@ -40,6 +40,7 @@ export default function forumRoutes(app: Application) {
         include: [
           {
             model: User,
+            as: 'user',
             required: true,
             where: {
               banned: {
