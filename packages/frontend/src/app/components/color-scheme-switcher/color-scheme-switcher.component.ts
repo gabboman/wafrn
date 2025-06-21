@@ -33,6 +33,7 @@ const colorSchemeVariants = [
   'red',
   'pink',
   'purple',
+  'blue',
   'rizzler',
   'contrastWater',
   'wafrn98',
