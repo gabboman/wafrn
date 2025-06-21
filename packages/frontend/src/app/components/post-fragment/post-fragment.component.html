@@ -27,6 +27,14 @@
     [ngClass]="{ hidden: (fragment().content_warning || fragment().muted_words_cw) && !showSensitiveContent() }"
     >
     @for (block of wafrnFormattedContent(); track $index) {
+    <!-- The thing that I really struggled at here is giving this @if a condition that made sense
+         for posts which already have the mentions in the body of the post. I failed to find one.
+    -->
+      @if (this.fragment().mentionPost?.length != 0) {
+        <section style="border-bottom: 1px solid var(--mat-sys-surface-container-highest); width: fit-content;">
+          <span><small><span style="color: var(--mat-sys-outline)">{{ 'post-fragment.replyingTo' | translate }}</span><a *ngFor="let url of mentionPosts">{{ url }} </a></small></span>
+        </section>
+      }
       <div #mediaInline class="fragment-content overflow-hidden">
         <div [injectHTML]="block" class="post-text"></div>
         @if (typeof block !== 'string') {
