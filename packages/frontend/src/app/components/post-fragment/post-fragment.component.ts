@@ -66,7 +66,7 @@ export class PostFragmentComponent implements OnChanges, OnDestroy {
   emojiSubscription!: Subscription
   followsSubscription!: Subscription
   userId!: string
-  mentionPosts: any
+  mentionPosts: string[] = []
   availableEmojiNames: string[] = []
 
   reactionLoading = signal<boolean>(false)
@@ -165,11 +165,18 @@ export class PostFragmentComponent implements OnChanges, OnDestroy {
         this.renderEmojiReact(emojiEvent)
       }
     })
-
-    // it is a shame that I can't just do this DIRECTLY in the template
-    // it took me embarassingly long to figure out
-    // - alexia
-    this.mentionPosts = this.fragment().mentionPost?.map((post) => post.url)
+    const mentions = this.fragment().mentionPost
+    if(mentions){
+      this.mentionPosts =  mentions.filter(usr => {
+      let content = this.fragment().content;
+      // This will always get us @user if local user, @uswer without the instance if fedi, or @user.bsky.app
+      let userUrl = '@' + (usr.url.split('@').length == 1 ? usr.url :  usr.url.split('@')[1])
+      // If we are mentioning @user@instance1 and  @user@instance2 as @user @user this will fail. Its an edge case.
+      // this could fail. kinda. in some situation. a very edge case. I think we will see one or two cases a year of this issue
+      return !content.includes(userUrl)
+    }).map((user) => user.url)
+    }
+    
     this.initializeContent()
   }
 
