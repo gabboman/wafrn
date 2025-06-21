@@ -166,11 +166,12 @@ export class PostFragmentComponent implements OnChanges, OnDestroy {
       }
     })
     const mentions = this.fragment().mentionPost
+    let content = this.postService.getPostHtml(this.fragment(), []).toLowerCase();
+
     if(mentions){
       this.mentionPosts =  mentions.filter(usr => {
-      let content = this.fragment().content;
       // This will always get us @user if local user, @uswer without the instance if fedi, or @user.bsky.app
-      let userUrl = '@' + (usr.url.split('@').length == 1 ? usr.url :  usr.url.split('@')[1])
+      let userUrl = '@' + (usr.url.split('@').length == 1 ? usr.url :  usr.url.split('@')[1]).toLowerCase()
       // If we are mentioning @user@instance1 and  @user@instance2 as @user @user this will fail. Its an edge case.
       // this could fail. kinda. in some situation. a very edge case. I think we will see one or two cases a year of this issue
       return !content.includes(userUrl)
