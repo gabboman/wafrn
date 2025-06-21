@@ -174,7 +174,7 @@ export class PostFragmentComponent implements OnChanges, OnDestroy {
       let userUrl = '@' + (usr.url.split('@').length == 1 ? usr.url :  usr.url.split('@')[1]).toLowerCase()
       // If we are mentioning @user@instance1 and  @user@instance2 as @user @user this will fail. Its an edge case.
       // this could fail. kinda. in some situation. a very edge case. I think we will see one or two cases a year of this issue
-      return !content.includes(userUrl)
+      return !content.includes(userUrl) && usr.url != this.fragment().user.url
     }).map((user) => user.url)
     }
     
