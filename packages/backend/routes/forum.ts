@@ -37,6 +37,7 @@ export default function forumRoutes(app: Application) {
         )
       ).map((elem: any) => elem.postsId)
       const fullPostsToGet = await Post.findAll({
+        /* TODO this
         include: [
           {
             model: User,
@@ -61,6 +62,7 @@ export default function forumRoutes(app: Application) {
             }
           }
         ],
+        */
         where: {
           id: {
             [Op.in]: [...new Set(postIds.concat([postId]))]
