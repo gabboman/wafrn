@@ -195,8 +195,8 @@ async function getPostThreadRecursive(
         content_warning: postPetition.summary
           ? postPetition.summary
           : remoteUser.NSFW
-          ? 'User is marked as NSFW by this instance staff. Possible NSFW without tagging'
-          : '',
+            ? 'User is marked as NSFW by this instance staff. Possible NSFW without tagging'
+            : '',
         createdAt: new Date(postPetition.published),
         updatedAt: createdAt,
         userId: remoteUserServerBaned || remoteUser.banned ? (await deletedUser)?.id : remoteUser.id,
@@ -209,8 +209,6 @@ async function getPostThreadRecursive(
       }
 
       const mentionedUsersIds: string[] = []
-      const tagsToAdd: any = []
-      const emojis: any[] = []
       const quotes: any[] = []
       try {
         if (!remoteUser.banned && !remoteUserServerBaned) {
@@ -295,6 +293,8 @@ async function getPostThreadRecursive(
       }
       newPost.setQuoted(quotes)
 
+      await newPost.save()
+
       await bulkCreateNotifications(
         quotes.map((quote) => ({
           notificationType: 'QUOTE',
@@ -308,8 +308,6 @@ async function getPostThreadRecursive(
           userUrl: remoteUser.url
         }
       )
-
-      await newPost.save()
       try {
         if (!remoteUser.banned && !remoteUserServerBaned) {
           await addTagsToPost(newPost, fediTags)
