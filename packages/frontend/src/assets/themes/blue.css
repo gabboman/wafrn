@@ -3,13 +3,13 @@
   /* Primary palette variables */
   --mat-sys-primary: light-dark(#343dff, #bec2ff);
   --mat-sys-on-primary: light-dark(#ffffff, #0001ac);
-  --mat-sys-primary-container: light-dark(#e0e0ff, #0000ef);
+  --mat-sys-primary-container: light-dark(#e0e0ff, #4c53b8);
   --mat-sys-on-primary-container: light-dark(#00006e, #e0e0ff);
   --mat-sys-inverse-primary: light-dark(#bec2ff, #343dff);
   --mat-sys-primary-fixed: light-dark(#e0e0ff, #e0e0ff);
   --mat-sys-primary-fixed-dim: light-dark(#bec2ff, #bec2ff);
   --mat-sys-on-primary-fixed: light-dark(#00006e, #00006e);
-  --mat-sys-on-primary-fixed-variant: light-dark(#0000ef, #0000ef);
+  --mat-sys-on-primary-fixed-variant: light-dark(#4c53b8, #4c53b8);
 
   /* Secondary palette variables */
   --mat-sys-secondary: light-dark(#4c53b8, #bec2ff);
