@@ -1,6 +1,15 @@
 import { Job } from 'bullmq'
 import { getAtprotoUser } from '../utils/getAtprotoUser.js'
-import { Follows, Post, User, UserLikesPostRelations, PostTag, Media, Notification } from '../../models/index.js'
+import {
+  Follows,
+  Post,
+  User,
+  UserLikesPostRelations,
+  PostTag,
+  Media,
+  Notification,
+  Blocks
+} from '../../models/index.js'
 import { environment } from '../../environment.js'
 import { Op, Model } from 'sequelize'
 import { logger } from '../../utils/logger.js'
@@ -72,8 +81,12 @@ async function processFirehose(job: Job) {
                   await UserLikesPostRelations.findOrCreate({
                     where: {
                       userId: remoteUser.id,
-                      postId: postInDb.id,
-                      bskyPath: operation.path
+                      postId: postInDb.id
+                    },
+                    defaults: {
+                      bskyPath: operation.path,
+                      userId: remoteUser.id,
+                      postId: postInDb.id
                     }
                   })
 
@@ -167,6 +180,17 @@ async function processFirehose(job: Job) {
                   userUrl: remoteUser.url
                 }
               )
+            }
+            break
+          }
+          case 'app.bsky.graph.block': {
+            const userBlocked = await getAtprotoUser(record.subject, (await adminUser) as User)
+            if (userBlocked) {
+              await Blocks.create({
+                blockedId: userBlocked.id,
+                blockerId: remoteUser.id,
+                bskyPath: operation.path
+              })
             }
             break
           }
@@ -275,9 +299,20 @@ async function processFirehose(job: Job) {
               }
               break
             }
+            case 'feed.repost': {
+              const post = await Post.findOne({
+                where: {
+                  bskyUri: `at://${job.data.repo}/${operation.path}`
+                }
+              })
+              if (post) {
+                await post.destroy()
+              }
+              break
+            }
             default: {
               logger.info({
-                message: `Bsky deleted type not implemented: ${deleteOperation.path}`,
+                message: `Bsky delete type not implemented: ${deleteOperation.path}`,
                 operation: deleteOperation
               })
             }

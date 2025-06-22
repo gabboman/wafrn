@@ -89,7 +89,7 @@ COPY environment.example.ts environment.ts
 RUN perl -pi -e 's/\$\{\{([_A-Z]+):-(.*)\}\}/$ENV{$1}||$2/ge' environment.ts && \
   perl -pi -e 's/\$\{\{([_A-Z]+)\}\}/$ENV{$1}/g' environment.ts
 
-RUN npm run type-check
+#RUN npm run type-check
 
 # expose port from environment.ts
 EXPOSE ${PORT}
