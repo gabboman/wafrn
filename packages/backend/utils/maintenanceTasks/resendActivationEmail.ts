@@ -2,6 +2,7 @@ import { Op } from 'sequelize'
 import { User } from '../../models/index.js'
 import { wait } from '../wait.js'
 import { environment } from '../../environment.js'
+import sendActivationEmail from '../sendActivationEmail.js'
 
 const usersNotVerified = await User.findAll({
   where: {
@@ -30,5 +31,5 @@ for await (const user of usersNotVerified.filter((elem) => !!elem)) {
   }
              </p> 
              <p>And by "may" we mean for sure. Please do reply to this email if you did and we dont get back to you in 24 hours</p>`
-  const emailSent = await wait(2500)
+  const emailSent = await sendActivationEmail(user.email as string, user.activationCode, mailHeader, mailBody)
 }
