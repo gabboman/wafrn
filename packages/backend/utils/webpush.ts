@@ -89,6 +89,7 @@ async function getNotificationPayload(notification: NotificationBody, context?: 
     id: await getNotificationId(notification),
     url: getNotificationUrl(notification, context),
     title: getNotificationTitle(notification, context),
-    body: getNotificationBody(notification, context)
+    body: getNotificationBody(notification, context),
+    type: notification.notificationType,
   }
 }
