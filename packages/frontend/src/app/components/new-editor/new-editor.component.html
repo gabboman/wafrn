@@ -218,7 +218,7 @@
     <section id="tags" class="w-full flex-row">
       <mat-form-field class="w-full" appearance="outline">
         <mat-label>{{ 'editor.tagFieldLabel' | translate }}</mat-label>
-        <input [(ngModel)]="tags" placeholder="{{ 'editor.tagSeparationNotice' | translate }}" matNativeControl />
+        <input [(ngModel)]="tags" placeholder="{{ 'common.commaSeparation' | translate }}" matNativeControl />
       </mat-form-field>
       <div class="taglist">
         @for (tag of tags.split(','); track $index) {

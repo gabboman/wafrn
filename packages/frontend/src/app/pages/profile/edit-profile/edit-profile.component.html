@@ -4,7 +4,7 @@
       <hr />
       <mat-tab label="{{ 'profile.tabHeaders.profile' | translate }}">
         <div class="pt-2 px-3 border-round-md mb-4" style="border: 1px solid var(--mat-sys-outline-variant)">
-          <label for="avatar" class="block font-medium mb-2">Choose another avatar</label>
+          <label for="avatar" class="block font-medium mb-2">{{ 'profile.profile.chooseAvatar' | translate }}</label>
           <input
             formControlName="avatar"
             id="avatar"
@@ -15,7 +15,7 @@
             />
         </div>
         <div class="pt-2 px-3 border-round-md mb-4" style="border: 1px solid var(--mat-sys-outline-variant)">
-          <label for="avatar" class="block font-medium mb-2">Choose header image</label>
+          <label for="avatar" class="block font-medium mb-2">{{ 'profile.profile.chooseHeader' | translate }}</label>
           <input
             id="headerImage"
             type="file"
@@ -25,11 +25,11 @@
             />
         </div>
         <mat-form-field class="w-full" appearance="outline">
-          <mat-label>Display name (can contain emoji codes)</mat-label>
+          <mat-label>{{ 'profile.profile.changeDisplayName' | translate }}</mat-label>
           <input formControlName="name" matInput />
         </mat-form-field>
         <mat-form-field class="w-full" appearance="outline">
-          <mat-label>Your bio/description. You can put emoji codes here too. You can use markdown here</mat-label>
+          <mat-label>{{ 'profile.profile.changeBio' | translate }}</mat-label>
           <textarea
             matInput
             placeholder="Description"
@@ -38,16 +38,16 @@
           ></textarea>
         </mat-form-field>
         <hr />
-        <p [hidden]="loading" class="w-full">Extra information (Fediverse exclusive)</p>
+        <p [hidden]="loading" class="w-full">{{ 'profile.profile.extraInfoHead' | translate }}</p>
         @for (attachment of fediAttachments; track $index) {
           <form [hidden]="loading">
             <div class="w-full">
               <mat-form-field class="w-50">
-                <mat-label>Property name</mat-label>
+                <mat-label>{{ 'profile.profile.fieldPropertyName' | translate }}</mat-label>
                 <input [ngModelOptions]="{ standalone: true }" [(ngModel)]="fediAttachments[$index].name" matInput />
               </mat-form-field>
               <mat-form-field class="w-50">
-                <mat-label>Property value</mat-label>
+                <mat-label>{{ 'profile.profile.fieldPropertyValue' | translate }}</mat-label>
                 <input [ngModelOptions]="{ standalone: true }" [(ngModel)]="fediAttachments[$index].value" matInput />
               </mat-form-field>
             </div>
@@ -56,102 +56,102 @@
         <div [hidden]="loading" (click)="addFediAttachment()">+</div>
       </mat-tab>
       <mat-tab label="{{ 'profile.tabHeaders.preferences' | translate }}">
-        <h5 class="w-full">Notification filtering</h5>
+        <h5 class="w-full">{{ 'profile.preferences.notificationFilters' | translate }}</h5>
         <mat-form-field class="w-full">
-          <mat-label>Show notifications from</mat-label>
+          <mat-label>{{ 'profile.preferences.showNotificationsFrom' | translate }}</mat-label>
           <mat-select formControlName="showNotificationsFrom">
-            <mat-option [value]="1">Everyone</mat-option>
-            <mat-option [value]="2">Followers</mat-option>
-            <mat-option [value]="3">People I follow</mat-option>
-            <mat-option [value]="4">Mutuals</mat-option>
+            <mat-option [value]="1">{{ 'profile.preferences.notifyFrom.everyone' | translate }}</mat-option>
+            <mat-option [value]="2">{{ 'profile.preferences.notifyFrom.followers' | translate }}</mat-option>
+            <mat-option [value]="3">{{ 'profile.preferences.notifyFrom.following' | translate }}</mat-option>
+            <mat-option [value]="4">{{ 'profile.preferences.notifyFrom.mutual' | translate }}</mat-option>
           </mat-select>
         </mat-form-field>
         <div class="w-full">
           <!-- It would be possible that a user disabled all notifications. It would also be funny. -->
           <mat-checkbox formControlName="notifyMentions"></mat-checkbox>
-          <mat-label>Mentions</mat-label>
+          <mat-label>{{ 'profile.preferences.notifyWhen.mentioned' | translate }}</mat-label>
         </div>
         <div class="w-full">
           <mat-checkbox formControlName="notifyFollows"></mat-checkbox>
-          <mat-label>Follows</mat-label>
+          <mat-label>{{ 'profile.preferences.notifyWhen.followed' | translate }}</mat-label>
         </div>
         <div class="w-full">
           <mat-checkbox formControlName="notifyReactions"></mat-checkbox>
-          <mat-label>Likes and EmojiReactions</mat-label>
+          <mat-label>{{ 'profile.preferences.notifyWhen.likesEmojiReacts' | translate }}</mat-label>
         </div>
         <div class="w-full">
           <mat-checkbox formControlName="notifyQuotes"></mat-checkbox>
-          <mat-label>Quotes</mat-label>
+          <mat-label>{{ 'profile.preferences.notifyWhen.quoted' | translate }}</mat-label>
         </div>
         <div class="w-full">
           <mat-checkbox formControlName="notifyRewoots"></mat-checkbox>
-          <mat-label>Rewoots</mat-label>
+          <mat-label>{{ 'profile.preferences.notifyWhen.rewooted' | translate }}</mat-label>
         </div>
         <hr class="w-full" />
         <div class="w-full">
           <mat-checkbox formControlName="manuallyAcceptsFollows"></mat-checkbox>
-          <mat-label>Manually accept follows</mat-label>
+          <mat-label>{{ 'profile.preferences.manuallyAcceptFollows' | translate }}</mat-label>
         </div>
         <div class="w-full">
           <mat-checkbox formControlName="disableForceAltText"></mat-checkbox>
-          <mat-label>Allow uploading media without alt text (enable this only if you're evil)</mat-label>
+          <mat-label>{{ 'profile.preferences.disableForceAltText' | translate }}</mat-label>
         </div>
         <div class="w-full">
           <mat-checkbox formControlName="forceClassicLogo"></mat-checkbox>
-          <mat-label>Force classic logo</mat-label>
+          <mat-label>{{ 'profile.preferences.forceClassicLogo' | translate }}</mat-label>
         </div>
         <div class="w-full">
           <mat-checkbox formControlName="forceClassicVideoPlayer"></mat-checkbox>
-          <mat-label>Force classic video player</mat-label>
+          <mat-label>{{ 'profile.preferences.forceClassicVideoPlayer' | translate }}</mat-label>
         </div>
         <div class="w-full">
           <mat-checkbox formControlName="forceClassicAudioPlayer"></mat-checkbox>
-          <mat-label>Force classic audio player</mat-label>
+          <mat-label>{{ 'profile.preferences.forceClassicAudioPlayer' | translate }}</mat-label>
         </div>
         <div class="w-full">
           <mat-checkbox formControlName="forceClassicMediaView"></mat-checkbox>
-          <mat-label>Force classic media carousel (vertical)</mat-label>
+          <mat-label>{{ 'profile.preferences.forceClassicMediaView' | translate }}</mat-label>
         </div>
         <div class="w-full">
           <mat-checkbox formControlName="expandQuotes"></mat-checkbox>
-          <mat-label>Do not collapse quotes</mat-label>
+          <mat-label>{{ 'profile.preferences.dontCollapseQuotes' | translate }}</mat-label>
         </div>
         <div class="w-full">
           <mat-checkbox formControlName="disableCW"></mat-checkbox>
-          <mat-label>Disable CW unless post contains muted words</mat-label>
+          <mat-label>{{ 'profile.preferences.disableCwExceptMuted' | translate }}</mat-label>
         </div>
         <div class="w-full">
           <mat-checkbox formControlName="disableConfetti"></mat-checkbox>
-          <mat-label>Disable confetti effects when performing some actions</mat-label>
+          <mat-label>{{ 'profile.preferences.disableConfetti' | translate }}</mat-label>
         </div>
         <div class="w-full">
           <mat-checkbox formControlName="disableSounds"></mat-checkbox>
-          <mat-label>Disable sound effects when performing some actions</mat-label>
+          <mat-label>{{ 'profile.preferences.disableUiSounds' | translate }}</mat-label>
         </div>
         <div class="w-full">
           <mat-checkbox formControlName="defaultExploreLocal"></mat-checkbox>
-          <mat-label>Default dashboard is explore local instead of following</mat-label>
+          <mat-label>{{ 'profile.preferences.dashboardIsExploreLocal' | translate }}</mat-label>
         </div>
         <div class="w-full">
           <mat-checkbox formControlName="replaceAIWithCocaine"></mat-checkbox>
-          <mat-label>Replace the word artificial intelligence with custom word (cocaine?)</mat-label>
+          <mat-label>{{ 'profile.preferences.cocAIne' | translate }}</mat-label>
         </div>
         <mat-form-field class="w-full">
-          <mat-label>Custom word for AI replacement</mat-label>
+          <mat-label>{{ 'profile.preferences.customCocAIne' | translate }}</mat-label>
           <input formControlName="replaceAIWord" placeholder="custom word. requires enable replace" matNativeControl />
         </mat-form-field>
         <mat-accordion>
           <mat-expansion-panel hideToggle>
             <mat-expansion-panel-header>
-              <mat-panel-title> Not recommended options </mat-panel-title>
+              <mat-panel-title> {{ 'profile.preferences.notRecommendedOptions' | translate }} </mat-panel-title>
             </mat-expansion-panel-header>
             <div class="w-full">
               <mat-checkbox formControlName="disableNSFWFilter"></mat-checkbox>
-              <mat-label>Disable NSFW images filter</mat-label>
+              <mat-label>{{ 'profile.preferences.disableNSFWFilter' | translate }}</mat-label>
             </div>
             <div class="w-full">
               <mat-checkbox formControlName="automaticalyExpandPosts"></mat-checkbox>
-              <mat-label>Automatically expand all posts</mat-label>
+              <mat-label>{{ 'profile.preferences.automaticallyExpandAllPosts' | translate }}</mat-label>
             </div>
           </mat-expansion-panel>
         </mat-accordion>
@@ -159,7 +159,7 @@
       <mat-tab label="{{ 'profile.tabHeaders.privacySecurity' | translate }}">
         <p>Options</p>
         <mat-form-field class="w-full" appearance="outline">
-          <mat-label>Default post privacy</mat-label>
+          <mat-label>{{ 'profile.privacy.defaultPostPrivacy' | translate }}</mat-label>
           <mat-select [required]="true" formControlName="defaultPostEditorPrivacy">
             @for (option of privacyOptions; track $index) {
               <mat-option [value]="option.level">{{ option.name }}</mat-option>
@@ -167,7 +167,7 @@
           </mat-select>
         </mat-form-field>
         <mat-form-field class="w-full" appearance="outline">
-          <mat-label>Asks</mat-label>
+          <mat-label>{{ 'profile.privacy.asks' | translate }}</mat-label>
           <mat-select [required]="true" formControlName="asksLevel">
             @for (option of askOptions; track $index) {
               <mat-option [value]="option.level">{{ option.name }}</mat-option>
@@ -176,20 +176,19 @@
         </mat-form-field>
         <div class="w-full">
           <mat-checkbox formControlName="disableEmailNotifications"></mat-checkbox>
-          <mat-label>Disable email notification</mat-label>
+          <mat-label>{{ 'profile.privacy.disableEmailNotifications' | translate }}</mat-label>
         </div>
         <div class="w-full">
           <mat-checkbox formControlName="hideFollows"></mat-checkbox>
-          <mat-label>Hide my follows and followers</mat-label>
+          <mat-label>{{ 'profile.privacy.hideFollows' | translate }}</mat-label>
         </div>
         <div class="w-full">
           <mat-checkbox formControlName="hideProfileNotLoggedIn"></mat-checkbox>
           <mat-label
-            >Hide profile to not logged in users and search (this will only apply to your profile IN this wafrn, not to
-            your posts nor other fedi instances or bluesky)</mat-label
+            >{{ 'profile.privacy.hideProfileNotLoggedInDescription' | translate }}</mat-label
             >
           </div>
-          {{ 'profile.security.header' | translate }}:
+          <h3>{{ 'profile.security.header' | translate }}:</h3>
           <div class="flex align-items-center justify-content-between mt-2">
             <a
               routerLink="/recoverPassword"
@@ -209,6 +208,7 @@
         </mat-tab>
         <mat-tab label="{{ 'profile.tabHeaders.misc' | translate }}">
           <section id="tags" class="mt-2 w-full flex-row">
+            <!-- TODO replace text here with variable that can be translated -->
             <app-user-selector
               (optionSelected)="userAliasSelected($event)"
               [controlText]="'Moving from a different account (without the @)'"
@@ -217,8 +217,8 @@
           <hr />
           <section id="mutedWords" class="mt-2 w-full flex-row">
             <mat-form-field class="w-full">
-              <mat-label>Words that will add cw to post</mat-label>
-              <input formControlName="mutedWords" placeholder="Separated by commas" matNativeControl />
+              <mat-label>{{ 'profile.other.wordsThatWillAutoCwPosts' | translate }}</mat-label>
+              <input formControlName="mutedWords" placeholder="{{ 'profile.other.mutedWordsPlaceholder' | translate }}" matNativeControl />
             </mat-form-field>
             @if (editProfileForm.value.mutedWords.split(',').length > 0) {
               <div class="taglist flex flex-wrap mb-2">
@@ -235,8 +235,8 @@
           <hr />
           <section id="superMutedwWords" class="mt-2 w-full flex-row">
             <mat-form-field class="w-full">
-              <mat-label>phrases that will not show a post with them (BE CAREFUL WITH THESE)</mat-label>
-              <input formControlName="superMutedWords" placeholder="Separated by commas" matNativeControl />
+              <mat-label>{{ 'profile.other.superMutedWords' | translate }}</mat-label>
+              <input formControlName="superMutedWords" placeholder="{{ 'common.commaSeparation' | translate }}" matNativeControl />
             </mat-form-field>
             @if (editProfileForm.value.superMutedWords.split(',').length > 0) {
               <div class="taglist flex flex-wrap mb-2">
@@ -254,7 +254,7 @@
           <mat-accordion>
             <mat-expansion-panel hideToggle>
               <mat-expansion-panel-header>
-                <mat-panel-title> available emojis </mat-panel-title>
+                <mat-panel-title> {{ 'profile.other.availableEmoji' | translate }} </mat-panel-title>
               </mat-expansion-panel-header>
               <app-emoji-collections (emoji)="emojiClicked($event)"></app-emoji-collections>
             </mat-expansion-panel>
@@ -263,32 +263,31 @@
       </form>
       <mat-tab label="Bluesky">
         <!-- I swear I'll translate this, don't merge before I do! -->
-        <p>Bluesky integration is still very experimental! Things will absolutely break!</p>
+        <p>{{ 'profile.bsky.psa1' | translate }}</p>
         <p>
-          Please refer to <a href="https://wafrn.net/faq/user.html#blueskyIntegration">the FAQ</a> to find out what
-          does/doesn't work generally speaking.
+          {{ 'profile.bsky.psa2_1' | translate }}
+          <a href="https://wafrn.net/faq/user.html#blueskyIntegrationo">{{ 'profile.bsky.psa2_2' | translate }}</a>
+          {{ 'profile.bsky.psa2_3' | translate }}
         </p>
-        <p>
-          In the future, we aim to have Bluesky-Specific settings in here, like the ability to change the Bluesky
-          username.
-        </p>
+        <p>{{ 'profile.bsky.psa3' | translate }}</p>
         <button [disabled]="loading" (click)="enableBluesky()" mat-flat-button class="w-full">Enable bluesky</button>
       </mat-tab>
       <mat-tab label="Migrate out">
         <p>
-          To migrate to another server please create an alias and click <a [routerLink]="'/profile/migrate-out'">here</a>
+          {{ 'profile.migrate.psa1' | translate }}
+          <a [routerLink]="'/profile/migrate-out'">{{ 'profile.migrate.psa2' | translate }}</a>
         </p></mat-tab
         >
         <mat-tab label="Delete account">
-          <p>We will mark your account as deactivated and after 30 days it will be IRREVERSIBLY DELETED.</p>
-          <p>To confirm it's you, please fill your password</p>
+          <p>{{ 'profile.delete.psa1' | translate }}</p>
+          <p>{{ 'profile.delete.psa2' | translate }}</p>
           <form>
             <mat-form-field class="w-full">
               <mat-label>{{ 'login.password' | translate }}</mat-label>
               <input [(ngModel)]="password" [type]="'password'" name="password" matInput />
             </mat-form-field>
             <button (click)="requestDeleteAccount()" mat-flat-button style="background-color: red" class="w-full">
-              DELETE ACCOUNT
+             {{ 'profile.delete.button' | translate }}
             </button>
           </form>
         </mat-tab>
@@ -316,6 +315,6 @@
           icon="pi pi-user"
           class="w-full mt-4"
           >
-          Update profile
+         {{ 'profile.updateButton' | translate }}
         </button>
       </mat-card>
