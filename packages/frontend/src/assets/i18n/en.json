@@ -190,5 +190,8 @@
     "askAnonymously": "Make question anonymous",
     "askFormLabel": "Question",
     "askButtonText": "Ask"
+  },
+  "post-fragment": {
+    "replyingTo": "replying to: "
   }
 }

@@ -8,9 +8,9 @@ export const environment = {
   production: false,
   maxUploadSize: '250',
   logo: '/assets/logo.png',
-  baseUrl: 'http://localhost:3001/api',
-  baseMediaUrl: 'http://localhost:3001/api/uploads',
-  externalCacheurl: 'https://localhost:3001/api/cache/?media=',
+  baseUrl: 'http://localhost:9000/api',
+  baseMediaUrl: 'http://localhost:9000/api/uploads',
+  externalCacheurl: 'https://localhost:9000/api/cache/?media=',
   frontUrl: 'http://localhost:4200',
   shortenPosts: 5,
   reviewRegistrations: true,
@@ -25,3 +25,4 @@ export const environment = {
  * This import should be commented out in production mode because it will have a negative impact
  * on performance if an error is thrown.
  */
+import 'zone.js/plugins/zone-error' // Included with Angular CLI.

@@ -20,6 +20,8 @@ import { EmojiReactComponent } from '../emoji-react/emoji-react.component'
 import { PostHeaderComponent } from '../post/post-header/post-header.component'
 import { SingleAskComponent } from '../single-ask/single-ask.component'
 
+import { TranslateModule } from '@ngx-translate/core'
+
 import { Subscription } from 'rxjs'
 import { PostLinkModule } from 'src/app/directives/post-link/post-link.module'
 import Viewer from 'viewerjs'
@@ -48,7 +50,8 @@ type EmojiReaction = {
     InjectHtmlModule,
     PostHeaderComponent,
     SingleAskComponent,
-    PostLinkModule
+    PostLinkModule,
+    TranslateModule
   ],
   templateUrl: './post-fragment.component.html',
   styleUrl: './post-fragment.component.scss'
@@ -58,10 +61,12 @@ export class PostFragmentComponent implements OnChanges, OnDestroy {
   forceExpand = output<boolean>()
   showSensitiveContent = signal<boolean>(false)
   emojiCollection = signal<EmojiReaction[]>([])
+  isLocalUser = true
   likeSubscription!: Subscription
   emojiSubscription!: Subscription
   followsSubscription!: Subscription
   userId!: string
+  mentionPosts: string[] = []
   availableEmojiNames: string[] = []
 
   reactionLoading = signal<boolean>(false)
@@ -160,6 +165,19 @@ export class PostFragmentComponent implements OnChanges, OnDestroy {
         this.renderEmojiReact(emojiEvent)
       }
     })
+    const mentions = this.fragment().mentionPost
+    let content = this.postService.getPostHtml(this.fragment(), []).toLowerCase();
+
+    if(mentions){
+      this.mentionPosts =  mentions.filter(usr => {
+      // This will always get us @user if local user, @uswer without the instance if fedi, or @user.bsky.app
+      let userUrl = '@' + (usr.url.split('@').length == 1 ? usr.url :  usr.url.split('@')[1]).toLowerCase()
+      // If we are mentioning @user@instance1 and  @user@instance2 as @user @user this will fail. Its an edge case.
+      // this could fail. kinda. in some situation. a very edge case. I think we will see one or two cases a year of this issue
+      return !content.includes(userUrl) && usr.url != this.fragment().user.url
+    }).map((user) => user.url)
+    }
+    
     this.initializeContent()
   }
 

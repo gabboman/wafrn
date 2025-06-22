@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core'
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core'
 import { EnvironmentService } from 'src/app/services/environment.service'
 import { SimpleSeoService } from 'src/app/services/simple-seo.service'
 import { UtilsService } from 'src/app/services/utils.service'
@@ -17,7 +17,8 @@ export class PrivacyComponent implements OnInit {
 
   constructor(
     private seo: SimpleSeoService,
-    private utilsService: UtilsService
+    private utilsService: UtilsService,
+    private cdr: ChangeDetectorRef
   ) {}
 
   ngOnInit(): void {
@@ -34,5 +35,6 @@ export class PrivacyComponent implements OnInit {
     this.blockedServers = await this.utilsService.getBlockedServers()
     this.loaded = true
     this.loading = false
+    this.cdr.markForCheck()
   }
 }

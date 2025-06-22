@@ -58,14 +58,18 @@ async function forcePopulateUsers(dids: string[], localUser: User) {
   }
 }
 
-async function getAtprotoUser(inputHandle: string, localUser: User, petitionData?: ProfileViewBasic): Promise<User | undefined> {
+async function getAtprotoUser(
+  inputHandle: string,
+  localUser: User,
+  petitionData?: ProfileViewBasic
+): Promise<User | undefined> {
   // we check if we found the user
   let avatarString = ``
-  if(!inputHandle && !petitionData) {
-    return await getDeletedUser() as User
+  if (!inputHandle && !petitionData) {
+    return (await getDeletedUser()) as User
   }
   let handle = inputHandle
-  if(!inputHandle && petitionData?.did) {
+  if (!inputHandle && petitionData?.did) {
     handle = petitionData.did
   }
   let userFound =
@@ -95,11 +99,11 @@ async function getAtprotoUser(inputHandle: string, localUser: User, petitionData
     try {
       bskyUserResponse = await agent.getProfile({ actor: handle })
     } catch (error) {
-      return await User.findOne({
+      return (await User.findOne({
         where: {
           url: environment.deletedUser
         }
-      })
+      })) as User
     }
   }
   if (bskyUserResponse.success) {
