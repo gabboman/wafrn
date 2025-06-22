@@ -19,7 +19,7 @@ console.log(`Not verified users: ${usersNotVerified.length}`)
 await wait(500)
 for await (const user of usersNotVerified.filter((elem) => !!elem)) {
   console.log(`Sending email to user ${user.url} with email ${user.email}`)
-  const mailHeader = `Helo ${environment.instanceUrl}, your email is still not verified!`
+  const mailHeader = `Helo ${user.url}, your email is still not verified!`
   const mailBody = `<h1>We maaaay have commited a small whoopsie on ${
     environment.instanceUrl
   } regarding the previous email verification email</h1>
