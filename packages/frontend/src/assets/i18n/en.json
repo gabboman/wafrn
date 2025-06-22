@@ -1,4 +1,7 @@
 {
+  "common": {
+    "commaSeparation": "Separated with commas"
+  },
   "login": {
     "welcomeBack": "Welcome back!",
     "exploreWithoutAccount": "Click here to take a look without an account!",
@@ -93,6 +96,55 @@
     "editorGuide": "Doubts on how to format the text or how to start? Check <a target=\"_blank\" href=\"https://wafrn.net/faq/user\">the guide</a>"
   },
   "profile": {
+    "profile": {
+      "chooseAvatar": "Choose another avatar",
+      "chooseHeader":  "Choose header image",
+      "changeDisplayName": "Display name (can contain emoji codes)",
+      "changeBio": "Your bio/description. You can put emoji codes here too. You can use markdown here",
+      "extraInfoHead": "Extra information (Fediverse exclusive)",
+      "fieldPropertyName": "Property name",
+      "fieldPropertyValue": "Property value"
+    },
+    "preferences": {
+      "notificationFilters": "Notification filtering",
+      "showNotificationsFrom": "Show notifications from",
+      "notifyFrom": {
+        "everyone": "Everyone",
+        "followers": "Followers",
+        "following": "People I follow",
+        "mutual": "Mutuals"
+      },
+      "notifyWhen": {
+        "mentioned": "Mentions",
+        "followed": "Follows",
+        "likesEmojiReacts": "Likes and EmojiReactions",
+        "quoted": "Quotes",
+        "rewooted": "Rewoots"
+      },
+      "manuallyAcceptFollows": "Manually accept follows",
+      "disableForceAltText": "Allow uploading media without alt text (enable this only if you're evil)",
+      "forceClassicLogo": "Force classic logo",
+      "forceClassicVideoPlayer": "Force classic video player",
+      "forceClassicAudioPlayer": "Force classic audio player",
+      "forceClassicMediaView": "Force classic media carousel (vertical)",
+      "dontCollapseQuotes": "Do not collapse quotes",
+      "disableCwExceptMuted": "Disable CW unless post contains muted words",
+      "disableConfetti": "Disable confetti effects when performing some actions",
+      "disableUiSounds": "Disable sound effects when performing some actions",
+      "dashboardIsExploreLocal": "Default dashboard is explore local instead of following",
+      "cocAIne": "Replace the word artificial intelligence with custom word (cocaine?)",
+      "customCocAIne": "Custom word for AI replacement",
+      "notRecommendedOptions": "Not recommended options",
+      "disableNSFWFilter": "Disable NSFW images filter",
+      "automaticallyExpandAllPosts": "Automatically expand all posts"
+    },
+    "privacy": {
+      "defaultPostPrivacy": "Default post privacy",
+      "asks": "Asks",
+      "disableEmailNotifications": "Disable email notification",
+      "hideFollows": "Hide my follows and followers",
+      "hideProfileNotLoggedInDescription": "Hide profile to not logged in users and search (this will only apply to your profile IN this wafrn, not to\nyour posts nor other fedi instances or bluesky)"
+    },
     "security": {
       "header": "Security Settings",
       "passwordChange": "Reset Password",
@@ -121,12 +173,35 @@
         }
       }
     },
+    "other": {
+      "movingFromAccount": "'Moving from a different account (without the @)'",
+      "wordsThatWillAutoCwPosts": "Words that will add cw to post",
+      "superMutedWords": "phrases that will not show a post with them (BE CAREFUL WITH THESE)",
+      "availableEmoji": "available emojis"
+    },
+    "bsky": {
+      "psa1": "Bluesky integration is still very experimental! Things will absolutely break!",
+      "psa2_1": "Please refer to",
+      "psa2_2": "the FAQ",
+      "psa2_3": "to find out what does/doesn't work generally speaking.",
+      "psa3": "In the future, we aim to have Bluesky-Specific settings in here, like the ability to change the Bluesky username."
+    },
+    "migrate": {
+      "psa1": "To migrate to another server please create an alias and click",
+      "psa2": "here"
+    },
+    "delete": {
+      "psa1": "We will mark your account as deactivated and after 30 days it will be IRREVERSIBLY DELETED.",
+      "psa2": "To confirm it's you, please fill your password",
+      "button": "DELETE ACCOUNT"
+    },
     "tabHeaders": {
       "profile": "Profile",
       "preferences": "Preferences",
       "privacySecurity": "Privacy and Security",
       "misc": "Miscellaneous"
-    }
+    },
+    "updateButton": "Update profile"
   },
   "ask-dialog-content": {
     "askAnonymously": "Make question anonymous",
