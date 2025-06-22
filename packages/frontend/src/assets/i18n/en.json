@@ -179,12 +179,29 @@
       "superMutedWords": "phrases that will not show a post with them (BE CAREFUL WITH THESE)",
       "availableEmoji": "available emojis"
     },
+    "bsky": {
+      "psa1": "Bluesky integration is still very experimental! Things will absolutely break!",
+      "psa2_1": "Please refer to",
+      "psa2_2": "the FAQ",
+      "psa2_3": "to find out what does/doesn't work generally speaking.",
+      "psa3": "In the future, we aim to have Bluesky-Specific settings in here, like the ability to change the Bluesky username."
+    },
+    "migrate": {
+      "psa1": "To migrate to another server please create an alias and click",
+      "psa2": "here"
+    },
+    "delete": {
+      "psa1": "We will mark your account as deactivated and after 30 days it will be IRREVERSIBLY DELETED.",
+      "psa2": "To confirm it's you, please fill your password",
+      "button": "DELETE ACCOUNT"
+    },
     "tabHeaders": {
       "profile": "Profile",
       "preferences": "Preferences",
       "privacySecurity": "Privacy and Security",
       "misc": "Miscellaneous"
-    }
+    },
+    "updateButton": "Update profile"
   },
   "ask-dialog-content": {
     "askAnonymously": "Make question anonymous",

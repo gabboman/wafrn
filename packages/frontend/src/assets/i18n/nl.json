@@ -176,16 +176,32 @@
     "other": {
       "movingFromAccount": "'Verhuizen vanuit een ander account (zonder @)'",
       "wordsThatWillAutoCwPosts": "Woorden die een post als expliciet markeren",
-      "mutedWordsPlaceholder": "Met kommas verdeeld",
       "superMutedWords": "phrases that will not show a post with them (BE CAREFUL WITH THESE)",
-      "superMutedWordsPlaceholder": "Separated by commas"
+      "availableEmoji": "beschikbare emojis"
+    },
+    "bsky": {
+      "psa1": "De bluesky integratie is nog niet stabiel! Dingen zullen zonder twijfel niet werken!",
+      "psa2_1": "Lees de",
+      "psa2_2": "veel-voorkomende vragen",
+      "psa2_3": "om te vinden wat wel en niet werkt op dit moment.",
+      "psa3": "In de toekomst kunt u hier uw bluesky-specifieke zaken instellen. Zoals uw bluesky gebruikersnaam."
+    },
+    "migrate": {
+      "psa1": "Om naar een andere server te verhuizen, klik",
+      "psa2": "hier"
+    },
+    "delete": {
+      "psa1": "Uw account zal als gedeactiveerd worden gemarkeerd, en na 30 dagen ONOMKEERBAAR VERWIJDERD WORDEN",
+      "psa2": "Voor de veiligheid, voer hier uw wachtwoord in",
+      "button": "VERWIJDER ACCOUNT"
     },
     "tabHeaders": {
       "profile": "Profiel",
       "preferences": "Voorkeuren",
       "privacySecurity": "Privacy en Beveiliging",
       "misc": "Overig"
-    }
+    },
+    "updateButton": "Aanpassingen opslaan"
   },
   "ask-dialog-content": {
     "askAnonymously": "Stel anoniem een vraag",
