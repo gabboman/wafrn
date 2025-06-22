@@ -121,3 +121,7 @@
         "askButtonText": "Zapytaj"
     }
 }
+  "post-fragment": {
+    "replyingTo": "w odpowiedzi do: "
+  }
+}
