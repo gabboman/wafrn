@@ -1,0 +1,52 @@
+{
+  "login": {
+    "welcomeBack": "Rebonjour !",
+    "exploreWithoutAccount": "Appuyez ici pour jeter un coup d'œil sans compte !",
+    "register": "Inscrivez-vous maintenant !",
+    "checkSpam": "Si vous avez une problème, veuillez consulter le dossier spam !",
+    "email": "Email",
+    "password": "Mot de passe",
+    "forgottenPassword": "Mot de passe oublié ? Appuyez ici !",
+    "showPassword": "Montrer mot de passe",
+    "hidePassword": "Cacher mot de passe",
+    "loginButton": "Se connecter"
+  },
+  "notifications": {
+    "loadingMore": "Chargement de notifications",
+    "refresh": "Actualiser"
+  },
+  "menu": {
+    "login": "Se connecter",
+    "register": "S'inscrire",
+    "writeWoot": "Écrire nouveau woot",
+    "notifications": "Notifications",
+    "explore": "Explorer",
+    "exploreWafrn": "Explorer WAFRN",
+    "unansweredAsks": "Demandes pas répondues",
+    "privateMessages": "Messages privées",
+    "search": "Rechercher",
+    "myBlog": "Mon blog",
+    "privacy": "Politique de Confidentialité",
+    "source": "Lire le code source!",
+    "patreon": "Patreon",
+    "kofi": "Ko-fi",
+    "logout": "Log out",
+    "faq": "FAQ",
+    "settings": {
+      "title": "Paramètres",
+      "follows": "Gérer abonné·es",
+      "enableBluesky": "Activer Bluesky",
+      "editProfile": "Modifier profil"
+    }
+  },
+  "editor": {
+    "inReplyTo": "Réponse à",
+    "publishWoot": "Publier cette woot",
+    "directMessageWarning": "Les administrateurs de votre serveur et le serveur externe peuvent lire ces messages",
+    "wootTextLabel": "Texte du woot",
+    "wootTextPlaceholder": "Écrivez ici...",
+    "altTextFieldLabel": "Description d'image",
+    "ariaLabelWootPrivacy": "Modifier la visibilité du woot",
+    "uploadMediaTooltip": "Mettre média en ligne"
+  }
+}
