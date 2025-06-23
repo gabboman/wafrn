@@ -48,5 +48,49 @@
     "altTextFieldLabel": "Description d'image",
     "ariaLabelWootPrivacy": "Modifier la visibilité du woot",
     "uploadMediaTooltip": "Mettre média en ligne"
+  },
+  "profile": {
+    "profile": {
+      "chooseAvatar": "Choisir un autre avatar",
+      "changeDisplayName": "Nom affiché (peut contenir les émojis)",
+      "changeBio": "La description de votre compte. Vous pouvez utiliser les émoji ici aussi. Vous pouvez utiliser MarkDown ici.",
+      "extraInfoHead": "Information supplémentaire (seulement avec Fediverse)"
+    },
+    "preferences": {
+      "notificationFilters": "Filtrage de notifications",
+      "showNotificationsFrom": "Montrer les notifications de",
+      "notifyFrom": {
+        "everyone": "Tout le monde",
+        "followers": "Followers",
+        "following": "Les personnes que je suis"
+      },
+      "notifyWhen": {
+        "mentioned": "Mentionné",
+        "followed": "Suivi",
+        "likesEmojiReacts": "« J'aime » et réactions émoji",
+        "rewooted": "Rewoots"
+      },
+      "disableUiSounds": "Désactiver les effets sonores de certains actions"
+    },
+    "delete": {
+      "psa1": "On va indiquer votre compte déactivée et après 30 jours elle sera EFFACÉE IRRÉVERSIBLEMENT.",
+      "psa2": "Pour confirmer que ce soit vraiment vous, veuillez remplir votre mot de passe.",
+      "button": "EFFACER LA COMPTE"
+    },
+    "tabHeaders": {
+      "profile": "Profil",
+      "preferences": "Préférences",
+      "privacySecurity": "Confidentialité et Sécurité",
+      "misc": "Autre"
+    },
+    "updateButton": "Effectuer changements"
+  },
+  "ask-dialog-content": {
+    "askAnonymously": "Faire votre question anonyme",
+    "askFormLabel": "Question",
+    "askButtonText": "Demander"
+  },
+  "post-fragment": {
+    "replyingTo": "répondant à "
   }
 }
