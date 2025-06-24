@@ -1,0 +1,96 @@
+{
+  "login": {
+    "welcomeBack": "Rebonjour !",
+    "exploreWithoutAccount": "Appuyez ici pour jeter un coup d'œil sans compte !",
+    "register": "Inscrivez-vous maintenant !",
+    "checkSpam": "Si vous avez une problème, veuillez consulter le dossier spam !",
+    "email": "Email",
+    "password": "Mot de passe",
+    "forgottenPassword": "Mot de passe oublié ? Appuyez ici !",
+    "showPassword": "Montrer mot de passe",
+    "hidePassword": "Cacher mot de passe",
+    "loginButton": "Se connecter"
+  },
+  "notifications": {
+    "loadingMore": "Chargement de notifications",
+    "refresh": "Actualiser"
+  },
+  "menu": {
+    "login": "Se connecter",
+    "register": "S'inscrire",
+    "writeWoot": "Écrire nouveau woot",
+    "notifications": "Notifications",
+    "explore": "Explorer",
+    "exploreWafrn": "Explorer WAFRN",
+    "unansweredAsks": "Demandes pas répondues",
+    "privateMessages": "Messages privées",
+    "search": "Rechercher",
+    "myBlog": "Mon blog",
+    "privacy": "Politique de Confidentialité",
+    "source": "Lire le code source!",
+    "patreon": "Patreon",
+    "kofi": "Ko-fi",
+    "logout": "Log out",
+    "faq": "FAQ",
+    "settings": {
+      "title": "Paramètres",
+      "follows": "Gérer abonné·es",
+      "enableBluesky": "Activer Bluesky",
+      "editProfile": "Modifier profil"
+    }
+  },
+  "editor": {
+    "inReplyTo": "Réponse à",
+    "publishWoot": "Publier cette woot",
+    "directMessageWarning": "Les administrateurs de votre serveur et le serveur externe peuvent lire ces messages",
+    "wootTextLabel": "Texte du woot",
+    "wootTextPlaceholder": "Écrivez ici...",
+    "altTextFieldLabel": "Description d'image",
+    "ariaLabelWootPrivacy": "Modifier la visibilité du woot",
+    "uploadMediaTooltip": "Mettre média en ligne"
+  },
+  "profile": {
+    "profile": {
+      "chooseAvatar": "Choisir un autre avatar",
+      "changeDisplayName": "Nom affiché (peut contenir les émojis)",
+      "changeBio": "La description de votre compte. Vous pouvez utiliser les émoji ici aussi. Vous pouvez utiliser MarkDown ici.",
+      "extraInfoHead": "Information supplémentaire (seulement avec Fediverse)"
+    },
+    "preferences": {
+      "notificationFilters": "Filtrage de notifications",
+      "showNotificationsFrom": "Montrer les notifications de",
+      "notifyFrom": {
+        "everyone": "Tout le monde",
+        "followers": "Followers",
+        "following": "Les personnes que je suis"
+      },
+      "notifyWhen": {
+        "mentioned": "Mentionné",
+        "followed": "Suivi",
+        "likesEmojiReacts": "« J'aime » et réactions émoji",
+        "rewooted": "Rewoots"
+      },
+      "disableUiSounds": "Désactiver les effets sonores de certains actions"
+    },
+    "delete": {
+      "psa1": "On va indiquer votre compte déactivée et après 30 jours elle sera EFFACÉE IRRÉVERSIBLEMENT.",
+      "psa2": "Pour confirmer que ce soit vraiment vous, veuillez remplir votre mot de passe.",
+      "button": "EFFACER LA COMPTE"
+    },
+    "tabHeaders": {
+      "profile": "Profil",
+      "preferences": "Préférences",
+      "privacySecurity": "Confidentialité et Sécurité",
+      "misc": "Autre"
+    },
+    "updateButton": "Effectuer changements"
+  },
+  "ask-dialog-content": {
+    "askAnonymously": "Faire votre question anonyme",
+    "askFormLabel": "Question",
+    "askButtonText": "Demander"
+  },
+  "post-fragment": {
+    "replyingTo": "répondant à "
+  }
+}

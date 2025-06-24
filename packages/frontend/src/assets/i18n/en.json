@@ -74,7 +74,7 @@
     "quoteButton": "Quote a woot",
     "publishWoot": "Publish this woot",
     "directMessageWarning": "Admins of both your server and the external server can read these messages.",
-    "unlistedWarning": "Unlisted posts will get ignored by searches (TAGS INCLUDED), and will not show on explore local. but they will be shown to your followers. And if someone sends a link they will ve visible, unlike followers only. Basicaly, for when you want to post a lot but dont want to fill explore local.",
+    "unlistedWarning": "Unlisted posts will get ignored by searches (TAGS INCLUDED), and will not show on explore local. but they will be shown to your followers. And if someone sends a link they will ve visible, unlike followers only. Basically, for when you want to post a lot but dont want to fill explore local.",
     "directMessageWithQuoteWarning": "Quoted user will be notified of this as a mention too",
     "sensitivePlaceholder": "What is sensitive about this woot?",
     "wootQuoteBoxLabel": "Paste the URL of a woot to quote it. Can be the external url or the wafrn url",
