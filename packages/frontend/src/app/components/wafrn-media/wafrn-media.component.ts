@@ -95,7 +95,7 @@ export class WafrnMediaComponent implements OnChanges, AfterViewInit {
   }
 
   private getExtension() {
-    const mediaUrl = this.data().url.split('.')
+    const mediaUrl = this.data().url ? this.data().url.split('.') : ['']
     return mediaUrl[mediaUrl.length - 1].toLowerCase()
   }
 
