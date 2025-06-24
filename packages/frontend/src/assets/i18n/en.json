@@ -15,7 +15,10 @@
     "forgottenPassword": "Forgot password? Click here!",
     "showPassword": "Show password",
     "hidePassword": "Hide password",
-    "loginButton": "Log in"
+    "loginButton": "Log in",
+    "checkEmail": "Please check your email",
+    "checkEmailLine1": "We have sent you an email. Please do check your email and the spam folder",
+    "checkEmailLine2": "If you have any problem, write to the instance admin, whose email can be <a href=\"/about\">here</a>"
   },
   "notifications": {
     "loadingMore": "Loading more notifications",
