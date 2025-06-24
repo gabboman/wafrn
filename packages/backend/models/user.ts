@@ -32,6 +32,7 @@ import {
   HasManyRemoveAssociationMixin
 } from 'sequelize'
 import { Col } from 'sequelize/lib/utils'
+import { environment } from '../environment.js'
 
 export interface UserAttributes {
   id?: string
@@ -511,13 +512,23 @@ export class User extends Model<UserAttributes, UserAttributes> implements UserA
   })
   declare userMigratedTo: string
 
-  @Column(DataType.VIRTUAL)
   get isBlueskyUser() {
     return !!(this.url.split('@').length == 2 && this.bskyDid)
   }
 
-  @Column(DataType.VIRTUAL)
   get isFediverseUser() {
     return !!(this.url.split('@').length == 3 && this.remoteId)
+  }
+
+  get fullUrl() {
+    return this.remoteId || `${environment.frontendUrl}/blog/${this.url}`
+  }
+
+  get avatarFullUrl() {
+    return this.url.startsWith('@') ? this.avatar : `${environment.mediaUrl}${this.avatar}`;
+  }
+
+  get headerImageFullUrl() {
+    return this.url.startsWith('@') ? this.headerImage : `${environment.mediaUrl}${this.headerImage}`
   }
 }
