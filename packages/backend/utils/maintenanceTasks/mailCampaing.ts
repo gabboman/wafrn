@@ -10,7 +10,6 @@ import { environment } from '../../environment.js'
 async function sendMail() {
   const users = await User.findAll({
     where: {
-      url: 'admin',
       banned: { [Op.ne]: true },
       activated: true,
       disableEmailNotifications: false,
