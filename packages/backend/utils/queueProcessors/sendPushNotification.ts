@@ -236,7 +236,7 @@ async function sendWsNotifications(notifications: NotificationBody[], context?: 
     // we just tell the user to update the notifications
     return {
       name: 'updateNotificationsSocket',
-      data: {userId: elem.notifiedUserId}
+      data: {userId: elem.notifiedUserId, type: elem.notificationType, from: elem.userId, postId: elem.postId ? elem.postId : ''}
     }
   }) )
 }

@@ -133,6 +133,7 @@
       "dontCollapseQuotes": "Do not collapse quotes",
       "disableCwExceptMuted": "Disable CW unless post contains muted words",
       "disableConfetti": "Disable confetti effects when performing some actions",
+      "enableConfettiRecivingLike": "Enable confetti when you recive a like",
       "disableUiSounds": "Disable sound effects when performing some actions",
       "dashboardIsExploreLocal": "Default dashboard is explore local instead of following",
       "cocAIne": "Replace the word artificial intelligence with custom word (cocaine?)",

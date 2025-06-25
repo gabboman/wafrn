@@ -3,7 +3,8 @@ import { WebSocketSubject, webSocket } from 'rxjs/webSocket'
 import { EnvironmentService } from './environment.service'
 import { LoginService } from './login.service'
 import { DashboardService } from './dashboard.service'
-import { retry, Subject } from 'rxjs'
+import { debounce, retry, Subject } from 'rxjs'
+import { MessageService } from './message.service'
 
 @Injectable({
   providedIn: 'root'
@@ -12,7 +13,7 @@ export class WebsocketService {
   private socket$!: WebSocketSubject<any>
   constructor(
     private loginService: LoginService,
-    private dashboardService: DashboardService
+    private dashboardService: DashboardService,
   ) {
     if (loginService.checkUserLoggedIn()) {
       this.connectSocket()
@@ -37,11 +38,17 @@ export class WebsocketService {
             delay: 3000
           })
         )
-        .subscribe((obs: { message: 'update_notifications' }) => {
+        .subscribe((obs: { message: 'update_notifications', type: string }) => {
           try {
             switch (obs.message) {
               case 'update_notifications': {
                 this.dashboardService.scrollEventEmitter.next('scroll')
+                console.log(obs)
+                if(obs.type == 'LIKE' && localStorage.getItem('enableConfettiRecivingLike') == 'true'){
+                  MessageService.confetti.addConfetti({
+                    emojis: ['❤️', '💚', '💙']
+                  })
+                }
               }
             }
           } catch (error) {
