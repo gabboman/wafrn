@@ -5,6 +5,7 @@ import { User, Post } from '../../models/index.js'
 import { environment } from '../../environment.js'
 import { getAllLocalUserIds } from '../../utils/cacheGetters/getAllLocalUserIds.js'
 import { return404 } from '../../utils/return404.js'
+import fs from 'fs'
 
 // @ts-ignore cacher has no types
 import Cacher from 'cacher'
@@ -127,12 +128,13 @@ function wellKnownRoutes(app: Application) {
         ]
       }
     })
+    const packageJsonFile = JSON.parse(fs.readFileSync('../../package.json').toString())
 
     res.send({
       version: '2.0',
       software: {
         name: 'wafrn',
-        version: '0.1.0'
+        version: packageJsonFile.version
       },
       protocols: ['activitypub'],
       services: {
