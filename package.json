@@ -1,7 +1,7 @@
 {
   "name": "wafrn",
-  "version": "0.0.5",
-  "description": "wafrn monorepo",
+  "version": "0.0.69",
+  "description": "wafrn",
   "main": "index.ts",
   "scripts": {
     "full:upgrade": "git pull && pm2 restart all && npm run frontend:deploy",
