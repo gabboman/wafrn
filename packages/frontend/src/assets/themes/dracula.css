@@ -1,0 +1,100 @@
+:root {
+  /* Dracula */
+  --drac-bg    : #282A36;
+  --drac-fg    : #F8F8F2;
+  --drac-line  : #44475A;
+  --drac-cmnt  : #6272A4;
+  --drac-cyan  : #8BE9FD;
+  --drac-green : #50FA7B;
+  --drac-orange: #FFB86C;
+  --drac-pink  : #FF79C6;
+  --drac-purple: #BD93F9;
+  --drac-red   : #FF5555;
+  --drac-yellow: #F1FA8C;
+  --failure    : #900;   /* << If you see his color, I made a mistake */
+  --failure2   : #a80;   /* << If you see his color, I made a mistake */
+  
+  /* Primary palette variables */
+  --mat-sys-primary: var(--drac-fg);
+  --mat-sys-on-primary: var(--drac-line);
+  --mat-sys-primary-container: var(--drac-line);
+  --mat-sys-on-primary-container: var(--drac-fg);
+  --mat-sys-inverse-primary: var(--drac-purple);
+  --mat-sys-primary-fixed: var(--failue);
+  --mat-sys-primary-fixed-dim: var(--drac-cmnt);
+  --mat-sys-on-primary-fixed: var(--failure);
+  --mat-sys-on-primary-fixed-variant: var(--failure);
+  
+  /* Secondary palette variables */
+  --mat-sys-secondary: var(--failure);
+  --mat-sys-on-secondary: var(--failure);
+  --mat-sys-secondary-container: var(--drac-cmnt);
+  --mat-sys-on-secondary-container: var(--drac-bg);
+  --mat-sys-secondary-fixed: var(--failure);
+  --mat-sys-secondary-fixed-dim: var(--failure);
+  --mat-sys-on-secondary-fixed: var(--failure);
+  --mat-sys-on-secondary-fixed-variant: var(--failure);
+  
+  /* Tertiary palette variables */
+  --mat-sys-tertiary: var(--failure);
+  --mat-sys-on-tertiary: var(--failure);
+  --mat-sys-tertiary-container: var(--drac-or);
+  --mat-sys-on-tertiary-container: var(--failure);
+  --mat-sys-tertiary-fixed: var(--failure);
+  --mat-sys-tertiary-fixed-dim: var(--failure);
+  --mat-sys-on-tertiary-fixed: var(--failure);
+  --mat-sys-on-tertiary-fixed-variant: var(--failure);  
+  
+  /* Neutral palette variables */
+  --mat-sys-background: var(--drac-line);
+  --mat-sys-on-background: var(--drac-fg);
+  --mat-sys-surface: var(--drac-bg);
+  --mat-sys-surface-dim: var(--failure);
+  --mat-sys-surface-bright: var(--failure);
+  --mat-sys-surface-container-lowest: var(--failure);
+  --mat-sys-surface-container-low: var(--drac-bg);
+  --mat-sys-surface-container: var(--drac-line);
+  --mat-sys-surface-container-high: var(--drac-line);
+  --mat-sys-surface-container-highest: var(--drac-pink);
+  --mat-sys-on-surface: var(--drac-fg);
+  --mat-sys-shadow: hsl(from var(--drac-line) h s 50%);  /* darkened background */
+  --mat-sys-scrim: var(--failure);
+  --mat-sys-surface-tint: var(--failure);
+  --mat-sys-inverse-surface: var(--drac-cmnt);
+  --mat-sys-inverse-on-surface: var(--drac-green);
+  --mat-sys-outline: var(--drac-pink);
+  --mat-sys-outline-variant: var(--drac-purple);
+  --mat-sys-neutral10: var(--failure); /* Variable used for the form field native select option text color */
+  
+  /* Error palette variables */
+  --mat-sys-error: var(--failure);
+  --mat-sys-on-error: var(--failure2);
+  --mat-sys-error-container: var(--failure);
+  --mat-sys-on-error-container: var(--failure2);
+  
+  /* Neutral variant palette variables */
+  --mat-sys-surface-variant: var(--drac-cmnt);
+  --mat-sys-on-surface-variant: var(--drac-fg);
+  --mat-sys-neutral-variant20: var(--drac-bg); /* Variable used for the sidenav scrim (container background shadow when opened) */
+  
+  /* not in default theme document */
+  --mat-badge-background-color: var(--drac-purple);
+  --mat-badge-text-color: var(--drac-bg);
+}
+
+.mat-mdc-list-item { 
+  height: 2rem !important;
+}
+
+/* mentions have a border */
+.mention {
+  border-width: 1px;
+  border-color: var(--drac-purple);
+  border-style: solid;
+}
+
+/* emoji reacts have a shadow */
+.emojireact-button {
+  border-top: 2px solid var(--mat-sys-shadow);
+  border-left: 2px solid var(--mat-sys-shadow);
+}
