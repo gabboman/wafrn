@@ -202,7 +202,7 @@ const postSearchAttributes = function (options? : {id?: string, onlyArticles?: b
     ]
   }
 
-  if (id) result.where.id = id;
+  if (options?.id) result.where.id = options.id;
 
   return result;
 }
