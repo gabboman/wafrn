@@ -27,7 +27,7 @@ async function flagActivity(body: activityPubObject, remoteUser: User, user: Use
         .replaceAll(`${environment.frontendUrl}/fediverse/post/`, '')
     )
   if (reportedPostsIds.length == 0 && reportedUsersUrl.length > 0) {
-    const body = `Here you go: ${reportedPostsIds.join(', ')}`
+    const body = `Here you go: ${reportedPostsIds.join(', ')}, ${JSON.stringify(apObject)}`
     const subject = `There has been a report that is directed towards an user but does not includes post`
     await sendActivationEmail(environment.adminEmail, '', subject, body)
   } else {

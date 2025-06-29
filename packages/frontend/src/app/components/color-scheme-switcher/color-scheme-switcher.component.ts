@@ -6,6 +6,7 @@ import { MatMenuModule } from '@angular/material/menu'
 import { MatTooltipModule } from '@angular/material/tooltip'
 import { FaIconComponent } from '@fortawesome/angular-fontawesome'
 import { faPalette } from '@fortawesome/free-solid-svg-icons'
+import { TranslateService } from '@ngx-translate/core';
 import { LoginService } from 'src/app/services/login.service'
 
 // !! NOTE FOR ADDING THEMES !! //
@@ -40,6 +41,7 @@ const colorSchemeVariants = [
   'aqua',
   'unwafrn',
   'wafrnverse',
+  'dracula',
   'fan'
 ] as const
 type ColorSchemeTuple = typeof colorSchemeVariants
@@ -84,7 +86,10 @@ export class ColorSchemeSwitcherComponent {
   themeText = linkedSignal(() => capitalize(this.theme()))
   iconClass = ''
 
-  constructor(private loginService: LoginService) {
+  constructor(
+    private loginService: LoginService,
+    private translateService: TranslateService
+  ) {
     const colorScheme = localStorage.getItem('colorScheme')
     if (
       colorScheme !== null &&
@@ -173,5 +178,9 @@ export class ColorSchemeSwitcherComponent {
     var raw = navigator.userAgent.match(/Chrom(e|ium)\/([0-9]+)\./)
 
     return raw ? parseInt(raw[2], 10) : false
+  }
+
+  setLang(lang: string) {
+    this.translateService.setDefaultLang(lang)
   }
 }

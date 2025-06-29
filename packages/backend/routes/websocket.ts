@@ -9,13 +9,13 @@ import { Job, Worker } from 'bullmq';
 import {BehaviorSubject, debounceTime, filter, Subscription} from 'rxjs'
 
 export default function websocketRoutes(app: Application) {
-    const notificationEmitter: BehaviorSubject<string> = new BehaviorSubject('')
+    const notificationEmitter: BehaviorSubject<{type: string, userId:  string}> = new BehaviorSubject({type: '', userId: '' })
     new Worker(
         'updateNotificationsSocket',
         async (job: Job) => {
             // TODO send notifications!
             const userId = job.data.userId ? job.data.userId : '';
-            notificationEmitter.next(userId)
+            notificationEmitter.next({userId, type: job.data.type})
         },
         {
             connection: environment.bullmqConnection,
@@ -58,9 +58,9 @@ export default function websocketRoutes(app: Application) {
                                 } else {
                                     authorized = true;
                                     userId = jwtData.userId
-                                    const myNotifications = notificationEmitter.pipe(filter(userIdFromNotification => userId === userIdFromNotification))
+                                    const myNotifications = notificationEmitter.pipe(filter(notification => userId === notification.userId))
                                     subscriptions.push(myNotifications.subscribe(elem => {
-                                         ws.send(JSON.stringify({message: 'update_notifications'}))
+                                         ws.send(JSON.stringify({message: 'update_notifications', type:  elem.type}))
                                     }))
                                 }
                             })

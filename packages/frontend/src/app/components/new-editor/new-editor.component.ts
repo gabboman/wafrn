@@ -438,9 +438,13 @@ export class NewEditorComponent implements OnDestroy {
       this.uploadedMedias = []
       this.tags = ''
       if (this.data?.ask) {
-        window.location.reload()
+        // super dirty but we take you to your homepage after an ask
+        this.router.navigate(["/"])
       }
+      else {
       this.closeEditor()
+
+      }
     }
     this.postBeingSubmitted = false
   }

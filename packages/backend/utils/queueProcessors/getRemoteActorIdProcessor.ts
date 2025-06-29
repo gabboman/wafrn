@@ -110,11 +110,28 @@ async function getRemoteActorIdProcessor(job: Job) {
         await federatedHost.save()
         let userRes
         const existingUsers = await User.findAll({
-          where: sequelize.where(sequelize.fn('lower', sequelize.col('url')), userData.url.toLowerCase())
+          where: {
+            [Op.or]: [
+                sequelize.where(sequelize.fn('lower', sequelize.col('url')), userData.url.toLowerCase()),
+                {
+                  remoteId: userData.remoteId
+                }
+
+              ]
+          }
         })
         if (res) {
           if (res !== (await getDeletedUser())) {
             userRes = await User.findByPk(res as string)
+            if(existingUsers.length > 1) {
+              logger.debug({
+                message: `Multiple fedi users found for ${userData.url} (${userData.remoteId}): ${existingUsers.length}`
+              })
+              for await (const userWithDuplicatedData of existingUsers.slice(1)) {
+                userWithDuplicatedData.url = userWithDuplicatedData.url + '_DUPLICATED_' + new Date().getTime()
+                userWithDuplicatedData.remoteId = userWithDuplicatedData.remoteId + '_DUPLICATED_' + new Date().getTime()
+              }
+            }
             if (existingUsers && existingUsers.length > 0 && existingUsers[0] && userRes?.id !== existingUsers[0]?.id) {
               const existingUser = existingUsers[0]
               existingUser.activated = false
