@@ -119,6 +119,9 @@ export class NavigationMenuComponent implements OnInit, OnDestroy {
     // IMPORTANT: HIDE THE SPLASH SCREEN
     const splashElement = document.getElementById('splash')
     splashElement?.classList.add('loaded')
+
+    const microformatsElement = document.getElementById('indieweb')
+    microformatsElement?.classList.add('loaded')
   }
 
   ngOnDestroy(): void {

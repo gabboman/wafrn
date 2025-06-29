@@ -6,10 +6,6 @@ Disallow: /
 User-Agent: meta-externalagent
 Disallow: /
 
-User-agent: *
-Disallow: /fediverse/
-Allow: /blog/
-
 User-agent: CCBot
 Disallow: /
 
@@ -37,7 +33,7 @@ Disallow: /
 User-agent: Omgilibot
 Disallow: /
 
-User-agent: ImagesiftBot 
+User-agent: ImagesiftBot
 Disallow: /
 
 User-agent: Meltwater
@@ -45,3 +41,9 @@ Disallow: /
 
 User-agent: Seekr
 Disallow: /
+
+User-agent: *
+Disallow /
+Allow: /$
+Allow: /fediverse/
+Allow: /blog/

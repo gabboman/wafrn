@@ -106,9 +106,65 @@ body {
   }
 }
 
+// Pre-splash / Indieweb content
+#indieweb {
+  position: relative;
+  min-height: 100dvh;
+  inset: 0;
+}
+
+#microformats {
+  max-width: 800px;
+  border: 1px solid black;
+  margin: 2em;
+  padding: 1em;
+
+  .h-card {
+    display: flex;
+    flex-flow: row wrap;
+
+    border: 1px solid black;
+    margin: 1em;
+
+    .u-featured {
+      object-fit: cover;
+      order: 1;
+      flex: 1 100%;
+    }
+
+    .u-photo {
+      object-fit: contain;
+      max-height: 5em;
+      order: 2;
+    }
+
+    .p-name {
+      order: 3;
+      flex: 3 0px;
+      align-self: center;
+      padding: 1em;
+      text-decoration: none;
+    }
+  }
+
+  .h-entry {
+    padding: 1em;
+    border: 1px solid black;
+    margin-bottom: 2em;
+  }
+
+  .u-uid,
+  .dt-pubished,
+  .u-in-reply-to {
+    text-align: right;
+    display: block;
+  }
+}
+
 // Splashscreen
 #splash {
-  position: fixed;
+  position: relative;
+  min-height: 100dvh;
   inset: 0;
 }
 
@@ -137,7 +193,7 @@ body {
 }
 
 #splash-content {
-  height: 100%;
+  min-height: 100dvh;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -146,11 +202,16 @@ body {
   transition: translate 120ms ease-in;
 }
 
+#indieweb.loaded,
 #splash.loaded {
   display: none;
   opacity: 0;
 
   & #splash-content {
+    translate: 0 -6px;
+  }
+
+  & #microformats {
     translate: 0 -6px;
   }
 }
@@ -171,6 +232,7 @@ body {
 /* Small-Screen media queries. */
 /* Currently encompasses the bottom-sheet style for dialogs, as well as the full-width post style for narrow screens.*/
 @media screen and (max-width: 800px) {
+
   /* START bottom-sheet */
   :root {
     --mat-dialog-container-shape: 16px 16px 0px 0px;
@@ -194,12 +256,14 @@ body {
       transform: translateY(0%);
     }
   }
+
   /* END bottom-sheet */
   /* START fullwidth post style */
   mat-card {
-    border-radius: 0px!important;
-    margin-inline: 0px!important;
+    border-radius: 0px !important;
+    margin-inline: 0px !important;
   }
+
   /* END fullwidth post style */
 
 }
@@ -270,9 +334,10 @@ mat-tab-header {
 
 // Workaround for bug with matTooltip
 .mat-mdc-tooltip-trigger {
-	touch-action: auto !important;
-	-webkit-user-drag: auto !important;
+  touch-action: auto !important;
+  -webkit-user-drag: auto !important;
 }
+
 .sr-only {
   position: absolute !important;
   width: 1px !important;
@@ -284,6 +349,7 @@ mat-tab-header {
   white-space: nowrap !important;
   border: 0 !important;
 }
+
 .sr-only-focusable {
   position: absolute;
   width: 1px;
