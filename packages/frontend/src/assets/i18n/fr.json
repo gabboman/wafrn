@@ -70,7 +70,22 @@
         "likesEmojiReacts": "« J'aime » et réactions émoji",
         "rewooted": "Rewoots"
       },
+      "manuallyAcceptFollows": "Manuellement accepter les suivi·es",
+      "disableForceAltText": "Permettre la mise en ligne des médias sans alternative textuelle (pas recommandé - nous voulons que WAFRN soit accessible à tous)",
       "disableUiSounds": "Désactiver les effets sonores de certains actions"
+    },
+    "privacy": {
+      "defaultPostPrivacy": "Visibilité du post par défaut",
+      "asks": "Demandes",
+      "disableEmailNotifications": "Désactiver notifications d'email",
+      "hideFollows": "Cacher mes suivi·es et mes abonné·es"
+    },
+    "security": {
+      "header": "Paramètres de Sécurité (pas traduites)"
+    },
+    "migrate": {
+      "psa1": "Pour émigrer à un autre serveur veuillez créer un pseudonyme et appuyer",
+      "psa2": "ici"
     },
     "delete": {
       "psa1": "On va indiquer votre compte déactivée et après 30 jours elle sera EFFACÉE IRRÉVERSIBLEMENT.",
