@@ -141,7 +141,7 @@
     "privacy": {
       "defaultPostPrivacy": "Default post privacy",
       "asks": "Asks",
-      "disableEmailNotifications": "Disable email notification",
+      "disableEmailNotifications": "Disable email notifications",
       "hideFollows": "Hide my follows and followers",
       "hideProfileNotLoggedInDescription": "Hide profile to not logged in users and search (this will only apply to your profile IN this wafrn, not to\nyour posts nor other fedi instances or bluesky)"
     },
