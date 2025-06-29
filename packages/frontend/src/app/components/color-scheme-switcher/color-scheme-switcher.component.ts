@@ -75,6 +75,7 @@ export class ColorSchemeSwitcherComponent {
 
   // Options
   centerLayoutMode = localStorage.getItem('centerLayout') === 'true'
+  horizontalMenuMode = localStorage.getItem('horizontalMenu') === 'true'
 
   // Icons
   paletteIcon = faPalette
@@ -135,6 +136,15 @@ export class ColorSchemeSwitcherComponent {
     if (forceUpdate && this.loginService.checkUserLoggedIn()) {
       await this.loginService.updateUserOptions([
         { name: 'wafrn.centerLayout', value: this.centerLayoutMode.toString() }
+      ])
+    }
+  }
+
+  async updateHorizontalMenu(forceUpdate = false) {
+    this.horizontalMenuMode = !this.horizontalMenuMode
+    if (forceUpdate) {
+      await this.loginService.updateUserOptions([
+        { name: 'wafrn.horizontalMenu', value: this.horizontalMenuMode.toString() }
       ])
     }
   }
