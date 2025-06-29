@@ -178,6 +178,14 @@
             }
           </mat-select>
         </mat-form-field>
+        <mat-form-field class="w-full" appearance="outline">
+          <mat-label>{{ 'profile.privacy.rssOptions' | translate }}</mat-label>
+          <mat-select [required]="true" formControlName="rssOptions">
+            @for (option of rssOptions; track $index) {
+              <mat-option [value]="option.level">{{ option.name }}</mat-option>
+            }
+          </mat-select>
+        </mat-form-field>
         <div class="w-full">
           <mat-checkbox formControlName="disableEmailNotifications"></mat-checkbox>
           <mat-label>{{ 'profile.privacy.disableEmailNotifications' | translate }}</mat-label>

@@ -231,6 +231,7 @@ export class LoginService {
       asksLevel: 'wafrn.public.asks',
       forceClassicLogo: 'wafrn.forceClassicLogo',
       defaultPostEditorPrivacy: 'wafrn.defaultPostEditorPrivacy',
+      rssOptions: 'wafrn.enableRSS',
       mutedWords: 'wafrn.mutedWords',
       superMutedWords: 'wafrn.superMutedWords',
       disableCW: 'wafrn.disableCW',

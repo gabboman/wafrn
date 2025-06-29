@@ -1,7 +1,7 @@
 import express, { Request, Application, Response } from 'express'
 import { environment } from '../environment.js'
 import { Op } from 'sequelize'
-import { Emoji, Media, Post, User, sequelize } from '../models/index.js'
+import { Emoji, Media, Post, User, UserOptions, sequelize } from '../models/index.js'
 import fs from 'fs'
 import dompurify from 'isomorphic-dompurify'
 import { redisCache } from '../utils/redis.js'
@@ -170,7 +170,7 @@ function getBlogMicroformat(user: User): string {
           </div>`;
 }
 
-const postSearchAttributes = function (id?: string) {
+const postSearchAttributes = function (options? : {id?: string, onlyArticles?: boolean }) {
   const result: any = {
     attributes: ['content', 'id', 'privacy', 'content_warning', 'createdAt'],
     where: {
@@ -211,7 +211,7 @@ async function getPostSEOCache(id: string): Promise<{ title: string; description
   const resData = await redisCache.get('postSeoCache:' + id)
   let res: any = { ...environment.defaultSEOData }
   if (!resData) {
-    const post = await Post.findOne(postSearchAttributes(id))
+    const post = await Post.findOne(postSearchAttributes({id}))
     if (post && post.user) {
       res.title = `${post.user.url.startsWith('@') ? 'External' : 'Wafrn'} post by ${sanitizeStringForSEO(
         post.user.url
@@ -222,9 +222,9 @@ async function getPostSEOCache(id: string): Promise<{ title: string; description
           : sanitizeStringForSEO(post.content)
       ).substring(0, 190)
       const safeMedia = post.medias?.find((elem: any) => elem.NSFW === false && !elem.url.toLowerCase().endsWith('mp4'))
-      if (safeMedia)
+      if (safeMedia){
         res.img = safeMedia?.fullUrl
-
+      }
       res.content = getPostMicroformat(post, true, res.img);
 
       redisCache.set('postSeoCache:' + id, JSON.stringify(res), 'EX', 300)
@@ -254,12 +254,24 @@ async function getBlogSEOCache(url: string): Promise<{ title: string; descriptio
       res.img = blog.url.startsWith('@') ? blog.avatar : `${environment.mediaUrl}${blog.avatar}`
 
       res.content = getBlogMicroformat(blog)
-
-      const posts = await blog.getPosts({
-        order: [['createdAt', 'DESC']],
-        limit: 10,
-        ...postSearchAttributes()
+      const rssOption = await UserOptions.findOne({
+        where: {
+          userId: blog.id,
+          optionName: 'wafrn.enableRSS'
+        }
+      })
+      let posts: Post[] = [];
+      if(rssOption && rssOption.optionValue != '0') {
+        // value 0: NO
+        // value 1: Only articles
+        // value 2: ALL
+        posts = await blog.getPosts({
+          order: [['createdAt', 'DESC']],
+          limit: 10,
+          ...postSearchAttributes({onlyArticles: rssOption.optionValue == '1'})
       });
+      }
+      
 
       if (posts.length > 0) {
         res.content += `<div class="h-feed">

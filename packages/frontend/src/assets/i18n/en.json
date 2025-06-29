@@ -147,7 +147,8 @@
       "asks": "Asks",
       "disableEmailNotifications": "Disable email notification",
       "hideFollows": "Hide my follows and followers",
-      "hideProfileNotLoggedInDescription": "Hide profile to not logged in users and search (this will only apply to your profile IN this wafrn, not to\nyour posts nor other fedi instances or bluesky)"
+      "hideProfileNotLoggedInDescription": "Hide profile to not logged in users and search (this will only apply to your profile IN this wafrn, not to\nyour posts nor other fedi instances or bluesky)",
+      "rssOptions": "Enable RSS and microfront for my blog page"
     },
     "security": {
       "header": "Security Settings",
