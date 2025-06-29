@@ -237,6 +237,7 @@ export class LoginService {
       forceClassicVideoPlayer: 'wafrn.forceClassicVideoPlayer',
       forceClassicAudioPlayer: 'wafrn.forceClassicAudioPlayer',
       disableConfetti: 'wafrn.disableConfetti',
+      enableConfettiRecivingLike: 'wafrn.enableConfettiRecivingLike',
       forceClassicMediaView: 'wafrn.forceClassicMediaView',
       expandQuotes: 'wafrn.expandQuotes',
       attachments: 'fediverse.public.attachment',

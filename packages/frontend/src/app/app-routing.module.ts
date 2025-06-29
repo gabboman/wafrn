@@ -27,6 +27,11 @@ const routes: Routes = [
         loadChildren: () => import('./pages/register/register.module').then((m) => m.RegisterModule)
       },
       {
+        path: 'checkMail',
+        canActivate: [userLoggedGuard],
+        loadComponent: () => import('./pages/check-email/check-email.component').then((m) => m.CheckEmailComponent)
+      },
+      {
         path: 'about',
         loadChildren: () => import('./pages/privacy/privacy.module').then((m) => m.PrivacyModule)
       },

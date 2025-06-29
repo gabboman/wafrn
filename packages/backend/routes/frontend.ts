@@ -1,4 +1,4 @@
-import express, { Application, Response } from 'express'
+import express, { Request, Application, Response } from 'express'
 import { environment } from '../environment.js'
 import { Op } from 'sequelize'
 import { Media, Post, User, sequelize } from '../models/index.js'
@@ -9,7 +9,6 @@ import { getCheckFediverseSignatureFunction } from '../utils/activitypub/checkFe
 import { SignedRequest } from '../interfaces/fediverse/signedRequest.js'
 import { handlePostRequest } from '../utils/activitypub/handlePostRequest.js'
 import { Privacy } from '../models/post.js'
-
 const cacheOptions = {
   etag: false,
   maxAge: '1'
@@ -86,8 +85,22 @@ function frontend(app: Application) {
     }
   })
 
-  // serve static angular files
-  app.get('*.*', express.static(environment.frontedLocation, cacheOptions))
+  
+  app.get('/disableEmailNotifications/:id/:code', async (req: Request, res: Response) => {
+    let result = false;
+    let userId = req.params.id;
+    let code = req.params.code;
+    if(userId && code){
+      let user = await User.findByPk(userId);
+      if(user && user.activationCode == code) {
+        user.disableEmailNotifications = true;
+        await user.save();
+        result = true;
+      }
+    }
+    res.send(result ? `You successfuly disabled email notifications` : `Something went wrong! Please do send an email to the instance admin! Do reply to the email`)
+  })
+
 
   app.get(
     ['/fediverse/post/:id', '/fediverse/activity/post/:id'],
@@ -114,6 +127,9 @@ function frontend(app: Application) {
       }
     }
   )
+  // serve static angular files
+  app.get('*.*', express.static(environment.frontedLocation, cacheOptions))
+
 }
 
 function sanitizeStringForSEO(unsanitized: string): string {

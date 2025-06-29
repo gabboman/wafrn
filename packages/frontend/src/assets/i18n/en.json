@@ -15,7 +15,10 @@
     "forgottenPassword": "Forgot password? Click here!",
     "showPassword": "Show password",
     "hidePassword": "Hide password",
-    "loginButton": "Log in"
+    "loginButton": "Log in",
+    "checkEmail": "Please check your email",
+    "checkEmailLine1": "We have sent you an email. Please do check your email and the spam folder",
+    "checkEmailLine2": "If you have any problem, write to the instance admin, whose email can be <a href=\"/about\">here</a>"
   },
   "notifications": {
     "loadingMore": "Loading more notifications",
@@ -130,6 +133,7 @@
       "dontCollapseQuotes": "Do not collapse quotes",
       "disableCwExceptMuted": "Disable CW unless post contains muted words",
       "disableConfetti": "Disable confetti effects when performing some actions",
+      "enableConfettiRecivingLike": "Enable confetti when you recive a like",
       "disableUiSounds": "Disable sound effects when performing some actions",
       "dashboardIsExploreLocal": "Default dashboard is explore local instead of following",
       "cocAIne": "Replace the word artificial intelligence with custom word (cocaine?)",

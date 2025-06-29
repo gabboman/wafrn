@@ -7,12 +7,14 @@ import { AudioService } from './audio.service'
   providedIn: 'root'
 })
 export class MessageService {
-  confetti: JSConfetti
+  public static confetti: JSConfetti
   constructor(
     private snackBar: MatSnackBar,
     private audioService: AudioService
   ) {
-    this.confetti = new JSConfetti()
+    if(!MessageService.confetti){
+      MessageService.confetti = new JSConfetti()
+    }
   }
 
   add(message: {
@@ -39,7 +41,7 @@ export class MessageService {
       verticalPosition: 'top'
     })
     if (message.confettiEmojis && message.confettiEmojis.length) {
-      this.confetti.addConfetti({
+      MessageService.confetti.addConfetti({
         emojis: message.confettiEmojis
       })
     }

@@ -1,0 +1,218 @@
+{
+  "common": {
+    "commaSeparation": "Separados por comas"
+  },
+  "login": {
+    "welcomeBack": "¡Bienvenido/a de vuelta!",
+    "exploreWithoutAccount": "¡Cliqueá acá para mirar sin una cuenta!",
+    "dontHaveAccount": "¿No tenés una cuenta?",
+    "register": "¡Registrate ahora!",
+    "checkSpam": "¡Si tenés algún problema, por favor revisá tu carpeta de spam!",
+    "email": "Email",
+    "password": "Contraseña",
+    "mfaToken": "Token",
+    "mfaTokenEnter": "Escribí el token de tu app de autentificación",
+    "forgottenPassword": "¿Olvidaste tu contraseña? ¡Cliqueá acá!",
+    "showPassword": "Mostrar contraseña",
+    "hidePassword": "Esconder contraseña",
+    "loginButton": "Iniciar sesión",
+    "checkEmail": "Por favor revisá tu email",
+    "checkEmailLine1": "Te mandamos un email. Por favor revisá tu email y tu carpeta de spam",
+    "checkEmailLine2": "Si tenés algún problema, escribile al admin de la instancia, cuyo email se encuentra <a href=\"/about\">acá</a>"
+  },
+  "notifications": {
+    "loadingMore": "Cargando más notificaciones",
+    "refresh": "Actualizar"
+  },
+  "menu": {
+    "login": "Iniciar sesión",
+    "register": "Registrarse",
+    "dashboard": "Dashboard",
+    "dashboardHover": "Ver dashboard",
+    "writeWoot": "Escribir nuevo woot",
+    "notifications": "Notificaciones",
+    "explore": "Explorar",
+    "exploreWafrn": "Explorar WAFRN",
+    "exploreFediverse": "Wafrn y amigos",
+    "unansweredAsks": "Preguntas sin responder",
+    "privateMessages": "Mensajes privados",
+    "search": "Buscar",
+    "myBlog": "Mi blog",
+    "privacy": "Política de Privacidad",
+    "source": "¡Ver el código fuente!",
+    "patreon": "Patreon",
+    "kofi": "Ko-fi",
+    "logout": "Cerrar sesión",
+    "faq": "Preguntas Frecuentes",
+    "settings": {
+      "title": "Opciones",
+      "follows": "Administar seguidores",
+      "enableBluesky": "Activar Bluesky",
+      "editProfile": "Preferencias y Perfil",
+      "themeEditor": "Editor de temas",
+      "mutedUsers": "Usuarios silenciados",
+      "mutedPosts": "Posts silenciados",
+      "bookmarkedPosts": "Posts guardados",
+      "myBlockedUsers": "Usuarios bloqueados",
+      "myBlockedServers": "Servidores bloqueados",
+      "importFollows": "Importar seguidores",
+      "superSecretMenu": "Menú Super Secreto"
+    },
+    "admin": {
+      "title": "Admin",
+      "serverList": "Lista de servidores",
+      "addEmojis": "Agregar emojis",
+      "reports": "Reportes",
+      "bans": "Usuarios baneados",
+      "blocklist": "Usuarios bloqueados",
+      "stats": "Estadísticas",
+      "awaitingAproval": "Esperando aprobación"
+    }
+  },
+  "editor": {
+    "inReplyTo": "Respondiendo a:",
+    "quoteButton": "Citar un woot",
+    "publishWoot": "Publicar este woot",
+    "directMessageWarning": "Los admins de tu servidor y el servidor externo pueden leer estos mensajes.",
+    "unlistedWarning": "Los posts no listados van a ser ignorados por las búsquedas (INCLUYENDO TAGS), y no van a mostrarse en explorar localmente, pero van a mostrarse a tus seguidores. Y si alguien manda un link van a ser visibles, a diferencia de los posts solo para seguidores. En resumen, para cuando querés postear mucho pero no querés llenar explorar localmente",
+    "directMessageWithQuoteWarning": "El usuario citado también va a ser notificado de esto como una mención",
+    "sensitivePlaceholder": "¿Qué tiene este woot de delicado?",
+    "wootQuoteBoxLabel": "Pegá la URL de un woot para citarlo. Puede ser la URL externa o la URL de wafrn",
+    "wootQuoteBoxPlaceholder": "Nada más pegá la URL del woot",
+    "wootQuoteConfirmButton": "Agregar woot como cita",
+    "wootTextLabel": "Texto del woot",
+    "wootTextPlaceholder": "Empezá a escribir...",
+    "altTextFieldLabel": "Descripción de Imagen",
+    "altTextFieldPlaceholder": "Descripción. Por favor LLENÁ ESTO",
+    "isNSFWToggle": "Para Adultos",
+    "mediaCountMastodonWarning": "¡ATENCIÓN! CUALQUIER ARCHIVO ADICIONAL NO VA A SER MOSTRADO EN MASTODON",
+    "altTextWarning": "Por favor llená las descripciones de contenido. Si querés desactivar esta alerta, podés hacerlo en las opciones.",
+    "quoteTitle": "Citando:",
+    "tagFieldLabel": "Tags",
+    "tagSeparationNotice": "Separadas por comas",
+    "ariaLabelWootPrivacy": "Editar privacidad del woot",
+    "ariaLabelQuoteSetter": "Enable the quote setter",
+    "uploadMediaTooltip": "Subir Archivo",
+    "contentWarningTooltip": "Alerta de Contenido",
+    "insertEmojiTooltip": "Insertar emoji",
+    "hiddenMentionsTooltip": "Otros usuarios mencionados",
+    "editorGuide": "¿Dudas sobre cómo formatear el texto o cómo empezar? Revisá <a target=\"_blank\" href=\"https://wafrn.net/faq/user\">la guía</a> (en inglés)"
+  },
+  "profile": {
+    "profile": {
+      "chooseAvatar": "Eleqir otro avatar",
+      "chooseHeader":  "Eleqir imágen de cabecera",
+      "changeDisplayName": "Nombre para mostrar (puede contener códigos de emoji)",
+      "changeBio": "Tu bio/descripción. También podés poner códigos de emoji acá. Podés usar markdown acá",
+      "extraInfoHead": "Información extra (exclusiva para Fediverse)",
+      "fieldPropertyName": "Nombre de propiedad",
+      "fieldPropertyValue": "Valor de propiedad"
+    },
+    "preferences": {
+      "notificationFilters": "Filtrar Notificaciones",
+      "showNotificationsFrom": "Mostrar notificaciones de",
+      "notifyFrom": {
+        "everyone": "Todos",
+        "followers": "Seguidores",
+        "following": "Gente que sigo",
+        "mutual": "Mutuals"
+      },
+      "notifyWhen": {
+        "mentioned": "Menciones",
+        "followed": "Follows",
+        "likesEmojiReacts": "Likes y reacciones de emoji",
+        "quoted": "Citas",
+        "rewooted": "Rewoots"
+      },
+      "manuallyAcceptFollows": "Aceptar follows manualmente",
+      "disableForceAltText": "Permitir subir archivos sin descripciones (solamente activá esto si sos malo/a)",
+      "forceClassicLogo": "Forzar logo clásico",
+      "forceClassicVideoPlayer": "Forzar reproductor de video clásico",
+      "forceClassicAudioPlayer": "Forzar reproductor de audio clásico",
+      "forceClassicMediaView": "Forzar carrusel de medios clásico (vertical)",
+      "dontCollapseQuotes": "No colapsar citas",
+      "disableCwExceptMuted": "Desactivar alertas de contenido a no ser que el post tenga palabras silenciadas",
+      "disableConfetti": "Desactivar efectos de confeti al realizar ciertas acciones",
+      "enableConfettiRecivingLike": "Activar confeti cuando recibís un like",
+      "disableUiSounds": "Desactivar efectos de sonido al realizar ciertas acciones",
+      "dashboardIsExploreLocal": "Dashboard por defecto es explorar localmente en vez de siguiendo",
+      "cocAIne": "Reemplazar el término inteligencia artificial por otra palabra (cocaina?)",
+      "customCocAIne": "Palabra personalizada para reemplazar IA",
+      "notRecommendedOptions": "Opciones no recomendadas",
+      "disableNSFWFilter": "Desactivar filtro de imáqenes para adultos",
+      "automaticallyExpandAllPosts": "Expandir todos los posts automáticamente"
+    },
+    "privacy": {
+      "defaultPostPrivacy": "Privacidad de posts por defecto",
+      "asks": "Preguntas",
+      "disableEmailNotifications": "Desactivar notificaciones por email",
+      "hideFollows": "Esconder mis follows y seguidores",
+      "hideProfileNotLoggedInDescription": "Hide profile to not logged in users and search (this will only apply to your profile IN this wafrn, not to\nyour posts nor other fedi instances or bluesky)"
+    },
+    "security": {
+      "header": "Opciones de Seguridad",
+      "passwordChange": "Resetear Contraseña",
+      "mfa": {
+        "header": "Verificación en Dos Pasos",
+        "setup": "Configurar verificación en dos pasos",
+        "addNew": "Agregar nuevo Autentificador",
+        "friendlyNameLabel": "Friendly name, e.g. 'Work Phone' or 'Aegis' Nombre amigable, ej. \"Celular de Trabajo\" o \"Aegis\"",
+        "typeLabel": "Tipo de verificación en dos pasos",
+        "setupNewButton": "Configurar nuevo autentificador",
+        "tokenLabel": "Token",
+        "deleteLabel": "Borrar",
+        "scanInstructions": "Escaneá el código de abajo con tu app de autentificación, y escribí el código",
+        "installInstructions": "Si no tenés una app de autentificación recomendamos <a href=\"https://getaegis.app/\" target=\"_blank\">Aegis</a> (Android) o <a href=\"https://2fas.com/\" target=\"_blank\">2FAS</a> (iOS/Android)",
+        "imageAltSecret": "El secreto de autentificación es '{{ secret }}'",
+        "secretFallback": "Si no podés leer el código QR podés usar el código '{{ secret }}' en tu app manualmente",
+        "confirmDeleteMessage": "¿Estás seguro/a de que querés borrar este proveedor? Nota: borrar todos los proveedores va a desactivar la verificación en dos pasos en tu cuenta",
+        "deleteSuccess": "Proveedor removido exitosamente",
+        "verifySuccess": "La verificación en dos pasos ahora está activada",
+        "verifyFailed": "La verificación falló. Revisá tu token, o si el problema continúa contactá a un Administrador",
+        "errorMessageGeneric": "Hubo un problema con tu solicitud. Probá de nuevo, o pedile ayuda a un Administrador",
+        "noMfa": "Tu cuenta no tiene activada la verificación en dos pasos",
+        "mfaList": "Tenés configurados los siguientes proveedores de verificación en dos pasos",
+        "type": {
+          "totpLabel": "App de Autentificación"
+        }
+      }
+    },
+    "other": {
+      "movingFromAccount": "'Mudándose de una cuenta distinta (sin la @)'",
+      "wordsThatWillAutoCwPosts": "Palabras que van a agregar una alerta de contenido al post",
+      "superMutedWords": "frases que van a esconder posts que las contengan (TENÉ CUIDADO)",
+      "availableEmoji": "emojis disponibles"
+    },
+    "bsky": {
+      "psa1": "¡La integración con Bluesky aún es muy experiental! ¡Algunas cosas van a fallar!",
+      "psa2_1": "Por favor revisá",
+      "psa2_2": "las Preguntas Frecuentes (en inqlés)",
+      "psa2_3": "para aprender qué anda y qué no, generalmente.",
+      "psa3": "En el futuro, queremos tener opciones específicas para Bluesky acá, como la opción de cambiar tu nombre de usuario de Bluesky."
+    },
+    "migrate": {
+      "psa1": "Para migrar a otro servidor, por favor creá un alias y cliqueá",
+      "psa2": "acá"
+    },
+    "delete": {
+      "psa1": "Vamos a marcar tu cuenta como desactivada y dentro de 30 días va a ser BORRADA PERMANENTEMENTE.",
+      "psa2": "Para confirmar que sos vos, por favor escribí tu contraseña",
+      "button": "BORRAR CUENTA"
+    },
+    "tabHeaders": {
+      "profile": "Perfil",
+      "preferences": "Preferencias",
+      "privacySecurity": "Privacidad y Seguridad",
+      "misc": "Miscelánea"
+    },
+    "updateButton": "Actualizar perfil"
+  },
+  "ask-dialog-content": {
+    "askAnonymously": "Hacer anónima la pregunta",
+    "askFormLabel": "Pregunta",
+    "askButtonText": "Preguntar"
+  },
+  "post-fragment": {
+    "replyingTo": "respondiendo a: "
+  }
+}
