@@ -66,11 +66,11 @@ function frontend(app: Application) {
       })
       if (blog) {
         const feed = new Feed({
-          title: `${blog.url}'s wafrn blog`,
-          description: blog.description,
+          title: sanitizeStringForSEO(`${blog.url}'s wafrn blog`),
+          description: sanitizeStringForSEO(blog.description),
           id: `${environment.frontendUrl}/blog/${blog.url}/rss`,
           link: `${environment.frontendUrl}/blog/${blog.url}`,
-          image: `${environment.mediaUrl}${blog.avatar}}`,
+          image: `${environment.mediaUrl}${blog.avatar}`,
           favicon: `${environment.frontendUrl}/favicon.ico`,
           copyright: 'All rights reserved by the user',
           generator: environment.instanceUrl,
@@ -99,10 +99,10 @@ function frontend(app: Application) {
         posts = posts.reverse()
         posts.forEach((post) => {
           feed.addItem({
-            title: post.title ? post.title : `Wafrn post by ${blog.url}`,
+            title: sanitizeStringForSEO(post.title ? post.title : `Wafrn post by ${blog.url}`),
             id: post.id,
             link: `${environment.frontendUrl}/fediverse/post/${post.id}`,
-            description: post.content.substring(0, 150),
+            description: sanitizeStringForSEO(post.content.substring(0, 150)),
             content: post.content,
             date: post.createdAt
             // image: post.image
@@ -113,6 +113,7 @@ function frontend(app: Application) {
     }
     res.status(result.status)
     if (result.data) {
+      res.contentType('application/rss+xml')
       res.send(result.data)
     } else {
       res.send()
