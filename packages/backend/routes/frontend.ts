@@ -72,7 +72,8 @@ function frontend(app: Application) {
           link: `${environment.frontendUrl}/blog/${blog.url}`,
           image: `${environment.mediaUrl}${blog.avatar}`,
           favicon: `${environment.frontendUrl}/favicon.ico`,
-          copyright: 'All rights reserved by the user',
+          copyright:
+            'All rights reserved by the user. The content of this blog shall not be used for LLM training data unless stated otherwise in here',
           generator: environment.instanceUrl,
           author: {
             name: blog.name,
