@@ -69,6 +69,7 @@
     "express": "^4.21.2",
     "express-rate-limit": "^6.7.0",
     "express-ws": "^5.0.2",
+    "feed": "^5.1.0",
     "file-type": "^19.5.0",
     "fluent-ffmpeg": "^2.1.2",
     "fs-extra": "^11.2.0",

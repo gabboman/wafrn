@@ -11,7 +11,7 @@ import { handlePostRequest } from '../utils/activitypub/handlePostRequest.js'
 import { Privacy } from '../models/post.js'
 import { getPostHtml } from '../utils/getPostHtml.js'
 import { logger } from '../utils/logger.js'
-import { userInfo } from 'os'
+import { Feed } from 'feed'
 
 const cacheOptions = {
   etag: false,
@@ -50,6 +50,75 @@ function frontend(app: Application) {
     )
   })
 
+  // RSS
+  app.get('/blog/:url/rss', async (req: Request, res: Response) => {
+    let result: { status: 404 | 200; data: any } = {
+      status: 404,
+      data: undefined
+    }
+    if (req.params?.url) {
+      const url = req.params.url
+      const blog = await User.findOne({
+        where: sequelize.and(
+          sequelize.where(sequelize.fn('lower', sequelize.col('url')), url.toLowerCase()),
+          sequelize.where(sequelize.col('email'), Op.ne, null)
+        )
+      })
+      if (blog) {
+        const feed = new Feed({
+          title: `${blog.url}'s wafrn blog`,
+          description: blog.description,
+          id: `${environment.frontendUrl}/blog/${blog.url}/rss`,
+          link: `${environment.frontendUrl}/blog/${blog.url}`,
+          image: `${environment.mediaUrl}${blog.avatar}}`,
+          favicon: `${environment.frontendUrl}/favicon.ico`,
+          copyright: 'All rights reserved by the user',
+          generator: environment.instanceUrl,
+          author: {
+            name: blog.name,
+            link: `${environment.frontendUrl}/blog/${blog.url}`
+          }
+        })
+        const rssOption = await UserOptions.findOne({
+          where: {
+            userId: blog.id,
+            optionName: 'wafrn.enableRSS'
+          }
+        })
+        let posts: Post[] = []
+        if (rssOption && rssOption.optionValue != '0') {
+          // value 0: NO
+          // value 1: Only articles
+          // value 2: ALL
+          posts = await blog.getPosts({
+            order: [['createdAt', 'DESC']],
+            limit: 10,
+            ...postSearchAttributes({ onlyArticles: rssOption.optionValue == '1' })
+          })
+        }
+        posts = posts.reverse()
+        posts.forEach((post) => {
+          feed.addItem({
+            title: post.title ? post.title : `Wafrn post by ${blog.url}`,
+            id: post.id,
+            link: `${environment.frontendUrl}/fediverse/post/${post.id}`,
+            description: post.content.substring(0, 150),
+            content: post.content,
+            date: post.createdAt
+            // image: post.image
+          })
+        })
+        result = { status: 200, data: feed.rss2() }
+      }
+    }
+    res.status(result.status)
+    if (result.data) {
+      res.send(result.data)
+    } else {
+      res.send()
+    }
+  })
+
   app.get('/blog/:url/ask', async function (req, res) {
     if (req.params?.url) {
       try {
@@ -76,13 +145,18 @@ function frontend(app: Application) {
         const blogData = await getBlogSEOCache(req.params.url)
         if (blogData) {
           res.send(
-            getIndexSeo(`${blogData.title}'s ${environment.instanceUrl} blog`, blogData.description, blogData.img, blogData.content)
+            getIndexSeo(
+              `${blogData.title}'s ${environment.instanceUrl} blog`,
+              blogData.description,
+              blogData.img,
+              blogData.content
+            )
           )
         } else {
           res.send(getIndexSeo(defaultSeoData.title, defaultSeoData.description, defaultSeoData.img))
         }
       } catch (error) {
-        logger.debug(error);
+        logger.debug(error)
         res.send(getIndexSeo(defaultSeoData.title, defaultSeoData.description, defaultSeoData.img))
       }
     } else {
@@ -90,22 +164,24 @@ function frontend(app: Application) {
     }
   })
 
-  
   app.get('/disableEmailNotifications/:id/:code', async (req: Request, res: Response) => {
-    let result = false;
-    let userId = req.params.id;
-    let code = req.params.code;
-    if(userId && code){
-      let user = await User.findByPk(userId);
-      if(user && user.activationCode == code) {
-        user.disableEmailNotifications = true;
-        await user.save();
-        result = true;
+    let result = false
+    let userId = req.params.id
+    let code = req.params.code
+    if (userId && code) {
+      let user = await User.findByPk(userId)
+      if (user && user.activationCode == code) {
+        user.disableEmailNotifications = true
+        await user.save()
+        result = true
       }
     }
-    res.send(result ? `You successfuly disabled email notifications` : `Something went wrong! Please do send an email to the instance admin! Do reply to the email`)
+    res.send(
+      result
+        ? `You successfuly disabled email notifications`
+        : `Something went wrong! Please do send an email to the instance admin! Do reply to the email`
+    )
   })
-
 
   app.get(
     ['/fediverse/post/:id', '/fediverse/activity/post/:id'],
@@ -124,7 +200,7 @@ function frontend(app: Application) {
               res.send(getIndexSeo(defaultSeoData.title, defaultSeoData.description, defaultSeoData.img))
             }
           } catch (error) {
-            logger.debug(error);
+            logger.debug(error)
             res.send(getIndexSeo(defaultSeoData.title, defaultSeoData.description, defaultSeoData.img))
           }
         } else {
@@ -135,7 +211,6 @@ function frontend(app: Application) {
   )
   // serve static angular files
   app.get('*.*', express.static(environment.frontedLocation, cacheOptions))
-
 }
 
 function sanitizeStringForSEO(unsanitized: string): string {
@@ -143,34 +218,62 @@ function sanitizeStringForSEO(unsanitized: string): string {
 }
 
 function getPostMicroformat(post: Post, includeBlog: boolean = false, mainImage?: string): string {
-  const skipImage: Array<boolean> = [];
+  const skipImage: Array<boolean> = []
   let sanitizedHtml = getPostHtml(post)
 
-  sanitizedHtml = sanitizedHtml.replaceAll(/!\[media-(\d+)\]/g, (_, p1) => { if (post.medias?.[p1 - 1]) { skipImage[p1 - 1] = true; const media = post.medias[p1 - 1]; return `<img class="${mainImage == media.fullUrl ? 'u-photo' : ''}" style="max-width:100%" title="${sanitizeStringForSEO(media.description)}" src="${media.fullUrl}">` } else return ''; })
+  sanitizedHtml = sanitizedHtml.replaceAll(/!\[media-(\d+)\]/g, (_, p1) => {
+    if (post.medias?.[p1 - 1]) {
+      skipImage[p1 - 1] = true
+      const media = post.medias[p1 - 1]
+      return `<img class="${
+        mainImage == media.fullUrl ? 'u-photo' : ''
+      }" style="max-width:100%" title="${sanitizeStringForSEO(media.description)}" src="${media.fullUrl}">`
+    } else return ''
+  })
 
   return `<div style="max-width:100%" class="h-entry">
-        ${includeBlog ? `<div class="p-author">
+        ${
+          includeBlog
+            ? `<div class="p-author">
           ${getBlogMicroformat(post.user)}
-        </div>` : ''}
-        <a class="u-url u-uid" href="${post.fullUrl}"><time class="dt-published" datetime="${post.createdAt.toISOString()}">${post.createdAt.toLocaleString()}</time></a>
-        ${(post.parent) ? `<a class="u-in-reply-to" href="${post.parent.fullUrl}">In Reply To</a>` : ''}
+        </div>`
+            : ''
+        }
+        <a class="u-url u-uid" href="${
+          post.fullUrl
+        }"><time class="dt-published" datetime="${post.createdAt.toISOString()}">${post.createdAt.toLocaleString()}</time></a>
+        ${post.parent ? `<a class="u-in-reply-to" href="${post.parent.fullUrl}">In Reply To</a>` : ''}
         ${post.content_warning ? `<div class="p-summary">${sanitizeStringForSEO(post.content_warning)}</div>` : ''}
         <div class="e-content">
         ${sanitizedHtml}
-        ${post.medias?.filter((_, idx) => !skipImage[idx])?.map((elem) => `<img class="${mainImage == elem.fullUrl ? 'u-photo' : ''}" style="max-width:100%" title="${sanitizeStringForSEO(elem.description)}" src="${elem.fullUrl}">`).join("\n") || ''}
+        ${
+          post.medias
+            ?.filter((_, idx) => !skipImage[idx])
+            ?.map(
+              (elem) =>
+                `<img class="${
+                  mainImage == elem.fullUrl ? 'u-photo' : ''
+                }" style="max-width:100%" title="${sanitizeStringForSEO(elem.description)}" src="${elem.fullUrl}">`
+            )
+            .join('\n') || ''
+        }
         </div>
-      </div>`;
+      </div>`
 }
 
 function getBlogMicroformat(user: User): string {
   return `<div style="max-width:100%" class="h-card">
             <a class="p-name u-url" rel="me" href="${user.fullUrl}">${sanitizeStringForSEO(user.name)}</a>
             ${user.avatar ? `<img style="max-width:100%" class="u-photo" src="${user.avatarFullUrl}" />` : ''}
-            ${user.headerImage ? `<img style="max-width:100%" class="u-featured" src="${user.headerImageFullUrl}" />` : ''}
-          </div>`;
+            ${
+              user.headerImage
+                ? `<img style="max-width:100%" class="u-featured" src="${user.headerImageFullUrl}" />`
+                : ''
+            }
+          </div>`
 }
 
-const postSearchAttributes = function (options? : {id?: string, onlyArticles?: boolean }) {
+const postSearchAttributes = function (options?: { id?: string; onlyArticles?: boolean }) {
   const result: any = {
     attributes: ['content', 'id', 'privacy', 'content_warning', 'createdAt'],
     where: {
@@ -202,16 +305,18 @@ const postSearchAttributes = function (options? : {id?: string, onlyArticles?: b
     ]
   }
 
-  if (options?.id) result.where.id = options.id;
+  if (options?.id) result.where.id = options.id
 
-  return result;
+  return result
 }
 
-async function getPostSEOCache(id: string): Promise<{ title: string; description: string; img: string, content?: string }> {
+async function getPostSEOCache(
+  id: string
+): Promise<{ title: string; description: string; img: string; content?: string }> {
   const resData = await redisCache.get('postSeoCache:' + id)
   let res: any = { ...environment.defaultSEOData }
   if (!resData) {
-    const post = await Post.findOne(postSearchAttributes({id}))
+    const post = await Post.findOne(postSearchAttributes({ id }))
     if (post && post.user) {
       res.title = `${post.user.url.startsWith('@') ? 'External' : 'Wafrn'} post by ${sanitizeStringForSEO(
         post.user.url
@@ -222,10 +327,10 @@ async function getPostSEOCache(id: string): Promise<{ title: string; description
           : sanitizeStringForSEO(post.content)
       ).substring(0, 190)
       const safeMedia = post.medias?.find((elem: any) => elem.NSFW === false && !elem.url.toLowerCase().endsWith('mp4'))
-      if (safeMedia){
+      if (safeMedia) {
         res.img = safeMedia?.fullUrl
       }
-      res.content = getPostMicroformat(post, true, res.img);
+      res.content = getPostMicroformat(post, true, res.img)
 
       redisCache.set('postSeoCache:' + id, JSON.stringify(res), 'EX', 300)
     }
@@ -235,7 +340,9 @@ async function getPostSEOCache(id: string): Promise<{ title: string; description
   return res
 }
 
-async function getBlogSEOCache(url: string): Promise<{ title: string; description: string; img: string, content: string }> {
+async function getBlogSEOCache(
+  url: string
+): Promise<{ title: string; description: string; img: string; content: string }> {
   const resData = await redisCache.get('blogSeoCache:' + url)
   let res: any = { ...environment.defaultSEOData }
   if (!resData) {
@@ -260,22 +367,21 @@ async function getBlogSEOCache(url: string): Promise<{ title: string; descriptio
           optionName: 'wafrn.enableRSS'
         }
       })
-      let posts: Post[] = [];
-      if(rssOption && rssOption.optionValue != '0') {
+      let posts: Post[] = []
+      if (rssOption && rssOption.optionValue != '0') {
         // value 0: NO
         // value 1: Only articles
         // value 2: ALL
         posts = await blog.getPosts({
           order: [['createdAt', 'DESC']],
           limit: 10,
-          ...postSearchAttributes({onlyArticles: rssOption.optionValue == '1'})
-      });
+          ...postSearchAttributes({ onlyArticles: rssOption.optionValue == '1' })
+        })
       }
-      
 
       if (posts.length > 0) {
         res.content += `<div class="h-feed">
-          ${posts.map(post => getPostMicroformat(post, false)).join('\n')}
+          ${posts.map((post) => getPostMicroformat(post, false)).join('\n')}
         </div>`
       }
 
@@ -325,7 +431,7 @@ function getIndexSeo(title: string, description: string, image?: string, content
   const bodyCommendToReplace =
     /<!-- BEGIN MAIN CONTENT FOR INDIEWEB -->.*(.*(\n))*.*<!-- END MAIN CONTENT FOR INDIEWEB -->/gm
 
-  indexWithSeo = indexWithSeo.replace(bodyCommendToReplace, (content || ''));
+  indexWithSeo = indexWithSeo.replace(bodyCommendToReplace, content || '')
 
   return indexWithSeo
 }
