@@ -58,6 +58,11 @@ function frontend(app: Application) {
     }
     if (req.params?.url) {
       const url = req.params.url
+      let cacheResult = await redisCache.get('blogRss:' + url)
+      if (cacheResult) {
+        res.contentType('application/rss+xml')
+        return res.send(cacheResult)
+      }
       const blog = await User.findOne({
         where: sequelize.and(
           sequelize.where(sequelize.fn('lower', sequelize.col('url')), url.toLowerCase()),
@@ -104,12 +109,14 @@ function frontend(app: Application) {
             id: post.id,
             link: `${environment.frontendUrl}/fediverse/post/${post.id}`,
             description: sanitizeStringForSEO(post.content.substring(0, 150)),
-            content: post.content,
+            content: getPostMicroformat(post, false),
             date: post.createdAt
             // image: post.image
           })
         })
-        result = { status: 200, data: feed.rss2() }
+        let dataToCache = feed.rss2()
+        await redisCache.set('blogRss:' + url, dataToCache, 'EX', 300)
+        result = { status: 200, data: dataToCache }
       }
     }
     res.status(result.status)
