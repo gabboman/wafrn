@@ -67,6 +67,11 @@
       ><span class="theme-selector-button">Center layout</span></mat-checkbox
     >
   </button>
+    <button mat-menu-item class="pl-1">
+    <mat-checkbox [checked]="horizontalMenuMode" (click)="updateHorizontalMenu(true)"
+      ><span class="theme-selector-button">Horizontal Menu</span></mat-checkbox
+    >
+  </button>
 </mat-menu>
 
 @switch (colorScheme()) {
@@ -120,4 +125,8 @@
 
 @if (centerLayoutMode) {
   <link href="/assets/themes/center-column.css" rel="stylesheet" />
+}
+
+@if (horizontalMenuMode) {
+<link href="/assets/themes/horizontal-menu.css" rel="stylesheet" />
 }
