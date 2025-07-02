@@ -1,96 +1,204 @@
 {
+  "common": {
+    "commaSeparation": "Séparés avec des virgules"
+  },
   "login": {
-    "welcomeBack": "Rebonjour !",
-    "exploreWithoutAccount": "Appuyez ici pour jeter un coup d'œil sans compte !",
-    "register": "Inscrivez-vous maintenant !",
-    "checkSpam": "Si vous avez une problème, veuillez consulter le dossier spam !",
+    "welcomeBack": "Heureux de te revoir !",
+    "exploreWithoutAccount": "Clique ici pour jeter un coup d'œil sans avoir de compte !",
+    "dontHaveAccount": "Pas de compte ?",
+    "register": "Inscris-toi maintenant !",
+    "checkSpam": "Vérifie tes spams en cas de problème !",
     "email": "Email",
     "password": "Mot de passe",
-    "forgottenPassword": "Mot de passe oublié ? Appuyez ici !",
-    "showPassword": "Montrer mot de passe",
-    "hidePassword": "Cacher mot de passe",
-    "loginButton": "Se connecter"
+    "mfaToken": "Jeton d'authentification",
+    "mfaTokenEnter": "Entre ton jeton d'authentification",
+    "forgottenPassword": "Mot de passe oublié ? Clique ici !",
+    "showPassword": "Afficher le mot de passe",
+    "hidePassword": "Cacher le mot de passe",
+    "loginButton": "Connexion",
+    "checkEmail": "Checke tes mails",
+    "checkEmailLine1": "WAFRN T'as envoyé un mail. Vérifie tes mails et ton dossier de spam",
+    "checkEmailLine2": "Tu peux envoyer un mail à l'administrateur·ice de cette instance en cas de problème. Son adresse mail se trouve <a href=\"/about\">ici</a>"
   },
   "notifications": {
-    "loadingMore": "Chargement de notifications",
-    "refresh": "Actualiser"
+    "loadingMore": "Charger plus de notifications",
+    "refresh": "Rafraîchir"
   },
   "menu": {
-    "login": "Se connecter",
-    "register": "S'inscrire",
-    "writeWoot": "Écrire nouveau woot",
+    "login": "Connexion",
+    "register": "Inscription",
+    "dashboard": "Tableau de bord",
+    "dashboardHover": "Voir le tableau de bord",
+    "writeWoot": "Écrire un nouveau woot",
     "notifications": "Notifications",
     "explore": "Explorer",
     "exploreWafrn": "Explorer WAFRN",
-    "unansweredAsks": "Demandes pas répondues",
-    "privateMessages": "Messages privées",
-    "search": "Rechercher",
+    "exploreFediverse": "Ami·es de WAFRN",
+    "unansweredAsks": "Questions non répondues",
+    "privateMessages": "Messages privés",
+    "search": "Recherche",
     "myBlog": "Mon blog",
-    "privacy": "Politique de Confidentialité",
-    "source": "Lire le code source!",
+    "privacy": "Politique de confidentialité",
+    "source": "Code source",
     "patreon": "Patreon",
     "kofi": "Ko-fi",
-    "logout": "Log out",
-    "faq": "FAQ",
+    "logout": "Déconnexion",
+    "faq": "Foire Aux Questions",
     "settings": {
       "title": "Paramètres",
-      "follows": "Gérer abonné·es",
+      "follows": "Gérer les abonné·e·s",
       "enableBluesky": "Activer Bluesky",
-      "editProfile": "Modifier profil"
+      "editProfile": "Préférences et Profil",
+      "themeEditor": "Éditeur de thème",
+      "mutedUsers": "Utilisateur·ice·s masqué·e·s",
+      "mutedPosts": "Post masqués",
+      "bookmarkedPosts": "Signets",
+      "myBlockedUsers": "Utilisateur·ice·s bloqué·e·s",
+      "myBlockedServers": "Serveurs bloqués",
+      "importFollows": "Importer des abonné·e·s",
+      "superSecretMenu": "Menu Super Secret"
+    },
+    "admin": {
+      "title": "Admin",
+      "serverList": "Liste de serveurs",
+      "addEmojis": "Ajouter des émojis",
+      "reports": "Signalements",
+      "bans": "Utilisateur·ice·s banni·e·s",
+      "blocklist": "Utilisateur·ice·s bloqué·e·s",
+      "stats": "Statistiques",
+      "awaitingAproval": "En attente d'approbation"
     }
   },
   "editor": {
-    "inReplyTo": "Réponse à",
-    "publishWoot": "Publier cette woot",
-    "directMessageWarning": "Les administrateurs de votre serveur et le serveur externe peuvent lire ces messages",
+    "inReplyTo": "En réponse à: ",
+    "quoteButton": "Cite un woot",
+    "publishWoot": "Publie ce woot",
+    "directMessageWarning": "Les administrateur·ice·s de ce serveur et du serveur distant peuvent lire ces messages.",
+    "unlistedWarning": "Les posts non listés seront ignorés par la recherche (TAGS COMPRIS), et ne s'afficheront pas dans le fil local, mais tes followers pourront les voir. Et si quelqu'un envoie un lien vers ces posts, ils seront visibles, contrairement à abonné·e·s uniquement. En gros, quand tu veux poster beaucoup mais ne veux pas remplir le fil local.",
+    "directMessageWithQuoteWarning": "Les utilisateur·ice·s cité·e·s seront notifié·e·s de cette citation",
+    "sensitivePlaceholder": "Quel sujet sensible est abordé dans ce woot ?",
+    "wootQuoteBoxLabel": "Colle l'URL d'un woot pour le citer. L'URL peut être une URL externe ou une URL provenant de WAFRN.",
+    "wootQuoteBoxPlaceholder": "Colle l'URL du woot",
+    "wootQuoteConfirmButton": "Citer ce woot",
     "wootTextLabel": "Texte du woot",
-    "wootTextPlaceholder": "Écrivez ici...",
+    "wootTextPlaceholder": "Commence à écrire...",
     "altTextFieldLabel": "Description d'image",
-    "ariaLabelWootPrivacy": "Modifier la visibilité du woot",
-    "uploadMediaTooltip": "Mettre média en ligne"
+    "altTextFieldPlaceholder": "Description. REMPLIS-LA stp",
+    "isNSFWToggle": "NSFW",
+    "mediaCountMastodonWarning": "ATTENTION ! TOUT MÉDIA SUPPLÉMENTAIRE NE SERA PAS AFFICHÉ SUR MASTODON",
+    "altTextWarning": "Remplis la description d'image. Si tu veux désactiver ce rappel, tu peux le faire dans les paramètres.",
+    "quoteTitle": "Cite:",
+    "tagFieldLabel": "Tags",
+    "tagSeparationNotice": "Séparés par des virgules",
+    "ariaLabelWootPrivacy": "Édite la visibilité du woot",
+    "ariaLabelQuoteSetter": "Active le configurateur de citations",
+    "uploadMediaTooltip": "Ajoute un Média",
+    "contentWarningTooltip": "Avertissement de Contenu",
+    "insertEmojiTooltip": "Ajoute un émoji",
+    "hiddenMentionsTooltip": "Autres utilisateur·ice·s mentionné·e·s",
+    "editorGuide": "Tu as des doutes sur comment formater ton texte ou par quoi commencer ? Consulte <a target=\"_blank\" href=\"https://wafrn.net/faq/user\">le guide</a>"
   },
   "profile": {
     "profile": {
-      "chooseAvatar": "Choisir un autre avatar",
-      "changeDisplayName": "Nom affiché (peut contenir les émojis)",
-      "changeBio": "La description de votre compte. Vous pouvez utiliser les émoji ici aussi. Vous pouvez utiliser MarkDown ici.",
-      "extraInfoHead": "Information supplémentaire (seulement avec Fediverse)"
+      "chooseAvatar": "Choisis une nouvelle photo de profil",
+      "chooseHeader": "Choisis une nouvelle bannière",
+      "changeDisplayName": "Nom d'affichage (peut contenir des codes émoji)",
+      "changeBio": "Ta bio/description. Tu peux mettre des codes émoji ici aussi. Tu peux aussi utiliser markdown",
+      "extraInfoHead": "Infos en plus (exclusif au Fédivers)",
+      "fieldPropertyName": "Nom",
+      "fieldPropertyValue": "Valeur"
     },
     "preferences": {
-      "notificationFilters": "Filtrage de notifications",
-      "showNotificationsFrom": "Montrer les notifications de",
+      "notificationFilters": "Filtrer les notifications",
+      "showNotificationsFrom": "Montrer les notifications",
       "notifyFrom": {
-        "everyone": "Tout le monde",
-        "followers": "Followers",
-        "following": "Les personnes que je suis"
+        "everyone": "De tout le monde",
+        "followers": "Des personnes qui me suivent",
+        "following": "Des personnes que je suis",
+        "mutual": "Des mutus"
       },
       "notifyWhen": {
-        "mentioned": "Mentionné",
-        "followed": "Suivi",
-        "likesEmojiReacts": "« J'aime » et réactions émoji",
+        "mentioned": "Mentions",
+        "followed": "Abonnements",
+        "likesEmojiReacts": "Likes et Réactions Émoji",
+        "quoted": "Citations",
         "rewooted": "Rewoots"
       },
-      "manuallyAcceptFollows": "Manuellement accepter les suivi·es",
-      "disableForceAltText": "Permettre la mise en ligne des médias sans alternative textuelle (pas recommandé - nous voulons que WAFRN soit accessible à tous)",
-      "disableUiSounds": "Désactiver les effets sonores de certains actions"
+      "manuallyAcceptFollows": "Accepte les demandes d'abonnement manuellement",
+      "disableForceAltText": "Permettre l'ajout de médias sans description de contenu (coche cette option seulement si tu es mauvais·e)",
+      "forceClassicLogo": "Force l'utilisation du logo classique",
+      "forceClassicVideoPlayer": "Force l'utilisation du lecteur vidéo classique",
+      "forceClassicAudioPlayer": "Force l'utilisation du lecteur audio classique",
+      "forceClassicMediaView": "Force l'utilisation du carousel classique (vertical)",
+      "dontCollapseQuotes": "Ne pas tronquer les citations",
+      "disableCwExceptMuted": "Désactive les avertissements de contenu sauf si le post contient des mots masqués",
+      "disableConfetti": "Désactive les confetti qui s'affichent lors de certaines actions",
+      "enableConfettiRecivingLike": "Active les confetti quand tu reçois un like",
+      "disableUiSounds": "Désactive les effets sonore",
+      "dashboardIsExploreLocal": "Le tableau de bord par défaut devient le fil local au lieu du fil des abonnements",
+      "cocAIne": "Remplace le mot \"intelligence artificielle\" par un autre mot (cocaïne ?)",
+      "customCocAIne": "Nouveau mot remplaçant l'IA",
+      "notRecommendedOptions": "Options non recommendées",
+      "disableNSFWFilter": "Désactive le filtre d'images NSFW",
+      "automaticallyExpandAllPosts": "Développe tous les posts automatiquement"
     },
     "privacy": {
-      "defaultPostPrivacy": "Visibilité du post par défaut",
-      "asks": "Demandes",
-      "disableEmailNotifications": "Désactiver notifications d'email",
-      "hideFollows": "Cacher mes suivi·es et mes abonné·es"
+      "defaultPostPrivacy": "Visibilité des posts par défaut",
+      "asks": "Questions",
+      "disableEmailNotifications": "Désactiver les notifications par email",
+      "hideFollows": "Cacher mes abonnements et abonné·e·s",
+      "hideProfileNotLoggedInDescription": "Cacher mon profil aux utilisateur·ice·s non connecté·e·s et dans la recherche (cela s'appliquera uniquement à ton profil DANS ce WAFRN, \ntes posts et ton profil dans d'autres instances fedi et sur bluesky seront toujours visibles)",
+      "rssOptions": "Activer le flux RSS et le microfront sur mon blog"
     },
     "security": {
-      "header": "Paramètres de Sécurité (pas traduites)"
+      "header": "Paramètres de sécurité",
+      "passwordChange": "Réinitialiser le mot de passe",
+      "mfa": {
+        "header": "Authentification à Deux Facteurs",
+        "setup": "Configurer l'Authentification à Deux Facteurs",
+        "addNew": "Ajoute une nouvelle Authentification à Deux Facteurs",
+        "friendlyNameLabel": "Nom facile à reconnaître, comme 'Téléphone du boulot' ou 'Aegis'",
+        "typeLabel": "Type d'Authentification à Deux Facteurs",
+        "setupNewButton": "Configurer un nouvel authentificateur",
+        "tokenLabel": "Jeton",
+        "deleteLabel": "Supprimer",
+        "scanInstructions": "Scanne le code ci-dessous avec ton appli d'authentification, et entre le code affiché",
+        "installInstructions": "Si tu n'as pas encore d'appli d'authentification, nous te suggérons d'installer <a href=\"https://getaegis.app/\" target=\"_blank\">Aegis</a> (Android) ou <a href=\"https://2fas.com/\" target=\"_blank\">2FAS</a> (iOS/Android)",
+        "imageAltSecret": "Le secret d'authentification est '{{ secret }}'",
+        "secretFallback": "Tu peux entrer le code '{{ secret }}' manuellement dans l'appli si tu n'arrive pas à scanner le QR code",
+        "confirmDeleteMessage": "Es-tu sûr·e de vouloir supprimer ce fournisseur d'Authentification à Deux Facteurs? À noter: supprimer tous les fournisseurs d'A2F désactivera l'A2F sur ton compte",
+        "deleteSuccess": "Fournisseur d'Authentification à Deux Facteurs supprimé avec succès",
+        "verifySuccess": "Bravo, ton Authentification à Deux Facteurs est maintenant activée !",
+        "verifyFailed": "La vérification à échoué. Vérifie ton jeton d'identification ou, si le problème persiste, contacte un·e administrateur·ice",
+        "errorMessageGeneric": "Il y a eu un problème avec ta requête. Réessaie, ou demande de l'aide à un·e administrateur·ice",
+        "noMfa": "L'authentifiaction à Deux Facteurs n'est pas activée sur ton compte",
+        "mfaList": "Les fournisseurs d'Authentification à Deux Facteurs ci-dessous sont configurés sur ton compte",
+        "type": {
+          "totpLabel": "Appli d'authentification"
+        }
+      }
+    },
+    "other": {
+      "movingFromAccount": "'Migrer depuis un compte différent (sans le @)'",
+      "wordsThatWillAutoCwPosts": "Ces mots ajoutent un avertissement de contenu aux posts qui les contiennent",
+      "superMutedWords": "Ces phrases cachent les posts qui les contiennent (FAIT GAFFE)",
+      "availableEmoji": "Émojis disponibles"
+    },
+    "bsky": {
+      "psa1": "L'intégration Bluesky est encore très expérimentale! Certaines choses vont absolument se casser!",
+      "psa2_1": "Consulte",
+      "psa2_2": "la FAQ",
+      "psa2_3": "pour savoir ce qui fonctionne/ne fonctionne pas en général.",
+      "psa3": "Dans le futur, les paramètres spécifiques à Bluesky seront affichés ici, comme la possibiliter de changer de nom d'affichage."
     },
     "migrate": {
-      "psa1": "Pour émigrer à un autre serveur veuillez créer un pseudonyme et appuyer",
+      "psa1": "Pour migrer vers un autre serveur, crée un alias et clique",
       "psa2": "ici"
     },
     "delete": {
-      "psa1": "On va indiquer votre compte déactivée et après 30 jours elle sera EFFACÉE IRRÉVERSIBLEMENT.",
-      "psa2": "Pour confirmer que ce soit vraiment vous, veuillez remplir votre mot de passe.",
-      "button": "EFFACER LA COMPTE"
+      "psa1": "Ton compte sera marqué comme étant désactivé. Après 30 jours, il sera SUPPRIMÉ DÉFINITIVEMENT.",
+      "psa2": "Entre ton mot de passe pour confirmer ton identité",
+      "button": "SUPPRIMER LE COMPTE"
     },
     "tabHeaders": {
       "profile": "Profil",
@@ -98,14 +206,14 @@
       "privacySecurity": "Confidentialité et Sécurité",
       "misc": "Autre"
     },
-    "updateButton": "Effectuer changements"
+    "updateButton": "Mettre à jour"
   },
   "ask-dialog-content": {
-    "askAnonymously": "Faire votre question anonyme",
+    "askAnonymously": "Rend la question anonyme",
     "askFormLabel": "Question",
     "askButtonText": "Demander"
   },
   "post-fragment": {
-    "replyingTo": "répondant à "
+    "replyingTo": "en réponse à: "
   }
 }
