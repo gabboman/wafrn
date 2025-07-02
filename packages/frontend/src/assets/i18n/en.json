@@ -18,7 +18,7 @@
     "loginButton": "Log in",
     "checkEmail": "Please check your email",
     "checkEmailLine1": "We have sent you an email. Please do check your email and the spam folder",
-    "checkEmailLine2": "If you have any problem, write to the instance admin, whose email can be <a href=\"/about\">here</a>"
+    "checkEmailLine2": "If you have any problem, write to the instance admin, whose email can be found <a href=\"/about\">here</a>"
   },
   "notifications": {
     "loadingMore": "Loading more notifications",
@@ -33,7 +33,7 @@
     "notifications": "Notifications",
     "explore": "Explore",
     "exploreWafrn": "Explore WAFRN",
-    "exploreFediverse": "Wafrn & friends",
+    "exploreFediverse": "WAFRN & friends",
     "unansweredAsks": "Unanswered Asks",
     "privateMessages": "Private messages",
     "search": "Search",
@@ -74,7 +74,7 @@
     "quoteButton": "Quote a woot",
     "publishWoot": "Publish this woot",
     "directMessageWarning": "Admins of both your server and the external server can read these messages.",
-    "unlistedWarning": "Unlisted posts will get ignored by searches (TAGS INCLUDED), and will not show on explore local. but they will be shown to your followers. And if someone sends a link they will ve visible, unlike followers only. Basically, for when you want to post a lot but dont want to fill explore local.",
+    "unlistedWarning": "Unlisted posts will get ignored by searches (TAGS INCLUDED), and will not show on explore local, but they will be shown to your followers. And if someone sends a link they will ve visible, unlike followers only. Basically, for when you want to post a lot but dont want to fill explore local.",
     "directMessageWithQuoteWarning": "Quoted user will be notified of this as a mention too",
     "sensitivePlaceholder": "What is sensitive about this woot?",
     "wootQuoteBoxLabel": "Paste the URL of a woot to quote it. Can be the external url or the wafrn url",
@@ -101,7 +101,7 @@
   "profile": {
     "profile": {
       "chooseAvatar": "Choose another avatar",
-      "chooseHeader":  "Choose header image",
+      "chooseHeader": "Choose header image",
       "changeDisplayName": "Display name (can contain emoji codes)",
       "changeBio": "Your bio/description. You can put emoji codes here too. You can use markdown here",
       "extraInfoHead": "Extra information (Fediverse exclusive)",
@@ -133,7 +133,7 @@
       "dontCollapseQuotes": "Do not collapse quotes",
       "disableCwExceptMuted": "Disable CW unless post contains muted words",
       "disableConfetti": "Disable confetti effects when performing some actions",
-      "enableConfettiRecivingLike": "Enable confetti when you recive a like",
+      "enableConfettiRecivingLike": "Enable confetti when you receive a like",
       "disableUiSounds": "Disable sound effects when performing some actions",
       "dashboardIsExploreLocal": "Default dashboard is explore local instead of following",
       "cocAIne": "Replace the word artificial intelligence with custom word (cocaine?)",
@@ -181,8 +181,8 @@
     "other": {
       "movingFromAccount": "'Moving from a different account (without the @)'",
       "wordsThatWillAutoCwPosts": "Words that will add cw to post",
-      "superMutedWords": "phrases that will not show a post with them (BE CAREFUL WITH THESE)",
-      "availableEmoji": "available emojis"
+      "superMutedWords": "Phrases that will not show a post with them (BE CAREFUL WITH THESE)",
+      "availableEmoji": "Available emojis"
     },
     "bsky": {
       "psa1": "Bluesky integration is still very experimental! Things will absolutely break!",
