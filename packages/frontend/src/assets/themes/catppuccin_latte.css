@@ -1,0 +1,88 @@
+/* CATPPUCCIN LATTE THEME :neocat_cofe_256: */
+
+/* Catppuccin Colors */
+@import url('https://cdn.jsdelivr.net/npm/@catppuccin/palette/css/catppuccin.css');
+/* URL taken from a page within https://github.com/catppuccin/palette
+ *
+ * If it would be more conveinent later on, catppuccin colors could be
+ * installed via NPM package. Details on doing so are in the same
+ * github link.
+*/
+
+/* variables */
+:root {
+  /* I used this (--failure) when I couldn't find the variables within the
+   * site to know what to do with them. Please file a bug report if you
+   * see this color.
+  */ --failure: blue;
+  
+  /* Primary palette variables */
+  --mat-sys-primary: var(--ctp-latte-blue);
+  --mat-sys-on-primary: var(--ctp-latte-base);
+  --mat-sys-primary-container: var(--ctp-latte-surface1);
+  --mat-sys-on-primary-container: var(--ctp-latte-subtext1);
+  --mat-sys-inverse-primary: var(--ctp-latte-overlay2);
+  --mat-sys-primary-fixed: var(--failure);
+  --mat-sys-primary-fixed-dim: var(--ctp-latte-yellow);
+  --mat-sys-on-primary-fixed: var(--failure);
+  --mat-sys-on-primary-fixed-variant: var(--failure);
+
+  /* Secondary palette variables */
+  --mat-sys-secondary: var(--failure);
+  --mat-sys-on-secondary: var(--failure);
+  --mat-sys-secondary-container: var(--ctp-latte-surface1);
+  --mat-sys-on-secondary-container: var(--failure);
+  --mat-sys-secondary-fixed: var(--failure);
+  --mat-sys-secondary-fixed-dim: var(--failure);
+  --mat-sys-on-secondary-fixed: var(--failure);
+  --mat-sys-on-secondary-fixed-variant: var(--failure);
+
+  /* Tertiary palette variables */
+  --mat-sys-tertiary: var(--failure);
+  --mat-sys-on-tertiary: var(--failure);
+  --mat-sys-tertiary-container: var(--failure);
+  --mat-sys-on-tertiary-container: var(--failure);
+  --mat-sys-tertiary-fixed: var(--failure);
+  --mat-sys-tertiary-fixed-dim: var(--failure);
+  --mat-sys-on-tertiary-fixed: var(--failure);
+  --mat-sys-on-tertiary-fixed-variant: var(--failure);
+
+  /* Neutral palette variables */
+  --mat-sys-background: var(--ctp-latte-base);
+  --mat-sys-on-green: var(--ctp-latte-text);
+  --mat-sys-surface: var(--ctp-latte-surface0);
+  --mat-sys-surface-dim: var(--failure);
+  --mat-sys-surface-bright: var(--failure);
+  --mat-sys-surface-container-lowest: var(--failure);
+  --mat-sys-surface-container-low: var(--ctp-latte-mantle);
+  --mat-sys-surface-container: var(--ctp-latte-base);
+  --mat-sys-surface-container-high: var(--ctp-latte-overlay0);
+  --mat-sys-surface-container-highest: var(--ctp-latte-overlay1);
+  --mat-sys-on-surface: var(--ctp-latte-subtext1);
+  --mat-sys-shadow: var(--failure);
+  --mat-sys-scrim: var(--failure);
+  --mat-sys-surface-tint: var(--failure);
+  --mat-sys-inverse-surface: var(--ctp-latte-rosewater);
+  --mat-sys-inverse-on-surface: var(--ctp-latte-crust);
+  --mat-sys-outline: var(--ctp-latte-mauve);
+  --mat-sys-outline-variant: var(--ctp-latte-yellow);
+  --mat-sys-neutral10: var(--failure); /* Variable used for the form field native select option text color */
+
+  /* Error palette variables */
+  --mat-sys-error: var(--failure);
+  --mat-sys-on-error: var(--failure);
+  --mat-sys-error-container: var(--failure);
+  --mat-sys-on-error-container: var(--failure);
+
+  /* Neutral variant palette variables */
+  --mat-sys-surface-variant: var(--ctp-latte-surface1);
+  --mat-sys-on-surface-variant: var(--ctp-latte-green);
+  --mat-sys-neutral-variant20: var(--ctp-latte-surface1); /* Variable used for the sidenav scrim (container background shadow when opened) */
+  
+  /* other */
+  --mat-badge-text-color: var(--mat-sys-on-primary);
+}
+
+.mat-mdc-list-item { 
+  height: 2rem !important;
+}
