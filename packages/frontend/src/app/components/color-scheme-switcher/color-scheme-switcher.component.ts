@@ -42,7 +42,11 @@ const colorSchemeVariants = [
   'unwafrn',
   'wafrnverse',
   'dracula',
-  'fan'
+  'fan',
+  'catppuccin_frappe',
+  'catppuccin_latte',
+  'catppuccin_macchiato',
+  'catppuccin_mocha'
 ] as const
 type ColorSchemeTuple = typeof colorSchemeVariants
 type ColorScheme = ColorSchemeTuple[number]
@@ -70,6 +74,17 @@ export class ColorSchemeSwitcherComponent {
   // Utility
   readonly variants = colorSchemeVariants
   readonly capitalize = capitalize
+
+  defaultThemes: ColorScheme[] = ['default', 'tan', 'green', 'gold', 'red', 'pink', 'purple', 'blue']
+  computeryThemes: ColorScheme[] = ['unwafrn', 'wafrnverse', 'wafrn98', 'aqua', 'fan']
+  experimentalThemes: ColorScheme[] = ['rizzler', 'contrastWater']
+  programmersThemes: ColorScheme[] = [
+    'dracula',
+    'catppuccin_frappe',
+    'catppuccin_latte',
+    'catppuccin_macchiato',
+    'catppuccin_mocha'
+  ]
 
   // Color scheme
   colorScheme = signal<ColorScheme>('default')
