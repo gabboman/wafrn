@@ -1,0 +1,218 @@
+{
+  "common": {
+    "commaSeparation": "o kipisi e ni kepeken sitelen lili (,)"
+  },
+  "login": {
+    "welcomeBack": "kama pona!",
+    "exploreWithoutAccount": "sina wile lukin kepeken ala lipu jan la, o luka e ni!",
+    "dontHaveAccount": "sina jo ala e lipu jan anu seme?",
+    "register": "o kama jo e lipu jan!",
+    "checkSpam": "ike la, o lukin e poki pi lipu toki ike!",
+    "email": "ma pi lipu toki",
+    "password": "nimi open",
+    "mfaToken": "nimi open pi tenpo lili",
+    "mfaTokenEnter": "o pana e nimi open pi tenpo lili tan ilo awen sina",
+    "forgottenPassword": "sina sona ala e nimi open sina la, o luka e ni!",
+    "showPassword": "o lukin e nimi open",
+    "hidePassword": "o weka e nimi open",
+    "loginButton": "o kama insa kepeken lipu jan",
+    "checkEmail": "o lukin e ma sina pi lipu toki",
+    "checkEmailLine1": "mi pana e lipu toki tawa sina. o lukin e ma sina pi lipu toki",
+    "checkEmailLine2": "ike la, o toki tawa jan lawa pi ma ni. ma ona pi lipu toki li <a href=\"/about\">lon ni</a>"
+  },
+  "notifications": {
+    "loadingMore": "mi pana e toki sin namako",
+    "refresh": "o alasa sin"
+  },
+  "menu": {
+    "login": "o kama insa kepeken lipu jan",
+    "register": "o kama jo e lipu jan",
+    "dashboard": "linja lipu",
+    "dashboardHover": "o lukin e linja lipu",
+    "writeWoot": "o pali e lipu sin",
+    "notifications": "toki sin",
+    "explore": "o alasa",
+    "exploreWafrn": "o alasa lon lipu Wafrn",
+    "exploreFediverse": "lipu Wafrn. lipu pona",
+    "unansweredAsks": "wile sona",
+    "privateMessages": "toki len",
+    "search": "o alasa",
+    "myBlog": "lipu mi",
+    "privacy": "lawa len",
+    "source": "o lukin e toki ilo!",
+    "patreon": "Patreon",
+    "kofi": "Ko-fi",
+    "logout": "o weka",
+    "faq": "wile sona suli",
+    "settings": {
+      "title": "ante",
+      "follows": "o lawa e jan poka",
+      "enableBluesky": "o open e lipu Bluesky",
+      "editProfile": "ante. lipu jan sina",
+      "themeEditor": "o ante e lukin",
+      "mutedUsers": "jan pi ken kalama ala",
+      "mutedPosts": "lipu pi ken kalama ala",
+      "bookmarkedPosts": "lipu awen",
+      "myBlockedUsers": "jan pi ken toki ala",
+      "myBlockedServers": "ma pi ken toki ala",
+      "importFollows": "o kama jo e jan poke pi ma ante",
+      "superSecretMenu": "lipu pi len mute"
+    },
+    "admin": {
+      "title": "jan lawa",
+      "serverList": "lipu ma",
+      "addEmojis": "o pana e sitelen sin",
+      "reports": "toki tan ike",
+      "bans": "jan ike",
+      "blocklist": "jan pi ken toki ala",
+      "stats": "nanpa",
+      "awaitingAproval": "ni li awen tawa pona"
+    }
+  },
+  "editor": {
+    "inReplyTo": "sina toki tawa ni:",
+    "quoteButton": "o toki sama e lipu ni",
+    "publishWoot": "o pana e lipu ni",
+    "directMessageWarning": "jan lawa pi ma ni en jan lawa pi ma ante li ken lukin e toki ni",
+    "unlistedWarning": "jan li ken ala alasa e lipu pi alasa ala, taso jan poka sina li ken lukin e ona lon linja lipu ona. kin la, jan li jo e nanpa lipu la ona ken lukin e lipu ",
+    "directMessageWithQuoteWarning": "sina toki sama e lipu la, jan pali ona li kama sona e ni",
+    "sensitivePlaceholder": "kipisi seme lon lipu ni li ken ike?",
+    "wootQuoteBoxLabel": "toki sama la o pana e nanpa lipu. nanpa lipu li ken tan ma Wafrn anu ma ante",
+    "wootQuoteBoxPlaceholder": "o pana e nanpa lipu",
+    "wootQuoteConfirmButton": "o toki sama e lipu",
+    "wootTextLabel": "toki lipu",
+    "wootTextPlaceholder": "o sitelen...",
+    "altTextFieldLabel": "toki sitelen",
+    "altTextFieldPlaceholder": "o pana e toki sitelen lon ni",
+    "isNSFWToggle": "tawa jan suli taso",
+    "mediaCountMastodonWarning": "ma Mastodon la jan ken ala lukin e musi namako",
+    "altTextWarning": "o toki e sitelen ni. ante la sina ken ala e toki ni",
+    "quoteTitle": "toki sama:",
+    "tagFieldLabel": "nimi",
+    "tagSeparationNotice": "o kipisi e ona kepeken sitelen lili (,)",
+    "ariaLabelWootPrivacy": "o ante e len lipu",
+    "ariaLabelQuoteSetter": "Enable the quote setter",
+    "uploadMediaTooltip": "o pana e musi",
+    "contentWarningTooltip": "lipu ni li ken ike",
+    "insertEmojiTooltip": "o pana e sitelen lili",
+    "hiddenMentionsTooltip": "jan nimi ante",
+    "editorGuide": "sina wile kama sona e nasin sitelen la o lukin <a target=\"_blank\" href=\"https://wafrn.net/faq/user\">e ni</a>"
+  },
+  "profile": {
+    "profile": {
+      "chooseAvatar": "o anu e sitelen jan ante",
+      "chooseHeader":  "o anu e sitelen suli ante",
+      "changeDisplayName": "nimi lukin. ni li ken jo e sitelen lili",
+      "changeBio": "o toki e sina. ni li ken jo e sitelen lili e nasin sitelen Markdown",
+      "extraInfoHead": "sona namako. ni li tawa ma Fediverse taso",
+      "fieldPropertyName": "nimi ijo",
+      "fieldPropertyValue": "toki ijo"
+    },
+    "preferences": {
+      "notificationFilters": "ante pi toki sin",
+      "showNotificationsFrom": "o pana lukin e toki sin tan:",
+      "notifyFrom": {
+        "everyone": "jan ali",
+        "followers": "jan poka",
+        "following": "mi tawa poka jan la, jan ni",
+        "mutual": "jan pona"
+      },
+      "notifyWhen": {
+        "mentioned": "jan li toki e nimi mi",
+        "followed": "jan li tawa poka mi",
+        "likesEmojiReacts": "lipu mi li pona tawa jan",
+        "quoted": "jan li toki sama e lipu mi",
+        "rewooted": "jan li pana sin e lipu mi"
+      },
+      "manuallyAcceptFollows": "wile pi tawa poka o pona tawa mi",
+      "disableForceAltText": "mi pana e musi la mi wile ala toki e ona. sina open e ni la sina ike",
+      "forceClassicLogo": "o kepeken sitelen pini",
+      "forceClassicVideoPlayer": "o pana e sitelen tawa kepeken ilo musi pini",
+      "forceClassicAudioPlayer": "o pana e kalama kepeken ilo musi pini",
+      "forceClassicMediaView": "o pana e sitelen kepeken nasin pini",
+      "dontCollapseQuotes": "o lili ala e toki sama",
+      "disableCwExceptMuted": "lipu li jo ala e nimi pi lukin ala la, o toki ala e ken ike ona",
+      "disableConfetti": "o pana ala e lipu kule lili",
+      "enableConfettiRecivingLike": "lipu sina li pona tawa jan la o pana e lipu kule lili",
+      "disableUiSounds": "o kalama ala",
+      "dashboardIsExploreLocal": "open la o alasa e ma Wafrn",
+      "cocAIne": "o ante e nimi AI tawa nimi ante",
+      "customCocAIne": "o ante e nimi AI tawa nimi ni",
+      "notRecommendedOptions": "ante ni li pona ala",
+      "disableNSFWFilter": "sitelen li tawa jan suli taso la, o len ala e ona",
+      "automaticallyExpandAllPosts": "o suli e lipu ali"
+    },
+    "privacy": {
+      "defaultPostPrivacy": "len lipu open",
+      "asks": "wile sona",
+      "disableEmailNotifications": "o pana ala e lipu linluwi pi toki sin",
+      "hideFollows": "mi tawa poka jan anu jan li tawa poka mi la, o len e ni",
+      "hideProfileNotLoggedInDescription": "alasa anu jan pi lipu jan ala la o len e lipu jan mi. ni li lon ma Wafrn ni taso"
+    },
+    "security": {
+      "header": "ante awen",
+      "passwordChange": "o ante e nimi open mi",
+      "mfa": {
+        "header": "awen pi nimi open tu",
+        "setup": "o kepeken awen pi nimi open tu",
+        "addNew": "o pana e ilo awen sin",
+        "friendlyNameLabel": "nimi pona. sama nimi 'ilo sona pali' anu nimi 'Aegis",
+        "typeLabel": "nasin awen",
+        "setupNewButton": "o pana e ilo awen sin",
+        "tokenLabel": "nimi",
+        "deleteLabel": "weka",
+        "scanInstructions": "o lukin e sitelen nasa kepeken ilo awen sina. o pana e nimi tan ona",
+        "installInstructions": "sina jo ala e ilo awen la <a href=\"https://getaegis.app/\" target=\"_blank\">ilo Aegis</a> (tawa ilo Android) anu <a href=\"https://2fas.com/\" target=\"_blank\">2ilo FAS</a> (tawa ilo iOS anu ilo Android) li pona tawa mi",
+        "imageAltSecret": "nimi len li nimi '{{ secret }}'",
+        "secretFallback": "sina ken ala lukin e sitelen nasa la o pana e nimi len '{{ secret }}' tawa ilo awen sina",
+        "confirmDeleteMessage": "sina wile ala wile weka e ilo awen ni? sina weka e ilo ali la, awen pi nimi open tu li pini",
+        "deleteSuccess": "ilo awen ni li kama weka",
+        "verifySuccess": "pona. awen pi nimi open tu li kama open",
+        "verifyFailed": "mi ken ala sona e kon sina. o lukin e nimi sina. pakala li awen la, o toki tawa jan lawa",
+        "errorMessageGeneric": "wile sina li pakala. o sin. ante la, o toki tawa jan lawa",
+        "noMfa": "lipu jan sina la awen pi nimi open tu li pini",
+        "mfaList": "sina kepeken e ilo awen ni:",
+        "type": {
+          "totpLabel": "ilo awen"
+        }
+      }
+    },
+    "other": {
+      "movingFromAccount": "'mi kama tan lipu jan ante (kepeken ala e sitelen @)'",
+      "wordsThatWillAutoCwPosts": "lipu li jo e nimi ni la o toki e ken ike ona",
+      "superMutedWords": "lipu li jo e toki ni la o pana lukin ala e ona",
+      "availableEmoji": "sitelen lili lon"
+    },
+    "bsky": {
+      "psa1": "toki tawa ma Bluesky li sin a! ijo li pakala!",
+      "psa2_1": "sina wile sona e ken la o lukin e",
+      "psa2_2": "wile sona suli",
+      "psa2_3": "",
+      "psa3": "tenpo kama la mi wile e ni: ante tawa ma Bluesky li lon ni"
+    },
+    "migrate": {
+      "psa1": "sina wile tawa ma ante la, o pana e nimi sin o luka",
+      "psa2": "e ni"
+    },
+    "delete": {
+      "psa1": "tenpo sike mun wan la, lipu jan sina li weka lon tenpo ali",
+      "psa2": "mi o sona e kon sina. ni la o pana e nimi open sina",
+      "button": "O WEKA E LIPU JAN MI"
+    },
+    "tabHeaders": {
+      "profile": "lipu jan",
+      "preferences": "ante",
+      "privacySecurity": "len. awen",
+      "misc": "ijo ante"
+    },
+    "updateButton": "o sin e lipu jan mi"
+  },
+  "ask-dialog-content": {
+    "askAnonymously": "o pana ala e nimi mi",
+    "askFormLabel": "wile sona",
+    "askButtonText": "wile sona"
+  },
+  "post-fragment": {
+    "replyingTo": "li toki tawa: "
+  }
+}
