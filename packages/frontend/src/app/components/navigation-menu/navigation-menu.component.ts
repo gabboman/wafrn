@@ -39,7 +39,9 @@ import {
   faFileEdit,
   faPaintbrush,
   IconDefinition,
-  faBookmark
+  faBookmark,
+  faHome,
+  faSync
 } from '@fortawesome/free-solid-svg-icons'
 import { MenuItem } from 'src/app/interfaces/menu-item'
 import { MatDialog } from '@angular/material/dialog'
@@ -552,6 +554,13 @@ export class NavigationMenuComponent implements OnInit, OnDestroy {
         }
       },
       {
+        label: this.translateService.instant('menu.home'),
+        icon: faHome,
+        title: this.translateService.instant('menu.home'),
+        visible: true,
+        routerLink: '/'
+      },
+      {
         label: this.translateService.instant('menu.login'),
         icon: faHouse,
         title: this.translateService.instant('menu.login'),
@@ -660,6 +669,15 @@ export class NavigationMenuComponent implements OnInit, OnDestroy {
             }
           }
         ]
+      },
+      {
+        label: this.translateService.instant('menu.reload'),
+        icon: faSync,
+        title: this.translateService.instant('menu.reload'),
+        visible: true,
+        command: () => {
+          window.location.reload()
+        }
       }
     ]
   }
