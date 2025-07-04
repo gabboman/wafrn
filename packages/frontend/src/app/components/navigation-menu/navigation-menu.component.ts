@@ -57,6 +57,7 @@ import { AudioService } from 'src/app/services/audio.service'
 })
 export class NavigationMenuComponent implements OnInit, OnDestroy {
   menuItems: MenuItem[] = []
+  menuItemsMobile: MenuItem[] = []
   maintenanceMode = EnvironmentService.environment.maintenance
   maintenanceMessage = EnvironmentService.environment.maintenanceMessage
   menuVisible = false
@@ -114,7 +115,6 @@ export class NavigationMenuComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.drawMenu()
     this.onResize()
-    this.menuVisible = !this.mobile
 
     // IMPORTANT: HIDE THE SPLASH SCREEN
     const splashElement = document.getElementById('splash')
@@ -539,6 +539,353 @@ export class NavigationMenuComponent implements OnInit, OnDestroy {
         }
       }
     ]
+
+    this.menuItemsMobile = [
+      {
+        label: this.translateService.instant('menu.showMenu'),
+        icon: faBars,
+        title: this.translateService.instant('menu.showMenu'),
+        visible: true,
+        command: () => {
+          this.menuVisible = !this.menuVisible
+        }
+      },
+      {
+        label: this.translateService.instant('menu.login'),
+        icon: faHouse,
+        title: this.translateService.instant('menu.login'),
+        visible: !this.jwtService.tokenValid(),
+        routerLink: '/login',
+        command: () => {
+          this.hideMenu()
+        }
+      },
+      {
+        label: this.translateService.instant('menu.register'),
+        icon: faUser,
+        title: this.translateService.instant('menu.register'),
+        visible: !this.jwtService.tokenValid(),
+        routerLink: '/register',
+        command: () => {
+          this.hideMenu()
+        }
+      },
+      {
+        label: this.translateService.instant('menu.exploreWafrn'),
+        icon: faCompass,
+        title: this.translateService.instant('menu.exploreWafrn'),
+        visible: !this.jwtService.tokenValid(),
+        routerLink: '/dashboard/exploreLocal',
+        command: () => {
+          this.hideMenu()
+        }
+      },
+
+      {
+        label: this.translateService.instant('menu.writeWoot'),
+        icon: faPencil,
+        title: this.translateService.instant('menu.writeWoot'),
+        visible: this.jwtService.tokenValid(),
+        command: async () => {
+          this.hideMenu()
+          this.openEditor()
+        }
+      },
+      {
+        label: this.translateService.instant('menu.notifications'),
+        icon: faBell,
+        title: this.translateService.instant('menu.notifications'),
+        visible: this.jwtService.tokenValid(),
+        badge: this.notifications,
+        routerLink: '/dashboard/notifications',
+        command: () => {
+          this.hideMenu()
+        }
+      },
+      {
+        label: this.translateService.instant('menu.explore'),
+        icon: faCompass,
+        title: this.translateService.instant('menu.exploreDescription'),
+        visible: this.jwtService.tokenValid(),
+        items: [
+          {
+            label: this.translateService.instant('menu.dashboard'),
+            icon: faHouse,
+            title: this.translateService.instant('menu.dashboardHover'),
+            visible: this.jwtService.tokenValid(),
+            routerLink: '/dashboard',
+            command: () => {
+              this.hideMenu()
+            }
+          },
+          {
+            label: this.translateService.instant('menu.exploreWafrn'),
+            icon: faServer,
+            title: this.translateService.instant('menu.exploreWafrnDescription'),
+            visible: this.jwtService.tokenValid(),
+            routerLink: '/dashboard/exploreLocal',
+            command: () => {
+              this.hideMenu()
+            }
+          },
+          {
+            label: this.translateService.instant('menu.exploreFediverse'),
+            icon: faCompass,
+            title: this.translateService.instant('menu.exploreFediverseDescription'),
+            visible: this.jwtService.tokenValid(),
+            routerLink: '/dashboard/explore',
+            command: () => {
+              this.hideMenu()
+            }
+          },
+          {
+            label: this.translateService.instant('menu.privateMessages'),
+            icon: faEnvelope,
+            title: this.translateService.instant('menu.privateMessages'),
+            visible: this.jwtService.tokenValid(),
+            routerLink: '/dashboard/private',
+            command: () => {
+              this.hideMenu()
+            }
+          },
+          {
+            label: this.translateService.instant('menu.search'),
+            icon: faSearch,
+            title: this.translateService.instant('menu.search'),
+            visible: this.jwtService.tokenValid(),
+            routerLink: '/dashboard/search',
+            command: () => {
+              this.hideMenu()
+            }
+          }
+        ]
+      },
+      {
+        label: this.translateService.instant('menu.unansweredAsks'),
+        icon: faQuestion,
+        title: this.translateService.instant('menu.unansweredAsks'),
+        visible: this.jwtService.tokenValid(),
+        badge: this.awaitingAsks,
+        routerLink: '/profile/myAsks',
+        command: () => {
+          this.hideMenu()
+        }
+      },
+
+      {
+        label: this.translateService.instant('menu.admin.title'),
+        icon: faPowerOff,
+        title: this.translateService.instant('menu.admin.title'),
+        visible: this.jwtService.adminToken(),
+        badge: this.adminNotifications + this.usersAwaitingApproval,
+        items: [
+          {
+            label: this.translateService.instant('menu.admin.serverList'),
+            icon: faServer,
+            title: this.translateService.instant('menu.admin.serverList'),
+            visible: true,
+            routerLink: '/admin/server-list',
+            command: () => {
+              this.hideMenu()
+            }
+          },
+          {
+            label: this.translateService.instant('menu.admin.addEmojis'),
+            icon: faIcons,
+            title: this.translateService.instant('menu.admin.addEmojis'),
+            visible: true,
+            routerLink: '/admin/emojis',
+            command: () => {
+              this.hideMenu()
+            }
+          },
+          {
+            label: this.translateService.instant('menu.admin.reports'),
+            icon: faExclamationTriangle,
+            title: this.translateService.instant('menu.admin.reports'),
+            visible: true,
+            badge: this.adminNotifications,
+            routerLink: '/admin/user-reports',
+            command: () => {
+              this.hideMenu()
+            }
+          },
+          {
+            label: this.translateService.instant('menu.admin.bans'),
+            icon: faBan,
+            title: this.translateService.instant('menu.admin.bans'),
+            visible: true,
+            routerLink: '/admin/bans',
+            command: () => {
+              this.hideMenu()
+            }
+          },
+          {
+            label: this.translateService.instant('menu.admin.blocklist'),
+            icon: faHourglass,
+            title: this.translateService.instant('menu.admin.blocklist'),
+            visible: true,
+            routerLink: '/admin/user-blocks',
+            command: () => {
+              this.hideMenu()
+            }
+          },
+          {
+            label: this.translateService.instant('menu.admin.stats'),
+            icon: faChartSimple,
+            title: this.translateService.instant('menu.admin.stats'),
+            visible: true,
+            routerLink: '/admin/stats',
+            command: () => {
+              this.hideMenu()
+            }
+          },
+          {
+            label: this.translateService.instant('menu.admin.awaitingAproval'),
+            icon: faUserLock,
+            title: this.translateService.instant('menu.admin.awaitingAproval'),
+            visible: true,
+            badge: this.usersAwaitingApproval,
+            routerLink: '/admin/activate-users',
+            command: () => {
+              this.hideMenu()
+            }
+          }
+        ]
+      },
+
+      {
+        label: this.translateService.instant('menu.settings.title'),
+        icon: faCog,
+        title: this.translateService.instant('menu.settings.title'),
+        visible: this.jwtService.tokenValid(),
+        badge: this.followsAwaitingApproval,
+        items: [
+          {
+            label: this.translateService.instant('menu.settings.follows'),
+            icon: faUser,
+            title: this.translateService.instant('menu.settings.follows'),
+            visible: true,
+            badge: this.followsAwaitingApproval,
+            routerLink: '/blog/' + this.jwtService.getTokenData().url + '/followers',
+            command: () => {
+              this.hideMenu()
+            }
+          },
+          // {
+          //   label: this.translateService.instant('menu.settings.enableBluesky'),
+          //   icon: faBluesky,
+          //   title: this.translateService.instant('menu.settings.enableBluesky'),
+          //   visible: true,
+          //   routerLink: '/profile/enable-bluesky',
+          //   command: () => {
+          //     this.hideMenu()
+          //   }
+          // },
+          {
+            label: this.translateService.instant('menu.settings.editProfile'),
+            icon: faUserEdit,
+            title: this.translateService.instant('menu.settings.editProfile'),
+            visible: this.jwtService.tokenValid(),
+            routerLink: '/profile/edit',
+            command: () => {
+              this.hideMenu()
+            }
+          },
+          {
+            label: this.translateService.instant('menu.settings.themeEditor'),
+            icon: faPaintbrush,
+            title: this.translateService.instant('menu.settings.themeEditor'),
+            visible: this.jwtService.tokenValid(),
+            routerLink: '/profile/css',
+            command: () => {
+              this.hideMenu()
+            }
+          },
+          {
+            label: this.translateService.instant('menu.settings.mutedUsers'),
+            icon: faVolumeMute,
+            title: this.translateService.instant('menu.settings.mutedUsers'),
+            visible: this.jwtService.tokenValid(),
+            routerLink: '/profile/mutes',
+            command: () => {
+              this.hideMenu()
+            }
+          },
+          {
+            label: this.translateService.instant('menu.settings.mutedPosts'),
+            icon: faBellSlash,
+            title: this.translateService.instant('menu.settings.mutedPosts'),
+            visible: this.jwtService.tokenValid(),
+            routerLink: '/profile/silencedPosts',
+            command: () => {
+              this.hideMenu()
+            }
+          },
+          {
+            label: this.translateService.instant('menu.settings.bookmarkedPosts'),
+            icon: faBookmark,
+            title: this.translateService.instant('menu.settings.bookmarkedPosts'),
+            visible: this.jwtService.tokenValid(),
+            routerLink: '/profile/bookmarkedPosts',
+            command: () => {
+              this.hideMenu()
+            }
+          },
+          {
+            label: this.translateService.instant('menu.settings.myBlockedUsers'),
+            icon: faBan,
+            title: this.translateService.instant('menu.settings.myBlockedUsers'),
+            visible: this.jwtService.tokenValid(),
+            routerLink: '/profile/blocks',
+            command: () => {
+              this.hideMenu()
+            }
+          },
+          {
+            label: this.translateService.instant('menu.settings.myBlockedServers'),
+            icon: faServer,
+            title: this.translateService.instant('menu.settings.myBlockedServers'),
+            visible: this.jwtService.tokenValid(),
+            routerLink: '/profile/serverBlocks',
+            command: () => {
+              this.hideMenu()
+            }
+          },
+          {
+            label: this.translateService.instant('menu.settings.importFollows'),
+            icon: faUserEdit,
+            title: this.translateService.instant('menu.settings.importFollows'),
+            visible: this.jwtService.tokenValid(),
+            routerLink: '/profile/importFollows',
+            command: () => {
+              this.hideMenu()
+            }
+          },
+          {
+            label: this.translateService.instant('menu.settings.superSecretMenu'),
+            icon: faSkull,
+            title: this.translateService.instant('menu.settings.superSecretMenu'),
+            visible: this.jwtService.tokenValid(),
+            routerLink: '/doom',
+            command: () => {
+              this.hideMenu()
+            }
+          }
+        ]
+      },
+
+      {
+        label: this.translateService.instant('menu.logout'),
+        icon: faSignOut,
+        title: this.translateService.instant('menu.logout'),
+        visible: this.jwtService.tokenValid(),
+        command: () => {
+          this.loginService.logOut()
+          this.hideMenu()
+        }
+      }
+    ]
   }
 
   async updateNotifications(url: string) {
@@ -568,7 +915,6 @@ export class NavigationMenuComponent implements OnInit, OnDestroy {
   @HostListener('window:resize', ['$event'])
   onResize() {
     this.mobile = window.innerWidth <= 992
-    this.menuVisible = !this.mobile
   }
 
   @HostListener('window:keydown.n')
