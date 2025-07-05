@@ -11,6 +11,7 @@ import { ColorSchemeSwitcherComponent } from '../color-scheme-switcher/color-sch
 import { MenuItemComponent } from '../menu-item/menu-item.component'
 import { SnappyRouter } from '../snappy/snappy-router.component'
 import { NavigationMenuComponent } from './navigation-menu.component'
+import { MatToolbarModule } from '@angular/material/toolbar'
 
 @NgModule({
   declarations: [NavigationMenuComponent],
@@ -25,8 +26,9 @@ import { NavigationMenuComponent } from './navigation-menu.component'
     MatButtonModule,
     MatDialogModule,
     ColorSchemeSwitcherComponent,
-    SnappyRouter
+    SnappyRouter,
+    MatToolbarModule
   ],
   exports: [NavigationMenuComponent]
 })
-export class NavigationMenuModule { }
+export class NavigationMenuModule {}

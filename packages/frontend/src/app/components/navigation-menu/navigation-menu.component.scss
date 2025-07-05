@@ -2,6 +2,7 @@
 :root .side-menu {
   background-color: var(--mat-sys-surface-container-low);
   box-shadow: var(--mat-sys-level2);
+  z-index: 5
 }
 
 .mat-drawer-inner-container {

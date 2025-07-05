@@ -1,3 +1,11 @@
+<mat-toolbar class="wafrn-toolbar slideup" *ngIf="!(menuVisible || !mobile)">
+  @for (link of mobile ? menuItemsMobile : menuItems; track $index) {
+    @if (link.divider) {
+    } @else {
+      <app-menu-item [hideText]="true" [item]="link"></app-menu-item>
+    }
+  }
+</mat-toolbar>
 <mat-drawer-container>
   <mat-drawer
     style="position: fixed"
@@ -5,7 +13,7 @@
     [mode]="mobile ? 'over' : 'side'"
     [opened]="menuVisible || !mobile"
     (closed)="hideMenu()"
-    >
+  >
     <a [href]="'/'" class="block" (click)="hideMenu()">
       <img
         [src]="logo"
@@ -13,7 +21,7 @@
         alt="instance logo"
         width="200"
         style="object-fit: contain"
-        />
+      />
     </a>
     <hr />
     <nav aria-label="Navigation menu">
@@ -32,33 +40,6 @@
     </div>
   </mat-drawer>
   <mat-drawer-content>
-    <button
-      style="position: fixed; z-index: 500; top: 1em; left: 1em"
-      mat-mini-fab
-      color="primary"
-      [hidden]="!mobile"
-      type="button"
-      class="show-sidebar-menu-button"
-      (click)="showMenu()"
-      [matBadge]="notifications + adminNotifications + usersAwaitingApproval + followsAwaitingApproval + awaitingAsks"
-      [matBadgeHidden]="
-        notifications + adminNotifications + usersAwaitingApproval + followsAwaitingApproval + awaitingAsks === 0
-      "
-      matBadgePosition="below"
-      >
-      <fa-icon [icon]="hamburguerIcon"></fa-icon>
-    </button>
-    <button
-      style="position: fixed; z-index: 500; bottom: 1em; right: 1em"
-      mat-fab
-      color="primary"
-      [hidden]="!mobile || !jwtService.tokenValid() || currentRoute === '/editor'"
-      type="button"
-      class="show-sidebar-menu-button create-post-button"
-      (click)="this.hideMenu(); this.openEditor()"
-      >
-      <fa-icon [icon]="pencilIcon"></fa-icon>
-    </button>
     <main id="main-content" class="wafrn-content">
       @if (maintenanceMode) {
         <div [innerHtml]="maintenanceMessage"></div>
@@ -67,3 +48,7 @@
     </main>
   </mat-drawer-content>
 </mat-drawer-container>
+
+<br />
+<br />
+<br />
