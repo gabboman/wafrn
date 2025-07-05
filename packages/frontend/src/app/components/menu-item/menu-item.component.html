@@ -1,6 +1,9 @@
 <a
   [matMenuTriggerFor]="item.items ? menu : null"
   [routerLink]="item.routerLink ? item.routerLink : null"
+  [matBadge]="item.badge"
+  [matBadgeHidden]="item.badge === 0"
+  matBadgePosition="above after"
   *ngIf="item.visible"
   mat-list-item
   (click)="doCommand()"
@@ -9,12 +12,7 @@
 >
   <div class="h-3rem flex align-items-center justify-content-start navigation-menu-button">
     @if (item.icon) {
-      <span
-        [matBadge]="item.badge"
-        [matBadgeHidden]="item.badge === 0"
-        matBadgePosition="above after"
-        class="menu-item-icon"
-      >
+      <span class="menu-item-icon">
         <fa-icon [icon]="item.icon"></fa-icon>
       </span>
     }
