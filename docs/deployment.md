@@ -103,7 +103,7 @@ docker compose up --build -d
 
 Once the scripts run and everything is okay you should be able to access your website at `https://wafrn.example.com`
 
-## Updating and Backups
+## Upgrading, Updating and Backups
 
 Before you update please check the [CHANGELOG.md](../CHANGELOG.md) for any breaking changes that you might need to be aware of
 
@@ -111,6 +111,7 @@ Go to your `wafrn` directory and enter:
 
 ```bash
 git pull origin main
+docker compose stop
 docker compose up --build -d
 ```
 

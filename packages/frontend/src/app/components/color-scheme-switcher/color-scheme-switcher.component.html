@@ -51,7 +51,27 @@
   <fa-icon [icon]="paletteIcon"></fa-icon>
 </button>
 <mat-menu #colorSchemeMenu="matMenu">
-  @for (variant of variants; track $index) {
+    <button mat-menu-item [matMenuTriggerFor]="defaultThemesMenu">Default theme variants</button>
+    <button mat-menu-item [matMenuTriggerFor]="computeryThemesMenu">Computery themes</button>
+    <button mat-menu-item [matMenuTriggerFor]="experimentalThemesMenu">Experimental themes</button>
+    <button mat-menu-item [matMenuTriggerFor]="programmerThemesMenu">Programmer's favourites</button>
+
+  <hr class="my-0" />
+  <button mat-menu-item class="pl-1">
+    <mat-checkbox [checked]="centerLayoutMode" (click)="updateCenterLayout(true)"
+      ><span class="theme-selector-button">Center layout</span></mat-checkbox
+    >
+  </button>
+    <button mat-menu-item class="pl-1">
+    <mat-checkbox [checked]="horizontalMenuMode" (click)="updateHorizontalMenu(true)"
+      ><span class="theme-selector-button">Horizontal Menu</span></mat-checkbox
+    >
+  </button>
+</mat-menu>
+
+
+<mat-menu #defaultThemesMenu="matMenu">
+  @for (variant of defaultThemes; track $index) {
     <button
       class="theme-selector-button"
       mat-menu-item
@@ -61,13 +81,47 @@
       {{ variant | titlecase }}
     </button>
   }
-  <hr class="my-0" />
-  <button mat-menu-item class="pl-1">
-    <mat-checkbox [checked]="centerLayoutMode" (click)="updateCenterLayout(true)"
-      ><span class="theme-selector-button">Center layout</span></mat-checkbox
-    >
-  </button>
 </mat-menu>
+
+<mat-menu #computeryThemesMenu="matMenu">
+  @for (variant of computeryThemes; track $index) {
+    <button
+      class="theme-selector-button"
+      mat-menu-item
+      (click)="setColorScheme(variant, true)"
+      [ngClass]="{ selected: variant == colorScheme() }"
+    >
+      {{ variant | titlecase }}
+    </button>
+  }
+</mat-menu>
+
+<mat-menu #experimentalThemesMenu="matMenu">
+  @for (variant of experimentalThemes; track $index) {
+    <button
+      class="theme-selector-button"
+      mat-menu-item
+      (click)="setColorScheme(variant, true)"
+      [ngClass]="{ selected: variant == colorScheme() }"
+    >
+      {{ variant | titlecase }}
+    </button>
+  }
+</mat-menu>
+
+<mat-menu #programmerThemesMenu="matMenu">
+  @for (variant of programmersThemes; track $index) {
+    <button
+      class="theme-selector-button"
+      mat-menu-item
+      (click)="setColorScheme(variant, true)"
+      [ngClass]="{ selected: variant == colorScheme() }"
+    >
+      {{ variant | titlecase }}
+    </button>
+  }
+</mat-menu>
+
 
 @switch (colorScheme()) {
   @case ('default') {}
@@ -110,11 +164,31 @@
   @case ('wafrnverse') {
     <link href="/assets/themes/wafrnverse.css" rel="stylesheet" />
   }
+  @case ('dracula') {
+    <link href="/assets/themes/dracula.css" rel="stylesheet" />
+  }
   @case ('fan') {
     <link href="/assets/themes/fan.css" rel="stylesheet" />
   }
+  @case ('catppuccin_frappe') {
+    <link href="/assets/themes/catppuccin_frappe.css" rel="stylesheet" />
+  }
+  @case ('catppuccin_latte') {
+    <link href="/assets/themes/catppuccin_latte.css" rel="stylesheet" />
+  }
+  @case ('catppuccin_macchiato') {
+    <link href="/assets/themes/catppuccin_macchiato.css" rel="stylesheet" />
+  }
+  @case ('catppuccin_mocha') {
+    <link href="/assets/themes/catppuccin_mocha.css" rel="stylesheet" />
+  }
+  
 }
 
 @if (centerLayoutMode) {
   <link href="/assets/themes/center-column.css" rel="stylesheet" />
+}
+
+@if (horizontalMenuMode) {
+<link href="/assets/themes/horizontal-menu.css" rel="stylesheet" />
 }

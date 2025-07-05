@@ -29,10 +29,11 @@ export class AppComponent implements OnInit {
     private websocketService: WebsocketService,
     private router: Router
   ) {
-    this.translate.addLangs(['en', 'pl'])
+    this.translate.addLangs(['en', 'pl', 'es'])
     this.translate.setDefaultLang('en')
     try {
-      this.translate.use(this.translate.getBrowserLang() || 'en')
+      // TODO re enable this
+      // this.translate.use(this.translate.getBrowserLang() || 'en')
     } catch (error) {
       // probably lang not avaiable
     }
