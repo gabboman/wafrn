@@ -78,6 +78,9 @@ export class NavigationMenuComponent implements OnInit, OnDestroy {
   hamburguerIcon = faBars
   pencilIcon = faPencil
   currentRoute = ''
+
+  horizontalMenuMode = localStorage.getItem('horizontalMenu') === 'true'
+
   constructor(
     private editorService: EditorService,
     private router: Router,
@@ -676,10 +679,15 @@ export class NavigationMenuComponent implements OnInit, OnDestroy {
         title: this.translateService.instant('menu.reload'),
         visible: true,
         command: () => {
-          window.location.reload()
+          const currentUrl = this.router.url
+          this.router.navigateByUrl('/', { skipLocationChange: true }).then(() => {
+            this.router.navigate([currentUrl])
+          })
         }
       }
     ]
+
+    this.horizontalMenuMode = localStorage.getItem('horizontalMenu') === 'true'
   }
 
   async updateNotifications(url: string) {
@@ -708,7 +716,8 @@ export class NavigationMenuComponent implements OnInit, OnDestroy {
 
   @HostListener('window:resize', ['$event'])
   onResize() {
-    this.mobile = window.innerWidth <= 992
+    this.horizontalMenuMode = localStorage.getItem('horizontalMenu') === 'true'
+    this.mobile = window.innerWidth <= 992 || this.horizontalMenuMode
   }
 
   @HostListener('window:keydown.n')

@@ -51,10 +51,10 @@
   <fa-icon [icon]="paletteIcon"></fa-icon>
 </button>
 <mat-menu #colorSchemeMenu="matMenu">
-    <button mat-menu-item [matMenuTriggerFor]="defaultThemesMenu">Default theme variants</button>
-    <button mat-menu-item [matMenuTriggerFor]="computeryThemesMenu">Computery themes</button>
-    <button mat-menu-item [matMenuTriggerFor]="experimentalThemesMenu">Experimental themes</button>
-    <button mat-menu-item [matMenuTriggerFor]="programmerThemesMenu">Programmer's favourites</button>
+  <button mat-menu-item [matMenuTriggerFor]="defaultThemesMenu">Default theme variants</button>
+  <button mat-menu-item [matMenuTriggerFor]="computeryThemesMenu">Computery themes</button>
+  <button mat-menu-item [matMenuTriggerFor]="experimentalThemesMenu">Experimental themes</button>
+  <button mat-menu-item [matMenuTriggerFor]="programmerThemesMenu">Programmer's favourites</button>
 
   <hr class="my-0" />
   <button mat-menu-item class="pl-1">
@@ -62,13 +62,12 @@
       ><span class="theme-selector-button">Center layout</span></mat-checkbox
     >
   </button>
-    <button mat-menu-item class="pl-1">
+  <button mat-menu-item class="pl-1">
     <mat-checkbox [checked]="horizontalMenuMode" (click)="updateHorizontalMenu(true)"
       ><span class="theme-selector-button">Horizontal Menu</span></mat-checkbox
     >
   </button>
 </mat-menu>
-
 
 <mat-menu #defaultThemesMenu="matMenu">
   @for (variant of defaultThemes; track $index) {
@@ -122,7 +121,6 @@
   }
 </mat-menu>
 
-
 @switch (colorScheme()) {
   @case ('default') {}
   @case ('tan') {
@@ -144,7 +142,7 @@
     <link href="/assets/themes/purple.css" rel="stylesheet" />
   }
   @case ('blue') {
-    <link href="/assets/themes/blue.css" rel="stylesheet" >
+    <link href="/assets/themes/blue.css" rel="stylesheet" />
   }
   @case ('rizzler') {
     <link href="/assets/themes/rizzler.css" rel="stylesheet" />
@@ -182,13 +180,8 @@
   @case ('catppuccin_mocha') {
     <link href="/assets/themes/catppuccin_mocha.css" rel="stylesheet" />
   }
-  
 }
 
 @if (centerLayoutMode) {
   <link href="/assets/themes/center-column.css" rel="stylesheet" />
-}
-
-@if (horizontalMenuMode) {
-<link href="/assets/themes/horizontal-menu.css" rel="stylesheet" />
 }

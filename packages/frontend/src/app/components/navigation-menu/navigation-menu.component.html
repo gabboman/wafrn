@@ -1,4 +1,4 @@
-<mat-toolbar class="wafrn-toolbar" *ngIf="mobile">
+<mat-toolbar class="wafrn-toolbar slideup" *ngIf="!(menuVisible || !mobile)">
   @for (link of mobile ? menuItemsMobile : menuItems; track $index) {
     @if (link.divider) {
     } @else {
@@ -48,3 +48,7 @@
     </main>
   </mat-drawer-content>
 </mat-drawer-container>
+
+<br />
+<br />
+<br />
