@@ -551,7 +551,7 @@ export class NavigationMenuComponent implements OnInit, OnDestroy {
         icon: faBars,
         title: this.translateService.instant('menu.showMenu'),
         visible: true,
-        badge: this.awaitingAsks + this.adminNotifications,
+        badge: this.awaitingAsks + this.adminNotifications + this.usersAwaitingApproval + this.followsAwaitingApproval,
         command: () => {
           this.menuVisible = !this.menuVisible
         }
