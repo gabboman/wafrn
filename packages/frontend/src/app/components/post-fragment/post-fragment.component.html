@@ -5,10 +5,8 @@
   <app-single-ask [ask]="fragment().ask!"></app-single-ask>
 }
 @if (fragment().content_warning || fragment().muted_words_cw) {
-  <div
-    class="content-warning-text"
-    [innerHTML]="fragment().muted_words_cw + '<br/>' + fragment().content_warning"
-  ></div>
+  <div class="content-warning-text" [innerHTML]="fragment().muted_words_cw"></div>
+  <div class="content-warning-text" [innerHTML]="fragment().content_warning"></div>
   <button class="toggle-cw-button" mat-raised-button color="primary" (click)="cwClick()" class="w-full my-2">
     @if (showSensitiveContent()) {
       Hide
