@@ -1,17 +1,37 @@
 {
     email ${{ACME_EMAIL}}
 
+    log {
+
+    }
+
+    metrics {
+        per_host
+    }
+
+    admin 0.0.0.0:2019
+
     on_demand_tls {
-		ask http://pds:3000/tls-check
-	}
+        ask http://pds:3000/tls-check
+    }
+}
+
+${{MEDIA_DOMAIN}} {
+    handle {
+        root * /var/www/html/uploads/
+        try_files {path} /index.html
+        file_server
+    }
+}
+
+${{CACHE_DOMAIN}} {
+    handle /api/cache* {
+        reverse_proxy ${{CACHE_HOST:-backend:9000}}
+    }
 }
 
 ${{DOMAIN_NAME}} {
     @api path /api* /fediverse* /contexts* /post* /blog* /.well-known*
-
-    log {
-
-    }
 
     handle @api {
         header {
@@ -33,10 +53,14 @@ ${{DOMAIN_NAME}} {
     }
 }
 
+monitoring.${{DOMAIN_NAME}} {
+    reverse_proxy grafana:2345
+}
+
 ${{PDS_DOMAIN_NAME}} *.${{PDS_DOMAIN_NAME}} {
     tls {
-		on_demand
-	}
+        on_demand
+    }
 
     reverse_proxy pds:3000
 }

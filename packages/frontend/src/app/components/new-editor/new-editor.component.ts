@@ -1,11 +1,10 @@
-import { CommonModule } from '@angular/common'
+import { Location } from '@angular/common';
 import { Component, HostListener, inject, OnDestroy, ViewChild } from '@angular/core'
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms'
 import { MatButtonModule } from '@angular/material/button'
 import { MatCardModule } from '@angular/material/card'
 import { MatFormFieldModule } from '@angular/material/form-field'
 import { MatInputModule } from '@angular/material/input'
-import { MatDialogModule, MatDialogRef } from '@angular/material/dialog'
 import { MatChipsModule } from '@angular/material/chips'
 import { FontAwesomeModule, IconDefinition } from '@fortawesome/angular-fontawesome'
 import {
@@ -54,11 +53,11 @@ import { MatBadgeModule } from '@angular/material/badge'
 import { EmojiPickerComponent } from '../emoji-picker/emoji-picker.component'
 import { Emoji } from 'src/app/interfaces/emoji'
 import { Dialog } from '@angular/cdk/dialog'
+import { Router } from '@angular/router'
 
 @Component({
   selector: 'app-new-editor',
   imports: [
-    CommonModule,
     FormsModule,
     ReactiveFormsModule,
     MatCardModule,
@@ -77,11 +76,10 @@ import { Dialog } from '@angular/cdk/dialog'
     MatCheckboxModule,
     MatTooltipModule,
     InfoCardComponent,
-    MatDialogModule,
     TranslateModule,
     MatBadgeModule,
     MatChipsModule
-  ],
+],
   templateUrl: './new-editor.component.html',
   styleUrl: './new-editor.component.scss'
 })
@@ -150,7 +148,8 @@ export class NewEditorComponent implements OnDestroy {
     private loginService: LoginService,
     private postService: PostsService,
     private jwtService: JwtService,
-    private dialogRef: MatDialogRef<NewEditorComponent>
+    private router: Router,
+    private location: Location
   ) {
     this.data = EditorService.editorData
     this.editing = this.data?.edit == true
@@ -277,7 +276,6 @@ export class NewEditorComponent implements OnDestroy {
   }
 
   async uploadImage(media: WafrnMedia) {
-    console.log(media)
     try {
       media.url =
         EnvironmentService.environment.externalCacheurl +
@@ -351,7 +349,7 @@ export class NewEditorComponent implements OnDestroy {
         })
       }
     } catch (error) {
-      console.log(error)
+      console.error(error)
       this.messages.add({
         severity: 'error',
         summary: 'Something went wrong when trying to load this.'
@@ -433,21 +431,26 @@ export class NewEditorComponent implements OnDestroy {
       this.messages.add({
         severity: 'success',
         summary: 'Your woot has been published!',
-        confettiEmojis: disableConfetti ? [] : ['✏️', '🖍️', '✒️', '🖊️']
+        confettiEmojis: disableConfetti ? [] : ['✏️', '🖍️', '✒️', '🖊️'],
+        soundUrl: '/assets/sounds/2.ogg'
       })
       this.postCreatorForm.value.content = ''
       this.uploadedMedias = []
       this.tags = ''
       if (this.data?.ask) {
-        window.location.reload()
+        // super dirty but we take you to your homepage after an ask
+        this.router.navigate(["/"])
       }
+      else {
       this.closeEditor()
+
+      }
     }
     this.postBeingSubmitted = false
   }
 
   closeEditor() {
-    this.dialogRef.close()
+    this.location.back()
   }
 
   // things for calculating position

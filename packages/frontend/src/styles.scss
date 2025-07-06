@@ -27,7 +27,7 @@ $theme: mat.define-theme((color: (primary: mat.$violet-palette )));
 @include mat.typography-hierarchy($theme);
 
 :root {
-  @include mat.badge-overrides((background-color: var(--mdc-filled-button-container-color, var(--mat-sys-primary))));
+  @include mat.badge-overrides((background-color: var(--mat-button-filled-container-color, var(--mat-sys-primary))));
 }
 
 // Variables
@@ -106,9 +106,65 @@ body {
   }
 }
 
+// Pre-splash / Indieweb content
+#indieweb {
+  position: relative;
+  min-height: 100dvh;
+  inset: 0;
+}
+
+#microformats {
+  max-width: 800px;
+  border: 1px solid black;
+  margin: 2em;
+  padding: 1em;
+
+  .h-card {
+    display: flex;
+    flex-flow: row wrap;
+
+    border: 1px solid black;
+    margin: 1em;
+
+    .u-featured {
+      object-fit: cover;
+      order: 1;
+      flex: 1 100%;
+    }
+
+    .u-photo {
+      object-fit: contain;
+      max-height: 5em;
+      order: 2;
+    }
+
+    .p-name {
+      order: 3;
+      flex: 3 0px;
+      align-self: center;
+      padding: 1em;
+      text-decoration: none;
+    }
+  }
+
+  .h-entry {
+    padding: 1em;
+    border: 1px solid black;
+    margin-bottom: 2em;
+  }
+
+  .u-uid,
+  .dt-pubished,
+  .u-in-reply-to {
+    text-align: right;
+    display: block;
+  }
+}
+
 // Splashscreen
 #splash {
-  position: fixed;
+  position: relative;
+  min-height: 100dvh;
   inset: 0;
 }
 
@@ -137,7 +193,7 @@ body {
 }
 
 #splash-content {
-  height: 100%;
+  min-height: 100dvh;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -146,11 +202,16 @@ body {
   transition: translate 120ms ease-in;
 }
 
+#indieweb.loaded,
 #splash.loaded {
   display: none;
   opacity: 0;
 
   & #splash-content {
+    translate: 0 -6px;
+  }
+
+  & #microformats {
     translate: 0 -6px;
   }
 }
@@ -171,9 +232,10 @@ body {
 /* Small-Screen media queries. */
 /* Currently encompasses the bottom-sheet style for dialogs, as well as the full-width post style for narrow screens.*/
 @media screen and (max-width: 800px) {
+
   /* START bottom-sheet */
   :root {
-    --mdc-dialog-container-shape: 16px 16px 0px 0px;
+    --mat-dialog-container-shape: 16px 16px 0px 0px;
   }
 
   .cdk-global-overlay-wrapper {
@@ -194,12 +256,14 @@ body {
       transform: translateY(0%);
     }
   }
+
   /* END bottom-sheet */
   /* START fullwidth post style */
   mat-card {
-    border-radius: 0px!important;
-    margin-inline: 0px!important;
+    border-radius: 0px !important;
+    margin-inline: 0px !important;
   }
+
   /* END fullwidth post style */
 
 }
@@ -270,6 +334,41 @@ mat-tab-header {
 
 // Workaround for bug with matTooltip
 .mat-mdc-tooltip-trigger {
-	touch-action: auto !important;
-	-webkit-user-drag: auto !important;
+  touch-action: auto !important;
+  -webkit-user-drag: auto !important;
+}
+
+.sr-only {
+  position: absolute !important;
+  width: 1px !important;
+  height: 1px !important;
+  padding: 0 !important;
+  margin: -1px !important;
+  overflow: hidden !important;
+  clip: rect(0 0 0 0) !important;
+  white-space: nowrap !important;
+  border: 0 !important;
+}
+
+.sr-only-focusable {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+
+  &:focus,
+  &:active {
+    position: static;
+    width: auto;
+    height: auto;
+    margin: 0;
+    overflow: visible;
+    clip: auto;
+    white-space: normal;
+  }
 }

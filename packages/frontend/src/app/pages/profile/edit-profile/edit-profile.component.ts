@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core'
 import { FormControl, UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms'
 import { BlogDetails } from 'src/app/interfaces/blogDetails'
 import { Emoji } from 'src/app/interfaces/emoji'
+import { SimplifiedUser } from 'src/app/interfaces/simplified-user'
 import { DashboardService } from 'src/app/services/dashboard.service'
 import { JwtService } from 'src/app/services/jwt.service'
 import { LoginService } from 'src/app/services/login.service'
@@ -30,6 +31,11 @@ export class EditProfileComponent implements OnInit {
     { level: 2, name: 'Only allow asks from identified users' },
     { level: 3, name: 'Disable asks' }
   ]
+  rssOptions = [
+    {level: 0, name: 'No'},
+    {level: 1, name: 'Only articles (Feature still in the works)'},
+    {level: 2, name: 'Yes for all my posts'}
+  ]
 
   fediAttachments: { name: string; value: string }[] = [{ name: '', value: '' }]
   editProfileForm = new UntypedFormGroup({
@@ -38,6 +44,7 @@ export class EditProfileComponent implements OnInit {
     disableNSFWFilter: new UntypedFormControl(false, []),
     disableGifsByDefault: new UntypedFormControl(false, []),
     defaultPostEditorPrivacy: new UntypedFormControl(false, []),
+    rssOptions: new UntypedFormControl(false, []),
     asksLevel: new UntypedFormControl(2, []),
     description: new FormControl('', Validators.required),
     federateWithThreads: new FormControl(false),
@@ -49,10 +56,13 @@ export class EditProfileComponent implements OnInit {
     hideProfileNotLoggedIn: new FormControl(false),
     forceOldEditor: new FormControl(false),
     mutedWords: new FormControl(''),
+    superMutedWords: new FormControl(''),
     disableCW: new FormControl(false),
     forceClassicAudioPlayer: new FormControl(false),
     forceClassicVideoPlayer: new FormControl(false),
     disableConfetti: new FormControl(false),
+    enableConfettiRecivingLike: new FormControl(false),
+    disableSounds: new FormControl(false),
     forceClassicMediaView: new FormControl(false),
     expandQuotes: new FormControl(false),
     defaultExploreLocal: new FormControl(false),
@@ -63,8 +73,12 @@ export class EditProfileComponent implements OnInit {
     notifyReactions: new FormControl(true),
     notifyQuotes: new FormControl(true),
     notifyFollows: new FormControl(true),
-    notifyRewoots: new FormControl(true)
+    notifyRewoots: new FormControl(true),
+    replaceAIWithCocaine: new FormControl(false),
+    replaceAIWord: new FormControl('cocaine')
   })
+
+  password = ''
 
   constructor(
     private jwtService: JwtService,
@@ -88,6 +102,10 @@ export class EditProfileComponent implements OnInit {
       this.editProfileForm.controls['defaultPostEditorPrivacy'].patchValue(
         this.loginService.getUserDefaultPostPrivacyLevel()
       )
+      let rssOptionValue = localStorage.getItem('enableRSS')
+      this.editProfileForm.controls['rssOptions'].patchValue(
+        rssOptionValue ? parseInt(rssOptionValue) : 0
+      )
       this.editProfileForm.controls['forceClassicLogo'].patchValue(this.loginService.getForceClassicLogo())
       const federateWithThreads = localStorage.getItem('federateWithThreads')
       this.editProfileForm.controls['federateWithThreads'].patchValue(federateWithThreads === 'true')
@@ -109,6 +127,9 @@ export class EditProfileComponent implements OnInit {
         this.mediaService.checkForceClassicVideoPlayer()
       )
       this.editProfileForm.controls['disableConfetti'].patchValue(localStorage.getItem('disableConfetti') == 'true')
+      this.editProfileForm.controls['enableConfettiRecivingLike'].patchValue(localStorage.getItem('enableConfettiRecivingLike') == 'true')
+      this.editProfileForm.controls['disableSounds'].patchValue(localStorage.getItem('disableSounds') == 'true')
+
       this.editProfileForm.controls['forceClassicMediaView'].patchValue(
         localStorage.getItem('forceClassicMediaView') == 'true'
       )
@@ -117,6 +138,13 @@ export class EditProfileComponent implements OnInit {
       this.editProfileForm.controls['defaultExploreLocal'].patchValue(
         localStorage.getItem('defaultExploreLocal') == 'true'
       )
+      this.editProfileForm.controls['replaceAIWithCocaine'].patchValue(
+        localStorage.getItem('replaceAIWithCocaine') == 'true'
+      )
+
+      this.editProfileForm.controls['replaceAIWord'].patchValue(
+        localStorage.getItem('replaceAIWord') ? JSON.parse(localStorage.getItem('replaceAIWord') as string) : 'cocaine'
+      )
 
       const mutedWords = localStorage.getItem('mutedWords')
       if (mutedWords && mutedWords.trim().length) {
@@ -124,6 +152,14 @@ export class EditProfileComponent implements OnInit {
           this.editProfileForm.controls['mutedWords'].patchValue(JSON.parse(mutedWords))
         } catch (error) {
           this.messages.add({ severity: 'error', summary: 'Something wrong with your muted words!' })
+        }
+      }
+      const superMutedWords = localStorage.getItem('superMutedWords')
+      if (superMutedWords && superMutedWords.trim().length) {
+        try {
+          this.editProfileForm.controls['superMutedWords'].patchValue(JSON.parse(superMutedWords))
+        } catch (error) {
+          this.messages.add({ severity: 'error', summary: 'Something wrong with your superMuted words!' })
         }
       }
       const disableCW = localStorage.getItem('disableCW') == 'true'
@@ -226,5 +262,21 @@ export class EditProfileComponent implements OnInit {
     this.loginService.enableBluesky().then(() => {
       this.loading = false
     })
+  }
+
+  async requestDeleteAccount() {
+    this.loading = true
+    let success = await this.loginService.deleteAccount(this.password)
+    if (success) {
+      this.messages.add({ severity: 'success', summary: 'goodbye' })
+      setTimeout(() => {
+        this.loginService.logOut()
+        window.location.reload()
+      }, 1000)
+    }
+  }
+
+  userAliasSelected(data: string) {
+    this.editProfileForm.controls['alsoKnownAs'].patchValue(data)
   }
 }

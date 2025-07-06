@@ -1,0 +1,18 @@
+<mat-card class="p-3 mb-6 lg:mx-4 wafrn-container">
+  @if (loading) {
+    <app-loader></app-loader>
+  }
+  <div [hidden]="loading">
+    <h1>Migrate out</h1>
+    <p>You need to first create an alias on the new fedi account you are moving to</p>
+    <app-user-selector
+      (optionSelected)="userSelectedEvent($event)"
+      [controlText]="'New account (without the @)'"
+    ></app-user-selector>
+
+    <button [disabled]="selectedUser == '' && loading == false" mat-button class="w-full" (click)="pressButton()">
+      Migrate
+    </button>
+    <p [innerText]="message"></p>
+  </div>
+</mat-card>

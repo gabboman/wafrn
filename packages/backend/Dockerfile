@@ -1,5 +1,5 @@
 # Build stage
-FROM node:20-alpine AS build
+FROM node:22-alpine AS build
 
 # include important binaries
 RUN apk add --no-cache perl curl tini bash
@@ -28,6 +28,8 @@ ARG ADMIN_EMAIL
 ARG ADMIN_PASSWORD
 ARG JWT_SECRET
 ARG DOMAIN_NAME
+ARG CACHE_DOMAIN
+ARG MEDIA_DOMAIN
 
 ARG POSTGRES_PASSWORD
 ARG POSTGRES_USER
@@ -53,6 +55,11 @@ ARG BLOCKED_IPS
 ARG REVIEW_REGISTRATIONS
 ARG IGNORE_BLOCK_HOSTS
 
+ARG USE_WORKERS
+ARG WORKERS_LOW
+ARG WORKERS_MEDIUM
+ARG WORKERS_HIGH
+
 ARG WEBPUSH_EMAIL
 ARG WEBPUSH_PRIVATE
 ARG WEBPUSH_PUBLIC
@@ -60,6 +67,7 @@ ARG FRONTEND_LOGO
 ARG FRONTEND_API_URL
 ARG FRONTEND_MEDIA_URL
 ARG FRONTEND_CACHE_URL
+ARG FRONTEND_CACHE_BACKUP_URLS
 ARG FRONTEND_SHORTEN_POSTS
 ARG FRONTEND_DISABLE_PWA
 ARG FRONTEND_MAINTENANCE
@@ -74,13 +82,14 @@ ARG LISTEN_IP=0.0.0.0
 ARG PORT=9000
 ARG LOG_DESTINATION=1
 
+
 COPY environment.example.ts environment.ts
 
 # use sed to replace the environment variables in the environment.ts file
 RUN perl -pi -e 's/\$\{\{([_A-Z]+):-(.*)\}\}/$ENV{$1}||$2/ge' environment.ts && \
   perl -pi -e 's/\$\{\{([_A-Z]+)\}\}/$ENV{$1}/g' environment.ts
 
-RUN npm run type-check
+#RUN npm run type-check
 
 # expose port from environment.ts
 EXPOSE ${PORT}

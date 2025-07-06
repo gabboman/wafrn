@@ -12,15 +12,17 @@
     <mat-label>Select voice</mat-label>
     <mat-select [(ngModel)]="voiceIndex">
       @for (voice of voices; track $index) {
-        <mat-option *ngIf="voice.lang === languagesAllowed[selectedLangIndex]" [value]="$index"
-          >{{ voice.name }} - {{ voice.lang }}</mat-option
-        >
-      }
-    </mat-select>
-  </mat-form-field>
-  <mat-form-field class="w-full">
-    <mat-label>Text to speech</mat-label>
-    <textarea [(ngModel)]="textToSay" matInput> </textarea>
-  </mat-form-field>
-  <button class="w-full" mat-flat-button (click)="sayStuff()" [disabled]="info !== ''">say things</button>
-</mat-card>
+        @if (voice.lang === languagesAllowed[selectedLangIndex]) {
+          <mat-option [value]="$index"
+            >{{ voice.name }} - {{ voice.lang }}</mat-option
+            >
+          }
+        }
+      </mat-select>
+    </mat-form-field>
+    <mat-form-field class="w-full">
+      <mat-label>Text to speech</mat-label>
+      <textarea [(ngModel)]="textToSay" matInput> </textarea>
+    </mat-form-field>
+    <button class="w-full" mat-flat-button (click)="sayStuff()" [disabled]="info !== ''">say things</button>
+  </mat-card>

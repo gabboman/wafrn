@@ -20,7 +20,8 @@ import { PostHostView } from "./postHostView.js";
 import { RemoteUserPostView } from "./remoteUserPostView.js";
 import { FederatedHost } from "./federatedHost.js";
 import { PostAncestor } from "./postAncestor.js";
-import { BelongsToManyGetAssociationsMixin, BelongsToManySetAssociationsMixin, BelongsToSetAssociationMixin, HasManyGetAssociationsMixin, HasManyRemoveAssociationMixin, HasManyRemoveAssociationsMixin, HasManySetAssociationsMixin, HasOneGetAssociationMixin } from "sequelize";
+import { BelongsToGetAssociationMixin, BelongsToManyGetAssociationsMixin, BelongsToManySetAssociationsMixin, BelongsToSetAssociationMixin, HasManyGetAssociationsMixin, HasManyRemoveAssociationMixin, HasManyRemoveAssociationsMixin, HasManySetAssociationsMixin, HasOneGetAssociationMixin } from "sequelize";
+import { environment } from "../environment.js";
 
 export const Privacy = {
   Public: 0,
@@ -40,9 +41,9 @@ export interface PostAttributes {
   content?: string;
   markdownContent?: string;
   title?: string;
-  remotePostId?: string;
-  bskyUri?: string;
-  bskyCid?: string;
+  remotePostId?: string | null;
+  bskyUri?: string | null;
+  bskyCid?: string | null;
   privacy?: PrivacyType;
   featured?: boolean;
   isReblog?: boolean;
@@ -94,19 +95,19 @@ export class Post extends Model<PostAttributes, PostAttributes> implements PostA
     allowNull: true,
     type: DataType.STRING(768)
   })
-  declare remotePostId: string;
+  declare remotePostId: string | null;
 
   @Column({
     allowNull: true,
     type: DataType.STRING(768)
   })
-  declare bskyUri: string;
+  declare bskyUri: string | null;
 
   @Column({
     allowNull: true,
     type: DataType.STRING(768)
   })
-  declare bskyCid: string;
+  declare bskyCid: string | null;
 
   @Column({
     allowNull: true,
@@ -157,6 +158,7 @@ export class Post extends Model<PostAttributes, PostAttributes> implements PostA
 
   @BelongsTo(() => Post, "parentId")
   declare parent: Post
+  declare getParent: BelongsToGetAssociationMixin<Post>
   declare setParent: BelongsToSetAssociationMixin<Post, string>
 
   @HasMany(() => Post, "parentId")
@@ -192,7 +194,8 @@ export class Post extends Model<PostAttributes, PostAttributes> implements PostA
   declare emojiReacions: EmojiReaction[];
 
   @BelongsToMany(() => Emoji, () => PostEmojiRelations)
-  declare emojis: Emoji[];
+  declare emojis: Emoji[]
+  declare getEmojis: BelongsToManyGetAssociationsMixin<Emoji>
 
   @HasMany(() => Quotes, {
     foreignKey: "quoterPostId"
@@ -228,7 +231,8 @@ export class Post extends Model<PostAttributes, PostAttributes> implements PostA
   declare getPostTags: HasManyGetAssociationsMixin<PostTag>
 
   @BelongsTo(() => User)
-  declare user: User;
+  declare user: User
+  declare getUser: BelongsToGetAssociationMixin<User>
 
   @HasMany(() => Media, {
     sourceKey: "id"
@@ -291,5 +295,9 @@ export class Post extends Model<PostAttributes, PostAttributes> implements PostA
 
   get hierarchy() {
     return Post.hierarchy;
+  }
+
+  get fullUrl() {
+    return this.remotePostId || `${environment.frontendUrl}/fediverse/post/${this.id}`
   }
 }

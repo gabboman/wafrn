@@ -1,7 +1,7 @@
 import { Component, Input, OnInit, SimpleChanges } from '@angular/core'
 import { UserNotifications } from 'src/app/interfaces/user-notifications'
 import { RouterModule } from '@angular/router'
-import { CommonModule } from '@angular/common'
+
 import { MatCardModule } from '@angular/material/card'
 
 import { PostFragmentComponent } from '../post-fragment/post-fragment.component'
@@ -14,7 +14,7 @@ import { faAt, faCheck, faHeart, faQuoteLeft, faRepeat, faUser } from '@fortawes
   selector: 'app-single-notification',
   templateUrl: './single-notification.component.html',
   styleUrls: ['./single-notification.component.scss'],
-  imports: [CommonModule, RouterModule, MatCardModule, PostFragmentComponent, PostHeaderComponent, PostRibbonComponent]
+  imports: [RouterModule, MatCardModule, PostFragmentComponent, PostHeaderComponent, PostRibbonComponent]
   //providers: [DateTimeToRelativePipe, DateTimeFromJsDatePipe]
 })
 export class SingleNotificationComponent implements OnInit {

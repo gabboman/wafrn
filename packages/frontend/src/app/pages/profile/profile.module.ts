@@ -10,6 +10,11 @@ import { MyServerBlocksComponent } from './my-server-blocks/my-server-blocks.com
     CommonModule,
     RouterModule.forChild([
       {
+        path: 'migrate-out',
+        loadComponent: () =>
+          import('../../components/migrate-out/migrate-out.component').then((c) => c.MigrateOutComponent)
+      },
+      {
         path: 'edit',
         loadChildren: () => import('./edit-profile/edit-profile.module').then((m) => m.EditProfileModule)
       },

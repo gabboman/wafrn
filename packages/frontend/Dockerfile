@@ -1,5 +1,5 @@
 # Build stage
-FROM node:20-alpine AS builder
+FROM node:22-alpine AS builder
 
 RUN apk add --no-cache perl curl tini bash
 
@@ -30,6 +30,8 @@ ARG CACHE_DOMAIN
 ARG MEDIA_DOMAIN
 ARG ACME_EMAIL
 ARG DOMAIN_NAME
+
+ARG CACHE_HOST
 
 COPY Caddyfile.example /app/Caddyfile
 

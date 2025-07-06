@@ -66,11 +66,17 @@ case $1 in
       echo "Please provide a backup directory to restore"
     fi
     ;;
+  clean)
+    pushd "$SCRIPT_DIR/.."
+    rm -f packages/backend/cache/*
+    popd
+    ;;
   *)
     echo "Valid options:"
     echo "  update: Download latest wafrn from repository, update and restart"
     echo "  backup: Create backup of the current wafrn files"
     echo "  restore: Restore a specific backup"
+    echo "  clean: Cleans the cache"
     exit 1
     ;;
 esac

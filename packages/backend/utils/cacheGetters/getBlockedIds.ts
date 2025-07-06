@@ -1,6 +1,7 @@
 import { Op } from 'sequelize'
 import { Blocks, Mutes, User } from '../../models/index.js'
 import { redisCache } from '../redis.js'
+import { logger } from '../logger.js'
 
 export default async function getBlockedIds(
   userId: string,
@@ -45,6 +46,7 @@ export default async function getBlockedIds(
     // to avoid sequelize stuff. should add to other cachers too tbh
     return res.length > 0 ? res : ['00000000-0000-0000-0000-000000000000']
   } catch (error) {
-    return []
+    logger.error(error)
+    return ['00000000-0000-0000-0000-000000000000']
   }
 }

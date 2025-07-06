@@ -1,5 +1,5 @@
 import { Op } from 'sequelize'
-import { Media, Post, PostTag, User } from '../../models/index.js'
+import { Media, Post, PostTag, sequelize, User } from '../../models/index.js'
 import { environment } from '../../environment.js'
 import { fediverseTag } from '../../interfaces/fediverse/tags.js'
 import { activityPubObject } from '../../interfaces/fediverse/activityPubObject.js'
@@ -8,8 +8,13 @@ import { getPostReplies } from './getPostReplies.js'
 import { getPostAndUserFromPostId } from '../cacheGetters/getPostAndUserFromPostId.js'
 import { logger } from '../logger.js'
 import { Privacy } from '../../models/post.js'
+import { redisCache } from '../redis.js'
 
-async function postToJSONLD(postId: string) {
+async function postToJSONLD(postId: string): Promise<activityPubObject | undefined> {
+  let resFromCacheString = await redisCache.get('postToJsonLD:' + postId)
+  if (resFromCacheString) {
+    return JSON.parse(resFromCacheString) as activityPubObject
+  }
   const cacheData = await getPostAndUserFromPostId(postId)
   const post = cacheData.data
   const localUser = post.user
@@ -29,6 +34,33 @@ async function postToJSONLD(postId: string) {
 
   if (post.parentId) {
     let dbPost = (await getPostAndUserFromPostId(post.parentId)).data
+    if (post.bskyDid) {
+      // we do same check for all parents
+      const ancestorIdsQuery = await sequelize.query(
+        `SELECT "ancestorId" FROM "postsancestors" where "postsId" = '${post.parentId}'`
+      )
+      const ancestorIds: string[] = ancestorIdsQuery[0].map((elem: any) => elem.ancestorId)
+      if (ancestorIds.length > 0) {
+        const ancestors = await Post.findAll({
+          include: [
+            {
+              model: User,
+              as: 'user',
+              attributes: ['url']
+            }
+          ],
+          where: {
+            id: {
+              [Op.in]: ancestorIds
+            }
+          }
+        })
+        const parentsUserUrls = ancestors.map((elem) => elem.user.url)
+        if (parentsUserUrls.some((elem) => elem.split('@').length == 2)) {
+          return undefined
+        }
+      }
+    }
     while (
       dbPost &&
       dbPost.content === '' &&
@@ -54,11 +86,9 @@ async function postToJSONLD(postId: string) {
   // we remove the wafrnmedia from the post for the outside world, as they get this on the attachments
   processedContent = processedContent.replaceAll(wafrnMediaRegex, '')
   if (ask) {
-    processedContent = `<p>${getUserName(userAsker)} asked </p> <blockquote>${
-      ask.question
-    }</blockquote> ${processedContent} <p>To properly see this ask, <a href="${
-      environment.frontendUrl + '/fediverse/post/' + post.id
-    }">check the post in the original instance</a></p>`
+    processedContent = `<p>${getUserName(userAsker)} asked </p> <blockquote>${ask.question
+      }</blockquote> ${processedContent} <p>To properly see this ask, <a href="${environment.frontendUrl + '/fediverse/post/' + post.id
+      }">check the post in the original instance</a></p>`
   }
   const mentions: string[] = post.mentionPost.map((elem: any) => elem.id)
   const fediMentions: fediverseTag[] = []
@@ -168,13 +198,13 @@ async function postToJSONLD(postId: string) {
       // conversation: conversationString,
       content: (processedContent + tagsAndQuotes).replace(lineBreaksAtEndRegex, ''),
       attachment: postMedias
-        ?.sort((a: any, b: any) => a.mediaOrder - b.mediaOrder)
-        .map((media: any) => {
+        ?.sort((a: Media, b: Media) => a.mediaOrder - b.mediaOrder)
+        .map((media: Media) => {
           const extension = media.url.split('.')[media.url.split('.').length - 1].toLowerCase()
           return {
             type: 'Document',
             mediaType: media.mediaType,
-            url: environment.mediaUrl + media.url,
+            url: media.external ? media.url : environment.mediaUrl + media.url,
             sensitive: media.NSFW ? true : false,
             name: media.description
           }
@@ -186,7 +216,8 @@ async function postToJSONLD(postId: string) {
         first: {
           type: 'CollectionPage',
           partOf: `${environment.frontendUrl}/fediverse/post/${post.id}/replies`,
-          items: await getPostReplies(post.id)
+          next: `${environment.frontendUrl}/fediverse/post/${post.id}/replies?page=1`,
+          items: []
         }
       }
     }
@@ -216,12 +247,13 @@ async function postToJSONLD(postId: string) {
         post.privacy / 1 === Privacy.DirectMessage
           ? mentionedUsers
           : post.privacy / 1 === Privacy.Public
-          ? ['https://www.w3.org/ns/activitystreams#Public']
-          : [stringMyFollowers],
+            ? ['https://www.w3.org/ns/activitystreams#Public']
+            : [stringMyFollowers],
       cc: [`${environment.frontendUrl}/fediverse/blog/${localUser.url.toLowerCase()}`, stringMyFollowers],
       object: parentPostString
     }
   }
+  await redisCache.set('postToJsonLD:' + postId, JSON.stringify(postAsJSONLD), 'EX', 300)
   return postAsJSONLD
 }
 
@@ -249,7 +281,7 @@ function getToAndCC(
       break
     }
     default: {
-      ;(to = mentionedUsers), (cc = [])
+      ; (to = mentionedUsers), (cc = [])
     }
   }
   return {

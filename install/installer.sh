@@ -79,11 +79,33 @@ else
     read SEND_ACTIVATION_MAIL
   fi
 
+  echo Please select from the following packages:
+  echo "1: Minimum install (default); Runs the bare minimum to get Wafrn running"
+  echo "2: Monitoring support; Minimum install with added Grafana to monitor your instance"
+  echo "3: Advanced install; More advanced config, with separate workers to handle the load. Preferred options for larger instances."
+  echo "4: Advanced install with monitoring support; The full package: advanced install plus Grafana support"
+
+  read INSTALL_TYPE
+
   echo
   echo
   echo "--------------------------------------------"
   echo "Ok that was all. Let's get the party started"
   echo "--------------------------------------------"
+fi
+
+export DOCKER_COMPOSE_FILENAME=docker-compose.simple.yml
+
+if [[ $INSTALL_TYPE == "2" ]]; then
+  export DOCKER_COMPOSE_FILENAME=docker-compose.simple.metrics.yml
+fi
+
+if [[ $INSTALL_TYPE == "3" ]]; then
+  export DOCKER_COMPOSE_FILENAME=docker-compose.advanced.yml
+fi
+
+if [[ $INSTALL_TYPE == "4" ]]; then
+  export DOCKER_COMPOSE_FILENAME=docker-compose.advanced.metrics.yml
 fi
 
 if [[ ! $BLUESKY_SUPPORT =~ ^[Yy]$ ]]; then
@@ -102,9 +124,11 @@ fi
 
 export DOMAIN_NAME PDS_DOMAIN_NAME ADMIN_EMAIL ADMIN_USER SMTP_HOST SMTP_PORT SMTP_USER SMTP_PASSWORD SMTP_FROM BLUESKY_SUPPORT
 
-export CACHE_DOMAIN=${DOMAIN_NAME}
-export MEDIA_DOMAIN=${DOMAIN_NAME}
+export CACHE_DOMAIN=cdn.${DOMAIN_NAME}
+export MEDIA_DOMAIN=media.${DOMAIN_NAME}
 export ACME_EMAIL=${ADMIN_EMAIL}
+export FRONTEND_MEDIA_URL=https://${MEDIA_DOMAIN}
+export FRONTEND_CACHE_URL=https://${CACHE_DOMAIN}/api/cache?media=
 
 echo
 echo "-------------------"
@@ -112,7 +136,7 @@ echo "Installing packages"
 echo "-------------------"
 
 sudo apt update
-sudo apt install -y git postgresql-client curl lsb-release wget build-essential sudo
+sudo apt install -y git postgresql-client curl lsb-release wget build-essential sudo jq xxd
 
 echo
 echo "-----------------"
@@ -147,6 +171,7 @@ echo "Setting up the config"
 echo "---------------------"
 
 source install/env_secret_setup.sh
+cp $DOCKER_COMPOSE_FILENAME docker-compose.yml
 
 echo
 echo "--------------------------"
@@ -180,6 +205,14 @@ cat <<CROND_FILE | sudo tee /etc/cron.d/wafrn-backup
 22 3 * * * $(whoami) $HOME/wafrn/install/manage.sh backup
 CROND_FILE
 
+echo "-------------------------"
+echo "Setting up cache cleanups"
+echo "-------------------------"
+
+cat <<CROND_FILE | sudo tee /etc/cron.d/wafrn-cleanup
+22 4 * * * $(whoami) $HOME/wafrn/install/manage.sh clean
+CROND_FILE
+
 echo
 echo "----"
 echo "Done"
@@ -189,7 +222,12 @@ source $HOME/wafrn/.env
 
 echo "Well done. The database user and password have been introduced in the config file over at '~/wafrn/.env'"
 echo
-echo "You can log in at https://${DOMAIN_NAME} with the email ${ADMIN_EMAIL} and the password ${ADMIN_PASSWORD}"
+echo "You can log in at https://${DOMAIN_NAME} with the email '${ADMIN_EMAIL}' and the password '${ADMIN_PASSWORD}'"
 echo
 echo "For the Bluesky integration to work make sure to read the docs on what to do as next steps."
 echo "Before doing any activity however it is **highly** advised to log out and log back in to the shell"
+
+if [[ $INSTALL_TYPE =~ ^[24]$ ]]; then
+  echo
+  echo "For monitoring please go to https://monitoring.${DOMAIN_NAME} with username 'admin' and password '${GF_SECURITY_ADMIN_PASSWORD}'"
+fi

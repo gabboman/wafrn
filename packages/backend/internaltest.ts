@@ -2,41 +2,41 @@
 
 import { Op } from 'sequelize'
 import { getAtProtoThread } from './atproto/utils/getAtProtoThread.js'
-import { User } from './models/index.js'
+import { Media, Post, PostTag, Quotes, User } from './models/index.js'
 import { environment } from './environment.js'
 import { getRemoteActor } from './utils/activitypub/getRemoteActor.js'
 import { MoveActivity } from './utils/activitypub/processors/move.js'
 import sendActivationEmail from './utils/sendActivationEmail.js'
 import { wait } from './utils/wait.js'
+import { getAtProtoSession } from './atproto/utils/getAtProtoSession.js'
+import { postToAtproto } from './atproto/utils/postToAtproto.js'
+import { LdSignature } from './utils/activitypub/rsa2017.js'
+import { activityPubObject } from './interfaces/fediverse/activityPubObject.js'
+import { Queue } from 'bullmq'
+import { getCacheAtDids } from './atproto/cache/getCacheAtDids.js'
+import { getAtprotoUser } from './atproto/utils/getAtprotoUser.js'
 
-// https://bsky.app/profile/did:plc:kcu5gsklhhensnm6vhu6lhq5/post/3lkw3tgtihs23
-//await getAtProtoThread('at://did:plc:kcu5gsklhhensnm6vhu6lhq5/app.bsky.feed.post/3lljrwzmx522w', undefined, true)
-
-async function sendMail() {
-  const users = await User.findAll({
-    attributes: ['url', 'email', 'banned', 'activated', 'disableEmailNotifications'],
-    where: {
-      banned: { [Op.ne]: true },
-      activated: true,
-      disableEmailNotifications: false,
-      email: {
-        [Op.ne]: null
-      },
-      createdAt: {
-        [Op.gt]: new Date().setDate(new Date().getDate() - 2)
-      }
-    },
-    order: [['createdAt', 'ASC']]
-  })
-  console.log('NUMBER OF EMAILS TO SEND: ' + users.length)
-  await wait(1500)
-  for await (const user of users) {
-    const subject = `Hello ${user.url}! Your wafrn account was activated!`
-    const body = `Hello ${user.url}, your account has been reviewed by our team and is now activated! If you already got this email twice apologies, we got an issue with the email provider and we had to resend a few :(`
-    console.log(`mailing ${user.url}`)
-    await sendActivationEmail(user.email || '', '', subject, body)
-    await wait(1500)
+const cacheDids = await getCacheAtDids(true)
+const followedDids = cacheDids.followedUsersLocalIds
+console.log(`Need to update ${followedDids.size}`)
+const users = await User.findAll({
+  where: {
+    id: {
+      [Op.in]: Array.from(followedDids)
+    }
   }
+})
+
+const adminuser = (await User.findOne({
+  where: {
+    url: environment.adminUser
+  }
+})) as User
+console.log(`starting updates of ${users.length}`)
+for await (const user of users) {
+  console.log(`For started`)
+  console.log(`Updating ${user.url}`)
+  await getAtprotoUser(user.url, adminuser)
 }
 
-sendMail()
+console.log(`update ended`)

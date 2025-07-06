@@ -11,14 +11,14 @@
           [class.emoji-active-collection]="this.collectionHas(-1)"
           class="emoji-sidebar-child p-2 flex align-content-center justify-content-center cursor-pointer bg-transparent emoji-collection-button"
           (click)="this.toggleCollection(-1)"
-        >
+          >
           <span title="All emojis">*</span>
         </button>
         <button
           [class.emoji-active-collection]="this.collectionHas(-2)"
           class="emoji-sidebar-child p-2 flex align-content-center justify-content-center cursor-pointer bg-transparent emoji-collection-button"
           (click)="this.toggleCollection(-2)"
-        >
+          >
           <span><fa-icon title="Recent emojis" [icon]="clockIcon"></fa-icon></span>
         </button>
         @for (emojiCollection of emojiCollections; track $index) {
@@ -28,18 +28,19 @@
               [class.emoji-active-collection]="this.collectionHas($index)"
               class="emoji-sidebar-child p-2 flex align-content-center justify-content-center cursor-pointer bg-transparent emoji-collection-button"
               (click)="toggleCollection($index)"
-            >
+              >
               @if (!emoji.url) {
                 {{ emoji.id }}
               }
-              <img
-                *ngIf="emoji.url"
-                loading="lazy"
-                class="mr-2 ml-2"
-                [src]="baseMediaUrl + emoji.url"
-                [alt]="emojiCollection.name"
-                [title]="emojiCollection.name"
-              />
+              @if (emoji.url) {
+                <img
+                  loading="lazy"
+                  class="mr-2 ml-2"
+                  [src]="baseMediaUrl + emoji.url"
+                  [alt]="emojiCollection.name"
+                  [title]="emojiCollection.name"
+                  />
+              }
             </button>
           }
         }
@@ -53,7 +54,7 @@
       minBufferPx="200"
       maxBufferPx="300"
       [style.height.px]="this.virtualHeight()"
-    >
+      >
       <div *cdkVirtualFor="let row of this.vcRows()" class="emoji-row" [class.emoji-header]="row.tag === 0">
         @if (row.tag == 0) {
           <span>{{ row.name }}</span>
@@ -66,7 +67,7 @@
                 [title]="emoji.name"
                 (click)="click(emoji)"
                 class="flex align-content-center justify-content-center cursor-pointer bg-transparent emoji-item"
-              >
+                >
                 @if (!emoji.url) {
                   {{ emoji.id }}
                 } @else {
@@ -75,7 +76,7 @@
                     loading="lazy"
                     [alt]="emoji.name"
                     [src]="this.baseMediaUrl + emoji.url"
-                  />
+                    />
                 }
               </button>
             }

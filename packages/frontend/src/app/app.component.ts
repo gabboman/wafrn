@@ -1,9 +1,13 @@
-import { Component, Injector, OnInit } from '@angular/core'
+import { Component, Injector, Inject, OnInit, DOCUMENT } from '@angular/core'
 import { SwUpdate } from '@angular/service-worker'
 import { LoginService } from './services/login.service'
 import { EnvironmentService } from './services/environment.service'
 import { TranslateService } from '@ngx-translate/core'
 import { SwPush } from '@angular/service-worker'
+
+import { WebsocketService } from './services/websocket.service'
+import { NavigationError, Router } from '@angular/router'
+import { filter, map } from 'rxjs'
 
 @Component({
   selector: 'app-root',
@@ -20,15 +24,37 @@ export class AppComponent implements OnInit {
     private injector: Injector,
     private loginService: LoginService,
     private environmentService: EnvironmentService,
-    private translate: TranslateService
+    @Inject(DOCUMENT) private document: Document,
+    private translate: TranslateService,
+    private websocketService: WebsocketService,
+    private router: Router
   ) {
-    this.translate.addLangs(['en', 'pl'])
+    this.translate.addLangs(['en', 'pl', 'es'])
     this.translate.setDefaultLang('en')
     try {
-      this.translate.use(this.translate.getBrowserLang() || 'en')
+      // TODO re enable this
+      // this.translate.use(this.translate.getBrowserLang() || 'en')
     } catch (error) {
       // probably lang not avaiable
     }
+    router.events
+      .pipe(
+        filter((evt) => evt instanceof NavigationError),
+        map((evt) => evt as NavigationError)
+      )
+      .subscribe((evt) => {
+        if (evt.error instanceof Error && evt.error.name == 'ChunkLoadError') {
+          window.location.assign(evt.url)
+        }
+      })
+    swUpdate.unrecoverable.subscribe((event) => {
+      navigator.serviceWorker.getRegistrations().then(function (registrations) {
+        for (const registration of registrations) {
+          registration.unregister()
+        }
+        window.location.reload()
+      })
+    })
   }
 
   ngOnInit() {
@@ -75,5 +101,10 @@ export class AppComponent implements OnInit {
           console.log(notificationSubscription)
         })
     }
+    const currentLang = this.translate.currentLang || this.translate.getDefaultLang() || 'en'
+    this.document.documentElement.lang = currentLang
+    this.translate.onLangChange.subscribe((event) => {
+      this.document.documentElement.lang = event.lang
+    })
   }
 }

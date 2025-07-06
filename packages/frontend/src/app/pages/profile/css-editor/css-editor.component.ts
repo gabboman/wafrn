@@ -1,4 +1,3 @@
-import { CommonModule } from '@angular/common'
 import { Component } from '@angular/core'
 import { FormsModule } from '@angular/forms'
 import { MatButtonModule } from '@angular/material/button'
@@ -10,7 +9,7 @@ import { ThemeService } from 'src/app/services/theme.service'
 
 @Component({
   selector: 'app-css-editor',
-  imports: [CommonModule, MatCardModule, FormsModule, MatInputModule, MatButtonModule],
+  imports: [MatCardModule, FormsModule, MatInputModule, MatButtonModule],
   templateUrl: './css-editor.component.html',
   styleUrl: './css-editor.component.scss'
 })
@@ -47,7 +46,7 @@ export class CssEditorComponent {
         this.router.navigate(['/dashboard'])
       })
       .catch((error: any) => {
-        console.log(error)
+        console.error(error)
         this.ready = true
         this.messages.add({
           severity: 'error',

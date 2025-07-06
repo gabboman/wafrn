@@ -33,17 +33,13 @@ export class WafrnMediaComponent implements OnChanges, AfterViewInit {
     this.data().external
       ? EnvironmentService.environment.externalCacheurl + encodeURIComponent(this.data().url)
       : EnvironmentService.environment.externalCacheurl +
-      encodeURIComponent(EnvironmentService.environment.baseMediaUrl + this.data().url)
+        encodeURIComponent(EnvironmentService.environment.baseMediaUrl + this.data().url)
   )
   readonly displayUrl = computed<string>(() => this.tmpUrl())
   readonly extension = computed<string>(() => this.getExtension())
   readonly mimeType = computed<string>(() => this.getMimeType())
   readonly width = computed<number | ''>(() => this.data().width ?? '')
   readonly height = computed<number | ''>(() => this.data().height ?? '')
-  // We use this aspectRatio when the sensitive content screen is visible.
-  // Could do with some refinement as it causes slight misalignment in
-  // some cases, but it is better than not having it.
-  readonly aspectRatio = computed<number>(() => ((this.data().width ?? 1) / (this.data().height ?? 1)))
   readonly enableVideoControls = computed<boolean | ''>(() => this.mediaService.checkForceClassicVideoPlayer() ?? false)
   readonly enableAudioControls = computed<boolean | ''>(() => this.mediaService.checkForceClassicAudioPlayer() ?? false)
 
@@ -99,7 +95,7 @@ export class WafrnMediaComponent implements OnChanges, AfterViewInit {
   }
 
   private getExtension() {
-    const mediaUrl = this.data().url.split('.')
+    const mediaUrl = this.data().url ? this.data().url.split('.') : ['']
     return mediaUrl[mediaUrl.length - 1].toLowerCase()
   }
 

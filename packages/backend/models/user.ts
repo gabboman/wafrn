@@ -14,7 +14,6 @@ import { Mutes } from './mutes.js'
 import { ServerBlock } from './serverBlock.js'
 import { PostReport } from './postReport.js'
 import { SilencedPost } from './silencedPost.js'
-import { UserReport } from './userReport.js'
 import { FederatedHost } from './federatedHost.js'
 import { Post } from './post.js'
 import { Media } from './media.js'
@@ -29,9 +28,11 @@ import {
   BelongsToManyRemoveAssociationMixin,
   BelongsToManyRemoveAssociationsMixin,
   BelongsToManySetAssociationsMixin,
+  HasManyGetAssociationsMixin,
   HasManyRemoveAssociationMixin
 } from 'sequelize'
 import { Col } from 'sequelize/lib/utils'
+import { environment } from '../environment.js'
 
 export interface UserAttributes {
   id?: string
@@ -75,6 +76,8 @@ export interface UserAttributes {
   hideFollows?: Boolean
   hideProfileNotLoggedIn?: Boolean
   emailVerified: Boolean | null
+  selfDeleted: Boolean | null
+  userMigratedTo: String | null
 }
 
 @Table({
@@ -451,16 +454,6 @@ export class User extends Model<UserAttributes, UserAttributes> implements UserA
   })
   declare silencedPosts: SilencedPost[]
 
-  @HasMany(() => UserReport, {
-    foreignKey: 'ReportedId'
-  })
-  declare reportedReport: UserReport[]
-
-  @HasMany(() => UserReport, {
-    foreignKey: 'ReporterId'
-  })
-  declare reporterReport: UserReport[]
-
   @BelongsTo(() => FederatedHost, {
     foreignKey: {
       name: 'federatedHostId',
@@ -474,6 +467,7 @@ export class User extends Model<UserAttributes, UserAttributes> implements UserA
     sourceKey: 'id'
   })
   declare posts: Post[]
+  declare getPosts: HasManyGetAssociationsMixin<Post>
 
   @HasMany(() => Media, {
     sourceKey: 'id'
@@ -492,24 +486,49 @@ export class User extends Model<UserAttributes, UserAttributes> implements UserA
     sourceKey: 'id'
   })
   declare userLikesPostRelations: UserLikesPostRelations[]
+  declare getUserLikesPostRelations: HasManyGetAssociationsMixin<UserLikesPostRelations>
 
   @HasMany(() => UserBookmarkedPosts, {
     sourceKey: 'id'
   })
   declare userBookmarkedPosts: UserBookmarkedPosts[]
+  declare getUserBookmarkedPosts: HasManyGetAssociationsMixin<UserBookmarkedPosts>
 
   @HasMany(() => RemoteUserPostView, {
     sourceKey: 'id'
   })
   declare remoteUserPostViewList: RemoteUserPostView[]
 
-  @Column(DataType.VIRTUAL)
+  @Column({
+    allowNull: true,
+    type: DataType.BOOLEAN,
+    defaultValue: false
+  })
+  declare selfDeleted: boolean
+
+  @Column({
+    allowNull: true,
+    type: DataType.STRING(768)
+  })
+  declare userMigratedTo: string
+
   get isBlueskyUser() {
     return !!(this.url.split('@').length == 2 && this.bskyDid)
   }
 
-  @Column(DataType.VIRTUAL)
   get isFediverseUser() {
     return !!(this.url.split('@').length == 3 && this.remoteId)
+  }
+
+  get fullUrl() {
+    return this.remoteId || `${environment.frontendUrl}/blog/${this.url}`
+  }
+
+  get avatarFullUrl() {
+    return this.url.startsWith('@') ? this.avatar : `${environment.mediaUrl}${this.avatar}`;
+  }
+
+  get headerImageFullUrl() {
+    return this.url.startsWith('@') ? this.headerImage : `${environment.mediaUrl}${this.headerImage}`
   }
 }

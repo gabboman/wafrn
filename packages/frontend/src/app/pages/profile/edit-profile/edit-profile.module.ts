@@ -9,10 +9,11 @@ import { MatButtonModule } from '@angular/material/button'
 import { MatInputModule } from '@angular/material/input'
 import { MatSelectModule } from '@angular/material/select'
 import { MatCheckboxModule } from '@angular/material/checkbox'
-import { MatTabsModule } from '@angular/material/tabs';
+import { MatTabsModule } from '@angular/material/tabs'
 import { EmojiCollectionsComponent } from 'src/app/components/emoji-collections/emoji-collections.component'
 import { MatExpansionModule } from '@angular/material/expansion'
 import { TranslateModule } from '@ngx-translate/core'
+import { UserSelectorComponent } from 'src/app/components/user-selector/user-selector.component'
 
 const routes: Routes = [
   {
@@ -37,7 +38,8 @@ const routes: Routes = [
     EmojiCollectionsComponent,
     MatExpansionModule,
     TranslateModule,
-    MatTabsModule
+    MatTabsModule,
+    UserSelectorComponent
   ]
 })
-export class EditProfileModule { }
+export class EditProfileModule {}

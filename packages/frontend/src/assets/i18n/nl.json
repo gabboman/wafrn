@@ -1,0 +1,211 @@
+{
+  "common": {
+    "commaSeparation": "Met kommas verdeeld"
+  },
+  "login": {
+    "welcomeBack": "Welkom terug!",
+    "exploreWithoutAccount": "Neem een kijkje zonder account!",
+    "dontHaveAccount": "Heeft u geen account?",
+    "register": "Registreer!",
+    "checkSpam": "Als u geen email ontvangt, check dan ook uw spam folder!",
+    "email": "Email",
+    "password": "Wachtwoord",
+    "mfaToken": "Token",
+    "mfaTokenEnter": "Plaats hier de code uit uw tweestapsverificator",
+    "forgottenPassword": "Wachtwoord vergeten?",
+    "showPassword": "Wachtwoord tonen",
+    "hidePassword": "Wachtwoord verbergen",
+    "loginButton": "Inloggen"
+  },
+  "notifications": {
+    "loadingMore": "Meer berichten aan het ophalen",
+    "refresh": "Herladen"
+  },
+  "menu": {
+    "login": "Inloggen",
+    "register": "Registreren",
+    "dashboard": "Overzicht",
+    "dashboardHover": "Overzicht bekijken",
+    "writeWoot": "Nieuwe Woot",
+    "notifications": "Meldingen",
+    "explore": "Tijdlijnen",
+    "exploreWafrn": "WAFRN Tijdlijn",
+    "exploreFediverse": "WAFRN & Vrienden",
+    "unansweredAsks": "Onbeäntwoorde vragen",
+    "privateMessages": "Privéberichten",
+    "search": "Zoek",
+    "myBlog": "Mijn blog",
+    "privacy": "Privacybeleid",
+    "source": "Bekijk de broncode!",
+    "patreon": "Patreon",
+    "kofi": "Ko-fi",
+    "logout": "Uitloggen",
+    "faq": "FAQ",
+    "settings": {
+      "title": "Instellingen",
+      "follows": "Beheer volgers",
+      "enableBluesky": "Bluesky verbinden",
+      "editProfile": "Instellingen & Profielbeheer",
+      "themeEditor": "Thema aanpassen",
+      "mutedUsers": "Genegeerde gebruikers",
+      "mutedPosts": "Genegeerde posts",
+      "bookmarkedPosts": "Bladwijzers",
+      "myBlockedUsers": "Geblokkeerde gebruikers",
+      "myBlockedServers": "Geblokkeerde servers",
+      "importFollows": "Volgers importeren",
+      "superSecretMenu": "Supergeheim Menu"
+    },
+    "admin": {
+      "title": "Beheerder",
+      "serverList": "Serverlijst",
+      "addEmojis": "Emojis toevoegen",
+      "reports": "Rapporten",
+      "bans": "Verbannen gebruikers",
+      "blocklist": "Geblokkeerde gebruikers",
+      "stats": "Statistiek",
+      "awaitingAproval": "Wacht op toestemming"
+    }
+  },
+  "editor": {
+    "inReplyTo": "Reactie aan:",
+    "quoteButton": "Woot aanhalen",
+    "publishWoot": "Woot publiceren",
+    "directMessageWarning": "Beheerders van deze server, en die van de ontvanger, kunnen deze berichten lezen.",
+    "unlistedWarning": "Deze woot zal niet vindbaar zijn via zoeken, en niet op de lokale tijdlijn verschijnen. Maar wel naar uw volgers gestuurd worden. En vindbaar zijn via links. Gebruik dit als u een post wil uitbrengen maar niet in de lokale tijdlijn geplaatst wil worden.",
+    "directMessageWithQuoteWarning": "Dit zal de aangehaalde gebruiker ook een melding geven",
+    "sensitivePlaceholder": "Beschrijf hier waarom deze woot gevoelig is.",
+    "wootQuoteBoxLabel": "Paste the URL of a woot to quote it. Can be the external url or the wafrn url",
+    "wootQuoteBoxPlaceholder": "Plak hier de url van de woot",
+    "wootQuoteConfirmButton": "Refereer naar een woot",
+    "wootTextLabel": "Woot tekst",
+    "wootTextPlaceholder": "Schrijf hier uw bericht...",
+    "altTextFieldLabel": "Mediabeschrijving toevoegen",
+    "altTextFieldPlaceholder": "Mediabeschrijving. Voeg dit toe.",
+    "isNSFWToggle": "Expliciete Media",
+    "mediaCountMastodonWarning": "WAARSCHUWING! ALS U MEER MEDIA TOEVOEGD KAN NIET IEDEREEN DIT ZIEN (bijv. mastodongebruikers)",
+    "altTextWarning": "Voeg alstublieft mediabeschrijving toe. Als u dit uit wilt zetten, kan dat in de instellingen.",
+    "quoteTitle": "Refereerd naar:",
+    "tagFieldLabel": "Tags",
+    "tagSeparationNotice": "Met kommas verdeelt",
+    "ariaLabelWootPrivacy": "Woot zichtbaarheid veranderen",
+    "ariaLabelQuoteSetter": "Enable the quote setter",
+    "uploadMediaTooltip": "Media toevoegen",
+    "contentWarningTooltip": "Inhoudswaarschuwing",
+    "insertEmojiTooltip": "Emojis toevoegen",
+    "hiddenMentionsTooltip": "Verder genoemde gebruikers",
+    "editorGuide": "Ga naar <a target=\"_blank\" href=\"https://wafrn.net/faq/user\">the guide</a> voor instructie over opmaak op wafrn"
+  },
+  "profile": {
+    "profile": {
+      "chooseAvatar": "Kies een andere profielafbeelding",
+      "chooseHeader": "Kies een andere kopafbeelding",
+      "changeDisplayName": "Roepnaam (kan emojicodes gebruiken)",
+      "changeBio": "Je beschrijving. Ook hier kunt u emojicodes gebruiken. U kunt hier markdown gebruiken.",
+      "extraInfoHead": "Extra informatievelden (Alleen Fediverse/Activitypub)",
+      "fieldPropertyName": "Veldnaam",
+      "fieldPropertyValue": "Veldinhoud"
+    },
+    "preferences": {
+      "notificationFilters": "Berichtfilters",
+      "showNotificationsFrom": "Toon berichten van zenders",
+      "notifyFrom": {
+        "everyone": "Iedereen",
+        "followers": "Volgers",
+        "following": "Gebruikers die ik volg",
+        "mutual": "Volgers die ik volg"
+      },
+      "notifyWhen": {
+        "mentioned": "Genoemd",
+        "followed": "Gevolgd",
+        "likesEmojiReacts": "Geliked/Emojiracties",
+        "quoted": "Aangehaald",
+        "rewooted": "Hergewoot"
+      },
+      "manuallyAcceptFollows": "Volgers handmatig accepteren",
+      "disableForceAltText": "Laat toevoegen van media zonder mediabeschrijving toe (Alleen slechte mensen zetten dit aan)",
+      "forceClassicLogo": "Gebruik oud logo",
+      "forceClassicVideoPlayer": "Gebruik oude videospeler",
+      "forceClassicAudioPlayer": "Gebruik oude audiospeler",
+      "forceClassicMediaView": "Gebruik oude (verticale) mediacarousel",
+      "dontCollapseQuotes": "Verklein aanhalingen in posts niet",
+      "disableCwExceptMuted": "Verberg expliciete content niet (tenzij er genegeerde woorden in de woot staan)",
+      "disableConfetti": "Toon geen confetti bij sommige interacties",
+      "disableUiSounds": "Speel geen geluiden bij sommige interacties",
+      "dashboardIsExploreLocal": "Standaard overzicht is locale tijdlijn ipv gebruikers die u volgt.",
+      "cocAIne": "Vervang de woorden \"artificial intelligence\" met een zelf gekozen woord (cocaïne?)",
+      "customCocAIne": "Zelfgekozen AI vervangingswoord",
+      "notRecommendedOptions": "Afgeraden opties",
+      "disableNSFWFilter": "Zet expliciete media filter uit",
+      "automaticallyExpandAllPosts": "Toon woots altijd volledig"
+    },
+    "privacy": {
+      "defaultPostPrivacy": "Standaard wootzichtbaarheid",
+      "asks": "Vragen",
+      "disableEmailNotifications": "Geen email berichten meer ontvangen",
+      "hideFollows": "Verberg wie ik volg en wie mij volgt",
+      "hideProfileNotLoggedInDescription": "Verberg uw profiel voor gebruikers die niet ingelogd zijn. Dit werkt alleen voor uw profiel op deze wafrn site.\nEn kan geen effect hebben op andere fediverse-instanties of bluesky."
+    },
+    "security": {
+      "header": "Beveiligingsinstellingen",
+      "passwordChange": "Wachtwoord opnieuw instellen",
+      "mfa": {
+        "header": "Tweestapsverificatie",
+        "setup": "Tweestapsverificatie instellen",
+        "addNew": "Nieuwe tweestapsverificator toevoegen",
+        "friendlyNameLabel": "Een vriendelijke naam, bijv. 'Werktelefoon' of 'Aegis'",
+        "typeLabel": "Type Tweestapsverificatie",
+        "setupNewButton": "Authenticator opzetten",
+        "tokenLabel": "Token",
+        "deleteLabel": "Verwijderen",
+        "scanInstructions": "Scan de code hieronder met uw Authenticator applicatie, en neem de code over.",
+        "installInstructions": "Als u nog geen authenticator app heeft, adviseren wij om <a href=\"https://getaegis.app/\" target=\"_blank\">Aegis</a> (Android) of <a href=\"https://2fas.com/\" target=\"_blank\">2FAS</a> (iOS/Android) te gebruiken",
+        "imageAltSecret": "Uw authenticatie 'secret' is '{{ secret }}'",
+        "secretFallback": "Als de QR-code leesbaar is, kan u de code '{{ secret }}' overnemen naar uw app",
+        "confirmDeleteMessage": "Weet u zeker dat u deze multifactorauthenticator wilt verwijderen? Weet: Als u alle multifactorauthenticatiebronnen verwijderd word multifactorauthenticatie uitgezet voor uw account",
+        "deleteSuccess": "Authenticatiebron verwijderd",
+        "verifySuccess": "Succes, Multifactorauthenticatie staat nu aan",
+        "verifyFailed": "Verificatie mislukt, controlleer uw token. Als het probleem aanhoud kan u contact opnemen met uw beheerder.",
+        "errorMessageGeneric": "Er is iets fout gegaan. Probeer opnieuw, of vraag een beheerder om hulp",
+        "noMfa": "U heeft op dit moment geen multifactorauthenticatie aanstaan.",
+        "mfaList": "Dit zijn uw multifactorauthenticatiebronnen",
+        "type": {
+          "totpLabel": "Authenticatiebron"
+        }
+      }
+    },
+    "other": {
+      "movingFromAccount": "'Verhuizen vanuit een ander account (zonder @)'",
+      "wordsThatWillAutoCwPosts": "Woorden die een post als expliciet markeren",
+      "superMutedWords": "phrases that will not show a post with them (BE CAREFUL WITH THESE)",
+      "availableEmoji": "beschikbare emojis"
+    },
+    "bsky": {
+      "psa1": "De bluesky integratie is nog niet stabiel! Dingen zullen zonder twijfel niet werken!",
+      "psa2_1": "Lees de",
+      "psa2_2": "veel-voorkomende vragen",
+      "psa2_3": "om te vinden wat wel en niet werkt op dit moment.",
+      "psa3": "In de toekomst kunt u hier uw bluesky-specifieke zaken instellen. Zoals uw bluesky gebruikersnaam."
+    },
+    "migrate": {
+      "psa1": "Om naar een andere server te verhuizen, klik",
+      "psa2": "hier"
+    },
+    "delete": {
+      "psa1": "Uw account zal als gedeactiveerd worden gemarkeerd, en na 30 dagen ONOMKEERBAAR VERWIJDERD WORDEN",
+      "psa2": "Voor de veiligheid, voer hier uw wachtwoord in",
+      "button": "VERWIJDER ACCOUNT"
+    },
+    "tabHeaders": {
+      "profile": "Profiel",
+      "preferences": "Voorkeuren",
+      "privacySecurity": "Privacy en Beveiliging",
+      "misc": "Overig"
+    },
+    "updateButton": "Aanpassingen opslaan"
+  },
+  "ask-dialog-content": {
+    "askAnonymously": "Stel anoniem een vraag",
+    "askFormLabel": "Vraagje:",
+    "askButtonText": "Stel een vraag"
+  }
+}

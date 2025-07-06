@@ -1,6 +1,15 @@
 import { Job } from 'bullmq'
 import { getAtprotoUser } from '../utils/getAtprotoUser.js'
-import { Follows, Post, User, UserLikesPostRelations, PostTag, Media, Notification } from '../../models/index.js'
+import {
+  Follows,
+  Post,
+  User,
+  UserLikesPostRelations,
+  PostTag,
+  Media,
+  Notification,
+  Blocks
+} from '../../models/index.js'
 import { environment } from '../../environment.js'
 import { Op, Model } from 'sequelize'
 import { logger } from '../../utils/logger.js'
@@ -20,7 +29,7 @@ const adminUser = User.findOne({
 })
 async function processFirehose(job: Job) {
   // FIRST VERSION. THIS IS GONA BE DIRTY
-  const remoteUser = await getAtprotoUser(job.data.repo, await adminUser as User)
+  const remoteUser = await getAtprotoUser(job.data.repo, (await adminUser) as User)
   const operation: RepoOp = job.data.operation
   if (remoteUser && operation) {
     switch (operation.action) {
@@ -72,8 +81,12 @@ async function processFirehose(job: Job) {
                   await UserLikesPostRelations.findOrCreate({
                     where: {
                       userId: remoteUser.id,
-                      postId: postInDb.id,
-                      bskyPath: operation.path
+                      postId: postInDb.id
+                    },
+                    defaults: {
+                      bskyPath: operation.path,
+                      userId: remoteUser.id,
+                      postId: postInDb.id
                     }
                   })
 
@@ -96,7 +109,8 @@ async function processFirehose(job: Job) {
                 message: `Error creating bluesky like`,
                 user,
                 likedPostId,
-                record
+                record,
+                error
               })
             }
 
@@ -110,21 +124,41 @@ async function processFirehose(job: Job) {
           case 'app.bsky.feed.repost': {
             const postToBeRewooted = await getAtProtoThread(record.subject.uri)
             if (postToBeRewooted) {
-              const rewootCreated = await Post.create({
-                content: '',
-                isReblog: true,
-                userId: remoteUser.id,
-                parentId: postToBeRewooted,
-                bskyUri: `at://${job.data.repo}/${operation.path}`,
-                bskyCid: operation.cid,
-                privacy: Privacy.Public
-              })
+              try {
+                let [post, created] = await Post.findOrCreate({
+                  where: {
+                    [Op.or]: [
+                      {
+                        bskyUri: `at://${job.data.repo}/${operation.path}`
+                      },
+                      {
+                        bskyCid: operation.cid
+                      }
+                    ]
+                  },
+                  defaults: {
+                    content: '',
+                    isReblog: true,
+                    userId: remoteUser.id,
+                    parentId: postToBeRewooted,
+                    bskyUri: `at://${job.data.repo}/${operation.path}`,
+                    bskyCid: operation.cid,
+                    privacy: Privacy.Public
+                  }
+                })
+              } catch (error) {
+                logger.info({
+                  message: `Error with bsky rewoot`,
+                  repo: job.data?.repo,
+                  operation: operation,
+                  error: error
+                })
+              }
             }
-
             break
           }
           case 'app.bsky.graph.follow': {
-            const userFollowed = await getAtprotoUser(record.subject, await adminUser as User)
+            const userFollowed = await getAtprotoUser(record.subject, (await adminUser) as User)
             if (userFollowed) {
               let tmp = await Follows.findOrCreate({
                 where: {
@@ -146,6 +180,17 @@ async function processFirehose(job: Job) {
                   userUrl: remoteUser.url
                 }
               )
+            }
+            break
+          }
+          case 'app.bsky.graph.block': {
+            const userBlocked = await getAtprotoUser(record.subject, (await adminUser) as User)
+            if (userBlocked) {
+              await Blocks.create({
+                blockedId: userBlocked.id,
+                blockerId: remoteUser.id,
+                bskyPath: operation.path
+              })
             }
             break
           }
@@ -254,9 +299,20 @@ async function processFirehose(job: Job) {
               }
               break
             }
+            case 'feed.repost': {
+              const post = await Post.findOne({
+                where: {
+                  bskyUri: `at://${job.data.repo}/${operation.path}`
+                }
+              })
+              if (post) {
+                await post.destroy()
+              }
+              break
+            }
             default: {
               logger.info({
-                message: `Bsky deleted type not implemented: ${deleteOperation.path}`,
+                message: `Bsky delete type not implemented: ${deleteOperation.path}`,
                 operation: deleteOperation
               })
             }

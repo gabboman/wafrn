@@ -4,7 +4,7 @@ import { FormsModule, ReactiveFormsModule, UntypedFormBuilder, UntypedFormGroup,
 import { ProcessedPost } from 'src/app/interfaces/processed-post'
 import { BlocksService } from 'src/app/services/blocks.service'
 import { MessageService } from 'src/app/services/message.service'
-import { CommonModule } from '@angular/common'
+
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog'
 import { MatInputModule } from '@angular/material/input'
 import { MatSelectModule } from '@angular/material/select'
@@ -15,37 +15,33 @@ import { MatButtonModule } from '@angular/material/button'
   templateUrl: './report-post.component.html',
   styleUrls: ['./report-post.component.scss'],
   imports: [
-    CommonModule,
     FormsModule,
     ReactiveFormsModule,
     MatInputModule,
     MatSelectModule,
     MatCheckboxModule,
     MatButtonModule
-  ]
+]
 })
 export class ReportPostComponent implements OnDestroy {
   loading = false
   visible = false
   reportForm: UntypedFormGroup
-  postToReport: ProcessedPost[]
+  postToReport: ProcessedPost[] | undefined
+  userToReport: string = ''
   launchreportScreenSubscription
 
   reportOptions: Array<{ label: string; value: number }> = [
     {
-      label: 'This post is spam',
+      label: 'SPAM',
       value: 1
     },
     {
-      label: 'This post contains NSFW media and is not labelled as such',
-      value: 2
-    },
-    {
-      label: 'This post is inciting hate against a person or collective',
+      label: 'Inciting hate against a person or collective',
       value: 5
     },
     {
-      label: 'This post contains illegal content',
+      label: 'Illegal content',
       value: 10
     }
   ]
@@ -56,9 +52,10 @@ export class ReportPostComponent implements OnDestroy {
     private readonly formBuilder: UntypedFormBuilder,
     private blockService: BlocksService,
     private dialogRef: MatDialogRef<ReportPostComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: { post: ProcessedPost }
+    @Inject(MAT_DIALOG_DATA) public data: { data: { post?: ProcessedPost; userId?: string } }
   ) {
-    this.postToReport = [data.post]
+    this.postToReport = data.data.post ? [data.data.post] : undefined
+    this.userToReport = data.data.userId ? data.data.userId : (this.postToReport as [ProcessedPost])[0].userId
     // I could call clearForm, but that will calm typescript typechecker
     this.reportForm = this.formBuilder.group({
       description: ['', [Validators.required]],
@@ -76,21 +73,19 @@ export class ReportPostComponent implements OnDestroy {
   }
 
   async submit() {
-    if (this.postToReport) {
-      const reportDone = this.reportService.reportPost(this.postToReport, this.reportForm)
-      if (this.reportForm.value['block'].length === 1) {
-        const userBlocked = this.blockService.blockUser(this.postToReport[this.postToReport.length - 1].userId)
-        Promise.all([reportDone, userBlocked])
-      }
-      if (await reportDone) {
-        this.messages.add({
-          severity: 'success',
-          summary: 'The post has been reported and we will take action against it'
-        })
+    const reportDone = this.reportService.reportPost(this.postToReport, this.reportForm, this.userToReport)
+    if (this.reportForm.value['block'].length === 1) {
+      const userBlocked = this.blockService.blockUser(this.userToReport)
+      Promise.all([reportDone, userBlocked])
+    }
+    if (await reportDone) {
+      this.messages.add({
+        severity: 'success',
+        summary: 'The post has been reported and we will take action against it'
+      })
 
-        this.dialogRef.close()
-        this.clearForm()
-      }
+      this.dialogRef.close()
+      this.clearForm()
     }
   }
 

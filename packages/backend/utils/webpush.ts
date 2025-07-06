@@ -56,6 +56,14 @@ async function sendWebPushNotification(
     )
   } catch (error) {
     logger.error({ message: 'Error sending web push notification: ', error: error })
+    // TODO: if sending webpush fails, we can remove this record from the db
+    // if the error is some weird error and we should not have removed the record
+    // that is not a problem, because next time the app opens, the device will be registered again
+    await UnifiedPushData.destroy({
+      where: {
+        endpoint: device.endpoint
+      }
+    })
   }
 }
 
@@ -81,6 +89,7 @@ async function getNotificationPayload(notification: NotificationBody, context?: 
     id: await getNotificationId(notification),
     url: getNotificationUrl(notification, context),
     title: getNotificationTitle(notification, context),
-    body: getNotificationBody(notification, context)
+    body: getNotificationBody(notification, context),
+    type: notification.notificationType,
   }
 }

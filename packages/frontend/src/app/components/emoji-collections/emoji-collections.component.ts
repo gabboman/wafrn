@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common'
+
 import { AfterViewInit, Component, computed, ElementRef, HostListener, model, OnDestroy, output, signal, ViewChild } from '@angular/core'
 import { FormsModule } from '@angular/forms'
 import { MatButtonModule } from '@angular/material/button'
@@ -22,7 +22,6 @@ enum EmojiRenderType {
 @Component({
   selector: 'app-emoji-collections',
   imports: [
-    CommonModule,
     MatButtonModule,
     FontAwesomeModule,
     FormsModule,
@@ -30,7 +29,7 @@ enum EmojiRenderType {
     MatTooltipModule,
     MatExpansionModule,
     ScrollingModule
-  ],
+],
   templateUrl: './emoji-collections.component.html',
   styleUrl: './emoji-collections.component.scss',
 })

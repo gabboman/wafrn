@@ -1,58 +1,63 @@
-<mat-card *ngIf="notification" class="wafrn-container post-card">
-  <app-post-ribbon
+@if (notification) {
+  <mat-card class="wafrn-container post-card" role="article" [attr.aria-labelledby]="'notification-title-' + notification.url">
+    <h4 class="sr-only" [attr.id]="'notification-title-' + notification.url">
+      {{ notification.userName }}
+    </h4>
+    <app-post-ribbon
     [user]="{
       avatar: notification.avatar,
       url: notification.userUrl,
       id: notification.url,
       name: notification.url
     }"
-    [icon]="notificationIcons[notification.type]"
-    [card]="false"
-    [time]="notification.date"
-  >
-    <a
-      class="user-link user-name"
-      [routerLink]="'/blog/' + notification.userUrl"
-      [innerHTML]="notification.userName"
-    ></a>
-    <span class="text-sm post-action">
-      @switch (notification.type) {
-        @case ('MENTION') {
-          mentioned you in a woot
-        }
-        @case ('LIKE') {
-          liked one of your woots
-        }
-        @case ('FOLLOW') {
-          now follows you!
-        }
-        @case ('REWOOT') {
-          rewooted one of your woots
-        }
-        @case ('QUOTE') {
-          quoted you in a woot
-        }
-        @case ('EMOJIREACT') {
-          reacted with
-          @if (emojiUrl) {
-            <img class="post-emoji" [src]="emojiUrl" [alt]="notification.emojiName" [title]="notification.emojiName"/>
-          } @else {
-            {{ notification.emojiName }}
+      [icon]="notificationIcons[notification.type]"
+      [card]="false"
+      [time]="notification.date"
+      >
+      <a
+        class="user-link user-name"
+        [routerLink]="'/blog/' + notification.userUrl"
+        [innerHTML]="notification.userName"
+      ></a>
+      <span class="text-sm post-action">
+        @switch (notification.type) {
+          @case ('MENTION') {
+            mentioned you in a woot
           }
-          to your woot
+          @case ('LIKE') {
+            liked one of your woots
+          }
+          @case ('FOLLOW') {
+            now follows you!
+          }
+          @case ('REWOOT') {
+            rewooted one of your woots
+          }
+          @case ('QUOTE') {
+            quoted you in a woot
+          }
+          @case ('EMOJIREACT') {
+            reacted with
+            @if (emojiUrl) {
+              <img class="post-emoji" [src]="emojiUrl" [alt]="notification.emojiName" [title]="notification.emojiName"/>
+            } @else {
+              {{ notification.emojiName }}
+            }
+            to your woot
+          }
         }
-      }
-    </span>
-  </app-post-ribbon>
-  @if (notification.type !== 'FOLLOW') {
-    <hr />
-    <div class="notification-content-shortened">
-      <div [routerLink]="notification.url">
-        @if (notification.fragment) {
-          <app-post-header [fragment]="notification.fragment"></app-post-header>
-          <app-post-fragment [fragment]="notification.fragment"></app-post-fragment>
-        }
+      </span>
+    </app-post-ribbon>
+    @if (notification.type !== 'FOLLOW') {
+      <hr />
+      <div class="notification-content-shortened">
+        <div [routerLink]="notification.url">
+          @if (notification.fragment) {
+            <app-post-header [fragment]="notification.fragment"></app-post-header>
+            <app-post-fragment [fragment]="notification.fragment"></app-post-fragment>
+          }
+        </div>
       </div>
-    </div>
-  }
-</mat-card>
+    }
+  </mat-card>
+}

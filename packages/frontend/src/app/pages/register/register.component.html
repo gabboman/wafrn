@@ -6,9 +6,11 @@
     <a routerLink="/login" class="font-medium no-underline ml-2 cursor-pointer">Just log in!</a>
   </div>
 
-  <button mat-flat-button color="warn" class="w-full h-full py-2 mb-3" *ngIf="manuallyReview">
-    An administrator will review your profile before you can join. This process can take a few hours.
-  </button>
+  @if (manuallyReview) {
+    <button mat-flat-button color="warn" class="w-full h-full py-2 mb-3">
+      An administrator will review your profile before you can join. This process can take a few hours.
+    </button>
+  }
 
   <form [hidden]="loading" [formGroup]="loginForm" (ngSubmit)="onSubmit()">
     <mat-form-field class="w-full">
@@ -22,9 +24,11 @@
       <button mat-icon-button matSuffix type="button" (click)="togglePasswordVisibility()">
         <fa-icon [icon]="isPasswordVisible ? faEyeSlash : faEye"></fa-icon>
       </button>
-      <mat-error *ngIf="loginForm.get('password')?.invalid && loginForm.get('password')?.touched">
-        Password is required
-      </mat-error>
+      @if (loginForm.get('password')?.invalid && loginForm.get('password')?.touched) {
+        <mat-error>
+          Password is required
+        </mat-error>
+      }
     </mat-form-field>
 
     <mat-form-field class="w-full mb-3" subscriptSizing="dynamic">
@@ -47,51 +51,51 @@
         [min]="minDate"
         [max]="minimumRegistrationDate"
         [matDatepicker]="picker"
-      />
+        />
       <mat-hint
         >MM/DD/YYYY - Your birthday date is required for legal reasons in the european union and USA. Its not shared
-        with anyone</mat-hint
-      >
-      <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
-      <mat-datepicker #picker></mat-datepicker>
-    </mat-form-field>
-    <mat-form-field class="w-full mb-3" subscriptSizing="dynamic">
-      <mat-label>Gender</mat-label>
-      <mat-hint>This actually does not do anything at all</mat-hint>
-      <mat-select>
-        @for (gender of genders; track $index) {
-          <mat-option [value]="gender" [innerHTML]="gender">{{ gender }}</mat-option>
-        }
-      </mat-select>
-    </mat-form-field>
-    <div class="pt-2 px-3 pb-2 border-round-md" style="border: 1px solid #999">
-      <label for="avatar" class="block font-medium mb-2">Upload your avatar</label>
-      <div class="flex flex-row align-content-center">
-        <button type="button" mat-stroked-button color="primary" (click)="avatarInput.click()">
-          <fa-icon [icon]="faUpload" class="m-1"></fa-icon>Choose File
-        </button>
-        <input
-          #avatarInput
-          formControlName="avatar"
-          id="avatar"
-          type="file"
-          accept="image/jpeg,image/png,image/webp,image/gif"
-          hidden
-          (change)="imgSelected($event)"
-        />
-        <p class="m-auto ml-1">{{ selectedFileName }}</p>
+        with anyone. Minimum registration age is 18</mat-hint
+        >
+        <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+        <mat-datepicker #picker></mat-datepicker>
+      </mat-form-field>
+      <mat-form-field class="w-full mb-3" subscriptSizing="dynamic">
+        <mat-label>Gender</mat-label>
+        <mat-hint>This actually does not do anything at all</mat-hint>
+        <mat-select>
+          @for (gender of genders; track $index) {
+            <mat-option [value]="gender" [innerHTML]="gender">{{ gender }}</mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
+      <div class="pt-2 px-3 pb-2 border-round-md" style="border: 1px solid #999">
+        <label for="avatar" class="block font-medium mb-2">Upload your avatar</label>
+        <div class="flex flex-row align-content-center">
+          <button type="button" mat-stroked-button color="primary" (click)="avatarInput.click()">
+            <fa-icon [icon]="faUpload" class="m-1"></fa-icon>Choose File
+          </button>
+          <input
+            #avatarInput
+            formControlName="avatar"
+            id="avatar"
+            type="file"
+            accept="image/jpeg,image/png,image/webp,image/gif"
+            hidden
+            (change)="imgSelected($event)"
+            />
+          <p class="m-auto ml-1">{{ selectedFileName }}</p>
+        </div>
       </div>
-    </div>
 
-    <button
-      color="primary"
-      mat-flat-button
-      extended
-      [disabled]="loading || !loginForm.valid"
-      class="w-full border-round-md mt-4"
-    >
-      <fa-icon [icon]="faUser"></fa-icon>
-      Register
-    </button>
-  </form>
-</mat-card>
+      <button
+        color="primary"
+        mat-flat-button
+        extended
+        [disabled]="loading || !loginForm.valid"
+        class="w-full border-round-md mt-4"
+        >
+        <fa-icon [icon]="faUser"></fa-icon>
+        Register
+      </button>
+    </form>
+  </mat-card>

@@ -1,0 +1,171 @@
+services:
+  backend: &default_backend
+    build: &default_backend_build
+      context: packages/backend
+      dockerfile: Dockerfile
+      # these args configure private env vars for the backend and public env vars for the frontend
+      args: &default_backend_build_args
+        ADMIN_USER: ${ADMIN_USER}
+        ADMIN_EMAIL: ${ADMIN_EMAIL}
+        ADMIN_PASSWORD: ${ADMIN_PASSWORD}
+        JWT_SECRET: ${JWT_SECRET}
+        DOMAIN_NAME: ${DOMAIN_NAME}
+
+        CACHE_DOMAIN: ${CACHE_DOMAIN}
+        MEDIA_DOMAIN: ${MEDIA_DOMAIN}
+
+        SMTP_HOST: ${SMTP_HOST}
+        SMTP_USER: ${SMTP_USER}
+        SMTP_PORT: ${SMTP_PORT}
+        SMTP_PASSWORD: ${SMTP_PASSWORD}
+        SMTP_FROM: ${SMTP_FROM}
+
+        POSTGRES_USER: ${POSTGRES_USER}
+        POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+        POSTGRES_DBNAME: ${POSTGRES_DBNAME}
+
+        WEBPUSH_EMAIL: ${WEBPUSH_EMAIL}
+        WEBPUSH_PRIVATE: ${WEBPUSH_PRIVATE}
+        WEBPUSH_PUBLIC: ${WEBPUSH_PUBLIC}
+
+        ENABLE_BSKY: ${ENABLE_BSKY}
+        PDS_DOMAIN_NAME: ${PDS_DOMAIN_NAME}
+
+        USE_WORKERS: false
+        LOG_SQL_QUERIES: ${LOG_SQL_QUERIES:-}
+        UPLOAD_LIMIT: ${UPLOAD_LIMIT:-}
+        POSTS_PER_PAGE: ${POSTS_PER_PAGE:-}
+        LOG_LEVEL: ${LOG_LEVEL:-}
+        BLOCKLIST_URI: ${BLOCKLIST_URI:-}
+        FRONTEND_PATH: ${FRONTEND_PATH:-}
+        DISABLE_REQUIRE_SEND_EMAIL: ${DISABLE_REQUIRE_SEND_EMAIL:-}
+        BLOCKED_IPS: ${BLOCKED_IPS:-}
+        REVIEW_REGISTRATIONS: ${REVIEW_REGISTRATIONS:-}
+        IGNORE_BLOCK_HOSTS: ${IGNORE_BLOCK_HOSTS:-}
+
+        FRONTEND_LOGO: ${FRONTEND_LOGO:-}
+        FRONTEND_API_URL: ${FRONTEND_API_URL:-}
+        FRONTEND_MEDIA_URL: ${FRONTEND_MEDIA_URL:-}
+        FRONTEND_CACHE_URL: ${FRONTEND_CACHE_URL:-}
+        FRONTEND_CACHE_BACKUP_URLS: ${FRONTEND_CACHE_BACKUP_URLS:-}
+        FRONTEND_SHORTEN_POSTS: ${FRONTEND_SHORTEN_POSTS:-}
+        FRONTEND_DISABLE_PWA: ${FRONTEND_DISABLE_PWA:-}
+        FRONTEND_MAINTENANCE: ${FRONTEND_MAINTENANCE:-}
+    depends_on:
+      db:
+        condition: service_started
+      redis:
+        condition: service_started
+      frontend:
+        condition: service_started
+      migration:
+        condition: service_completed_successfully
+    restart: unless-stopped
+    environment:
+      - NODE_ENV=production
+    volumes:
+      - ./packages/backend/uploads:/wafrn/uploads
+      - ./packages/backend/cache:/wafrn/cache
+      - frontend:/wafrn/packages/frontend:ro
+
+  migration:
+    <<: *default_backend
+    depends_on:
+      db:
+        condition: service_started
+      redis:
+        condition: service_started
+      frontend:
+        condition: service_started
+    restart: no
+    command: "npm exec tsx migrate.ts init-container"
+
+  frontend:
+    restart: unless-stopped
+    build:
+      context: packages/frontend
+      dockerfile: Dockerfile
+      args:
+        DOMAIN_NAME: ${DOMAIN_NAME}
+        PDS_DOMAIN_NAME: ${PDS_DOMAIN_NAME}
+        CACHE_DOMAIN: ${CACHE_DOMAIN}
+        MEDIA_DOMAIN: ${MEDIA_DOMAIN}
+        ACME_EMAIL: ${ACME_EMAIL}
+        CACHE_HOST: "cache:9000"
+    ports:
+      - 80:80
+      - 443:443
+    volumes:
+      - "caddy:/data"
+      - "frontend:/var/www/html/frontend"
+      - ./packages/backend/uploads:/var/www/html/uploads
+
+  db:
+    image: postgres:17
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DBNAME}
+    volumes:
+      - dbpg:/var/lib/postgresql/data
+
+  adminer:
+    image: adminer
+    restart: unless-stopped
+
+  redis:
+    image: redis:7.2.4
+    restart: unless-stopped
+    volumes:
+      - redis:/data
+
+  pds:
+    image: ghcr.io/bluesky-social/pds:0.4
+    restart: unless-stopped
+    profiles:
+      - bluesky
+    environment:
+      PDS_HOSTNAME: ${PDS_DOMAIN_NAME}
+      PDS_JWT_SECRET: ${PDS_JWT_SECRET}
+      PDS_ADMIN_PASSWORD: ${PDS_ADMIN_PASSWORD}
+      PDS_PLC_ROTATION_KEY_K256_PRIVATE_KEY_HEX: ${PDS_PLC_ROTATION_KEY_K256_PRIVATE_KEY_HEX}
+      PDS_DATA_DIRECTORY: /pds
+      PDS_BLOBSTORE_DISK_LOCATION: /pds/blocks
+      PDS_BLOB_UPLOAD_LIMIT: 52428800
+      PDS_DID_PLC_URL: "https://plc.directory"
+      PDS_BSKY_APP_VIEW_URL: "https://api.bsky.app"
+      PDS_BSKY_APP_VIEW_DID: "did:web:api.bsky.app"
+      PDS_REPORT_SERVICE_URL: "https://mod.bsky.app"
+      PDS_REPORT_SERVICE_DID: "did:plc:ar7c4by46qjdydhdevvrndac"
+      PDS_CRAWLERS: "https://bsky.network"
+      LOG_ENABLED: true
+    volumes:
+      - pds:/pds
+
+  pds_worker:
+    <<: *default_backend
+    profiles:
+      - bluesky
+    command: "npm exec tsx atproto.ts"
+
+  cache:
+    <<: *default_backend
+
+  workers:
+    <<: *default_backend
+    build:
+      <<: *default_backend_build
+      args:
+        <<: *default_backend_build_args
+        USE_WORKERS: true
+    deploy:
+      mode: replicated
+      replicas: 3
+
+volumes:
+  dbpg:
+  caddy:
+  pds:
+  frontend:
+  redis:

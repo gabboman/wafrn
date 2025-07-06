@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common'
+
 import { Component, Input, OnChanges, signal, SimpleChanges } from '@angular/core'
 import { MatButtonModule } from '@angular/material/button'
 import { MatTooltipModule } from '@angular/material/tooltip'
@@ -36,7 +36,7 @@ import { PostsService } from 'src/app/services/posts.service'
 
 @Component({
   selector: 'app-bottom-reply-bar',
-  imports: [CommonModule, RouterModule, FontAwesomeModule, MatButtonModule, MatTooltipModule, PostLinkModule],
+  imports: [RouterModule, FontAwesomeModule, MatButtonModule, MatTooltipModule, PostLinkModule],
   templateUrl: './bottom-reply-bar.component.html',
   styleUrl: './bottom-reply-bar.component.scss'
 })
@@ -145,7 +145,8 @@ export class BottomReplyBarComponent implements OnChanges {
       this.messages.add({
         severity: 'success',
         summary: 'You successfully liked this woot',
-        confettiEmojis: disableConfetti ? [] : ['❤️', '💚', '💙']
+        confettiEmojis: disableConfetti ? [] : ['❤️', '💚', '💙'],
+        soundUrl: '/assets/sounds/1.ogg'
       })
     } else {
       this.messages.add({
@@ -222,7 +223,8 @@ export class BottomReplyBarComponent implements OnChanges {
         this.messages.add({
           severity: 'success',
           summary: 'You rewooted the woot!',
-          confettiEmojis: disableConfetti ? [] : ['🔁']
+          confettiEmojis: disableConfetti ? [] : ['🔁'],
+          soundUrl: '/assets/sounds/2.ogg'
         })
       }
     } else {

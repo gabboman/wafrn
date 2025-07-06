@@ -34,7 +34,7 @@ const updateMediaDataQueue = new Queue('processRemoteMediaData', {
       type: 'exponential',
       delay: 1000
     },
-    removeOnFail: 25000
+    removeOnFail: true
   }
 })
 
@@ -295,7 +295,7 @@ async function getUnjointedPosts(postIdsInput: string[], posterId: string, doNot
   const bookmarks = await getBookmarks(postIds, posterId)
   userIds = userIds.concat(likes.map((like: any) => like.userId))
   const users = User.findAll({
-    attributes: ['url', 'avatar', 'id', 'name', 'remoteId', 'banned', 'bskyDid', 'isBlueskyUser', 'isFediverseUser'],
+    attributes: ['url', 'avatar', 'id', 'name', 'remoteId', 'banned', 'bskyDid'],
     where: {
       id: {
         [Op.in]: userIds

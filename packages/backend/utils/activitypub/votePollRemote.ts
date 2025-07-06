@@ -29,7 +29,7 @@ const sendPostQueue = new Queue('sendPostToInboxes', {
       type: 'exponential',
       delay: 1000
     },
-    removeOnFail: 25000
+    removeOnFail: true
   }
 })
 
@@ -38,8 +38,7 @@ const queueEvents = new QueueEvents('sendPostToInboxes', {
 })
 async function voteInPoll(userId: string, pollId: number) {
   const user = await User.findByPk(userId)
-  if (!user)
-    return
+  if (!user) return
 
   const votesToSend = await QuestionPollQuestion.findAll({
     include: [
@@ -87,7 +86,7 @@ async function voteInPoll(userId: string, pollId: number) {
     }
     const inboxes = vote.questionPoll.post.user.remoteInbox
     const sendVoteJob = await sendPostQueue.add(
-      'sencChunk',
+      'sendChunk',
       {
         objectToSend: voteObject,
         petitionBy: user.dataValues,

@@ -3,7 +3,7 @@ import checkIpBlocked from '../utils/checkIpBlocked.js'
 import AuthorizedRequest from '../interfaces/authorizedRequest.js'
 import { Application, Request, Response } from 'express'
 import { Post, QuestionPoll, QuestionPollAnswer, QuestionPollQuestion, User, sequelize } from '../models/index.js'
-import { Op, QueryTypes } from 'sequelize'
+import { Model, Op, QueryTypes } from 'sequelize'
 import {
   getBookmarks,
   getEmojis,
@@ -15,6 +15,7 @@ import {
 } from '../utils/baseQueryNew.js'
 import getFollowedsIds from '../utils/cacheGetters/getFollowedsIds.js'
 import { Privacy } from '../models/post.js'
+import { getallBlockedServers } from '../utils/cacheGetters/getAllBlockedServers.js'
 
 export default function forumRoutes(app: Application) {
   app.get('/api/forum/:id', optionalAuthentication, async (req: AuthorizedRequest, res: Response) => {
@@ -36,6 +37,32 @@ export default function forumRoutes(app: Application) {
         )
       ).map((elem: any) => elem.postsId)
       const fullPostsToGet = await Post.findAll({
+        /* TODO this
+        include: [
+          {
+            model: User,
+            as: 'user',
+            required: true,
+            where: {
+              banned: {
+                [Op.ne]: true
+              },
+              [Op.or]: [
+                {
+                  federatedHostId: {
+                    [Op.notIn]: await getallBlockedServers()
+                  }
+                },
+                {
+                  federatedHostId: {
+                    [Op.eq]: undefined
+                  }
+                }
+              ]
+            }
+          }
+        ],
+        */
         where: {
           id: {
             [Op.in]: [...new Set(postIds.concat([postId]))]

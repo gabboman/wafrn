@@ -110,12 +110,7 @@ export default function searchRoutes(app: Application) {
           remoteUsers = searchRemoteUser(searchTerm.trim(), usr)
           promises.push(remoteUsers)
         }
-        if (
-          usr?.enableBsky &&
-          searchTerm.split('@').length === 2 &&
-          searchTerm.split('@')[0] == '' &&
-          !searchTerm.split('@')[1].endsWith(environment.bskyPds)
-        ) {
+        if (usr?.enableBsky && searchTerm.split('@').length === 2 && searchTerm.split('@')[0] == '') {
           remoteUsers = [await getAtprotoUser(searchTerm.split('@')[1], usr)]
         }
         const urlPattern = /(?:https?):\/\/(\w+:?\w*)?(\S+)(:\d+)?(\/|\/([\w#!:.?+=&%!\-\/]))?/
@@ -173,7 +168,7 @@ export default function searchRoutes(app: Application) {
     localUsers = await localUsers
     users = await users
 
-    const foundUsers = [...remoteUsers, ...localUsers, ...users]
+    const foundUsers = [...remoteUsers, ...localUsers, ...users].filter(elem => !!elem)
     const userIds = foundUsers.map((u: any) => u.id)
     const userEmojiIds = await UserEmojiRelation.findAll({
       attributes: ['emojiId', 'userId'],

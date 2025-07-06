@@ -20,7 +20,7 @@ const processPostViewQueue = new Queue('processRemoteView', {
       type: 'exponential',
       delay: 25000
     },
-    removeOnFail: 25000
+    removeOnFail: true
   }
 })
 
@@ -112,6 +112,9 @@ async function handlePostRequest(req: SignedRequest, res: Response) {
         }
       }
       const response = await postToJSONLD(post.id)
+      if (!response) {
+        return res.sendStatus(404)
+      }
       res.set({
         'content-type': 'application/activity+json'
       })

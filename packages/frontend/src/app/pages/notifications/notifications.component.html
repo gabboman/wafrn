@@ -9,13 +9,13 @@
   }
 }
 
-<div class="load-more-notifications-intersector"><app-loader>notifications</app-loader></div>
+<div class="load-more-notifications-intersector" role="region" [attr.aria-label]="'notifications.loadingMore' | translate"><app-loader>notifications</app-loader></div>
 
 <button
   (click)="reload()"
   mat-mini-fab
   color="default"
-  aria-label="Refresh"
+  [attr.aria-label]="'notifications.refresh' | translate"
   class="refresh-button"
   style="position: fixed; z-index: 500; top: 1em; right: 1em"
 >

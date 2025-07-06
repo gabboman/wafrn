@@ -1,6 +1,4 @@
-<mat-dialog-content style="padding: 0px; overflow-x: hidden">
-  <!-- hardcoded padding :( -->
-
+<mat-card class="p-3 mb-6 lg:mx-4 wafrn-container">
   <div class="below-editor-toolbar">
     <div class="below-editor-toolbar-leftside">
       <button mat-icon-button class="close-post-btn" (click)="closeEditor()">
@@ -14,7 +12,7 @@
         class="input-height-btn"
         [matTooltip]="getPrivacyIconName()"
         [disabled]="editing"
-      >
+        >
         <fa-icon size="lg" [icon]="getPrivacyIcon()"></fa-icon>
       </button>
       <button
@@ -23,7 +21,7 @@
         (click)="quoteOpen = !quoteOpen"
         class="input-height-btn"
         matTooltip="{{ 'editor.quoteButton' | translate }}"
-      >
+        >
         <fa-icon size="lg" [icon]="quoteIcon"></fa-icon>
       </button>
       @if (pollQuestions.length === 0) {
@@ -36,7 +34,7 @@
         mat-icon-button
         (click)="showContentWarning = !showContentWarning"
         matTooltip="{{ 'editor.contentWarningTooltip' | translate }}"
-      >
+        >
         @if (contentWarning.includes('meta')) {
           <fa-icon size="lg" [icon]="skull"></fa-icon>
         } @else {
@@ -48,11 +46,11 @@
         mat-icon-button
         (click)="openEmojiSelection()"
         matTooltip="{{ 'editor.insertEmojiTooltip' | translate }}"
-      >
+        >
         <svg width="20px" height="20px" viewBox="0 0 1000 1000" fill="currentColor" class="vertical-align-middle">
           <path
             d="M958 104h-62V43q0-17-12-29T855 2h-87q-17 0-29 12t-12 29v61h-62q-17 0-29 12t-12 29v4q-81-34-169-34-116 0-217 59-97 57-154 154-58 100-58 216.5T84 761q57 98 154 155 101 58 217.5 58T672 916q97-57 154-155 59-100 59-216 0-88-34-168h4q17 0 29-12t12-29v-62h62q17 0 29-12t12-29v-88q0-17-12-29t-29-12zM644 348q29 0 49.5 20.5t20.5 49-20.5 49T644 487t-49.5-20.5-20.5-49 20.5-49T644 348zm-377 0q29 0 49.5 20.5t20.5 49-20.5 49T267 487t-49.5-20.5-20.5-49 20.5-49T267 348zm473 255q-10 70-50.5 126.5t-102 88.5-132 32-132-32-102-88.5T171 603q-2-16 8.5-27.5T206 564h499q16 0 26.5 11.5T740 603zm218-370H855v103h-87V233H665v-88h103V43h87v102h103v88z"
-          />
+            />
         </svg>
       </button>
       <!--
@@ -63,7 +61,7 @@
         mat-icon-button
         (click)="showMentionedUsersList = !showMentionedUsersList"
         matTooltip="{{ 'editor.hiddenMentionsTooltip' | translate }}"
-      >
+        >
         <fa-icon size="lg" [icon]="atIcon"></fa-icon>
       </button>
     --></div>
@@ -78,18 +76,20 @@
           (postCreatorForm.value.content === initialContent && tags.length === 0 && uploadedMedias.length === 0)
         "
         matTooltip="{{ 'editor.publishWoot' | translate }}"
-      >
+        >
         <fa-icon size="lg" [icon]="postIcon"></fa-icon>
       </button>
     </div>
   </div>
 
   <div class="post-editor-data">
-    <h4 class="mt-3" *ngIf="editing">You are editing your woot</h4>
-    <ng-container *ngIf="data && data.ask">
+    @if (editing) {
+      <h4 class="mt-3">You are editing your woot</h4>
+    }
+    @if (data && data.ask) {
       <h4 class="mt-3">Replying ask</h4>
       <app-single-ask [ask]="data.ask"></app-single-ask>
-    </ng-container>
+    }
 
     @if (privacy === 10) {
       <app-info-card [type]="'caution'" addClass="mb-3">
@@ -113,7 +113,7 @@
           [(ngModel)]="contentWarning"
           placeholder="{{ 'editor.sensitivePlaceholder' | translate }}"
           matNativeControl
-        />
+          />
       </mat-form-field>
     }
 
@@ -130,25 +130,27 @@
     }
 
     @if (quoteOpen && !data?.quote) {
-      <mat-card class="p-2 my-4" *ngIf="!quoteLoading">
-        <mat-form-field class="w-full" appearance="outline">
-          <mat-label> {{ 'editor.wootQuoteBoxLabel' | translate }} </mat-label>
-          <input
-            [(ngModel)]="urlPostToQuote"
-            placeholder="{{ 'editor.wootQuoteBoxPlaceholder' | translate }}"
-            matNativeControl
-          />
-        </mat-form-field>
-        <button
-          (click)="loadQuote()"
-          mat-stroked-button
-          color="primary"
-          class="w-full"
-          [disabled]="urlPostToQuote === ''"
-        >
-          {{ 'editor.wootQuoteConfirmButton' | translate }}
-        </button>
-      </mat-card>
+      @if (!quoteLoading) {
+        <mat-card class="p-2 my-4">
+          <mat-form-field class="w-full" appearance="outline">
+            <mat-label> {{ 'editor.wootQuoteBoxLabel' | translate }} </mat-label>
+            <input
+              [(ngModel)]="urlPostToQuote"
+              placeholder="{{ 'editor.wootQuoteBoxPlaceholder' | translate }}"
+              matNativeControl
+              />
+          </mat-form-field>
+          <button
+            (click)="loadQuote()"
+            mat-stroked-button
+            color="primary"
+            class="w-full"
+            [disabled]="urlPostToQuote === ''"
+            >
+            {{ 'editor.wootQuoteConfirmButton' | translate }}
+          </button>
+        </mat-card>
+      }
     }
 
     <form [formGroup]="postCreatorForm">
@@ -176,7 +178,7 @@
 
     <section id="uploaded-media">
       <div class="grid">
-        <ng-container *ngFor="let media of uploadedMedias; let i = index">
+        @for (media of uploadedMedias; track media; let i = $index) {
           <div class="col-12 md:col-6 my-2 relative">
             <app-media-preview [media]="media"></app-media-preview>
             <mat-form-field class="w-full" appearance="outline">
@@ -199,24 +201,30 @@
               </button>
             </div>
           </div>
-        </ng-container>
+        }
       </div>
-      <p class="my-2" *ngIf="uploadedMedias.length >= 4">
-        {{ 'editor.mediaCountMastodonWarning' | translate }}
-      </p>
-      <p class="my-2" *ngIf="!allDescriptionsFilled()">
-        {{ 'editor.altTextWarning' | translate }}
-      </p>
+      @if (uploadedMedias.length >= 4) {
+        <p class="my-2">
+          {{ 'editor.mediaCountMastodonWarning' | translate }}
+        </p>
+      }
+      @if (!allDescriptionsFilled()) {
+        <p class="my-2">
+          {{ 'editor.altTextWarning' | translate }}
+        </p>
+      }
     </section>
 
     <section id="tags" class="w-full flex-row">
       <mat-form-field class="w-full" appearance="outline">
         <mat-label>{{ 'editor.tagFieldLabel' | translate }}</mat-label>
-        <input [(ngModel)]="tags" placeholder="{{ 'editor.tagSeparationNotice' | translate }}" matNativeControl />
+        <input [(ngModel)]="tags" placeholder="{{ 'common.commaSeparation' | translate }}" matNativeControl />
       </mat-form-field>
       <div class="taglist">
         @for (tag of tags.split(','); track $index) {
-          <span *ngIf="tag && tag !== '' && tag.trim() !== ''" class="tag"> #{{ tag.trim() }} </span>
+          @if (tag && tag !== '' && tag.trim() !== '') {
+            <span class="tag"> #{{ tag.trim() }} </span>
+          }
         }
       </div>
     </section>
@@ -230,21 +238,27 @@
     }
 
     <section id="quote">
-      <div *ngIf="!data?.quote">
-        <mat-spinner *ngIf="quoteLoading" class="my-4" color="accent" diameter="24"></mat-spinner>
-      </div>
-      <div *ngIf="data && data.quote">
-        <p class="mb-2">{{ 'editor.quoteTitle' | translate }}</p>
-        <div class="quoted-post mb-4">
-          <button mat-mini-fab class="delete-btn" color="warn" (click)="data ? (data.quote = undefined) : null">
-            <fa-icon size="lg" [icon]="closeIcon"></fa-icon>
-          </button>
-          <div class="flex">
-            <app-post-header [fragment]="data.quote"></app-post-header>
-          </div>
-          <app-post-fragment [fragment]="data.quote"></app-post-fragment>
+      @if (!data?.quote) {
+        <div>
+          @if (quoteLoading) {
+            <mat-spinner class="my-4" color="accent" diameter="24"></mat-spinner>
+          }
         </div>
-      </div>
+      }
+      @if (data && data.quote) {
+        <div>
+          <p class="mb-2">{{ 'editor.quoteTitle' | translate }}</p>
+          <div class="quoted-post mb-4">
+            <button mat-mini-fab class="delete-btn" color="warn" (click)="data ? (data.quote = undefined) : null">
+              <fa-icon size="lg" [icon]="closeIcon"></fa-icon>
+            </button>
+            <div class="flex">
+              <app-post-header [fragment]="data.quote"></app-post-header>
+            </div>
+            <app-post-fragment [fragment]="data.quote"></app-post-fragment>
+          </div>
+        </div>
+      }
     </section>
     <span [innerHTML]="'editor.editorGuide' | translate" addClass="mb-3"> </span>
     <!-- Popup Menus -->
@@ -262,7 +276,7 @@
       [hidden]="suggestions.length === 0"
       [style.left.px]="cursorPosition.x"
       [style.top.px]="cursorPosition.y"
-    >
+      >
       <div class="flex flex-column gap-2">
         @for (user of suggestions; track $index) {
           <div (click)="insertMention(user)" class="flex gap-2 align-items-center suggestion-item">
@@ -281,4 +295,4 @@
       </div>
     </div>
   </div>
-</mat-dialog-content>
+</mat-card>

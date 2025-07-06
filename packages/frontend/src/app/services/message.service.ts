@@ -1,22 +1,31 @@
 import { Injectable } from '@angular/core'
 import { MatSnackBar } from '@angular/material/snack-bar'
 import JSConfetti from 'js-confetti'
+import { AudioService } from './audio.service'
 
 @Injectable({
   providedIn: 'root'
 })
 export class MessageService {
-  confetti: JSConfetti
-  constructor(private snackBar: MatSnackBar) {
-    this.confetti = new JSConfetti()
+  public static confetti: JSConfetti
+  constructor(
+    private snackBar: MatSnackBar,
+    private audioService: AudioService
+  ) {
+    if(!MessageService.confetti){
+      MessageService.confetti = new JSConfetti()
+    }
   }
 
   add(message: {
     severity: 'error' | 'success' | 'warn' | 'info'
     summary: string
     confettiEmojis?: string[]
-    //detail?: string;
+    soundUrl?: string
   }) {
+    if (localStorage.getItem('disableSounds') != 'true' && message.soundUrl) {
+      this.audioService.playSound(message.soundUrl)
+    }
     let icon = ''
     switch (message.severity) {
       case 'warn':
@@ -32,7 +41,7 @@ export class MessageService {
       verticalPosition: 'top'
     })
     if (message.confettiEmojis && message.confettiEmojis.length) {
-      this.confetti.addConfetti({
+      MessageService.confetti.addConfetti({
         emojis: message.confettiEmojis
       })
     }

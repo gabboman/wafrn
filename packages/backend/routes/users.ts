@@ -55,6 +55,10 @@ import dompurify from 'isomorphic-dompurify'
 import { Queue } from 'bullmq'
 import * as OTPAuth from 'otpauth'
 import verifyTotp from '../utils/verifyTotp.js'
+import { getPetitionSigned } from '../utils/activitypub/getPetitionSigned.js'
+import { isArray } from 'underscore'
+import { follow } from '../utils/follow.js'
+import { activityPubObject } from '../interfaces/fediverse/activityPubObject.js'
 
 const markdownConverter = new showdown.Converter({
   simplifiedAutoLink: true,
@@ -75,7 +79,20 @@ const generateUserKeyPairQueue = new Queue('generateUserKeyPair', {
       type: 'exponential',
       delay: 1000
     },
-    removeOnFail: 25000
+    removeOnFail: true
+  }
+})
+
+const deletePostQueue = new Queue('deletePostQueue', {
+  connection: environment.bullmqConnection,
+  defaultJobOptions: {
+    removeOnComplete: true,
+    attempts: 3,
+    backoff: {
+      type: 'exponential',
+      delay: 1000
+    },
+    removeOnFail: true
   }
 })
 
@@ -143,11 +160,10 @@ export default function userRoutes(app: Application) {
 
             const userWithEmail = User.create(user)
             const mailHeader = `Welcome to ${environment.instanceUrl}, please verify your email!`
-            const mailBody = `<h1>Welcome to ${environment.instanceUrl}</h1> To verify your email <a href="${
-              environment.instanceUrl
-            }/activate/${encodeURIComponent(
-              req.body.email.toLowerCase()
-            )}/${activationCode}">click here!</a>. If you can not see the link correctly please copy this link:
+            const mailBody = `<h1>Welcome to ${environment.instanceUrl}</h1> To verify your email <a href="${environment.instanceUrl
+              }/activate/${encodeURIComponent(
+                req.body.email.toLowerCase()
+              )}/${activationCode}">click here!</a>. If you can not see the link correctly please copy this link:
             ${environment.instanceUrl}/activate/${encodeURIComponent(req.body.email.toLowerCase())}/${activationCode}
             `
             const emailSent = environment.disableRequireSendEmail
@@ -380,10 +396,26 @@ export default function userRoutes(app: Application) {
             'Hello, thanks for confirming your email address. The admin team will review your registration and will be aproved shortly'
           emailSubject = 'Thanks for verifying your email, Our admin team will review your registration request soon!'
         }
-
-        await Promise.all([user.save(), sendActivationEmail(req.body.email.toLowerCase(), '', emailSubject, emailBody)])
-        success = true
+        try {
+          await Promise.all([
+            user.save(),
+            sendActivationEmail(req.body.email.toLowerCase(), '', emailSubject, emailBody)
+          ])
+          success = true
+        } catch (error) {
+          logger.info({
+            message: `Error while activating account`,
+            error: error
+          })
+        }
       }
+    }
+
+    if (!success) {
+      logger.info({
+        message: `Success marked as false on activate account!`,
+        body: req.body
+      })
     }
 
     res.send({
@@ -576,116 +608,149 @@ export default function userRoutes(app: Application) {
 
   // list all registered MFA options for a user
   app.get('/api/user/mfa', authenticateToken, async (req: AuthorizedRequest, res) => {
-    if (req.jwtData?.userId) {
-      try {
-        const mfaDetails = await MfaDetails.findAll({
-          where: {
-            userId: req.jwtData?.userId,
-            enabled: {
-              [Op.eq]: true
-            }
-          }
-        })
-        res.send({
-          success: true,
-          mfa: mfaDetails.map((detail) => ({
-            id: detail.id,
-            name: detail.name,
-            type: detail.type,
-            enabled: detail.enabled
-          }))
-        })
+    try {
+      if (!req.jwtData?.userId) {
+        // NOTE: 401 means "we need to know who you are", not "you are not authorized to do this" which would be code 403
+        res.status(401).send({ success: false, message: 'Invalid JWT' })
         return
-      } catch (error) {
-        logger.error(error)
       }
+  
+      const mfaDetails = await MfaDetails.findAll({
+        where: {
+          userId: req.jwtData?.userId,
+          enabled: {
+            [Op.eq]: true
+          }
+        }
+      })
+      res.send({
+        success: true,
+        mfa: mfaDetails.map((detail) => ({
+          id: detail.id,
+          name: detail.name,
+          type: detail.type,
+          enabled: detail.enabled
+        }))
+      })
+    } catch (error) {
+      logger.error(error)
+      res.status(500).send({ success: false, message: 'Error fetching MFA details' })
     }
-    res.send({ success: false })
   })
 
   app.post('/api/user/mfa', authenticateToken, async (req: AuthorizedRequest, res) => {
     try {
-      if (req.jwtData?.userId && req.body?.type == 'totp') {
-        const totpSettings: any = {
-          algorithm: 'SHA1',
-          digits: 6,
-          period: 30,
-          secret: new OTPAuth.Secret({ size: 20 }).base32
-        }
-
-        const mfaDetail = await MfaDetails.create({
-          userId: req.jwtData?.userId,
-          type: 'totp',
-          name: req.body?.name || 'Authenticator App',
-          data: totpSettings,
-          enabled: false
-        })
-
-        totpSettings.issuer = environment.instanceUrl
-        totpSettings.label = req.jwtData?.email
-
-        const totp = new OTPAuth.TOTP(totpSettings)
-
-        res.send({
-          success: true,
-          mfa: {
-            id: mfaDetail.id,
-            type: mfaDetail.type,
-            name: mfaDetail.name,
-            secret: totpSettings.secret,
-            qrString: totp.toString()
-          }
-        })
+      if (!req.jwtData?.userId) {
+        res.status(401).send({ success: false, message: 'Invalid JWT' })
         return
       }
+      if (req.body?.type !== 'totp') {
+        res.status(400).send({ success: false, message: 'Invalid MFA type' })
+        return
+      }
+
+      const totpSettings: any = {
+        algorithm: 'SHA1',
+        digits: 6,
+        period: 30,
+        secret: new OTPAuth.Secret({ size: 20 }).base32
+      }
+
+      const mfaDetail = await MfaDetails.create({
+        userId: req.jwtData?.userId,
+        type: 'totp',
+        name: req.body?.name || 'Authenticator App',
+        data: totpSettings,
+        enabled: false
+      })
+
+      totpSettings.issuer = environment.instanceUrl
+      totpSettings.label = req.jwtData?.email
+
+      const totp = new OTPAuth.TOTP(totpSettings)
+
+      res.send({
+        success: true,
+        mfa: {
+          id: mfaDetail.id,
+          type: mfaDetail.type,
+          name: mfaDetail.name,
+          secret: totpSettings.secret,
+          qrString: totp.toString()
+        }
+      })
     } catch (error) {
       logger.error(error)
+      res.status(500).send({ success: false, message: 'Error creating MFA detail' })
     }
-    res.send({ success: false })
   })
 
   app.post('/api/user/mfa/:id/verify', authenticateToken, async (req: AuthorizedRequest, res) => {
     try {
-      if (req.jwtData?.userId && req.body?.token) {
-        const mfaDetail = await MfaDetails.findOne({
-          where: {
-            id: req.params.id,
-            userId: req.jwtData?.userId,
-            enabled: {
-              [Op.eq]: false
-            }
-          }
-        })
-        if (mfaDetail) {
-          if (await verifyTotp(mfaDetail, req.body?.token)) {
-            mfaDetail.enabled = true
-            await mfaDetail.save()
-            res.send({ success: true })
-            return
+      if (!req.jwtData?.userId) {
+        res.status(401).send({ success: false, message: 'Invalid JWT' })
+        return
+      }
+      if (!req.body?.token) {
+        res.status(400).send({ success: false, message: 'Token is required' })
+        return
+      }
+
+      const mfaDetail = await MfaDetails.findOne({
+        where: {
+          id: req.params.id,
+          userId: req.jwtData?.userId,
+          enabled: {
+            [Op.eq]: false
           }
         }
+      })
+
+      if (mfaDetail) {
+        if (await verifyTotp(mfaDetail, req.body?.token)) {
+          mfaDetail.enabled = true
+          await mfaDetail.save()
+          res.send({ success: true })
+          return
+        }
+      } else {
+        logger.info({
+          message: 'MFA detail not found',
+          userId: req.jwtData?.userId,
+          mfaDetailId: req.params.id
+        })
+        res.status(500).send({ success: false })
+        // NOTE: explicitly not sending 404 here because
+        // we don't want to leak information about the existence of the MFA detail to the user
       }
     } catch (error) {
       logger.error(error)
+      res.status(500).send({ success: false, message: 'Error verifying MFA token' })
     }
-    res.send({ success: false })
   })
 
   app.delete('/api/user/mfa/:id', authenticateToken, async (req: AuthorizedRequest, res) => {
     try {
-      if (req.jwtData?.userId) {
-        const mfaDetail = await MfaDetails.findOne({
-          where: {
-            id: req.params.id,
-            userId: req.jwtData?.userId
-          }
-        })
-        if (mfaDetail) {
-          await mfaDetail.destroy()
-          res.send({ success: true })
-          return
-        }
+      if (!req.jwtData?.userId) {
+        res.status(401).send({ success: false, message: 'Invalid JWT' })
+        return
       }
+      if (!req.params.id) {
+        res.status(400).send({ success: false, message: 'MFA detail ID is required' })
+        return
+      }
+      const mfaDetail = await MfaDetails.findOne({
+        where: {
+          id: req.params.id,
+          userId: req.jwtData?.userId
+        }
+      })
+      if (mfaDetail) {
+        await mfaDetail.destroy()
+      }
+      // NOTE: explicitly not sending 404 here because
+      // we don't want to leak information about the existence of the MFA detail to the user
+      res.send({ success: true })
     } catch (error) {
       logger.error(error)
     }
@@ -713,8 +778,7 @@ export default function userRoutes(app: Application) {
           'followerCount',
           'manuallyAcceptsFollows',
           'bskyDid',
-          'isFediverseUser',
-          'isBlueskyUser',
+          'userMigratedTo',
           [sequelize.literal(`"id" = '${userId}' AND "enableBsky"`), 'enableBsky'],
           [sequelize.literal(`"id" = '${userId}' AND "disableEmailNotifications"`), 'disableEmailNotifications'],
           [sequelize.literal(`"id" = '${userId}' AND "hideProfileNotLoggedIn"`), 'hideProfileNotLoggedIn'],
@@ -756,19 +820,19 @@ export default function userRoutes(app: Application) {
       let followed = blog.url.startsWith('@')
         ? blog.followingCount
         : Follows.count({
-            where: {
-              followerId: blog.id,
-              accepted: true
-            }
-          })
+          where: {
+            followerId: blog.id,
+            accepted: true
+          }
+        })
       let followers = blog.url.startsWith('@')
         ? blog.followerCount
         : Follows.count({
-            where: {
-              followedId: blog.id,
-              accepted: true
-            }
-          })
+          where: {
+            followedId: blog.id,
+            accepted: true
+          }
+        })
       const publicOptions = UserOptions.findAll({
         where: {
           userId: blog.id,
@@ -807,10 +871,10 @@ export default function userRoutes(app: Application) {
 
       const postCount = blog
         ? await Post.count({
-            where: {
-              userId: blog.id
-            }
-          })
+          where: {
+            userId: blog.id
+          }
+        })
         : 0
 
       followed = await followed
@@ -1201,6 +1265,124 @@ export default function userRoutes(app: Application) {
       success: success
     })
   })
+
+  app.post('/api/user/selfDeactivate', authenticateToken, async (req: AuthorizedRequest, res: Response) => {
+    // frontend will warn user. User will recive email.
+    let success = false
+    const userId = req.jwtData?.userId as string
+    const user = (await User.findByPk(userId)) as User
+    const password = req.body.password
+    if (req.body.password && (await bcrypt.compare(req.body.password, user.password))) {
+      user.selfDeleted = true
+      user.activated = false
+      user.updatedAt = new Date()
+      user.banned = true
+      await user.save()
+      await sendActivationEmail(
+        user.email as string,
+        '',
+        `We have marked your ${environment.instanceUrl} for deletion`,
+        `
+            <h1>We are sad to see you go</h1>
+            <p>
+             We have recived your request to delete your account. It will still ve visible for a few moments. In 30 days or less we will complete the destruction process and at that point there will be no going back</p>
+             <p>This is a slow process on our side and thats why its not done imediately</p>
+             <p>We will send to every fedi server that has ever seen a post of yours a "PLEASE DELETE. NOW". This task takes time and slows down the server. We run this task weekly more or less. But just in case, "30 days"</p>.
+            `
+      )
+    }
+
+    res.send({
+      success: success
+    })
+  })
+
+  // TODO still not finished
+  app.post('/api/user/migrateOut', authenticateToken, async (req: AuthorizedRequest, res: Response) => {
+    let success = false
+    const newUserRemoteId: string = req.body.target
+    const localUser = await User.findByPk(req.jwtData?.userId)
+    let message = `User not yet found`
+    if (newUserRemoteId && localUser) {
+      message = `User found but new account doesnt seems to have an alias pointing towards you`
+      try {
+        const localUser = (await User.findByPk(req.jwtData?.userId)) as User
+        const petitionData = await getPetitionSigned(localUser, newUserRemoteId)
+        if (petitionData && petitionData.alsoKnownAs) {
+          const aliasList = isArray(petitionData.alsoKnownAs)
+            ? petitionData.alsoKnownAs.map((elem: string) => elem.toLowerCase())
+            : [petitionData.alsoKnownAs.toLowerCase()]
+          if (aliasList.includes(`${environment.frontendUrl}/fediverse/blog/${localUser.url}`)) {
+            // TIME TO MOVE OUT
+            // FIRST STEP: followers. send message to each follower. a move object
+            const followerIds = await Follows.findAll({
+              attributes: ['followerId'],
+              where: {
+                followedId: localUser.id
+              }
+            })
+            const followers = await User.findAll({
+              where: {
+                id: {
+                  [Op.in]: followerIds.map((elem) => elem.followerId)
+                }
+              }
+            })
+            const moveObjectToSend: activityPubObject = {
+              '@context': 'https://www.w3.org/ns/activitystreams',
+              id:
+                environment.frontendUrl +
+                '/fediverse/blogMove/' +
+                localUser.url.toLowerCase() +
+                '/' +
+                new Date().getTime(),
+              actor: environment.frontendUrl + '/fediverse/blog/' + localUser.url.toLowerCase(),
+              type: 'Move',
+              object: environment.frontendUrl + '/fediverse/blog/' + localUser.url.toLowerCase(),
+              target: newUserRemoteId
+            }
+            for await (const remoteFollower of followers.filter((elem) => !!elem.remoteId)) {
+              await deletePostQueue.add('sendChunk', {
+                objectToSend: moveObjectToSend,
+                petitionBy: localUser,
+                inboxList: [remoteFollower.remoteInbox]
+              })
+            }
+
+            // second step: local followers here: create a follow request to new account
+            const localFollows = await User.findAll({
+              where: {
+                id: {
+                  [Op.in]: followerIds.map((elem) => elem.followerId)
+                },
+                email: {
+                  [Op.ne]: null
+                }
+              }
+            })
+            for await (const localFollow of localFollows) {
+              try {
+                await follow(localFollow.id, localUser.id)
+              } catch (error) {}
+            }
+            // third step: return data and set message to succ ess
+            localUser.userMigratedTo = newUserRemoteId
+            await localUser.save()
+            message = `Operation successful!`
+            success = true
+          } else {
+            message = `Alias not detected`
+          }
+        }
+      } catch (error) {}
+    }
+
+    res.status(success ? 200 : 500)
+    res.send({
+      success,
+      message
+    })
+  })
 }
 
 async function updateBlueskyProfile(agent: BskyAgent, user: User) {
@@ -1208,10 +1390,11 @@ async function updateBlueskyProfile(agent: BskyAgent, user: User) {
   await getCacheAtDids(true)
   return await agent.upsertProfile(async (existingProfile) => {
     const profile = existingProfile ?? {}
-    const fullProfileString = `\nView full profile at ${environment.frontendUrl}/blog/${user.url}`
+    const fullProfileString = `\n\nView full profile at ${environment.frontendUrl}/blog/${user.url}`
     profile.displayName = user.name.substring(0, 63)
     profile.description =
-      dompurify.sanitize(user.descriptionMarkdown.substring(0, 256 - fullProfileString.length), { ALLOWED_TAGS: [] }) +
+      dompurify.sanitize(user.descriptionMarkdown.substring(0, 248 - fullProfileString.length), { ALLOWED_TAGS: [] }) +
+      '[...]' +
       fullProfileString
     if (user.avatar) {
       let pngAvatar = await optimizeMedia('uploads' + user.avatar, {
@@ -1267,15 +1450,15 @@ async function updateProfileOptions(optionsJSON: string, posterId: string) {
         })
         userOption
           ? await userOption.update({
-              optionValue: option.value,
-              public: option.public == true
-            })
+            optionValue: option.value,
+            public: option.public == true
+          })
           : await UserOptions.create({
-              userId: posterId,
-              optionName: option.name,
-              optionValue: option.value,
-              public: option.public == true
-            })
+            userId: posterId,
+            optionName: option.name,
+            optionValue: option.value,
+            public: option.public == true
+          })
       }
     }
   }

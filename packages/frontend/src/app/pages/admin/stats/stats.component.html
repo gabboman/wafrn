@@ -1,27 +1,29 @@
 <h2 class="mb-1 lg:mx-4 wafrn-container">Stats</h2>
-<mat-card *ngIf="backendReply" class="p-3 mb-6 lg:mx-4 wafrn-container">
-  <div class="mb-2">
-    <p>ATProto waiting</p>
-    <p class="big">{{ backendReply.atProtoAwaiting }}</p>
-  </div>
-  <div class="mb-2">
-    <p>Inbox still waiting</p>
-    <p class="big">{{ backendReply.inboxAwaiting }}</p>
-  </div>
-  <div class="mb-2">
-    <p>Preparation send awaiting</p>
-    <p class="big">{{ backendReply.prepareSendPostAwaiting }}</p>
-  </div>
-  <div class="mb-2">
-    <p>Send post awaiting</p>
-    <p class="big">{{ backendReply.sendPostAwaiting }}</p>
-  </div>
-  <div class="mb-2">
-    <p>Delete post awaiting</p>
-    <p class="big">{{ backendReply.deletePostAwaiting }}</p>
-  </div>
-  <div class="mb-2">
-    <p>Generate Private and public key for new user</p>
-    <p class="big">{{ backendReply.createKeyPairWaiting }}</p>
-  </div>
-</mat-card>
+@if (backendReply) {
+  <mat-card class="p-3 mb-6 lg:mx-4 wafrn-container">
+    <div class="mb-2">
+      <p>ATProto waiting</p>
+      <p class="big">{{ backendReply.atProtoAwaiting }}</p>
+    </div>
+    <div class="mb-2">
+      <p>Inbox still waiting</p>
+      <p class="big">{{ backendReply.inboxAwaiting }}</p>
+    </div>
+    <div class="mb-2">
+      <p>Preparation send awaiting</p>
+      <p class="big">{{ backendReply.prepareSendPostAwaiting }}</p>
+    </div>
+    <div class="mb-2">
+      <p>Send post awaiting</p>
+      <p class="big">{{ backendReply.sendPostAwaiting }}</p>
+    </div>
+    <div class="mb-2">
+      <p>Delete post awaiting</p>
+      <p class="big">{{ backendReply.deletePostAwaiting }}</p>
+    </div>
+    <div class="mb-2">
+      <p>Generate Private and public key for new user</p>
+      <p class="big">{{ backendReply.createKeyPairWaiting }}</p>
+    </div>
+  </mat-card>
+}

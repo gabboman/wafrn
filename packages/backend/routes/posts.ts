@@ -65,7 +65,7 @@ const prepareSendPostQueue = new Queue('prepareSendPost', {
       type: 'exponential',
       delay: 1000
     },
-    removeOnFail: 25000
+    removeOnFail: true
   }
 })
 export default function postsRoutes(app: Application) {
@@ -320,7 +320,7 @@ export default function postsRoutes(app: Application) {
                   }
                 })
                 const parentsUserUrls = ancestors.map((elem) => elem.user.url)
-                if (parentsUserUrls.some((elem) => elem.startsWith('@'))) {
+                if (parentsUserUrls.some((elem) => elem.split('@').length == 2)) {
                   return res.status(403).send({ success: false, message: 'You need to enable bluesky' })
                 }
               }
@@ -464,7 +464,7 @@ export default function postsRoutes(app: Application) {
         content = content.replaceAll(mentionRegex, (userUrl: string) => userUrl.toLowerCase())
 
         let dbFoundMentions: any[] = []
-        const newMentionedUsers = req.body.mentionedUsersIds || []
+        const newMentionedUsers = req.body.mentionedUserIds || req.body.mentionedUsersIds || []
         if (postToBeQuoted) {
           newMentionedUsers.push(postToBeQuoted.userId)
         }
@@ -732,6 +732,10 @@ export default function postsRoutes(app: Application) {
       }
       if (!success) {
         res.statusCode = 400
+        logger.debug({
+          message: `Failed to create post`,
+          body: req.body
+        })
         res.send({ success: false })
       }
     }
@@ -742,13 +746,14 @@ export default function postsRoutes(app: Application) {
     let report
     try {
       const posterId = req.jwtData?.userId
-      if (req.body?.postId && req.body.severity && req.body.description) {
+      if ((req.body.userId || req.body?.postId) && req.body.severity && req.body.description) {
         report = await PostReport.create({
           resolved: false,
           severity: req.body.severity,
           description: req.body.description,
           userId: posterId,
-          postId: req.body.postId
+          postId: req.body.postId,
+          reportedUserId: req.body.userId ? req.body.userId : undefined
         })
         success = true
         res.send(report)

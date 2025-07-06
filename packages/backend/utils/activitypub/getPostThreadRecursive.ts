@@ -25,6 +25,7 @@ import { Queue } from 'bullmq'
 import { bulkCreateNotifications } from '../pushNotifications.js'
 import { getDeletedUser } from '../cacheGetters/getDeletedUser.js'
 import { Privacy } from '../../models/post.js'
+import { getAtProtoThread } from '../../atproto/utils/getAtProtoThread.js'
 
 const updateMediaDataQueue = new Queue('processRemoteMediaData', {
   connection: environment.bullmqConnection,
@@ -35,16 +36,19 @@ const updateMediaDataQueue = new Queue('processRemoteMediaData', {
       type: 'exponential',
       delay: 1000
     },
-    removeOnFail: 25000
+    removeOnFail: true
   }
 })
 
 async function getPostThreadRecursive(
   user: any,
-  remotePostId: string,
+  remotePostId: string | null,
   remotePostObject?: any,
-  localPostToForceUpdate?: string
+  localPostToForceUpdate?: string,
+  options?: any
 ) {
+  if (remotePostId === null) return
+
   const deletedUser = getDeletedUser()
   try {
     remotePostId.startsWith(`${environment.frontendUrl}/fediverse/post/`)
@@ -66,15 +70,31 @@ async function getPostThreadRecursive(
       }
     })
   }
+  if (environment.enableBsky && remotePostId.startsWith('at://')) {
+    // Bluesky post. Likely coming from an import
+    const postInDatabase = await Post.findOne({
+      where: {
+        bskyUri: remotePostId
+      }
+    })
+    if (postInDatabase) {
+      return postInDatabase
+    } else if (!remotePostObject) {
+      const postId = await getAtProtoThread(remotePostId)
+      return await Post.findByPk(postId)
+    }
+  }
   const postInDatabase = await Post.findOne({
     where: {
       remotePostId: remotePostId
     }
   })
   if (postInDatabase && !localPostToForceUpdate) {
-    const parentPostPetition = await getPetitionSigned(user, postInDatabase.remotePostId)
-    if (parentPostPetition) {
-      await loadPoll(parentPostPetition, postInDatabase, user)
+    if (postInDatabase.remotePostId) {
+      const parentPostPetition = await getPetitionSigned(user, postInDatabase.remotePostId)
+      if (parentPostPetition) {
+        await loadPoll(parentPostPetition, postInDatabase, user)
+      }
     }
     return postInDatabase
   } else {
@@ -87,9 +107,11 @@ async function getPostThreadRecursive(
           }
         })
         if (remotePostInDatabase) {
-          const parentPostPetition = await getPetitionSigned(user, remotePostInDatabase.remotePostId)
-          if (parentPostPetition) {
-            await loadPoll(parentPostPetition, remotePostInDatabase, user)
+          if (remotePostInDatabase.remotePostId) {
+            const parentPostPetition = await getPetitionSigned(user, remotePostInDatabase.remotePostId)
+            if (parentPostPetition) {
+              await loadPoll(parentPostPetition, remotePostInDatabase, user)
+            }
           }
           return remotePostInDatabase
         }
@@ -131,7 +153,11 @@ async function getPostThreadRecursive(
         // peertube federation. We just add a link to the video, federating this is HELL
         postTextContent = postTextContent + ` <a href="${postPetition.id}" target="_blank">${postPetition.id}</a>`
       }
-      if (postPetition.attachment && postPetition.attachment.length > 0 && !remoteUser.banned) {
+      if (
+        postPetition.attachment &&
+        postPetition.attachment.length > 0 &&
+        (!remoteUser.banned || options?.allowMediaFromBanned)
+      ) {
         for await (const remoteFile of postPetition.attachment) {
           if (remoteFile.type !== 'Link') {
             const wafrnMedia = await Media.create({
@@ -158,7 +184,6 @@ async function getPostThreadRecursive(
           }
         }
       }
-
       const lemmyName = postPetition.name ? postPetition.name : ''
       postTextContent = postTextContent ? postTextContent : `<p>${lemmyName}</p>`
       let createdAt = new Date(postPetition.published)
@@ -170,8 +195,8 @@ async function getPostThreadRecursive(
         content_warning: postPetition.summary
           ? postPetition.summary
           : remoteUser.NSFW
-          ? 'User is marked as NSFW by this instance staff. Possible NSFW without tagging'
-          : '',
+            ? 'User is marked as NSFW by this instance staff. Possible NSFW without tagging'
+            : '',
         createdAt: new Date(postPetition.published),
         updatedAt: createdAt,
         userId: remoteUserServerBaned || remoteUser.banned ? (await deletedUser)?.id : remoteUser.id,
@@ -179,9 +204,11 @@ async function getPostThreadRecursive(
         privacy: privacy
       }
 
+      if (postPetition.name) {
+        postToCreate.title = postPetition.name
+      }
+
       const mentionedUsersIds: string[] = []
-      const tagsToAdd: any = []
-      const emojis: any[] = []
       const quotes: any[] = []
       try {
         if (!remoteUser.banned && !remoteUserServerBaned) {
@@ -266,6 +293,8 @@ async function getPostThreadRecursive(
       }
       newPost.setQuoted(quotes)
 
+      await newPost.save()
+
       await bulkCreateNotifications(
         quotes.map((quote) => ({
           notificationType: 'QUOTE',
@@ -279,8 +308,6 @@ async function getPostThreadRecursive(
           userUrl: remoteUser.url
         }
       )
-
-      await newPost.save()
       try {
         if (!remoteUser.banned && !remoteUserServerBaned) {
           await addTagsToPost(newPost, fediTags)
@@ -288,7 +315,9 @@ async function getPostThreadRecursive(
       } catch (error) {
         logger.info('problem processing tags')
       }
-      await processMentions(newPost, mentionedUsersIds)
+      if (mentionedUsersIds.length != 0) {
+        await processMentions(newPost, mentionedUsersIds)
+      }
       await loadPoll(remotePostObject, newPost, user)
       const postCleanContent = dompurify.sanitize(newPost.content, { ALLOWED_TAGS: [] }).trim()
       const mentions = await newPost.getMentionPost()

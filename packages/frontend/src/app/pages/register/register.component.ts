@@ -5,6 +5,7 @@ import { MessageService } from 'src/app/services/message.service'
 
 import { faEye, faEyeSlash, faUpload, faUser } from '@fortawesome/free-solid-svg-icons'
 import { EnvironmentService } from 'src/app/services/environment.service'
+import { Router } from '@angular/router'
 
 @Component({
   selector: 'app-register',
@@ -167,7 +168,8 @@ export class RegisterComponent {
 
   constructor(
     private loginService: LoginService,
-    private messages: MessageService
+    private messages: MessageService,
+    private router: Router
   ) {
     // minimum age: 14
     this.minimumRegistrationDate = new Date()
@@ -191,6 +193,7 @@ export class RegisterComponent {
           severity: 'success',
           summary: 'Success!'
         })
+        this.router.navigate(['/checkMail'])
       } else {
         this.messages.add({
           severity: 'warn',

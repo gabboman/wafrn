@@ -6,15 +6,19 @@
 @for (post of posts; track $index) {
   <app-post [post]="post"></app-post>
 }
-<app-loader *ngIf="loadingPosts">posts</app-loader>
+@if (loadingPosts) {
+  <app-loader>posts</app-loader>
+}
 
-<mat-card *ngIf="noMorePosts" class="mx-3 lg:mx-4 wafrn-container">
-  <h2>Oh no! No more posts found</h2>
-  <h3>
-    Consider taking a look at the <a [routerLink]="'/dashboard/exploreLocal'">local dashboard</a> or
-    <a [routerLink]="'/dashboard/explore'">explore the fediverse</a>
-  </h3>
-</mat-card>
+@if (noMorePosts) {
+  <mat-card class="mx-3 lg:mx-4 wafrn-container">
+    <h2>You dont seem to be following anyone yet!</h2>
+    <h3>
+      Consider taking a look at the <a [routerLink]="'/dashboard/exploreLocal'">local dashboard</a> or
+      <a [routerLink]="'/dashboard/explore'">explore the fediverse</a>
+    </h3>
+  </mat-card>
+}
 
 <footer class="p-4 flex gap-3 align-items-center">
   <div [hidden]="loadingPosts || noMorePosts" id="if-you-see-this-load-more-posts" class="m-0 text-lg"></div>
@@ -27,6 +31,6 @@
   aria-label="Refresh"
   class="refresh-button"
   style="position: fixed; z-index: 500; top: 1em; right: 1em"
->
+  >
   <fa-icon [icon]="reloadIcon" />
 </button>

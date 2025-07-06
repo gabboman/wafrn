@@ -18,7 +18,7 @@ const sendPostQueue = new Queue('sendPostToInboxes', {
       type: 'exponential',
       delay: 1000
     },
-    removeOnFail: 25000
+    removeOnFail: true
   }
 })
 
@@ -115,7 +115,7 @@ async function likePostRemote(like: any, dislike = false) {
     inboxes = inboxes.concat(usersToSendThePost.map((elem: any) => (elem.remoteInbox ? elem.remoteInbox : '')))
     for await (const inboxChunk of inboxes) {
       await sendPostQueue.add(
-        'sencChunk',
+        'sendChunk',
         {
           objectToSend: likeObject,
           petitionBy: user.dataValues,
@@ -226,7 +226,7 @@ async function emojiReactRemote(react: EmojiReaction, undo = false) {
     inboxes = inboxes.concat(usersToSendThePost.map((elem: any) => (elem.remoteInbox ? elem.remoteInbox : '')))
     for await (const inboxChunk of inboxes) {
       await sendPostQueue.add(
-        'sencChunk',
+        'sendChunk',
         {
           objectToSend: emojireactObject,
           petitionBy: user.dataValues,

@@ -8,10 +8,7 @@ export default function checkIpBlocked(req: Request, res: Response, next: NextFu
     res.status(401),
       res.send({
         message:
-          'Hello, so would you mind sending me an email explaining why the spam or scrapping? Just I want to know. Have a good day. Remember info@wafrn.net',
-        matrix: 'I also have matrix @gabboman92:matrix.org',
-        discord:
-          'my discord is gabboman92 but please if you have gone through the effort of scraping wafrn please be fun and use matrix',
+          'Hello, you seem to be scrapping us. Please contact the administrator',
         have_a_good_day: true
       })
   } else {

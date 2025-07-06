@@ -9,23 +9,21 @@ async function FollowActivity(body: activityPubObject, remoteUser: User, user: U
   const apObject: activityPubObject = body
   // Follow user
   const userToBeFollowed = await getRemoteActor(apObject.object, user)
-  let remoteFollow = await Follows.findOne({
+  
+  let [remoteFollow, created]  = await Follows.findOrCreate({
     where: {
       followerId: remoteUser.id,
       followedId: userToBeFollowed.id
-    }
-  })
-  if (!remoteFollow) {
-    remoteFollow = await Follows.create({
+    },
+    defaults: {
       followerId: remoteUser.id,
       followedId: userToBeFollowed.id,
       remoteFollowId: apObject.id,
       accepted: userToBeFollowed.url.startsWith('@') ? true : !userToBeFollowed.manuallyAcceptsFollows
-    })
-  }
-  await remoteFollow.save()
+    }
+  })
   // we accept it if user accepts follows automaticaly
-  if (remoteFollow.accepted) {
+  if (remoteFollow.accepted && created) {
     createNotification(
       {
         notificationType: 'FOLLOW',

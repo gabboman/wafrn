@@ -10,6 +10,7 @@ import { firstValueFrom } from 'rxjs'
 import { EnvironmentService } from './environment.service'
 import { MessageService } from './message.service'
 import { TranslateService } from '@ngx-translate/core'
+import { environment } from 'src/environments/environment'
 
 @Injectable({
   providedIn: 'root'
@@ -39,7 +40,6 @@ export class LoginService {
       if (petition.success) {
         localStorage.setItem('authToken', petition.token)
         if (petition.mfaRequired) {
-          console.log('MFA Route')
           success = true
           this.router.navigate(['/login/mfa'])
         } else {
@@ -231,11 +231,14 @@ export class LoginService {
       asksLevel: 'wafrn.public.asks',
       forceClassicLogo: 'wafrn.forceClassicLogo',
       defaultPostEditorPrivacy: 'wafrn.defaultPostEditorPrivacy',
+      rssOptions: 'wafrn.enableRSS',
       mutedWords: 'wafrn.mutedWords',
+      superMutedWords: 'wafrn.superMutedWords',
       disableCW: 'wafrn.disableCW',
       forceClassicVideoPlayer: 'wafrn.forceClassicVideoPlayer',
       forceClassicAudioPlayer: 'wafrn.forceClassicAudioPlayer',
       disableConfetti: 'wafrn.disableConfetti',
+      enableConfettiRecivingLike: 'wafrn.enableConfettiRecivingLike',
       forceClassicMediaView: 'wafrn.forceClassicMediaView',
       expandQuotes: 'wafrn.expandQuotes',
       attachments: 'fediverse.public.attachment',
@@ -246,7 +249,10 @@ export class LoginService {
       notifyReactions: 'wafrn.notifyReactions',
       notifyQuotes: 'wafrn.notifyQuotes',
       notifyFollows: 'wafrn.notifyFollows',
-      notifyRewoots: 'wafrn.notifyRewoots'
+      notifyRewoots: 'wafrn.notifyRewoots',
+      disableSounds: 'wafrn.disableSounds',
+      replaceAIWithCocaine: 'wafrn.replaceAIWithCocaine',
+      replaceAIWord: 'wafrn.replaceAIWord'
     }
 
     try {
@@ -311,7 +317,7 @@ export class LoginService {
         await this.postsService.loadFollowers()
       }
     } catch (error) {
-      console.log(error)
+      console.error(error)
     }
 
     return success
@@ -329,6 +335,28 @@ export class LoginService {
       })
     }
     return
+  }
+
+  async deleteAccount(password: string): Promise<boolean> {
+    let res = false
+    let message = 'Something went wrong! Is the password the correct one?'
+    let body = {
+      password: password
+    }
+    try {
+      let petition = await firstValueFrom(
+        this.http.post<{ success: boolean }>(`${EnvironmentService.environment.baseUrl}/user/selfDeactivate`, body)
+      )
+      if (petition.success) {
+        res = true
+      }
+    } catch (error) {
+      message = 'Something went wrong. Please try again or contact an administrator'
+    }
+    if (!res) {
+      this.messagesService.add({ severity: 'error', summary: message })
+    }
+    return res
   }
 
   async handleSuccessfulLogin() {
@@ -350,5 +378,15 @@ export class LoginService {
   getForceClassicLogo(): boolean {
     const res = localStorage.getItem('forceClassicLogo')
     return res == 'true'
+  }
+
+  async migrate(target: string): Promise<{ success: boolean; message: string }> {
+    const res = await firstValueFrom(
+      this.http.post<{ success: boolean; message: string }>(
+        EnvironmentService.environment.baseUrl + '/user/migrateOut',
+        { target }
+      )
+    )
+    return res
   }
 }

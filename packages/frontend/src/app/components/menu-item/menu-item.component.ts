@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common'
+
 import { Component, Input } from '@angular/core'
 import { MatButtonModule } from '@angular/material/button'
 import { MatListModule } from '@angular/material/list'
@@ -10,7 +10,7 @@ import { MatBadgeModule } from '@angular/material/badge'
 
 @Component({
   selector: 'app-menu-item',
-  imports: [CommonModule, RouterModule, FontAwesomeModule, MatButtonModule, MatListModule, MatBadgeModule],
+  imports: [RouterModule, FontAwesomeModule, MatButtonModule, MatListModule, MatBadgeModule],
   templateUrl: './menu-item.component.html',
   styleUrl: './menu-item.component.scss'
 })

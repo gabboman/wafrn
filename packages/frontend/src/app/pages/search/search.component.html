@@ -1,4 +1,4 @@
-<main class="wafrn-container">
+<div class="wafrn-container">
   <!-- SEARCH FORM -->
   <div class="pb-4 lg:px-4">
     <mat-card>
@@ -23,56 +23,59 @@
     </mat-card>
   </div>
   <mat-tab-group color="primary">
-    <mat-tab *ngIf="!loading() && (posts().length > 0)" label="Posts">
-      <div *ngFor="let post of posts()">
-        <app-post [post]="post"></app-post>
-      </div>
-    </mat-tab>
-    <mat-tab *ngIf="users().length > 0" label="Users">
-      <div class="mt-4">
-        @for (user of users(); track $index) {
-          <mat-card mat-list-item class="user-preview text-center p-4 m-4">
-            <img
-              [alt]="user.name + ' avatar'"
-              [src]="getAvatar(user.url)"
-              loading="lazy"
-              width="80"
-              height="80"
-              class="block mx-auto my-2 border-round-md"
-            />
-            <div class="flex-grow-1 p-2">
-              <button
-                mat-raised-button
-                color="primary"
-                *ngIf="followedUsers.indexOf(user.id) === -1 && userLoggedIn"
-                (click)="followUser(user.id)"
-                class="mb-4"
-              >
-                Follow
-              </button>
-              <button
-                mat-raised-button
-                color="primary"
-                *ngIf="followedUsers.indexOf(user.id) !== -1 && userLoggedIn"
-                (click)="unfollowUser(user.id)"
-              >
-                Unfollow
-              </button>
-              <p>{{ user.name }}</p>
-              <p>
-                <a [blogLink]="user">{{ user.url }}</a>
-              </p>
-              <div class="mb-3" [innerHTML]="user.description"></div>
-            </div>
-          </mat-card>
+    @if (!loading() && (posts().length > 0)) {
+      <mat-tab label="Posts">
+        @for (post of posts(); track post) {
+          <div>
+            <app-post [post]="post"></app-post>
+          </div>
         }
-      </div>
-    </mat-tab>
+      </mat-tab>
+    }
+    @if (users().length > 0) {
+      <mat-tab label="Users">
+        <div class="mt-4">
+          @for (user of users(); track $index) {
+            <mat-card mat-list-item class="user-preview text-center p-4 m-4">
+              <img [alt]="user.name + ' avatar'" [src]="getAvatar(user.url)" loading="lazy" width="80" height="80"
+                class="block mx-auto my-2 border-round-md" />
+              <div class="flex-grow-1 p-2">
+                @if (followedUsers.indexOf(user.id) === -1 && userLoggedIn) {
+                  <button mat-raised-button color="primary"
+                    (click)="followUser(user.id)" class="mb-4">
+                    Follow
+                  </button>
+                }
+                @if (followedUsers.indexOf(user.id) !== -1 && userLoggedIn) {
+                  <button mat-raised-button color="primary"
+                    (click)="unfollowUser(user.id)">
+                    Unfollow
+                  </button>
+                }
+                <p>{{ user.name }}</p>
+                <p>
+                  <a [blogLink]="user">{{ user.url }}</a>
+                </p>
+                <div class="mb-3" [innerHTML]="user.description"></div>
+              </div>
+            </mat-card>
+          }
+        </div>
+      </mat-tab>
+    }
   </mat-tab-group>
-</main>
+</div>
 
-<footer id="if-you-see-this-load-more-posts" *ngIf="atLeastOneSearchDone" class="p-4 flex gap-3 align-items-center">
-  <mat-spinner *ngIf="loading()" diameter="24"></mat-spinner>
-  <p *ngIf="loading()" class="m-0 text-lg">Loading more...</p>
-  <p *ngIf="posts().length === 0" class="m-0 text-lg">No new results</p>
-</footer>
+@if (atLeastOneSearchDone) {
+  <footer id="if-you-see-this-load-more-posts" class="p-4 flex gap-3 align-items-center">
+    @if (loading()) {
+      <mat-spinner diameter="24"></mat-spinner>
+    }
+    @if (loading()) {
+      <p class="m-0 text-lg">Loading more...</p>
+    }
+    @if (posts().length === 0) {
+      <p class="m-0 text-lg">No new results</p>
+    }
+  </footer>
+}

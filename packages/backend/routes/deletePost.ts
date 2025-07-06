@@ -34,7 +34,7 @@ const deletePostQueue = new Queue('deletePostQueue', {
       type: 'exponential',
       delay: 1000
     },
-    removeOnFail: 25000
+    removeOnFail: true
   }
 })
 
@@ -66,7 +66,7 @@ export default function deletePost(app: Application) {
           }
         }
         // bsky delete
-        if (postToDelete.bskyUri) {
+        if (postToDelete.bskyUri && user.enableBsky) {
           const agent = await getAtProtoSession(user)
           if (postToDelete.bskyCid) {
             await agent.deletePost(postToDelete.bskyUri)
@@ -93,7 +93,7 @@ export default function deletePost(app: Application) {
         // if the post is previous to the new functionality of storing who has seen the post, send to everyone
         // or NUKE has been requested
         if (new Date(postToDelete.createdAt).getTime() < 1721437200091 || req.query?.nuke) {
-          serversToSendThePost = FederatedHost.findAll({
+          serversToSendThePost = await FederatedHost.findAll({
             where: {
               publicInbox: { [Op.ne]: null },
               blocked: false
@@ -162,7 +162,7 @@ export default function deletePost(app: Application) {
           )
           if (postToDelete.privacy != Privacy.LocalOnly) {
             for await (const inboxChunk of _.chunk(inboxes, 1)) {
-              await deletePostQueue.add('sencChunk', {
+              await deletePostQueue.add('sendChunk', {
                 objectToSend: { ...objectToSend, signature: bodySignature.signature },
                 petitionBy: user,
                 inboxList: inboxChunk
@@ -179,7 +179,7 @@ export default function deletePost(app: Application) {
       success = false
     }
 
-    res.send(success)
+    res.send({ success })
   })
 
   app.delete('/api/deleteRewoots', authenticateToken, async (req: AuthorizedRequest, res: Response) => {
@@ -202,14 +202,14 @@ export default function deletePost(app: Application) {
         const reblogsToDelete = unfilteredPostIds
 
         if (!reblogsToDelete) {
-          return res.send(true)
+          return res.send({ success: true })
         }
         if (user.enableBsky) {
           const agent = await getAtProtoSession(user)
           postsToDeleteUnfiltered
             .filter((elem) => elem.bskyUri && !elem.bskyCid)
             .forEach((elem) => {
-              agent.deleteRepost(elem.bskyUri)
+              agent.deleteRepost(elem.bskyUri as string)
             })
         }
 
@@ -281,7 +281,7 @@ export default function deletePost(app: Application) {
               new Date()
             )
             for await (const inboxChunk of inboxes) {
-              await deletePostQueue.add('sencChunk', {
+              await deletePostQueue.add('sendChunk', {
                 objectToSend: { ...objectToSend, signature: bodySignature.signature },
                 petitionBy: user,
                 inboxList: inboxChunk
@@ -315,6 +315,6 @@ export default function deletePost(app: Application) {
       success = false
     }
 
-    res.send(success)
+    res.send({ success })
   })
 }

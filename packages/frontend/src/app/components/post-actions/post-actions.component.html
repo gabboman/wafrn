@@ -5,7 +5,7 @@
     class="split-button-left"
     (click)="sharePost()"
     matTooltip="Copy Wafrn link"
-  >
+    >
     <fa-icon [icon]="shareIcon"></fa-icon>
   </button>
   <button
@@ -14,7 +14,7 @@
     class="split-button-right"
     [matMenuTriggerFor]="menu"
     matTooltip="Post actions"
-  >
+    >
     <fa-icon [icon]="expandDownIcon"></fa-icon>
   </button>
 </div>
@@ -24,29 +24,33 @@
       <fa-icon class="mr-2" [icon]="shareIcon"></fa-icon>Share with wafrn
     </span>
   </button>
-  <button *ngIf="content.remotePostId && content.user.url.startsWith('@')" (click)="shareOriginalPost()" mat-menu-item>
-    <span class="post-actions-menu-span-content">
-      <fa-icon class="mr-2" [icon]="shareExternalIcon"></fa-icon>
-      Share external URL
-    </span>
-  </button>
-  <button *ngIf="content.bskyUri" (click)="viewOnBsky()" mat-menu-item>
-    <span class="post-actions-menu-span-content">
-      <fa-icon class="mr-2" [icon]="bskyIcon"></fa-icon>
-      View on bluesky
-    </span>
-
-  </button>
-  <button
-    *ngIf="content.user.url.startsWith('@') && content.privacy !== 1 && content.privacy !== 10"
-    (click)="viewOriginalPost()"
-    mat-menu-item
-  >
-    <span class="post-actions-menu-span-content">
-      <fa-icon class="mr-2" [icon]="goExternalPost"></fa-icon>
-      View original post
-    </span>
-  </button>
+  @if (content.remotePostId && content.user.url.startsWith('@')) {
+    <button (click)="shareOriginalPost()" mat-menu-item>
+      <span class="post-actions-menu-span-content">
+        <fa-icon class="mr-2" [icon]="shareExternalIcon"></fa-icon>
+        Share external URL
+      </span>
+    </button>
+  }
+  @if (content.bskyUri) {
+    <button (click)="viewOnBsky()" mat-menu-item>
+      <span class="post-actions-menu-span-content">
+        <fa-icon class="mr-2" [icon]="bskyIcon"></fa-icon>
+        View on bluesky
+      </span>
+    </button>
+  }
+  @if (content.user.url.startsWith('@') && content.privacy !== 1 && content.privacy !== 10) {
+    <button
+      (click)="viewOriginalPost()"
+      mat-menu-item
+      >
+      <span class="post-actions-menu-span-content">
+        <fa-icon class="mr-2" [icon]="goExternalPost"></fa-icon>
+        View original post
+      </span>
+    </button>
+  }
   @if (userLoggedIn) {
     <button (click)="replyPost()" mat-menu-item>
       <span class="post-actions-menu-span-content">
@@ -62,23 +66,26 @@
         </span>
       </button>
     } @else {
-      <button *ngIf="content.privacy !== 10 && content.privacy !== 1" (click)="quickReblog()" mat-menu-item>
+      @if (content.privacy !== 10 && content.privacy !== 1) {
+        <button (click)="quickReblog()" mat-menu-item>
+          <span class="post-actions-menu-span-content">
+            <fa-icon class="mr-2" [icon]="quickReblogIcon"></fa-icon>
+            Rewoot
+          </span>
+        </button>
+      }
+    }
+    @if (content.privacy !== 10 && content.privacy !== 1 && content.privacy !== 2) {
+      <button
+        (click)="quoteWoot()"
+        mat-menu-item
+        >
         <span class="post-actions-menu-span-content">
-          <fa-icon class="mr-2" [icon]="quickReblogIcon"></fa-icon>
-          Rewoot
+          <fa-icon class="mr-2" [icon]="quoteIcon"></fa-icon>
+          Quote woot
         </span>
       </button>
     }
-    <button
-      *ngIf="content.privacy !== 10 && content.privacy !== 1 && content.privacy !== 2"
-      (click)="quoteWoot()"
-      mat-menu-item
-    >
-      <span class="post-actions-menu-span-content">
-        <fa-icon class="mr-2" [icon]="quoteIcon"></fa-icon>
-        Quote woot
-      </span>
-    </button>
     @if (bookmarked()) {
       <button (click)="unbookmarkPost()" mat-menu-item>
         <span class="post-actions-menu-span-content">
@@ -117,25 +124,31 @@
       </button>
     } @else {
       <button (click)="editPost()" mat-menu-item>
-      <span class="post-actions-menu-span-content">
-        <fa-icon class="mr-2" [icon]="editedIcon"></fa-icon>Edit woot
-      </span>
-      </button>
-      <button *ngIf="!postSilenced" (click)="silencePost()" mat-menu-item>
         <span class="post-actions-menu-span-content">
-          <fa-icon class="mr-2" [icon]="silenceIcon"></fa-icon>Silence interactions
+          <fa-icon class="mr-2" [icon]="editedIcon"></fa-icon>Edit woot
         </span>
       </button>
-      <button *ngIf="!postSilenced" (click)="silencePost(true)" mat-menu-item>
-        <span class="post-actions-menu-span-content">
-          <fa-icon class="mr-2" [icon]="silenceIcon"></fa-icon>Silence notifications and replies
-        </span>
-      </button>
-      <button *ngIf="postSilenced" (click)="unsilencePost()" mat-menu-item>
-        <span class="post-actions-menu-span-content">
-          <fa-icon class="mr-2" [icon]="unsilenceIcon"></fa-icon>Reactivate notifications
-        </span>
-      </button>
+      @if (!postSilenced) {
+        <button (click)="silencePost()" mat-menu-item>
+          <span class="post-actions-menu-span-content">
+            <fa-icon class="mr-2" [icon]="silenceIcon"></fa-icon>Silence interactions
+          </span>
+        </button>
+      }
+      @if (!postSilenced) {
+        <button (click)="silencePost(true)" mat-menu-item>
+          <span class="post-actions-menu-span-content">
+            <fa-icon class="mr-2" [icon]="silenceIcon"></fa-icon>Silence notifications and replies
+          </span>
+        </button>
+      }
+      @if (postSilenced) {
+        <button (click)="unsilencePost()" mat-menu-item>
+          <span class="post-actions-menu-span-content">
+            <fa-icon class="mr-2" [icon]="unsilenceIcon"></fa-icon>Reactivate notifications
+          </span>
+        </button>
+      }
       <button (click)="deletePost()" mat-menu-item>
         <span class="post-actions-menu-span-content">
           <fa-icon class="mr-2" [icon]="deleteIcon"></fa-icon>Delete woot

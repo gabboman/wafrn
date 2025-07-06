@@ -6,6 +6,7 @@ import { environment } from '../../environment.js'
 import _ from 'underscore'
 import { wait } from '../../utils/wait.js'
 import { logger } from '../../utils/logger.js'
+import { getDeletedUser } from '../../utils/cacheGetters/getDeletedUser.js'
 
 async function forcePopulateUsers(dids: string[], localUser: User) {
   const userFounds = await User.findAll({
@@ -26,6 +27,13 @@ async function forcePopulateUsers(dids: string[], localUser: User) {
       if (petition.data.profiles && petition.data.profiles.length > 0) {
         await User.bulkCreate(
           petition.data.profiles.map((data) => {
+            let avatarString = ``
+            if (data.avatar) {
+              let avatarCID = data.avatar.split('/')[7]
+              if (avatarCID) {
+                avatarString = `?cid=${avatarCID.split('@jpeg')[0]}&did=${data.did}`
+              }
+            }
             return {
               hideFollows: false,
               // TODO hey you should check this
@@ -33,7 +41,7 @@ async function forcePopulateUsers(dids: string[], localUser: User) {
               bskyDid: data.did,
               url: '@' + (data.handle === 'handle.invalid' ? `handle.invalid${data.did}` : data.handle),
               name: data.displayName ? data.displayName : data.handle,
-              avatar: data.avatar,
+              avatar: avatarString,
               description: data.description,
               followingCount: data.followsCount,
               followerCount: data.followersCount,
@@ -50,8 +58,20 @@ async function forcePopulateUsers(dids: string[], localUser: User) {
   }
 }
 
-async function getAtprotoUser(handle: string, localUser: User, petitionData?: ProfileViewBasic) {
+async function getAtprotoUser(
+  inputHandle: string,
+  localUser: User,
+  petitionData?: ProfileViewBasic
+): Promise<User | undefined> {
   // we check if we found the user
+  let avatarString = ``
+  if (!inputHandle && !petitionData) {
+    return (await getDeletedUser()) as User
+  }
+  let handle = inputHandle
+  if (!inputHandle && petitionData?.did) {
+    handle = petitionData.did
+  }
   let userFound =
     handle == 'handle.invalid'
       ? undefined
@@ -66,21 +86,11 @@ async function getAtprotoUser(handle: string, localUser: User, petitionData?: Pr
           }
         })
   // sometimes we can get the dids and if its a local user we just return it and thats it
-  if (userFound && !userFound.url.startsWith('@')) {
+  if (userFound && userFound.email) {
     return userFound
   }
-  // We check if the user is local.
-  if (handle.endsWith('.' + environment.bskyPds)) {
-    let userUrl = handle.split('.' + environment.bskyPds)[0]
-    if (userUrl.startsWith('@')) {
-      userUrl = userUrl.split('@')[1]
-    }
-    if (userUrl.includes('.')) {
-      return
-    }
-    return User.findOne({
-      where: sequelize.where(sequelize.fn('lower', sequelize.col('url')), userUrl)
-    })
+  if (userFound) {
+    avatarString = userFound.avatar
   }
   const agent = await getAtProtoSession(localUser)
   // TODO check if current user exist
@@ -89,22 +99,28 @@ async function getAtprotoUser(handle: string, localUser: User, petitionData?: Pr
     try {
       bskyUserResponse = await agent.getProfile({ actor: handle })
     } catch (error) {
-      return await User.findOne({
+      return (await User.findOne({
         where: {
           url: environment.deletedUser
         }
-      })
+      })) as User
     }
   }
   if (bskyUserResponse.success) {
     const data = bskyUserResponse.data
+    if (data.avatar) {
+      let avatarCID = data.avatar.split('/')[7]
+      if (avatarCID) {
+        avatarString = `?cid=${avatarCID.split('@jpeg')[0]}&did=${data.did}`
+      }
+    }
     const newData = {
       hideProfileNotLoggedIn: false,
       hideFollows: false,
       bskyDid: data.did,
       url: '@' + (data.handle === 'handle.invalid' ? `handle.invalid${data.did}` : data.handle),
       name: data.displayName ? data.displayName : data.handle,
-      avatar: data.avatar,
+      avatar: avatarString,
       description: data.description as string,
       followingCount: data.followsCount as number,
       followerCount: data.followersCount as number,

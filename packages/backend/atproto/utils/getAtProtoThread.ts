@@ -13,6 +13,7 @@ import showdown from 'showdown'
 import { bulkCreateNotifications, createNotification } from '../../utils/pushNotifications.js'
 import { getAllLocalUserIds } from '../../utils/cacheGetters/getAllLocalUserIds.js'
 import { Privacy } from '../../models/post.js'
+import { wait } from '../../utils/wait.js'
 
 const markdownConverter = new showdown.Converter({
   simplifiedAutoLink: true,
@@ -152,7 +153,18 @@ async function processSinglePost(
       return existingPost.id
     }
   }
-  const postCreator = await getAtprotoUser(post.author.did, (await adminUser) as User, post.author)
+  let postCreator: User | undefined
+  try {
+    postCreator = await getAtprotoUser(post.author.did, (await adminUser) as User, post.author)
+  } catch (error) {
+    logger.debug({
+      message: `Problem obtaining user from post`,
+      post,
+      parentId,
+      forceUpdate,
+      error
+    })
+  }
   if (!postCreator || !post) {
     const usr = postCreator ? postCreator : await User.findOne({ where: { url: environment.deletedUser } })
 
@@ -187,28 +199,21 @@ async function processSinglePost(
       }
 
       const rt = new RichText({
-        text: postText
+        text: postText,
+        facets: record.facets
       })
-      await rt.detectFacets(agent)
       let text = ''
+
       for (const segment of rt.segments()) {
         if (segment.isLink()) {
-          let linkOfSegment = segment.link?.uri
-          if (linkOfSegment) {
-            linkOfSegment = linkOfSegment.substring(0, linkOfSegment.length - 2)
-            const links: string[] = medias
-              .filter((elem: any) => elem.mediaType == 'text/html')
-              .map((elem: any) => elem.url)
-            let result = links.find((elem) => elem.startsWith(linkOfSegment as string))
-            linkOfSegment = result ? result : linkOfSegment
-          }
-          text += `<a href="${linkOfSegment}" target="_blank">${linkOfSegment}</a>`
+          const href = segment.link?.uri
+          text += `<a href="${href}" target="_blank">${href}</a>`
         } else if (segment.isMention()) {
-          text += `<a href="${environment.frontendUrl}/blog/${segment.mention?.did}" target="_blank">${segment.text}</a>`
+          const href = `${environment.frontendUrl}/blog/${segment.mention?.did}`
+          text += `<a href="${href}" target="_blank">${segment.text}</a>`
         } else if (segment.isTag()) {
-          text += `<a href="${environment.frontendUrl}/dashboard/search/${segment.text.substring(1)}" target="_blank">${
-            segment.text
-          }</a>`
+          const href = `${environment.frontendUrl}/dashboard/search/${segment.text.substring(1)}`
+          text += `<a href="${href}" target="_blank">${segment.text}</a>`
           tags.push(segment.text.substring(1))
         } else {
           text += segment.text
@@ -229,6 +234,13 @@ async function processSinglePost(
     }
     if (!parentId) {
       delete newData.parentId
+    }
+
+    // very dirty thing but at times somehting can happen that a post gets through the firehose before than the db.
+    // this is dirty but we dont get the bsky uri until we post there...
+    // so as a temporary hack, if user is local we wait 2 seconds
+    if ((await getAllLocalUserIds()).includes(newData.userId)) {
+      await wait(2000)
     }
     let [postToProcess, created] = await Post.findOrCreate({ where: { bskyUri: post.uri }, defaults: newData })
     // do not update existing posts. But what if local user creates a post through bsky? then we force updte i guess
@@ -443,7 +455,7 @@ async function getPostThreadSafe(agent: BskyAgent | undefined, options: any) {
     try {
       return await agent.getPostThread(options)
     } catch (error) {
-      logger.debug({
+      logger.trace({
         message: `Error trying to get atproto thread`,
         options: options,
         error: error

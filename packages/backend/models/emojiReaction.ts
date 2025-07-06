@@ -38,7 +38,7 @@ export class EmojiReaction extends Model<EmojiReactionAttributes, EmojiReactionA
 
   @Column({
     allowNull: true,
-    type: DataType.STRING
+    type: DataType.STRING(768)
   })
   declare content: string;
 
