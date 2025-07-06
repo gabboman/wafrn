@@ -160,10 +160,11 @@ export default function userRoutes(app: Application) {
 
             const userWithEmail = User.create(user)
             const mailHeader = `Welcome to ${environment.instanceUrl}, please verify your email!`
-            const mailBody = `<h1>Welcome to ${environment.instanceUrl}</h1> To verify your email <a href="${environment.instanceUrl
-              }/activate/${encodeURIComponent(
-                req.body.email.toLowerCase()
-              )}/${activationCode}">click here!</a>. If you can not see the link correctly please copy this link:
+            const mailBody = `<h1>Welcome to ${environment.instanceUrl}</h1> To verify your email <a href="${
+              environment.instanceUrl
+            }/activate/${encodeURIComponent(
+              req.body.email.toLowerCase()
+            )}/${activationCode}">click here!</a>. If you can not see the link correctly please copy this link:
             ${environment.instanceUrl}/activate/${encodeURIComponent(req.body.email.toLowerCase())}/${activationCode}
             `
             const emailSent = environment.disableRequireSendEmail
@@ -438,6 +439,7 @@ export default function userRoutes(app: Application) {
           }
         })
         if (user) {
+          user.emailVerified = true
           user.password = await bcrypt.hash(req.body.password, environment.saltRounds)
           user.activated = environment.reviewRegistrations ? user.activated : true
           user.requestedPasswordReset = null
@@ -614,7 +616,7 @@ export default function userRoutes(app: Application) {
         res.status(401).send({ success: false, message: 'Invalid JWT' })
         return
       }
-  
+
       const mfaDetails = await MfaDetails.findAll({
         where: {
           userId: req.jwtData?.userId,
@@ -820,19 +822,19 @@ export default function userRoutes(app: Application) {
       let followed = blog.url.startsWith('@')
         ? blog.followingCount
         : Follows.count({
-          where: {
-            followerId: blog.id,
-            accepted: true
-          }
-        })
+            where: {
+              followerId: blog.id,
+              accepted: true
+            }
+          })
       let followers = blog.url.startsWith('@')
         ? blog.followerCount
         : Follows.count({
-          where: {
-            followedId: blog.id,
-            accepted: true
-          }
-        })
+            where: {
+              followedId: blog.id,
+              accepted: true
+            }
+          })
       const publicOptions = UserOptions.findAll({
         where: {
           userId: blog.id,
@@ -871,10 +873,10 @@ export default function userRoutes(app: Application) {
 
       const postCount = blog
         ? await Post.count({
-          where: {
-            userId: blog.id
-          }
-        })
+            where: {
+              userId: blog.id
+            }
+          })
         : 0
 
       followed = await followed
@@ -1450,15 +1452,15 @@ async function updateProfileOptions(optionsJSON: string, posterId: string) {
         })
         userOption
           ? await userOption.update({
-            optionValue: option.value,
-            public: option.public == true
-          })
+              optionValue: option.value,
+              public: option.public == true
+            })
           : await UserOptions.create({
-            userId: posterId,
-            optionName: option.name,
-            optionValue: option.value,
-            public: option.public == true
-          })
+              userId: posterId,
+              optionName: option.name,
+              optionValue: option.value,
+              public: option.public == true
+            })
       }
     }
   }

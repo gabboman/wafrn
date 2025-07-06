@@ -78,6 +78,7 @@ export class NavigationMenuComponent implements OnInit, OnDestroy {
   hamburguerIcon = faBars
   pencilIcon = faPencil
   currentRoute = ''
+  reloadIcon = faSync
 
   horizontalMenuMode = localStorage.getItem('horizontalMenu') === 'true'
 
@@ -679,10 +680,7 @@ export class NavigationMenuComponent implements OnInit, OnDestroy {
         title: this.translateService.instant('menu.reload'),
         visible: true,
         command: () => {
-          const currentUrl = this.router.url
-          this.router.navigateByUrl('/', { skipLocationChange: true }).then(() => {
-            this.router.navigate([currentUrl])
-          })
+          this.refresh()
         }
       }
     ]
@@ -731,5 +729,12 @@ export class NavigationMenuComponent implements OnInit, OnDestroy {
 
   onCloseMenu() {
     this.menuVisible = false
+  }
+
+  refresh() {
+    const currentUrl = this.router.url
+    this.router.navigateByUrl('/', { skipLocationChange: true }).then(() => {
+      this.router.navigate([currentUrl])
+    })
   }
 }
