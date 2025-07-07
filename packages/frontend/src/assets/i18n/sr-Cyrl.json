@@ -17,8 +17,8 @@
     "hidePassword": "Сакри лозинку",
     "loginButton": "Пријави се",
     "checkEmail": "Молимо те да провериш и-мејл",
-    "checkEmailLine1": "Послали смо ти и-мејл. Молимо да провериш свој и-мејл и спам фолдер",
-    "checkEmailLine2": "Ако имаш икаквих проблема, пиши администратору инстанце, чији и-мејл може бити пронађен <a href=\"/about\">овде</a>"
+    "checkEmailLine1": "Послали смо ти и-мејл. Молимо да провериш свој е-мејл и спам фолдер",
+    "checkEmailLine2": "Ако имаш икаквих проблема, пиши администратору инстанце, чији е-мејл може бити пронађен <a href=\"/about\">овде</a>"
   },
   "notifications": {
     "loadingMore": "Учитавају се још нотификација",
@@ -125,79 +125,79 @@
         "rewooted": "Rewoot-ови"
       },
       "manuallyAcceptFollows": "Мануелно прихватај пратиоце",
-      "disableForceAltText": "Allow uploading media without alt text (enable this only if you're evil)",
+      "disableForceAltText": "Дозволи отпремање медија без алт текста (укључите ово само ако сте зли)",
       "forceClassicLogo": "Врати на класични лого",
       "forceClassicVideoPlayer": "Врати на класични видео плејер",
       "forceClassicAudioPlayer": "Врати на класични аудио плејер",
       "forceClassicMediaView": "Врати на класични медија приказивач (вертикални)",
-      "dontCollapseQuotes": "Do not collapse quotes",
-      "disableCwExceptMuted": "Disable CW unless post contains muted words",
-      "disableConfetti": "Disable confetti effects when performing some actions",
-      "enableConfettiRecivingLike": "Enable confetti when you receive a like",
-      "disableUiSounds": "Disable sound effects when performing some actions",
-      "dashboardIsExploreLocal": "Default dashboard is explore local instead of following",
-      "cocAIne": "Replace the word artificial intelligence with custom word (cocaine?)",
-      "customCocAIne": "Custom word for AI replacement",
-      "notRecommendedOptions": "Not recommended options",
-      "disableNSFWFilter": "Disable NSFW images filter",
-      "automaticallyExpandAllPosts": "Automatically expand all posts"
+      "dontCollapseQuotes": "Не мој сакривати цитате",
+      "disableCwExceptMuted": "Онемогући упозорења о садржају осим ако објава садржи утишане речи",
+      "disableConfetti": "Искључи конфета ефекат када се раде неке акције",
+      "enableConfettiRecivingLike": "Укључи конфете када добијеш лајк",
+      "disableUiSounds": "Искључи звукове када се раде неке акције",
+      "dashboardIsExploreLocal": "Подразумевани дешборд је истражи локално уместо те које пратим",
+      "cocAIne": "Замени речи \"artificial intelligence\" са неком другом (cocaine?)",
+      "customCocAIne": "Реч са којом се замељује \"AI\"",
+      "notRecommendedOptions": "Не препоручене опције",
+      "disableNSFWFilter": "Искључи филтер за сензитивне слике",
+      "automaticallyExpandAllPosts": "Аутоматски рашири све објаве"
     },
     "privacy": {
-      "defaultPostPrivacy": "Default post privacy",
+      "defaultPostPrivacy": "Подразумевана приватност објава",
       "asks": "Питања",
-      "disableEmailNotifications": "Disable email notifications",
-      "hideFollows": "Hide my follows and followers",
-      "hideProfileNotLoggedInDescription": "Hide profile to not logged in users and search (this will only apply to your profile IN this wafrn, not to\nyour posts nor other fedi instances or bluesky)",
-      "rssOptions": "Enable RSS and microfront for my blog page"
+      "disableEmailNotifications": "Искључи нотификације преко е-мејлова",
+      "hideFollows": "Сакри кога пратим и ко мене прати",
+      "hideProfileNotLoggedInDescription": "Сакриј свој профил од непријављених корисника и из претраге (ово ће само утицати унутар ове wafrn инстанце\nне на твоје објаве, унутар других федиверс инстанца нити у Bluesky-у)",
+      "rssOptions": "Укључи RSS и microfront за моју блог страницу"
     },
     "security": {
-      "header": "Security Settings",
+      "header": "Подешавања безбедности",
       "passwordChange": "Ресетуј лозинку",
       "mfa": {
-        "header": "Two Factor Authentication",
-        "setup": "Setup Two Factor Authentication",
-        "addNew": "Add new Two Factor Authenticator",
-        "friendlyNameLabel": "Friendly name, e.g. 'Work Phone' or 'Aegis'",
-        "typeLabel": "Two factor type",
-        "setupNewButton": "Set up new authenticator",
+        "header": "Двофакторска аутентификација",
+        "setup": "Подеси двофакторску аутентификацију",
+        "addNew": "Додај нови двофакторски аутентификатор",
+        "friendlyNameLabel": "Разумљиво име, нпр. 'Пословни телефон' или 'Aegis'",
+        "typeLabel": "Тип другог фактора",
+        "setupNewButton": "Подеси нови аутентификатор",
         "tokenLabel": "Токен",
         "deleteLabel": "Избриши",
-        "scanInstructions": "Scan the code below in your Authenticator application, and enter the code shown",
-        "installInstructions": "If you don't have an Authenticator app yet we suggest <a href=\"https://getaegis.app/\" target=\"_blank\">Aegis</a> (Android) or <a href=\"https://2fas.com/\" target=\"_blank\">2FAS</a> (iOS/Android)",
-        "imageAltSecret": "Authentication secret is '{{ secret }}'",
-        "secretFallback": "If you cannot read the QR code you can use code '{{ secret }}' manually in your app",
-        "confirmDeleteMessage": "Are you sure you want to delete this MFA provider? Note: deleting all MFA providers will disable MFA on your account",
-        "deleteSuccess": "MFA provider successfully removed",
-        "verifySuccess": "Success, your MFA is now enabled",
-        "verifyFailed": "Verification failed. Check your token, or if the problem persists ask an Administrator",
-        "errorMessageGeneric": "There was an issue with your request. Try again, or ask an Administrator for help",
-        "noMfa": "You do not have MFA enabled on your account",
-        "mfaList": "You have the following MFA providers set up",
+        "scanInstructions": "Скенирај код испод у апликацији за аутентификацију, и упиши код који се појави",
+        "installInstructions": "Ако већ немаш апликацију за аутентификацију ми препоручујемо <a href=\"https://getaegis.app/\" target=\"_blank\">Aegis</a> (Андроид) или <a href=\"https://2fas.com/\" target=\"_blank\">2FAS</a> (iOS/Андроид)",
+        "imageAltSecret": "Тајна за аутентификацију је '{{ secret }}'",
+        "secretFallback": "Ако не можеш да скенираш QR код, можеш да користиш код '{{ secret }}' мануелно о апликацији",
+        "confirmDeleteMessage": "Да ли сте сигурни да желите да обришете овај MFA провајдер? Брисање свих MFA провајдера ће искључити MFA за овај налог",
+        "deleteSuccess": "MFA провајдер успешно обрисан",
+        "verifySuccess": "Твој MFA је успешно укључен",
+        "verifyFailed": "Верификација неуспешна. Провери свој токен, или ако се проблем настави питај администратора",
+        "errorMessageGeneric": "Дошло је до проблема са твојим захтевом. Покушај поново, или питај администратора за помоћ",
+        "noMfa": "Немаш MFA укључено на овом налогу",
+        "mfaList": "Ови MFA провајдери су подешени",
         "type": {
           "totpLabel": "Апликација за аутентикацију"
         }
       }
     },
     "other": {
-      "movingFromAccount": "'Moving from a different account (without the @)'",
-      "wordsThatWillAutoCwPosts": "Words that will add cw to post",
-      "superMutedWords": "Phrases that will not show a post with them (BE CAREFUL WITH THESE)",
-      "availableEmoji": "Available emojis"
+      "movingFromAccount": "'Селидба са другог налога (без @)'",
+      "wordsThatWillAutoCwPosts": "Речи које додају упозорења о садржају",
+      "superMutedWords": "Фразе које ће сакрити објаве у којима се садрже (БУДИТЕ ПАЖЉИВИ СА ОВИМ)",
+      "availableEmoji": "Доступни емоџији"
     },
     "bsky": {
-      "psa1": "Bluesky integration is still very experimental! Things will absolutely break!",
-      "psa2_1": "Please refer to",
-      "psa2_2": "the FAQ",
-      "psa2_3": "to find out what does/doesn't work generally speaking.",
-      "psa3": "In the future, we aim to have Bluesky-Specific settings in here, like the ability to change the Bluesky username."
+      "psa1": "Bluesky интеграција је још увек експериментална! Ствари ће се абсолутно кварити!",
+      "psa2_1": "Молимо да проверите",
+      "psa2_2": "ЋПП",
+      "psa2_3": "да би сазнали шта генерално (не)ради.",
+      "psa3": "У будућности желимо да овде имамо Bluesky-специфична подешавања, као што је могућност да се промени Bluesky корисничко име."
     },
     "migrate": {
-      "psa1": "To migrate to another server please create an alias and click",
+      "psa1": "Да би се преселили (мигрирали) на други сервер направите псеудоним и кликните",
       "psa2": "овде"
     },
     "delete": {
-      "psa1": "We will mark your account as deactivated and after 30 days it will be IRREVERSIBLY DELETED.",
-      "psa2": "To confirm it's you, please fill your password",
+      "psa1": "Ми ће мо ваш налог означити као деактивиран и после 30 дана биће НЕПОВРАТИВО ИЗБРИСАН.",
+      "psa2": "Да би сте потврдили да сте то заиста Ви, молимо Вас да упишете Вашу шифру",
       "button": "ИЗБРИШИ НАЛОГ"
     },
     "tabHeaders": {
