@@ -80,8 +80,8 @@ export class ColorSchemeSwitcherComponent {
   experimentalThemes: ColorScheme[] = ['rizzler', 'contrastWater']
   programmersThemes: ColorScheme[] = [
     'dracula',
-    'catppuccin_frappe',
     'catppuccin_latte',
+    'catppuccin_frappe',
     'catppuccin_macchiato',
     'catppuccin_mocha'
   ]
