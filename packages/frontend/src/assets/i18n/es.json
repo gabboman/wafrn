@@ -100,8 +100,8 @@
   },
   "profile": {
     "profile": {
-      "chooseAvatar": "Eleqir otro avatar",
-      "chooseHeader":  "Eleqir imágen de cabecera",
+      "chooseAvatar": "Elegir otro avatar",
+      "chooseHeader":  "Elegir imágen de cabecera",
       "changeDisplayName": "Nombre para mostrar (puede contener códigos de emoji)",
       "changeBio": "Tu bio/descripción. También podés poner códigos de emoji acá. Podés usar markdown acá",
       "extraInfoHead": "Información extra (exclusiva para Fediverse)",
@@ -139,7 +139,7 @@
       "cocAIne": "Reemplazar el término inteligencia artificial por otra palabra (cocaina?)",
       "customCocAIne": "Palabra personalizada para reemplazar IA",
       "notRecommendedOptions": "Opciones no recomendadas",
-      "disableNSFWFilter": "Desactivar filtro de imáqenes para adultos",
+      "disableNSFWFilter": "Desactivar filtro de imágenes para adultos",
       "automaticallyExpandAllPosts": "Expandir todos los posts automáticamente"
     },
     "privacy": {
@@ -147,7 +147,7 @@
       "asks": "Preguntas",
       "disableEmailNotifications": "Desactivar notificaciones por email",
       "hideFollows": "Esconder mis follows y seguidores",
-      "hideProfileNotLoggedInDescription": "Hide profile to not logged in users and search (this will only apply to your profile IN this wafrn, not to\nyour posts nor other fedi instances or bluesky)"
+      "hideProfileNotLoggedInDescription": "Esconder tu perfil de la búsqueda y usuarios sin cuenta (esto solo aplica a este wafrn, no a bluesky u otras instancias)"
     },
     "security": {
       "header": "Opciones de Seguridad",
@@ -156,7 +156,7 @@
         "header": "Verificación en Dos Pasos",
         "setup": "Configurar verificación en dos pasos",
         "addNew": "Agregar nuevo Autentificador",
-        "friendlyNameLabel": "Friendly name, e.g. 'Work Phone' or 'Aegis' Nombre amigable, ej. \"Celular de Trabajo\" o \"Aegis\"",
+        "friendlyNameLabel": "Nombre amigable, ej. \"Celular de Trabajo\" o \"Aegis\"",
         "typeLabel": "Tipo de verificación en dos pasos",
         "setupNewButton": "Configurar nuevo autentificador",
         "tokenLabel": "Token",
@@ -180,13 +180,13 @@
     "other": {
       "movingFromAccount": "'Mudándose de una cuenta distinta (sin la @)'",
       "wordsThatWillAutoCwPosts": "Palabras que van a agregar una alerta de contenido al post",
-      "superMutedWords": "frases que van a esconder posts que las contengan (TENÉ CUIDADO)",
-      "availableEmoji": "emojis disponibles"
+      "superMutedWords": "Frases que van a esconder posts que las contengan (TENÉ CUIDADO)",
+      "availableEmoji": "Emojis disponibles"
     },
     "bsky": {
-      "psa1": "¡La integración con Bluesky aún es muy experiental! ¡Algunas cosas van a fallar!",
+      "psa1": "¡La integración con Bluesky aún es muy experimental! ¡Algunas cosas van a fallar!",
       "psa2_1": "Por favor revisá",
-      "psa2_2": "las Preguntas Frecuentes (en inqlés)",
+      "psa2_2": "las Preguntas Frecuentes (en inglés)",
       "psa2_3": "para aprender qué anda y qué no, generalmente.",
       "psa3": "En el futuro, queremos tener opciones específicas para Bluesky acá, como la opción de cambiar tu nombre de usuario de Bluesky."
     },
