@@ -31,6 +31,11 @@ export class EditProfileComponent implements OnInit {
     { level: 2, name: 'Only allow asks from identified users' },
     { level: 3, name: 'Disable asks' }
   ]
+  rssOptions = [
+    {level: 0, name: 'No'},
+    {level: 1, name: 'Only articles (Feature still in the works)'},
+    {level: 2, name: 'Yes for all my posts'}
+  ]
 
   fediAttachments: { name: string; value: string }[] = [{ name: '', value: '' }]
   editProfileForm = new UntypedFormGroup({
@@ -39,6 +44,7 @@ export class EditProfileComponent implements OnInit {
     disableNSFWFilter: new UntypedFormControl(false, []),
     disableGifsByDefault: new UntypedFormControl(false, []),
     defaultPostEditorPrivacy: new UntypedFormControl(false, []),
+    rssOptions: new UntypedFormControl(false, []),
     asksLevel: new UntypedFormControl(2, []),
     description: new FormControl('', Validators.required),
     federateWithThreads: new FormControl(false),
@@ -95,6 +101,10 @@ export class EditProfileComponent implements OnInit {
       this.editProfileForm.controls['disableNSFWFilter'].patchValue(this.mediaService.checkNSFWFilterDisabled())
       this.editProfileForm.controls['defaultPostEditorPrivacy'].patchValue(
         this.loginService.getUserDefaultPostPrivacyLevel()
+      )
+      let rssOptionValue = localStorage.getItem('enableRSS')
+      this.editProfileForm.controls['rssOptions'].patchValue(
+        rssOptionValue ? parseInt(rssOptionValue) : 0
       )
       this.editProfileForm.controls['forceClassicLogo'].patchValue(this.loginService.getForceClassicLogo())
       const federateWithThreads = localStorage.getItem('federateWithThreads')

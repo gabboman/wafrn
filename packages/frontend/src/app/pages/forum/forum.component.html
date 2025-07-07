@@ -8,13 +8,8 @@
       userLoggedIn &&
       post()[post().length - 1] &&
       (!post()[post().length - 1].remotePostId.startsWith(localUrl) || post()[post().length - 1].bskyUri)
-      ) {
-      <button
-        (click)="loadRepliesFromFediverse()"
-        color="primary"
-        mat-stroked-button
-        class="w-full"
-        >
+    ) {
+      <button (click)="loadRepliesFromFediverse()" color="primary" mat-stroked-button class="w-full">
         Fetch more external replies
       </button>
     }
@@ -26,14 +21,17 @@
   @if (loading && this.hasPost) {
     <app-loader></app-loader>
   }
-  @for (content of forumPosts() | slice: currentPage * itemsPerPage : currentPage * itemsPerPage + itemsPerPage; track content) {
+  @for (
+    content of forumPosts() | slice: currentPage * itemsPerPage : currentPage * itemsPerPage + itemsPerPage;
+    track content
+  ) {
     @if (
       content.content !== '' ||
       content.tags.length > 0 ||
       content.quotes.length > 0 ||
       content.questionPoll?.questionPollQuestions ||
       (content.medias && content.medias.length > 0)
-      ) {
+    ) {
       <mat-card [id]="'post-' + content.id" class="wafrn-container post-card">
         <app-post-header [fragment]="content" [simplified]="false"></app-post-header>
         <app-post-fragment [fragment]="content"></app-post-fragment>
@@ -67,13 +65,3 @@
     ></mat-paginator>
   </footer>
 }
-
-<button
-  [routerLink]="'/'"
-  mat-mini-fab
-  color="default"
-  aria-label="Go back to the dashboard"
-  style="position: fixed; z-index: 500; top: 1em; right: 1em"
-  >
-  <fa-icon [icon]="homeIcon" />
-</button>

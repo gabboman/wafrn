@@ -1,6 +1,6 @@
 {
   "name": "wafrn",
-  "version": "0.6.9",
+  "version": "2025.7.1-dev",
   "scripts": {
     "ng": "ng",
     "start": "ng serve",

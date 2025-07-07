@@ -439,6 +439,7 @@ export default function userRoutes(app: Application) {
           }
         })
         if (user) {
+          user.emailVerified = true
           user.password = await bcrypt.hash(req.body.password, environment.saltRounds)
           user.activated = environment.reviewRegistrations ? user.activated : true
           user.requestedPasswordReset = null
@@ -615,7 +616,7 @@ export default function userRoutes(app: Application) {
         res.status(401).send({ success: false, message: 'Invalid JWT' })
         return
       }
-  
+
       const mfaDetails = await MfaDetails.findAll({
         where: {
           userId: req.jwtData?.userId,
@@ -779,8 +780,6 @@ export default function userRoutes(app: Application) {
           'followerCount',
           'manuallyAcceptsFollows',
           'bskyDid',
-          'isFediverseUser',
-          'isBlueskyUser',
           'userMigratedTo',
           [sequelize.literal(`"id" = '${userId}' AND "enableBsky"`), 'enableBsky'],
           [sequelize.literal(`"id" = '${userId}' AND "disableEmailNotifications"`), 'disableEmailNotifications'],

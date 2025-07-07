@@ -1,0 +1,65 @@
+/* oh my god this breaks everyithing on mobile */
+/* and this is why for now we are leaving it only on desktop for now!*/
+
+@media only screen and (min-width: 768px) {
+  .side-menu {
+    position: absolute;
+    width: 100vw;
+    height: 10vh;
+  }
+
+  .mat-mdc-nav-list {
+    display: flex;
+  }
+
+  .menu-item-content,
+  .side-menu hr {
+    display: none;
+  }
+
+  .mat-drawer-inner-container {
+    flex-direction: row;
+  }
+
+  .mat-drawer-inner-container > a > img {
+    /*logo*/
+    margin-left: 0 !important;
+    display: inline-block !important;
+  }
+
+  .mat-drawer-content {
+    margin-left: auto !important;
+    /* do not adjust to menu width */
+    margin-top: 5vh;
+  }
+
+  .drawer-footer {
+    margin-top: 0;
+    padding-top: 0;
+    height: fit-content;
+  }
+
+  nav,
+  .drawer-footer {
+    align-self: center;
+  }
+
+  nav {
+    margin-left: auto;
+  }
+
+  app-menu-item > div {
+    /* dropdown list */
+    background-color: var(--mdc-elevated-card-container-color, var(--mat-sys-surface-container-low));
+    border-color: var(--mdc-elevated-card-container-color, var(--mat-sys-surface-container-low));
+    border-radius: var(--mdc-elevated-card-container-shape, var(--mat-sys-corner-medium));
+    box-shadow: var(--mdc-elevated-card-container-elevation, var(--mat-sys-level1));
+    position: fixed;
+    z-index: 5;
+    height: fit-content;
+  }
+
+  .ml-4 .menu-item-content {
+    display: block;
+  }
+}

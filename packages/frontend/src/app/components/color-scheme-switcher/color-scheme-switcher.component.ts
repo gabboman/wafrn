@@ -1,4 +1,4 @@
-import { CommonModule, NgClass } from '@angular/common';
+import { CommonModule, NgClass } from '@angular/common'
 import { Component, linkedSignal, signal } from '@angular/core'
 import { MatButtonModule } from '@angular/material/button'
 import { MatCheckboxModule } from '@angular/material/checkbox'
@@ -6,6 +6,7 @@ import { MatMenuModule } from '@angular/material/menu'
 import { MatTooltipModule } from '@angular/material/tooltip'
 import { FaIconComponent } from '@fortawesome/angular-fontawesome'
 import { faPalette } from '@fortawesome/free-solid-svg-icons'
+import { TranslateService } from '@ngx-translate/core'
 import { LoginService } from 'src/app/services/login.service'
 
 // !! NOTE FOR ADDING THEMES !! //
@@ -40,7 +41,12 @@ const colorSchemeVariants = [
   'aqua',
   'unwafrn',
   'wafrnverse',
-  'fan'
+  'dracula',
+  'fan',
+  'catppuccin_frappe',
+  'catppuccin_latte',
+  'catppuccin_macchiato',
+  'catppuccin_mocha'
 ] as const
 type ColorSchemeTuple = typeof colorSchemeVariants
 type ColorScheme = ColorSchemeTuple[number]
@@ -69,12 +75,24 @@ export class ColorSchemeSwitcherComponent {
   readonly variants = colorSchemeVariants
   readonly capitalize = capitalize
 
+  defaultThemes: ColorScheme[] = ['default', 'tan', 'green', 'gold', 'red', 'pink', 'purple', 'blue']
+  computeryThemes: ColorScheme[] = ['unwafrn', 'wafrnverse', 'wafrn98', 'aqua', 'fan']
+  experimentalThemes: ColorScheme[] = ['rizzler', 'contrastWater']
+  programmersThemes: ColorScheme[] = [
+    'dracula',
+    'catppuccin_frappe',
+    'catppuccin_latte',
+    'catppuccin_macchiato',
+    'catppuccin_mocha'
+  ]
+
   // Color scheme
   colorScheme = signal<ColorScheme>('default')
   colorSchemeText = linkedSignal(() => capitalize(this.colorScheme()))
 
   // Options
   centerLayoutMode = localStorage.getItem('centerLayout') === 'true'
+  horizontalMenuMode = localStorage.getItem('horizontalMenu') === 'true'
 
   // Icons
   paletteIcon = faPalette
@@ -84,7 +102,10 @@ export class ColorSchemeSwitcherComponent {
   themeText = linkedSignal(() => capitalize(this.theme()))
   iconClass = ''
 
-  constructor(private loginService: LoginService) {
+  constructor(
+    private loginService: LoginService,
+    private translateService: TranslateService
+  ) {
     const colorScheme = localStorage.getItem('colorScheme')
     if (
       colorScheme !== null &&
@@ -139,6 +160,15 @@ export class ColorSchemeSwitcherComponent {
     }
   }
 
+  async updateHorizontalMenu(forceUpdate = false) {
+    this.horizontalMenuMode = !this.horizontalMenuMode
+    if (forceUpdate) {
+      await this.loginService.updateUserOptions([
+        { name: 'wafrn.horizontalMenu', value: this.horizontalMenuMode.toString() }
+      ])
+    }
+  }
+
   getTheme(): ColorTheme {
     if (typeof localStorage !== 'undefined') {
       const localTheme = localStorage.getItem('theme')
@@ -173,5 +203,9 @@ export class ColorSchemeSwitcherComponent {
     var raw = navigator.userAgent.match(/Chrom(e|ium)\/([0-9]+)\./)
 
     return raw ? parseInt(raw[2], 10) : false
+  }
+
+  setLang(lang: string) {
+    this.translateService.setDefaultLang(lang)
   }
 }
