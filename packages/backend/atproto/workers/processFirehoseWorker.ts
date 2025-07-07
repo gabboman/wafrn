@@ -49,6 +49,10 @@ async function processFirehose(job: Job) {
                   await UserLikesPostRelations.findOrCreate({
                     where: {
                       userId: remoteUser.id,
+                      postId: postId
+                    },
+                    defaults: {
+                      userId: remoteUser.id,
                       postId: postId,
                       bskyPath: operation.path
                     }
