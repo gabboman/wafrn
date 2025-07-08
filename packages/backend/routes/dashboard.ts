@@ -5,7 +5,7 @@
 import { Application, Response } from 'express'
 import optionalAuthentication from '../utils/optionalAuthentication.js'
 import AuthorizedRequest from '../interfaces/authorizedRequest.js'
-import { FederatedHost, Post, PostMentionsUserRelation, sequelize, User } from '../models/index.js'
+import { FederatedHost, Post, PostMentionsUserRelation, PostTag, sequelize, User } from '../models/index.js'
 import { Op } from 'sequelize'
 import getStartScrollParam from '../utils/getStartScrollParam.js'
 import { environment } from '../environment.js'
@@ -69,9 +69,23 @@ export default function dashboardRoutes(app: Application) {
           break
         }
         case 1: {
+          const orConditions: any = [
+            {
+              userId: { [Op.in]: await getFollowedsIds(posterId) }
+            }
+          ]
+          const subscribedTags = ['waffle feature']
+          if (subscribedTags && subscribedTags.length > 0) {
+            orConditions.push({
+              privacy: 0,
+              '$postTags.tagName$': {
+                [Op.in]: subscribedTags
+              }
+            })
+          }
           whereObject = {
             privacy: { [Op.in]: [Privacy.Public, Privacy.FollowersOnly, Privacy.LocalOnly, Privacy.Unlisted] },
-            userId: { [Op.in]: await getFollowedsIds(posterId) }
+            [Op.or]: orConditions
           }
           break
         }
@@ -94,7 +108,7 @@ export default function dashboardRoutes(app: Application) {
             }
           })
 
-          const lastDmDate: Date = dms.length > 0 ? new Date(dms[dms.length -1].createdAt) : new Date(0)
+          const lastDmDate: Date = dms.length > 0 ? new Date(dms[dms.length - 1].createdAt) : new Date(0)
           const myPosts = await Post.findAll({
             // TODO fix this! there is a THEORETICAL posibility of something going wrong. using all user dms can be too much but just get them between here and last post...
             order: [['createdAt', 'DESC']],
@@ -103,7 +117,7 @@ export default function dashboardRoutes(app: Application) {
               userId: posterId,
               privacy: Privacy.DirectMessage,
               createdAt: {
-                [Op.lt]: getStartScrollParam(req),
+                [Op.lt]: getStartScrollParam(req)
               }
             }
           })
@@ -144,6 +158,10 @@ export default function dashboardRoutes(app: Application) {
       const postIds = await Post.findAll({
         include: [
           {
+            model: PostTag,
+            required: false
+          },
+          {
             model: User,
             as: 'user',
             required: true,
@@ -157,7 +175,8 @@ export default function dashboardRoutes(app: Application) {
         ],
         order: [['createdAt', 'DESC']],
         limit: POSTS_PER_PAGE,
-        attributes: ['id'],
+        attributes: ['id', 'createdAt'],
+        subQuery: false,
         where: {
           createdAt: { [Op.lt]: getStartScrollParam(req) },
           ...whereObject
