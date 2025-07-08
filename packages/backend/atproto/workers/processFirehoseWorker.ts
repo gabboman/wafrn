@@ -46,7 +46,7 @@ async function processFirehose(job: Job) {
                 if (postId) {
                   user = remoteUser.url
                   likedPostId = postId
-                  await UserLikesPostRelations.findOrCreate({
+                  const [like, existingLike] = await UserLikesPostRelations.findOrCreate({
                     where: {
                       userId: remoteUser.id,
                       postId: postId
@@ -58,7 +58,7 @@ async function processFirehose(job: Job) {
                     }
                   })
                   const post = await Post.findByPk(postId)
-                  if (post) {
+                  if (post && !existingLike) {
                     await createNotification(
                       {
                         notificationType: 'LIKE',
