@@ -494,7 +494,8 @@ export class PostsService {
       'mark',
       'tbody',
       'tfoot',
-      'thead'
+      'thead',
+      'img' // I KNOW WHAT IM DOING. We are replacing imgs with remote urls
     ]
   ): string {
     const content = post.content
@@ -638,6 +639,12 @@ export class PostsService {
         )
       : []
     const hostUrl = this.getURL(EnvironmentService.environment.frontUrl).hostname
+    const imgs = parsedAsHTML.getElementsByTagName('img')
+    Array.from(imgs).forEach((img, index) => {
+      if (!img.src.startsWith(EnvironmentService.environment.externalCacheurl)) {
+        img.src = EnvironmentService.environment.externalCacheurl + encodeURIComponent(img.src)
+      }
+    })
     Array.from(links).forEach((link) => {
       const youtubeMatch = link.href.matchAll(this.youtubeRegex)
       if (link.innerText === link.href && youtubeMatch) {
