@@ -16,6 +16,7 @@ import { getUnjointedPosts } from '../utils/baseQueryNew.js'
 import { getMutedPosts } from '../utils/cacheGetters/getMutedPosts.js'
 import { navigationRateLimiter } from '../utils/rateLimiters.js'
 import { Privacy } from '../models/post.js'
+import { getFollowedHashtags } from '../utils/getFollowedHashtags.js'
 
 export default function dashboardRoutes(app: Application) {
   app.get(
@@ -74,7 +75,7 @@ export default function dashboardRoutes(app: Application) {
               userId: { [Op.in]: await getFollowedsIds(posterId) }
             }
           ]
-          const subscribedTags = ['waffle feature']
+          const subscribedTags = await getFollowedHashtags(posterId)
           if (subscribedTags && subscribedTags.length > 0) {
             orConditions.push({
               privacy: 0,

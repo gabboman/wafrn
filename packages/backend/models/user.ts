@@ -33,6 +33,7 @@ import {
 } from 'sequelize'
 import { Col } from 'sequelize/lib/utils'
 import { environment } from '../environment.js'
+import { UserFollowHashtag } from './userFollowHashtag.js'
 
 export interface UserAttributes {
   id?: string
@@ -499,6 +500,11 @@ export class User extends Model<UserAttributes, UserAttributes> implements UserA
   })
   declare remoteUserPostViewList: RemoteUserPostView[]
 
+  @HasMany(() => UserFollowHashtag, {
+    sourceKey: 'id'
+  })
+  declare userFollowedHashtagList: UserFollowHashtag[]
+
   @Column({
     allowNull: true,
     type: DataType.BOOLEAN,
@@ -525,7 +531,7 @@ export class User extends Model<UserAttributes, UserAttributes> implements UserA
   }
 
   get avatarFullUrl() {
-    return this.url.startsWith('@') ? this.avatar : `${environment.mediaUrl}${this.avatar}`;
+    return this.url.startsWith('@') ? this.avatar : `${environment.mediaUrl}${this.avatar}`
   }
 
   get headerImageFullUrl() {
