@@ -71,6 +71,20 @@ export async function bulkCreateNotifications(notifications: NotificationBody[],
 export async function createNotification(notification: NotificationBody, context?: NotificationContext) {
   const localUserIds = await getAllLocalUserIds()
   if (localUserIds.includes(notification.notifiedUserId)) {
+    if (notification.postId && notification.notificationType != 'EMOJIREACT') {
+      // lets avoid double existing notifications. Ok may break things with emojireacts
+      const existingNotifications = await Notification.count({
+        where: {
+          userId: notification.userId,
+          notifiedUserId: notification.notifiedUserId,
+          postId: notification.postId,
+          notificationType: notification.notificationType
+        }
+      })
+      if (existingNotifications) {
+        return
+      }
+    }
     if (context && context.postContent) {
       context.postContent = dompurify.sanitize(context.postContent, { ALLOWED_TAGS: [] })
     }
@@ -79,9 +93,9 @@ export async function createNotification(notification: NotificationBody, context
     const sendNotification =
       timeDiff < 3600 * 1000
         ? sendPushNotificationQueue.add('sendPushNotification', {
-          notifications: [notification],
-          context
-        })
+            notifications: [notification],
+            context
+          })
         : null
     await Promise.all([Notification.create(notification), sendNotification])
   }
