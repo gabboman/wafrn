@@ -40,7 +40,7 @@ export class UserFollowHashtags
     type: DataType.DATE,
     defaultValue: new Date()
   })
-  declare editedAt: Date
+  declare updatedAt: Date
 
   @BelongsTo(() => User, 'userId')
   declare user: User
