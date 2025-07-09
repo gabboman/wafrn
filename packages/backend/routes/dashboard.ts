@@ -80,7 +80,9 @@ export default function dashboardRoutes(app: Application) {
             orConditions.push({
               privacy: 0,
               '$postTags.tagName$': {
-                [Op.in]: subscribedTags
+                [Op.iLike]: {
+                  [Op.any]: subscribedTags
+                }
               }
             })
           }

@@ -33,7 +33,7 @@ import {
 } from 'sequelize'
 import { Col } from 'sequelize/lib/utils'
 import { environment } from '../environment.js'
-import { UserFollowHashtag } from './userFollowHashtag.js'
+import { UserFollowHashtags } from './userFollowHashtag.js'
 
 export interface UserAttributes {
   id?: string
@@ -500,10 +500,10 @@ export class User extends Model<UserAttributes, UserAttributes> implements UserA
   })
   declare remoteUserPostViewList: RemoteUserPostView[]
 
-  @HasMany(() => UserFollowHashtag, {
+  @HasMany(() => UserFollowHashtags, {
     sourceKey: 'id'
   })
-  declare userFollowedHashtagList: UserFollowHashtag[]
+  declare userFollowedHashtagList: UserFollowHashtags[]
 
   @Column({
     allowNull: true,

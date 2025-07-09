@@ -1,21 +1,21 @@
 import { Model, Table, Column, DataType, ForeignKey, BelongsTo, PrimaryKey } from 'sequelize-typescript'
 import { User } from './user.js'
 
-export interface UserFollowHashtagAttributes {
+export interface UserFollowHashtagsAttributes {
   userId: string
   tagName: string
-  createdAt: Date
-  updatedAt: Date
+  createdAt?: Date
+  updatedAt?: Date
 }
 
 @Table({
-  tableName: 'UserFollowHashtags',
-  modelName: 'UserFollowHashtags',
+  tableName: 'userFollowHashtags',
+  modelName: 'userFollowHashtags',
   timestamps: true
 })
-export class UserFollowHashtag
-  extends Model<UserFollowHashtagAttributes, UserFollowHashtagAttributes>
-  implements UserFollowHashtagAttributes
+export class UserFollowHashtags
+  extends Model<UserFollowHashtagsAttributes, UserFollowHashtagsAttributes>
+  implements UserFollowHashtagsAttributes
 {
   @ForeignKey(() => User)
   @Column({

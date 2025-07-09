@@ -4,15 +4,24 @@ import { getAllLocalUserIds } from '../../utils/cacheGetters/getAllLocalUserIds.
 import { cache } from 'sharp'
 import { environment } from '../../environment.js'
 import { Queue } from 'bullmq'
+import { UserFollowHashtags } from '../../models/userFollowHashtag.js'
 
 let superCache:
   | undefined
-  | { followedDids: Set<string>; localUserDids: Set<string>; followedUsersLocalIds: Set<string> }
+  | {
+      followedDids: Set<string>
+      localUserDids: Set<string>
+      followedUsersLocalIds: Set<string>
+      followedHashtags: Set<string>
+    }
 
 // TODO improve this. This function is called A LOT and we could use a lot less of JSON PARSE
-async function getCacheAtDids(
-  forceUpdate = false
-): Promise<{ followedDids: Set<string>; localUserDids: Set<string>; followedUsersLocalIds: Set<string> }> {
+async function getCacheAtDids(forceUpdate = false): Promise<{
+  followedDids: Set<string>
+  localUserDids: Set<string>
+  followedUsersLocalIds: Set<string>
+  followedHashtags: Set<string>
+}> {
   if (!forceUpdate && superCache) {
     return superCache
   }
@@ -56,18 +65,30 @@ async function getCacheAtDids(
       }
     })
     const followedUsersLocalIds = new Set<string>(dids.map((elem) => elem.id).filter((elem) => elem != ''))
-    const localUserDids = new Set<string>(localUsersWithDid.map((elem) => elem.bskyDid || '').filter((elem) => elem != ''))
-    const followedDids = new Set<string>(
-      [...dids
-        .map((elem) => elem.bskyDid || '')
-        .filter((elem) => elem != ''),
-      ...localUserDids]
+    const localUserDids = new Set<string>(
+      localUsersWithDid.map((elem) => elem.bskyDid || '').filter((elem) => elem != '')
+    )
+    const followedDids = new Set<string>([
+      ...dids.map((elem) => elem.bskyDid || '').filter((elem) => elem != ''),
+      ...localUserDids
+    ])
+
+    const followedHashtagsQuery = await UserFollowHashtags.findAll({
+      attributes: ['tagName']
+    })
+
+    const followedHashtags = new Set<string>(
+      followedHashtagsQuery
+        .map((elem) => elem.tagName)
+        .filter((elem) => !!elem)
+        .map((elem) => elem.toLowerCase())
     )
 
     cacheResult = {
       followedDids: followedDids,
       localUserDids: localUserDids,
-      followedUsersLocalIds: followedUsersLocalIds
+      followedUsersLocalIds: followedUsersLocalIds,
+      followedHashtags: followedHashtags
     }
   }
   superCache = cacheResult
