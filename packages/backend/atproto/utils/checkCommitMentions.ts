@@ -2,11 +2,17 @@ import { ParsedCommit } from '@skyware/firehose'
 import { Post } from '../../models/index.js'
 import { Op, Sequelize } from 'sequelize'
 import { getAllLocalUserIds } from '../../utils/cacheGetters/getAllLocalUserIds.js'
+import { RichText } from '@atproto/api'
 
 // Preemptive checks to see if
 function checkCommitMentions(
   commit: ParsedCommit,
-  cacheData: { followedDids: Set<string>; localUserDids: Set<string>; followedUsersLocalIds: Set<string> }
+  cacheData: {
+    followedDids: Set<string>
+    localUserDids: Set<string>
+    followedUsersLocalIds: Set<string>
+    followedHashtags: Set<string>
+  }
 ): boolean {
   const didsToCheck = cacheData.followedDids
 
@@ -22,7 +28,7 @@ function checkCommitMentions(
       operation.action === 'create' &&
       (operation.path.startsWith('app.bsky.feed.like') || operation.path.startsWith('app.bsky.graph.follow'))
     ) {
-      let record: any = operation.record;
+      let record: any = operation.record
       // we do not ned 18k likes on a mark hamill post. We better do just a "people you follow liked..."
       let likedPostUri = record?.subject?.uri ? record?.subject.uri : ''
       if (likedPostUri) {
@@ -38,12 +44,29 @@ function checkCommitMentions(
         return true
       }
     }
-    if (operation.action === 'create' && operation.path.startsWith('app.bsky.feed.post') && (operation.record as any)?.facets) {
-      let record: any = operation.record;
+    if (
+      operation.action === 'create' &&
+      operation.path.startsWith('app.bsky.feed.post') &&
+      (operation.record as any)?.facets
+    ) {
+      let record: any = operation.record
       const mentions = record?.facets
         .flatMap((elem: any) => elem.features)
         .map((elem: any) => elem.did)
         .filter((elem: any) => elem)
+
+      if (record.text) {
+        const rt = new RichText({
+          text: record.text,
+          facets: record.facets
+        })
+        let tags = rt.segments().filter((elem) => elem.isTag())
+        if (tags && tags.some((tag) => cacheData.followedHashtags.has(tag.text.substring(1).toLowerCase()))) {
+          res = true
+          return true
+        }
+      }
+
       if (mentions && mentions.length && mentions.some((mention: string) => cacheData.localUserDids.has(mention))) {
         res = true
         return res
