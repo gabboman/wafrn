@@ -594,28 +594,6 @@ export class NavigationMenuComponent implements OnInit, OnDestroy {
           this.hideMenu()
         }
       },
-
-      {
-        label: this.translateService.instant('menu.writeWoot'),
-        icon: faPencil,
-        title: this.translateService.instant('menu.writeWoot'),
-        visible: this.jwtService.tokenValid(),
-        command: async () => {
-          this.hideMenu()
-          this.openEditor()
-        }
-      },
-      {
-        label: this.translateService.instant('menu.notifications'),
-        icon: faBell,
-        title: this.translateService.instant('menu.notifications'),
-        visible: this.jwtService.tokenValid(),
-        badge: this.notifications,
-        routerLink: '/dashboard/notifications',
-        command: () => {
-          this.hideMenu()
-        }
-      },
       {
         label: this.translateService.instant('menu.explore'),
         icon: faCompass,
@@ -675,12 +653,24 @@ export class NavigationMenuComponent implements OnInit, OnDestroy {
         ]
       },
       {
-        label: this.translateService.instant('menu.reload'),
-        icon: faSync,
-        title: this.translateService.instant('menu.reload'),
-        visible: true,
+        label: this.translateService.instant('menu.notifications'),
+        icon: faBell,
+        title: this.translateService.instant('menu.notifications'),
+        visible: this.jwtService.tokenValid(),
+        badge: this.notifications,
+        routerLink: '/dashboard/notifications',
         command: () => {
-          this.refresh()
+          this.hideMenu()
+        }
+      },
+      {
+        label: this.translateService.instant('menu.myBlog'),
+        icon: faUser,
+        title: this.translateService.instant('menu.myBlog'),
+        visible: this.jwtService.tokenValid(),
+        routerLink: '/blog/' + (this.jwtService.tokenValid() ? this.jwtService.getTokenData()['url'] : ''),
+        command: () => {
+          this.hideMenu()
         }
       }
     ]
