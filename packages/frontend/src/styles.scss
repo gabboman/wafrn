@@ -90,7 +90,7 @@ body {
 }
 
 .wafrn-content {
-  padding-top: 4rem;
+  padding-top: 1.5rem;
 }
 
 // No JavaScript
@@ -266,6 +266,10 @@ body {
 
   /* END fullwidth post style */
 
+  /* Flush first post to match 0 margin sides*/
+  .wafrn-content {
+    padding-top: 0;
+  }
 }
 
 .shortened-post {
