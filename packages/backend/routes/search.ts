@@ -74,14 +74,12 @@ export default function searchRoutes(app: Application) {
         where: {
           activated: true,
           hideProfileNotLoggedIn: false,
-          [Op.and]: [
-            {
-              url: {
-                [Op.notLike]: '@%'
-              }
-            },
-            sequelize.literal(`lower("url") LIKE ${sequelize.escape('%' + searchTerm + '%')}`)
-          ]
+          email: {
+            [Op.ne]: null
+          },
+          url: {
+            [Op.iLike]: `%${searchTerm}%`
+          }
         },
         attributes: ['name', 'url', 'avatar', 'id', 'remoteId', 'description']
       })
@@ -90,7 +88,7 @@ export default function searchRoutes(app: Application) {
         offset: page * environment.postsPerPage,
         where: {
           activated: true,
-          url: { [Op.like]: '@%' },
+          url: { [Op.iLike]: `@${searchTerm}@` },
           federatedHostId: {
             [Op.notIn]: await getallBlockedServers()
           },
@@ -230,9 +228,11 @@ export default function searchRoutes(app: Application) {
       limit: 20,
       where: {
         activated: true,
-        [Op.and]: [sequelize.literal(`lower("url") LIKE ${sequelize.escape('@%' + searchTerm + '%')}`)],
         banned: {
           [Op.ne]: true
+        },
+        url: {
+          [Op.iLike]: `@%${searchTerm}%`
         },
         [Op.or]: [
           {
@@ -247,21 +247,22 @@ export default function searchRoutes(app: Application) {
           }
         ]
       },
-      attributes: ['url', 'avatar', 'id', 'remoteId']
+      attributes: ['url', 'avatar', 'id', 'remoteId', 'federatedHostId']
     })
 
     let localUsers: any = User.findAll({
       limit: 20,
       where: {
         activated: true,
-        [Op.and]: [
-          {
-            url: {
-              [Op.notLike]: '@%'
-            }
-          },
-          sequelize.literal(`lower("url") LIKE ${sequelize.escape('%' + searchTerm + '%')}`)
-        ]
+        banned: {
+          [Op.ne]: true
+        },
+        email: {
+          [Op.ne]: null
+        },
+        url: {
+          [Op.iLike]: `%${searchTerm}%`
+        }
       },
       attributes: ['url', 'avatar', 'id', 'remoteId']
     })
