@@ -13,7 +13,7 @@ export default function followHashtagRoutes(app: Application) {
       await UserFollowHashtags.findOrCreate({
         where: {
           userId: userId,
-          tagName: req.body.hashtag
+          tagName: req.body.hashtag.toLowerCase()
         }
       })
       success = true
@@ -30,10 +30,10 @@ export default function followHashtagRoutes(app: Application) {
     let success = false
     if (req.body.hashtag && typeof req.body.hashtag === 'string') {
       const userId = req.jwtData?.userId as string
-      await UserFollowHashtags.destroy({
+      let result = await UserFollowHashtags.destroy({
         where: {
           userId: userId,
-          tagName: req.body.hashtag
+          tagName: req.body.hashtag.toLowerCase()
         }
       })
       success = true
