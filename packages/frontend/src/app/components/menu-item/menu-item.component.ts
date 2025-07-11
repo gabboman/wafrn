@@ -28,7 +28,7 @@ export class MenuItemComponent {
   chevronDown = faChevronDown
 
   @Input() item!: MenuItem
-  @Input() hideText = false
+  @Input() button = false
   expanded = false
 
   constructor(private router: Router) {}
