@@ -5,8 +5,9 @@ import { User } from '../../models/index.js'
 import { redisCache } from '../../utils/redis.js'
 
 async function getAtProtoSession(user?: User): Promise<AtpAgent> {
+  const serviceUrl = environment.bskyPds.startsWith('http') ? environment.bskyPds : 'https://' + environment.bskyPds
   const agent = new AtpAgent({
-    service: 'https://' + environment.bskyPds,
+    service: serviceUrl,
     persistSession: async (evt, session) => {
       if (session && user) {
         // Updated so we do not need to log in on every interaction
