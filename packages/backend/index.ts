@@ -48,6 +48,7 @@ import { readFile } from 'fs/promises'
 import { Worker } from 'bullmq'
 import expressWs from 'express-ws'
 import websocketRoutes from './routes/websocket.js'
+import followHashtagRoutes from './routes/followHashtags.js'
 
 function errorHandler(err: Error, req: Request, res: Response, next: Function) {
   console.error(err.stack)
@@ -57,8 +58,8 @@ function errorHandler(err: Error, req: Request, res: Response, next: Function) {
 const swaggerJSON = JSON.parse(await readFile(new URL('./swagger.json', import.meta.url), 'utf-8'))
 // rest of the code remains same
 const app = express()
-const wsServer = expressWs(app);
-const server = wsServer.app; 
+const wsServer = expressWs(app)
+const server = wsServer.app
 const PORT = environment.port
 app.use(errorHandler)
 app.use(overrideContentType)
@@ -125,6 +126,7 @@ silencePostRoutes(app)
 statusRoutes(app)
 emojiRoutes(app)
 pollRoutes(app)
+followHashtagRoutes(app)
 // just websocket things
 websocketRoutes(server)
 frontend(app)

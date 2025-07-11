@@ -88,6 +88,22 @@ export class DashboardService {
     }
   }
 
+  async manageHashtagSubscription(tag: string, subscribe = true): Promise<boolean> {
+    const url = `${EnvironmentService.environment.baseUrl}/${subscribe ? 'followHashtag' : 'unfollowHashtag'}`
+    let success = false
+    try {
+      const petition = await firstValueFrom(this.http.post<{ success: boolean }>(url, { hashtag: tag }))
+      success = petition.success
+    } catch (error) {
+      console.error(error)
+      this.messageService.add({
+        severity: 'error',
+        summary: 'Something went wrong!'
+      })
+    }
+    return success
+  }
+
   async getBlogPage(page: number, blogId: string): Promise<ProcessedPost[][]> {
     try {
       let result: ProcessedPost[][] = []

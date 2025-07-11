@@ -41,7 +41,8 @@ import {
   IconDefinition,
   faBookmark,
   faHome,
-  faSync
+  faSync,
+  faHashtag
 } from '@fortawesome/free-solid-svg-icons'
 import { MenuItem } from 'src/app/interfaces/menu-item'
 import { MatDialog } from '@angular/material/dialog'
@@ -412,6 +413,16 @@ export class NavigationMenuComponent implements OnInit, OnDestroy {
             title: this.translateService.instant('menu.settings.mutedPosts'),
             visible: this.jwtService.tokenValid(),
             routerLink: '/profile/silencedPosts',
+            command: () => {
+              this.hideMenu()
+            }
+          },
+          {
+            label: this.translateService.instant('menu.settings.followedHashtags'),
+            icon: faHashtag,
+            title: this.translateService.instant('menu.settings.followedHashtags'),
+            visible: this.jwtService.tokenValid(),
+            routerLink: '/profile/manageFollowedHashtags',
             command: () => {
               this.hideMenu()
             }

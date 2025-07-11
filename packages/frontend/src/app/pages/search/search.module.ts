@@ -14,6 +14,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner'
 import { MatTabsModule } from '@angular/material/tabs'
 import { ReuseableRouteType } from 'src/app/services/routing.service'
 import { BlogLinkModule } from 'src/app/directives/blog-link/blog-link.module'
+import { MatExpansionModule } from '@angular/material/expansion'
 const routes: Routes = [
   {
     path: '',
@@ -43,7 +44,8 @@ const routes: Routes = [
     MatListModule,
     MatProgressSpinnerModule,
     MatTabsModule,
-    BlogLinkModule
+    BlogLinkModule,
+    MatExpansionModule
   ]
 })
-export class SearchModule { }
+export class SearchModule {}

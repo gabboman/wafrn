@@ -34,6 +34,7 @@ import { UserLikesPostRelations } from './userLikesPostRelations.js'
 import { UserOptions } from './userOptions.js'
 import { afterCreate, beforeBulkCreate, beforeBulkUpdate, beforeCreate, beforeUpdate } from './hierarchy/hierarchy.js'
 import { UnifiedPushData } from './unifiedPushData.js'
+import { UserFollowHashtags } from './userFollowHashtag.js'
 
 sequelize.addModels([
   Ask,
@@ -68,7 +69,8 @@ sequelize.addModels([
   UserEmojiRelation,
   UserLikesPostRelations,
   UserOptions,
-  UnifiedPushData
+  UnifiedPushData,
+  UserFollowHashtags
 ])
 
 Post.addHook('beforeCreate', 'hierarchyBeforeCreate', beforeCreate)
@@ -111,5 +113,6 @@ export {
   UserEmojiRelation,
   UserLikesPostRelations,
   UserOptions,
-  UnifiedPushData
+  UnifiedPushData,
+  UserFollowHashtags
 }
