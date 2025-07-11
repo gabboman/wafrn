@@ -562,11 +562,14 @@ export class NavigationMenuComponent implements OnInit, OnDestroy {
       ],
       [
         {
-          label: this.translateService.instant('menu.home'),
-          icon: faHome,
-          title: this.translateService.instant('menu.home'),
+          label: this.translateService.instant('menu.dashboard'),
+          icon: faHouse,
+          title: this.translateService.instant('menu.dashboardHover'),
           visible: this.jwtService.tokenValid(),
-          routerLink: '/'
+          routerLink: '/dashboard',
+          command: () => {
+            this.hideMenu()
+          }
         },
         {
           label: this.translateService.instant('menu.login'),
@@ -604,16 +607,6 @@ export class NavigationMenuComponent implements OnInit, OnDestroy {
           title: this.translateService.instant('menu.exploreDescription'),
           visible: this.jwtService.tokenValid(),
           items: [
-            {
-              label: this.translateService.instant('menu.dashboard'),
-              icon: faHouse,
-              title: this.translateService.instant('menu.dashboardHover'),
-              visible: this.jwtService.tokenValid(),
-              routerLink: '/dashboard',
-              command: () => {
-                this.hideMenu()
-              }
-            },
             {
               label: this.translateService.instant('menu.exploreWafrn'),
               icon: faServer,
