@@ -35,10 +35,14 @@
   </mat-drawer>
   <mat-drawer-content>
     <mat-toolbar class="wafrn-toolbar slideup" *ngIf="!!mobile">
-      @for (link of mobile ? menuItemsMobile : menuItems; track $index) {
-        @if (!link.divider && link.visible) {
-          <app-menu-item [button]="true" [item]="link"></app-menu-item>
-        }
+      @for (section of menuItemsMobile; track $index) {
+        <div>
+          @for (link of section; track $index) {
+            @if (!link.divider && link.visible) {
+              <app-menu-item [button]="true" [item]="link"></app-menu-item>
+            }
+          }
+        </div>
       }
     </mat-toolbar>
     <main id="main-content" class="wafrn-content">
