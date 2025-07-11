@@ -1,11 +1,3 @@
-<mat-toolbar class="wafrn-toolbar slideup" *ngIf="!(menuVisible || !mobile)">
-  @for (link of mobile ? menuItemsMobile : menuItems; track $index) {
-    @if (link.divider) {
-    } @else {
-      <app-menu-item [hideText]="true" [item]="link"></app-menu-item>
-    }
-  }
-</mat-toolbar>
 <mat-drawer-container>
   <mat-drawer
     style="position: fixed"
@@ -25,12 +17,14 @@
     </a>
     <hr />
     <nav aria-label="Navigation menu">
-      <mat-nav-list>
+      <mat-nav-list class="side-menu-nav-list">
         @for (link of menuItems; track $index) {
-          @if (link.divider) {
-            <hr />
-          } @else {
-            <app-menu-item [item]="link"></app-menu-item>
+          @if (link.visible) {
+            @if (link.divider) {
+              <hr />
+            } @else {
+              <app-menu-item [item]="link"></app-menu-item>
+            }
           }
         }
       </mat-nav-list>
@@ -40,6 +34,17 @@
     </div>
   </mat-drawer>
   <mat-drawer-content>
+    <mat-toolbar class="wafrn-toolbar" *ngIf="!!mobile">
+      @for (section of menuItemsMobile; track $index) {
+        <div>
+          @for (link of section; track $index) {
+            @if (!link.divider && link.visible) {
+              <app-menu-item [button]="true" [item]="link"></app-menu-item>
+            }
+          }
+        </div>
+      }
+    </mat-toolbar>
     <main id="main-content" class="wafrn-content">
       @if (maintenanceMode) {
         <div [innerHtml]="maintenanceMessage"></div>
@@ -50,7 +55,7 @@
 </mat-drawer-container>
 
 <button
-  *ngIf="menuVisible || !mobile"
+  *ngIf="!mobile"
   (click)="refresh()"
   mat-mini-fab
   color="default"
@@ -62,18 +67,14 @@
 </button>
 
 <button
-  *ngIf="menuVisible || !mobile"
+  *ngIf="!mobile"
   style="position: fixed; z-index: 500; bottom: 1em; right: 1em"
   mat-fab
   color="primary"
   [hidden]="!mobile || !jwtService.tokenValid() || currentRoute === '/editor'"
   type="button"
-  class="show-sidebar-menu-button create-post-button"
+  class="show-sidebar-menu-button create-post-button slideup"
   (click)="this.hideMenu(); this.openEditor()"
 >
   <fa-icon [icon]="pencilIcon"></fa-icon>
 </button>
-
-<br />
-<br />
-<br />
