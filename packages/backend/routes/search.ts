@@ -111,7 +111,14 @@ export default function searchRoutes(app: Application) {
           promises.push(remoteUsers)
         }
         if (usr?.enableBsky && searchTerm.split('@').length === 2 && searchTerm.split('@')[0] == '') {
-          remoteUsers = [await getAtprotoUser(searchTerm.split('@')[1], usr)]
+          try {
+            remoteUsers = [await getAtprotoUser(searchTerm.split('@')[1], usr)]
+          } catch (error) {
+            logger.error({
+              message: `Something went wrong while searching remote user`,
+              error
+            })
+          }
         }
         const urlPattern = /(?:https?):\/\/(\w+:?\w*)?(\S+)(:\d+)?(\/|\/([\w#!:.?+=&%!\-\/]))?/
         if (searchTerm.match(urlPattern)) {
