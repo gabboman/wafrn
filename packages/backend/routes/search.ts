@@ -88,13 +88,12 @@ export default function searchRoutes(app: Application) {
         offset: page * environment.postsPerPage,
         where: {
           activated: true,
-          url: { [Op.iLike]: `@${searchTerm}@` },
+          url: { [Op.iLike]: `%${searchTerm}%` },
           federatedHostId: {
             [Op.notIn]: await getallBlockedServers()
           },
           banned: false,
-          hideProfileNotLoggedIn: false,
-          [Op.or]: [sequelize.literal(`lower("url") LIKE ${sequelize.escape('%' + searchTerm + '%')}`)]
+          hideProfileNotLoggedIn: false
         },
         attributes: ['name', 'url', 'avatar', 'id', 'remoteId', 'description']
       })
