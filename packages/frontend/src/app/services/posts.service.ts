@@ -64,6 +64,7 @@ export class PostsService {
   public emojiCollections: EmojiCollection[] = []
   public notYetAcceptedFollowedUsersIds: Array<string> = []
   public blockedUserIds: Array<string> = []
+  public followedHashtags: string[] = []
   constructor(
     private mediaService: MediaService,
     private http: HttpClient,
@@ -84,8 +85,10 @@ export class PostsService {
           silencedPosts: string[]
           emojis: EmojiCollection[]
           mutedUsers: string[]
+          followedHashtags: string[]
         }>(`${EnvironmentService.environment.baseUrl}/my-ui-options`)
       )
+      this.followedHashtags = followsAndBlocks.followedHashtags
       this.emojiCollections = followsAndBlocks.emojis ? followsAndBlocks.emojis : []
       this.emojiCollections = this.emojiCollections.concat({
         name: 'Keyboard Emojis',

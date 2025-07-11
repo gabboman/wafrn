@@ -1,0 +1,21 @@
+<mat-card class="p-3 mb-6 lg:mx-4 scalein wafrn-container" style="text-align: center">
+  <h2>Manage followed hashtags</h2>
+  @if (!loading) {
+    @for (hashtag of postsService.followedHashtags; track $index) {
+      <div>
+        <a [routerLink]="['/dashboard/search/' + hashtag]">#{{ hashtag }}</a>
+        <button
+          (click)="unfollowHashtag(hashtag)"
+          mat-flat-button
+          color="primary"
+          extended
+          class="border-round-md search-button ml-2"
+        >
+          Unfollow #{{ hashtag }}
+        </button>
+      </div>
+    }
+  } @else {
+    <app-loader></app-loader>
+  }
+</mat-card>

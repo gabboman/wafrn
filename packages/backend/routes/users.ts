@@ -59,6 +59,7 @@ import { getPetitionSigned } from '../utils/activitypub/getPetitionSigned.js'
 import { isArray } from 'underscore'
 import { follow } from '../utils/follow.js'
 import { activityPubObject } from '../interfaces/fediverse/activityPubObject.js'
+import { getFollowedHashtags } from '../utils/getFollowedHashtags.js'
 
 const markdownConverter = new showdown.Converter({
   simplifiedAutoLink: true,
@@ -915,6 +916,7 @@ export default function userRoutes(app: Application) {
       attributes: ['banned']
     })
     const silencedPosts = getMutedPosts(userId)
+    const followedHashtags = getFollowedHashtags(userId)
     Promise.all([
       userPromise,
       followedUsers,
@@ -923,7 +925,8 @@ export default function userRoutes(app: Application) {
       options,
       silencedPosts,
       localEmojis,
-      mutedUsers
+      mutedUsers,
+      followedHashtags
     ])
     const user = await userPromise
     if (!user || user.banned) {
@@ -936,7 +939,8 @@ export default function userRoutes(app: Application) {
         options: await options,
         silencedPosts: await silencedPosts,
         emojis: await localEmojis,
-        mutedUsers: await mutedUsers
+        mutedUsers: await mutedUsers,
+        followedHashtags: await followedHashtags
       })
     }
   })
