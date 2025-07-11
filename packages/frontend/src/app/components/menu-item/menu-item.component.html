@@ -1,5 +1,6 @@
 @if (button) {
   <a
+    [matMenuTriggerFor]="item.items ? menu : null"
     [routerLink]="item.routerLink ? item.routerLink : null"
     [matBadge]="item.badge"
     [matBadgeHidden]="item.badge === 0"
@@ -18,6 +19,12 @@
       }
     </div>
   </a>
+
+  <mat-menu #menu="matMenu">
+    @for (elem of item.items; track $index) {
+      <app-menu-item [item]="elem"></app-menu-item>
+    }
+  </mat-menu>
 } @else {
   <a
     [matMenuTriggerFor]="item.items ? menu : null"
