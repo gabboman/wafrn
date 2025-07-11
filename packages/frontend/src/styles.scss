@@ -383,4 +383,9 @@ mat-tab-header {
   bottom: 0;
   width: 100%;
   z-index: 2;
+  justify-content: space-between;
+  box-shadow: var(--mat-sys-level4);
+  border-top: 1px solid var(--mat-sys-outline-variant);
+  --mat-list-list-item-one-line-container-height: 52px;
+  --mat-sys-hover-state-layer-opacity: 0;
 }

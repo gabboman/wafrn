@@ -1,27 +1,56 @@
-<a
-  [matMenuTriggerFor]="item.items ? menu : null"
-  [routerLink]="item.routerLink ? item.routerLink : null"
-  [matBadge]="item.badge"
-  [matBadgeHidden]="item.badge === 0"
-  matBadgePosition="above after"
-  *ngIf="item.visible"
-  mat-list-item
-  (click)="doCommand()"
-  (keydown)="handleKey($event)"
-  tabIndex="0"
->
-  <div class="h-3rem flex align-items-center justify-content-start navigation-menu-button">
-    @if (item.icon) {
-      <span class="menu-item-icon">
-        <fa-icon [icon]="item.icon"></fa-icon>
-      </span>
-    }
-    <span *ngIf="!hideText" class="ml-3 mr-1 menu-item-content">{{ item.label }}</span>
-  </div>
-</a>
+@if (button) {
+  <a
+    [matMenuTriggerFor]="item.items ? menu : null"
+    [routerLink]="item.routerLink ? item.routerLink : null"
+    [matBadge]="item.badge"
+    [matBadgeHidden]="item.badge === 0"
+    matBadgePosition="above after"
+    *ngIf="item.visible"
+    mat-button
+    (click)="doCommand()"
+    (keydown)="handleKey($event)"
+    tabIndex="0"
+  >
+    <div class="flex align-items-center justify-content-start navigation-menu-button">
+      @if (item.icon) {
+        <span class="menu-item-icon">
+          <fa-icon [icon]="item.icon"></fa-icon>
+        </span>
+      }
+    </div>
+  </a>
 
-<mat-menu #menu="matMenu">
-  @for (elem of item.items; track $index) {
-    <app-menu-item [item]="elem"></app-menu-item>
-  }
-</mat-menu>
+  <mat-menu #menu="matMenu">
+    @for (elem of item.items; track $index) {
+      <app-menu-item [item]="elem"></app-menu-item>
+    }
+  </mat-menu>
+} @else {
+  <a
+    [matMenuTriggerFor]="item.items ? menu : null"
+    [routerLink]="item.routerLink ? item.routerLink : null"
+    [matBadge]="item.badge"
+    [matBadgeHidden]="item.badge === 0"
+    matBadgePosition="above after"
+    *ngIf="item.visible"
+    mat-list-item
+    (click)="doCommand()"
+    (keydown)="handleKey($event)"
+    tabIndex="0"
+  >
+    <div class="flex align-items-center justify-content-start navigation-menu-button">
+      @if (item.icon) {
+        <span class="menu-item-icon">
+          <fa-icon [icon]="item.icon"></fa-icon>
+        </span>
+      }
+      <span class="ml-3 mr-1 menu-item-content">{{ item.label }}</span>
+    </div>
+  </a>
+
+  <mat-menu #menu="matMenu">
+    @for (elem of item.items; track $index) {
+      <app-menu-item [item]="elem"></app-menu-item>
+    }
+  </mat-menu>
+}
