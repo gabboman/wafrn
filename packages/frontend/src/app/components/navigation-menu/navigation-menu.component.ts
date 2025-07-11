@@ -42,7 +42,8 @@ import {
   faBookmark,
   faHome,
   faSync,
-  faHashtag
+  faHashtag,
+  faRefresh
 } from '@fortawesome/free-solid-svg-icons'
 import { MenuItem } from 'src/app/interfaces/menu-item'
 import { MatDialog } from '@angular/material/dialog'
@@ -573,11 +574,11 @@ export class NavigationMenuComponent implements OnInit, OnDestroy {
       ],
       [
         {
-          label: this.translateService.instant('menu.dashboard'),
+          label: this.translateService.instant('menu.home'),
           icon: faHouse,
-          title: this.translateService.instant('menu.dashboardHover'),
+          title: this.translateService.instant('menu.home'),
           visible: this.jwtService.tokenValid(),
-          routerLink: '/dashboard',
+          routerLink: '/',
           command: () => {
             this.hideMenu()
           }
@@ -618,6 +619,16 @@ export class NavigationMenuComponent implements OnInit, OnDestroy {
           title: this.translateService.instant('menu.exploreDescription'),
           visible: this.jwtService.tokenValid(),
           items: [
+            {
+              label: this.translateService.instant('menu.dashboard'),
+              icon: faHouse,
+              title: this.translateService.instant('menu.dashboardHover'),
+              visible: this.jwtService.tokenValid(),
+              routerLink: '/dashboard',
+              command: () => {
+                this.hideMenu()
+              }
+            },
             {
               label: this.translateService.instant('menu.exploreWafrn'),
               icon: faServer,
