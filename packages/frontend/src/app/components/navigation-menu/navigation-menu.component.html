@@ -34,7 +34,7 @@
     </div>
   </mat-drawer>
   <mat-drawer-content>
-    <mat-toolbar class="wafrn-toolbar slideup" *ngIf="!!mobile">
+    <mat-toolbar class="wafrn-toolbar" *ngIf="!!mobile">
       @for (section of menuItemsMobile; track $index) {
         <div>
           @for (link of section; track $index) {
