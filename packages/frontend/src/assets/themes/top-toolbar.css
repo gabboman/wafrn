@@ -5,6 +5,10 @@
   box-shadow: var(--mat-sys-level2);
 }
 
+.refresh-button {
+  top: calc(56px + 1em);
+}
+
 /* Small-Screen media queries. */
 @media screen and (max-width: 992px) {
   .wafrn-content {
@@ -25,9 +29,5 @@
 @media screen and (max-width: 599px) {
   .wafrn-content {
     padding-top: calc(56px + 1em);
-  }
-
-  .refresh-button {
-    top: calc(56px + 1em);
   }
 }
