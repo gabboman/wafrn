@@ -13,3 +13,8 @@
   border-top-right-radius: 0;
   border-bottom-right-radius: 0;
 }
+
+// Make sidebar buttons shorter
+:root {
+  --mat-list-list-item-one-line-container-height: 2rem;
+}

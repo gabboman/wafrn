@@ -1,15 +1,27 @@
 <div class="wafrn-container">
   <!-- SEARCH FORM -->
   <div class="pb-4 lg:px-4">
-    <mat-card>
-      <div class="p-3 font-medium line-height-3">
-        <p>
-          You can search for users by url and description, and posts by tags. No need to add # to your search. To force
-          the server to search for a remote user in the Fediverse, put their full username starting with an &#64;. As
-          example, &#64;torvalds&#64;social.kernel.org
-        </p>
-        <p>You can also force the app to get an external post with the url</p>
-      </div>
+    <mat-card class="p-3 font-medium line-height-3">
+      <mat-accordion class="p-3">
+        <mat-expansion-panel hideToggle>
+          <mat-expansion-panel-header>
+            <mat-panel-title> How search works </mat-panel-title>
+          </mat-expansion-panel-header>
+          <div>
+            Wafrn connects with the fediverse and bluesky. You can search tags "tumblr style" but for better results we
+            recommend using "twitter style" for fandoms.
+          </div>
+          <div>
+            You can search <b>public</b> posts that wafrn has already seen. You can get more posts of these types by
+            following a tag!
+          </div>
+          <div>
+            You can search for users. Search will return users by url. You can search for fedi users but you need to use
+            the full &#64;: as example, &#64;foone&#64;digipress.club
+          </div>
+          <p>You can also search for remote posts by the URL of the fedi or bluesky post, as example [EXAMPLE URL]</p>
+        </mat-expansion-panel>
+      </mat-accordion>
       <form class="p-3 flex gap-2" [formGroup]="searchForm" (submit)="submitSearch()">
         <mat-form-field class="flex-1">
           <mat-label>Search term</mat-label>
@@ -22,8 +34,26 @@
       </form>
     </mat-card>
   </div>
+
+  <mat-card
+    *ngIf="currentSearch && userLoggedIn && !loading()"
+    class="mb-6 overflow-hidden wafrn-container post-card blog-header"
+  >
+    <button
+      (click)="followUnfollowHashtag(currentSearch)"
+      mat-flat-button
+      color="primary"
+      extended
+      class="border-round-md search-button"
+    >
+      {{ postService.followedHashtags.includes(currentSearch.toLowerCase()) ? 'Unfollow' : 'Follow' }} #{{
+        currentSearch
+      }}
+    </button>
+  </mat-card>
+
   <mat-tab-group color="primary">
-    @if (!loading() && (posts().length > 0)) {
+    @if (!loading() && posts().length > 0) {
       <mat-tab label="Posts">
         @for (post of posts(); track post) {
           <div>
@@ -37,20 +67,20 @@
         <div class="mt-4">
           @for (user of users(); track $index) {
             <mat-card mat-list-item class="user-preview text-center p-4 m-4">
-              <img [alt]="user.name + ' avatar'" [src]="getAvatar(user.url)" loading="lazy" width="80" height="80"
-                class="block mx-auto my-2 border-round-md" />
+              <img
+                [alt]="user.name + ' avatar'"
+                [src]="getAvatar(user.url)"
+                loading="lazy"
+                width="80"
+                height="80"
+                class="block mx-auto my-2 border-round-md"
+              />
               <div class="flex-grow-1 p-2">
                 @if (followedUsers.indexOf(user.id) === -1 && userLoggedIn) {
-                  <button mat-raised-button color="primary"
-                    (click)="followUser(user.id)" class="mb-4">
-                    Follow
-                  </button>
+                  <button mat-raised-button color="primary" (click)="followUser(user.id)" class="mb-4">Follow</button>
                 }
                 @if (followedUsers.indexOf(user.id) !== -1 && userLoggedIn) {
-                  <button mat-raised-button color="primary"
-                    (click)="unfollowUser(user.id)">
-                    Unfollow
-                  </button>
+                  <button mat-raised-button color="primary" (click)="unfollowUser(user.id)">Unfollow</button>
                 }
                 <p>{{ user.name }}</p>
                 <p>

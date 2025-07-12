@@ -74,14 +74,12 @@ export default function searchRoutes(app: Application) {
         where: {
           activated: true,
           hideProfileNotLoggedIn: false,
-          [Op.and]: [
-            {
-              url: {
-                [Op.notLike]: '@%'
-              }
-            },
-            sequelize.literal(`lower("url") LIKE ${sequelize.escape('%' + searchTerm + '%')}`)
-          ]
+          email: {
+            [Op.ne]: null
+          },
+          url: {
+            [Op.iLike]: `%${searchTerm}%`
+          }
         },
         attributes: ['name', 'url', 'avatar', 'id', 'remoteId', 'description']
       })
@@ -90,13 +88,12 @@ export default function searchRoutes(app: Application) {
         offset: page * environment.postsPerPage,
         where: {
           activated: true,
-          url: { [Op.like]: '@%' },
+          url: { [Op.iLike]: `%${searchTerm}%` },
           federatedHostId: {
             [Op.notIn]: await getallBlockedServers()
           },
           banned: false,
-          hideProfileNotLoggedIn: false,
-          [Op.or]: [sequelize.literal(`lower("url") LIKE ${sequelize.escape('%' + searchTerm + '%')}`)]
+          hideProfileNotLoggedIn: false
         },
         attributes: ['name', 'url', 'avatar', 'id', 'remoteId', 'description']
       })
@@ -111,7 +108,14 @@ export default function searchRoutes(app: Application) {
           promises.push(remoteUsers)
         }
         if (usr?.enableBsky && searchTerm.split('@').length === 2 && searchTerm.split('@')[0] == '') {
-          remoteUsers = [await getAtprotoUser(searchTerm.split('@')[1], usr)]
+          try {
+            remoteUsers = [await getAtprotoUser(searchTerm.split('@')[1], usr)]
+          } catch (error) {
+            logger.error({
+              message: `Something went wrong while searching remote user`,
+              error
+            })
+          }
         }
         const urlPattern = /(?:https?):\/\/(\w+:?\w*)?(\S+)(:\d+)?(\/|\/([\w#!:.?+=&%!\-\/]))?/
         if (searchTerm.match(urlPattern)) {
@@ -168,7 +172,7 @@ export default function searchRoutes(app: Application) {
     localUsers = await localUsers
     users = await users
 
-    const foundUsers = [...remoteUsers, ...localUsers, ...users].filter(elem => !!elem)
+    const foundUsers = [...remoteUsers, ...localUsers, ...users].filter((elem) => !!elem)
     const userIds = foundUsers.map((u: any) => u.id)
     const userEmojiIds = await UserEmojiRelation.findAll({
       attributes: ['emojiId', 'userId'],
@@ -196,6 +200,24 @@ export default function searchRoutes(app: Application) {
     })
   })
 
+  /* TODO: Define what we want properly
+   * This new endpoint will
+   * always return posts: [] and users: []
+   * if user not logged in will use LOCAL posts only with EXACT hashtags
+   * it will never return users
+   * if user logged in
+   * options:
+   * url => (THIS ONE WILL BE COMPUTED IN BACKEND) If the search term we recive is an URL our ONLY course of action is to check if said url is a fedi/bsky post and fetch ONLY that one!
+   * exactHashtagMatch => as name implies. Will ignore upper and lower case tho.
+   * localOnly => will return results of regular posts AND local only posts / users
+   * TRY %term% now that we have GIN indexes
+   * excludeCW => as name implies. We will check only based on "post has cw"
+   * onlyCW => horny mode. Posts returned will only be ones with CW.
+   * if search has @: SEARCH USER MODE. Will only return users that @search. Will search fedi and bsky if user has bsky enabled
+   *
+   */
+  // app.get('/api/v3/search', optionalAuthentication, async (req: AuthorizedRequest, res: Response) => {})
+
   app.get('/api/userSearch/:term', authenticateToken, async (req: AuthorizedRequest, res: Response) => {
     const posterId = req.jwtData?.userId
     // const success = false;
@@ -205,9 +227,11 @@ export default function searchRoutes(app: Application) {
       limit: 20,
       where: {
         activated: true,
-        [Op.and]: [sequelize.literal(`lower("url") LIKE ${sequelize.escape('@%' + searchTerm + '%')}`)],
         banned: {
           [Op.ne]: true
+        },
+        url: {
+          [Op.iLike]: `@%${searchTerm}%`
         },
         [Op.or]: [
           {
@@ -222,21 +246,22 @@ export default function searchRoutes(app: Application) {
           }
         ]
       },
-      attributes: ['url', 'avatar', 'id', 'remoteId']
+      attributes: ['url', 'avatar', 'id', 'remoteId', 'federatedHostId']
     })
 
     let localUsers: any = User.findAll({
       limit: 20,
       where: {
         activated: true,
-        [Op.and]: [
-          {
-            url: {
-              [Op.notLike]: '@%'
-            }
-          },
-          sequelize.literal(`lower("url") LIKE ${sequelize.escape('%' + searchTerm + '%')}`)
-        ]
+        banned: {
+          [Op.ne]: true
+        },
+        email: {
+          [Op.ne]: null
+        },
+        url: {
+          [Op.iLike]: `%${searchTerm}%`
+        }
       },
       attributes: ['url', 'avatar', 'id', 'remoteId']
     })

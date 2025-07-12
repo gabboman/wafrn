@@ -1,4 +1,4 @@
-<mat-card class="p-3 mb-6 lg:mx-4 wafrn-container">
+<mat-card class="p-3 mb-6 lg:mx-4 wafrn-container wafrn-post-editor">
   <div class="below-editor-toolbar">
     <div class="below-editor-toolbar-leftside">
       <button mat-icon-button class="close-post-btn" (click)="closeEditor()">
@@ -12,7 +12,7 @@
         class="input-height-btn"
         [matTooltip]="getPrivacyIconName()"
         [disabled]="editing"
-        >
+      >
         <fa-icon size="lg" [icon]="getPrivacyIcon()"></fa-icon>
       </button>
       <button
@@ -21,7 +21,7 @@
         (click)="quoteOpen = !quoteOpen"
         class="input-height-btn"
         matTooltip="{{ 'editor.quoteButton' | translate }}"
-        >
+      >
         <fa-icon size="lg" [icon]="quoteIcon"></fa-icon>
       </button>
       @if (pollQuestions.length === 0) {
@@ -34,7 +34,7 @@
         mat-icon-button
         (click)="showContentWarning = !showContentWarning"
         matTooltip="{{ 'editor.contentWarningTooltip' | translate }}"
-        >
+      >
         @if (contentWarning.includes('meta')) {
           <fa-icon size="lg" [icon]="skull"></fa-icon>
         } @else {
@@ -46,11 +46,11 @@
         mat-icon-button
         (click)="openEmojiSelection()"
         matTooltip="{{ 'editor.insertEmojiTooltip' | translate }}"
-        >
+      >
         <svg width="20px" height="20px" viewBox="0 0 1000 1000" fill="currentColor" class="vertical-align-middle">
           <path
             d="M958 104h-62V43q0-17-12-29T855 2h-87q-17 0-29 12t-12 29v61h-62q-17 0-29 12t-12 29v4q-81-34-169-34-116 0-217 59-97 57-154 154-58 100-58 216.5T84 761q57 98 154 155 101 58 217.5 58T672 916q97-57 154-155 59-100 59-216 0-88-34-168h4q17 0 29-12t12-29v-62h62q17 0 29-12t12-29v-88q0-17-12-29t-29-12zM644 348q29 0 49.5 20.5t20.5 49-20.5 49T644 487t-49.5-20.5-20.5-49 20.5-49T644 348zm-377 0q29 0 49.5 20.5t20.5 49-20.5 49T267 487t-49.5-20.5-20.5-49 20.5-49T267 348zm473 255q-10 70-50.5 126.5t-102 88.5-132 32-132-32-102-88.5T171 603q-2-16 8.5-27.5T206 564h499q16 0 26.5 11.5T740 603zm218-370H855v103h-87V233H665v-88h103V43h87v102h103v88z"
-            />
+          />
         </svg>
       </button>
       <!--
@@ -76,7 +76,7 @@
           (postCreatorForm.value.content === initialContent && tags.length === 0 && uploadedMedias.length === 0)
         "
         matTooltip="{{ 'editor.publishWoot' | translate }}"
-        >
+      >
         <fa-icon size="lg" [icon]="postIcon"></fa-icon>
       </button>
     </div>
@@ -113,7 +113,7 @@
           [(ngModel)]="contentWarning"
           placeholder="{{ 'editor.sensitivePlaceholder' | translate }}"
           matNativeControl
-          />
+        />
       </mat-form-field>
     }
 
@@ -138,7 +138,7 @@
               [(ngModel)]="urlPostToQuote"
               placeholder="{{ 'editor.wootQuoteBoxPlaceholder' | translate }}"
               matNativeControl
-              />
+            />
           </mat-form-field>
           <button
             (click)="loadQuote()"
@@ -146,7 +146,7 @@
             color="primary"
             class="w-full"
             [disabled]="urlPostToQuote === ''"
-            >
+          >
             {{ 'editor.wootQuoteConfirmButton' | translate }}
           </button>
         </mat-card>
@@ -276,7 +276,7 @@
       [hidden]="suggestions.length === 0"
       [style.left.px]="cursorPosition.x"
       [style.top.px]="cursorPosition.y"
-      >
+    >
       <div class="flex flex-column gap-2">
         @for (user of suggestions; track $index) {
           <div (click)="insertMention(user)" class="flex gap-2 align-items-center suggestion-item">

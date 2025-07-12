@@ -128,10 +128,3 @@
     --mat-sys-neutral-variant20: light-dark(#352f30, #352f30); /* Variable used for the sidenav scrim (container background shadow when opened) */
   }
 }
-
-
-.mat-mdc-list-item { 
-  height: 2rem !important;
-}
-
-

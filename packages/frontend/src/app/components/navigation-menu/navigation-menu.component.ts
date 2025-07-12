@@ -39,7 +39,11 @@ import {
   faFileEdit,
   faPaintbrush,
   IconDefinition,
-  faBookmark
+  faBookmark,
+  faHome,
+  faSync,
+  faHashtag,
+  faRefresh
 } from '@fortawesome/free-solid-svg-icons'
 import { MenuItem } from 'src/app/interfaces/menu-item'
 import { MatDialog } from '@angular/material/dialog'
@@ -57,6 +61,7 @@ import { AudioService } from 'src/app/services/audio.service'
 })
 export class NavigationMenuComponent implements OnInit, OnDestroy {
   menuItems: MenuItem[] = []
+  menuItemsMobile: MenuItem[][] = []
   maintenanceMode = EnvironmentService.environment.maintenance
   maintenanceMessage = EnvironmentService.environment.maintenanceMessage
   menuVisible = false
@@ -75,6 +80,10 @@ export class NavigationMenuComponent implements OnInit, OnDestroy {
   hamburguerIcon = faBars
   pencilIcon = faPencil
   currentRoute = ''
+  reloadIcon = faSync
+
+  horizontalMenuMode = localStorage.getItem('horizontalMenu') === 'true'
+
   constructor(
     private editorService: EditorService,
     private router: Router,
@@ -114,7 +123,6 @@ export class NavigationMenuComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.drawMenu()
     this.onResize()
-    this.menuVisible = !this.mobile
 
     // IMPORTANT: HIDE THE SPLASH SCREEN
     const splashElement = document.getElementById('splash')
@@ -411,6 +419,16 @@ export class NavigationMenuComponent implements OnInit, OnDestroy {
             }
           },
           {
+            label: this.translateService.instant('menu.settings.followedHashtags'),
+            icon: faHashtag,
+            title: this.translateService.instant('menu.settings.followedHashtags'),
+            visible: this.jwtService.tokenValid(),
+            routerLink: '/profile/manageFollowedHashtags',
+            command: () => {
+              this.hideMenu()
+            }
+          },
+          {
             label: this.translateService.instant('menu.settings.bookmarkedPosts'),
             icon: faBookmark,
             title: this.translateService.instant('menu.settings.bookmarkedPosts'),
@@ -539,6 +557,157 @@ export class NavigationMenuComponent implements OnInit, OnDestroy {
         }
       }
     ]
+
+    this.menuItemsMobile = [
+      [
+        {
+          label: this.translateService.instant('menu.showMenu'),
+          icon: faBars,
+          title: this.translateService.instant('menu.showMenu'),
+          visible: true,
+          badge:
+            this.awaitingAsks + this.adminNotifications + this.usersAwaitingApproval + this.followsAwaitingApproval,
+          command: () => {
+            this.menuVisible = !this.menuVisible
+          }
+        }
+      ],
+      [
+        {
+          label: this.translateService.instant('menu.home'),
+          icon: faHouse,
+          title: this.translateService.instant('menu.home'),
+          visible: this.jwtService.tokenValid(),
+          routerLink: '/',
+          command: () => {
+            this.hideMenu()
+          }
+        },
+        {
+          label: this.translateService.instant('menu.login'),
+          icon: faHouse,
+          title: this.translateService.instant('menu.login'),
+          visible: !this.jwtService.tokenValid(),
+          routerLink: '/login',
+          command: () => {
+            this.hideMenu()
+          }
+        },
+        {
+          label: this.translateService.instant('menu.register'),
+          icon: faUser,
+          title: this.translateService.instant('menu.register'),
+          visible: !this.jwtService.tokenValid(),
+          routerLink: '/register',
+          command: () => {
+            this.hideMenu()
+          }
+        },
+        {
+          label: this.translateService.instant('menu.exploreWafrn'),
+          icon: faCompass,
+          title: this.translateService.instant('menu.exploreWafrn'),
+          visible: !this.jwtService.tokenValid(),
+          routerLink: '/dashboard/exploreLocal',
+          command: () => {
+            this.hideMenu()
+          }
+        },
+        {
+          label: this.translateService.instant('menu.explore'),
+          icon: faCompass,
+          title: this.translateService.instant('menu.exploreDescription'),
+          visible: this.jwtService.tokenValid(),
+          items: [
+            {
+              label: this.translateService.instant('menu.dashboard'),
+              icon: faHouse,
+              title: this.translateService.instant('menu.dashboardHover'),
+              visible: this.jwtService.tokenValid(),
+              routerLink: '/dashboard',
+              command: () => {
+                this.hideMenu()
+              }
+            },
+            {
+              label: this.translateService.instant('menu.exploreWafrn'),
+              icon: faServer,
+              title: this.translateService.instant('menu.exploreWafrnDescription'),
+              visible: this.jwtService.tokenValid(),
+              routerLink: '/dashboard/exploreLocal',
+              command: () => {
+                this.hideMenu()
+              }
+            },
+            {
+              label: this.translateService.instant('menu.exploreFediverse'),
+              icon: faCompass,
+              title: this.translateService.instant('menu.exploreFediverseDescription'),
+              visible: this.jwtService.tokenValid(),
+              routerLink: '/dashboard/explore',
+              command: () => {
+                this.hideMenu()
+              }
+            },
+            {
+              label: this.translateService.instant('menu.privateMessages'),
+              icon: faEnvelope,
+              title: this.translateService.instant('menu.privateMessages'),
+              visible: this.jwtService.tokenValid(),
+              routerLink: '/dashboard/private',
+              command: () => {
+                this.hideMenu()
+              }
+            },
+            {
+              label: this.translateService.instant('menu.search'),
+              icon: faSearch,
+              title: this.translateService.instant('menu.search'),
+              visible: this.jwtService.tokenValid(),
+              routerLink: '/dashboard/search',
+              command: () => {
+                this.hideMenu()
+              }
+            }
+          ]
+        },
+        {
+          label: this.translateService.instant('menu.notifications'),
+          icon: faBell,
+          title: this.translateService.instant('menu.notifications'),
+          visible: this.jwtService.tokenValid(),
+          badge: this.notifications,
+          routerLink: '/dashboard/notifications',
+          command: () => {
+            this.hideMenu()
+          }
+        },
+        {
+          label: this.translateService.instant('menu.myBlog'),
+          icon: faUser,
+          title: this.translateService.instant('menu.myBlog'),
+          visible: this.jwtService.tokenValid(),
+          routerLink: '/blog/' + (this.jwtService.tokenValid() ? this.jwtService.getTokenData()['url'] : ''),
+          command: () => {
+            this.hideMenu()
+          }
+        }
+      ],
+      [
+        {
+          label: this.translateService.instant('menu.writeWoot'),
+          icon: faPencil,
+          title: this.translateService.instant('menu.writeWoot'),
+          visible: this.jwtService.tokenValid(),
+          command: async () => {
+            this.hideMenu()
+            this.openEditor()
+          }
+        }
+      ]
+    ]
+
+    this.horizontalMenuMode = localStorage.getItem('horizontalMenu') === 'true'
   }
 
   async updateNotifications(url: string) {
@@ -567,8 +736,8 @@ export class NavigationMenuComponent implements OnInit, OnDestroy {
 
   @HostListener('window:resize', ['$event'])
   onResize() {
-    this.mobile = window.innerWidth <= 992
-    this.menuVisible = !this.mobile
+    this.horizontalMenuMode = localStorage.getItem('horizontalMenu') === 'true'
+    this.mobile = window.innerWidth <= 992 || this.horizontalMenuMode
   }
 
   @HostListener('window:keydown.n')
@@ -582,5 +751,12 @@ export class NavigationMenuComponent implements OnInit, OnDestroy {
 
   onCloseMenu() {
     this.menuVisible = false
+  }
+
+  refresh() {
+    const currentUrl = this.router.url
+    this.router.navigateByUrl('/', { skipLocationChange: true }).then(() => {
+      this.router.navigate([currentUrl])
+    })
   }
 }

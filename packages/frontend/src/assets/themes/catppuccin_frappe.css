@@ -49,7 +49,7 @@
 
   /* Neutral palette variables */
   --mat-sys-background: var(--ctp-frappe-base);
-  --mat-sys-on-green: var(--ctp-frappe-text);
+  --mat-sys-on-background: var(--ctp-frappe-text);
   --mat-sys-surface: var(--ctp-frappe-surface0);
   --mat-sys-surface-dim: var(--failure);
   --mat-sys-surface-bright: var(--failure);

@@ -976,3 +976,8 @@ fa-icon[mattooltip="Delete woot"]:hover {
     .image-cw-text {
         background: #808080 !important;
     }
+
+/* Bottom Toolbar */
+.wafrn-toolbar {
+  border-top: 2px outset;
+}

@@ -59,6 +59,7 @@ import { getPetitionSigned } from '../utils/activitypub/getPetitionSigned.js'
 import { isArray } from 'underscore'
 import { follow } from '../utils/follow.js'
 import { activityPubObject } from '../interfaces/fediverse/activityPubObject.js'
+import { getFollowedHashtags } from '../utils/getFollowedHashtags.js'
 
 const markdownConverter = new showdown.Converter({
   simplifiedAutoLink: true,
@@ -160,10 +161,11 @@ export default function userRoutes(app: Application) {
 
             const userWithEmail = User.create(user)
             const mailHeader = `Welcome to ${environment.instanceUrl}, please verify your email!`
-            const mailBody = `<h1>Welcome to ${environment.instanceUrl}</h1> To verify your email <a href="${environment.instanceUrl
-              }/activate/${encodeURIComponent(
-                req.body.email.toLowerCase()
-              )}/${activationCode}">click here!</a>. If you can not see the link correctly please copy this link:
+            const mailBody = `<h1>Welcome to ${environment.instanceUrl}</h1> To verify your email <a href="${
+              environment.instanceUrl
+            }/activate/${encodeURIComponent(
+              req.body.email.toLowerCase()
+            )}/${activationCode}">click here!</a>. If you can not see the link correctly please copy this link:
             ${environment.instanceUrl}/activate/${encodeURIComponent(req.body.email.toLowerCase())}/${activationCode}
             `
             const emailSent = environment.disableRequireSendEmail
@@ -438,6 +440,7 @@ export default function userRoutes(app: Application) {
           }
         })
         if (user) {
+          user.emailVerified = true
           user.password = await bcrypt.hash(req.body.password, environment.saltRounds)
           user.activated = environment.reviewRegistrations ? user.activated : true
           user.requestedPasswordReset = null
@@ -614,7 +617,7 @@ export default function userRoutes(app: Application) {
         res.status(401).send({ success: false, message: 'Invalid JWT' })
         return
       }
-  
+
       const mfaDetails = await MfaDetails.findAll({
         where: {
           userId: req.jwtData?.userId,
@@ -820,19 +823,19 @@ export default function userRoutes(app: Application) {
       let followed = blog.url.startsWith('@')
         ? blog.followingCount
         : Follows.count({
-          where: {
-            followerId: blog.id,
-            accepted: true
-          }
-        })
+            where: {
+              followerId: blog.id,
+              accepted: true
+            }
+          })
       let followers = blog.url.startsWith('@')
         ? blog.followerCount
         : Follows.count({
-          where: {
-            followedId: blog.id,
-            accepted: true
-          }
-        })
+            where: {
+              followedId: blog.id,
+              accepted: true
+            }
+          })
       const publicOptions = UserOptions.findAll({
         where: {
           userId: blog.id,
@@ -871,10 +874,10 @@ export default function userRoutes(app: Application) {
 
       const postCount = blog
         ? await Post.count({
-          where: {
-            userId: blog.id
-          }
-        })
+            where: {
+              userId: blog.id
+            }
+          })
         : 0
 
       followed = await followed
@@ -913,6 +916,7 @@ export default function userRoutes(app: Application) {
       attributes: ['banned']
     })
     const silencedPosts = getMutedPosts(userId)
+    const followedHashtags = getFollowedHashtags(userId)
     Promise.all([
       userPromise,
       followedUsers,
@@ -921,7 +925,8 @@ export default function userRoutes(app: Application) {
       options,
       silencedPosts,
       localEmojis,
-      mutedUsers
+      mutedUsers,
+      followedHashtags
     ])
     const user = await userPromise
     if (!user || user.banned) {
@@ -934,7 +939,8 @@ export default function userRoutes(app: Application) {
         options: await options,
         silencedPosts: await silencedPosts,
         emojis: await localEmojis,
-        mutedUsers: await mutedUsers
+        mutedUsers: await mutedUsers,
+        followedHashtags: await followedHashtags
       })
     }
   })
@@ -1450,15 +1456,15 @@ async function updateProfileOptions(optionsJSON: string, posterId: string) {
         })
         userOption
           ? await userOption.update({
-            optionValue: option.value,
-            public: option.public == true
-          })
+              optionValue: option.value,
+              public: option.public == true
+            })
           : await UserOptions.create({
-            userId: posterId,
-            optionName: option.name,
-            optionValue: option.value,
-            public: option.public == true
-          })
+              userId: posterId,
+              optionName: option.name,
+              optionValue: option.value,
+              public: option.public == true
+            })
       }
     }
   }

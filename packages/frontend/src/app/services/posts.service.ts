@@ -64,6 +64,7 @@ export class PostsService {
   public emojiCollections: EmojiCollection[] = []
   public notYetAcceptedFollowedUsersIds: Array<string> = []
   public blockedUserIds: Array<string> = []
+  public followedHashtags: string[] = []
   constructor(
     private mediaService: MediaService,
     private http: HttpClient,
@@ -84,8 +85,10 @@ export class PostsService {
           silencedPosts: string[]
           emojis: EmojiCollection[]
           mutedUsers: string[]
+          followedHashtags: string[]
         }>(`${EnvironmentService.environment.baseUrl}/my-ui-options`)
       )
+      this.followedHashtags = followsAndBlocks.followedHashtags
       this.emojiCollections = followsAndBlocks.emojis ? followsAndBlocks.emojis : []
       this.emojiCollections = this.emojiCollections.concat({
         name: 'Keyboard Emojis',
@@ -494,13 +497,15 @@ export class PostsService {
       'mark',
       'tbody',
       'tfoot',
-      'thead'
+      'thead',
+      'img' // I KNOW WHAT IM DOING. We are replacing imgs with remote urls
     ]
   ): string {
     const content = post.content
     let sanitized = sanitizeHtml(content, {
       allowedTags: tags,
       allowedAttributes: {
+        img: ['src'],
         a: ['href', 'title', 'target'],
         col: ['span', 'visibility'],
         colgroup: ['width', 'visibility', 'background', 'border'],
@@ -627,7 +632,7 @@ export class PostsService {
         }
       }
     })
-    // we remove stuff like img and script tags. we only allow certain stuff.
+    // we remove stuff like script tags. we only allow certain stuff.
     const parsedAsHTML = this.parser.parseFromString(sanitized, 'text/html')
     const links = parsedAsHTML.getElementsByTagName('a')
     const mentionedRemoteIds = post.mentionPost ? post.mentionPost?.map((elem) => elem.remoteId) : []
@@ -638,6 +643,13 @@ export class PostsService {
         )
       : []
     const hostUrl = this.getURL(EnvironmentService.environment.frontUrl).hostname
+    // We are gonna allow images in posts now but they have to go through the cacher/proxy
+    const imgs = parsedAsHTML.getElementsByTagName('img')
+    Array.from(imgs).forEach((img, index) => {
+      if (!img.src.startsWith(EnvironmentService.environment.externalCacheurl)) {
+        img.src = EnvironmentService.environment.externalCacheurl + encodeURIComponent(img.src)
+      }
+    })
     Array.from(links).forEach((link) => {
       const youtubeMatch = link.href.matchAll(this.youtubeRegex)
       if (link.innerText === link.href && youtubeMatch) {

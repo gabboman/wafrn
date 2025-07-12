@@ -49,7 +49,7 @@
 
   /* Neutral palette variables */
   --mat-sys-background: var(--ctp-macchiato-base);
-  --mat-sys-on-green: var(--ctp-macchiato-text);
+  --mat-sys-on-background: var(--ctp-macchiato-text);
   --mat-sys-surface: var(--ctp-macchiato-surface0);
   --mat-sys-surface-dim: var(--failure);
   --mat-sys-surface-bright: var(--failure);

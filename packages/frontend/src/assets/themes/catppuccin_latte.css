@@ -49,7 +49,7 @@
 
   /* Neutral palette variables */
   --mat-sys-background: var(--ctp-latte-base);
-  --mat-sys-on-green: var(--ctp-latte-text);
+  --mat-sys-on-background: var(--ctp-latte-text);
   --mat-sys-surface: var(--ctp-latte-surface0);
   --mat-sys-surface-dim: var(--failure);
   --mat-sys-surface-bright: var(--failure);

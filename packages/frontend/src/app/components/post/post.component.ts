@@ -184,7 +184,7 @@ export class PostComponent implements OnInit, OnDestroy, OnChanges {
 
   expandPost() {
     this.expanded.set(true)
-    this.postsExpanded = this.postsExpanded + 100
+    this.postsExpanded = this.postsExpanded + 50
     this.post = this.originalPostContent.slice(0, this.postsExpanded)
   }
 }

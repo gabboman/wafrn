@@ -4,7 +4,7 @@
 @if (!loading() && !found) {
   <app-pagenotfound />
 }
-@if ((!loadingBlog() || this.useSimple()) && (this.blogDetails() !== undefined)) {
+@if ((!loadingBlog() || this.useSimple()) && this.blogDetails() !== undefined) {
   <app-blog-header [blogDetails]="blogDetails()!"></app-blog-header>
   @for (post of posts; track $index) {
     <ng-template></ng-template>
@@ -21,33 +21,22 @@
         @if (blogDetails()!.url.startsWith('@')) {
           <app-info-card [type]="userLoggedIn ? 'info' : 'caution'">
             {{
-            userLoggedIn
-            ? 'As this user is from a remote instance, the shown information may be incomplete.'
-            : 'To see external users you need to be logged in. You can check the user in their original instance'
+              userLoggedIn
+                ? 'As this user is from a remote instance, the shown information may be incomplete.'
+                : 'To see external users you need to be logged in. You can check the user in their original instance'
             }}
             <a
-            [href]="
-              blogDetails()!.url.split('@').length === 3
-                ? blogDetails()!.remoteId
-                : 'https://bsky.app/profile/' + blogDetails()!.url.split('@')[1]
-            "
+              [href]="
+                blogDetails()!.url.split('@').length === 3
+                  ? blogDetails()!.remoteId
+                  : 'https://bsky.app/profile/' + blogDetails()!.url.split('@')[1]
+              "
               target="_blank"
               >View on remote instance</a
-              >
-            </app-info-card>
-          }
-        </div>
-      }
-    </footer>
-  }
-
-  <button
-    [routerLink]="'/'"
-    mat-mini-fab
-    color="default"
-    aria-label="Go back to the dashboard"
-    style="position: fixed; z-index: 500; top: 1em; right: 1em"
-    >
-    <fa-icon [icon]="homeIcon" />
-  </button>
-
+            >
+          </app-info-card>
+        }
+      </div>
+    }
+  </footer>
+}
