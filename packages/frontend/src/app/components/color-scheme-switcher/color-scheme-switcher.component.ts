@@ -92,6 +92,7 @@ export class ColorSchemeSwitcherComponent {
 
   // Options
   centerLayoutMode = localStorage.getItem('centerLayout') === 'true'
+  topToolbarMode = localStorage.getItem('topToolbar') === 'true'
   horizontalMenuMode = localStorage.getItem('horizontalMenu') === 'true'
 
   // Icons
@@ -157,6 +158,13 @@ export class ColorSchemeSwitcherComponent {
       await this.loginService.updateUserOptions([
         { name: 'wafrn.centerLayout', value: this.centerLayoutMode.toString() }
       ])
+    }
+  }
+
+  async updateTopToolbar(forceUpdate = false) {
+    this.topToolbarMode = !this.topToolbarMode
+    if (forceUpdate && this.loginService.checkUserLoggedIn()) {
+      await this.loginService.updateUserOptions([{ name: 'wafrn.topToolbar', value: this.topToolbarMode.toString() }])
     }
   }
 

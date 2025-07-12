@@ -17,17 +17,31 @@
 
 html {
   color-scheme: light dark;
-  @include mat.theme((color: mat.$violet-palette,
-      density: 0));
+  @include mat.theme(
+    (
+      color: mat.$violet-palette,
+      density: 0
+    )
+  );
 }
 
 // HACK: Have to make dummy theme to initialize typography
-$theme: mat.define-theme((color: (primary: mat.$violet-palette )));
+$theme: mat.define-theme(
+  (
+    color: (
+      primary: mat.$violet-palette
+    )
+  )
+);
 
 @include mat.typography-hierarchy($theme);
 
 :root {
-  @include mat.badge-overrides((background-color: var(--mat-button-filled-container-color, var(--mat-sys-primary))));
+  @include mat.badge-overrides(
+    (
+      background-color: var(--mat-button-filled-container-color, var(--mat-sys-primary))
+    )
+  );
 }
 
 // Variables
@@ -37,7 +51,7 @@ $theme: mat.define-theme((color: (primary: mat.$violet-palette )));
 
   --info-card-info-background: light-dark(#d5e3fe, #3a475d);
   --info-card-warning-background: light-dark(#d7c3b8, #52443c);
-  --mat-dialog-container-max-width: 960px
+  --mat-dialog-container-max-width: 960px;
 }
 
 // Fonts overrides
@@ -49,16 +63,29 @@ $theme: mat.define-theme((color: (primary: mat.$violet-palette )));
 body,
 html {
   font-family: Inter, sans-serif !important;
-  font-feature-settings: 'liga' 1, 'calt' 1, 'tnum' 1, 'case' 1, 'zero' 1, 'ss01' 0, 'ss02' 1 !important;
+  font-feature-settings:
+    'liga' 1,
+    'calt' 1,
+    'tnum' 1,
+    'case' 1,
+    'zero' 1,
+    'ss01' 0,
+    'ss02' 1 !important;
 }
 
 @supports (font-variation-settings: normal) {
-
   :root,
   body,
   html {
     font-family: InterVariable, sans-serif !important;
-    font-feature-settings: 'liga' 1, 'calt' 1, 'tnum' 1, 'case' 1, 'zero' 1, 'ss01' 0, 'ss02' 1 !important;
+    font-feature-settings:
+      'liga' 1,
+      'calt' 1,
+      'tnum' 1,
+      'case' 1,
+      'zero' 1,
+      'ss01' 0,
+      'ss02' 1 !important;
   }
 }
 
@@ -232,7 +259,6 @@ body {
 /* Small-Screen media queries. */
 /* Currently encompasses the bottom-sheet style for dialogs, as well as the full-width post style for narrow screens.*/
 @media screen and (max-width: 800px) {
-
   /* START bottom-sheet */
   :root {
     --mat-dialog-container-shape: 16px 16px 0px 0px;
@@ -242,7 +268,7 @@ body {
     align-items: flex-end !important;
   }
 
-  [id*="mat-mdc-dialog-"] {
+  [id*='mat-mdc-dialog-'] {
     animation: 300ms slideup;
     --mat-dialog-transition-duration: 0ms !important;
   }
@@ -377,7 +403,6 @@ mat-tab-header {
   }
 }
 
-
 .wafrn-toolbar {
   position: fixed;
   bottom: 0;
@@ -388,4 +413,29 @@ mat-tab-header {
   border-top: 1px solid var(--mat-sys-outline-variant);
   --mat-list-list-item-one-line-container-height: 52px;
   --mat-sys-hover-state-layer-opacity: 0;
+}
+
+.refresh-button {
+  /* Evil specificity hack */
+  :root & {
+    position: fixed;
+  }
+  z-index: 500;
+  top: 1em;
+  right: 1em;
+}
+
+/* Mobile mode breakpoint*/
+@media screen and (max-width: 992px) {
+  .refresh-button {
+    top: unset;
+    bottom: calc(64px + 1em);
+  }
+}
+
+/* mat-toolbar breakpoint */
+@media screen and (max-width: 599px) {
+  .refresh-button {
+    bottom: calc(56px + 1em);
+  }
 }

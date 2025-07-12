@@ -45,7 +45,9 @@
         </div>
       }
     </mat-toolbar>
-    <br/><br/>
+    <button *ngIf="true" (click)="refresh()" mat-mini-fab color="default" aria-label="Refresh" class="refresh-button">
+      <fa-icon [icon]="reloadIcon" />
+    </button>
     <main id="main-content" class="wafrn-content">
       @if (maintenanceMode) {
         <div [innerHtml]="maintenanceMessage"></div>
@@ -54,18 +56,6 @@
     </main>
   </mat-drawer-content>
 </mat-drawer-container>
-
-<button
-  *ngIf="true"
-  (click)="refresh()"
-  mat-mini-fab
-  color="default"
-  aria-label="Refresh"
-  class="refresh-button"
-  style="position: fixed; z-index: 500; top: 1em; right: 1em"
->
-  <fa-icon [icon]="reloadIcon" />
-</button>
 
 <button
   *ngIf="!mobile"
