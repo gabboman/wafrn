@@ -11,6 +11,10 @@
     padding-top: calc(64px + 1em);
   }
 
+  .wafrn-post-editor {
+    margin-top: 3rem;
+  }
+
   .refresh-button {
     bottom: unset;
     top: calc(64px + 1em);
