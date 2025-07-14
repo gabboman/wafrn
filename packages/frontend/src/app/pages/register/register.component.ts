@@ -154,46 +154,46 @@ export class RegisterComponent {
     'Fanatic',
     'piles of crack cocaine meth weed drug',
     'All the ones below this one'
-    'Steam Deck compatible'
-    'Here could be your ad!'
-    'Comic Sans'
-    'eepy'
-    'caffeinated and sleep deprived'
-    'Blackjack and Hookers'
-    'Arch btw'
-    'dumbfuck juice'
-    'uoppy'
-    'bnuuy'
-    'kibty'
-    ':3'
-    'filesystem'
-    'Not MS-DOS compatible'
-    '01000111 01100101 01101110 01100100 01100101 01110010'
-    'fox'
-    'Electron app'
-    'ISO 8601'
-    'waffle'
-    'pancake'
-    'day'
-    'week'
-    'month'
-    'year'
-    'mailserver'
-    'mailserver (evil)'
-    'cinderace'
-    'Is this loss?'
-    'transistor-transistor logic'
-    'blue hair and pronouns'
-    'Acer Spin SP314 V1.08'
-    'wouldn´t you like to know?'
-    'Graphical User Interface'
-    'CMOS battery'
-    'IP over Avian Carriers'
-    'wrong'
-    'XKCD comic'
-    'a walrus in disguise'
-    '[REDACTED]'
-    'dead.'
+    'Steam Deck compatible',
+    'Here could be your ad!',
+    'Comic Sans',
+    'eepy',
+    'caffeinated and sleep deprived',
+    'Blackjack and Hookers',
+    'Arch btw',
+    'dumbfuck juice',
+    'uoppy',
+    'bnuuy',
+    'kibty',
+    ':3',
+    'filesystem',
+    'Not MS-DOS compatible',
+    '01000111 01100101 01101110 01100100 01100101 01110010',
+    'fox',
+    'Electron app',
+    'ISO 8601',
+    'waffle',
+    'pancake',
+    'day',
+    'week',
+    'month',
+    'year',
+    'mailserver',
+    'mailserver (evil)',
+    'cinderace',
+    'Is this loss?',
+    'transistor-transistor logic',
+    'blue hair and pronouns',
+    'Acer Spin SP314 V1.08',
+    'wouldn´t you like to know?',
+    'Graphical User Interface',
+    'CMOS battery',
+    'IP over Avian Carriers',
+    'wrong',
+    'XKCD comic',
+    'a walrus in disguise',
+    '[REDACTED]',
+    'dead.',
   ]
 
   loginForm = new UntypedFormGroup({
