@@ -153,7 +153,7 @@ export class RegisterComponent {
     'Version 2.1 NTSC-J No CD (alternate hardware)',
     'Fanatic',
     'piles of crack cocaine meth weed drug',
-    'All the ones below this one'
+    'All the ones below this one',
     'Steam Deck compatible',
     'Here could be your ad!',
     'Comic Sans',
@@ -169,7 +169,6 @@ export class RegisterComponent {
     'filesystem',
     'Not MS-DOS compatible',
     '01000111 01100101 01101110 01100100 01100101 01110010',
-    'fox',
     'Electron app',
     'ISO 8601',
     'waffle',
@@ -193,7 +192,8 @@ export class RegisterComponent {
     'XKCD comic',
     'a walrus in disguise',
     '[REDACTED]',
-    'dead.',
+    'publically traded',
+    'dead.'
   ]
 
   loginForm = new UntypedFormGroup({
