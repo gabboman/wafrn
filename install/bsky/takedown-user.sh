@@ -1,3 +1,5 @@
+#!/bin/bash
+
 # Use this to delete a user by DID in the system
 
 SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
