@@ -323,9 +323,10 @@ export default function adminRoutes(app: Application) {
           userToDelete.email,
           '',
           `Registrations at ${environment.frontendUrl} with vpn are not allowed`,
-          `<h1>Hello ${userToDelete.url}, we have got a lot of abusers registering with vpns.</h1>
+          `<h1>Hello ${userToDelete.url}, we have got a lot of spammers registering with vpns.</h1>
           <p>Please do <a href="${environment.frontendUrl}/register">try registering again without a vpn</a> or <b>on a different internet connection</b>. Corporate work networks usualy get flagged as VPN</p>
-          <p>There is only so much gore you can see before you say “fuck this shit”</p>
+          <p>This is one of the many ways we avoid spam.</p>
+          <p>There is also only so much gore you can see before you say “fuck this shit”.</p>
           <p>I am sorry. I promise that I won't do evil shit with your data, nor will i sell it or anything.</p>
           <p>I have freed up your email if you want to join again without a vpn.</p>
           <p>Thanks for your understanding and we're sorry</p>

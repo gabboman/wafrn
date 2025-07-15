@@ -1,0 +1,219 @@
+{
+  "common": {
+    "commaSeparation": "Odvojeno zarezima"
+  },
+  "login": {
+    "welcomeBack": "Dobrodošli nazad!",
+    "exploreWithoutAccount": "Kliknite ovde da bi ste pogledali bez naloga!",
+    "dontHaveAccount": "Nemate nalog?",
+    "register": "Registrujte se sada!",
+    "checkSpam": "Ako budete imali problema, proverite spam folder!",
+    "email": "E-mejl",
+    "password": "Lozinka",
+    "mfaToken": "Token",
+    "mfaTokenEnter": "Upiši svoj token iz aplikacije za Autentikaciju",
+    "forgottenPassword": "Zaboravili ste lozinku? Kliknite ovde!",
+    "showPassword": "Prikaži lozinku",
+    "hidePassword": "Sakri lozinku",
+    "loginButton": "Prijavi se",
+    "checkEmail": "Molimo te da proveriš i-mejl",
+    "checkEmailLine1": "Poslali smo ti i-mejl. Molimo da proveriš svoj e-mejl i spam folder",
+    "checkEmailLine2": "Ako imaš ikakvih problema, piši administratoru instance, čiji e-mejl može biti pronađen <a href=\"/about\">ovde</a>"
+  },
+  "notifications": {
+    "loadingMore": "Učitavaju se još notifikacija",
+    "refresh": "Osveži"
+  },
+  "menu": {
+    "login": "Prijavi se",
+    "register": "Registruj se",
+    "dashboard": "Dešbord",
+    "dashboardHover": "Pogledaj dešbord",
+    "writeWoot": "Napiši novi woot",
+    "notifications": "Notifikacije",
+    "explore": "Istraži",
+    "exploreWafrn": "Istraži WAFRN",
+    "exploreFediverse": "Wafrn i prijatelji",
+    "unansweredAsks": "Neodgovorena pitanja",
+    "privateMessages": "Privatne poruke",
+    "search": "Pretraga",
+    "myBlog": "Moj blog",
+    "privacy": "Politika Privatnosti",
+    "source": "Pogledaj izvorni kod!",
+    "patreon": "Patreon",
+    "kofi": "Ko-fi",
+    "logout": "Odjavi se",
+    "faq": "Često postavljena pitanja",
+    "settings": {
+      "title": "Podešavanja",
+      "follows": "Upravljaj pratiocima",
+      "enableBluesky": "Uključi Bluesky",
+      "editProfile": "Profil i Preference",
+      "themeEditor": "Izmeni temu",
+      "mutedUsers": "Utišani korisnici",
+      "mutedPosts": "Utišane objave",
+      "bookmarkedPosts": "Sačuvane objave",
+      "myBlockedUsers": "Blokirani korisnici",
+      "myBlockedServers": "Blokirani serveri",
+      "importFollows": "Uvezi pratioce",
+      "superSecretMenu": "Super Tajni Meni"
+    },
+    "admin": {
+      "title": "Administracija",
+      "serverList": "Lista servera",
+      "addEmojis": "Dodaj emodži-e",
+      "reports": "Tužbe",
+      "bans": "Korisnici sa zabranom",
+      "blocklist": "Blokirani korisnici",
+      "stats": "Statistike",
+      "awaitingAproval": "Čekanje za dozvolu"
+    }
+  },
+  "editor": {
+    "inReplyTo": "Kao odgovor na:",
+    "quoteButton": "Citiraj woot",
+    "publishWoot": "Objavi ovaj woot",
+    "directMessageWarning": "Administratori od tvog servera i servera gde se nalaze drugi korisnici u konverzaciji mogu da vide ove poruke.",
+    "unlistedWarning": "Ovaj woot je podešen kao neizlistan. Neće se pojaviti u pretrazi, hešteg-ovima i drugim funkcijama pronalazka, već samo pratocima. Za razliku od objava koje su samo ža pratioce, ovakve još uvek može da vidi bilo ko sa linkom.",
+    "directMessageWithQuoteWarning": "I citirani korisnik će biti notificiran o ovoj objavi kao pominjanje",
+    "sensitivePlaceholder": "Šta je osetljivo oko ovog woot-a?",
+    "wootQuoteBoxLabel": "Nalepite URL woot-a da bi ga citirali. Može da bude spoljni URL ili WAFRN URL",
+    "wootQuoteBoxPlaceholder": "Samo nalepi link do woot-a",
+    "wootQuoteConfirmButton": "Dodaj woot kao citat",
+    "wootTextLabel": "Woot tekst",
+    "wootTextPlaceholder": "Počni da pišeš...",
+    "altTextFieldLabel": "Deskripcija slike",
+    "altTextFieldPlaceholder": "Deskripcija. Molimo da POPUNITE OVO",
+    "isNSFWToggle": "Senzitivno",
+    "mediaCountMastodonWarning": "PAŽNjA! DALjI OTPREMLjENI MEDIJI NEĆE BITI PRIKAZANI NA MASTODONU",
+    "altTextWarning": "Molimo vas da popunite opise medija. Ako želite da onemogućite ovu proveru, to možete učiniti u podešavanjima.",
+    "quoteTitle": "Citirano:",
+    "tagFieldLabel": "Tag-ovi",
+    "tagSeparationNotice": "Odvojeno zarezima",
+    "ariaLabelWootPrivacy": "Izmeni privatnost woot-a",
+    "ariaLabelQuoteSetter": "Omogući postavljač za citate",
+    "uploadMediaTooltip": "Otpremi medije",
+    "contentWarningTooltip": "Upozorenje o sadržaju",
+    "insertEmojiTooltip": "Ubaci emodži",
+    "hiddenMentionsTooltip": "Drugi pomenuti korisnici",
+    "editorGuide": "Nedoumice oko toga kako formatirati tekst ili kako početi? Pogledajte <a target=\"_blank\" href=\"https://wafrn.net/faq/user\">vodič.</a>"
+  },
+  "profile": {
+    "profile": {
+      "chooseAvatar": "Izaberi drugi avatar",
+      "chooseHeader": "Izaberi profilnu sliku",
+      "changeDisplayName": "Prikazano ime (može da sadrži emodži kodove)",
+      "changeBio": "Tvoja biografija/opis. I ovde možeš koristiti emodži kodove. Ovde možeš koristiti markdown",
+      "extraInfoHead": "Dodatne informacije (ekskluzivno za Fedivers)",
+      "fieldPropertyName": "Ime osobine",
+      "fieldPropertyValue": "Vrednost osobine"
+    },
+    "preferences": {
+      "notificationFilters": "Filtriranje notifikacija",
+      "showNotificationsFrom": "Prikaži notifikacije od",
+      "notifyFrom": {
+        "everyone": "Svakoga",
+        "followers": "Pratioca",
+        "following": "Tih koje ja pratim",
+        "mutual": "Tih sa kojim se obostrano pratim"
+      },
+      "notifyWhen": {
+        "mentioned": "Pominjanja",
+        "followed": "Zapraćenja",
+        "likesEmojiReacts": "Lajkovi i EmodžiReakcije",
+        "quoted": "Citiranja",
+        "rewooted": "Rewoot-ovi"
+      },
+      "manuallyAcceptFollows": "Manuelno prihvataj pratioce",
+      "disableForceAltText": "Dozvoli otpremanje medija bez alt teksta (uključite ovo samo ako ste zli)",
+      "forceClassicLogo": "Vrati na klasični logo",
+      "forceClassicVideoPlayer": "Vrati na klasični video plejer",
+      "forceClassicAudioPlayer": "Vrati na klasični audio plejer",
+      "forceClassicMediaView": "Vrati na klasični medija prikazivač (vertikalni)",
+      "dontCollapseQuotes": "Ne moj sakrivati citate",
+      "disableCwExceptMuted": "Onemogući upozorenja o sadržaju osim ako objava sadrži utišane reči",
+      "disableConfetti": "Isključi konfeta efekat kada se rade neke akcije",
+      "enableConfettiRecivingLike": "Uključi konfete kada dobiješ lajk",
+      "disableUiSounds": "Isključi zvukove kada se rade neke akcije",
+      "dashboardIsExploreLocal": "Podrazumevani dešbord je istraži lokalno umesto te koje pratim",
+      "cocAIne": "Zameni reči \"artificial intelligence\" sa nekom drugom (cocaine?)",
+      "customCocAIne": "Reč sa kojom se zameljuje \"AI\"",
+      "notRecommendedOptions": "Ne preporučene opcije",
+      "disableNSFWFilter": "Isključi filter za senzitivne slike",
+      "automaticallyExpandAllPosts": "Automatski raširi sve objave"
+    },
+    "privacy": {
+      "defaultPostPrivacy": "Podrazumevana privatnost objava",
+      "asks": "Pitanja",
+      "disableEmailNotifications": "Isključi notifikacije preko e-mejlova",
+      "hideFollows": "Sakri koga pratim i ko mene prati",
+      "hideProfileNotLoggedInDescription": "Sakrij svoj profil od neprijavljenih korisnika i iz pretrage (ovo će samo uticati unutar ove wafrn instance\nne na tvoje objave, unutar drugih fedivers instanca niti u Bluesky-u)",
+      "rssOptions": "Uključi RSS i microfront za moju blog stranicu"
+    },
+    "security": {
+      "header": "Podešavanja bezbednosti",
+      "passwordChange": "Resetuj lozinku",
+      "mfa": {
+        "header": "Dvofaktorska autentifikacija",
+        "setup": "Podesi dvofaktorsku autentifikaciju",
+        "addNew": "Dodaj novi dvofaktorski autentifikator",
+        "friendlyNameLabel": "Razumljivo ime, npr. 'Poslovni telefon' ili 'Aegis'",
+        "typeLabel": "Tip drugog faktora",
+        "setupNewButton": "Podesi novi autentifikator",
+        "tokenLabel": "Token",
+        "deleteLabel": "Izbriši",
+        "scanInstructions": "Skeniraj kod ispod u aplikaciji za autentifikaciju, i upiši kod koji se pojavi",
+        "installInstructions": "Ako već nemaš aplikaciju za autentifikaciju mi preporučujemo <a href=\"https://getaegis.app/\" target=\"_blank\">Aegis</a> (Android) ili <a href=\"https://2fas.com/\" target=\"_blank\">2FAS</a> (iOS/Android)",
+        "imageAltSecret": "Tajna za autentifikaciju je '{{ secret }}'",
+        "secretFallback": "Ako ne možeš da skeniraš QR kod, možeš da koristiš kod '{{ secret }}' manuelno o aplikaciji",
+        "confirmDeleteMessage": "Da li ste sigurni da želite da obrišete ovaj MFA provajder? Brisanje svih MFA provajdera će isključiti MFA za ovaj nalog",
+        "deleteSuccess": "MFA provajder uspešno obrisan",
+        "verifySuccess": "Tvoj MFA je uspešno uključen",
+        "verifyFailed": "Verifikacija neuspešna. Proveri svoj token, ili ako se problem nastavi pitaj administratora",
+        "errorMessageGeneric": "Došlo je do problema sa tvojim zahtevom. Pokušaj ponovo, ili pitaj administratora za pomoć",
+        "noMfa": "Nemaš MFA uključeno na ovom nalogu",
+        "mfaList": "Ovi MFA provajderi su podešeni",
+        "type": {
+          "totpLabel": "Aplikacija za autentikaciju"
+        }
+      }
+    },
+    "other": {
+      "movingFromAccount": "'Selidba sa drugog naloga (bez @)'",
+      "wordsThatWillAutoCwPosts": "Reči koje dodaju upozorenja o sadržaju",
+      "superMutedWords": "Fraze koje će sakriti objave u kojima se sadrže (BUDITE PAŽLjIVI SA OVIM)",
+      "availableEmoji": "Dostupni emodžiji"
+    },
+    "bsky": {
+      "psa1": "Bluesky integracija je još uvek eksperimentalna! Stvari će se absolutno kvariti!",
+      "psa2_1": "Molimo da proverite",
+      "psa2_2": "ĆPP",
+      "psa2_3": "da bi saznali šta generalno (ne)radi.",
+      "psa3": "U budućnosti želimo da ovde imamo Bluesky-specifična podešavanja, kao što je mogućnost da se promeni Bluesky korisničko ime."
+    },
+    "migrate": {
+      "psa1": "Da bi se preselili (migrirali) na drugi server napravite pseudonim i kliknite",
+      "psa2": "ovde"
+    },
+    "delete": {
+      "psa1": "Mi će mo vaš nalog označiti kao deaktiviran i posle 30 dana biće NEPOVRATIVO IZBRISAN.",
+      "psa2": "Da bi ste potvrdili da ste to zaista Vi, molimo Vas da upišete Vašu šifru",
+      "button": "IZBRIŠI NALOG"
+    },
+    "tabHeaders": {
+      "profile": "Profil",
+      "preferences": "Preference",
+      "privacySecurity": "Privatnost i bezbednost",
+      "misc": "Razno"
+    },
+    "updateButton": "Promeni profil"
+  },
+  "ask-dialog-content": {
+    "askAnonymously": "Učini pitanje anonimnim",
+    "askFormLabel": "Pitanje",
+    "askButtonText": "Pitaj"
+  },
+  "post-fragment": {
+    "replyingTo": "u odgovoru na: "
+  }
+}
