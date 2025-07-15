@@ -14,6 +14,7 @@ import { bulkCreateNotifications, createNotification } from '../../utils/pushNot
 import { getAllLocalUserIds } from '../../utils/cacheGetters/getAllLocalUserIds.js'
 import { Privacy } from '../../models/post.js'
 import { wait } from '../../utils/wait.js'
+import { UpdatedAt } from 'sequelize-typescript'
 
 const markdownConverter = new showdown.Converter({
   simplifiedAutoLink: true,
@@ -171,7 +172,10 @@ async function processSinglePost(
     const invalidPost = await Post.create({
       userId: usr?.id,
       content: `Failed to get atproto post`,
-      parentId: parentId
+      parentId: parentId,
+      isDeleted: true,
+      createdAt: new Date(0),
+      updatedAt: new Date(0)
     })
     return invalidPost.id
   }

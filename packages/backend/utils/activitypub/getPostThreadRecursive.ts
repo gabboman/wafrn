@@ -195,9 +195,9 @@ async function getPostThreadRecursive(
         content_warning: postPetition.summary
           ? postPetition.summary
           : remoteUser.NSFW
-            ? 'User is marked as NSFW by this instance staff. Possible NSFW without tagging'
-            : '',
-        createdAt: new Date(postPetition.published),
+          ? 'User is marked as NSFW by this instance staff. Possible NSFW without tagging'
+          : '',
+        createdAt: createdAt,
         updatedAt: createdAt,
         userId: remoteUserServerBaned || remoteUser.banned ? (await deletedUser)?.id : remoteUser.id,
         remotePostId: postPetition.id,
