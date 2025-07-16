@@ -1,6 +1,6 @@
 import { object } from 'underscore'
 import { Follows, User } from '../../models/index.js'
-import { environment } from '../../environment.js'
+import { completeEnvironment } from '../backendOptions.js'
 import { activityPubObject } from '../../interfaces/fediverse/activityPubObject.js'
 import { postPetitionSigned } from './postPetitionSigned.js'
 
@@ -14,18 +14,17 @@ async function rejectremoteFollow(userId: string, remoteUserId: string) {
     }
   })
 
-  if (!localUser || !remoteUser || !followToBeDestroyed)
-    return;
+  if (!localUser || !remoteUser || !followToBeDestroyed) return
 
   const apObj: activityPubObject = {
     '@context': 'https://www.w3.org/ns/activitystreams',
-    actor: environment.frontendUrl + '/fediverse/blog/' + localUser.url.toLowerCase(),
-    id: `${environment.frontendUrl}/fediverse/reject/${encodeURIComponent(followToBeDestroyed.remoteFollowId)}`,
+    actor: completeEnvironment.frontendUrl + '/fediverse/blog/' + localUser.url.toLowerCase(),
+    id: `${completeEnvironment.frontendUrl}/fediverse/reject/${encodeURIComponent(followToBeDestroyed.remoteFollowId)}`,
     type: 'Reject',
     object: {
       actor: remoteUser.remoteId,
       id: followToBeDestroyed.remoteFollowId,
-      object: environment.frontendUrl + '/fediverse/blog/' + localUser.url.toLowerCase(),
+      object: completeEnvironment.frontendUrl + '/fediverse/blog/' + localUser.url.toLowerCase(),
       type: 'Follow'
     }
   }

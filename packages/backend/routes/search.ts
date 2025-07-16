@@ -10,7 +10,6 @@ import { authenticateToken } from '../utils/authenticateToken.js'
 
 import { searchRemoteUser } from '../utils/activitypub/searchRemoteUser.js'
 import AuthorizedRequest from '../interfaces/authorizedRequest.js'
-import { environment } from '../environment.js'
 import { getPostThreadRecursive } from '../utils/activitypub/getPostThreadRecursive.js'
 import checkIpBlocked from '../utils/checkIpBlocked.js'
 import { getAllLocalUserIds } from '../utils/cacheGetters/getAllLocalUserIds.js'
@@ -22,6 +21,7 @@ import { getAtprotoUser } from '../atproto/utils/getAtprotoUser.js'
 import { getAtProtoThread } from '../atproto/utils/getAtProtoThread.js'
 import { logger } from '../utils/logger.js'
 import { Privacy } from '../models/post.js'
+import { completeEnvironment } from '../utils/backendOptions.js'
 export default function searchRoutes(app: Application) {
   app.get('/api/v2/search/', authenticateToken, async (req: AuthorizedRequest, res: Response) => {
     // const success = false;
@@ -64,13 +64,13 @@ export default function searchRoutes(app: Application) {
         ],
         attributes: ['postId'],
         order: [['createdAt', 'DESC']],
-        limit: environment.postsPerPage,
-        offset: page * environment.postsPerPage
+        limit: completeEnvironment.postsPerPage,
+        offset: page * completeEnvironment.postsPerPage
       })
       promises.push(taggedPostsId)
       localUsers = User.findAll({
-        limit: environment.postsPerPage,
-        offset: page * environment.postsPerPage,
+        limit: completeEnvironment.postsPerPage,
+        offset: page * completeEnvironment.postsPerPage,
         where: {
           activated: true,
           hideProfileNotLoggedIn: false,
@@ -84,8 +84,8 @@ export default function searchRoutes(app: Application) {
         attributes: ['name', 'url', 'avatar', 'id', 'remoteId', 'description']
       })
       users = User.findAll({
-        limit: environment.postsPerPage,
-        offset: page * environment.postsPerPage,
+        limit: completeEnvironment.postsPerPage,
+        offset: page * completeEnvironment.postsPerPage,
         where: {
           activated: true,
           url: { [Op.iLike]: `%${searchTerm}%` },

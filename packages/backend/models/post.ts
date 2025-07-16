@@ -21,7 +21,7 @@ import { RemoteUserPostView } from "./remoteUserPostView.js";
 import { FederatedHost } from "./federatedHost.js";
 import { PostAncestor } from "./postAncestor.js";
 import { BelongsToGetAssociationMixin, BelongsToManyGetAssociationsMixin, BelongsToManySetAssociationsMixin, BelongsToSetAssociationMixin, HasManyGetAssociationsMixin, HasManyRemoveAssociationMixin, HasManyRemoveAssociationsMixin, HasManySetAssociationsMixin, HasOneGetAssociationMixin } from "sequelize";
-import { environment } from "../environment.js";
+import { environment } from "../completeEnvironment.js";
 
 export const Privacy = {
   Public: 0,
@@ -298,6 +298,6 @@ export class Post extends Model<PostAttributes, PostAttributes> implements PostA
   }
 
   get fullUrl() {
-    return this.remotePostId || `${environment.frontendUrl}/fediverse/post/${this.id}`
+    return this.remotePostId || `${completeEnvironment.frontendUrl}/fediverse/post/${this.id}`
   }
 }

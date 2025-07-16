@@ -2,9 +2,9 @@ import { Expo, type ExpoPushErrorTicket } from 'expo-server-sdk'
 import { logger } from './logger.js'
 import { Notification, PushNotificationToken } from '../models/index.js'
 import { Queue } from 'bullmq'
-import { environment } from '../environment.js'
 import { getAllLocalUserIds } from './cacheGetters/getAllLocalUserIds.js'
 import dompurify from 'isomorphic-dompurify'
+import { completeEnvironment } from './backendOptions.js'
 
 type PushNotificationPayload = {
   notifications: NotificationBody[]
@@ -12,7 +12,7 @@ type PushNotificationPayload = {
 }
 
 const sendPushNotificationQueue = new Queue<PushNotificationPayload>('sendPushNotification', {
-  connection: environment.bullmqConnection,
+  connection: completeEnvironment.bullmqConnection,
   defaultJobOptions: {
     removeOnComplete: true,
     attempts: 3,

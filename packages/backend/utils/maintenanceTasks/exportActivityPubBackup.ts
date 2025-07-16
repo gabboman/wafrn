@@ -6,7 +6,7 @@ import { Post, User } from "../../models/index.js";
 import { userToJSONLD } from "../activitypub/userToJSONLD.js";
 import archiver from "archiver";
 import { v4 as uuidv4 } from 'uuid';
-import { environment } from "../../environment.js";
+import { environment } from "../../completeEnvironment.js";
 import { postToJSONLD } from "../activitypub/postToJSONLD.js";
 import axios from "axios";
 
@@ -25,8 +25,8 @@ async function extractImages(archive: archiver.Archiver, data: any, remoteFetch:
         // ugly hack to skip the main "url" objects in the post and blog events
         if (value.indexOf('fediverse/post') !== -1) {
         } else if (value.indexOf('fediverse/blog') !== -1) {
-        } else if (value.startsWith(environment.mediaUrl)) {
-          const fileName = value.slice(environment.mediaUrl.length + 1);
+        } else if (value.startsWith(completeEnvironment.mediaUrl)) {
+          const fileName = value.slice(completeEnvironment.mediaUrl.length + 1);
           const newFileName = `media_attachments/files/${fileName}`;
           if (!archived[fileName]) {
             console.log(`Media file ${value} - ${fileName}`);
@@ -36,7 +36,7 @@ async function extractImages(archive: archiver.Archiver, data: any, remoteFetch:
           data[key] = `/${newFileName}`;
         } else if (remoteFetch) {
           const fileName = value.replaceAll(/[^.a-zA-Z0-9_-]/g, '_');
-          const downloadedFile = await axios.get(environment.externalCacheurl + value, { responseType: 'stream' }).catch(() => null);
+          const downloadedFile = await axios.get(completeEnvironment.externalCacheurl + value, { responseType: 'stream' }).catch(() => null);
           if (downloadedFile?.data) {
             const newFileName = `media_attachments/files/${fileName}`;
             if (!archived[fileName]) {
@@ -224,7 +224,7 @@ async function exportBackup(userUrl: string, exportType: string): Promise<string
     for (const like of await user.getUserLikesPostRelations({ include: Post })) {
       if (like.post) {
         const postUser = await like.post.getUser();
-        const postRemoteId = like.post.remotePostId || (postUser.url.startsWith('@') && like.post.bskyUri ? like.post.bskyUri : `${environment.frontendUrl}/fediverse/post/${like.post.id}`);
+        const postRemoteId = like.post.remotePostId || (postUser.url.startsWith('@') && like.post.bskyUri ? like.post.bskyUri : `${completeEnvironment.frontendUrl}/fediverse/post/${like.post.id}`);
         likes.orderedItems.push(postRemoteId);
       }
     }
@@ -238,7 +238,7 @@ async function exportBackup(userUrl: string, exportType: string): Promise<string
     for (const bookmark of await user.getUserBookmarkedPosts({ include: Post })) {
       if (bookmark.post) {
         const postUser = await bookmark.post.getUser();
-        const postRemoteId = bookmark.post.remotePostId || (postUser.url.startsWith('@') && bookmark.post.bskyUri ? bookmark.post.bskyUri : `${environment.frontendUrl}/fediverse/post/${bookmark.post.id}`);
+        const postRemoteId = bookmark.post.remotePostId || (postUser.url.startsWith('@') && bookmark.post.bskyUri ? bookmark.post.bskyUri : `${completeEnvironment.frontendUrl}/fediverse/post/${bookmark.post.id}`);
         bookmarks.orderedItems.push(postRemoteId);
       }
     }
@@ -260,5 +260,5 @@ if (!process.argv[2]) {
 
 const fileName = await exportBackup(process.argv[2], process.argv[3]);
 
-console.log(`Exported to: ${environment.mediaUrl}/${fileName}`);
+console.log(`Exported to: ${completeEnvironment.mediaUrl}/${fileName}`);
 process.exit(0);

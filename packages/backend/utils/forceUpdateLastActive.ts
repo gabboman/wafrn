@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from 'express'
 import jwt from 'jsonwebtoken'
-import { environment } from '../environment.js'
+import { completeEnvironment } from './backendOptions.js'
 import AuthorizedRequest from '../interfaces/authorizedRequest.js'
 import { User } from '../models/index.js'
 

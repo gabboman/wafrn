@@ -6,8 +6,8 @@ import { server } from '../interfaces/server.js'
 import { Op, WhereOptions } from 'sequelize'
 import { redisCache } from '../utils/redis.js'
 import sendActivationEmail from '../utils/sendActivationEmail.js'
-import { environment } from '../environment.js'
 import { UserAttributes } from '../models/user.js'
+import { completeEnvironment } from '../utils/backendOptions.js'
 
 export default function adminRoutes(app: Application) {
   app.get('/api/admin/server-list', authenticateToken, adminToken, async (req: AuthorizedRequest, res: Response) => {
@@ -287,7 +287,7 @@ export default function adminRoutes(app: Application) {
         },
         banned: false
       }
-      if (!environment.disableRequireSendEmail) {
+      if (!completeEnvironment.disableRequireSendEmail) {
         whereConditions.emailVerified = true
       }
       const notActiveUsers = await User.findAll({
@@ -306,7 +306,7 @@ export default function adminRoutes(app: Application) {
         const emailPromise = sendActivationEmail(
           userToActivate.email,
           '',
-          `your account at ${environment.frontendUrl} has been activated`,
+          `your account at ${completeEnvironment.frontendUrl} has been activated`,
           `Hello ${userToActivate.url}, your account has been reviewed by our team and is now activated! Congratulations`
         )
         Promise.allSettled([emailPromise, userToActivate.save()])
@@ -322,9 +322,9 @@ export default function adminRoutes(app: Application) {
         const emailPromise = sendActivationEmail(
           userToDelete.email,
           '',
-          `Registrations at ${environment.frontendUrl} with vpn are not allowed`,
+          `Registrations at ${completeEnvironment.frontendUrl} with vpn are not allowed`,
           `<h1>Hello ${userToDelete.url}, we have got a lot of spammers registering with vpns.</h1>
-          <p>Please do <a href="${environment.frontendUrl}/register">try registering again without a vpn</a> or <b>on a different internet connection</b>. Corporate work networks usualy get flagged as VPN</p>
+          <p>Please do <a href="${completeEnvironment.frontendUrl}/register">try registering again without a vpn</a> or <b>on a different internet connection</b>. Corporate work networks usualy get flagged as VPN</p>
           <p>This is one of the many ways we avoid spam.</p>
           <p>There is also only so much gore you can see before you say “fuck this shit”.</p>
           <p>I am sorry. I promise that I won't do evil shit with your data, nor will i sell it or anything.</p>
@@ -352,7 +352,7 @@ export default function adminRoutes(app: Application) {
           const emailPromise = sendActivationEmail(
             userToActivate.email,
             '',
-            `Hello ${userToActivate.url}, before we can activate your account at ${environment.frontendUrl} we need you to reply to this email`,
+            `Hello ${userToActivate.url}, before we can activate your account at ${completeEnvironment.frontendUrl} we need you to reply to this email`,
             `Hello ${userToActivate.url}, you recived this email because something might be off in your account. Usually is something like the email being in a strange provider or 'wow that email looks weird'. We just need a confirmation. Sorry for this and thanks.`
           )
           Promise.allSettled([userToActivate.save(), emailPromise])

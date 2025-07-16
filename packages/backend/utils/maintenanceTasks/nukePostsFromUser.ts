@@ -1,4 +1,4 @@
-import { environment } from "../../environment.js";
+import { environment } from "../../completeEnvironment.js";
 let posts = [
 'LIST OF IDS OF POSTS TO NUKE'
 ]
@@ -6,7 +6,7 @@ const token = "Bearer USERTOKEN GOES GERE. IT SHOULD BE 'Bearer TOKEN'"
 
 for await (const post of posts) {
   console.log(`Nuking ${post}`)
-  await fetch(`${environment.frontendUrl}/api/deletePost?id=${post}`, {
+  await fetch(`${completeEnvironment.frontendUrl}/api/deletePost?id=${post}`, {
     "credentials": "include",
     "headers": {
         "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:139.0) Gecko/20100101 Firefox/139.0",

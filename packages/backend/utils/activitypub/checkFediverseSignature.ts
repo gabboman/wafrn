@@ -1,6 +1,6 @@
 import { Response, NextFunction } from 'express'
 import { FederatedHost, User, sequelize } from '../../models/index.js'
-import { environment } from '../../environment.js'
+import { completeEnvironment } from '../backendOptions.js'
 import { logger } from '../logger.js'
 // @ts-ignore @peertube/http-signature doesn't have types
 import httpSignature from '@peertube/http-signature'
@@ -21,7 +21,7 @@ function getCheckFediverseSignatureFunction(force = false) {
     let remoteUserUrl = ''
     const adminUser = User.findOne({
       where: {
-        url: environment.adminUser
+        url: completeEnvironment.adminUser
       }
     })
     try {

@@ -4,8 +4,8 @@ import { wait } from '../wait.js'
 import sendActivationEmail from '../sendActivationEmail.js'
 import getBlockedIds from '../cacheGetters/getBlockedIds.js'
 import { getMutedPosts } from '../cacheGetters/getMutedPosts.js'
-import {getNotificationOptions } from '../../routes/notifications.js'
-import { environment } from '../../environment.js'
+import { getNotificationOptions } from '../../routes/notifications.js'
+import { completeEnvironment } from '../backendOptions.js'
 
 async function sendMail() {
   const users = await User.findAll({
@@ -49,7 +49,10 @@ async function sendMail() {
         }
       }
     })
-    const subject = notificationsCount != 0 ? `Hello ${user.url}, you have ${notificationsCount} unread notifications in wafrn!` : `Hello ${user.url}, you have ${notificationsCount} unread notifications in wafrn! Wow thats zero notifications`
+    const subject =
+      notificationsCount != 0
+        ? `Hello ${user.url}, you have ${notificationsCount} unread notifications in wafrn!`
+        : `Hello ${user.url}, you have ${notificationsCount} unread notifications in wafrn! Wow thats zero notifications`
     const body = `
     <h1>${user.url}, We miss you at <a href="https://app.wafrn.net">wafrn</a>!</h1>
     <p>As you can see, other people also misses you, as you have ${notificationsCount} unread notifications!</p>
@@ -80,7 +83,7 @@ And finaly, the part of the email where I say "give me money". Well, first, give
 	<li>And finaly... we have to link the wafrn <a href="https://patreon.com/wafrn" target="_blank">patreon</a> and <a href="https://ko-fi.com/wafrn" target="_blank">kofi</a>. This money goes to gabbo for fried chicken and to the wafrn servers. Give me money! please :3</li>
 </ul>
 
-<p>If you no longer desire to get these emails, please <a href="${environment.frontendUrl}/disableEmailNotifications/${user.id}/${user.activationCode}">click here</a>.</p>
+<p>If you no longer desire to get these emails, please <a href="${completeEnvironment.frontendUrl}/disableEmailNotifications/${user.id}/${user.activationCode}">click here</a>.</p>
     `
     console.log(`mailing ${user.url}`)
     await sendActivationEmail(user.email, '', subject, body)

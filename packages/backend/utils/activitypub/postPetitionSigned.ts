@@ -1,5 +1,5 @@
 import { createHash, createSign } from 'node:crypto'
-import { environment } from '../../environment.js'
+import { completeEnvironment } from '../backendOptions.js'
 import { logger } from '../logger.js'
 import { removeUser } from './removeUser.js'
 import { User } from '../../models/index.js'
@@ -7,10 +7,10 @@ import axios from 'axios'
 
 async function postPetitionSigned(message: object, user: any, target: string): Promise<any> {
   let res
-  if (user.url === environment.deletedUser) {
+  if (user.url === completeEnvironment.deletedUser) {
     return {}
   }
-  if (user.url === environment.deletedUser) {
+  if (user.url === completeEnvironment.deletedUser) {
     console.debug({
       warning: `POST petition to ${target} made by deleted user`,
       object: message
@@ -21,16 +21,18 @@ async function postPetitionSigned(message: object, user: any, target: string): P
     const digest = createHash('sha256').update(JSON.stringify(message)).digest('base64')
     const signer = createSign('sha256')
     const sendDate = new Date()
-    const stringToSign = `(request-target): post ${url.pathname}\nhost: ${url.host
-      }\ndate: ${sendDate.toUTCString()}\nalgorithm: rsa-sha256\ndigest: SHA-256=${digest}`
+    const stringToSign = `(request-target): post ${url.pathname}\nhost: ${
+      url.host
+    }\ndate: ${sendDate.toUTCString()}\nalgorithm: rsa-sha256\ndigest: SHA-256=${digest}`
     signer.update(stringToSign)
     signer.end()
     const signature = signer.sign(user.privateKey).toString('base64')
-    const header = `keyId="${environment.frontendUrl
-      }/fediverse/blog/${user.url.toLocaleLowerCase()}#main-key",algorithm="rsa-sha256",headers="(request-target) host date algorithm digest",signature="${signature}"`
+    const header = `keyId="${
+      completeEnvironment.frontendUrl
+    }/fediverse/blog/${user.url.toLocaleLowerCase()}#main-key",algorithm="rsa-sha256",headers="(request-target) host date algorithm digest",signature="${signature}"`
     const headers = {
       'Content-Type': 'application/activity+json',
-      'User-Agent': environment.instanceUrl,
+      'User-Agent': completeEnvironment.instanceUrl,
       Accept: 'application/activity+json',
       Algorithm: 'rsa-sha256',
       Host: url.host,

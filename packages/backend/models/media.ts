@@ -3,7 +3,7 @@ import {
 } from "sequelize-typescript";
 import { User } from "./user.js";
 import { Post } from "./post.js";
-import { environment } from "../environment.js";
+import { environment } from "../completeEnvironment.js";
 
 export interface MediaAttributes {
   id?: number;
@@ -113,6 +113,6 @@ export class Media extends Model<MediaAttributes, MediaAttributes> implements Me
   declare post: Post;
 
   get fullUrl(): string {
-    return this.url.startsWith("?cid") ? environment.externalCacheurl + this.url : (this.external ? this.url : (environment.mediaUrl + this.url));
+    return this.url.startsWith("?cid") ? completeEnvironment.externalCacheurl + this.url : (this.external ? this.url : (completeEnvironment.mediaUrl + this.url));
   }
 }

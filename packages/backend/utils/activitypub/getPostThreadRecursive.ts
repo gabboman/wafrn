@@ -13,7 +13,7 @@ import {
   Ask,
   Notification
 } from '../../models/index.js'
-import { environment } from '../../environment.js'
+import { completeEnvironment } from '../backendOptions.js'
 import { logger } from '../logger.js'
 import { getRemoteActor } from './getRemoteActor.js'
 import { getPetitionSigned } from './getPetitionSigned.js'
@@ -28,7 +28,7 @@ import { Privacy } from '../../models/post.js'
 import { getAtProtoThread } from '../../atproto/utils/getAtProtoThread.js'
 
 const updateMediaDataQueue = new Queue('processRemoteMediaData', {
-  connection: environment.bullmqConnection,
+  connection: completeEnvironment.bullmqConnection,
   defaultJobOptions: {
     removeOnComplete: true,
     attempts: 3,
@@ -51,7 +51,7 @@ async function getPostThreadRecursive(
 
   const deletedUser = getDeletedUser()
   try {
-    remotePostId.startsWith(`${environment.frontendUrl}/fediverse/post/`)
+    remotePostId.startsWith(`${completeEnvironment.frontendUrl}/fediverse/post/`)
   } catch (error) {
     logger.info({
       message: 'Error with url on post',
@@ -60,9 +60,9 @@ async function getPostThreadRecursive(
     })
     return
   }
-  if (remotePostId.startsWith(`${environment.frontendUrl}/fediverse/post/`)) {
+  if (remotePostId.startsWith(`${completeEnvironment.frontendUrl}/fediverse/post/`)) {
     // we are looking at a local post
-    const partToRemove = `${environment.frontendUrl}/fediverse/post/`
+    const partToRemove = `${completeEnvironment.frontendUrl}/fediverse/post/`
     const postId = remotePostId.substring(partToRemove.length)
     return await Post.findOne({
       where: {
@@ -70,7 +70,7 @@ async function getPostThreadRecursive(
       }
     })
   }
-  if (environment.enableBsky && remotePostId.startsWith('at://')) {
+  if (completeEnvironment.enableBsky && remotePostId.startsWith('at://')) {
     // Bluesky post. Likely coming from an import
     const postInDatabase = await Post.findOne({
       where: {
@@ -214,8 +214,10 @@ async function getPostThreadRecursive(
         if (!remoteUser.banned && !remoteUserServerBaned) {
           for await (const mention of fediMentions) {
             let mentionedUser
-            if (mention.href?.indexOf(environment.frontendUrl) !== -1) {
-              const username = mention.href?.substring(`${environment.frontendUrl}/fediverse/blog/`.length) as string
+            if (mention.href?.indexOf(completeEnvironment.frontendUrl) !== -1) {
+              const username = mention.href?.substring(
+                `${completeEnvironment.frontendUrl}/fediverse/blog/`.length
+              ) as string
               mentionedUser = await User.findOne({
                 where: sequelize.where(sequelize.fn('lower', sequelize.col('url')), username.toLowerCase())
               })
@@ -323,8 +325,8 @@ async function getPostThreadRecursive(
       const mentions = await newPost.getMentionPost()
       if (postCleanContent.startsWith('!ask') && mentions.length === 1) {
         let askContent = postCleanContent.split(`!ask @${mentions[0].url}`)[1]
-        if (askContent.startsWith('@' + environment.instanceUrl)) {
-          askContent = askContent.split('@' + environment.instanceUrl)[1]
+        if (askContent.startsWith('@' + completeEnvironment.instanceUrl)) {
+          askContent = askContent.split('@' + completeEnvironment.instanceUrl)[1]
         }
         await Ask.create({
           question: askContent,

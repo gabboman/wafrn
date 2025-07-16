@@ -1,6 +1,6 @@
 import { Op } from 'sequelize'
 import { Media, Post, PostTag, sequelize, User } from '../../models/index.js'
-import { environment } from '../../environment.js'
+import { completeEnvironment } from '../backendOptions.js'
 import { fediverseTag } from '../../interfaces/fediverse/tags.js'
 import { activityPubObject } from '../../interfaces/fediverse/activityPubObject.js'
 import { emojiToAPTag } from './emojiToAPTag.js'
@@ -21,7 +21,7 @@ async function postToJSONLD(postId: string): Promise<activityPubObject | undefin
   const userAsker = post.ask?.asker
   const ask = post.ask
 
-  const stringMyFollowers = `${environment.frontendUrl}/fediverse/blog/${localUser.url.toLowerCase()}/followers`
+  const stringMyFollowers = `${completeEnvironment.frontendUrl}/fediverse/blog/${localUser.url.toLowerCase()}/followers`
   const dbMentions = post.mentionPost
   let mentionedUsers: string[] = []
 
@@ -30,7 +30,7 @@ async function postToJSONLD(postId: string): Promise<activityPubObject | undefin
   }
   let parentPostString = null
   let quotedPostString = null
-  const conversationString = `${environment.frontendUrl}/fediverse/conversation/${post.id}`
+  const conversationString = `${completeEnvironment.frontendUrl}/fediverse/conversation/${post.id}`
 
   if (post.parentId) {
     let dbPost = (await getPostAndUserFromPostId(post.parentId)).data
@@ -76,7 +76,7 @@ async function postToJSONLD(postId: string): Promise<activityPubObject | undefin
     }
     parentPostString = dbPost?.remotePostId
       ? dbPost.remotePostId
-      : `${environment.frontendUrl}/fediverse/post/${dbPost ? dbPost.id : post.parentId}`
+      : `${completeEnvironment.frontendUrl}/fediverse/post/${dbPost ? dbPost.id : post.parentId}`
   }
   const postMedias = await post.medias
   let processedContent = post.content
@@ -86,9 +86,11 @@ async function postToJSONLD(postId: string): Promise<activityPubObject | undefin
   // we remove the wafrnmedia from the post for the outside world, as they get this on the attachments
   processedContent = processedContent.replaceAll(wafrnMediaRegex, '')
   if (ask) {
-    processedContent = `<p>${getUserName(userAsker)} asked </p> <blockquote>${ask.question
-      }</blockquote> ${processedContent} <p>To properly see this ask, <a href="${environment.frontendUrl + '/fediverse/post/' + post.id
-      }">check the post in the original instance</a></p>`
+    processedContent = `<p>${getUserName(userAsker)} asked </p> <blockquote>${
+      ask.question
+    }</blockquote> ${processedContent} <p>To properly see this ask, <a href="${
+      completeEnvironment.frontendUrl + '/fediverse/post/' + post.id
+    }">check the post in the original instance</a></p>`
   }
   const mentions: string[] = post.mentionPost.map((elem: any) => elem.id)
   const fediMentions: fediverseTag[] = []
@@ -112,7 +114,7 @@ async function postToJSONLD(postId: string): Promise<activityPubObject | undefin
   }
   for await (const tag of post.postTags) {
     const externalTagName = tag.tagName.replaceAll('"', "'").replaceAll(' ', '-')
-    const link = `${environment.frontendUrl}/dashboard/search/${encodeURIComponent(tag.tagName)}`
+    const link = `${completeEnvironment.frontendUrl}/dashboard/search/${encodeURIComponent(tag.tagName)}`
     tagsAndQuotes = `${tagsAndQuotes}  <a class="hashtag" data-tag="post" href="${link}" rel="tag ugc">#${externalTagName}</a>`
     fediTags.push({
       type: 'Hashtag',
@@ -128,9 +130,11 @@ async function postToJSONLD(postId: string): Promise<activityPubObject | undefin
   for await (const userId of mentions) {
     const user =
       (await User.findOne({ where: { id: userId } })) ||
-      ((await User.findOne({ where: { url: environment.deletedUser } })) as User)
-    const url = user.url.startsWith('@') ? user.url : `@${user.url}@${environment.instanceUrl}`
-    const remoteId = user.url.startsWith('@') ? user.remoteId : `${environment.frontendUrl}/fediverse/blog/${user.url}`
+      ((await User.findOne({ where: { url: completeEnvironment.deletedUser } })) as User)
+    const url = user.url.startsWith('@') ? user.url : `@${user.url}@${completeEnvironment.instanceUrl}`
+    const remoteId = user.url.startsWith('@')
+      ? user.remoteId
+      : `${completeEnvironment.frontendUrl}/fediverse/blog/${user.url}`
     if (remoteId) {
       fediMentions.push({
         type: 'Mention',
@@ -156,7 +160,7 @@ async function postToJSONLD(postId: string): Promise<activityPubObject | undefin
       actor: userAsker
         ? userAsker.remoteId
           ? userAsker.remoteId
-          : environment.frontendUrl + '/fediverse/blog/' + userAsker.url
+          : completeEnvironment.frontendUrl + '/fediverse/blog/' + userAsker.url
         : 'anonymous'
     })
   }
@@ -164,33 +168,36 @@ async function postToJSONLD(postId: string): Promise<activityPubObject | undefin
   const lineBreaksAtEndRegex = /\s*(<br\s*\/?>)+\s*$/g
 
   const usersToSend = getToAndCC(post.privacy, mentionedUsers, stringMyFollowers)
-  const actorUrl = `${environment.frontendUrl}/fediverse/blog/${localUser.url.toLowerCase()}`
+  const actorUrl = `${completeEnvironment.frontendUrl}/fediverse/blog/${localUser.url.toLowerCase()}`
   let misskeyQuoteURL = quotedPostString
   if (misskeyQuoteURL?.startsWith('https://bsky.app/')) {
     misskeyQuoteURL = null
   }
   let postAsJSONLD: activityPubObject = {
-    '@context': ['https://www.w3.org/ns/activitystreams', `${environment.frontendUrl}/contexts/litepub-0.1.jsonld`],
-    id: `${environment.frontendUrl}/fediverse/activity/post/${post.id}`,
+    '@context': [
+      'https://www.w3.org/ns/activitystreams',
+      `${completeEnvironment.frontendUrl}/contexts/litepub-0.1.jsonld`
+    ],
+    id: `${completeEnvironment.frontendUrl}/fediverse/activity/post/${post.id}`,
     type: 'Create',
     actor: actorUrl,
     published: new Date(post.createdAt).toISOString(),
     to: usersToSend.to,
     cc: usersToSend.cc,
     object: {
-      id: `${environment.frontendUrl}/fediverse/post/${post.id}`,
+      id: `${completeEnvironment.frontendUrl}/fediverse/post/${post.id}`,
       actor: actorUrl,
       type: 'Note',
       summary: post.content_warning ? post.content_warning : '',
       inReplyTo: parentPostString,
       published: new Date(post.createdAt).toISOString(),
       updated: new Date(post.updatedAt).toISOString(),
-      url: `${environment.frontendUrl}/fediverse/post/${post.id}`,
-      attributedTo: `${environment.frontendUrl}/fediverse/blog/${localUser.url.toLowerCase()}`,
+      url: `${completeEnvironment.frontendUrl}/fediverse/post/${post.id}`,
+      attributedTo: `${completeEnvironment.frontendUrl}/fediverse/blog/${localUser.url.toLowerCase()}`,
       to: usersToSend.to,
       cc: usersToSend.cc,
       sensitive: !!post.content_warning || contentWarning,
-      atomUri: `${environment.frontendUrl}/fediverse/post/${post.id}`,
+      atomUri: `${completeEnvironment.frontendUrl}/fediverse/post/${post.id}`,
       inReplyToAtomUri: parentPostString,
       quoteUrl: misskeyQuoteURL,
       _misksey_quote: misskeyQuoteURL,
@@ -204,19 +211,19 @@ async function postToJSONLD(postId: string): Promise<activityPubObject | undefin
           return {
             type: 'Document',
             mediaType: media.mediaType,
-            url: media.external ? media.url : environment.mediaUrl + media.url,
+            url: media.external ? media.url : completeEnvironment.mediaUrl + media.url,
             sensitive: media.NSFW ? true : false,
             name: media.description
           }
         }),
       tag: fediMentions.concat(fediTags).concat(emojis.map((emoji: any) => emojiToAPTag(emoji))),
       replies: {
-        id: `${environment.frontendUrl}/fediverse/post/${post.id}/replies`,
+        id: `${completeEnvironment.frontendUrl}/fediverse/post/${post.id}/replies`,
         type: 'Collection',
         first: {
           type: 'CollectionPage',
-          partOf: `${environment.frontendUrl}/fediverse/post/${post.id}/replies`,
-          next: `${environment.frontendUrl}/fediverse/post/${post.id}/replies?page=1`,
+          partOf: `${completeEnvironment.frontendUrl}/fediverse/post/${post.id}/replies`,
+          next: `${completeEnvironment.frontendUrl}/fediverse/post/${post.id}/replies?page=1`,
           items: []
         }
       }
@@ -239,17 +246,17 @@ async function postToJSONLD(postId: string): Promise<activityPubObject | undefin
   ) {
     postAsJSONLD = {
       '@context': 'https://www.w3.org/ns/activitystreams',
-      id: `${environment.frontendUrl}/fediverse/post/${post.id}`,
+      id: `${completeEnvironment.frontendUrl}/fediverse/post/${post.id}`,
       type: 'Announce',
-      actor: `${environment.frontendUrl}/fediverse/blog/${localUser.url.toLowerCase()}`,
+      actor: `${completeEnvironment.frontendUrl}/fediverse/blog/${localUser.url.toLowerCase()}`,
       published: new Date(post.createdAt).toISOString(),
       to:
         post.privacy / 1 === Privacy.DirectMessage
           ? mentionedUsers
           : post.privacy / 1 === Privacy.Public
-            ? ['https://www.w3.org/ns/activitystreams#Public']
-            : [stringMyFollowers],
-      cc: [`${environment.frontendUrl}/fediverse/blog/${localUser.url.toLowerCase()}`, stringMyFollowers],
+          ? ['https://www.w3.org/ns/activitystreams#Public']
+          : [stringMyFollowers],
+      cc: [`${completeEnvironment.frontendUrl}/fediverse/blog/${localUser.url.toLowerCase()}`, stringMyFollowers],
       object: parentPostString
     }
   }
@@ -281,7 +288,7 @@ function getToAndCC(
       break
     }
     default: {
-      ; (to = mentionedUsers), (cc = [])
+      ;(to = mentionedUsers), (cc = [])
     }
   }
   return {
@@ -299,7 +306,7 @@ function camelize(str: string): string {
 }
 
 function getUserName(user?: { url: string }): string {
-  let res = user ? '@' + user.url + '@' + environment.instanceUrl : 'anonymous'
+  let res = user ? '@' + user.url + '@' + completeEnvironment.instanceUrl : 'anonymous'
   if (user?.url.startsWith('@')) {
     res = user.url
   }
@@ -309,7 +316,7 @@ function getUserName(user?: { url: string }): string {
 function getPostUrlForQuote(post: any): string {
   const isPostFromBsky = !!post.bskyUri
   const isPostFromFedi = !!post.remotePostId
-  let res = `${environment.frontendUrl}/fediverse/post/${post.id}`
+  let res = `${completeEnvironment.frontendUrl}/fediverse/post/${post.id}`
   if (isPostFromBsky && post.user.url.startsWith('@')) {
     const parts = post.bskyUri.split('/app.bsky.feed.post/')
     const userDid = parts[0].split('at://')[1]

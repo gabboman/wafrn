@@ -1,11 +1,11 @@
 import axios from 'axios'
-import { environment } from '../environment.js'
+import { completeEnvironment } from './backendOptions.js'
 import { FederatedHost, User, sequelize } from '../models/index.js'
 //const { csv } = require("csv-parse");
 
 async function blockHosts() {
-  const ignoreHostsList: string[] = environment.ignoreBlockHosts
-  const remoteData = await axios.get(environment.blocklistUrl)
+  const ignoreHostsList: string[] = completeEnvironment.ignoreBlockHosts
+  const remoteData = await axios.get(completeEnvironment.blocklistUrl)
   console.log('remote data obtained')
   const hostLines: string[] = remoteData.data.split('\n')
   //hostLines.forEach(async (line, index) => {

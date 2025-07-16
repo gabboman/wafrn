@@ -2,7 +2,6 @@ import { Application, Request, Response } from 'express'
 import { Op } from 'sequelize'
 import sequelize from 'sequelize/lib/sequelize'
 import { User, Post } from '../../models/index.js'
-import { environment } from '../../environment.js'
 import { getAllLocalUserIds } from '../../utils/cacheGetters/getAllLocalUserIds.js'
 import { return404 } from '../../utils/return404.js'
 import fs from 'fs'
@@ -10,13 +9,14 @@ import fs from 'fs'
 // @ts-ignore cacher has no types
 import Cacher from 'cacher'
 import { Privacy } from '../../models/post.js'
+import { completeEnvironment } from '../../utils/backendOptions.js'
 const cacher = new Cacher()
 
 function wellKnownRoutes(app: Application) {
   // webfinger protocol
   app.get('/.well-known/host-meta', (req: Request, res) => {
     res.send(
-      `<?xml version="1.0" encoding="UTF-8"?><XRD xmlns="http://docs.oasis-open.org/ns/xri/xrd-1.0"><Link rel="lrdd" template="${environment.frontendUrl}/.well-known/webfinger?resource={uri}"/></XRD>`
+      `<?xml version="1.0" encoding="UTF-8"?><XRD xmlns="http://docs.oasis-open.org/ns/xri/xrd-1.0"><Link rel="lrdd" template="${completeEnvironment.frontendUrl}/.well-known/webfinger?resource={uri}"/></XRD>`
     )
     res.end()
   })
@@ -25,12 +25,12 @@ function wellKnownRoutes(app: Application) {
       const urlQueryResource: string = req.query.resource as string
       if (
         urlQueryResource.startsWith('acct:') &&
-        (urlQueryResource.endsWith(environment.instanceUrl) ||
-          urlQueryResource.startsWith(`acct:${environment.frontendUrl}/fediverse/blog/`))
+        (urlQueryResource.endsWith(completeEnvironment.instanceUrl) ||
+          urlQueryResource.startsWith(`acct:${completeEnvironment.frontendUrl}/fediverse/blog/`))
       ) {
-        const userUrl = urlQueryResource.endsWith(environment.instanceUrl)
-          ? urlQueryResource.slice(5).slice(0, -(environment.instanceUrl.length + 1))
-          : urlQueryResource.slice(`acct:${environment.frontendUrl}/fediverse/blog/`.length)
+        const userUrl = urlQueryResource.endsWith(completeEnvironment.instanceUrl)
+          ? urlQueryResource.slice(5).slice(0, -(completeEnvironment.instanceUrl.length + 1))
+          : urlQueryResource.slice(`acct:${completeEnvironment.frontendUrl}/fediverse/blog/`.length)
         const user = await User.findOne({
           where: sequelize.where(sequelize.fn('lower', sequelize.col('url')), userUrl.toLowerCase())
         })
@@ -41,18 +41,18 @@ function wellKnownRoutes(app: Application) {
         const response = {
           subject: urlQueryResource,
           aliases: [
-            `${environment.frontendUrl}/fediverse/blog/${user.url.toLowerCase()}`,
-            `${environment.frontendUrl}/blog/${user.url.toLowerCase()}`
+            `${completeEnvironment.frontendUrl}/fediverse/blog/${user.url.toLowerCase()}`,
+            `${completeEnvironment.frontendUrl}/blog/${user.url.toLowerCase()}`
           ],
           links: [
             {
               rel: 'self',
               type: 'application/activity+json',
-              href: `${environment.frontendUrl}/fediverse/blog/${user.url.toLowerCase()}`
+              href: `${completeEnvironment.frontendUrl}/fediverse/blog/${user.url.toLowerCase()}`
             },
             {
               rel: 'http://ostatus.org/schema/1.0/subscribe',
-              template: `${environment.frontendUrl}/fediverse/authorize_interaction?uri={uri}`
+              template: `${completeEnvironment.frontendUrl}/fediverse/authorize_interaction?uri={uri}`
             }
           ]
         }
@@ -71,7 +71,7 @@ function wellKnownRoutes(app: Application) {
       links: [
         {
           rel: 'http://nodeinfo.diaspora.software/ns/schema/2.0',
-          href: `${environment.frontendUrl}/.well-known/nodeinfo/2.0`
+          href: `${completeEnvironment.frontendUrl}/.well-known/nodeinfo/2.0`
         }
       ]
     })

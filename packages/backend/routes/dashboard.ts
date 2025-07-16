@@ -8,7 +8,6 @@ import AuthorizedRequest from '../interfaces/authorizedRequest.js'
 import { FederatedHost, Post, PostMentionsUserRelation, PostTag, sequelize, User } from '../models/index.js'
 import { Op } from 'sequelize'
 import getStartScrollParam from '../utils/getStartScrollParam.js'
-import { environment } from '../environment.js'
 import getFollowedsIds from '../utils/cacheGetters/getFollowedsIds.js'
 import getNonFollowedLocalUsersIds from '../utils/cacheGetters/getNotFollowedLocalUsersIds.js'
 import getBlockedIds from '../utils/cacheGetters/getBlockedIds.js'
@@ -17,6 +16,7 @@ import { getMutedPosts } from '../utils/cacheGetters/getMutedPosts.js'
 import { navigationRateLimiter } from '../utils/rateLimiters.js'
 import { Privacy } from '../models/post.js'
 import { getFollowedHashtags } from '../utils/getFollowedHashtags.js'
+import { completeEnvironment } from '../utils/backendOptions.js'
 
 export default function dashboardRoutes(app: Application) {
   app.get(
@@ -26,7 +26,7 @@ export default function dashboardRoutes(app: Application) {
     async (req: AuthorizedRequest, res: Response) => {
       const level = parseInt(req.query.level as string) // level of dashboard: localExplore, explore, dashboard or DMs
       const posterId = req.jwtData?.userId ? req.jwtData?.userId : '00000000-0000-0000-0000-000000000000'
-      const POSTS_PER_PAGE = environment.postsPerPage
+      const POSTS_PER_PAGE = completeEnvironment.postsPerPage
 
       // level: 0 explore 1 dashboard 2 localExplore 10 dms
       if (level !== 2 && posterId === '00000000-0000-0000-0000-000000000000') {

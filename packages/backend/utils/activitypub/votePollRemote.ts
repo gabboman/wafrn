@@ -9,7 +9,7 @@ import {
   User,
   sequelize
 } from '../../models/index.js'
-import { environment } from '../../environment.js'
+import { completeEnvironment } from '../backendOptions.js'
 import { activityPubObject } from '../../interfaces/fediverse/activityPubObject.js'
 import { postPetitionSigned } from './postPetitionSigned.js'
 import { logger } from '../logger.js'
@@ -21,7 +21,7 @@ import { loadPoll } from './loadPollFromPost.js'
 import { getPostThreadRecursive } from './getPostThreadRecursive.js'
 
 const sendPostQueue = new Queue('sendPostToInboxes', {
-  connection: environment.bullmqConnection,
+  connection: completeEnvironment.bullmqConnection,
   defaultJobOptions: {
     removeOnComplete: true,
     attempts: 3,
@@ -34,7 +34,7 @@ const sendPostQueue = new Queue('sendPostToInboxes', {
 })
 
 const queueEvents = new QueueEvents('sendPostToInboxes', {
-  connection: environment.bullmqConnection
+  connection: completeEnvironment.bullmqConnection
 })
 async function voteInPoll(userId: string, pollId: number) {
   const user = await User.findByPk(userId)
@@ -70,12 +70,15 @@ async function voteInPoll(userId: string, pollId: number) {
 
   for await (const vote of votesToSend) {
     const voteObject = {
-      '@context': ['https://www.w3.org/ns/activitystreams', `${environment.frontendUrl}/contexts/litepub-0.1.jsonld`],
-      actor: `${environment.frontendUrl}/fediverse/blog/${user.url.toLowerCase()}`,
-      id: `${environment.frontendUrl}/fediverse/voteActivity/${userId}/${vote.id}`,
+      '@context': [
+        'https://www.w3.org/ns/activitystreams',
+        `${completeEnvironment.frontendUrl}/contexts/litepub-0.1.jsonld`
+      ],
+      actor: `${completeEnvironment.frontendUrl}/fediverse/blog/${user.url.toLowerCase()}`,
+      id: `${completeEnvironment.frontendUrl}/fediverse/voteActivity/${userId}/${vote.id}`,
       object: {
-        attributedTo: `${environment.frontendUrl}/fediverse/blog/${user.url.toLowerCase()}`,
-        id: `${environment.frontendUrl}/fediverse/vote/${userId}/${vote.id}`,
+        attributedTo: `${completeEnvironment.frontendUrl}/fediverse/blog/${user.url.toLowerCase()}`,
+        id: `${completeEnvironment.frontendUrl}/fediverse/vote/${userId}/${vote.id}`,
         inReplyTo: vote.questionPoll.post.remotePostId,
         name: vote.questionText,
         to: vote.questionPoll.post.user.remoteId,

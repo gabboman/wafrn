@@ -29,7 +29,6 @@ import { sequelize } from '../models/index.js'
 import optimizeMedia from '../utils/optimizeMedia.js'
 import uploadHandler from '../utils/uploads.js'
 import { generateKeyPairSync } from 'crypto'
-import { environment } from '../environment.js'
 import { logger } from '../utils/logger.js'
 import { createAccountLimiter, loginRateLimiter } from '../utils/rateLimiters.js'
 import fs from 'fs/promises'
@@ -60,6 +59,7 @@ import { isArray } from 'underscore'
 import { follow } from '../utils/follow.js'
 import { activityPubObject } from '../interfaces/fediverse/activityPubObject.js'
 import { getFollowedHashtags } from '../utils/getFollowedHashtags.js'
+import { completeEnvironment } from '../utils/backendOptions.js'
 
 const markdownConverter = new showdown.Converter({
   simplifiedAutoLink: true,
@@ -72,7 +72,7 @@ const markdownConverter = new showdown.Converter({
 const forbiddenCharacters = [':', '@', '/', '<', '>', '"', '&', '?']
 
 const generateUserKeyPairQueue = new Queue('generateUserKeyPair', {
-  connection: environment.bullmqConnection,
+  connection: completeEnvironment.bullmqConnection,
   defaultJobOptions: {
     removeOnComplete: true,
     attempts: 3,
@@ -85,7 +85,7 @@ const generateUserKeyPairQueue = new Queue('generateUserKeyPair', {
 })
 
 const deletePostQueue = new Queue('deletePostQueue', {
-  connection: environment.bullmqConnection,
+  connection: completeEnvironment.bullmqConnection,
   defaultJobOptions: {
     removeOnComplete: true,
     attempts: 3,
@@ -132,7 +132,7 @@ export default function userRoutes(app: Application) {
             if (req.file != null) {
               avatarURL = `/${await optimizeMedia(req.file.path, { forceImageExtension: 'webp' })}`
             }
-            if (environment.removeFolderNameFromFileUploads) {
+            if (completeEnvironment.removeFolderNameFromFileUploads) {
               avatarURL = avatarURL.slice('/uploads/'.length - 1)
             }
             const activationCode = generateRandomString()
@@ -143,7 +143,7 @@ export default function userRoutes(app: Application) {
               url: req.body.url.trim().replace(' ', '_'),
               name: req.body.name ? req.body.name : req.body.url.trim().replace(' ', '_'),
               NSFW: req.body.nsfw === 'true',
-              password: await bcrypt.hash(req.body.password, environment.saltRounds),
+              password: await bcrypt.hash(req.body.password, completeEnvironment.saltRounds),
               birthDate: new Date(req.body.birthDate),
               avatar: avatarURL,
               activated: false,
@@ -160,15 +160,17 @@ export default function userRoutes(app: Application) {
             }
 
             const userWithEmail = User.create(user)
-            const mailHeader = `Welcome to ${environment.instanceUrl}, please verify your email!`
-            const mailBody = `<h1>Welcome to ${environment.instanceUrl}</h1> To verify your email <a href="${
-              environment.instanceUrl
+            const mailHeader = `Welcome to ${completeEnvironment.instanceUrl}, please verify your email!`
+            const mailBody = `<h1>Welcome to ${completeEnvironment.instanceUrl}</h1> To verify your email <a href="${
+              completeEnvironment.instanceUrl
             }/activate/${encodeURIComponent(
               req.body.email.toLowerCase()
             )}/${activationCode}">click here!</a>. If you can not see the link correctly please copy this link:
-            ${environment.instanceUrl}/activate/${encodeURIComponent(req.body.email.toLowerCase())}/${activationCode}
+            ${completeEnvironment.instanceUrl}/activate/${encodeURIComponent(
+              req.body.email.toLowerCase()
+            )}/${activationCode}
             `
-            const emailSent = environment.disableRequireSendEmail
+            const emailSent = completeEnvironment.disableRequireSendEmail
               ? true
               : sendActivationEmail(req.body.email.toLowerCase(), activationCode, mailHeader, mailBody)
             await Promise.all([userWithEmail, emailSent])
@@ -273,14 +275,14 @@ export default function userRoutes(app: Application) {
 
           if (avatar != null) {
             let url = `/${await optimizeMedia(avatar.path, { forceImageExtension: 'webp' })}`
-            if (environment.removeFolderNameFromFileUploads) {
+            if (completeEnvironment.removeFolderNameFromFileUploads) {
               url = url.slice('/uploads/'.length - 1)
             }
             user.avatar = url
           }
           if (headerImage != null) {
             let url = `/${await optimizeMedia(headerImage.path, { forceImageExtension: 'webp' })}`
-            if (environment.removeFolderNameFromFileUploads) {
+            if (completeEnvironment.removeFolderNameFromFileUploads) {
               url = url.slice('/uploads/'.length - 1)
             }
             user.headerImage = url
@@ -343,13 +345,13 @@ export default function userRoutes(app: Application) {
           user.requestedPasswordReset = new Date()
           user.save()
 
-          const link = `${environment.instanceUrl}/resetPassword/${encodeURIComponent(email)}/${resetCode}`
+          const link = `${completeEnvironment.instanceUrl}/resetPassword/${encodeURIComponent(email)}/${resetCode}`
           const appLink = `wafrn://complete-password-reset?email=${encodeURIComponent(email)}&code=${resetCode}`
 
           await sendActivationEmail(
             req.body.email.toLowerCase(),
             '',
-            `So you forgot your ${environment.instanceUrl} password`,
+            `So you forgot your ${completeEnvironment.instanceUrl} password`,
             `
             <h1>Use this link to reset your password</h1>
             <p>
@@ -389,7 +391,7 @@ export default function userRoutes(app: Application) {
         user.emailVerified = true
         let emailBody = ''
         let emailSubject = ''
-        if (!environment.reviewRegistrations) {
+        if (!completeEnvironment.reviewRegistrations) {
           user.activated = true
           emailSubject = 'Your wafrn account has been activated!'
           emailBody = ';D'
@@ -441,8 +443,8 @@ export default function userRoutes(app: Application) {
         })
         if (user) {
           user.emailVerified = true
-          user.password = await bcrypt.hash(req.body.password, environment.saltRounds)
-          user.activated = environment.reviewRegistrations ? user.activated : true
+          user.password = await bcrypt.hash(req.body.password, completeEnvironment.saltRounds)
+          user.activated = completeEnvironment.reviewRegistrations ? user.activated : true
           user.requestedPasswordReset = null
           await user.save()
 
@@ -500,7 +502,7 @@ export default function userRoutes(app: Application) {
                       mfaStep: 1,
                       email: userWithEmail.email.toLowerCase()
                     },
-                    environment.jwtSecret,
+                    completeEnvironment.jwtSecret,
                     { expiresIn: '300s' }
                   )
                 })
@@ -515,7 +517,7 @@ export default function userRoutes(app: Application) {
                       url: userWithEmail.url,
                       role: userWithEmail.role
                     },
-                    environment.jwtSecret,
+                    completeEnvironment.jwtSecret,
                     { expiresIn: '31536000s' }
                   )
                 })
@@ -587,7 +589,7 @@ export default function userRoutes(app: Application) {
                   url: userWithEmail.url,
                   role: userWithEmail.role
                 },
-                environment.jwtSecret,
+                completeEnvironment.jwtSecret,
                 { expiresIn: '31536000s' }
               )
             })
@@ -667,7 +669,7 @@ export default function userRoutes(app: Application) {
         enabled: false
       })
 
-      totpSettings.issuer = environment.instanceUrl
+      totpSettings.issuer = completeEnvironment.instanceUrl
       totpSettings.label = req.jwtData?.email
 
       const totp = new OTPAuth.TOTP(totpSettings)
@@ -946,7 +948,7 @@ export default function userRoutes(app: Application) {
   })
 
   app.post('/api/enable-bluesky', authenticateToken, async (req: AuthorizedRequest, res: Response) => {
-    if (!environment.enableBsky) {
+    if (!completeEnvironment.enableBsky) {
       res.status(500)
       res.send({
         error: true,
@@ -960,15 +962,15 @@ export default function userRoutes(app: Application) {
       if (inviteCode) {
         try {
           const agent = new AtpAgent({
-            service: 'https://' + environment.bskyPds
+            service: 'https://' + completeEnvironment.bskyPds
           })
           const sanitizedUrl = user.url.replaceAll('_', '-').replaceAll('.', '-')
           const bskyPassword = generateRandomString()
           let accountCreation = await agent
             .createAccount({
-              email: `${user.url}@${environment.instanceUrl}`,
+              email: `${user.url}@${completeEnvironment.instanceUrl}`,
               password: bskyPassword,
-              handle: `${sanitizedUrl}.${environment.bskyPds}`,
+              handle: `${sanitizedUrl}.${completeEnvironment.bskyPds}`,
               inviteCode: inviteCode.code
             })
             .catch((error) => {
@@ -1299,7 +1301,7 @@ export default function userRoutes(app: Application) {
       await sendActivationEmail(
         user.email as string,
         '',
-        `We have marked your ${environment.instanceUrl} for deletion`,
+        `We have marked your ${completeEnvironment.instanceUrl} for deletion`,
         `
             <h1>We are sad to see you go</h1>
             <p>
@@ -1330,7 +1332,7 @@ export default function userRoutes(app: Application) {
           const aliasList = isArray(petitionData.alsoKnownAs)
             ? petitionData.alsoKnownAs.map((elem: string) => elem.toLowerCase())
             : [petitionData.alsoKnownAs.toLowerCase()]
-          if (aliasList.includes(`${environment.frontendUrl}/fediverse/blog/${localUser.url}`)) {
+          if (aliasList.includes(`${completeEnvironment.frontendUrl}/fediverse/blog/${localUser.url}`)) {
             // TIME TO MOVE OUT
             // FIRST STEP: followers. send message to each follower. a move object
             const followerIds = await Follows.findAll({
@@ -1349,14 +1351,14 @@ export default function userRoutes(app: Application) {
             const moveObjectToSend: activityPubObject = {
               '@context': 'https://www.w3.org/ns/activitystreams',
               id:
-                environment.frontendUrl +
+                completeEnvironment.frontendUrl +
                 '/fediverse/blogMove/' +
                 localUser.url.toLowerCase() +
                 '/' +
                 new Date().getTime(),
-              actor: environment.frontendUrl + '/fediverse/blog/' + localUser.url.toLowerCase(),
+              actor: completeEnvironment.frontendUrl + '/fediverse/blog/' + localUser.url.toLowerCase(),
               type: 'Move',
-              object: environment.frontendUrl + '/fediverse/blog/' + localUser.url.toLowerCase(),
+              object: completeEnvironment.frontendUrl + '/fediverse/blog/' + localUser.url.toLowerCase(),
               target: newUserRemoteId
             }
             for await (const remoteFollower of followers.filter((elem) => !!elem.remoteId)) {
@@ -1408,7 +1410,7 @@ async function updateBlueskyProfile(agent: BskyAgent, user: User) {
   await getCacheAtDids(true)
   return await agent.upsertProfile(async (existingProfile) => {
     const profile = existingProfile ?? {}
-    const fullProfileString = `\n\nView full profile at ${environment.frontendUrl}/blog/${user.url}`
+    const fullProfileString = `\n\nView full profile at ${completeEnvironment.frontendUrl}/blog/${user.url}`
     profile.displayName = user.name.substring(0, 63)
     profile.description =
       dompurify.sanitize(user.descriptionMarkdown.substring(0, 248 - fullProfileString.length), { ALLOWED_TAGS: [] }) +

@@ -12,7 +12,7 @@ import {
   UserOptions,
   sequelize
 } from '../../models/index.js'
-import { environment } from '../../environment.js'
+import { completeEnvironment } from '../backendOptions.js'
 import { getUserIdFromRemoteId } from '../cacheGetters/getUserIdFromRemoteId.js'
 import { getPetitionSigned } from '../activitypub/getPetitionSigned.js'
 import { processUserEmojis } from '../activitypub/processUserEmojis.js'
@@ -86,7 +86,9 @@ async function getRemoteActorIdProcessor(job: Job) {
           name: userPetition.name ? userPetition.name : userPetition.preferredUsername,
           email: null,
           description: userPetition.summary ? userPetition.summary : '',
-          avatar: userPetition.icon?.url ? userPetition.icon.url : `${environment.mediaUrl}/uploads/default.webp`,
+          avatar: userPetition.icon?.url
+            ? userPetition.icon.url
+            : `${completeEnvironment.mediaUrl}/uploads/default.webp`,
           headerImage: userPetition?.image?.url ? userPetition.image.url.toString() : ``,
           password: 'NOT_A_WAFRN_USER_NOT_REAL_PASSWORD',
           publicKey: userPetition.publicKey?.publicKeyPem,
@@ -112,24 +114,24 @@ async function getRemoteActorIdProcessor(job: Job) {
         const existingUsers = await User.findAll({
           where: {
             [Op.or]: [
-                sequelize.where(sequelize.fn('lower', sequelize.col('url')), userData.url.toLowerCase()),
-                {
-                  remoteId: userData.remoteId
-                }
-
-              ]
+              sequelize.where(sequelize.fn('lower', sequelize.col('url')), userData.url.toLowerCase()),
+              {
+                remoteId: userData.remoteId
+              }
+            ]
           }
         })
         if (res) {
           if (res !== (await getDeletedUser())) {
             userRes = await User.findByPk(res as string)
-            if(existingUsers.length > 1) {
+            if (existingUsers.length > 1) {
               logger.debug({
                 message: `Multiple fedi users found for ${userData.url} (${userData.remoteId}): ${existingUsers.length}`
               })
               for await (const userWithDuplicatedData of existingUsers.slice(1)) {
                 userWithDuplicatedData.url = userWithDuplicatedData.url + '_DUPLICATED_' + new Date().getTime()
-                userWithDuplicatedData.remoteId = userWithDuplicatedData.remoteId + '_DUPLICATED_' + new Date().getTime()
+                userWithDuplicatedData.remoteId =
+                  userWithDuplicatedData.remoteId + '_DUPLICATED_' + new Date().getTime()
               }
             }
             if (existingUsers && existingUsers.length > 0 && existingUsers[0] && userRes?.id !== existingUsers[0]?.id) {
@@ -263,7 +265,7 @@ async function getRemoteActorIdProcessor(job: Job) {
         if (
           userRes &&
           userRes.id &&
-          userRes.url != environment.deletedUser &&
+          userRes.url != completeEnvironment.deletedUser &&
           userPetition &&
           userPetition.attachment &&
           userPetition.attachment.length

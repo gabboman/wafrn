@@ -2,8 +2,8 @@ import { Application, Response } from 'express'
 import AuthorizedRequest from '../interfaces/authorizedRequest.js'
 import { authenticateToken } from '../utils/authenticateToken.js'
 import { UserFollowHashtags } from '../models/userFollowHashtag.js'
-import { environment } from '../environment.js'
 import { Queue } from 'bullmq'
+import { completeEnvironment } from '../utils/backendOptions.js'
 
 export default function followHashtagRoutes(app: Application) {
   app.post('/api/followHashtag', authenticateToken, async (req: AuthorizedRequest, res: Response) => {
@@ -57,7 +57,7 @@ export default function followHashtagRoutes(app: Application) {
 
   async function forceUpdateCacheDidsAtThread() {
     const forceUpdaDidsteQueue = new Queue('forceUpdateDids', {
-      connection: environment.bullmqConnection,
+      connection: completeEnvironment.bullmqConnection,
       defaultJobOptions: {
         removeOnComplete: true,
         attempts: 3,

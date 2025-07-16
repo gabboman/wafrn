@@ -1,5 +1,5 @@
 import { Notification, Post, User } from '../../../models/index.js'
-import { environment } from '../../../environment.js'
+import { environment } from '../../../completeEnvironment.js'
 import { activityPubObject } from '../../../interfaces/fediverse/activityPubObject.js'
 import { logger } from '../../logger.js'
 import { createNotification } from '../../pushNotifications.js'
@@ -47,7 +47,7 @@ async function AnnounceActivity(body: activityPubObject, remoteUser: User, user:
 
     const privacy = getApObjectPrivacy(apObject, remoteUser)
 
-    if (remoteUser.url !== environment.deletedUser && retooted_content) {
+    if (remoteUser.url !== completeEnvironment.deletedUser && retooted_content) {
       const postToCreate = {
         content: '',
         isReblog: true,
@@ -83,7 +83,7 @@ async function AnnounceActivity(body: activityPubObject, remoteUser: User, user:
       // we try fetching the remote post thats the trick.
       const adminUser = (await User.findOne({
         where: {
-          url: environment.adminUser
+          url: completeEnvironment.adminUser
         }
       })) as User
       let urlToGet = typeof apObject.object.object === 'string' ? apObject.object.object : apObject.object.id

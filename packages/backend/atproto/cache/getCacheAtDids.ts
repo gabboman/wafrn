@@ -2,9 +2,9 @@ import { Follows, User } from '../../models/index.js'
 import { Op } from 'sequelize'
 import { getAllLocalUserIds } from '../../utils/cacheGetters/getAllLocalUserIds.js'
 import { cache } from 'sharp'
-import { environment } from '../../environment.js'
 import { Queue } from 'bullmq'
 import { UserFollowHashtags } from '../../models/userFollowHashtag.js'
+import { completeEnvironment } from '../../utils/backendOptions.js'
 
 let superCache:
   | undefined
@@ -97,7 +97,7 @@ async function getCacheAtDids(forceUpdate = false): Promise<{
 
 async function forceUpdateCacheDidsAtThread() {
   const forceUpdaDidsteQueue = new Queue('forceUpdateDids', {
-    connection: environment.bullmqConnection,
+    connection: completeEnvironment.bullmqConnection,
     defaultJobOptions: {
       removeOnComplete: true,
       attempts: 3,

@@ -6,13 +6,13 @@ import { logger } from '../logger.js'
 import { postToJSONLD } from './postToJSONLD.js'
 import { getRemoteActor } from './getRemoteActor.js'
 import { Queue } from 'bullmq'
-import { environment } from '../../environment.js'
+import { completeEnvironment } from '../backendOptions.js'
 import { FederatedHost, Follows, User } from '../../models/index.js'
 import { Op } from 'sequelize'
 import { Privacy } from '../../models/post.js'
 
 const processPostViewQueue = new Queue('processRemoteView', {
-  connection: environment.bullmqConnection,
+  connection: completeEnvironment.bullmqConnection,
   defaultJobOptions: {
     removeOnComplete: true,
     attempts: 3,

@@ -1,7 +1,6 @@
 import { Model } from 'sequelize'
 import { BskyAgent, RichText } from '@atproto/api'
 import { Media, Post, PostMentionsUserRelation, Quotes, User } from '../../models/index.js'
-import { environment } from '../../environment.js'
 import fs from 'fs/promises'
 import { getPostUrlForQuote } from '../../utils/activitypub/postToJSONLD.js'
 import RichtextBuilder from '@atcute/bluesky-richtext-builder'
@@ -11,6 +10,7 @@ import { removeMarkdown } from './removeMarkdown.js'
 import optimizeMedia from '../../utils/optimizeMedia.js'
 import dompurify from 'isomorphic-dompurify'
 import ffmpeg from 'fluent-ffmpeg'
+import { completeEnvironment } from '../../utils/backendOptions.js'
 
 export async function getVideoAspectRatio(fileName: string) {
   return new Promise((resolve, reject) => {
@@ -22,7 +22,7 @@ export async function getVideoAspectRatio(fileName: string) {
         if (stream) {
           resolve({
             width: stream.width,
-            height: stream.height,
+            height: stream.height
           })
         } else {
           reject(new Error('No video stream found'))
@@ -100,7 +100,7 @@ async function postToAtproto(post: Post, agent: BskyAgent) {
         } else {
           postText = postText.replaceAll(
             mentionRegex,
-            `[@${user.url}](${environment.frontendUrl}/fediverse/blog/${user.url.toLowerCase()})`
+            `[@${user.url}](${completeEnvironment.frontendUrl}/fediverse/blog/${user.url.toLowerCase()})`
           )
         }
       }
@@ -112,11 +112,11 @@ async function postToAtproto(post: Post, agent: BskyAgent) {
     const userAsker = await User.findByPk(ask.userAsker)
     if (userAsker) {
       postText =
-        `[${userAsker.name} asked:](https://${environment.instanceUrl}/fediverse/post/${post.id}) ` +
+        `[${userAsker.name} asked:](https://${completeEnvironment.instanceUrl}/fediverse/post/${post.id}) ` +
         `${ask.question}\n\n${postText}`
     } else {
       postText =
-        `[Anonymous asked:](https://${environment.instanceUrl}/fediverse/post/${post.id}) ` +
+        `[Anonymous asked:](https://${completeEnvironment.instanceUrl}/fediverse/post/${post.id}) ` +
         `${ask.question}\n\n${postText}`
     }
   }
@@ -173,54 +173,50 @@ async function postToAtproto(post: Post, agent: BskyAgent) {
     createdAt: new Date(post.createdAt).toISOString(),
     fullText: sanitizedText,
     fullTags: tags,
-    fediverseId: `${environment.frontendUrl}/fediverse/post/${post.id}`
+    fediverseId: `${completeEnvironment.frontendUrl}/fediverse/post/${post.id}`
   }
 
   if (postShortened) {
     res.embed = {
       $type: 'app.bsky.embed.external',
       external: {
-        uri: `https://${environment.instanceUrl}/fediverse/post/${post.id}`,
-        title: `See complete post at ${environment.instanceUrl}`,
-        description: `${environment.instanceUrl} is a Wafrn server. Wafrn is a federated social media inspired by Tumblr, join us and have fun!`
+        uri: `https://${completeEnvironment.instanceUrl}/fediverse/post/${post.id}`,
+        title: `See complete post at ${completeEnvironment.instanceUrl}`,
+        description: `${completeEnvironment.instanceUrl} is a Wafrn server. Wafrn is a federated social media inspired by Tumblr, join us and have fun!`
       }
     }
   } else {
-    const bskyMediaPromises= medias
-      .map(async (media) => {
-        let file = await fs.readFile('uploads/' + media.url)
-        const isVideo = media.mediaType?.startsWith('video/')
-        
-        if (!isVideo) {
-          // yeah, 1 millon bytes is officially the limit:
-          // https://github.com/bluesky-social/atproto/blob/80ada8f47628f55f3074cd16a52857e98d117e14/lexicons/app/bsky/embed/images.json#L24
-          if (file.length > 1000000) {
-            // well this image is TOO BIG. time to convert it
-            await optimizeMedia('uploads/' + media.url, {
-              outPath: 'uploads/' + media.id + '_bsky',
-              // bluesky CDN resizes images to 2000 on the long end, try that first
-              maxSize: 2000,
-              keep: true
-            })
-            file = await fs.readFile('uploads/' + media.id + '_bsky.webp')
-          }
-          if (file.length > 1000000) {
-            // still too big?! okay well let's crunch it
-            await optimizeMedia('uploads/' + media.url, {
-              outPath: 'uploads/' + media.id + '_bsky',
-              maxSize: 768,
-              keep: true
-            })
-            file = await fs.readFile('uploads/' + media.id + '_bsky.webp')
-          }
+    const bskyMediaPromises = medias.map(async (media) => {
+      let file = await fs.readFile('uploads/' + media.url)
+      const isVideo = media.mediaType?.startsWith('video/')
+
+      if (!isVideo) {
+        // yeah, 1 millon bytes is officially the limit:
+        // https://github.com/bluesky-social/atproto/blob/80ada8f47628f55f3074cd16a52857e98d117e14/lexicons/app/bsky/embed/images.json#L24
+        if (file.length > 1000000) {
+          // well this image is TOO BIG. time to convert it
+          await optimizeMedia('uploads/' + media.url, {
+            outPath: 'uploads/' + media.id + '_bsky',
+            // bluesky CDN resizes images to 2000 on the long end, try that first
+            maxSize: 2000,
+            keep: true
+          })
+          file = await fs.readFile('uploads/' + media.id + '_bsky.webp')
         }
-        
-        const { data } = await agent.uploadBlob(
-          Buffer.from(file),
-          { encoding: media.mediaType || undefined }
-        )
-        return { media, blob: data.blob }
-      })
+        if (file.length > 1000000) {
+          // still too big?! okay well let's crunch it
+          await optimizeMedia('uploads/' + media.url, {
+            outPath: 'uploads/' + media.id + '_bsky',
+            maxSize: 768,
+            keep: true
+          })
+          file = await fs.readFile('uploads/' + media.id + '_bsky.webp')
+        }
+      }
+
+      const { data } = await agent.uploadBlob(Buffer.from(file), { encoding: media.mediaType || undefined })
+      return { media, blob: data.blob }
+    })
 
     if (bskyMediaPromises.length) {
       const bskyMedias = await Promise.all(bskyMediaPromises)

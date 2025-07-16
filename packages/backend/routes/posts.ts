@@ -23,7 +23,6 @@ import getStartScrollParam from '../utils/getStartScrollParam.js'
 import getPosstGroupDetails from '../utils/getPostGroupDetails.js'
 import { logger } from '../utils/logger.js'
 import { createPostLimiter, navigationRateLimiter } from '../utils/rateLimiters.js'
-import { environment } from '../environment.js'
 import { Queue } from 'bullmq'
 import AuthorizedRequest from '../interfaces/authorizedRequest.js'
 import optionalAuthentication from '../utils/optionalAuthentication.js'
@@ -45,6 +44,7 @@ import { bulkCreateNotifications, createNotification } from '../utils/pushNotifi
 import { getAtProtoThread } from '../atproto/utils/getAtProtoThread.js'
 import dompurify from 'isomorphic-dompurify'
 import { Privacy, PrivacyType } from '../models/post.js'
+import { completeEnvironment } from '../utils/backendOptions.js'
 
 const markdownConverter = new showdown.Converter({
   simplifiedAutoLink: true,
@@ -57,7 +57,7 @@ const markdownConverter = new showdown.Converter({
 })
 
 const prepareSendPostQueue = new Queue('prepareSendPost', {
-  connection: environment.bullmqConnection,
+  connection: completeEnvironment.bullmqConnection,
   defaultJobOptions: {
     removeOnComplete: true,
     attempts: 3,
@@ -241,7 +241,7 @@ export default function postsRoutes(app: Application) {
         }
         const postIds = await Post.findAll({
           order: [['createdAt', 'DESC']],
-          limit: environment.postsPerPage,
+          limit: completeEnvironment.postsPerPage,
           attributes: ['id'],
           where: {
             createdAt: { [Op.lt]: getStartScrollParam(req) },
@@ -273,7 +273,7 @@ export default function postsRoutes(app: Application) {
     async (req: AuthorizedRequest, res: Response) => {
       let success = false
       let mentionsToAdd: string[] = []
-      const posterId = req.jwtData?.userId ? req.jwtData.userId : environment.deletedUser
+      const posterId = req.jwtData?.userId ? req.jwtData.userId : completeEnvironment.deletedUser
       const posterUser = await User.findByPk(posterId)
       const postToBeQuoted = await Post.findByPk(req.body.postToQuote)
       try {
@@ -554,7 +554,7 @@ export default function postsRoutes(app: Application) {
             const remoteId =
               userMentioned.url.split('@').length > 2
                 ? userMentioned.remoteId
-                : `${environment.frontendUrl}/fediverse/blog/${userMentioned.url}`
+                : `${completeEnvironment.frontendUrl}/fediverse/blog/${userMentioned.url}`
             const remoteUrl = userMentioned.remoteMentionUrl ? userMentioned.remoteMentionUrl : remoteId
             const stringToReplace = userMentioned.url.startsWith('@')
               ? userMentioned.url.toLowerCase()

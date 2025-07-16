@@ -1,7 +1,6 @@
 import express, { Request, Response } from 'express'
 import cors from 'cors'
 import bodyParser from 'body-parser'
-import { environment } from './environment.js'
 import { logger } from './utils/logger.js'
 
 import {
@@ -49,6 +48,7 @@ import { Worker } from 'bullmq'
 import expressWs from 'express-ws'
 import websocketRoutes from './routes/websocket.js'
 import followHashtagRoutes from './routes/followHashtags.js'
+import { completeEnvironment } from './utils/backendOptions.js'
 
 function errorHandler(err: Error, req: Request, res: Response, next: Function) {
   console.error(err.stack)
@@ -60,7 +60,7 @@ const swaggerJSON = JSON.parse(await readFile(new URL('./swagger.json', import.m
 const app = express()
 const wsServer = expressWs(app)
 const server = wsServer.app
-const PORT = environment.port
+const PORT = completeEnvironment.port
 app.use(errorHandler)
 app.use(overrideContentType)
 app.use(checkIpBlocked)
@@ -91,10 +91,10 @@ app.use('/api/uploads', express.static('uploads'))
 
 app.use('/api/environment', (req: Request, res: Response) => {
   res.send({
-    ...environment.frontendEnvironment,
-    webpushPublicKey: environment.webpushPublicKey,
-    reviewRegistrations: environment.reviewRegistrations,
-    maxUploadSize: environment.uploadLimit
+    ...completeEnvironment.frontendEnvironment,
+    webpushPublicKey: completeEnvironment.webpushPublicKey,
+    reviewRegistrations: completeEnvironment.reviewRegistrations,
+    maxUploadSize: completeEnvironment.uploadLimit
   })
 })
 
@@ -106,12 +106,12 @@ mediaRoutes(app)
 postsRoutes(app)
 searchRoutes(app)
 deletePost(app)
-if (environment.fediPort == environment.port) {
+if (completeEnvironment.fediPort == completeEnvironment.port) {
   app.use('/contexts', express.static('contexts'))
   activityPubRoutes(app)
   wellKnownRoutes(app)
 }
-if (environment.cachePort == environment.port) {
+if (completeEnvironment.cachePort == completeEnvironment.port) {
   cacheRoutes(app)
 }
 likeRoutes(app)
@@ -131,7 +131,7 @@ followHashtagRoutes(app)
 websocketRoutes(server)
 frontend(app)
 
-server.listen(PORT, environment.listenIp, () => {
+server.listen(PORT, completeEnvironment.listenIp, () => {
   logger.info('started main')
   const workers = [
     workerInbox,
@@ -143,10 +143,10 @@ server.listen(PORT, environment.listenIp, () => {
     workerProcessRemoteMediaData,
     workerGenerateUserKeyPair
   ]
-  if (environment.enableBsky) {
+  if (completeEnvironment.enableBsky) {
     workers.push(workerProcessFirehose as Worker)
   }
-  if (environment.workers.mainThread) {
+  if (completeEnvironment.workers.mainThread) {
     workers.forEach((worker) => {
       worker.on('error', (err) => {
         logger.warn({

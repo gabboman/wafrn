@@ -25,8 +25,8 @@ import { getMutedPosts } from '../utils/cacheGetters/getMutedPosts.js'
 import getBlockedIds from '../utils/cacheGetters/getBlockedIds.js'
 import { forceUpdateLastActive } from '../utils/forceUpdateLastActive.js'
 import { logger } from '../utils/logger.js'
-import { environment } from '../environment.js'
 import { UserAttributes } from '../models/user.js'
+import { completeEnvironment } from '../utils/backendOptions.js'
 
 function notificationRoutes(app: Application) {
   app.get(
@@ -245,7 +245,7 @@ function notificationRoutes(app: Application) {
         },
         banned: false
       }
-      if (!environment.disableRequireSendEmail) {
+      if (!completeEnvironment.disableRequireSendEmail) {
         whereConditions.emailVerified = true
       }
 

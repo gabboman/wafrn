@@ -1,4 +1,4 @@
-import { environment } from '../../environment.js'
+import { completeEnvironment } from '../backendOptions.js'
 import { User } from '../../models/index.js'
 import { getUserEmojis } from '../cacheGetters/getUserEmojis.js'
 import { getUserOptions } from '../cacheGetters/getUserOptions.js'
@@ -47,32 +47,32 @@ export async function userToJSONLD(user: User) {
     }
     userForFediverse = {
       '@context': ['https://www.w3.org/ns/activitystreams', 'https://w3id.org/security/v1'],
-      id: `${environment.frontendUrl}/fediverse/blog/${user.url.toLowerCase()}`,
+      id: `${completeEnvironment.frontendUrl}/fediverse/blog/${user.url.toLowerCase()}`,
       type: 'Person',
       attachment: attachments,
-      following: `${environment.frontendUrl}/fediverse/blog/${user.url.toLowerCase()}/following`,
-      followers: `${environment.frontendUrl}/fediverse/blog/${user.url.toLowerCase()}/followers`,
-      featured: `${environment.frontendUrl}/fediverse/blog/${user.url.toLowerCase()}/featured`,
-      inbox: `${environment.frontendUrl}/fediverse/blog/${user.url.toLowerCase()}/inbox`,
-      outbox: `${environment.frontendUrl}/fediverse/blog/${user.url.toLowerCase()}/outbox`,
+      following: `${completeEnvironment.frontendUrl}/fediverse/blog/${user.url.toLowerCase()}/following`,
+      followers: `${completeEnvironment.frontendUrl}/fediverse/blog/${user.url.toLowerCase()}/followers`,
+      featured: `${completeEnvironment.frontendUrl}/fediverse/blog/${user.url.toLowerCase()}/featured`,
+      inbox: `${completeEnvironment.frontendUrl}/fediverse/blog/${user.url.toLowerCase()}/inbox`,
+      outbox: `${completeEnvironment.frontendUrl}/fediverse/blog/${user.url.toLowerCase()}/outbox`,
       preferredUsername: user.url.toLowerCase(),
       name: user.name,
       summary: user.description,
-      url: `${environment.frontendUrl}/fediverse/blog/${user.url.toLowerCase()}`,
+      url: `${completeEnvironment.frontendUrl}/fediverse/blog/${user.url.toLowerCase()}`,
       manuallyApprovesFollowers: user.manuallyAcceptsFollows,
       discoverable: true,
       alsoKnownAs: alsoKnownAs,
       published: user.createdAt,
       tag: emojis.map((emoji: any) => emojiToAPTag(emoji)),
       endpoints: {
-        sharedInbox: `${environment.frontendUrl}/fediverse/sharedInbox`
+        sharedInbox: `${completeEnvironment.frontendUrl}/fediverse/sharedInbox`
       },
       ...(user.avatar
         ? {
             icon: {
               type: 'Image',
               mediaType: 'image/webp',
-              url: environment.mediaUrl + user.avatar
+              url: completeEnvironment.mediaUrl + user.avatar
             }
           }
         : undefined),
@@ -81,13 +81,13 @@ export async function userToJSONLD(user: User) {
             image: {
               type: 'Image',
               mediaType: 'image/webp',
-              url: environment.mediaUrl + user.headerImage
+              url: completeEnvironment.mediaUrl + user.headerImage
             }
           }
         : undefined),
       publicKey: {
-        id: `${environment.frontendUrl}/fediverse/blog/${user.url.toLowerCase()}#main-key`,
-        owner: `${environment.frontendUrl}/fediverse/blog/${user.url.toLowerCase()}`,
+        id: `${completeEnvironment.frontendUrl}/fediverse/blog/${user.url.toLowerCase()}#main-key`,
+        owner: `${completeEnvironment.frontendUrl}/fediverse/blog/${user.url.toLowerCase()}`,
         publicKeyPem: user.publicKey
       }
     }

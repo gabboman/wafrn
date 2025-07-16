@@ -14,13 +14,13 @@ import {
   UserLikesPostRelations
 } from '../../models/index.js'
 import { activityPubObject } from '../../interfaces/fediverse/activityPubObject.js'
-import { environment } from '../../environment.js'
+import { completeEnvironment } from '../backendOptions.js'
 import { Queue } from 'bullmq'
 import { LdSignature } from '../activitypub/rsa2017.js'
 import { getDeletedUser } from '../cacheGetters/getDeletedUser.js'
 
 const deletePostQueue = new Queue('deletePostQueue', {
-  connection: environment.bullmqConnection,
+  connection: completeEnvironment.bullmqConnection,
   defaultJobOptions: {
     removeOnComplete: true,
     attempts: 3,
@@ -221,18 +221,18 @@ if (users.length > 0) {
   for await (const user of users) {
     console.log(`Preparing queue of mass delete for ${user.url}`)
     const objectToSend: activityPubObject = {
-      '@context': [`${environment.frontendUrl}/contexts/litepub-0.1.jsonld`],
-      actor: `${environment.frontendUrl}/fediverse/blog/${user.url.toLowerCase()}`,
-      id: `${environment.frontendUrl}/fediverse/blog/${user.url.toLowerCase()}#deleteUser`,
-      object: `${environment.frontendUrl}/fediverse/blog/${user.url.toLowerCase()}`,
+      '@context': [`${completeEnvironment.frontendUrl}/contexts/litepub-0.1.jsonld`],
+      actor: `${completeEnvironment.frontendUrl}/fediverse/blog/${user.url.toLowerCase()}`,
+      id: `${completeEnvironment.frontendUrl}/fediverse/blog/${user.url.toLowerCase()}#deleteUser`,
+      object: `${completeEnvironment.frontendUrl}/fediverse/blog/${user.url.toLowerCase()}`,
       type: 'Delete'
     }
     const ldSignature = new LdSignature()
     const bodySignature = await ldSignature.signRsaSignature2017(
       objectToSend,
       user.privateKey as string,
-      `${environment.frontendUrl}/fediverse/blog/${user.url.toLocaleLowerCase()}`,
-      environment.instanceUrl,
+      `${completeEnvironment.frontendUrl}/fediverse/blog/${user.url.toLocaleLowerCase()}`,
+      completeEnvironment.instanceUrl,
       new Date()
     )
     for await (const inboxChunk of inboxes) {
