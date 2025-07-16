@@ -34,7 +34,6 @@ export class MenuItemComponent {
   constructor(private router: Router) {}
 
   doCommand() {
-    console.log('command called')
     if (this.item.items && this.item.items.length > 0) {
       this.expanded = !this.expanded
     } else {

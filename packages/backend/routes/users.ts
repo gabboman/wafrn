@@ -48,7 +48,7 @@ import { getAvaiableEmojisCache } from '../utils/cacheGetters/getAvaiableEmojis.
 import { rejectremoteFollow } from '../utils/activitypub/rejectRemoteFollow.js'
 import { acceptRemoteFollow } from '../utils/activitypub/acceptRemoteFollow.js'
 import showdown from 'showdown'
-import { BskyAgent, ComNS } from '@atproto/api'
+import { AtpAgent, BskyAgent } from '@atproto/api'
 import { getAtProtoSession } from '../atproto/utils/getAtProtoSession.js'
 import { forceUpdateCacheDidsAtThread, getCacheAtDids } from '../atproto/cache/getCacheAtDids.js'
 import dompurify from 'isomorphic-dompurify'
@@ -959,16 +959,28 @@ export default function userRoutes(app: Application) {
       const inviteCode = await BskyInviteCodes.findOne()
       if (inviteCode) {
         try {
-          const agent = new BskyAgent({
+          const agent = new AtpAgent({
             service: 'https://' + environment.bskyPds
           })
           const sanitizedUrl = user.url.replaceAll('_', '-').replaceAll('.', '-')
           const bskyPassword = generateRandomString()
-          await agent.createAccount({
-            email: `${user.url}@${environment.instanceUrl}`,
-            password: bskyPassword,
-            handle: `${sanitizedUrl}.${environment.bskyPds}`,
-            inviteCode: inviteCode.code
+          let accountCreation = await agent
+            .createAccount({
+              email: `${user.url}@${environment.instanceUrl}`,
+              password: bskyPassword,
+              handle: `${sanitizedUrl}.${environment.bskyPds}`,
+              inviteCode: inviteCode.code
+            })
+            .catch((error) => {
+              logger.error({
+                message: `Bsky account creation failed for ${user.url}`,
+                error: error
+              })
+              throw new Error(error.message)
+            })
+          logger.info({
+            message: `Bsky account created? ${user.url}`,
+            response: accountCreation
           })
           await inviteCode.destroy()
           const userDid = agent.assertDid
