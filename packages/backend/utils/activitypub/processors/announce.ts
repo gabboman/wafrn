@@ -1,11 +1,11 @@
 import { Notification, Post, User } from '../../../models/index.js'
-import { environment } from '../../../completeEnvironment.js'
 import { activityPubObject } from '../../../interfaces/fediverse/activityPubObject.js'
 import { logger } from '../../logger.js'
 import { createNotification } from '../../pushNotifications.js'
 import { getPostThreadRecursive } from '../getPostThreadRecursive.js'
 import { getApObjectPrivacy } from '../getPrivacy.js'
 import { signAndAccept } from '../signAndAccept.js'
+import { completeEnvironment } from '../../backendOptions.js'
 
 async function AnnounceActivity(body: activityPubObject, remoteUser: User, user: User) {
   const apObject: activityPubObject = body

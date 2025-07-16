@@ -10,7 +10,7 @@ const youtubeRegex =
   /((?:https?:\/\/)?(www.|m.)?(youtube(\-nocookie)?\.com|youtu\.be)\/(v\/|watch\?v=|embed\/)?([\S]{11}))([^\S]|\?[\S]*|\&[\S]*|\b)/g
 
 function getURL(urlString: string): URL {
-  let res = new URL(completeEnvironment.frontendcompleteEnvironment.frontUrl)
+  let res = new URL(completeEnvironment.frontendEnvironment.frontUrl)
   try {
     res = new URL(urlString)
   } catch (error) {
@@ -21,10 +21,10 @@ function getURL(urlString: string): URL {
 
 function emojiToHtml(emoji: Emoji): string {
   return `<img class="post-emoji" src="${
-    completeEnvironment.frontendcompleteEnvironment.externalCacheurl +
+    completeEnvironment.frontendEnvironment.externalCacheurl +
     (emoji.external
       ? encodeURIComponent(emoji.url)
-      : encodeURIComponent(completeEnvironment.frontendcompleteEnvironment.baseMediaUrl + emoji.url))
+      : encodeURIComponent(completeEnvironment.frontendEnvironment.baseMediaUrl + emoji.url))
   }" title="${emoji.name}" alt="${emoji.name}">`
 }
 
@@ -220,14 +220,14 @@ export function getPostHtml(
         (elem) => getURL(elem.remoteId ? elem.remoteId : 'https://adomainthatdoesnotexist.google.com').hostname
       )
     : []
-  const hostUrl = getURL(completeEnvironment.frontendcompleteEnvironment.frontUrl).hostname
+  const hostUrl = getURL(completeEnvironment.frontendEnvironment.frontUrl).hostname
   Array.from(links).forEach((link) => {
     const youtubeMatch = link.href.matchAll(youtubeRegex)
     if (link.innerText === link.href && youtubeMatch) {
       // NOTE: Since this should not be part of the image Viewer, we have to add then no-viewer class to be checked for later
       Array.from(youtubeMatch).forEach((youtubeString) => {
         link.innerHTML = `<div class="watermark"><!-- Watermark container --><div class="watermark__inner"><!-- The watermark --><div class="watermark__body"><img alt="youtube logo" class="yt-watermark no-viewer" loading="lazy" src="/assets/img/youtube_logo.png"></div></div><img class="yt-thumbnail" src="${
-          completeEnvironment.frontendcompleteEnvironment.externalCacheurl +
+          completeEnvironment.frontendEnvironment.externalCacheurl +
           encodeURIComponent(`https://img.youtube.com/vi/${youtubeString[6]}/hqdefault.jpg`)
         }" loading="lazy" alt="Thumbnail for video"></div>`
       })
@@ -238,7 +238,7 @@ export function getPostHtml(
       if (post.mentionPost) {
         const mentionedUser = post.mentionPost.find((elem) => elem.remoteId === link.href)
         if (mentionedUser) {
-          link.href = `${completeEnvironment.frontendcompleteEnvironment.frontUrl}/blog/${mentionedUser.url}`
+          link.href = `${completeEnvironment.frontendEnvironment.frontUrl}/blog/${mentionedUser.url}`
           link.classList.add('mention')
           link.classList.add('remote-mention')
         }

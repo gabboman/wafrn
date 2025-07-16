@@ -1,6 +1,6 @@
 import axios from 'axios'
-import { completeEnvironment } from './backendOptions.js'
 import { FederatedHost, User, sequelize } from '../models/index.js'
+import { completeEnvironment } from '../utils/backendOptions.js'
 //const { csv } = require("csv-parse");
 
 async function blockHosts() {

@@ -1,11 +1,11 @@
 import { Model, Op } from 'sequelize'
 import { activityPubObject } from '../../../interfaces/fediverse/activityPubObject.js'
 import { isArray } from 'underscore'
-import { environment } from '../../../completeEnvironment.js'
 import sequelize from 'sequelize/lib/sequelize'
 import { Post, PostReport, User } from '../../../models/index.js'
 import { logger } from '../../logger.js'
 import sendActivationEmail from '../../sendActivationEmail.js'
+import { completeEnvironment } from '../../backendOptions.js'
 
 async function flagActivity(body: activityPubObject, remoteUser: User, user: User) {
   const apObject: activityPubObject = body

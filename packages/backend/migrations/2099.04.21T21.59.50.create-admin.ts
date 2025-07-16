@@ -1,9 +1,9 @@
-import { completeEnvironment } from './backendOptions.js'
 import { Migration } from '../migrate.js'
 import { generateKeyPair } from 'crypto'
 import bcrypt from 'bcrypt'
 import util from 'util'
 import { User } from '../models/index.js'
+import { completeEnvironment } from '../utils/backendOptions.js'
 
 const generateKeyPairAsync = util.promisify(generateKeyPair)
 

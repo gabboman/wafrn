@@ -1,10 +1,10 @@
 import express, { Request, Response } from 'express'
 import cors from 'cors'
-import { environment } from './completeEnvironment.js'
 import { logger } from './utils/logger.js'
 import cacheRoutes from './routes/remoteCache.js'
 import checkIpBlocked from './utils/checkIpBlocked.js'
 import fs from 'fs'
+import { completeEnvironment } from './utils/backendOptions.js'
 
 fs.rmSync('cache', { recursive: true, force: true })
 fs.mkdirSync('cache')

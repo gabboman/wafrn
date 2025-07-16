@@ -1,8 +1,8 @@
 import { Follows, User } from '../../../models/index.js'
-import { environment } from '../../../completeEnvironment.js'
 import { activityPubObject } from '../../../interfaces/fediverse/activityPubObject.js'
 import { redisCache } from '../../redis.js'
 import { signAndAccept } from '../signAndAccept.js'
+import { completeEnvironment } from '../../backendOptions.js'
 
 async function AcceptActivity(body: activityPubObject, remoteUser: User, user: User) {
   const apObject: activityPubObject = body.object

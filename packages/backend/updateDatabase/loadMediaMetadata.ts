@@ -1,7 +1,7 @@
 import { Queue } from 'bullmq'
 import { Media } from '../models/index.js'
-import { completeEnvironment } from './backendOptions.js'
 import { Op } from 'sequelize'
+import { completeEnvironment } from '../utils/backendOptions.js'
 
 const updateMediaDataQueue = new Queue('processRemoteMediaData', {
   connection: completeEnvironment.bullmqConnection,
