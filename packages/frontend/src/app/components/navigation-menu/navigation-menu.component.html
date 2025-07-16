@@ -33,7 +33,7 @@
       <app-color-scheme-switcher></app-color-scheme-switcher>
     </div>
   </mat-drawer>
-  <mat-drawer-content class="mb-2 mt-2">
+  <mat-drawer-content>
     <mat-toolbar class="wafrn-toolbar" *ngIf="!!mobile">
       @for (section of menuItemsMobile; track $index) {
         <div>
@@ -54,6 +54,9 @@
       }
       <snappy-router> </snappy-router>
     </main>
+    <!-- Needed some space at the bottom I know is ugly but mb-2 gets ignored-->
+    <br />
+    <br />
   </mat-drawer-content>
 </mat-drawer-container>
 
