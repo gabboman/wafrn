@@ -960,9 +960,12 @@ export default function userRoutes(app: Application) {
     if (user && !user.enableBsky) {
       const inviteCode = await BskyInviteCodes.findOne()
       if (inviteCode) {
+        const serviceUrl = completeEnvironment.bskyPds.startsWith('http')
+          ? completeEnvironment.bskyPds
+          : 'https://' + completeEnvironment.bskyPds
         try {
           const agent = new AtpAgent({
-            service: 'https://' + completeEnvironment.bskyPds
+            service: serviceUrl
           })
           const sanitizedUrl = user.url.replaceAll('_', '-').replaceAll('.', '-')
           const bskyPassword = generateRandomString()
@@ -970,7 +973,7 @@ export default function userRoutes(app: Application) {
             .createAccount({
               email: `${user.url}@${completeEnvironment.instanceUrl}`,
               password: bskyPassword,
-              handle: `${sanitizedUrl}.${completeEnvironment.bskyPds}`,
+              handle: `${sanitizedUrl}.${completeEnvironment.bskyPdsUrl as string}`,
               inviteCode: inviteCode.code
             })
             .catch((error) => {
