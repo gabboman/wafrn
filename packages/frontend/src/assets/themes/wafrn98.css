@@ -1,962 +1,924 @@
-/*
+   /*
 theme by vv0ltz
 https://app.wafrn.net/blog/vv0ltz
  */
+    /* EVERY BORDER SHOULD BE A SQUARE RAAAAHH */
+    *,
+    .border-round-md {
+        border-radius: 0px !important;
+    }
 
- :root {    
-    
-  /* ELEMENT VARIABLES */  
-    
-  --main-bgcolor: #008080;
+    :root {
 
-  --main-textcolor: black;
+        /* ELEMENT VARIABLES */
+        --main-bgcolor: #008080;
 
-  --container-bordercolor: none;
+        --main-textcolor: black;
 
-  --link-textcolor: #00f;
+        --container-bordercolor: none;
 
-  --link-textcolor-hover: #00f;
+        --link-textcolor: #00f;
 
-  --link-textcolor-visited: #452a73;
+        --link-textcolor-hover: #00f;
 
-  --button-bgcolor: silver;
+        --link-textcolor-visited: #452a73;
 
-  --button-bgcolor-hover: silver;
+        --button-bgcolor: silver;
 
-  --button-accent-color: navy;
+        --button-bgcolor-hover: silver;
 
-  --button-accent-color-hover: #00f;
+        --button-accent-color: navy;
 
-  --element-bgcolor: silver;
+        --button-accent-color-hover: #00f;
 
-  --username-textcolor: #00f;
+        --element-bgcolor: silver;
 
-  --username-textcolor-hover: navy;
+        --username-textcolor: #00f;
 
-  --url-textcolor: navy;
+        --username-textcolor-hover: navy;
 
-  --popup-textcolor: black;
+        --url-textcolor: navy;
 
-  --popup-bgcolor: silver;
+        --popup-textcolor: black;
 
-  --color-trans: 0.37s cubic-bezier(0.77, 0, 0.23, 1);
+        --popup-bgcolor: silver;
 
-  --image-transoff: 0.37s cubic-bezier(0.88, 0.52, 0.48, 1);
+        --color-trans: 0.37s cubic-bezier(0.77, 0, 0.23, 1);
 
-  --image-trans: 0.37s cubic-bezier(0.81, -0.19, 0.27, 0.34);
-    
-  --mat-sys-corner-large: 0px;
-    
-  --mat-sys-corner-extra-large: 0px;
-    
-  --mat-sys-corner-extra-large-top: 0px;
+        --image-transoff: 0.37s cubic-bezier(0.88, 0.52, 0.48, 1);
 
-  --mat-sys-corner-large-end: 0px;
+        --image-trans: 0.37s cubic-bezier(0.81, -0.19, 0.27, 0.34);
 
-  --mat-sys-corner-extra-small: 0px;
- 
-  --mat-sys-corner-extra-small-top: 0px;
+        --mat-sys-corner-large: 0px;
 
-  --mat-sys-corner-full: 0px;
+        --mat-sys-corner-extra-large: 0px;
 
-  --mat-sys-corner-large-start: 0px;
+        --mat-sys-corner-extra-large-top: 0px;
 
-  --mat-sys-corner-large-top: 0px;
+        --mat-sys-corner-large-end: 0px;
 
-  --mat-sys-corner-medium: 0px;
+        --mat-sys-corner-extra-small: 0px;
 
-  --mat-sys-corner-small: 0px;
-    
-  --mat-sys-primary: #a9a9a9; 
-    
-  --mat-sys-surface-variant: silver;
-    
-  --mat-sys-on-surface-variant: black;
-    
-  --mat-sys-on-surface: black; 
-  
-  --mat-sys-secondary-container: navy;
-    
-  --mat-sys-surface-container: silver;
-    
-  --mat-sys-surface-container-high: silver;
-    
-  --mat-sys-primary-container: navy;
-    
-  --mat-sys-outline: #323232;
-    
-  --mat-sys-error: maroon;
+        --mat-sys-corner-extra-small-top: 0px;
 
-  --mat-sys-surface: silver;
-    
-  --info-card-warning-background: #ff6b6b;
-    
-  --sys-on-primary-container: white;
-    
-    
-    
-}
+        --mat-sys-corner-full: 0px;
 
+        --mat-sys-corner-large-start: 0px;
 
+        --mat-sys-corner-large-top: 0px;
 
-/* BACKGROUND */
+        --mat-sys-corner-medium: 0px;
 
-.mat-drawer-content {
-  background-color: var(--main-bgcolor) !important;
-}
+        --mat-sys-corner-small: 0px;
 
-/* LINKS */
+        --mat-sys-primary: #6b6b6b;
 
-a {
-  color: var(--link-textcolor);
+        --mat-sys-surface-variant: silver;
 
-  transition: var(--color-trans);
-}
+        --mat-sys-on-surface-variant: black;
 
-a:visited {
-  color: var(--link-textcolor-visited);
-    outline: 1px dotted var(--link-textcolor-visited);
-}
+        --mat-sys-on-surface: black;
 
-a:hover {
-  color: var(--link-textcolor-hover);
+        --mat-sys-secondary-container: navy;
 
-  transition: var(--color-trans);
-    outline: 1px dotted var(--link-textcolor-hover);
-}
+        --mat-sys-surface-container: silver;
 
-a:active {
-  color: var(--link-textcolor-hover);
-}
-    
+        --mat-sys-surface-container-high: silver;
 
+        --mat-sys-primary-container: navy;
 
-/* BUTTONS - these may be overwritten by the class of the button, see below */
+        --mat-sys-outline: #323232;
 
-button {
-  background-color: var(--button-bgcolor);
+        --mat-sys-error: maroon;
 
-  color: var(--main-textcolor);
+        --mat-sys-surface: silver;
 
-  border-color: var(--button-accent-color);
+        --info-card-warning-background: #ff6b6b;
 
-  border-style: solid;
+        --sys-on-primary-container: white;
+    }
 
-  border-width: 0px;
 
-  border-radius: 3px;
 
-  color: var(--main-textcolor);
+    /* BACKGROUND */
+    .mat-drawer-content, .mat-drawer-container {
+        background-color: var(--main-bgcolor) !important;
+    }
 
-  transition: var(--color-trans);
-}
+    /* LINKS */
+    a {
+        color: var(--link-textcolor);
 
-button:hover {
-  background-color: var(--button-bgcolor-hover);
+        transition: var(--color-trans);
+    }
 
-  color: var(button-accent-color);
+    a:visited {
+        color: var(--link-textcolor-visited);
+        outline: 1px dotted var(--link-textcolor-visited);
+    }
 
-  border-color: var(--button-accent-color-hover);
+    a:hover {
+        color: var(--link-textcolor-hover);
 
-  border-style: solid;
+        transition: var(--color-trans);
+        outline: 1px dotted var(--link-textcolor-hover);
+    }
 
-  border-width: 0px;
+    a:active {
+        color: var(--link-textcolor-hover);
+    }
 
-  border-radius: 3px;
+    /* RATIO BADGE */
+    .ratio-badge {
+        color: white;
+    }
 
-  color: var(--main-textcolor);
 
-  transition: var(--color-trans);
-}
+    /* BUTTONS - these may be overwritten by the class of the button, see below */
+    button {
+        background-color: var(--button-bgcolor);
 
-button:active {
-  background-color: var(--button-bgcolor-hover);
+        color: var(--main-textcolor);
 
-  color: var(button-accent-color);
+        border-color: var(--button-accent-color);
 
-  border-color: var(--button-accent-color-hover);
+        border-style: solid;
 
-  border-style: solid;
+        border-width: 0px;
 
-  border-width: 0px;
+        border-radius: 3px;
 
-  border-radius: 3px;
+        color: var(--main-textcolor);
 
-  color: var(--main-textcolor);
+        transition: var(--color-trans);
+    }
 
- transition: var(--color-trans);
-    
-  box-shadow: inset -1px -1px #ffffff, inset 1px 1px #0a0a0a, inset -2px -2px #dfdfdf, inset 2px 2px #808080;
-}
+    button:hover {
+        background-color: var(--button-bgcolor-hover);
+
+        color: var(button-accent-color);
+
+        border-color: var(--button-accent-color-hover);
+
+        border-style: solid;
+
+        border-width: 0px;
+
+        border-radius: 3px;
+
+        color: var(--main-textcolor);
+
+        transition: var(--color-trans);
+    }
+
+    button:active {
+        background-color: var(--button-bgcolor-hover);
+
+        color: var(button-accent-color);
+
+        border-color: var(--button-accent-color-hover);
+
+        border-style: solid;
+
+        border-width: 0px;
+
+        border-radius: 3px;
+
+        color: var(--main-textcolor);
+
+        transition: var(--color-trans);
+
+        box-shadow: inset -1px -1px #ffffff, inset 1px 1px #0a0a0a, inset -2px -2px #dfdfdf, inset 2px 2px #808080;
+    }
     .mat-mdc-raised-button:not(:disabled) {
         background: silver;
-        box-shadow: inset -1px -1px #0a0a0a,inset 1px 1px #fff,inset -2px -2px grey,inset 2px 2px #dfdfdf;
+        box-shadow: inset -1px -1px #0a0a0a, inset 1px 1px #fff, inset -2px -2px grey, inset 2px 2px #dfdfdf;
         border: none;
         border-radius: 0px;
     }
-    
+
     .mat-mdc-menu-item:not([disabled]) {
-        color:black;
+        color: black;
     }
-    
+
     /* .mat-mdc-checkbox .mat-internal-form-field {
         color: black; 
     } */
-  
-/* SIDE MENU */
-
+    /* SIDE MENU */
     .mat-drawer-inner-container {
         background: var(--element-bgcolor);
     }
-    
-   
-    
+
+
+
     .ml-3 {
         color: var(--main-textcolor);
     }
-    
+
     .menu-item-icon {
         color: var(--button-accent-color);
     }
 
 
-/* LOGO */
-    
+    /* LOGO */
     .instance-logo {
         content: url("https://cdn.wafrn.net/api/cache/?media=https%3A%2F%2Fmedia.wafrn.net%2F1744406752197_a2cbc3d0300270aa81ee9a6f2b5bfb94df612f5d_processed.webp");
     }
 
-/* DASHBOARD TITLE */
+    /* DASHBOARD TITLE */
+    div.wafrn-container.mx-1 {
+        display: none;
 
-div.wafrn-container.mx-1 {
-  display: none;
+        background-color: var(--main-bgcolor);
+    }
 
-  background-color: var(--main-bgcolor);
-}
+    div.wafrn-container.mx-1 h3 {
+        display: none;
 
-div.wafrn-container.mx-1 h3 {
-  display: none;
+        font-family: Arial, sans-serif;
 
-  font-family: Arial, sans-serif;
-  
-  text-rendering: optimizeLegibility;
-}
+        text-rendering: optimizeLegibility;
+    }
 
-/* BUTTONS - use these i think */
+    /* BUTTONS - use these i think */
+    .mat-mdc-unelevated-button.mat-primary {
+        background-color: var(--button-bgcolor);
 
-.mat-mdc-unelevated-button.mat-primary {
-  background-color: var(--button-bgcolor);
+        border-color: var(--button-accent-color);
 
-  border-color: var(--button-accent-color);
+        border-width: 0px;
 
-  border-width: 0px;
+        color: var(--main-textcolor);
 
-  color: var(--main-textcolor);
+        transition: var(--color-trans);
 
-  transition: var(--color-trans);
-    
-  border-radius: 0;
-    
-  box-shadow: inset -1px -1px #0a0a0a,inset 1px 1px #fff,inset -2px -2px grey,inset 2px 2px #dfdfdf;
-}
+        border-radius: 0;
 
-.mat-mdc-unelevated-button.mat-primary:hover {
-  background-color: var(--button-bgcolor-hover);
+        box-shadow: inset -1px -1px #0a0a0a, inset 1px 1px #fff, inset -2px -2px grey, inset 2px 2px #dfdfdf;
+    }
 
-  border-color: var(--button-accent-color-hover);
+    .mat-mdc-unelevated-button.mat-primary:hover {
+        background-color: var(--button-bgcolor-hover);
 
-  color: var(--main-textcolor);
+        border-color: var(--button-accent-color-hover);
 
-  border-width: 0px;
+        color: var(--main-textcolor);
 
-  transition: var(--color-trans);
+        border-width: 0px;
 
-  border-radius: 0;
-    
-  box-shadow: inset -1px -1px #0a0a0a,inset 1px 1px #fff,inset -2px -2px grey,inset 2px 2px #dfdfdf;
-}
+        transition: var(--color-trans);
 
-.mat-mdc-unelevated-button {
-  background-color: var(--button-bgcolor);
+        border-radius: 0;
 
-  border-color: var(--button-accent-color);
+        box-shadow: inset -1px -1px #0a0a0a, inset 1px 1px #fff, inset -2px -2px grey, inset 2px 2px #dfdfdf;
+    }
 
-  border-width: 0px;
+    .mat-mdc-unelevated-button {
+        background-color: var(--button-bgcolor);
 
-  color: var(--main-textcolor);
+        border-color: var(--button-accent-color);
 
-  transition: var(--color-trans);
+        border-width: 0px;
 
-  border-radius: 0;
-    
-  box-shadow: inset -1px -1px #0a0a0a,inset 1px 1px #fff,inset -2px -2px grey,inset 2px 2px #dfdfdf;
-}
+        color: var(--main-textcolor);
 
-.mat-mdc-unelevated-button:hover {
-  background-color: var(--button-bgcolor-hover);
+        transition: var(--color-trans);
 
-  border-color: var(--button-accent-color-hover);
+        border-radius: 0;
 
-  color: var(--main-textcolor);
+        box-shadow: inset -1px -1px #0a0a0a, inset 1px 1px #fff, inset -2px -2px grey, inset 2px 2px #dfdfdf;
+    }
 
-  border-width: 0px;
+    .mat-mdc-unelevated-button:hover {
+        background-color: var(--button-bgcolor-hover);
 
-  transition: var(--color-trans);
-    
-  border-radius: 0;
-    
-  box-shadow: inset -1px -1px #0a0a0a,inset 1px 1px #fff,inset -2px -2px grey,inset 2px 2px #dfdfdf;
-}
+        border-color: var(--button-accent-color-hover);
 
-button[aria-label="Go back to the dashboard"] {
-  background-color: var(--button-bgcolor);
+        color: var(--main-textcolor);
 
-  border-color: var(--button-accent-color);
+        border-width: 0px;
 
-  color: var(--main-textcolor);
+        transition: var(--color-trans);
 
-  transition: var(--color-trans);
-}
+        border-radius: 0;
 
-button[aria-label="Go back to the dashboard"]:hover {
-  background-color: var(--button-bgcolor-hover);
+        box-shadow: inset -1px -1px #0a0a0a, inset 1px 1px #fff, inset -2px -2px grey, inset 2px 2px #dfdfdf;
+    }
 
-  border-color: var(--button-accent-color-hover);
+    button[aria-label="Go back to the dashboard"] {
+        background-color: var(--button-bgcolor);
 
-  color: var(--main-textcolor);
+        border-color: var(--button-accent-color);
 
-  transition: var(--color-trans);
-}
+        color: var(--main-textcolor);
 
-/* LOADING - not quite sure this works */
+        transition: var(--color-trans);
+    }
 
-mat-spinner {
-  width: 42px;
+    button[aria-label="Go back to the dashboard"]:hover {
+        background-color: var(--button-bgcolor-hover);
 
-  height: 42px;
-}
+        border-color: var(--button-accent-color-hover);
 
-circle {
-  color: black !important;
+        color: var(--main-textcolor);
 
-  stroke-dasharray: 77px;
+        transition: var(--color-trans);
+    }
 
-  stroke-width: 33px;
-}
+    /* LOADING - not quite sure this works */
+    mat-spinner {
+        width: 42px;
 
-p#if-you-see-this-load-more-posts {
-  color: var(--main-textcolor);
-}
+        height: 42px;
+    }
 
-/* POPUP TOOLTIPS */
+    circle {
+        color: black !important;
 
-.mdc-tooltip__surface {
-  background-color: var(--popup-bgcolor) !important;
+        stroke-dasharray: 77px;
 
-  color: var(--popup-textcolor) !important;
+        stroke-width: 33px;
+    }
 
-  border-radius: 2px;
-}
+    p#if-you-see-this-load-more-posts {
+        color: var(--main-textcolor);
+    }
 
-/* UNIVERSAL WAFRN CONTAINER */
+    /* POPUP TOOLTIPS */
+    .mdc-tooltip__surface {
+        background-color: var(--popup-bgcolor) !important;
 
-.wafrn-container {
-  background-color: var(--element-bgcolor) !important;
+        color: var(--popup-textcolor) !important;
 
-  color: var(--main-textcolor);
+        border-radius: 2px;
+    }
 
-  border-radius: 0px;
+    /* UNIVERSAL WAFRN CONTAINER */
+    .wafrn-container {
+        background-color: var(--element-bgcolor) !important;
 
-  border-width: 0px;
+        color: var(--main-textcolor);
 
-  border-style: solid;
+        border-radius: 0px;
 
-  border-color: var(--container-bordercolor);
+        border-width: 0px;
 
-  box-shadow: none;
-}
-    
-/* OTHER CONTAINERS (except left sidebar) */
+        border-style: solid;
 
+        border-color: var(--container-bordercolor);
+
+        box-shadow: none;
+    }
+
+    /* OTHER CONTAINERS (except left sidebar) */
     .p-3 {
         background: var(--element-bgcolor);
     }
-    
+
     .mat-mdc-table {
         background: var(--element-bgcolor) !important;
     }
-    
+
     .mat-mdc-table .mat-mdc-header-cell {
         color: var(--main-textcolor);
     }
-    
+
     .embed-text {
         color: var(--link-textcolor);
     }
-    
+
     .mat-mdc-paginator {
         background: silver;
     }
-    
+
     .mat-expansion-panel {
         background: silver;
     }
-    
+
     .mat-expansion-panel:not([class*="mat-elevation-z"]) {
-        box-shadow: inset -1px -1px #0a0a0a,inset 1px 1px #fff,inset -2px -2px grey,inset 2px 2px #dfdfdf;
+        box-shadow: inset -1px -1px #0a0a0a, inset 1px 1px #fff, inset -2px -2px grey, inset 2px 2px #dfdfdf;
         border-radius: 0 !important;
     }
-    
+
     .info-card.info {
         background: var(--element-bgcolor) !important;
-        box-shadow: inset -1px -1px #0a0a0a,inset 1px 1px #fff,inset -2px -2px grey,inset 2px 2px #dfdfdf;
+        box-shadow: inset -1px -1px #0a0a0a, inset 1px 1px #fff, inset -2px -2px grey, inset 2px 2px #dfdfdf;
         margin-top: 1rem;
     }
-    
+
     .mb-2 {
-        padding-left: 1rem;
+        padding-left: 0 !important;
     }
-    
+
     app-notifications .post-card hr {
         border-color: silver;
     }
 
-/* PROFILE */
-
-/*
+    /* PROFILE */
+    /*
 
 app-view-blog mat-card.wafrn-container {}
 
 app-view-blog img[alt="user avatar"] {}
 
 */
+    /* UNFOLLOW BUTTON */
+    .mat-mdc-unelevated-button.mat-warn {
+        color: var(--main-textcolor);
 
-/* UNFOLLOW BUTTON */
+        background-color: #f44336;
 
-.mat-mdc-unelevated-button.mat-warn {
-  color: var(--main-textcolor);
+        transition: var(--color-trans);
+    }
 
-  background-color: #f44336;
+    .mat-mdc-unelevated-button.mat-warn:hover {
+        background-color: #f44336;
 
-  transition: var(--color-trans);
-}
+        transition: var(--color-trans);
+    }
 
-.mat-mdc-unelevated-button.mat-warn:hover {
-  background-color: #f44336;
-
-  transition: var(--color-trans);
-}
-
-/* FOLLOW COUNT */
-
-/*
+    /* FOLLOW COUNT */
+    /*
 
 div.follow-counts {}
 
 */
+    /* TEXT EDITOR */
+    .ql-snow > .ql-editor {
+        background-color: var(--element-bgcolor);
 
-/* TEXT EDITOR */
+        color: var(--main-textcolor) !important;
 
-.ql-snow > .ql-editor {
-  background-color: var(--element-bgcolor);
-
-  color: var(--main-textcolor) !important;
-
-  max-height: 600px;
-}
-
-.ql-snow > .ql-editor:focus {
-  background-color: var(--element-bgcolor);
-
-  color: var(--main-textcolor);
-}
-    
-/* CREATE POST */
-    :root .mat-mdc-dialog-inner-container {
-         --mat-sys-primary: ; 
-    
-  --mat-sys-on-surface-variant: black;
-    
-  --mat-sys-on-surface: black; 
+        max-height: 600px;
     }
 
-    
-/* POSTS */
+    .ql-snow > .ql-editor:focus {
+        background-color: var(--element-bgcolor);
 
-/* POST CONTAINER */
+        color: var(--main-textcolor);
+    }
 
-.mat-mdc-card {
-  color: var(--main-textcolor);
+    /* CREATE POST */
+    :root .mat-mdc-dialog-inner-container {
+        --mat-sys-primary: #6b6b6b;
 
-  border-radius: 2px;
+        --mat-sys-on-surface-variant: black;
 
-  border-color: var(--button-accent-color);
+        --mat-sys-on-surface: black;
+    }
 
-  box-shadow: none;
-}
+
+
+
+    /* POSTS */
+    /* POST CONTAINER */
+    .mat-mdc-card {
+        color: var(--main-textcolor);
+
+        border-radius: 2px;
+
+        border-color: var(--button-accent-color);
+
+        box-shadow: none;
+
+        background: var(--element-bgcolor);
+    }
 
     .mat-mdc-card::after {
         border: none;
         border-radius: 0;
-        box-shadow: inset -1px -1px #0a0a0a,inset 1px 1px #dfdfdf,inset -2px -2px grey,inset 2px 2px #fff;
+        box-shadow: inset -1px -1px #0a0a0a, inset 1px 1px #dfdfdf, inset -2px -2px grey, inset 2px 2px #fff;
     }
 
-/* DIVIDER LINE */
+    /* DIVIDER LINE */
+    app-post hr {
+        color: var(--element-bgcolor);
 
-app-post hr {
-  color: var(--element-bgcolor);
+        border: 0px;
+    }
 
-  border: 0px;
-}
+    /* POSTER INFO */
+    .original-poster-name {
+        color: var(--username-textcolor) !important;
 
-/* POSTER INFO */
+        transition: var(--color-trans);
+    }
 
-.original-poster-name {
-  color: var(--username-textcolor) !important;
+    .original-poster-name:hover {
+        color: var(--username-textcolor-hover) !important;
 
-  transition: var(--color-trans);
-}
+        transition: var(--color-trans);
+    }
 
-.original-poster-name:hover {
-  color: var(--username-textcolor-hover) !important;
+    .original-poster-url {
+        color: var(--url-textcolor);
 
-  transition: var(--color-trans);
-}
+        font-family: Arial, sans-serif;
 
-.original-poster-url {
-  color: var(--url-textcolor);
+        text-rendering: optimizeLegibility;
+    }
 
-  font-family: Arial, sans-serif;
-    
-  text-rendering: optimizeLegibility;
-}
+    .avatar {
+        height: 45px;
 
-.avatar {
-  height: 45px;
+        width: 45px;
+    }
 
-  width: 45px;
-}
+    .avatar img {
+        border-radius: 3px;
 
-.avatar img {
-  border-radius: 3px;
+        height: 45px;
 
-  height: 45px;
+        width: 45px;
+    }
 
-  width: 45px;
-}
+    .user-name {
+        color: var(--username-textcolor) !important;
 
-.user-name {
-  color: var(--username-textcolor) !important;
+        transition: var(--color-trans);
+    }
 
-  transition: var(--color-trans);
-}
+    .user-name:hover {
+        color: var(--username-textcolor-hover) !important;
 
-.user-name:hover {
-  color: var(--username-textcolor-hover) !important;
+        transition: var(--color-trans);
+    }
 
-  transition: var(--color-trans);
-}
+    span.user-url {
+        color: #00f;
 
-span.user-url {
-  color: #00f;
+        font-family: Arial, sans-serif;
 
-  font-family: Arial, sans-serif;
-    
-  text-rendering: optimizeLegibility;
-}
+        text-rendering: optimizeLegibility;
+    }
 
-/* FOLLOW BUTTON */
+    /* FOLLOW BUTTON */
+    button.follow-button {
+        background: none !important;
 
-button.follow-button {
-  background: none !important;
+        color: #00f!important;
 
-  color: #00f!important;
+        border: none !important;
 
-  border: none !important;
+        transition: var(--color-trans);
+    }
 
-  transition: var(--color-trans);
-}
+    button.follow-button:hover {
+        background: none !important;
 
-button.follow-button:hover {
-  background: none !important;
+        color: var(--link-textcolor-hover) !important;
 
-  color: var(--link-textcolor-hover) !important;
+        border: none !important;
 
-  border: none !important;
+        transition: var(--color-trans);
+    }
 
-  transition: var(--color-trans);
-}
+    .mat-mdc-button-persistent-ripple {
+        display: none;
+    }
 
-.mat-mdc-button-persistent-ripple {
-  display: none;
-}
-
-/* NOTES BUTTON */
-    
+    /* NOTES BUTTON */
     .mat-mdc-outlined-button:not(:disabled) {
         border-radius: 0;
         color: black;
-        box-shadow: inset -1px -1px #0a0a0a,inset 1px 1px #fff,inset -2px -2px grey,inset 2px 2px #dfdfdf;
+        box-shadow: inset -1px -1px #0a0a0a, inset 1px 1px #fff, inset -2px -2px grey, inset 2px 2px #dfdfdf;
     }
-    
+
     .mat-mdc-outlined-button:active {
         box-shadow: inset -1px -1px #ffffff, inset 1px 1px #0a0a0a, inset -2px -2px #dfdfdf, inset 2px 2px #808080;
     }
-    
+
     .mdc-button .mdc-button__label {
         color: black;
     }
 
-/* POST DATE */
-
-/*
+    /* POST DATE */
+    /*
 
 div.date-line {}
 
 svg.fa-globe {}
 
 */
+    /* POST SHARE */
+    app-post-actions button:hover {
+        background: none !important;
 
-/* POST SHARE */
+        border-width: 0px;
+    }
 
-app-post-actions button:hover {
-  background: none !important;
+    svg.fa-share-nodes {
+        color: var(--button-accent-color);
 
-  border-width: 0px;
-}
+        transition: var(--color-trans);
+    }
 
-svg.fa-share-nodes {
-  color: var(--button-accent-color);
+    svg.fa-share-nodes:hover {
+        color: var(--button-accent-color-hover);
 
-  transition: var(--color-trans);
-}
+        transition: var(--color-trans);
+    }
 
-svg.fa-share-nodes:hover {
-  color: var(--button-accent-color-hover);
+    svg.fa-chevron-down {
+        color: var(--button-accent-color);
 
-  transition: var(--color-trans);
-}
+        transition: var(--color-trans);
+    }
 
-svg.fa-chevron-down {
-  color: var(--button-accent-color);
+    svg.fa-chevron-down:hover {
+        color: var(--button-accent-color-hover);
 
-  transition: var(--color-trans);
-}
+        transition: var(--color-trans);
+    }
 
-svg.fa-chevron-down:hover {
-  color: var(--button-accent-color-hover);
+    /* CONTENT WARNING */
+    #fragment-content-warning {
+        color: var(--main-textcolor);
 
-  transition: var(--color-trans);
-}
+        font-family: Arial, sans-serif;
 
-/* CONTENT WARNING */
+        text-rendering: optimizeLegibility;
+    }
 
-#fragment-content-warning {
-  color: var(--main-textcolor);
-
-  font-family: Arial, sans-serif;
-    
-  text-rendering: optimizeLegibility;
-}
-
-/*
+    /*
 
 div.fragment-content-warning div.fragment-content {}
 
 div.fragment-content-warning button {}
 
 */
+    /* POST TEXT */
+    div.wafrn-text-default {
+        color: var(--main-textcolor);
 
-/* POST TEXT */
+        font-family: Arial, sans-serif;
 
-div.wafrn-text-default {
-  color: var(--main-textcolor);
-
-  font-family: Arial, sans-serif;
-    
-  text-rendering: optimizeLegibility;
-}
-
-/* MENTIONS */
-    
-  :root .mention {
-        border-radius: 0;
-      color: white;
+        text-rendering: optimizeLegibility;
     }
 
-a.mention {
-  color: white;
+    /* MENTIONS */
+    :root .mention {
+        border-radius: 0;
+        color: white;
+    }
 
-  transition: var(--color-trans);
-}
+    a.mention {
+        color: white;
 
-a.mention:hover {
-  color: white;
+        transition: var(--color-trans);
+    }
 
-  transition: var(--color-trans);
-}
+    a.mention:hover {
+        color: white;
 
-/* MEDIA CONTAINER */
+        transition: var(--color-trans);
+    }
 
-app-wafrn-media {
-  max-width: 70%;
+    /* MEDIA CONTAINER */
+    app-wafrn-media {
+        max-width: 70%;
 
-  display: block;
+        display: block;
 
-  margin-left: auto;
+        margin-left: auto;
 
-  margin-right: auto;
-}
+        margin-right: auto;
+    }
 
-/* IMAGES */
+    /* IMAGES */
+    app-wafrn-media img {
+        filter: brightness(1);
 
-app-wafrn-media img {
-  filter: brightness(1);
+        transition: var(--image-transoff);
+    }
 
-  transition: var(--image-transoff);
-}
+    app-wafrn-media img:hover {
+        filter: brightness(1);
 
-app-wafrn-media img:hover {
-  filter: brightness(1);
+        transition: var(--image-trans);
+    }
 
-  transition: var(--image-trans);
-}
-    
 
-/* MEDIA DESCRIPTION */
+    /* MEDIA DESCRIPTION */
+    app-wafrn-media div.media-description {
+        background-color: var(--element-bgcolor) !important;
 
-app-wafrn-media div.media-description {
-  background-color: var(--element-bgcolor) !important;
+        border-radius: 0px;
 
-  border-radius: 0px;
+        font-family: Arial, sans-serif;
 
-  font-family: Arial, sans-serif;
-    
-  text-rendering: optimizeLegibility;
+        text-rendering: optimizeLegibility;
 
-  font-size: 11px;
-}
+        font-size: 11px;
+    }
 
-/* VOTING */
-
-/*
+    /* VOTING */
+    /*
 
 .mdc-linear-progress__bar-inner {}
 
 .mdc-linear-progress__buffer-bar {}
 
 */
+    /* TAGS */
+    a.tag {
+        background-color: silver !important;
 
-/* TAGS */
+        color: var(--link-textcolor) !important;
 
-a.tag {
-  background-color: silver !important;
+        transition: var(--color-trans);
 
-  color: var(--link-textcolor) !important;
+        font-family: Arial, sans-serif;
 
-  transition: var(--color-trans);
+        text-rendering: optimizeLegibility;
 
-  font-family: Arial, sans-serif;
-    
-  text-rendering: optimizeLegibility;
-    
-  box-shadow: inset -2px -2px #0a0a0a,inset 1px 1px #0a0a0a,inset 2px 2px #fff,inset -3px -3px grey,inset 3px 3px #dfdfdf;
-    
-  border-radius: 0;
-}
+        box-shadow: inset -2px -2px #0a0a0a, inset 1px 1px #0a0a0a, inset 2px 2px #fff, inset -3px -3px grey, inset 3px 3px #dfdfdf;
 
-a.tag:hover {
-  color: var(--link-textcolor-hover) !important;
+        border-radius: 0;
+    }
 
-  transition: var(--color-trans);
-}
-    
+    a.tag:hover {
+        color: var(--link-textcolor-hover) !important;
+
+        transition: var(--color-trans);
+    }
+
     a.tag:active {
         box-shadow: inset -1px -1px #ffffff, inset 1px 1px #0a0a0a, inset -2px -2px #dfdfdf, inset 2px 2px #808080;
     }
-    
-/* QUOTE POSTS */
-    
-    /* Button in quotes */
 
-   .quoted-post .mat-mdc-button-touch-target {
+    /* QUOTE POSTS */
+    /* Button in quotes */
+    .quoted-post .mat-mdc-button-touch-target {
         background: var(--button-bgcolor);
-        box-shadow: inset -1px -1px #0a0a0a,inset 1px 1px #fff,inset -2px -2px grey,inset 2px 2px #dfdfdf;
+        box-shadow: inset -1px -1px #0a0a0a, inset 1px 1px #fff, inset -2px -2px grey, inset 2px 2px #dfdfdf;
     }
 
-/* container of quoted post */
-    
-    .quoted-post.quote-collapsed::before{
-        
+    /* container of quoted post */
+    .quoted-post.quote-collapsed::before {
+
         box-shadow: none !important;
     }
 
-div.quoted-post {
-  border: 0 !important;
-    
-  border-radius: 0;
-    
-  background: white;
-    
-  box-shadow: inset -1px -1px #fff,inset 1px 1px grey,inset -2px -2px #dfdfdf,inset 2px 2px #0a0a0a !important;
-}
-    
-/* CODE CONTAINER IN A POST */
-    
+    div.quoted-post {
+        border: 0 !important;
+
+        border-radius: 0;
+
+        background: white;
+
+        box-shadow: inset -1px -1px #fff, inset 1px 1px grey, inset -2px -2px #dfdfdf, inset 2px 2px #0a0a0a !important;
+    }
+
+    /* CODE CONTAINER IN A POST */
     pre {
-        
+
         background-color: white !important;
-        
-        box-shadow: inset -1px -1px #fff,inset 1px 1px grey,inset -2px -2px #dfdfdf,inset 2px 2px #0a0a0a !important;
-        
+
+        box-shadow: inset -1px -1px #fff, inset 1px 1px grey, inset -2px -2px #dfdfdf, inset 2px 2px #0a0a0a !important;
+
         border: 0 !important;
     }
 
-/* REACTS */
+    /* REACTS */
+    #emoji-reactions button {
+        background-color: var(--element-bgcolor);
 
-#emoji-reactions button {
-  background-color: var(--element-bgcolor);
+        border-width: 0px !important;
 
-  border-width: 0px !important;
+        transition: var(--color-trans);
 
-  transition: var(--color-trans);
+        fill: var(--main-textcolor);
+    }
 
-  fill: var(--main-textcolor);
-}
+    #emoji-reactions button:hover {
+        background-color: var(--button-bgcolor-hover);
 
-#emoji-reactions button:hover {
-  background-color: var(--button-bgcolor-hover);
+        transition: var(--color-trans);
 
-  transition: var(--color-trans);
+        fill: var(--main-textcolor);
+    }
 
-  fill: var(--main-textcolor);
-}
-
-/*
+    /*
 
 #emoji-reactions .mat-mdc-tooltip-trigger {}
 
 #emoji-reactions .mat-mdc-tooltip-trigger:hover {}
 
 */
+    app-emoji-react svg {
+        fill: var(--main-textcolor);
 
-app-emoji-react svg {
-  fill: var(--main-textcolor);
+        transition: var(--color-trans);
+    }
 
-  transition: var(--color-trans);
-}
+    app-emoji-react svg:hover {
+        fill: var(--link-textcolor-hover);
 
-app-emoji-react svg:hover {
-  fill: var(--link-textcolor-hover);
+        transition: var(--color-trans);
+    }
 
-  transition: var(--color-trans);
-}
-
-/*
+    /*
 
 div.emojireact-overlay {}
 
 */
-
-/* POST ACTIONS */
-
-/*
+    /* POST ACTIONS */
+    /*
 
 app-post hr > div a {}
 
 app-post hr > div a:hover {}
 
 */
+    fa-icon[mattooltip="Quote woot"] {
+        color: var(--main-textcolor);
 
-fa-icon[mattooltip="Quote woot"] {
-  color: var(--main-textcolor);
+        transition: var(--color-trans);
+    }
 
-  transition: var(--color-trans);
-}
+    fa-icon[mattooltip="Quote woot"]:hover {
+        color: var(--main-textcolor);
 
-fa-icon[mattooltip="Quote woot"]:hover {
-  color: var(--main-textcolor);
+        transition: var(--color-trans);
+    }
 
-  transition: var(--color-trans);
-}
+    fa-icon[mattooltip="Quick rewoot"] {
+        color: var(--main-textcolor);
 
-fa-icon[mattooltip="Quick rewoot"] {
-  color: var(--main-textcolor);
+        transition: var(--color-trans);
+    }
 
-  transition: var(--color-trans);
-}
+    fa-icon[mattooltip="Quick rewoot"]:hover {
+        color: var(--main-textcolor);
 
-fa-icon[mattooltip="Quick rewoot"]:hover {
-  color: var(--main-textcolor);
+        transition: var(--color-trans);
+    }
 
-  transition: var(--color-trans);
-}
+    fa-icon[mattooltip="Delete rewoot"] {
+        color: var(--main-textcolor);
 
-fa-icon[mattooltip="Delete rewoot"] {
-  color: var(--main-textcolor);
+        transition: var(--color-trans);
+    }
 
-  transition: var(--color-trans);
-}
+    fa-icon[mattooltip="Delete rewoot"]:hover {
+        color: var(--main-textcolor);
 
-fa-icon[mattooltip="Delete rewoot"]:hover {
-  color: var(--main-textcolor);
+        transition: var(--color-trans);
+    }
 
-  transition: var(--color-trans);
-}
+    fa-icon[mattooltip="Reply woot"] {
+        color: var(--main-textcolor);
 
-fa-icon[mattooltip="Reply woot"] {
-  color: var(--main-textcolor);
+        transition: var(--color-trans);
+    }
 
-  transition: var(--color-trans);
-}
+    fa-icon[mattooltip="Reply woot"]:hover {
+        color: var(--main-textcolor);
 
-fa-icon[mattooltip="Reply woot"]:hover {
-  color: var(--main-textcolor);
+        transition: var(--color-trans);
+    }
 
-  transition: var(--color-trans);
-}
+    fa-icon[mattooltip="Like woot"] {
+        color: var(--main-textcolor);
 
-fa-icon[mattooltip="Like woot"] {
-  color: var(--main-textcolor);
+        transition: var(--color-trans);
+    }
 
-  transition: var(--color-trans);
-}
+    fa-icon[mattooltip="Like woot"]:hover {
+        color: var(--main-textcolor);
 
-fa-icon[mattooltip="Like woot"]:hover {
-  color: var(--main-textcolor);
+        transition: var(--color-trans);
+    }
 
-  transition: var(--color-trans);
-}
+    fa-icon[mattooltip="Remove like"] {
+        color: var(--main-textcolor);
 
-fa-icon[mattooltip="Remove like"] {
-  color: var(--main-textcolor);
+        transition: var(--color-trans);
+    }
 
-  transition: var(--color-trans);
-}
+    fa-icon[mattooltip="Remove like"]:hover {
+        color: var(--main-textcolor);
 
-fa-icon[mattooltip="Remove like"]:hover {
-  color: var(--main-textcolor);
+        transition: var(--color-trans);
+    }
 
-  transition: var(--color-trans);
-}
+    fa-icon[mattooltip="Delete woot"] {
+        color: var(--main-textcolor);
 
-fa-icon[mattooltip="Delete woot"] {
-  color: var(--main-textcolor);
+        transition: var(--color-trans);
+    }
 
-  transition: var(--color-trans);
-}
+    fa-icon[mattooltip="Delete woot"]:hover {
+        color: var(--main-textcolor);
 
-fa-icon[mattooltip="Delete woot"]:hover {
-  color: var(--main-textcolor);
+        transition: var(--color-trans);
+    }
 
-  transition: var(--color-trans);
-}
-    
     /* The specific part below has a problem causing white on silver text when you go inside the post and see rewoots, the code below applies effect on the feed and notifications rather than opened posts. If you have ideas how to solve this I'll be glad */
-
-/* "USER REWOOTED/REPLIED POST DIV" */
+    /* "USER REWOOTED/REPLIED POST DIV" */
     .nudge-left {
-        background: linear-gradient(90deg,navy,#1084d0);
+        background: linear-gradient(90deg, navy, #1084d0);
         margin-left: -0.9rem !important;
         margin-right: -0.9rem;
         margin-top: -0.65rem;
@@ -964,16 +926,18 @@ fa-icon[mattooltip="Delete woot"]:hover {
         padding-right: 1rem;
         padding-top: 5px;
         padding-bottom: 5px;
-}
-    .nudge-left .user-name, .post-action, .ribbon-date, .ribbon-icon {
+    }
+    .nudge-left .user-name,
+    .post-action,
+    .ribbon-date,
+    .ribbon-icon {
         color: white !important;
     }
 
 
-    
-/* IMAGE CW TEXT BACKGROUND */
-    
-    .image-cw-text {
+
+    /* IMAGE CW TEXT BACKGROUND, AUDIO */
+    .image-cw-text, .v-container, .v-media, .v-media > iframe {
         background: #808080 !important;
     }
 
