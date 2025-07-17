@@ -137,12 +137,13 @@ function getCheckFediverseSignatureFunction(force = false) {
             const jsonld = new LdSignature()
 
             if (
-              await jsonld.verifyRsaSignature2017(req.body, remoteActor.publicKey).catch((error) => {
+              remoteActor &&
+              (await jsonld.verifyRsaSignature2017(req.body, remoteActor.publicKey).catch((error) => {
                 logger.debug({
                   message: `Problem with jsonld signature ${hostUrl}: ${remoteUserUrl}`,
                   error: error
                 })
-              })
+              }))
             ) {
               success = true
             } else {

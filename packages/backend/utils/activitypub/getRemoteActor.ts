@@ -23,12 +23,12 @@ const queue = new Queue('getRemoteActorId', {
 const queueEvents = new QueueEvents('getRemoteActorId', {
   connection: completeEnvironment.bullmqConnection
 })
-async function getRemoteActor(actorUrl: string, user: User | null, forceUpdate = false): Promise<any> {
+async function getRemoteActor(actorUrl: string, user: User | null, forceUpdate = false): Promise<User | null> {
   if (!user) {
     logger.debug({
       message: `caled getremoteactor with null`
     })
-    return
+    return null
   }
   let remoteUser
   if (!actorUrl) {
