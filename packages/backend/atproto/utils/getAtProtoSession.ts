@@ -12,8 +12,8 @@ async function getAtProtoSession(user?: User): Promise<AtpAgent> {
     service: serviceUrl,
     persistSession: async (evt, session) => {
       if (session && user) {
-        // Updated so we do not need to log in on every interaction
-        await redisCache.set('bskySession:' + user.id, JSON.stringify(session), 'EX', 3600)
+        // Updated so we do not need to log in on every interaction. Validity is 60 seconds I think
+        await redisCache.set('bskySession:' + user.id, JSON.stringify(session), 'EX', 50)
       }
     }
   })

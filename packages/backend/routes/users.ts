@@ -60,6 +60,7 @@ import { follow } from '../utils/follow.js'
 import { activityPubObject } from '../interfaces/fediverse/activityPubObject.js'
 import { getFollowedHashtags } from '../utils/getFollowedHashtags.js'
 import { completeEnvironment } from '../utils/backendOptions.js'
+import { environment } from '../environment.js'
 
 const markdownConverter = new showdown.Converter({
   simplifiedAutoLink: true,
@@ -958,7 +959,9 @@ export default function userRoutes(app: Application) {
     const userId = req.jwtData?.userId as string
     const user = await User.findByPk(userId)
     if (user && !user.enableBsky) {
-      const inviteCode = await BskyInviteCodes.findOne()
+      const inviteCode = completeEnvironment.bskyMasterInviteCode
+        ? completeEnvironment.bskyMasterInviteCode
+        : await BskyInviteCodes.findOne()
       if (inviteCode) {
         const serviceUrl = completeEnvironment.bskyPds.startsWith('http')
           ? completeEnvironment.bskyPds
@@ -974,7 +977,7 @@ export default function userRoutes(app: Application) {
               email: `${user.url}@${completeEnvironment.instanceUrl}`,
               password: bskyPassword,
               handle: `${sanitizedUrl}.${completeEnvironment.bskyPdsUrl as string}`,
-              inviteCode: inviteCode.code
+              inviteCode: typeof inviteCode === 'string' ? inviteCode : inviteCode.code
             })
             .catch((error) => {
               logger.error({
@@ -987,7 +990,12 @@ export default function userRoutes(app: Application) {
             message: `Bsky account created? ${user.url}`,
             response: accountCreation
           })
-          await inviteCode.destroy()
+          if (typeof inviteCode !== 'string') {
+            // This is a regular invitecode and not a MASTER INVITE CODE with 1 million usages.
+            // If for some reason we got there
+            // what the fuck
+            await inviteCode.destroy()
+          }
           const userDid = agent.assertDid
           user.bskyDid = userDid
           user.bskyAuthData = bskyPassword
