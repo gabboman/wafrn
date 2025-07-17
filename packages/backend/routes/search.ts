@@ -233,23 +233,21 @@ export default function searchRoutes(app: Application) {
     if (urlString && !page) {
       // we force fetch said remote post. Nothing eslse!
     } else {
-      let usersInDb = getUsersLocal(searchTerm, posterId, page)
-      // we only do remote searches on page 0 DUH
-      let externalUsers = !page ? getUserRemote(searchTerm, posterId) : null
-      await Promise.all([usersInDb, externalUsers])
-      users = (await externalUsers) ? [(await externalUsers) as User].concat(await usersInDb) : await usersInDb
-
-      res.send({
-        emojis: [],
-        userEmojiIds: [],
-        foundUsers: users,
-        posts: await getUnjointedPosts([], posterId, true)
-      })
+      users = await searchUsers(searchTerm, posterId, page)
     }
+
+    // TODO add emojis and useremojis reation search too lol
+    res.send({
+      emojis: [],
+      userEmojiIds: [],
+      foundUsers: await users,
+      posts: await getUnjointedPosts(postsIds, posterId, true)
+    })
   })
 
-  async function getUsersLocal(searchTerm: string, userId: string, page = 0): Promise<User[]> {
-    let localFirstMatch = !page
+  async function searchUsers(searchTerm: string, userId: string, page = 0): Promise<User[]> {
+    let remoteMatch: Promise<User | null> | null = null
+    let firstMatch = !page
       ? User.findOne({
           attributes: ['url', 'avatar', 'id', 'remoteId'],
           where: {
@@ -263,6 +261,9 @@ export default function searchRoutes(app: Application) {
           }
         })
       : null
+    if (page == 0) {
+      remoteMatch = searchUserFediAndbsky(searchTerm, (await User.findByPk(userId)) as User)
+    }
     // we only start displaying remote users when we have finished with local users
     const localUsersCount = await User.count({
       where: {
@@ -331,10 +332,13 @@ export default function searchRoutes(app: Application) {
           })
         : []
 
-    await Promise.all([localFirstMatch, localUsers, remoteUsers])
+    await Promise.all([firstMatch, localUsers, remoteUsers, remoteMatch])
+    if (await remoteMatch) {
+      firstMatch = remoteMatch
+    }
     let res: User[] = []
-    if (await localFirstMatch) {
-      res.push((await localFirstMatch) as User)
+    if (await firstMatch) {
+      res.push((await firstMatch) as User)
     }
     res = res.concat(await localUsers)
     if ((await remoteUsers) && (await remoteUsers).length >= 1) {
@@ -344,8 +348,26 @@ export default function searchRoutes(app: Application) {
     return res
   }
 
-  async function getUserRemote(searchTerm: string, userId: string): Promise<User | null> {
-    return null
+  async function searchUserFediAndbsky(searchTermIncomplete: string, usr: User): Promise<User | null> {
+    // WILL ALWAYS ADD INITIAL @ SO WE CAN AUTOCOMPLETE ON POST EDITOR
+    // search exact url match and forces update in local db.
+    // only search in bsky if user has enabed bsky
+    const searchTerm = searchTermIncomplete.startsWith('@') ? searchTermIncomplete : `@${searchTermIncomplete}`
+    const searchTermSplitted = searchTerm.split('@')
+    let result: User | null = null
+
+    if (usr.enableBsky && searchTermSplitted.length === 2 && searchTermSplitted[0] == '') {
+      const bskySearchResult = await getAtprotoUser(searchTerm.split('@')[1], usr)
+      if (bskySearchResult && bskySearchResult.url != completeEnvironment.deletedUser) {
+        result = bskySearchResult
+      }
+    }
+
+    // we have a full @fediUser@fediServer url. Time to search!
+    if (!result && searchTermSplitted.length === 3) {
+      result = await searchRemoteUser(searchTerm, usr)
+    }
+    return result
   }
 
   app.get('/api/userSearch/:term', authenticateToken, async (req: AuthorizedRequest, res: Response) => {
@@ -353,7 +375,7 @@ export default function searchRoutes(app: Application) {
     // const success = false;
     let users: any = []
     const searchTerm = req.params.term.trim()
-    users = await getUsersLocal(searchTerm, posterId, 0)
+    users = await searchUsers(searchTerm, posterId, 0)
     res.send({
       users
     })
