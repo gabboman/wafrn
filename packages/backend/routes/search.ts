@@ -216,41 +216,55 @@ export default function searchRoutes(app: Application) {
    * if search has @: SEARCH USER MODE. Will only return users that @search. Will search fedi and bsky if user has bsky enabled
    *
    */
-  // app.get('/api/v3/search', optionalAuthentication, async (req: AuthorizedRequest, res: Response) => {})
 
-  app.get('/api/userSearch/:term', authenticateToken, async (req: AuthorizedRequest, res: Response) => {
-    const posterId = req.jwtData?.userId
+  app.get('/api/v3/search', authenticateToken, async (req: AuthorizedRequest, res: Response) => {
+    const posterId = req.jwtData?.userId ? req.jwtData.userId : '00000000-0000-0000-0000-000000000000'
     // const success = false;
-    let users: any = []
-    const searchTerm = req.params.term.toLowerCase().trim()
-    users = User.findAll({
-      limit: 20,
-      where: {
-        activated: true,
-        banned: {
-          [Op.ne]: true
-        },
-        url: {
-          [Op.iLike]: `@%${searchTerm}%`
-        },
-        [Op.or]: [
-          {
-            federatedHostId: {
-              [Op.notIn]: await getallBlockedServers()
-            }
-          },
-          {
-            federatedHostId: {
-              [Op.eq]: null
+    const searchTerm = (req.query.term || '').toString().trim()
+    const page = Number(req?.query.page) || 0
+
+    let urlString = ''
+    let postsIds: string[] = []
+    let users: User[] = []
+
+    try {
+      urlString = new URL(searchTerm).href
+    } catch (error) {}
+    if (urlString && !page) {
+      // we force fetch said remote post. Nothing eslse!
+    } else {
+      let usersInDb = getUsersLocal(searchTerm, posterId, page)
+      // we only do remote searches on page 0 DUH
+      let externalUsers = !page ? getUserRemote(searchTerm, posterId) : null
+      await Promise.all([usersInDb, externalUsers])
+      users = (await externalUsers) ? [(await externalUsers) as User].concat(await usersInDb) : await usersInDb
+
+      res.send({
+        emojis: [],
+        userEmojiIds: [],
+        foundUsers: users,
+        posts: await getUnjointedPosts([], posterId, true)
+      })
+    }
+  })
+
+  async function getUsersLocal(searchTerm: string, userId: string, page = 0): Promise<User[]> {
+    let localFirstMatch = !page
+      ? User.findOne({
+          attributes: ['url', 'avatar', 'id', 'remoteId'],
+          where: {
+            activated: true,
+            banned: {
+              [Op.ne]: true
+            },
+            url: {
+              [Op.iLike]: searchTerm
             }
           }
-        ]
-      },
-      attributes: ['url', 'avatar', 'id', 'remoteId', 'federatedHostId']
-    })
-
-    let localUsers: any = User.findAll({
-      limit: 20,
+        })
+      : null
+    // we only start displaying remote users when we have finished with local users
+    const localUsersCount = await User.count({
       where: {
         activated: true,
         banned: {
@@ -262,17 +276,86 @@ export default function searchRoutes(app: Application) {
         url: {
           [Op.iLike]: `%${searchTerm}%`
         }
-      },
-      attributes: ['url', 'avatar', 'id', 'remoteId']
+      }
     })
-    await Promise.all([localUsers, users])
-    users = await users
-    localUsers = await localUsers
-    const result = localUsers
-      .concat(users)
-      .concat(await searchRemoteUser(searchTerm, await User.findOne({ where: { id: posterId } })))
+    let localUsers =
+      localUsersCount < (page + 1) * completeEnvironment.postsPerPage
+        ? User.findAll({
+            where: {
+              activated: true,
+              banned: {
+                [Op.ne]: true
+              },
+              email: {
+                [Op.ne]: null
+              },
+              url: {
+                [Op.iLike]: `%${searchTerm}%`
+              }
+            },
+            attributes: ['url', 'avatar', 'id', 'remoteId'],
+            order: [['createdAt', 'DESC']],
+            limit: completeEnvironment.postsPerPage,
+            offset: page * completeEnvironment.postsPerPage
+          })
+        : []
+
+    let remoteUsers =
+      localUsersCount >= page * completeEnvironment.postsPerPage
+        ? User.findAll({
+            where: {
+              activated: true,
+              banned: {
+                [Op.ne]: true
+              },
+              url: {
+                [Op.iLike]: `@%${searchTerm}%`
+              },
+              [Op.or]: [
+                {
+                  federatedHostId: {
+                    [Op.notIn]: await getallBlockedServers()
+                  }
+                },
+                {
+                  federatedHostId: {
+                    [Op.eq]: null
+                  }
+                }
+              ]
+            },
+            attributes: ['url', 'avatar', 'id', 'remoteId', 'federatedHostId'],
+            order: [['createdAt', 'DESC']],
+            limit: completeEnvironment.postsPerPage,
+            offset: page * completeEnvironment.postsPerPage
+          })
+        : []
+
+    await Promise.all([localFirstMatch, localUsers, remoteUsers])
+    let res: User[] = []
+    if (await localFirstMatch) {
+      res.push((await localFirstMatch) as User)
+    }
+    res = res.concat(await localUsers)
+    if ((await remoteUsers) && (await remoteUsers).length >= 1) {
+      let tmpRemote = await remoteUsers
+      res = res.concat(tmpRemote as User[])
+    }
+    return res
+  }
+
+  async function getUserRemote(searchTerm: string, userId: string): Promise<User | null> {
+    return null
+  }
+
+  app.get('/api/userSearch/:term', authenticateToken, async (req: AuthorizedRequest, res: Response) => {
+    const posterId = req.jwtData?.userId ? req.jwtData.userId : '00000000-0000-0000-0000-000000000000'
+    // const success = false;
+    let users: any = []
+    const searchTerm = req.params.term.trim()
+    users = await getUsersLocal(searchTerm, posterId, 0)
     res.send({
-      users: result
+      users
     })
   })
 }
