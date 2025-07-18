@@ -52,7 +52,11 @@ export class DashboardService {
     return result
   }
 
-  async getSearchPage(page: number, term: string): Promise<{ posts: ProcessedPost[][]; users: SimplifiedUser[] }> {
+  async getSearchPage(
+    page: number,
+    term: string,
+    options?: { user: string | undefined }
+  ): Promise<{ posts: ProcessedPost[][]; users: SimplifiedUser[] }> {
     let postResult: ProcessedPost[][] = []
     if (page === 0) {
       //if we are starting the scroll, we store the current date
@@ -62,6 +66,9 @@ export class DashboardService {
     petitionData = petitionData.set('page', page.toString())
     petitionData = petitionData.set('startScroll', this.startScrollDate.getTime().toString())
     petitionData = petitionData.set('term', term)
+    if (options?.user) {
+      petitionData = petitionData.set('user', options.user)
+    }
     const dashboardPetition: {
       posts: unlinkedPosts
       foundUsers: Array<SimplifiedUser>

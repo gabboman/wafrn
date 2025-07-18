@@ -12,7 +12,7 @@
             accept="image/jpeg,image/png,image/webp,image/gif"
             (change)="imgSelected($event)"
             class="w-full mb-3"
-            />
+          />
         </div>
         <div class="pt-2 px-3 border-round-md mb-4" style="border: 1px solid var(--mat-sys-outline-variant)">
           <label for="avatar" class="block font-medium mb-2">{{ 'profile.profile.chooseHeader' | translate }}</label>
@@ -22,7 +22,7 @@
             accept="image/jpeg,image/png,image/webp,image/gif"
             (change)="headerImgSelected($event)"
             class="w-full mb-3"
-            />
+          />
         </div>
         <mat-form-field class="w-full" appearance="outline">
           <mat-label>{{ 'profile.profile.changeDisplayName' | translate }}</mat-label>
@@ -196,116 +196,122 @@
         </div>
         <div class="w-full">
           <mat-checkbox formControlName="hideProfileNotLoggedIn"></mat-checkbox>
-          <mat-label
-            >{{ 'profile.privacy.hideProfileNotLoggedInDescription' | translate }}</mat-label
-            >
-          </div>
-          <h3>{{ 'profile.security.header' | translate }}:</h3>
-          <div class="flex align-items-center justify-content-between mt-2">
-            <a
-              routerLink="/recoverPassword"
-              class="font-medium no-underline ml-2 mdc-button w-full mat-primary mat-mdc-unelevated-button cursor-pointer"
-              >
-              {{ 'profile.security.passwordChange' | translate }}
-            </a>
-          </div>
-          <div class="flex align-items-center justify-content-between mt-2">
-            <a
-              routerLink="/mfaSetup"
-              class="font-medium no-underline ml-2 mdc-button w-full mat-primary mat-mdc-unelevated-button cursor-pointer"
-              >
-              {{ 'profile.security.mfa.setup' | translate }}
-            </a>
-          </div>
-        </mat-tab>
-        <mat-tab label="{{ 'profile.tabHeaders.misc' | translate }}">
-          <section id="tags" class="mt-2 w-full flex-row">
-            <!-- TODO replace text here with variable that can be translated -->
-            <app-user-selector
-              (optionSelected)="userAliasSelected($event)"
-              [controlText]="'Moving from a different account (without the @)'"
-            ></app-user-selector>
-          </section>
-          <hr />
-          <section id="mutedWords" class="mt-2 w-full flex-row">
-            <mat-form-field class="w-full">
-              <mat-label>{{ 'profile.other.wordsThatWillAutoCwPosts' | translate }}</mat-label>
-              <input formControlName="mutedWords" placeholder="{{ 'profile.other.mutedWordsPlaceholder' | translate }}" matNativeControl />
-            </mat-form-field>
-            @if (editProfileForm.value.mutedWords.split(',').length > 0) {
-              <div class="taglist flex flex-wrap mb-2">
-                @for (tag of editProfileForm.value.mutedWords.split(','); track $index) {
-                  @if (tag && tag !== '' && tag.trim() !== '') {
-                    <div class="tag">
-                      {{ tag.trim() }}
-                    </div>
-                  }
-                }
-              </div>
-            }
-          </section>
-          <hr />
-          <section id="superMutedwWords" class="mt-2 w-full flex-row">
-            <mat-form-field class="w-full">
-              <mat-label>{{ 'profile.other.superMutedWords' | translate }}</mat-label>
-              <input formControlName="superMutedWords" placeholder="{{ 'common.commaSeparation' | translate }}" matNativeControl />
-            </mat-form-field>
-            @if (editProfileForm.value.superMutedWords.split(',').length > 0) {
-              <div class="taglist flex flex-wrap mb-2">
-                @for (tag of editProfileForm.value.superMutedWords.split(','); track $index) {
-                  @if (tag && tag !== '' && tag.trim() !== '') {
-                    <div class="tag">
-                      {{ tag.trim() }}
-                    </div>
-                  }
-                }
-              </div>
-            }
-          </section>
-          <hr />
-          <mat-accordion>
-            <mat-expansion-panel hideToggle>
-              <mat-expansion-panel-header>
-                <mat-panel-title> {{ 'profile.other.availableEmoji' | translate }} </mat-panel-title>
-              </mat-expansion-panel-header>
-              <app-emoji-collections (emoji)="emojiClicked($event)"></app-emoji-collections>
-            </mat-expansion-panel>
-          </mat-accordion>
-        </mat-tab>
-      </form>
-      <mat-tab label="Bluesky">
-        <!-- I swear I'll translate this, don't merge before I do! -->
-        <p>{{ 'profile.bsky.psa1' | translate }}</p>
-        <p>
-          {{ 'profile.bsky.psa2_1' | translate }}
-          <a href="https://wafrn.net/faq/user.html#blueskyIntegrationo">{{ 'profile.bsky.psa2_2' | translate }}</a>
-          {{ 'profile.bsky.psa2_3' | translate }}
-        </p>
-        <p>{{ 'profile.bsky.psa3' | translate }}</p>
-        <button [disabled]="loading" (click)="enableBluesky()" mat-flat-button class="w-full">Enable bluesky</button>
+          <mat-label>{{ 'profile.privacy.hideProfileNotLoggedInDescription' | translate }}</mat-label>
+        </div>
+        <h3>{{ 'profile.security.header' | translate }}:</h3>
+        <div class="flex align-items-center justify-content-between mt-2">
+          <a
+            routerLink="/recoverPassword"
+            class="font-medium no-underline ml-2 mdc-button w-full mat-primary mat-mdc-unelevated-button cursor-pointer"
+          >
+            {{ 'profile.security.passwordChange' | translate }}
+          </a>
+        </div>
+        <div class="flex align-items-center justify-content-between mt-2">
+          <a
+            routerLink="/mfaSetup"
+            class="font-medium no-underline ml-2 mdc-button w-full mat-primary mat-mdc-unelevated-button cursor-pointer"
+          >
+            {{ 'profile.security.mfa.setup' | translate }}
+          </a>
+        </div>
       </mat-tab>
-      <mat-tab label="Migrate out">
-        <p>
-          {{ 'profile.migrate.psa1' | translate }}
-          <a [routerLink]="'/profile/migrate-out'">{{ 'profile.migrate.psa2' | translate }}</a>
-        </p></mat-tab
-        >
-        <mat-tab label="Delete account">
-          <p>{{ 'profile.delete.psa1' | translate }}</p>
-          <p>{{ 'profile.delete.psa2' | translate }}</p>
-          <form>
-            <mat-form-field class="w-full">
-              <mat-label>{{ 'login.password' | translate }}</mat-label>
-              <input [(ngModel)]="password" [type]="'password'" name="password" matInput />
-            </mat-form-field>
-            <button (click)="requestDeleteAccount()" mat-flat-button style="background-color: red" class="w-full">
-             {{ 'profile.delete.button' | translate }}
-            </button>
-          </form>
-        </mat-tab>
-      </mat-tab-group>
+      <mat-tab label="{{ 'profile.tabHeaders.misc' | translate }}">
+        <section id="tags" class="mt-2 w-full flex-row">
+          <!-- TODO replace text here with variable that can be translated -->
+          <app-user-selector
+            (optionSelected)="userAliasSelected($event.remoteId)"
+            [controlText]="'Moving from a different account (without the @)'"
+          ></app-user-selector>
+        </section>
+        <hr />
+        <section id="mutedWords" class="mt-2 w-full flex-row">
+          <mat-form-field class="w-full">
+            <mat-label>{{ 'profile.other.wordsThatWillAutoCwPosts' | translate }}</mat-label>
+            <input
+              formControlName="mutedWords"
+              placeholder="{{ 'profile.other.mutedWordsPlaceholder' | translate }}"
+              matNativeControl
+            />
+          </mat-form-field>
+          @if (editProfileForm.value.mutedWords.split(',').length > 0) {
+            <div class="taglist flex flex-wrap mb-2">
+              @for (tag of editProfileForm.value.mutedWords.split(','); track $index) {
+                @if (tag && tag !== '' && tag.trim() !== '') {
+                  <div class="tag">
+                    {{ tag.trim() }}
+                  </div>
+                }
+              }
+            </div>
+          }
+        </section>
+        <hr />
+        <section id="superMutedwWords" class="mt-2 w-full flex-row">
+          <mat-form-field class="w-full">
+            <mat-label>{{ 'profile.other.superMutedWords' | translate }}</mat-label>
+            <input
+              formControlName="superMutedWords"
+              placeholder="{{ 'common.commaSeparation' | translate }}"
+              matNativeControl
+            />
+          </mat-form-field>
+          @if (editProfileForm.value.superMutedWords.split(',').length > 0) {
+            <div class="taglist flex flex-wrap mb-2">
+              @for (tag of editProfileForm.value.superMutedWords.split(','); track $index) {
+                @if (tag && tag !== '' && tag.trim() !== '') {
+                  <div class="tag">
+                    {{ tag.trim() }}
+                  </div>
+                }
+              }
+            </div>
+          }
+        </section>
+        <hr />
+        <mat-accordion>
+          <mat-expansion-panel hideToggle>
+            <mat-expansion-panel-header>
+              <mat-panel-title> {{ 'profile.other.availableEmoji' | translate }} </mat-panel-title>
+            </mat-expansion-panel-header>
+            <app-emoji-collections (emoji)="emojiClicked($event)"></app-emoji-collections>
+          </mat-expansion-panel>
+        </mat-accordion>
+      </mat-tab>
+    </form>
+    <mat-tab label="Bluesky">
+      <!-- I swear I'll translate this, don't merge before I do! -->
+      <p>{{ 'profile.bsky.psa1' | translate }}</p>
+      <p>
+        {{ 'profile.bsky.psa2_1' | translate }}
+        <a href="https://wafrn.net/faq/user.html#blueskyIntegrationo">{{ 'profile.bsky.psa2_2' | translate }}</a>
+        {{ 'profile.bsky.psa2_3' | translate }}
+      </p>
+      <p>{{ 'profile.bsky.psa3' | translate }}</p>
+      <button [disabled]="loading" (click)="enableBluesky()" mat-flat-button class="w-full">Enable bluesky</button>
+    </mat-tab>
+    <mat-tab label="Migrate out">
+      <p>
+        {{ 'profile.migrate.psa1' | translate }}
+        <a [routerLink]="'/profile/migrate-out'">{{ 'profile.migrate.psa2' | translate }}</a>
+      </p></mat-tab
+    >
+    <mat-tab label="Delete account">
+      <p>{{ 'profile.delete.psa1' | translate }}</p>
+      <p>{{ 'profile.delete.psa2' | translate }}</p>
+      <form>
+        <mat-form-field class="w-full">
+          <mat-label>{{ 'login.password' | translate }}</mat-label>
+          <input [(ngModel)]="password" [type]="'password'" name="password" matInput />
+        </mat-form-field>
+        <button (click)="requestDeleteAccount()" mat-flat-button style="background-color: red" class="w-full">
+          {{ 'profile.delete.button' | translate }}
+        </button>
+      </form>
+    </mat-tab>
+  </mat-tab-group>
 
-      <!--
+  <!--
       <div class="w-full">
         <mat-checkbox formControlName="federateWithThreads"></mat-checkbox>
         <mat-label>Enable federation with Threads (meta/facebook)</mat-label>
@@ -319,14 +325,14 @@
         </mat-card>
         -->
 
-        <button
-          (click)="onSubmit()"
-          [disabled]="!editProfileForm.valid"
-          mat-raised-button
-          color="primary"
-          icon="pi pi-user"
-          class="w-full mt-4"
-          >
-         {{ 'profile.updateButton' | translate }}
-        </button>
-      </mat-card>
+  <button
+    (click)="onSubmit()"
+    [disabled]="!editProfileForm.valid"
+    mat-raised-button
+    color="primary"
+    icon="pi pi-user"
+    class="w-full mt-4"
+  >
+    {{ 'profile.updateButton' | translate }}
+  </button>
+</mat-card>

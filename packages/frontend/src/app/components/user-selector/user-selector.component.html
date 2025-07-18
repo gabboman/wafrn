@@ -5,7 +5,10 @@
       <input formControlName="userSearcher" matNativeControl [matAutocomplete]="auto" />
     </mat-form-field>
 
-    <mat-autocomplete (optionSelected)="optionSelected.emit($event.option.value)" #auto="matAutocomplete">
+    <mat-autocomplete
+      (optionSelected)="optionSelected.emit({ remoteId: $event.option.value, url: $event.option.getLabel() })"
+      #auto="matAutocomplete"
+    >
       @for (user of usersAutocompleteOptions; track user) {
         <mat-option [value]="user.remoteId">
           <div class="flex gap-2 align-items-center suggestion-item">

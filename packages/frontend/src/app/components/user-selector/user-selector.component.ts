@@ -1,4 +1,3 @@
-
 import { Component, EventEmitter, Input, OnDestroy, Output } from '@angular/core'
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms'
 import { MatFormFieldModule } from '@angular/material/form-field'
@@ -18,7 +17,7 @@ import { AvatarSmallComponent } from '../avatar-small/avatar-small.component'
     MatInputModule,
     MatAutocompleteModule,
     AvatarSmallComponent
-],
+  ],
   templateUrl: './user-selector.component.html',
   styleUrl: './user-selector.component.scss'
 })
@@ -29,7 +28,7 @@ export class UserSelectorComponent implements OnDestroy {
 
   @Input() controlText = ''
   @Input() fediExclusive = true
-  @Output() optionSelected: EventEmitter<string> = new EventEmitter()
+  @Output() optionSelected: EventEmitter<{ remoteId: string; url: string }> = new EventEmitter()
   subscriptions: Array<Subscription> = []
   userSearchSubscription: Subscription | null = null
   usersAutocompleteOptions: SimplifiedUser[] = []

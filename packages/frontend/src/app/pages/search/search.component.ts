@@ -22,7 +22,8 @@ export class SearchComponent implements OnInit, OnDestroy {
   cacheurl = EnvironmentService.environment.externalCacheurl
   baseMediaUrl = EnvironmentService.environment.baseMediaUrl
   searchForm: UntypedFormGroup = new UntypedFormGroup({
-    search: new UntypedFormControl('', [Validators.required])
+    search: new UntypedFormControl('', [Validators.required]),
+    user: new UntypedFormControl('')
   })
   currentSearch = ''
   posts = signal<ProcessedPost[][]>([])
@@ -93,7 +94,9 @@ export class SearchComponent implements OnInit, OnDestroy {
     this.posts.set([])
     this.users.set([])
     this.currentSearch = this.searchForm.value['search']
-    const searchResult = await this.dashboardService.getSearchPage(this.currentPage, this.currentSearch)
+    const searchResult = await this.dashboardService.getSearchPage(this.currentPage, this.currentSearch, {
+      user: this.searchForm.controls['user'].value
+    })
     this.posts.set(searchResult.posts)
     this.users.set(searchResult.users)
     searchResult.users.forEach((user) => {
@@ -176,5 +179,9 @@ export class SearchComponent implements OnInit, OnDestroy {
     }
     await this.postService.loadFollowers()
     this.loading.set(false)
+  }
+
+  searchUserSelected(evt: { remoteId: string; url: string }) {
+    this.searchForm.controls['user'].patchValue(evt.url)
   }
 }

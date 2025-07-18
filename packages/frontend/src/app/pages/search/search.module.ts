@@ -15,6 +15,7 @@ import { MatTabsModule } from '@angular/material/tabs'
 import { ReuseableRouteType } from 'src/app/services/routing.service'
 import { BlogLinkModule } from 'src/app/directives/blog-link/blog-link.module'
 import { MatExpansionModule } from '@angular/material/expansion'
+import { UserSelectorComponent } from 'src/app/components/user-selector/user-selector.component'
 const routes: Routes = [
   {
     path: '',
@@ -45,7 +46,8 @@ const routes: Routes = [
     MatProgressSpinnerModule,
     MatTabsModule,
     BlogLinkModule,
-    MatExpansionModule
+    MatExpansionModule,
+    UserSelectorComponent
   ]
 })
 export class SearchModule {}
