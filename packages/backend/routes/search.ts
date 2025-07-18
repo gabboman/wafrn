@@ -226,6 +226,50 @@ export default function searchRoutes(app: Application) {
     } catch (error) {}
     if (urlString && !page) {
       // we force fetch said remote post. Nothing eslse!
+      const userPoster = await User.findByPk(posterId)
+      if (userPoster) {
+        if (
+          userPoster.enableBsky &&
+          urlString.toLowerCase().startsWith('https://bsky.app/profile/') &&
+          urlString.toLowerCase().includes('/post/')
+        ) {
+          // BSKY POST
+          try {
+            const profileAndPost = urlString.split('https://bsky.app/profile/')[1].split('/post/')
+            let bskyProfile = profileAndPost[0]
+            let bskyUri = profileAndPost[1]
+            if (!bskyProfile.startsWith('did:')) {
+              let profileToGet = await getAtprotoUser(`${bskyProfile}`, userPoster)
+              if (profileToGet && profileToGet.bskyDid) bskyProfile = profileToGet.bskyDid
+            }
+            const uri = `at://${bskyProfile}/app.bsky.feed.post/${bskyUri}`
+
+            let bskyPostId = await getAtProtoThread(uri, undefined, true)
+            if (bskyPostId) {
+              postsIds = [bskyPostId]
+            }
+          } catch (error) {
+            logger.debug({
+              message: `Error in search obtaining bsky post ${searchTerm}`,
+              error
+            })
+          }
+        } else if (!urlString.toLowerCase().startsWith('https://bsky.app/profile/')) {
+          // ok fedi post probably
+          try {
+            const remotePost = await getPostThreadRecursive(userPoster, urlString)
+            if (remotePost) {
+              await getPostThreadRecursive(userPoster, urlString, undefined, remotePost.id)
+              postsIds = [remotePost.id]
+            }
+          } catch (error) {
+            logger.debug({
+              message: `Error in search obtaining fedi post ${searchTerm}`,
+              error
+            })
+          }
+        }
+      }
     } else {
       users = searchUsers(searchTerm, posterId, page)
       postsIds = searchPosts(searchTerm, posterId, page)
@@ -234,8 +278,6 @@ export default function searchRoutes(app: Application) {
     await Promise.all([users, postsIds])
     users = await users
     postsIds = await postsIds
-    // TODO add emojis and useremojis reation search too lol
-
     const userEmojiIds = await UserEmojiRelation.findAll({
       attributes: ['emojiId', 'userId'],
       where: {
