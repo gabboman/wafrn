@@ -175,7 +175,7 @@ export default function searchRoutes(app: Application) {
       }
     })
     let localUsers =
-      localUsersCount < (page + 1) * completeEnvironment.postsPerPage
+      localUsersCount >= (page + 1) * completeEnvironment.postsPerPage
         ? User.findAll({
             where: {
               activated: true,
