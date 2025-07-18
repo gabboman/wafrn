@@ -27,7 +27,6 @@ async function AnnounceActivity(body: activityPubObject, remoteUser: User, user:
   // LEMMY HACK
   if (typeof apObject.object === 'string') {
     let urlToGet = apObject.object
-    urlToGet = urlToGet
     if (!urlToGet) {
       const error = new Error()
       logger.debug({
