@@ -122,7 +122,9 @@ export class SearchComponent implements OnInit, OnDestroy {
   }
 
   async loadResults(page: number) {
-    const searchResult = await this.dashboardService.getSearchPage(page, this.currentSearch)
+    const searchResult = await this.dashboardService.getSearchPage(page, this.currentSearch, {
+      user: this.searchForm.controls['user'].value
+    })
     searchResult.posts.forEach((post) => this.posts().push(post))
     searchResult.users.forEach((user) => {
       this.users().push(user)
