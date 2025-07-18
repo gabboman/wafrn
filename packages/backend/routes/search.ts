@@ -268,17 +268,7 @@ export default function searchRoutes(app: Application) {
           required: true,
           attributes: ['id', 'userId', 'privacy'],
           where: {
-            [Op.or]: [
-              {
-                privacy: { [Op.in]: [Privacy.Public, Privacy.LocalOnly] }
-              },
-              {
-                userId: {
-                  [Op.in]: followedUsers
-                },
-                privacy: Privacy.FollowersOnly
-              }
-            ]
+            privacy: { [Op.in]: [Privacy.Public, Privacy.LocalOnly] }
           }
         }
       ]
@@ -299,17 +289,7 @@ export default function searchRoutes(app: Application) {
             required: true,
             attributes: ['id', 'userId', 'privacy'],
             where: {
-              [Op.or]: [
-                {
-                  privacy: { [Op.in]: [Privacy.Public, Privacy.LocalOnly] }
-                },
-                {
-                  userId: {
-                    [Op.in]: followedUsers
-                  },
-                  privacy: Privacy.FollowersOnly
-                }
-              ]
+              privacy: { [Op.in]: [Privacy.Public, Privacy.LocalOnly] }
             }
           }
         ],
@@ -334,17 +314,7 @@ export default function searchRoutes(app: Application) {
             required: true,
             attributes: ['id', 'userId', 'privacy'],
             where: {
-              [Op.or]: [
-                {
-                  privacy: { [Op.in]: [Privacy.Public, Privacy.LocalOnly] }
-                },
-                {
-                  userId: {
-                    [Op.in]: followedUsers
-                  },
-                  privacy: Privacy.FollowersOnly
-                }
-              ]
+              privacy: { [Op.in]: [Privacy.Public, Privacy.LocalOnly] }
             }
           }
         ],
