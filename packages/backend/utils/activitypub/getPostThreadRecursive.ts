@@ -26,6 +26,7 @@ import { bulkCreateNotifications } from '../pushNotifications.js'
 import { getDeletedUser } from '../cacheGetters/getDeletedUser.js'
 import { Privacy } from '../../models/post.js'
 import { getAtProtoThread } from '../../atproto/utils/getAtProtoThread.js'
+import * as cheerio from 'cheerio'
 
 const updateMediaDataQueue = new Queue('processRemoteMediaData', {
   connection: completeEnvironment.bullmqConnection,
@@ -135,7 +136,11 @@ async function getPostThreadRecursive(
         const fediTags: fediverseTag[] = [
           ...new Set<fediverseTag>(
             postPetition.tag
-              ?.filter((elem: fediverseTag) => ['Hashtag', 'WafrnHashtag'].includes(elem.type))
+              ?.filter((elem: fediverseTag) =>
+                [
+                  postPetition.tag.some((tag: fediverseTag) => tag.type == 'WafrnHashtag') ? 'WafrnHashtag' : 'Hashtag'
+                ].includes(elem.type)
+              )
               .map((elem: fediverseTag) => {
                 return { href: elem.href, type: elem.type, name: elem.name }
               })
@@ -155,6 +160,12 @@ async function getPostThreadRecursive(
         if (postPetition.type == 'Video') {
           // peertube federation. We just add a link to the video, federating this is HELL
           postTextContent = postTextContent + ` <a href="${postPetition.id}" target="_blank">${postPetition.id}</a>`
+        }
+        if (postPetition.tag && postPetition.tag.some((tag: fediverseTag) => tag.type === 'WafrnHashtag')) {
+          // Ok we have wafrn hashtags with us, we are probably talking with another wafrn! Crazy, I know
+          const dom = cheerio.load(postTextContent)
+          const tags = dom('a.hashtag').html('')
+          postTextContent = dom.html()
         }
         if (
           postPetition.attachment &&
