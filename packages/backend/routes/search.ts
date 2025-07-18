@@ -286,7 +286,7 @@ export default function searchRoutes(app: Application) {
     let completeMatch: Promise<PostTag[]> | PostTag[] | null = null
     let looseMatch: Promise<PostTag[]> | PostTag[] | null = null
 
-    if (totalPostExactMatch < (page + 1) * completeEnvironment.postsPerPage) {
+    if (totalPostExactMatch >= (page + 1) * completeEnvironment.postsPerPage) {
       completeMatch = PostTag.findAll({
         where: {
           tagName: {
@@ -324,7 +324,7 @@ export default function searchRoutes(app: Application) {
       message: `SEARCH: ${searchTerm}`,
       totalPostExactMatch,
       page,
-      forceFirstPage: totalPostExactMatch < (page + 1) * completeEnvironment.postsPerPage,
+      forceFirstPage: totalPostExactMatch >= (page + 1) * completeEnvironment.postsPerPage,
       exactMatchOffset: page * completeEnvironment.postsPerPage,
       looseSearchPage
     })
