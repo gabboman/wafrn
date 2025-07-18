@@ -226,7 +226,9 @@ export default function searchRoutes(app: Application) {
       let tmpRemote = await remoteUsers
       res = res.concat(tmpRemote as User[])
     }
-    return res
+    // we want to check that we dont get duplicated users
+    const resUrls = res.map((elem) => elem.url)
+    return res.filter((elem, index) => resUrls.indexOf(elem.url) == index)
   }
 
   async function searchUserFediAndbsky(searchTermIncomplete: string, usr: User): Promise<User | null> {
