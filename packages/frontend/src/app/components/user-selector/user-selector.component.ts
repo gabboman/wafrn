@@ -53,6 +53,10 @@ export class UserSelectorComponent implements OnDestroy {
     })
   }
 
+  autoCompleteDisplay(option: { remoteId: string; url: string }) {
+    return option.url
+  }
+
   ngOnDestroy(): void {
     for (const subscription of this.subscriptions) {
       subscription.unsubscribe()
