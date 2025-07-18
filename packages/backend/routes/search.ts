@@ -200,6 +200,16 @@ export default function searchRoutes(app: Application) {
     })
   })
 
+  app.get('/api/userSearch/:term', authenticateToken, async (req: AuthorizedRequest, res: Response) => {
+    const posterId = req.jwtData?.userId ? req.jwtData.userId : '00000000-0000-0000-0000-000000000000'
+    // const success = false;
+    let users: any = []
+    const searchTerm = req.params.term.trim()
+    users = await searchUsers(searchTerm, posterId, 0)
+    res.send({
+      users
+    })
+  })
   /* TODO: Define what we want properly
    * This new endpoint will
    * always return posts: [] and users: []
@@ -224,8 +234,8 @@ export default function searchRoutes(app: Application) {
     const page = Number(req?.query.page) || 0
 
     let urlString = ''
-    let postsIds: string[] = []
-    let users: User[] = []
+    let postsIds: Promise<string[]> | string[] = []
+    let users: Promise<User[]> | User[] = []
 
     try {
       urlString = new URL(searchTerm).href
@@ -233,14 +243,18 @@ export default function searchRoutes(app: Application) {
     if (urlString && !page) {
       // we force fetch said remote post. Nothing eslse!
     } else {
-      users = await searchUsers(searchTerm, posterId, page)
+      users = searchUsers(searchTerm, posterId, page)
+      postsIds = searchPosts(searchTerm, posterId, page)
     }
 
+    await Promise.all([users, postsIds])
+    users = await users
+    postsIds = await postsIds
     // TODO add emojis and useremojis reation search too lol
     res.send({
       emojis: [],
       userEmojiIds: [],
-      foundUsers: await users,
+      foundUsers: users,
       posts: await getUnjointedPosts(postsIds, posterId, true)
     })
   })
@@ -300,9 +314,9 @@ export default function searchRoutes(app: Application) {
             offset: page * completeEnvironment.postsPerPage
           })
         : []
-
+    const remoteUsersPage = page - Math.floor(localUsersCount / completeEnvironment.postsPerPage)
     let remoteUsers =
-      localUsersCount >= page * completeEnvironment.postsPerPage
+      remoteUsersPage >= 0
         ? User.findAll({
             where: {
               activated: true,
@@ -328,7 +342,7 @@ export default function searchRoutes(app: Application) {
             attributes: ['url', 'avatar', 'id', 'remoteId', 'federatedHostId'],
             order: [['createdAt', 'DESC']],
             limit: completeEnvironment.postsPerPage,
-            offset: page * completeEnvironment.postsPerPage
+            offset: remoteUsersPage * completeEnvironment.postsPerPage
           })
         : []
 
@@ -370,14 +384,118 @@ export default function searchRoutes(app: Application) {
     return result
   }
 
-  app.get('/api/userSearch/:term', authenticateToken, async (req: AuthorizedRequest, res: Response) => {
-    const posterId = req.jwtData?.userId ? req.jwtData.userId : '00000000-0000-0000-0000-000000000000'
-    // const success = false;
-    let users: any = []
-    const searchTerm = req.params.term.trim()
-    users = await searchUsers(searchTerm, posterId, 0)
-    res.send({
-      users
+  // this method will only search posts in the database localy, not remote petitions
+  // petitions of remote posts shall be done in the search endpoint itself
+  async function searchPosts(searchTerm: string, userId: string, page = 0): Promise<string[]> {
+    let res: string[] = []
+    const followedUsers = (await getFollowedsIds(userId)).concat([userId])
+    const totalPostExactMatch = await PostTag.count({
+      where: {
+        tagName: {
+          [Op.iLike]: searchTerm
+        }
+      },
+      include: [
+        {
+          model: Post,
+          required: true,
+          attributes: ['id', 'userId', 'privacy'],
+          where: {
+            [Op.or]: [
+              {
+                privacy: { [Op.in]: [Privacy.Public, Privacy.LocalOnly] }
+              },
+              {
+                userId: {
+                  [Op.in]: followedUsers
+                },
+                privacy: Privacy.FollowersOnly
+              }
+            ]
+          }
+        }
+      ]
     })
-  })
+    let completeMatch: Promise<PostTag[]> | PostTag[] | null = null
+    let looseMatch: Promise<PostTag[]> | PostTag[] | null = null
+
+    if (totalPostExactMatch < (page + 1) * completeEnvironment.postsPerPage) {
+      completeMatch = PostTag.findAll({
+        where: {
+          tagName: {
+            [Op.iLike]: searchTerm
+          }
+        },
+        include: [
+          {
+            model: Post,
+            required: true,
+            attributes: ['id', 'userId', 'privacy'],
+            where: {
+              [Op.or]: [
+                {
+                  privacy: { [Op.in]: [Privacy.Public, Privacy.LocalOnly] }
+                },
+                {
+                  userId: {
+                    [Op.in]: followedUsers
+                  },
+                  privacy: Privacy.FollowersOnly
+                }
+              ]
+            }
+          }
+        ],
+        attributes: ['postId'],
+        order: [['createdAt', 'DESC']],
+        limit: completeEnvironment.postsPerPage,
+        offset: page * completeEnvironment.postsPerPage
+      })
+    }
+    const looseSearchPage = page - Math.floor(totalPostExactMatch / completeEnvironment.postsPerPage)
+    if (looseSearchPage >= 0) {
+      looseMatch = PostTag.findAll({
+        where: {
+          tagName: {
+            [Op.iLike]: '%' + searchTerm + '%',
+            [Op.notILike]: searchTerm
+          }
+        },
+        include: [
+          {
+            model: Post,
+            required: true,
+            attributes: ['id', 'userId', 'privacy'],
+            where: {
+              [Op.or]: [
+                {
+                  privacy: { [Op.in]: [Privacy.Public, Privacy.LocalOnly] }
+                },
+                {
+                  userId: {
+                    [Op.in]: followedUsers
+                  },
+                  privacy: Privacy.FollowersOnly
+                }
+              ]
+            }
+          }
+        ],
+        attributes: ['postId'],
+        order: [['createdAt', 'DESC']],
+        limit: completeEnvironment.postsPerPage,
+        offset: looseSearchPage * completeEnvironment.postsPerPage
+      })
+    }
+    await Promise.all([completeMatch, looseMatch])
+    completeMatch = await completeMatch
+    looseMatch = await looseMatch
+    if (completeMatch && completeMatch.length > 0) {
+      res = res.concat(completeMatch.map((elem) => elem.postId))
+    }
+    if (looseMatch && looseMatch.length > 0) {
+      res = res.concat(looseMatch.map((elem) => elem.postId))
+    }
+    return res
+  }
 }
