@@ -255,28 +255,19 @@ export default function searchRoutes(app: Application) {
   // petitions of remote posts shall be done in the search endpoint itself
   async function searchPosts(searchTerm: string, userId: string, page = 0): Promise<string[]> {
     let res: string[] = []
-    const followedUsers = (await getFollowedsIds(userId)).concat([userId])
-    const totalPostExactMatch = await PostTag.count({
-      where: {
-        tagName: {
-          [Op.iLike]: searchTerm
+    const totalPostExactMatchQuery: any = await sequelize.query(
+      `SELECT count(*) AS "count" FROM (select 1 from "postTags" AS "postTags" INNER JOIN "posts" AS "post" ON "postTags"."postId" = "post"."id" AND "post"."privacy" IN (0, 2) WHERE "postTags"."tagName" ILIKE ':searchParam' limit 5000);`,
+      {
+        replacements: {
+          searchParam: searchTerm
         }
-      },
-      include: [
-        {
-          model: Post,
-          required: true,
-          attributes: ['id', 'userId', 'privacy'],
-          where: {
-            privacy: { [Op.in]: [Privacy.Public, Privacy.LocalOnly] }
-          }
-        }
-      ]
-    })
+      }
+    )
+    const totalPostExactMatch = totalPostExactMatchQuery[0][0].count
     let completeMatch: Promise<PostTag[]> | PostTag[] | null = null
     let looseMatch: Promise<PostTag[]> | PostTag[] | null = null
 
-    if (totalPostExactMatch >= (page + 1) * completeEnvironment.postsPerPage) {
+    if (totalPostExactMatch >= (page + 1) * completeEnvironment.postsPerPage || totalPostExactMatch == 10000) {
       completeMatch = PostTag.findAll({
         where: {
           tagName: {
