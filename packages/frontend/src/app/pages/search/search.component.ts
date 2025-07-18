@@ -118,7 +118,7 @@ export class SearchComponent implements OnInit, OnDestroy {
       if (element) {
         observer.observe(element)
       }
-    })
+    }, 250)
   }
 
   async loadResults(page: number) {

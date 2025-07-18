@@ -64,6 +64,7 @@ export default function searchRoutes(app: Application) {
       const userPoster = await User.findByPk(posterId)
       if (userPoster) {
         if (
+          completeEnvironment.enableBsky &&
           userPoster.enableBsky &&
           urlString.toLowerCase().startsWith('https://bsky.app/profile/') &&
           urlString.toLowerCase().includes('/post/')
@@ -175,7 +176,7 @@ export default function searchRoutes(app: Application) {
       }
     })
     let localUsers =
-      localUsersCount >= (page + 1) * completeEnvironment.postsPerPage
+      localUsersCount >= page * completeEnvironment.postsPerPage
         ? User.findAll({
             where: {
               activated: true,
@@ -254,7 +255,12 @@ export default function searchRoutes(app: Application) {
     const searchTermSplitted = searchTerm.split('@')
     let result: User | null = null
 
-    if (usr.enableBsky && searchTermSplitted.length === 2 && searchTermSplitted[0] == '') {
+    if (
+      completeEnvironment.enableBsky &&
+      usr.enableBsky &&
+      searchTermSplitted.length === 2 &&
+      searchTermSplitted[0] == ''
+    ) {
       const bskySearchResult = await getAtprotoUser(searchTerm.split('@')[1], usr)
       if (bskySearchResult && bskySearchResult.url != completeEnvironment.deletedUser) {
         result = bskySearchResult
@@ -300,7 +306,7 @@ export default function searchRoutes(app: Application) {
     if (options?.userId) {
       postsWhereObject = { ...postsWhereObject, userId: options.userId }
     }
-    if (totalPostExactMatch >= (page + 1) * completeEnvironment.postsPerPage || totalPostExactMatch == 10000) {
+    if (totalPostExactMatch >= page * completeEnvironment.postsPerPage || totalPostExactMatch == 10000) {
       completeMatch = PostTag.findAll({
         where: {
           tagName: {
