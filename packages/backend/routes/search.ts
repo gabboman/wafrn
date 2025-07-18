@@ -201,11 +201,12 @@ export default function searchRoutes(app: Application) {
         ? User.findAll({
             where: {
               activated: true,
+              email: null,
               banned: {
                 [Op.ne]: true
               },
               url: {
-                [Op.iLike]: `@%${searchTerm}%`
+                [Op.iLike]: `%${searchTerm}%`
               },
               [Op.or]: [
                 {
