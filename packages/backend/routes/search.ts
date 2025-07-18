@@ -39,11 +39,23 @@ export default function searchRoutes(app: Application) {
     // const success = false;
     const searchTerm = (req.query.term || '').toString().trim()
     const page = Number(req?.query.page) || 0
-
+    const forceSearchUser = (req.query.user || '').toString().trim()
+    let forceSearchUserId: string | undefined = undefined
     let urlString = ''
     let postsIds: Promise<string[]> | string[] = []
     let users: Promise<User[]> | User[] = []
-
+    if (forceSearchUser != '') {
+      const forceSearchUserObject = await User.findOne({
+        where: {
+          url: {
+            [Op.iLike]: forceSearchUser
+          }
+        }
+      })
+      if (forceSearchUserObject) {
+        forceSearchUserId = forceSearchUserObject.id
+      }
+    }
     try {
       urlString = new URL(searchTerm).href
     } catch (error) {}
@@ -95,7 +107,9 @@ export default function searchRoutes(app: Application) {
       }
     } else {
       users = searchUsers(searchTerm, posterId, page)
-      postsIds = searchPosts(searchTerm, posterId, page)
+      postsIds = searchPosts(searchTerm, posterId, page, {
+        userId: forceSearchUserId
+      })
     }
 
     await Promise.all([users, postsIds])
@@ -255,10 +269,20 @@ export default function searchRoutes(app: Application) {
 
   // this method will only search posts in the database localy, not remote petitions
   // petitions of remote posts shall be done in the search endpoint itself
-  async function searchPosts(searchTerm: string, userId: string, page = 0): Promise<string[]> {
+  async function searchPosts(
+    searchTerm: string,
+    userId: string,
+    page: number,
+    options?: {
+      // optional options: userId: if userid we only search posts from said user
+      userId?: string
+    }
+  ): Promise<string[]> {
     let res: string[] = []
     const totalPostExactMatchQuery: any = await sequelize.query(
-      `SELECT count(*) AS "count" FROM (select 1 from "postTags" AS "postTags" INNER JOIN "posts" AS "post" ON "postTags"."postId" = "post"."id" AND "post"."privacy" IN (0, 2) WHERE "postTags"."tagName" ILIKE ':searchParam' limit 5000);`,
+      `SELECT count(*) AS "count" FROM (select 1 from "postTags" AS "postTags" INNER JOIN "posts" AS "post" ON "postTags"."postId" = "post"."id" AND "post"."privacy" IN (0, 2) ${
+        options?.userId ? 'AND "post"."userId" = \'' + options.userId + "'" : ''
+      } WHERE "postTags"."tagName" ILIKE ':searchParam' limit 5000);`,
       {
         replacements: {
           searchParam: searchTerm
@@ -269,6 +293,12 @@ export default function searchRoutes(app: Application) {
     let completeMatch: Promise<PostTag[]> | PostTag[] | null = null
     let looseMatch: Promise<PostTag[]> | PostTag[] | null = null
 
+    let postsWhereObject: any = {
+      privacy: { [Op.in]: [Privacy.Public, Privacy.LocalOnly] }
+    }
+    if (options?.userId) {
+      postsWhereObject = { ...postsWhereObject, userId: options.userId }
+    }
     if (totalPostExactMatch >= (page + 1) * completeEnvironment.postsPerPage || totalPostExactMatch == 10000) {
       completeMatch = PostTag.findAll({
         where: {
@@ -281,9 +311,7 @@ export default function searchRoutes(app: Application) {
             model: Post,
             required: true,
             attributes: ['id', 'userId', 'privacy'],
-            where: {
-              privacy: { [Op.in]: [Privacy.Public, Privacy.LocalOnly] }
-            }
+            where: postsWhereObject
           }
         ],
         attributes: ['postId'],
@@ -306,9 +334,7 @@ export default function searchRoutes(app: Application) {
             model: Post,
             required: true,
             attributes: ['id', 'userId', 'privacy'],
-            where: {
-              privacy: { [Op.in]: [Privacy.Public, Privacy.LocalOnly] }
-            }
+            where: postsWhereObject
           }
         ],
         attributes: ['postId'],
