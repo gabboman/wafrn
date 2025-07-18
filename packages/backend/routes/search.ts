@@ -320,6 +320,14 @@ export default function searchRoutes(app: Application) {
       })
     }
     const looseSearchPage = page - Math.floor(totalPostExactMatch / completeEnvironment.postsPerPage)
+    logger.info({
+      message: `SEARCH: ${searchTerm}`,
+      totalPostExactMatch,
+      page,
+      forceFirstPage: totalPostExactMatch < (page + 1) * completeEnvironment.postsPerPage,
+      exactMatchOffset: page * completeEnvironment.postsPerPage,
+      looseSearchPage
+    })
     if (looseSearchPage >= 0) {
       looseMatch = PostTag.findAll({
         where: {
