@@ -210,22 +210,6 @@ export default function searchRoutes(app: Application) {
       users
     })
   })
-  /* TODO: Define what we want properly
-   * This new endpoint will
-   * always return posts: [] and users: []
-   * if user not logged in will use LOCAL posts only with EXACT hashtags
-   * it will never return users
-   * if user logged in
-   * options:
-   * url => (THIS ONE WILL BE COMPUTED IN BACKEND) If the search term we recive is an URL our ONLY course of action is to check if said url is a fedi/bsky post and fetch ONLY that one!
-   * exactHashtagMatch => as name implies. Will ignore upper and lower case tho.
-   * localOnly => will return results of regular posts AND local only posts / users
-   * TRY %term% now that we have GIN indexes
-   * excludeCW => as name implies. We will check only based on "post has cw"
-   * onlyCW => horny mode. Posts returned will only be ones with CW.
-   * if search has @: SEARCH USER MODE. Will only return users that @search. Will search fedi and bsky if user has bsky enabled
-   *
-   */
 
   app.get('/api/v3/search', authenticateToken, async (req: AuthorizedRequest, res: Response) => {
     const posterId = req.jwtData?.userId ? req.jwtData.userId : '00000000-0000-0000-0000-000000000000'
@@ -251,9 +235,27 @@ export default function searchRoutes(app: Application) {
     users = await users
     postsIds = await postsIds
     // TODO add emojis and useremojis reation search too lol
+
+    const userEmojiIds = await UserEmojiRelation.findAll({
+      attributes: ['emojiId', 'userId'],
+      where: {
+        userId: {
+          [Op.in]: users.map((elem) => elem.id)
+        }
+      }
+    })
+    const emojiIds = userEmojiIds.map((e: any) => e.emojiId)
+    const emojis = await Emoji.findAll({
+      attributes: ['id', 'url', 'external', 'name'],
+      where: {
+        id: {
+          [Op.in]: emojiIds
+        }
+      }
+    })
     res.send({
-      emojis: [],
-      userEmojiIds: [],
+      emojis,
+      userEmojiIds,
       foundUsers: users,
       posts: await getUnjointedPosts(postsIds, posterId, true)
     })
