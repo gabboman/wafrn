@@ -14,16 +14,16 @@ import getFollowedsIds from '../utils/cacheGetters/getFollowedsIds.js'
 import { getNotYetAcceptedFollowedids } from '../utils/cacheGetters/getNotYetAcceptedFollowedIds.js'
 import { getUserOptions } from '../utils/cacheGetters/getUserOptions.js'
 import { getMutedPosts } from '../utils/cacheGetters/getMutedPosts.js'
-import { environment } from '../environment.js'
 import { getAtProtoSession } from '../atproto/utils/getAtProtoSession.js'
 import { forceUpdateCacheDidsAtThread, getCacheAtDids } from '../atproto/cache/getCacheAtDids.js'
+import { completeEnvironment } from '../utils/backendOptions.js'
 
 export default function followsRoutes(app: Application) {
   // TODO refactor? It works, but I have a few res.send and thats not nice!
   app.post('/api/follow', authenticateToken, async (req: AuthorizedRequest, res: Response) => {
     let success = false
     try {
-      const posterId = req.jwtData?.userId ? req.jwtData.userId : environment.deletedUser
+      const posterId = req.jwtData?.userId ? req.jwtData.userId : completeEnvironment.deletedUser
       const options = await getUserOptions(posterId)
       const userFederatesWithThreads = options.filter(
         (elem) => elem.optionName === 'wafrn.federateWithThreads' && elem.optionValue === 'true'

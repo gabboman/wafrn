@@ -1,4 +1,4 @@
-import { environment } from '../../environment.js'
+import { completeEnvironment } from '../backendOptions.js'
 import { activityPubObject } from '../../interfaces/fediverse/activityPubObject.js'
 import { User } from '../../models/user.js'
 import { postPetitionSigned } from './postPetitionSigned.js'
@@ -6,9 +6,9 @@ import { postPetitionSigned } from './postPetitionSigned.js'
 async function signAndAccept(req: any, remoteUser: User, user: User) {
   const acceptMessage: activityPubObject = {
     '@context': 'https://www.w3.org/ns/activitystreams',
-    id: `${environment.frontendUrl}/fediverse/accept/${encodeURIComponent(req.body.id)}`,
+    id: `${completeEnvironment.frontendUrl}/fediverse/accept/${encodeURIComponent(req.body.id)}`,
     type: 'Accept',
-    actor: `${environment.frontendUrl}/fediverse/blog/${(await user).url.toLowerCase()}`,
+    actor: `${completeEnvironment.frontendUrl}/fediverse/blog/${(await user).url.toLowerCase()}`,
     object: req.body
   }
   if (remoteUser.remoteInbox === '') {

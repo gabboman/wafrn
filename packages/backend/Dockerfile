@@ -1,5 +1,5 @@
 # Build stage
-FROM node:22-alpine AS build
+FROM node:24-alpine AS build
 
 # include important binaries
 RUN apk add --no-cache perl curl tini bash

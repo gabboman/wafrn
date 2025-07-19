@@ -1,5 +1,5 @@
-import { environment } from '../environment.js'
 import { Redis } from 'ioredis'
-const redisCache = new Redis(environment.redisioConnection)
+import { completeEnvironment } from './backendOptions.js'
+const redisCache = new Redis(completeEnvironment.redisioConnection)
 
 export { redisCache }

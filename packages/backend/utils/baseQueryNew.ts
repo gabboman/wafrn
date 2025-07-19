@@ -22,11 +22,11 @@ import {
 import getPosstGroupDetails from './getPostGroupDetails.js'
 import getFollowedsIds from './cacheGetters/getFollowedsIds.js'
 import { Queue } from 'bullmq'
-import { environment } from '../environment.js'
+import { completeEnvironment } from './backendOptions.js'
 import { Privacy } from '../models/post.js'
 
 const updateMediaDataQueue = new Queue('processRemoteMediaData', {
-  connection: environment.bullmqConnection,
+  connection: completeEnvironment.bullmqConnection,
   defaultJobOptions: {
     removeOnComplete: true,
     attempts: 3,

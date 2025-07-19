@@ -1,6 +1,6 @@
 import { Op } from 'sequelize'
 import { Post, User } from '../../models/index.js'
-import { environment } from '../../environment.js'
+import { completeEnvironment } from '../backendOptions.js'
 import { redisCache } from '../redis.js'
 import { Privacy } from '../../models/post.js'
 
@@ -43,7 +43,7 @@ async function getPostReplies(postId: string) {
     })
     resString = JSON.stringify(
       posts.map((elem: any) =>
-        elem.remotePostId ? elem.remotePostId : `${environment.frontendUrl}/fediverse/post/${elem.id}`
+        elem.remotePostId ? elem.remotePostId : `${completeEnvironment.frontendUrl}/fediverse/post/${elem.id}`
       )
     )
     await redisCache.set('postReplies:' + postId, resString, 'EX', 60)

@@ -1,3 +1,5 @@
+#!/bin/bash
+
 # Use this to update the admin user in Wafrn to support login to the bsky PDS instance
 
 SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )

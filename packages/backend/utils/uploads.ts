@@ -1,6 +1,6 @@
 import multer from 'multer'
 import generateRandomString from './generateRandomString.js'
-import { environment } from '../environment.js'
+import { completeEnvironment } from './backendOptions.js'
 
 const imageStorage = multer.diskStorage({
   // Destination to store image
@@ -17,7 +17,7 @@ function uploadHandler(extensionsRegex?: RegExp, storage?: multer.StorageEngine)
   return multer({
     storage: storage ? storage : imageStorage,
     limits: {
-      fileSize: environment.uploadLimit * 1024 * 1024 // 15 MB.
+      fileSize: completeEnvironment.uploadLimit * 1024 * 1024 // 15 MB.
     },
     fileFilter(req, file, cb) {
       const name = file.originalname.toLowerCase()

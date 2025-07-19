@@ -1,7 +1,7 @@
 import { Op } from 'sequelize'
 import { User } from '../../models/index.js'
 import { wait } from '../wait.js'
-import { environment } from '../../environment.js'
+import { completeEnvironment } from '../backendOptions.js'
 import sendActivationEmail from '../sendActivationEmail.js'
 
 const usersNotVerified = await User.findAll({
@@ -21,12 +21,12 @@ for await (const user of usersNotVerified.filter((elem) => !!elem)) {
   console.log(`Sending email to user ${user.url} with email ${user.email}`)
   const mailHeader = `Helo ${user.url}, your email is still not verified!`
   const mailBody = `<h1>We maaaay have commited a small whoopsie on ${
-    environment.instanceUrl
+    completeEnvironment.instanceUrl
   } regarding the previous email verification email</h1>
-  <p>Please click here to verify your email <a href="${environment.instanceUrl}/activate/${encodeURIComponent(
+  <p>Please click here to verify your email <a href="${completeEnvironment.instanceUrl}/activate/${encodeURIComponent(
     user.email as string
   )}/${user.activationCode}">click here!</a>. If you can not see the link correctly please copy this link:
-              ${environment.instanceUrl}/activate/${encodeURIComponent((user.email as string).toLowerCase())}/${
+              ${completeEnvironment.instanceUrl}/activate/${encodeURIComponent((user.email as string).toLowerCase())}/${
     user.activationCode
   }
              </p> 

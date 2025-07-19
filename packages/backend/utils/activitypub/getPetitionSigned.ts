@@ -1,5 +1,5 @@
 import { createHash, createSign } from 'node:crypto'
-import { environment } from '../../environment.js'
+import { completeEnvironment } from '../backendOptions.js'
 import axios from 'axios'
 import { logger } from '../logger.js'
 import { User } from '../../models/index.js'
@@ -15,25 +15,27 @@ async function getPetitionSigned(user: any, target: string): Promise<any> {
     const acceptedFormats = 'application/activity+json,application/json'
     const signingOptions = {
       key: privKey,
-      keyId: `${environment.frontendUrl}/fediverse/blog/${user.url.toLocaleLowerCase()}#main-key`,
+      keyId: `${completeEnvironment.frontendUrl}/fediverse/blog/${user.url.toLocaleLowerCase()}#main-key`,
       algorithm: 'rsa-sha256',
       authorizationHeaderName: 'signature',
       headers: ['(request-target)', 'host', 'date', 'accept']
     }
     const sendDate = new Date()
-    const stringToSign = `(request-target): get ${url.pathname}\nhost: ${url.host
-      }\ndate: ${sendDate.toUTCString()}\naccept: ${acceptedFormats}`
+    const stringToSign = `(request-target): get ${url.pathname}\nhost: ${
+      url.host
+    }\ndate: ${sendDate.toUTCString()}\naccept: ${acceptedFormats}`
 
     const digest = createHash('sha256').update(stringToSign).digest('base64')
     const signer = createSign('sha256')
     signer.update(stringToSign)
     signer.end()
     const signature = signer.sign(user.privateKey).toString('base64')
-    const header = `keyId="${environment.frontendUrl
-      }/fediverse/blog/${user.url.toLocaleLowerCase()}#main-key",algorithm="rsa-sha256",headers="(request-target) host date accept",signature="${signature}"`
+    const header = `keyId="${
+      completeEnvironment.frontendUrl
+    }/fediverse/blog/${user.url.toLocaleLowerCase()}#main-key",algorithm="rsa-sha256",headers="(request-target) host date accept",signature="${signature}"`
     const headers = {
       'Content-Type': 'application/activity+json',
-      'User-Agent': environment.instanceUrl,
+      'User-Agent': completeEnvironment.instanceUrl,
       Accept: acceptedFormats,
       Algorithm: 'rsa-sha256',
       Host: url.host,

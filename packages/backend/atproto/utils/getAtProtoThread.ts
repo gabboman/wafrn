@@ -2,7 +2,6 @@
 import { getAtProtoSession } from './getAtProtoSession.js'
 import { QueryParams } from '@atproto/sync/dist/firehose/lexicons.js'
 import { Media, Notification, Post, PostMentionsUserRelation, PostTag, Quotes, User } from '../../models/index.js'
-import { environment } from '../../environment.js'
 import { Model, Op } from 'sequelize'
 import { PostView, ThreadViewPost } from '@atproto/api/dist/client/types/app/bsky/feed/defs.js'
 import { getAtprotoUser, forcePopulateUsers } from './getAtprotoUser.js'
@@ -14,6 +13,8 @@ import { bulkCreateNotifications, createNotification } from '../../utils/pushNot
 import { getAllLocalUserIds } from '../../utils/cacheGetters/getAllLocalUserIds.js'
 import { Privacy } from '../../models/post.js'
 import { wait } from '../../utils/wait.js'
+import { UpdatedAt } from 'sequelize-typescript'
+import { completeEnvironment } from '../../utils/backendOptions.js'
 
 const markdownConverter = new showdown.Converter({
   simplifiedAutoLink: true,
@@ -26,10 +27,10 @@ const markdownConverter = new showdown.Converter({
 
 const adminUser = User.findOne({
   where: {
-    url: environment.adminUser
+    url: completeEnvironment.adminUser
   }
 })
-const agent = environment.enableBsky ? await getAtProtoSession((await adminUser) || undefined) : undefined
+const agent = completeEnvironment.enableBsky ? await getAtProtoSession((await adminUser) || undefined) : undefined
 
 async function getAtProtoThread(
   uri: string,
@@ -166,12 +167,15 @@ async function processSinglePost(
     })
   }
   if (!postCreator || !post) {
-    const usr = postCreator ? postCreator : await User.findOne({ where: { url: environment.deletedUser } })
+    const usr = postCreator ? postCreator : await User.findOne({ where: { url: completeEnvironment.deletedUser } })
 
     const invalidPost = await Post.create({
       userId: usr?.id,
       content: `Failed to get atproto post`,
-      parentId: parentId
+      parentId: parentId,
+      isDeleted: true,
+      createdAt: new Date(0),
+      updatedAt: new Date(0)
     })
     return invalidPost.id
   }
@@ -209,10 +213,10 @@ async function processSinglePost(
           const href = segment.link?.uri
           text += `<a href="${href}" target="_blank">${href}</a>`
         } else if (segment.isMention()) {
-          const href = `${environment.frontendUrl}/blog/${segment.mention?.did}`
+          const href = `${completeEnvironment.frontendUrl}/blog/${segment.mention?.did}`
           text += `<a href="${href}" target="_blank">${segment.text}</a>`
         } else if (segment.isTag()) {
-          const href = `${environment.frontendUrl}/dashboard/search/${segment.text.substring(1)}`
+          const href = `${completeEnvironment.frontendUrl}/dashboard/search/${segment.text.substring(1)}`
           text += `<a href="${href}" target="_blank">${segment.text}</a>`
           tags.push(segment.text.substring(1))
         } else {

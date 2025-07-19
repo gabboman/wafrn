@@ -1,14 +1,14 @@
 import { Follows, User } from '../../../models/index.js'
-import { environment } from '../../../environment.js'
 import { activityPubObject } from '../../../interfaces/fediverse/activityPubObject.js'
 import { redisCache } from '../../redis.js'
 import { signAndAccept } from '../signAndAccept.js'
+import { completeEnvironment } from '../../backendOptions.js'
 
 async function AcceptActivity(body: activityPubObject, remoteUser: User, user: User) {
   const apObject: activityPubObject = body.object
-  if (apObject.type === 'Follow' && apObject.id.startsWith(environment.frontendUrl)) {
+  if (apObject.type === 'Follow' && apObject.id.startsWith(completeEnvironment.frontendUrl)) {
     const followUrl = apObject.id
-    const partToRemove = `${environment.frontendUrl}/fediverse/follows/`
+    const partToRemove = `${completeEnvironment.frontendUrl}/fediverse/follows/`
     const follows = followUrl.substring(partToRemove.length).split('/')
     if (follows.length === 2) {
       const followToUpdate = await Follows.findOne({

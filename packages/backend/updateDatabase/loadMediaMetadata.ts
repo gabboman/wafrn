@@ -1,10 +1,10 @@
 import { Queue } from 'bullmq'
 import { Media } from '../models/index.js'
-import { environment } from '../environment.js'
 import { Op } from 'sequelize'
+import { completeEnvironment } from '../utils/backendOptions.js'
 
 const updateMediaDataQueue = new Queue('processRemoteMediaData', {
-  connection: environment.bullmqConnection,
+  connection: completeEnvironment.bullmqConnection,
   defaultJobOptions: {
     removeOnComplete: true,
     attempts: 3,

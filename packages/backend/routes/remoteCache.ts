@@ -4,17 +4,17 @@ import fs from 'fs'
 import axios, { AxiosResponse } from 'axios'
 import { logger } from '../utils/logger.js'
 import optimizeMedia from '../utils/optimizeMedia.js'
-import { environment } from '../environment.js'
 import { Resolver } from 'did-resolver'
 import { getResolver } from 'plc-did-resolver'
 import { redisCache } from '../utils/redis.js'
 import { getLinkPreview } from 'link-preview-js'
 import { linkPreviewRateLimiter } from '../utils/rateLimiters.js'
 import { getMimeType } from 'stream-mime-type'
+import { completeEnvironment } from '../utils/backendOptions.js'
 
 function sendWithCache(res: Response, localFileName: string) {
   // Does the .mime file exist?
-  if(fs.existsSync(localFileName + '.mime')){
+  if (fs.existsSync(localFileName + '.mime')) {
     let mime = fs.readFileSync(localFileName + '.mime').toString()
     res.contentType(mime)
   }
@@ -83,7 +83,7 @@ export default function cacheRoutes(app: Application) {
           responseType: 'stream',
           headers: { 'User-Agent': 'wafrnCacher' }
         })
-        const { stream, mime } = await getMimeType( response.data );
+        const { stream, mime } = await getMimeType(response.data)
         res.contentType(mime)
         stream.pipe(res)
         await writeStream(stream, localFileName, mime)
@@ -106,7 +106,7 @@ export default function cacheRoutes(app: Application) {
       try {
         result = await getLinkPreview(url, {
           followRedirects: 'follow',
-          headers: { 'User-Agent': environment.instanceUrl }
+          headers: { 'User-Agent': completeEnvironment.instanceUrl }
         })
       } catch (error) {}
       // we cache the url 24 hours if success, 5 minutes if not

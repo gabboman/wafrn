@@ -1,6 +1,6 @@
 import { object } from 'underscore'
 import { Follows, User } from '../../models/index.js'
-import { environment } from '../../environment.js'
+import { completeEnvironment } from '../backendOptions.js'
 import { activityPubObject } from '../../interfaces/fediverse/activityPubObject.js'
 import { postPetitionSigned } from './postPetitionSigned.js'
 
@@ -17,13 +17,15 @@ async function acceptRemoteFollow(userId: string, remoteUserId: string) {
   if (localUser && remoteUser && followToBeAccepted) {
     const apObj: activityPubObject = {
       '@context': 'https://www.w3.org/ns/activitystreams',
-      actor: environment.frontendUrl + '/fediverse/blog/' + localUser.url.toLowerCase(),
-      id: `${environment.frontendUrl}/fediverse/accept/${encodeURIComponent(followToBeAccepted.remoteFollowId)}`,
+      actor: completeEnvironment.frontendUrl + '/fediverse/blog/' + localUser.url.toLowerCase(),
+      id: `${completeEnvironment.frontendUrl}/fediverse/accept/${encodeURIComponent(
+        followToBeAccepted.remoteFollowId
+      )}`,
       type: 'Accept',
       object: {
         actor: remoteUser.remoteId,
         id: followToBeAccepted.remoteFollowId,
-        object: environment.frontendUrl + '/fediverse/blog/' + localUser.url.toLowerCase(),
+        object: completeEnvironment.frontendUrl + '/fediverse/blog/' + localUser.url.toLowerCase(),
         type: 'Follow'
       }
     }

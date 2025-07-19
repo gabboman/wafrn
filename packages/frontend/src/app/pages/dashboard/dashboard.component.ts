@@ -29,7 +29,6 @@ export class DashboardComponent implements OnInit, OnDestroy, SnappyCreate, Snap
   level = 1
   timestamp = new Date().getTime()
   title = ''
-  reloadIcon = faArrowsRotate
   updateFollowersSubscription?: Subscription
   navigationSubscription!: Subscription
   scroll = 0

@@ -14,7 +14,6 @@ import {
   Quotes,
   PostTag
 } from '../../models/index.js'
-import { environment } from '../../environment.js'
 import { Job, Queue } from 'bullmq'
 import { Agent, BskyAgent, CredentialSession } from '@atproto/api'
 import { wait } from '../wait.js'
@@ -22,9 +21,10 @@ import dompurify from 'isomorphic-dompurify'
 import { postToAtproto } from '../../atproto/utils/postToAtproto.js'
 import { getAtProtoSession } from '../../atproto/utils/getAtProtoSession.js'
 import { Privacy } from '../../models/post.js'
+import { completeEnvironment } from '../backendOptions.js'
 
 const processPostViewQueue = new Queue('processRemoteView', {
-  connection: environment.bullmqConnection,
+  connection: completeEnvironment.bullmqConnection,
   defaultJobOptions: {
     removeOnComplete: true,
     attempts: 3,
@@ -37,7 +37,7 @@ const processPostViewQueue = new Queue('processRemoteView', {
 })
 
 const sendPostQueue = new Queue('sendPostToInboxes', {
-  connection: environment.bullmqConnection,
+  connection: completeEnvironment.bullmqConnection,
   defaultJobOptions: {
     removeOnComplete: true,
     attempts: 3,
@@ -60,7 +60,7 @@ async function prepareSendRemotePostWorker(job: Job) {
   const parent = post.parentId ? await Post.findByPk(post.parentId) : undefined
   const parentPoster = parent ? await User.findByPk(parent.userId) : undefined
   const localUser = await User.findByPk(post.userId)
-  if (post.privacy === Privacy.Public && localUser?.enableBsky && environment.enableBsky) {
+  if (post.privacy === Privacy.Public && localUser?.enableBsky && completeEnvironment.enableBsky) {
     try {
       // if parent has no bsky data we dont reblog
       if (!parent || parent.bskyUri) {
@@ -220,8 +220,8 @@ async function prepareSendRemotePostWorker(job: Job) {
       const bodySignature = await ldSignature.signRsaSignature2017(
         objectToSend,
         localUser.privateKey,
-        `${environment.frontendUrl}/fediverse/blog/${localUser.url.toLocaleLowerCase()}`,
-        environment.instanceUrl,
+        `${completeEnvironment.frontendUrl}/fediverse/blog/${localUser.url.toLocaleLowerCase()}`,
+        completeEnvironment.instanceUrl,
         new Date(post.createdAt)
       )
 

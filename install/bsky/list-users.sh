@@ -1,3 +1,5 @@
+#!/bin/bash
+
 # Use this to list all users to get the DID if you want to delete someone
 
 SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )

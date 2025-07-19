@@ -23,7 +23,6 @@ export class NotificationsComponent implements OnInit {
   quotes: Reblog[] = []
   emojiReacts: UserNotifications[] = []
   observer: IntersectionObserver
-  reloadIcon = faArrowsRotate
 
   seen = {
     follows: 0,

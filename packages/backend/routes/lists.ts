@@ -3,11 +3,11 @@ import AuthorizedRequest from '../interfaces/authorizedRequest.js'
 import { authenticateToken } from '../utils/authenticateToken.js'
 import uploadHandler from '../utils/uploads.js'
 import fs from 'fs/promises'
-import { environment } from '../environment.js'
 import { Follows, User, sequelize } from '../models/index.js'
 import { Op } from 'sequelize'
 import { searchRemoteUser } from '../utils/activitypub/searchRemoteUser.js'
 import { follow } from '../utils/follow.js'
+import { completeEnvironment } from '../utils/backendOptions.js'
 export default function listRoutes(app: Application) {
   // Recomended users to follow
   app.post(
@@ -25,10 +25,10 @@ export default function listRoutes(app: Application) {
             .filter((elem) => elem)
           const okUsers: string[] = []
           const localUsersUrls = lines
-            .filter((elem) => elem.endsWith('@' + environment.instanceUrl))
+            .filter((elem) => elem.endsWith('@' + completeEnvironment.instanceUrl))
             .map((elem) => elem.split('@')[0].toLowerCase())
           const remoteUsersUrls = lines
-            .filter((elem) => !elem.endsWith('@' + environment.instanceUrl))
+            .filter((elem) => !elem.endsWith('@' + completeEnvironment.instanceUrl))
             .map((url) => '@' + url)
           const allUsers = localUsersUrls.concat(remoteUsersUrls)
           let foundUsers = await User.findAll({

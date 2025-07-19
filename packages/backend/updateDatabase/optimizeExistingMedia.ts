@@ -1,5 +1,4 @@
 import { sequelize, User } from '../models/index.js'
-import { environment } from '../environment.js'
 import { logger } from '../utils/logger.js'
 import { Op } from 'sequelize'
 import optimizeMedia from '../utils/optimizeMedia.js'

@@ -1,6 +1,6 @@
 import { Op } from 'sequelize'
 import { FederatedHost, PostHostView, RemoteUserPostView, User } from '../../models/index.js'
-import { environment } from '../../environment.js'
+import { completeEnvironment } from '../backendOptions.js'
 import { postToJSONLD } from './postToJSONLD.js'
 import { LdSignature } from './rsa2017.js'
 import _ from 'underscore'
@@ -9,7 +9,7 @@ import { redisCache } from '../redis.js'
 import { activityPubObject } from '../../interfaces/fediverse/activityPubObject.js'
 
 const sendPostQueue = new Queue('sendPostToInboxes', {
-  connection: environment.bullmqConnection,
+  connection: completeEnvironment.bullmqConnection,
   defaultJobOptions: {
     removeOnComplete: true,
     attempts: 3,
@@ -30,13 +30,15 @@ async function federatePostHasBeenEdited(postToEdit: any) {
     return
   }
   const objectToSend = {
-    '@context': [`${environment.frontendUrl}/contexts/litepub-0.1.jsonld`],
-    actor: `${environment.frontendUrl}/fediverse/blog/${user.url.toLowerCase()}`,
+    '@context': [`${completeEnvironment.frontendUrl}/contexts/litepub-0.1.jsonld`],
+    actor: `${completeEnvironment.frontendUrl}/fediverse/blog/${user.url.toLowerCase()}`,
     to: postAsJSONLD.to,
     cc: postAsJSONLD.cc,
     bto: [],
     published: new Date(postToEdit.updatedAt).toISOString(),
-    id: `${environment.frontendUrl}/fediverse/post/${postToEdit.id}/update/${new Date(postToEdit.updatedAt).getTime()}`,
+    id: `${completeEnvironment.frontendUrl}/fediverse/post/${postToEdit.id}/update/${new Date(
+      postToEdit.updatedAt
+    ).getTime()}`,
     object: postAsJSONLD.object,
     type: 'Update'
   }
@@ -87,8 +89,8 @@ async function federatePostHasBeenEdited(postToEdit: any) {
   const bodySignature = await ldSignature.signRsaSignature2017(
     objectToSend,
     user.privateKey,
-    `${environment.frontendUrl}/fediverse/blog/${user.url.toLocaleLowerCase()}`,
-    environment.instanceUrl,
+    `${completeEnvironment.frontendUrl}/fediverse/blog/${user.url.toLocaleLowerCase()}`,
+    completeEnvironment.instanceUrl,
     new Date()
   )
   for await (const inboxChunk of urlsToSendPost) {
