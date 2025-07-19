@@ -1,4 +1,6 @@
-export const environment = {
+import { Environment } from './interfaces/environment.js'
+
+export const baseEnvironment: Environment = {
   prod: false,
   // this makes the logs really heavy, but might be useful for queries
   logSQLQueries: true,
