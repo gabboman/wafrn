@@ -2,11 +2,11 @@ import { getAtProtoSession } from './getAtProtoSession.js'
 import { sequelize, User } from '../../models/index.js'
 import { ProfileViewBasic } from '@atproto/api/dist/client/types/app/bsky/actor/defs.js'
 import { Model, Op } from 'sequelize'
-import { environment } from '../../environment.js'
 import _ from 'underscore'
 import { wait } from '../../utils/wait.js'
 import { logger } from '../../utils/logger.js'
 import { getDeletedUser } from '../../utils/cacheGetters/getDeletedUser.js'
+import { completeEnvironment } from '../../utils/backendOptions.js'
 
 async function forcePopulateUsers(dids: string[], localUser: User) {
   const userFounds = await User.findAll({
@@ -101,7 +101,7 @@ async function getAtprotoUser(
     } catch (error) {
       return (await User.findOne({
         where: {
-          url: environment.deletedUser
+          url: completeEnvironment.deletedUser
         }
       })) as User
     }

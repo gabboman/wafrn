@@ -9,32 +9,33 @@ async function FollowActivity(body: activityPubObject, remoteUser: User, user: U
   const apObject: activityPubObject = body
   // Follow user
   const userToBeFollowed = await getRemoteActor(apObject.object, user)
-  
-  let [remoteFollow, created]  = await Follows.findOrCreate({
-    where: {
-      followerId: remoteUser.id,
-      followedId: userToBeFollowed.id
-    },
-    defaults: {
-      followerId: remoteUser.id,
-      followedId: userToBeFollowed.id,
-      remoteFollowId: apObject.id,
-      accepted: userToBeFollowed.url.startsWith('@') ? true : !userToBeFollowed.manuallyAcceptsFollows
-    }
-  })
-  // we accept it if user accepts follows automaticaly
-  if (remoteFollow.accepted && created) {
-    createNotification(
-      {
-        notificationType: 'FOLLOW',
-        userId: remoteUser.id,
-        notifiedUserId: userToBeFollowed.id
+  if (userToBeFollowed) {
+    let [remoteFollow, created] = await Follows.findOrCreate({
+      where: {
+        followerId: remoteUser.id,
+        followedId: userToBeFollowed.id
       },
-      {
-        userUrl: remoteUser.url
+      defaults: {
+        followerId: remoteUser.id,
+        followedId: userToBeFollowed.id,
+        remoteFollowId: apObject.id,
+        accepted: userToBeFollowed.url.startsWith('@') ? true : !userToBeFollowed.manuallyAcceptsFollows
       }
-    )
-    await acceptRemoteFollow(userToBeFollowed.id, remoteUser.id)
+    })
+    // we accept it if user accepts follows automaticaly
+    if (remoteFollow.accepted && created) {
+      createNotification(
+        {
+          notificationType: 'FOLLOW',
+          userId: remoteUser.id,
+          notifiedUserId: userToBeFollowed.id
+        },
+        {
+          userUrl: remoteUser.url
+        }
+      )
+      await acceptRemoteFollow(userToBeFollowed.id, remoteUser.id)
+    }
   }
 }
 

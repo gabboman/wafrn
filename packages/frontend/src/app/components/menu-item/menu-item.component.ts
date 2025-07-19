@@ -1,4 +1,3 @@
-
 import { Component, Input } from '@angular/core'
 import { MatButtonModule } from '@angular/material/button'
 import { MatListModule } from '@angular/material/list'
@@ -7,10 +6,20 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome'
 import { MenuItem } from 'src/app/interfaces/menu-item'
 import { faChevronUp, faChevronDown } from '@fortawesome/free-solid-svg-icons'
 import { MatBadgeModule } from '@angular/material/badge'
+import { MatMenuModule } from '@angular/material/menu'
+import { CommonModule } from '@angular/common'
 
 @Component({
   selector: 'app-menu-item',
-  imports: [RouterModule, FontAwesomeModule, MatButtonModule, MatListModule, MatBadgeModule],
+  imports: [
+    CommonModule,
+    RouterModule,
+    FontAwesomeModule,
+    MatButtonModule,
+    MatListModule,
+    MatBadgeModule,
+    MatMenuModule
+  ],
   templateUrl: './menu-item.component.html',
   styleUrl: './menu-item.component.scss'
 })
@@ -19,19 +28,21 @@ export class MenuItemComponent {
   chevronDown = faChevronDown
 
   @Input() item!: MenuItem
+  @Input() button = false
   expanded = false
 
-  constructor(private router: Router) { }
+  constructor(private router: Router) {}
 
   doCommand() {
-    // TODO href and routerlink in the same page, a way of not doing it this dirty way
-    // this is BAD for accesibility you know
-    // the other option was an ngif and displaying it depending on this. not cool!
-    if (this.item.url) {
-      window.open(this.item.url, '_blank')
-    }
-    if (this.item.command) {
-      this.item.command()
+    if (this.item.items && this.item.items.length > 0) {
+      this.expanded = !this.expanded
+    } else {
+      if (this.item.url) {
+        window.open(this.item.url, '_blank')
+      }
+      if (this.item.command) {
+        this.item.command()
+      }
     }
   }
 

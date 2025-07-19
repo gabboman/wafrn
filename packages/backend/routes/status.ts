@@ -2,13 +2,13 @@ import { Application, Response } from 'express'
 import { adminToken, authenticateToken } from '../utils/authenticateToken.js'
 import AuthorizedRequest from '../interfaces/authorizedRequest.js'
 import { Queue } from 'bullmq'
-import { environment } from '../environment.js'
 import { FederatedHost } from '../models/index.js'
+import { completeEnvironment } from '../utils/backendOptions.js'
 
 export default function statusRoutes(app: Application) {
   app.get('/api/status/workerStats', authenticateToken, adminToken, async (req: AuthorizedRequest, res: Response) => {
     const sendPostsQueue = new Queue('sendPostToInboxes', {
-      connection: environment.bullmqConnection,
+      connection: completeEnvironment.bullmqConnection,
       defaultJobOptions: {
         removeOnComplete: true,
         attempts: 3,
@@ -20,7 +20,7 @@ export default function statusRoutes(app: Application) {
       }
     })
     const prepareSendPostQueue = new Queue('prepareSendPost', {
-      connection: environment.bullmqConnection,
+      connection: completeEnvironment.bullmqConnection,
       defaultJobOptions: {
         removeOnComplete: true,
         attempts: 3,
@@ -33,7 +33,7 @@ export default function statusRoutes(app: Application) {
     })
 
     const deletePostQueue = new Queue('deletePostQueue', {
-      connection: environment.bullmqConnection,
+      connection: completeEnvironment.bullmqConnection,
       defaultJobOptions: {
         removeOnComplete: true,
         attempts: 3,
@@ -46,7 +46,7 @@ export default function statusRoutes(app: Application) {
     })
 
     const inboxQueue = new Queue('inbox', {
-      connection: environment.bullmqConnection,
+      connection: completeEnvironment.bullmqConnection,
       defaultJobOptions: {
         removeOnComplete: true,
         attempts: 3,
@@ -58,7 +58,7 @@ export default function statusRoutes(app: Application) {
       }
     })
     const firehoseQueue = new Queue('firehoseQueue', {
-      connection: environment.bullmqConnection,
+      connection: completeEnvironment.bullmqConnection,
       defaultJobOptions: {
         removeOnComplete: true,
         attempts: 6,
@@ -70,7 +70,7 @@ export default function statusRoutes(app: Application) {
       }
     })
     const workerGenerateUserKeyPair = new Queue('generateUserKeyPair', {
-      connection: environment.bullmqConnection
+      connection: completeEnvironment.bullmqConnection
     })
     const createKeyPairWaiting = workerGenerateUserKeyPair.count()
     const atProtoAwaiting = firehoseQueue.count()

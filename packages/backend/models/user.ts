@@ -32,7 +32,8 @@ import {
   HasManyRemoveAssociationMixin
 } from 'sequelize'
 import { Col } from 'sequelize/lib/utils'
-import { environment } from '../environment.js'
+import { UserFollowHashtags } from './userFollowHashtag.js'
+import { completeEnvironment } from '../utils/backendOptions.js'
 
 export interface UserAttributes {
   id?: string
@@ -499,6 +500,11 @@ export class User extends Model<UserAttributes, UserAttributes> implements UserA
   })
   declare remoteUserPostViewList: RemoteUserPostView[]
 
+  @HasMany(() => UserFollowHashtags, {
+    sourceKey: 'id'
+  })
+  declare userFollowedHashtagList: UserFollowHashtags[]
+
   @Column({
     allowNull: true,
     type: DataType.BOOLEAN,
@@ -521,14 +527,14 @@ export class User extends Model<UserAttributes, UserAttributes> implements UserA
   }
 
   get fullUrl() {
-    return this.remoteId || `${environment.frontendUrl}/blog/${this.url}`
+    return this.remoteId || `${completeEnvironment.frontendUrl}/blog/${this.url}`
   }
 
   get avatarFullUrl() {
-    return this.url.startsWith('@') ? this.avatar : `${environment.mediaUrl}${this.avatar}`;
+    return this.url.startsWith('@') ? this.avatar : `${completeEnvironment.mediaUrl}${this.avatar}`
   }
 
   get headerImageFullUrl() {
-    return this.url.startsWith('@') ? this.headerImage : `${environment.mediaUrl}${this.headerImage}`
+    return this.url.startsWith('@') ? this.headerImage : `${completeEnvironment.mediaUrl}${this.headerImage}`
   }
 }

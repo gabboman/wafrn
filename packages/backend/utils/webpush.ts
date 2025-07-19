@@ -7,11 +7,15 @@ import {
 } from './pushNotifications.js'
 import { UnifiedPushData } from '../models/unifiedPushData.js'
 import { getMutedPostsMultiple } from './cacheGetters/getMutedPosts.js'
-import { environment } from '../environment.js'
 import WebPush from 'web-push'
 import { logger } from './logger.js'
+import { completeEnvironment } from './backendOptions.js'
 
-WebPush.setVapidDetails(environment.webpushEmail, environment.webpushPublicKey, environment.webpushPrivateKey)
+WebPush.setVapidDetails(
+  completeEnvironment.webpushEmail,
+  completeEnvironment.webpushPublicKey,
+  completeEnvironment.webpushPrivateKey
+)
 
 export async function sendWebPushNotifications(notifications: NotificationBody[], context?: NotificationContext) {
   const userIds = notifications.map((elem) => elem.notifiedUserId)
@@ -90,6 +94,6 @@ async function getNotificationPayload(notification: NotificationBody, context?: 
     url: getNotificationUrl(notification, context),
     title: getNotificationTitle(notification, context),
     body: getNotificationBody(notification, context),
-    type: notification.notificationType,
+    type: notification.notificationType
   }
 }

@@ -1,3 +1,5 @@
+#!/bin/bash
+
 # Use this to add an invite code to the bluesky integration
 
 SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )

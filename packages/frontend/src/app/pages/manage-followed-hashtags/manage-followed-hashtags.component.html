@@ -1,0 +1,36 @@
+<mat-card class="p-3 mb-6 lg:mx-4 scalein wafrn-container" style="text-align: center">
+  <h2>Manage followed hashtags</h2>
+  @if (!loading) {
+    @for (hashtag of postsService.followedHashtags; track $index) {
+      <div>
+        <a [routerLink]="['/dashboard/search/' + hashtag]">#{{ hashtag }}</a>
+        <button
+          (click)="updateHashtag(hashtag, false)"
+          mat-flat-button
+          color="primary"
+          extended
+          class="border-round-md search-button ml-2"
+        >
+          Unfollow #{{ hashtag }}
+        </button>
+      </div>
+    }
+    <div class="p-3 flex gap-2">
+      <mat-form-field class="flex-1">
+        <mat-label>Tag to subscribe</mat-label>
+        <input matInput [(ngModel)]="tag" id="float-input" type="text" />
+      </mat-form-field>
+      <button
+        (click)="updateHashtag(tag, true)"
+        mat-flat-button
+        color="primary"
+        extended
+        class="border-round-md follow-tag-button"
+      >
+        Subscribe to tag
+      </button>
+    </div>
+  } @else {
+    <app-loader></app-loader>
+  }
+</mat-card>

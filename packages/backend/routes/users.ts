@@ -29,7 +29,6 @@ import { sequelize } from '../models/index.js'
 import optimizeMedia from '../utils/optimizeMedia.js'
 import uploadHandler from '../utils/uploads.js'
 import { generateKeyPairSync } from 'crypto'
-import { environment } from '../environment.js'
 import { logger } from '../utils/logger.js'
 import { createAccountLimiter, loginRateLimiter } from '../utils/rateLimiters.js'
 import fs from 'fs/promises'
@@ -48,7 +47,7 @@ import { getAvaiableEmojisCache } from '../utils/cacheGetters/getAvaiableEmojis.
 import { rejectremoteFollow } from '../utils/activitypub/rejectRemoteFollow.js'
 import { acceptRemoteFollow } from '../utils/activitypub/acceptRemoteFollow.js'
 import showdown from 'showdown'
-import { BskyAgent, ComNS } from '@atproto/api'
+import { AtpAgent, BskyAgent } from '@atproto/api'
 import { getAtProtoSession } from '../atproto/utils/getAtProtoSession.js'
 import { forceUpdateCacheDidsAtThread, getCacheAtDids } from '../atproto/cache/getCacheAtDids.js'
 import dompurify from 'isomorphic-dompurify'
@@ -59,6 +58,9 @@ import { getPetitionSigned } from '../utils/activitypub/getPetitionSigned.js'
 import { isArray } from 'underscore'
 import { follow } from '../utils/follow.js'
 import { activityPubObject } from '../interfaces/fediverse/activityPubObject.js'
+import { getFollowedHashtags } from '../utils/getFollowedHashtags.js'
+import { completeEnvironment } from '../utils/backendOptions.js'
+import { environment } from '../environment.js'
 
 const markdownConverter = new showdown.Converter({
   simplifiedAutoLink: true,
@@ -71,7 +73,7 @@ const markdownConverter = new showdown.Converter({
 const forbiddenCharacters = [':', '@', '/', '<', '>', '"', '&', '?']
 
 const generateUserKeyPairQueue = new Queue('generateUserKeyPair', {
-  connection: environment.bullmqConnection,
+  connection: completeEnvironment.bullmqConnection,
   defaultJobOptions: {
     removeOnComplete: true,
     attempts: 3,
@@ -84,7 +86,7 @@ const generateUserKeyPairQueue = new Queue('generateUserKeyPair', {
 })
 
 const deletePostQueue = new Queue('deletePostQueue', {
-  connection: environment.bullmqConnection,
+  connection: completeEnvironment.bullmqConnection,
   defaultJobOptions: {
     removeOnComplete: true,
     attempts: 3,
@@ -131,7 +133,7 @@ export default function userRoutes(app: Application) {
             if (req.file != null) {
               avatarURL = `/${await optimizeMedia(req.file.path, { forceImageExtension: 'webp' })}`
             }
-            if (environment.removeFolderNameFromFileUploads) {
+            if (completeEnvironment.removeFolderNameFromFileUploads) {
               avatarURL = avatarURL.slice('/uploads/'.length - 1)
             }
             const activationCode = generateRandomString()
@@ -142,7 +144,7 @@ export default function userRoutes(app: Application) {
               url: req.body.url.trim().replace(' ', '_'),
               name: req.body.name ? req.body.name : req.body.url.trim().replace(' ', '_'),
               NSFW: req.body.nsfw === 'true',
-              password: await bcrypt.hash(req.body.password, environment.saltRounds),
+              password: await bcrypt.hash(req.body.password, completeEnvironment.saltRounds),
               birthDate: new Date(req.body.birthDate),
               avatar: avatarURL,
               activated: false,
@@ -159,14 +161,17 @@ export default function userRoutes(app: Application) {
             }
 
             const userWithEmail = User.create(user)
-            const mailHeader = `Welcome to ${environment.instanceUrl}, please verify your email!`
-            const mailBody = `<h1>Welcome to ${environment.instanceUrl}</h1> To verify your email <a href="${environment.instanceUrl
-              }/activate/${encodeURIComponent(
-                req.body.email.toLowerCase()
-              )}/${activationCode}">click here!</a>. If you can not see the link correctly please copy this link:
-            ${environment.instanceUrl}/activate/${encodeURIComponent(req.body.email.toLowerCase())}/${activationCode}
+            const mailHeader = `Welcome to ${completeEnvironment.instanceUrl}, please verify your email!`
+            const mailBody = `<h1>Welcome to ${completeEnvironment.instanceUrl}</h1> To verify your email <a href="${
+              completeEnvironment.instanceUrl
+            }/activate/${encodeURIComponent(
+              req.body.email.toLowerCase()
+            )}/${activationCode}">click here!</a>. If you can not see the link correctly please copy this link:
+            ${completeEnvironment.instanceUrl}/activate/${encodeURIComponent(
+              req.body.email.toLowerCase()
+            )}/${activationCode}
             `
-            const emailSent = environment.disableRequireSendEmail
+            const emailSent = completeEnvironment.disableRequireSendEmail
               ? true
               : sendActivationEmail(req.body.email.toLowerCase(), activationCode, mailHeader, mailBody)
             await Promise.all([userWithEmail, emailSent])
@@ -271,14 +276,14 @@ export default function userRoutes(app: Application) {
 
           if (avatar != null) {
             let url = `/${await optimizeMedia(avatar.path, { forceImageExtension: 'webp' })}`
-            if (environment.removeFolderNameFromFileUploads) {
+            if (completeEnvironment.removeFolderNameFromFileUploads) {
               url = url.slice('/uploads/'.length - 1)
             }
             user.avatar = url
           }
           if (headerImage != null) {
             let url = `/${await optimizeMedia(headerImage.path, { forceImageExtension: 'webp' })}`
-            if (environment.removeFolderNameFromFileUploads) {
+            if (completeEnvironment.removeFolderNameFromFileUploads) {
               url = url.slice('/uploads/'.length - 1)
             }
             user.headerImage = url
@@ -341,13 +346,13 @@ export default function userRoutes(app: Application) {
           user.requestedPasswordReset = new Date()
           user.save()
 
-          const link = `${environment.instanceUrl}/resetPassword/${encodeURIComponent(email)}/${resetCode}`
+          const link = `${completeEnvironment.instanceUrl}/resetPassword/${encodeURIComponent(email)}/${resetCode}`
           const appLink = `wafrn://complete-password-reset?email=${encodeURIComponent(email)}&code=${resetCode}`
 
           await sendActivationEmail(
             req.body.email.toLowerCase(),
             '',
-            `So you forgot your ${environment.instanceUrl} password`,
+            `So you forgot your ${completeEnvironment.instanceUrl} password`,
             `
             <h1>Use this link to reset your password</h1>
             <p>
@@ -387,7 +392,7 @@ export default function userRoutes(app: Application) {
         user.emailVerified = true
         let emailBody = ''
         let emailSubject = ''
-        if (!environment.reviewRegistrations) {
+        if (!completeEnvironment.reviewRegistrations) {
           user.activated = true
           emailSubject = 'Your wafrn account has been activated!'
           emailBody = ';D'
@@ -438,8 +443,9 @@ export default function userRoutes(app: Application) {
           }
         })
         if (user) {
-          user.password = await bcrypt.hash(req.body.password, environment.saltRounds)
-          user.activated = environment.reviewRegistrations ? user.activated : true
+          user.emailVerified = true
+          user.password = await bcrypt.hash(req.body.password, completeEnvironment.saltRounds)
+          user.activated = completeEnvironment.reviewRegistrations ? user.activated : true
           user.requestedPasswordReset = null
           await user.save()
 
@@ -497,7 +503,7 @@ export default function userRoutes(app: Application) {
                       mfaStep: 1,
                       email: userWithEmail.email.toLowerCase()
                     },
-                    environment.jwtSecret,
+                    completeEnvironment.jwtSecret,
                     { expiresIn: '300s' }
                   )
                 })
@@ -512,7 +518,7 @@ export default function userRoutes(app: Application) {
                       url: userWithEmail.url,
                       role: userWithEmail.role
                     },
-                    environment.jwtSecret,
+                    completeEnvironment.jwtSecret,
                     { expiresIn: '31536000s' }
                   )
                 })
@@ -584,7 +590,7 @@ export default function userRoutes(app: Application) {
                   url: userWithEmail.url,
                   role: userWithEmail.role
                 },
-                environment.jwtSecret,
+                completeEnvironment.jwtSecret,
                 { expiresIn: '31536000s' }
               )
             })
@@ -614,7 +620,7 @@ export default function userRoutes(app: Application) {
         res.status(401).send({ success: false, message: 'Invalid JWT' })
         return
       }
-  
+
       const mfaDetails = await MfaDetails.findAll({
         where: {
           userId: req.jwtData?.userId,
@@ -664,7 +670,7 @@ export default function userRoutes(app: Application) {
         enabled: false
       })
 
-      totpSettings.issuer = environment.instanceUrl
+      totpSettings.issuer = completeEnvironment.instanceUrl
       totpSettings.label = req.jwtData?.email
 
       const totp = new OTPAuth.TOTP(totpSettings)
@@ -820,19 +826,19 @@ export default function userRoutes(app: Application) {
       let followed = blog.url.startsWith('@')
         ? blog.followingCount
         : Follows.count({
-          where: {
-            followerId: blog.id,
-            accepted: true
-          }
-        })
+            where: {
+              followerId: blog.id,
+              accepted: true
+            }
+          })
       let followers = blog.url.startsWith('@')
         ? blog.followerCount
         : Follows.count({
-          where: {
-            followedId: blog.id,
-            accepted: true
-          }
-        })
+            where: {
+              followedId: blog.id,
+              accepted: true
+            }
+          })
       const publicOptions = UserOptions.findAll({
         where: {
           userId: blog.id,
@@ -871,10 +877,10 @@ export default function userRoutes(app: Application) {
 
       const postCount = blog
         ? await Post.count({
-          where: {
-            userId: blog.id
-          }
-        })
+            where: {
+              userId: blog.id
+            }
+          })
         : 0
 
       followed = await followed
@@ -913,6 +919,7 @@ export default function userRoutes(app: Application) {
       attributes: ['banned']
     })
     const silencedPosts = getMutedPosts(userId)
+    const followedHashtags = getFollowedHashtags(userId)
     Promise.all([
       userPromise,
       followedUsers,
@@ -921,7 +928,8 @@ export default function userRoutes(app: Application) {
       options,
       silencedPosts,
       localEmojis,
-      mutedUsers
+      mutedUsers,
+      followedHashtags
     ])
     const user = await userPromise
     if (!user || user.banned) {
@@ -934,13 +942,14 @@ export default function userRoutes(app: Application) {
         options: await options,
         silencedPosts: await silencedPosts,
         emojis: await localEmojis,
-        mutedUsers: await mutedUsers
+        mutedUsers: await mutedUsers,
+        followedHashtags: await followedHashtags
       })
     }
   })
 
   app.post('/api/enable-bluesky', authenticateToken, async (req: AuthorizedRequest, res: Response) => {
-    if (!environment.enableBsky) {
+    if (!completeEnvironment.enableBsky) {
       res.status(500)
       res.send({
         error: true,
@@ -950,21 +959,43 @@ export default function userRoutes(app: Application) {
     const userId = req.jwtData?.userId as string
     const user = await User.findByPk(userId)
     if (user && !user.enableBsky) {
-      const inviteCode = await BskyInviteCodes.findOne()
+      const inviteCode = completeEnvironment.bskyMasterInviteCode
+        ? completeEnvironment.bskyMasterInviteCode
+        : await BskyInviteCodes.findOne()
       if (inviteCode) {
+        const serviceUrl = completeEnvironment.bskyPds.startsWith('http')
+          ? completeEnvironment.bskyPds
+          : 'https://' + completeEnvironment.bskyPds
         try {
-          const agent = new BskyAgent({
-            service: 'https://' + environment.bskyPds
+          const agent = new AtpAgent({
+            service: serviceUrl
           })
           const sanitizedUrl = user.url.replaceAll('_', '-').replaceAll('.', '-')
           const bskyPassword = generateRandomString()
-          await agent.createAccount({
-            email: `${user.url}@${environment.instanceUrl}`,
-            password: bskyPassword,
-            handle: `${sanitizedUrl}.${environment.bskyPds}`,
-            inviteCode: inviteCode.code
+          let accountCreation = await agent
+            .createAccount({
+              email: `${user.url}@${completeEnvironment.instanceUrl}`,
+              password: bskyPassword,
+              handle: `${sanitizedUrl}.${completeEnvironment.bskyPdsUrl as string}`,
+              inviteCode: typeof inviteCode === 'string' ? inviteCode : inviteCode.code
+            })
+            .catch((error) => {
+              logger.error({
+                message: `Bsky account creation failed for ${user.url}`,
+                error: error
+              })
+              throw new Error(error.message)
+            })
+          logger.info({
+            message: `Bsky account created? ${user.url}`,
+            response: accountCreation
           })
-          await inviteCode.destroy()
+          if (typeof inviteCode !== 'string') {
+            // This is a regular invitecode and not a MASTER INVITE CODE with 1 million usages.
+            // If for some reason we got there
+            // what the fuck
+            await inviteCode.destroy()
+          }
           const userDid = agent.assertDid
           user.bskyDid = userDid
           user.bskyAuthData = bskyPassword
@@ -1281,7 +1312,7 @@ export default function userRoutes(app: Application) {
       await sendActivationEmail(
         user.email as string,
         '',
-        `We have marked your ${environment.instanceUrl} for deletion`,
+        `We have marked your ${completeEnvironment.instanceUrl} for deletion`,
         `
             <h1>We are sad to see you go</h1>
             <p>
@@ -1312,7 +1343,7 @@ export default function userRoutes(app: Application) {
           const aliasList = isArray(petitionData.alsoKnownAs)
             ? petitionData.alsoKnownAs.map((elem: string) => elem.toLowerCase())
             : [petitionData.alsoKnownAs.toLowerCase()]
-          if (aliasList.includes(`${environment.frontendUrl}/fediverse/blog/${localUser.url}`)) {
+          if (aliasList.includes(`${completeEnvironment.frontendUrl}/fediverse/blog/${localUser.url}`)) {
             // TIME TO MOVE OUT
             // FIRST STEP: followers. send message to each follower. a move object
             const followerIds = await Follows.findAll({
@@ -1331,14 +1362,14 @@ export default function userRoutes(app: Application) {
             const moveObjectToSend: activityPubObject = {
               '@context': 'https://www.w3.org/ns/activitystreams',
               id:
-                environment.frontendUrl +
+                completeEnvironment.frontendUrl +
                 '/fediverse/blogMove/' +
                 localUser.url.toLowerCase() +
                 '/' +
                 new Date().getTime(),
-              actor: environment.frontendUrl + '/fediverse/blog/' + localUser.url.toLowerCase(),
+              actor: completeEnvironment.frontendUrl + '/fediverse/blog/' + localUser.url.toLowerCase(),
               type: 'Move',
-              object: environment.frontendUrl + '/fediverse/blog/' + localUser.url.toLowerCase(),
+              object: completeEnvironment.frontendUrl + '/fediverse/blog/' + localUser.url.toLowerCase(),
               target: newUserRemoteId
             }
             for await (const remoteFollower of followers.filter((elem) => !!elem.remoteId)) {
@@ -1390,7 +1421,7 @@ async function updateBlueskyProfile(agent: BskyAgent, user: User) {
   await getCacheAtDids(true)
   return await agent.upsertProfile(async (existingProfile) => {
     const profile = existingProfile ?? {}
-    const fullProfileString = `\n\nView full profile at ${environment.frontendUrl}/blog/${user.url}`
+    const fullProfileString = `\n\nView full profile at ${completeEnvironment.frontendUrl}/blog/${user.url}`
     profile.displayName = user.name.substring(0, 63)
     profile.description =
       dompurify.sanitize(user.descriptionMarkdown.substring(0, 248 - fullProfileString.length), { ALLOWED_TAGS: [] }) +
@@ -1450,15 +1481,15 @@ async function updateProfileOptions(optionsJSON: string, posterId: string) {
         })
         userOption
           ? await userOption.update({
-            optionValue: option.value,
-            public: option.public == true
-          })
+              optionValue: option.value,
+              public: option.public == true
+            })
           : await UserOptions.create({
-            userId: posterId,
-            optionName: option.name,
-            optionValue: option.value,
-            public: option.public == true
-          })
+              userId: posterId,
+              optionName: option.name,
+              optionValue: option.value,
+              public: option.public == true
+            })
       }
     }
   }

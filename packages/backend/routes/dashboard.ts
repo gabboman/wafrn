@@ -5,10 +5,9 @@
 import { Application, Response } from 'express'
 import optionalAuthentication from '../utils/optionalAuthentication.js'
 import AuthorizedRequest from '../interfaces/authorizedRequest.js'
-import { FederatedHost, Post, PostMentionsUserRelation, sequelize, User } from '../models/index.js'
+import { FederatedHost, Post, PostMentionsUserRelation, PostTag, sequelize, User } from '../models/index.js'
 import { Op } from 'sequelize'
 import getStartScrollParam from '../utils/getStartScrollParam.js'
-import { environment } from '../environment.js'
 import getFollowedsIds from '../utils/cacheGetters/getFollowedsIds.js'
 import getNonFollowedLocalUsersIds from '../utils/cacheGetters/getNotFollowedLocalUsersIds.js'
 import getBlockedIds from '../utils/cacheGetters/getBlockedIds.js'
@@ -16,6 +15,8 @@ import { getUnjointedPosts } from '../utils/baseQueryNew.js'
 import { getMutedPosts } from '../utils/cacheGetters/getMutedPosts.js'
 import { navigationRateLimiter } from '../utils/rateLimiters.js'
 import { Privacy } from '../models/post.js'
+import { getFollowedHashtags } from '../utils/getFollowedHashtags.js'
+import { completeEnvironment } from '../utils/backendOptions.js'
 
 export default function dashboardRoutes(app: Application) {
   app.get(
@@ -25,7 +26,7 @@ export default function dashboardRoutes(app: Application) {
     async (req: AuthorizedRequest, res: Response) => {
       const level = parseInt(req.query.level as string) // level of dashboard: localExplore, explore, dashboard or DMs
       const posterId = req.jwtData?.userId ? req.jwtData?.userId : '00000000-0000-0000-0000-000000000000'
-      const POSTS_PER_PAGE = environment.postsPerPage
+      const POSTS_PER_PAGE = completeEnvironment.postsPerPage
 
       // level: 0 explore 1 dashboard 2 localExplore 10 dms
       if (level !== 2 && posterId === '00000000-0000-0000-0000-000000000000') {
@@ -69,9 +70,25 @@ export default function dashboardRoutes(app: Application) {
           break
         }
         case 1: {
+          const orConditions: any = [
+            {
+              userId: { [Op.in]: await getFollowedsIds(posterId) }
+            }
+          ]
+          const subscribedTags = await getFollowedHashtags(posterId)
+          if (subscribedTags && subscribedTags.length > 0) {
+            orConditions.push({
+              privacy: 0,
+              '$postTags.tagName$': {
+                [Op.iLike]: {
+                  [Op.any]: subscribedTags
+                }
+              }
+            })
+          }
           whereObject = {
             privacy: { [Op.in]: [Privacy.Public, Privacy.FollowersOnly, Privacy.LocalOnly, Privacy.Unlisted] },
-            userId: { [Op.in]: await getFollowedsIds(posterId) }
+            [Op.or]: orConditions
           }
           break
         }
@@ -94,7 +111,7 @@ export default function dashboardRoutes(app: Application) {
             }
           })
 
-          const lastDmDate: Date = dms.length > 0 ? new Date(dms[dms.length -1].createdAt) : new Date(0)
+          const lastDmDate: Date = dms.length > 0 ? new Date(dms[dms.length - 1].createdAt) : new Date(0)
           const myPosts = await Post.findAll({
             // TODO fix this! there is a THEORETICAL posibility of something going wrong. using all user dms can be too much but just get them between here and last post...
             order: [['createdAt', 'DESC']],
@@ -103,7 +120,7 @@ export default function dashboardRoutes(app: Application) {
               userId: posterId,
               privacy: Privacy.DirectMessage,
               createdAt: {
-                [Op.lt]: getStartScrollParam(req),
+                [Op.lt]: getStartScrollParam(req)
               }
             }
           })
@@ -144,6 +161,10 @@ export default function dashboardRoutes(app: Application) {
       const postIds = await Post.findAll({
         include: [
           {
+            model: PostTag,
+            required: false
+          },
+          {
             model: User,
             as: 'user',
             required: true,
@@ -157,7 +178,8 @@ export default function dashboardRoutes(app: Application) {
         ],
         order: [['createdAt', 'DESC']],
         limit: POSTS_PER_PAGE,
-        attributes: ['id'],
+        attributes: ['id', 'createdAt'],
+        subQuery: false,
         where: {
           createdAt: { [Op.lt]: getStartScrollParam(req) },
           ...whereObject

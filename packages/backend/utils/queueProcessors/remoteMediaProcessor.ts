@@ -4,7 +4,7 @@ import axios from 'axios'
 import type { Job } from 'bullmq'
 import mime from 'mime'
 import { Media } from '../../models/index.js'
-import { environment } from '../../environment.js'
+import { completeEnvironment } from '../backendOptions.js'
 import { fileTypeFromFile } from 'file-type'
 import sharp from 'sharp'
 import { Model } from 'sequelize'
@@ -17,7 +17,7 @@ async function processRemoteMedia(job: Job) {
   let fileLocation = ''
   if (media.external) {
     // call the local cache endpoint to populate redis
-    const cacheUrl = environment.frontendUrl + '/api/cache/?media=' + encodeURIComponent(media.url)
+    const cacheUrl = completeEnvironment.frontendUrl + '/api/cache/?media=' + encodeURIComponent(media.url)
     await axios.get(cacheUrl)
 
     // get the local file name from redis using the hash of the media url

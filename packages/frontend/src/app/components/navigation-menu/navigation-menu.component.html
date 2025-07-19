@@ -5,7 +5,7 @@
     [mode]="mobile ? 'over' : 'side'"
     [opened]="menuVisible || !mobile"
     (closed)="hideMenu()"
-    >
+  >
     <a [href]="'/'" class="block" (click)="hideMenu()">
       <img
         [src]="logo"
@@ -13,16 +13,18 @@
         alt="instance logo"
         width="200"
         style="object-fit: contain"
-        />
+      />
     </a>
     <hr />
     <nav aria-label="Navigation menu">
-      <mat-nav-list>
+      <mat-nav-list class="side-menu-nav-list">
         @for (link of menuItems; track $index) {
-          @if (link.divider) {
-            <hr />
-          } @else {
-            <app-menu-item [item]="link"></app-menu-item>
+          @if (link.visible) {
+            @if (link.divider) {
+              <hr />
+            } @else {
+              <app-menu-item [item]="link"></app-menu-item>
+            }
           }
         }
       </mat-nav-list>
@@ -32,32 +34,19 @@
     </div>
   </mat-drawer>
   <mat-drawer-content>
-    <button
-      style="position: fixed; z-index: 500; top: 1em; left: 1em"
-      mat-mini-fab
-      color="primary"
-      [hidden]="!mobile"
-      type="button"
-      class="show-sidebar-menu-button"
-      (click)="showMenu()"
-      [matBadge]="notifications + adminNotifications + usersAwaitingApproval + followsAwaitingApproval + awaitingAsks"
-      [matBadgeHidden]="
-        notifications + adminNotifications + usersAwaitingApproval + followsAwaitingApproval + awaitingAsks === 0
-      "
-      matBadgePosition="below"
-      >
-      <fa-icon [icon]="hamburguerIcon"></fa-icon>
-    </button>
-    <button
-      style="position: fixed; z-index: 500; bottom: 1em; right: 1em"
-      mat-fab
-      color="primary"
-      [hidden]="!mobile || !jwtService.tokenValid() || currentRoute === '/editor'"
-      type="button"
-      class="show-sidebar-menu-button create-post-button"
-      (click)="this.hideMenu(); this.openEditor()"
-      >
-      <fa-icon [icon]="pencilIcon"></fa-icon>
+    <mat-toolbar class="wafrn-toolbar" *ngIf="!!mobile">
+      @for (section of menuItemsMobile; track $index) {
+        <div>
+          @for (link of section; track $index) {
+            @if (!link.divider && link.visible) {
+              <app-menu-item [button]="true" [item]="link"></app-menu-item>
+            }
+          }
+        </div>
+      }
+    </mat-toolbar>
+    <button *ngIf="true" (click)="refresh()" mat-mini-fab color="default" aria-label="Refresh" class="refresh-button">
+      <fa-icon [icon]="reloadIcon" />
     </button>
     <main id="main-content" class="wafrn-content">
       @if (maintenanceMode) {
@@ -65,5 +54,21 @@
       }
       <snappy-router> </snappy-router>
     </main>
+    <!-- Needed some space at the bottom I know is ugly but mb-2 gets ignored-->
+    <br />
+    <br />
   </mat-drawer-content>
 </mat-drawer-container>
+
+<button
+  *ngIf="!mobile"
+  style="position: fixed; z-index: 500; bottom: 1em; right: 1em"
+  mat-fab
+  color="primary"
+  [hidden]="!mobile || !jwtService.tokenValid() || currentRoute === '/editor'"
+  type="button"
+  class="show-sidebar-menu-button create-post-button slideup"
+  (click)="this.hideMenu(); this.openEditor()"
+>
+  <fa-icon [icon]="pencilIcon"></fa-icon>
+</button>

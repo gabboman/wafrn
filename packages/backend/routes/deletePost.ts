@@ -15,7 +15,6 @@ import { authenticateToken } from '../utils/authenticateToken.js'
 import { Model, Op, Sequelize } from 'sequelize'
 import { logger } from '../utils/logger.js'
 import { Queue } from 'bullmq'
-import { environment } from '../environment.js'
 import { activityPubObject } from '../interfaces/fediverse/activityPubObject.js'
 import _ from 'underscore'
 import AuthorizedRequest from '../interfaces/authorizedRequest.js'
@@ -24,9 +23,10 @@ import { deletePostCommon } from '../utils/deletePost.js'
 import { redisCache } from '../utils/redis.js'
 import { getAtProtoSession } from '../atproto/utils/getAtProtoSession.js'
 import { Privacy } from '../models/post.js'
+import { completeEnvironment } from '../utils/backendOptions.js'
 
 const deletePostQueue = new Queue('deletePostQueue', {
-  connection: environment.bullmqConnection,
+  connection: completeEnvironment.bullmqConnection,
   defaultJobOptions: {
     removeOnComplete: true,
     attempts: 3,
@@ -76,13 +76,13 @@ export default function deletePost(app: Application) {
         }
         // bsky delete end
         const objectToSend: activityPubObject = {
-          '@context': [`${environment.frontendUrl}/contexts/litepub-0.1.jsonld`],
-          actor: `${environment.frontendUrl}/fediverse/blog/${user.url.toLowerCase()}`,
+          '@context': [`${completeEnvironment.frontendUrl}/contexts/litepub-0.1.jsonld`],
+          actor: `${completeEnvironment.frontendUrl}/fediverse/blog/${user.url.toLowerCase()}`,
           to: ['https://www.w3.org/ns/activitystreams#Public'],
-          id: `${environment.frontendUrl}/fediverse/post/${postToDelete.id}#delete`,
+          id: `${completeEnvironment.frontendUrl}/fediverse/post/${postToDelete.id}#delete`,
           object: {
-            atomUri: `${environment.frontendUrl}/fediverse/post/${postToDelete.id}`,
-            id: `${environment.frontendUrl}/fediverse/post/${postToDelete.id}`,
+            atomUri: `${completeEnvironment.frontendUrl}/fediverse/post/${postToDelete.id}`,
+            id: `${completeEnvironment.frontendUrl}/fediverse/post/${postToDelete.id}`,
             type: 'Tombstone'
           },
           type: 'Delete'
@@ -156,8 +156,8 @@ export default function deletePost(app: Application) {
           const bodySignature = await ldSignature.signRsaSignature2017(
             objectToSend,
             user.privateKey,
-            `${environment.frontendUrl}/fediverse/blog/${user.url.toLocaleLowerCase()}`,
-            environment.instanceUrl,
+            `${completeEnvironment.frontendUrl}/fediverse/blog/${user.url.toLocaleLowerCase()}`,
+            completeEnvironment.instanceUrl,
             new Date()
           )
           if (postToDelete.privacy != Privacy.LocalOnly) {
@@ -215,13 +215,13 @@ export default function deletePost(app: Application) {
 
         const objectsToSend: activityPubObject[] = reblogsToDelete.map((elem) => {
           return {
-            '@context': [`${environment.frontendUrl}/contexts/litepub-0.1.jsonld`],
-            actor: `${environment.frontendUrl}/fediverse/blog/${user.url.toLowerCase()}`,
+            '@context': [`${completeEnvironment.frontendUrl}/contexts/litepub-0.1.jsonld`],
+            actor: `${completeEnvironment.frontendUrl}/fediverse/blog/${user.url.toLowerCase()}`,
             to: ['https://www.w3.org/ns/activitystreams#Public'],
-            id: `${environment.frontendUrl}/fediverse/post/${elem}#delete`,
+            id: `${completeEnvironment.frontendUrl}/fediverse/post/${elem}#delete`,
             object: {
-              atomUri: `${environment.frontendUrl}/fediverse/post/${elem}`,
-              id: `${environment.frontendUrl}/fediverse/post/${elem}`,
+              atomUri: `${completeEnvironment.frontendUrl}/fediverse/post/${elem}`,
+              id: `${completeEnvironment.frontendUrl}/fediverse/post/${elem}`,
               type: 'Tombstone'
             },
             type: 'Delete'
@@ -276,8 +276,8 @@ export default function deletePost(app: Application) {
             const bodySignature = await ldSignature.signRsaSignature2017(
               objectToSend,
               user.privateKey,
-              `${environment.frontendUrl}/fediverse/blog/${user.url.toLocaleLowerCase()}`,
-              environment.instanceUrl,
+              `${completeEnvironment.frontendUrl}/fediverse/blog/${user.url.toLocaleLowerCase()}`,
+              completeEnvironment.instanceUrl,
               new Date()
             )
             for await (const inboxChunk of inboxes) {

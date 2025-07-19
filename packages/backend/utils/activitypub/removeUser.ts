@@ -11,7 +11,7 @@ import {
   User,
   UserEmojiRelation
 } from '../../models/index.js'
-import { environment } from '../../environment.js'
+import { completeEnvironment } from '../backendOptions.js'
 import { logger } from '../logger.js'
 import { redisCache } from '../redis.js'
 
@@ -22,11 +22,10 @@ async function removeUser(userId: string) {
     if (userToRemove) {
       const ownerOfDeletedPost = await User.findOne({
         where: {
-          url: environment.deletedUser
+          url: completeEnvironment.deletedUser
         }
       })
-      if (!ownerOfDeletedPost)
-        return
+      if (!ownerOfDeletedPost) return
 
       const postsIdsStringQuery = `"postId" IN (select "id" FROM "posts" WHERE "userId"='${userToRemove.id}')`
       userToRemove.activated = false

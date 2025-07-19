@@ -6,7 +6,7 @@
     <h1>Migrate out</h1>
     <p>You need to first create an alias on the new fedi account you are moving to</p>
     <app-user-selector
-      (optionSelected)="userSelectedEvent($event)"
+      (optionSelected)="userSelectedEvent($event.remoteId)"
       [controlText]="'New account (without the @)'"
     ></app-user-selector>
 

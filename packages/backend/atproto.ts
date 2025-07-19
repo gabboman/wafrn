@@ -1,9 +1,9 @@
 import { Firehose } from '@skyware/firehose'
 import { getCacheAtDids } from './atproto/cache/getCacheAtDids.js'
 import { Job, Queue, Worker } from 'bullmq'
-import { environment } from './environment.js'
 import { checkCommitMentions } from './atproto/utils/checkCommitMentions.js'
 import { logger } from './utils/logger.js'
+import { completeEnvironment } from './utils/backendOptions.js'
 
 //const firehose = new Firehose(`wss://bolson.bsky.dev`);
 
@@ -11,7 +11,7 @@ let cachedDids = await getCacheAtDids(true)
 const firehose = new Firehose()
 
 const firehoseQueue = new Queue('firehoseQueue', {
-  connection: environment.bullmqConnection,
+  connection: completeEnvironment.bullmqConnection,
   defaultJobOptions: {
     removeOnComplete: true,
     attempts: 6,
@@ -44,7 +44,7 @@ const workerForceUpdateAtDidCache = new Worker(
     cachedDids = await getCacheAtDids(true)
   },
   {
-    connection: environment.bullmqConnection,
+    connection: completeEnvironment.bullmqConnection,
     concurrency: 1,
     lockDuration: 120000
   }

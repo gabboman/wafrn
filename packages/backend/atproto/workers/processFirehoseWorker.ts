@@ -10,7 +10,6 @@ import {
   Notification,
   Blocks
 } from '../../models/index.js'
-import { environment } from '../../environment.js'
 import { Op, Model } from 'sequelize'
 import { logger } from '../../utils/logger.js'
 import { DeleteOp, RepoOp } from '@skyware/firehose'
@@ -21,10 +20,11 @@ import { redisCache } from '../../utils/redis.js'
 import { likePostRemote } from '../../utils/activitypub/likePost.js'
 import { createNotification } from '../../utils/pushNotifications.js'
 import { Privacy } from '../../models/post.js'
+import { completeEnvironment } from '../../utils/backendOptions.js'
 
 const adminUser = User.findOne({
   where: {
-    url: environment.adminUser
+    url: completeEnvironment.adminUser
   }
 })
 async function processFirehose(job: Job) {
@@ -46,15 +46,19 @@ async function processFirehose(job: Job) {
                 if (postId) {
                   user = remoteUser.url
                   likedPostId = postId
-                  await UserLikesPostRelations.findOrCreate({
+                  const [like, existingLike] = await UserLikesPostRelations.findOrCreate({
                     where: {
+                      userId: remoteUser.id,
+                      postId: postId
+                    },
+                    defaults: {
                       userId: remoteUser.id,
                       postId: postId,
                       bskyPath: operation.path
                     }
                   })
                   const post = await Post.findByPk(postId)
-                  if (post) {
+                  if (post && !existingLike) {
                     await createNotification(
                       {
                         notificationType: 'LIKE',

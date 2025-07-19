@@ -1,5 +1,5 @@
 import swaggerAutogen from 'swagger-autogen'
-import { environment } from './environment.js'
+import { completeEnvironment } from './utils/backendOptions.js'
 
 const config = {
   info: {
@@ -7,7 +7,7 @@ const config = {
     title: 'WAFRN Backend',
     description: 'API routes for wafrn social network'
   },
-  host: `${environment.frontendUrl}`,
+  host: `${completeEnvironment.frontendUrl}`,
   schemes: ['http'],
   securityDefinitions: {
     bearerAuth: {

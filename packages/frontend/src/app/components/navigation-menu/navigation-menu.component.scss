@@ -2,6 +2,7 @@
 :root .side-menu {
   background-color: var(--mat-sys-surface-container-low);
   box-shadow: var(--mat-sys-level2);
+  z-index: 5
 }
 
 .mat-drawer-inner-container {
@@ -27,6 +28,21 @@
 
 :root .mdc-list {
   padding: 0;
+}
+
+.mat-drawer-container-has-open:not(:has(> .mat-drawer-shown)) + .create-post-button {
+  animation: button-slide-out 300ms linear forwards;
+}
+
+@keyframes button-slide-out {
+  0% {
+    transform: translateY(0%);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(200%);
+    opacity: 0;
+  }
 }
 
 hr {

@@ -1,5 +1,4 @@
 import express, { Request, Application, Response } from 'express'
-import { environment } from '../environment.js'
 import { Op } from 'sequelize'
 import { Emoji, Media, Post, User, UserOptions, sequelize } from '../models/index.js'
 import fs from 'fs'
@@ -12,6 +11,7 @@ import { Privacy } from '../models/post.js'
 import { getPostHtml } from '../utils/getPostHtml.js'
 import { logger } from '../utils/logger.js'
 import { Feed } from 'feed'
+import { completeEnvironment } from '../utils/backendOptions.js'
 
 const cacheOptions = {
   etag: false,
@@ -19,7 +19,7 @@ const cacheOptions = {
 }
 
 function frontend(app: Application) {
-  const defaultSeoData = environment.defaultSEOData
+  const defaultSeoData = completeEnvironment.defaultSEOData
 
   // serve default angular application
   app.get(
@@ -46,7 +46,7 @@ function frontend(app: Application) {
       `<script>
         location.replace('/fediverse${req.url}')
       </script>
-      <a href="${environment.frontendUrl}/fediverse${req.url}">Hello. Post has been moved here. Please click to go</a>`
+      <a href="${completeEnvironment.frontendUrl}/fediverse${req.url}">Hello. Post has been moved here. Please click to go</a>`
     )
   })
 
@@ -73,16 +73,16 @@ function frontend(app: Application) {
         const feed = new Feed({
           title: sanitizeStringForSEO(`${blog.url}'s wafrn blog`),
           description: sanitizeStringForSEO(blog.description),
-          id: `${environment.frontendUrl}/blog/${blog.url}/rss`,
-          link: `${environment.frontendUrl}/blog/${blog.url}`,
-          image: `${environment.mediaUrl}${blog.avatar}`,
-          favicon: `${environment.frontendUrl}/favicon.ico`,
+          id: `${completeEnvironment.frontendUrl}/blog/${blog.url}/rss`,
+          link: `${completeEnvironment.frontendUrl}/blog/${blog.url}`,
+          image: `${completeEnvironment.mediaUrl}${blog.avatar}`,
+          favicon: `${completeEnvironment.frontendUrl}/favicon.ico`,
           copyright:
             'All rights reserved by the user. The content of this blog shall not be used for LLM training data unless stated otherwise in here',
-          generator: environment.instanceUrl,
+          generator: completeEnvironment.instanceUrl,
           author: {
             name: blog.name,
-            link: `${environment.frontendUrl}/blog/${blog.url}`
+            link: `${completeEnvironment.frontendUrl}/blog/${blog.url}`
           }
         })
         const rssOption = await UserOptions.findOne({
@@ -107,7 +107,7 @@ function frontend(app: Application) {
           feed.addItem({
             title: sanitizeStringForSEO(post.title ? post.title : `Wafrn post by ${blog.url}`),
             id: post.id,
-            link: `${environment.frontendUrl}/fediverse/post/${post.id}`,
+            link: `${completeEnvironment.frontendUrl}/fediverse/post/${post.id}`,
             description: sanitizeStringForSEO(post.content.substring(0, 150)),
             content: getPostMicroformat(post, false),
             date: post.createdAt
@@ -155,7 +155,7 @@ function frontend(app: Application) {
         if (blogData) {
           res.send(
             getIndexSeo(
-              `${blogData.title}'s ${environment.instanceUrl} blog`,
+              `${blogData.title}'s ${completeEnvironment.instanceUrl} blog`,
               blogData.description,
               blogData.img,
               blogData.content
@@ -199,7 +199,7 @@ function frontend(app: Application) {
       if (req.fediData?.valid) {
         await handlePostRequest(req, res)
       } else {
-        const defaultSeoData = environment.defaultSEOData
+        const defaultSeoData = completeEnvironment.defaultSEOData
         if (req.params?.id) {
           try {
             const postData = await getPostSEOCache(req.params.id)
@@ -219,7 +219,7 @@ function frontend(app: Application) {
     }
   )
   // serve static angular files
-  app.get('*.*', express.static(environment.frontedLocation, cacheOptions))
+  app.get('*.*', express.static(completeEnvironment.frontedLocation, cacheOptions))
 }
 
 function sanitizeStringForSEO(unsanitized: string): string {
@@ -323,7 +323,7 @@ async function getPostSEOCache(
   id: string
 ): Promise<{ title: string; description: string; img: string; content?: string }> {
   const resData = await redisCache.get('postSeoCache:' + id)
-  let res: any = { ...environment.defaultSEOData }
+  let res: any = { ...completeEnvironment.defaultSEOData }
   if (!resData) {
     const post = await Post.findOne(postSearchAttributes({ id }))
     if (post && post.user) {
@@ -353,7 +353,7 @@ async function getBlogSEOCache(
   url: string
 ): Promise<{ title: string; description: string; img: string; content: string }> {
   const resData = await redisCache.get('blogSeoCache:' + url)
-  let res: any = { ...environment.defaultSEOData }
+  let res: any = { ...completeEnvironment.defaultSEOData }
   if (!resData) {
     const blog = await User.findOne({
       where: sequelize.and(
@@ -367,7 +367,7 @@ async function getBlogSEOCache(
       const description = sanitizeStringForSEO(blog.description).substring(0, 200)
       res.title = name
       res.description = description
-      res.img = blog.url.startsWith('@') ? blog.avatar : `${environment.mediaUrl}${blog.avatar}`
+      res.img = blog.url.startsWith('@') ? blog.avatar : `${completeEnvironment.mediaUrl}${blog.avatar}`
 
       res.content = getBlogMicroformat(blog)
       const rssOption = await UserOptions.findOne({
@@ -410,17 +410,17 @@ function getIndexSeo(title: string, description: string, image?: string, content
   const sanitizedDescription = description.replaceAll('"', "'").substring(0, 500)
   let imgUrl = ''
   if (image) {
-    imgUrl = image.toLowerCase().startsWith('https') ? image : environment.mediaUrl + image
+    imgUrl = image.toLowerCase().startsWith('https') ? image : completeEnvironment.mediaUrl + image
   }
   imgUrl = sanitizeStringForSEO(imgUrl)
-  let indexWithSeo = fs.readFileSync(`${environment.frontedLocation}/index.html`).toString()
+  let indexWithSeo = fs.readFileSync(`${completeEnvironment.frontedLocation}/index.html`).toString()
   // index html must have a section with this html comment that we will edit out to put the seo there
   const commentToReplace =
     /<!-- BEGIN REMOVE THIS IN EXPRESS FOR SEO -->.*(.*(\n))*.*<!-- END REMOVE THIS IN EXPRESS FOR SEO -->/gm
   indexWithSeo = indexWithSeo.replace(
     commentToReplace,
     `
-     <meta property="og:site_name" content="${environment.instanceUrl}" />
+     <meta property="og:site_name" content="${completeEnvironment.instanceUrl}" />
     <meta property="og:title" content="${sanitizedTitle}">
     <meta name="twitter:title" content="${sanitizedTitle}">
     <meta property="description" content="${sanitizedDescription}">
@@ -432,8 +432,8 @@ function getIndexSeo(title: string, description: string, image?: string, content
     <meta name="twitter:image" content="${imgUrl}">`
         : ''
     }
-    <meta property="og:site_name" content="${environment.instanceUrl}">
-    <meta name="twitter:site" content="${environment.instanceUrl}">
+    <meta property="og:site_name" content="${completeEnvironment.instanceUrl}">
+    <meta name="twitter:site" content="${completeEnvironment.instanceUrl}">
     `
   )
 

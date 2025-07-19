@@ -2,10 +2,10 @@ import { Queue } from 'bullmq'
 import { User } from '../../models/index.js'
 import { redisCache } from '../redis.js'
 import { getUserIdFromRemoteId } from './getUserIdFromRemoteId.js'
-import { environment } from '../../environment.js'
+import { completeEnvironment } from '../backendOptions.js'
 
 const queue = new Queue('getRemoteActorId', {
-  connection: environment.bullmqConnection,
+  connection: completeEnvironment.bullmqConnection,
   defaultJobOptions: {
     removeOnComplete: true,
     removeOnFail: true,
@@ -17,14 +17,14 @@ const queue = new Queue('getRemoteActorId', {
   }
 })
 
-async function getKey(remoteUserUrl: string, adminUser: any): Promise<{ user?: User, key?: string }> {
+async function getKey(remoteUserUrl: string, adminUser: any): Promise<{ user?: User; key?: string }> {
   const cachedKey = await redisCache.get('key:' + remoteUserUrl)
-  let user;
+  let user
   let remoteKey = cachedKey || undefined //if petition from neew user we need to get the key first
   if (!remoteKey) {
     const userId = await getUserIdFromRemoteId(remoteUserUrl)
     if (userId && userId !== '') {
-      user = await User.findByPk(userId) || undefined
+      user = (await User.findByPk(userId)) || undefined
       remoteKey = user?.publicKey
     } else {
       await queue.add(

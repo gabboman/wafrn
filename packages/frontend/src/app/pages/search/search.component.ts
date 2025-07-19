@@ -22,10 +22,11 @@ export class SearchComponent implements OnInit, OnDestroy {
   cacheurl = EnvironmentService.environment.externalCacheurl
   baseMediaUrl = EnvironmentService.environment.baseMediaUrl
   searchForm: UntypedFormGroup = new UntypedFormGroup({
-    search: new UntypedFormControl('', [Validators.required])
+    search: new UntypedFormControl('', [Validators.required]),
+    user: new UntypedFormControl('')
   })
   currentSearch = ''
-  posts = signal<ProcessedPost[][]>([]);
+  posts = signal<ProcessedPost[][]>([])
   viewedPosts = 0
   users = signal<SimplifiedUser[]>([])
   avatars: Record<string, string> = {}
@@ -35,16 +36,18 @@ export class SearchComponent implements OnInit, OnDestroy {
 
   userLoggedIn = false
   currentPage = 0
-  loading = signal(false);
+  loading = signal(false)
   navigationSubscription: Subscription
   updateFollowersSubscription: Subscription
   searchIcon = faSearch
   atLeastOneSearchDone = false
 
+  currentlyFollowedHashtags: string[] = []
+
   constructor(
     private dashboardService: DashboardService,
     private messages: MessageService,
-    private postService: PostsService,
+    public postService: PostsService,
     private loginService: LoginService,
     private router: Router,
     private activatedRoute: ActivatedRoute,
@@ -83,23 +86,25 @@ export class SearchComponent implements OnInit, OnDestroy {
   }
 
   async submitSearch() {
-    this.loading.set(true);
+    this.loading.set(true)
     this.atLeastOneSearchDone = true
     this.viewedPosts = 0
     this.viewedUsers = 0
     this.currentPage = 0
-    this.posts.set([]);
-    this.users.set([]);
+    this.posts.set([])
+    this.users.set([])
     this.currentSearch = this.searchForm.value['search']
-    const searchResult = await this.dashboardService.getSearchPage(this.currentPage, this.currentSearch)
-    this.posts.set(searchResult.posts);
-    this.users.set(searchResult.users);
+    const searchResult = await this.dashboardService.getSearchPage(this.currentPage, this.currentSearch, {
+      user: this.searchForm.controls['user'].value
+    })
+    this.posts.set(searchResult.posts)
+    this.users.set(searchResult.users)
     searchResult.users.forEach((user) => {
       this.avatars[user.url] = user.url.startsWith('@')
         ? this.cacheurl + encodeURIComponent(user.avatar)
         : this.cacheurl + encodeURIComponent(this.baseMediaUrl + user.avatar)
     })
-    this.loading.set(false);
+    this.loading.set(false)
 
     setTimeout(() => {
       // we detect the bottom of the page and load more posts
@@ -113,11 +118,13 @@ export class SearchComponent implements OnInit, OnDestroy {
       if (element) {
         observer.observe(element)
       }
-    })
+    }, 250)
   }
 
   async loadResults(page: number) {
-    const searchResult = await this.dashboardService.getSearchPage(page, this.currentSearch)
+    const searchResult = await this.dashboardService.getSearchPage(page, this.currentSearch, {
+      user: this.searchForm.controls['user'].value
+    })
     searchResult.posts.forEach((post) => this.posts().push(post))
     searchResult.users.forEach((user) => {
       this.users().push(user)
@@ -155,5 +162,28 @@ export class SearchComponent implements OnInit, OnDestroy {
         summary: 'Something went wrong! Check your internet conectivity and try again'
       })
     }
+  }
+
+  async followUnfollowHashtag(tag: string) {
+    this.loading.set(true)
+    let success = await this.dashboardService.manageHashtagSubscription(
+      tag,
+      !this.postService.followedHashtags.includes(tag.toLowerCase())
+    )
+    if (success) {
+      this.messages.add({
+        severity: 'success',
+        summary:
+          (this.postService.followedHashtags.includes(tag.toLowerCase())
+            ? 'You no longer follow the tag #'
+            : 'You now follow the tag #') + tag
+      })
+    }
+    await this.postService.loadFollowers()
+    this.loading.set(false)
+  }
+
+  searchUserSelected(evt: { remoteId: string; url: string }) {
+    this.searchForm.controls['user'].patchValue(evt.url)
   }
 }

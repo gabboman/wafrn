@@ -1,7 +1,7 @@
 import * as crypto from 'node:crypto'
 import jsonld, { Options } from 'jsonld'
 import axios from 'axios'
-import { environment } from '../../environment.js'
+import { completeEnvironment } from '../backendOptions.js'
 import { logger } from '../logger.js'
 import { getPreloadedContexts, PRELOADED_CONTEXTS } from './contexts.js'
 import { JsonLd, RemoteDocument } from 'jsonld/jsonld-spec.js'
@@ -11,7 +11,7 @@ import { JsonLd, RemoteDocument } from 'jsonld/jsonld-spec.js'
 // RsaSignature2017 based from https://github.com/transmute-industries/RsaSignature2017
 
 export class LdSignature {
-  constructor() { }
+  constructor() {}
 
   public async signRsaSignature2017(
     data: any,
@@ -65,7 +65,7 @@ export class LdSignature {
   public async createVerifyData(data: any, options: any): Promise<string> {
     const transformedOptions = {
       ...options,
-      '@context': `${environment.frontendUrl}/contexts/identity-v1.jsonld`
+      '@context': `${completeEnvironment.frontendUrl}/contexts/identity-v1.jsonld`
     }
     delete transformedOptions['type']
     delete transformedOptions['id']
@@ -116,7 +116,7 @@ export class LdSignature {
 
   private async fetchDocument(url: string): Promise<JsonLd> {
     const headers = {
-      'User-Agent': environment.instanceUrl,
+      'User-Agent': completeEnvironment.instanceUrl,
       Accept: 'application/ld+json, application/json'
     }
     const axiosResponse = await axios.get(url, { headers: headers })

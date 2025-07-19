@@ -1,9 +1,9 @@
-import { FederatedHost } from '../../models/index.js'
+import { FederatedHost, User } from '../../models/index.js'
 import { logger } from '../logger.js'
 import { getPetitionSigned } from './getPetitionSigned.js'
 import { getRemoteActor } from './getRemoteActor.js'
 
-async function searchRemoteUser(searchTerm: string, user: any) {
+async function searchRemoteUser(searchTerm: string, user: any): Promise<User | null> {
   const usernameAndDomain = searchTerm.split('@')
   const users: Array<any> = []
   if (searchTerm.startsWith('@') && searchTerm.length > 3 && usernameAndDomain.length === 3) {
@@ -18,7 +18,7 @@ async function searchRemoteUser(searchTerm: string, user: any) {
       }
     })
     if (domainBlocked) {
-      return []
+      return null
     }
     try {
       let remoteResponse = await getPetitionSigned(
@@ -41,7 +41,7 @@ async function searchRemoteUser(searchTerm: string, user: any) {
       logger.trace(`webfinger petition failed: ${searchTerm}`)
     }
   }
-  return users
+  return users.find((elem) => !!elem)
 }
 
 export { searchRemoteUser }

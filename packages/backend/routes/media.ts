@@ -6,13 +6,13 @@ import { authenticateToken } from '../utils/authenticateToken.js'
 
 import getIp from '../utils/getIP.js'
 import optimizeMedia from '../utils/optimizeMedia.js'
-import { environment } from '../environment.js'
 import { logger } from '../utils/logger.js'
 import AuthorizedRequest from '../interfaces/authorizedRequest.js'
 import { Queue } from 'bullmq'
+import { completeEnvironment } from '../utils/backendOptions.js'
 
 const updateMediaDataQueue = new Queue('processRemoteMediaData', {
-  connection: environment.bullmqConnection,
+  connection: completeEnvironment.bullmqConnection,
   defaultJobOptions: {
     removeOnComplete: true,
     attempts: 3,
@@ -43,7 +43,7 @@ export default function mediaRoutes(app: Application) {
           if (!formatsToNotConvert.includes(extension)) {
             fileUrl = `/${await optimizeMedia(file.path)}`
           }
-          if (environment.removeFolderNameFromFileUploads) {
+          if (completeEnvironment.removeFolderNameFromFileUploads) {
             fileUrl = fileUrl.slice('/uploads/'.length - 1)
           }
 

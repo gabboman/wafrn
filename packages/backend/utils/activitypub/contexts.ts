@@ -6,7 +6,7 @@
  */
 
 import type { Context, JsonLd } from 'jsonld/jsonld-spec.js'
-import { environment } from '../../environment.js'
+import { completeEnvironment } from '../backendOptions.js'
 
 /* eslint:disable:quotemark indent */
 const id_v1 = {
@@ -643,7 +643,7 @@ export const PRELOADED_CONTEXTS: Record<string, JsonLd> = {
 
 export function getPreloadedContexts(): Record<string, JsonLd> {
   const res = PRELOADED_CONTEXTS
-  const wafrnContextUrl = `${environment.frontendUrl}/contexts/litepub-0.1.jsonld`
+  const wafrnContextUrl = `${completeEnvironment.frontendUrl}/contexts/litepub-0.1.jsonld`
   res[wafrnContextUrl] = wafrnContext
   return res
 }

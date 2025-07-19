@@ -1,15 +1,15 @@
 import { Job, Queue, QueueEvents } from 'bullmq'
 import { sequelize, User } from '../../models/index.js'
-import { environment } from '../../environment.js'
 
 import { logger } from '../logger.js'
 import { getUserIdFromRemoteId } from '../cacheGetters/getUserIdFromRemoteId.js'
 import { getDeletedUser } from '../cacheGetters/getDeletedUser.js'
 import { forcePopulateUsers } from '../../atproto/utils/getAtprotoUser.js'
 import { redisCache } from '../redis.js'
+import { completeEnvironment } from '../backendOptions.js'
 
 const queue = new Queue('getRemoteActorId', {
-  connection: environment.bullmqConnection,
+  connection: completeEnvironment.bullmqConnection,
   defaultJobOptions: {
     removeOnComplete: true,
     removeOnFail: true,
@@ -21,14 +21,14 @@ const queue = new Queue('getRemoteActorId', {
   }
 })
 const queueEvents = new QueueEvents('getRemoteActorId', {
-  connection: environment.bullmqConnection
+  connection: completeEnvironment.bullmqConnection
 })
-async function getRemoteActor(actorUrl: string, user: User | null, forceUpdate = false): Promise<any> {
+async function getRemoteActor(actorUrl: string, user: User | null, forceUpdate = false): Promise<User | null> {
   if (!user) {
     logger.debug({
       message: `caled getremoteactor with null`
     })
-    return
+    return null
   }
   let remoteUser
   if (!actorUrl) {
@@ -36,17 +36,17 @@ async function getRemoteActor(actorUrl: string, user: User | null, forceUpdate =
   }
   try {
     // we check its a string. A little bit dirty but could be worse
-    if (actorUrl.toLowerCase().startsWith(environment.frontendUrl + '/fediverse/blog/')) {
-      const urlToSearch = actorUrl.split(environment.frontendUrl + '/fediverse/blog/')[1].toLowerCase()
+    if (actorUrl.toLowerCase().startsWith(completeEnvironment.frontendUrl + '/fediverse/blog/')) {
+      const urlToSearch = actorUrl.split(completeEnvironment.frontendUrl + '/fediverse/blog/')[1].toLowerCase()
       return User.findOne({
         where: sequelize.where(sequelize.fn('lower', sequelize.col('url')), urlToSearch.toLowerCase())
       })
     }
-    if (environment.enableBsky && actorUrl.toLowerCase().startsWith('at://')) {
+    if (completeEnvironment.enableBsky && actorUrl.toLowerCase().startsWith('at://')) {
       // Bluesky user. This should only happen through an import
       const adminUser = (await User.findOne({
         where: {
-          url: environment.adminUser
+          url: completeEnvironment.adminUser
         }
       })) as User
       await forcePopulateUsers([actorUrl.slice(5)], adminUser)
@@ -86,7 +86,7 @@ async function getRemoteActor(actorUrl: string, user: User | null, forceUpdate =
     })
   }
   // update user if last update was more than 24 hours ago
-  if (remoteUser && remoteUser.url !== environment.deletedUser) {
+  if (remoteUser && remoteUser.url !== completeEnvironment.deletedUser) {
     const lastUpdate = new Date(remoteUser.updatedAt)
     const now = new Date()
     if (now.getTime() - lastUpdate.getTime() > 24 * 3600 * 1000 || forceUpdate) {

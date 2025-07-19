@@ -2,12 +2,12 @@ import { Job, Queue } from 'bullmq'
 import { Op } from 'sequelize'
 import _ from 'underscore'
 import { FederatedHost, User } from '../../models/index.js'
-import { environment } from '../../environment.js'
+import { completeEnvironment } from '../backendOptions.js'
 import { getRemoteActorIdProcessor } from '../queueProcessors/getRemoteActorIdProcessor.js'
 
 let adminUserPromise = User.findOne({
   where: {
-    url: environment.adminUser
+    url: completeEnvironment.adminUser
   }
 })
 
