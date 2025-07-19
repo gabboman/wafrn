@@ -1,4 +1,6 @@
-/* CATPPUCCIN FRAPPÈ THEME :neocat_cofe_256: */
+/* CATPPUCCIN FRAPPE THEME :neocat_cofe_256: */
+
+/* Source Repo: https://github.com/astreaprtcl/catppuccin-wafrn */
 
 /* Catppuccin Colors */
 @import url('https://cdn.jsdelivr.net/npm/@catppuccin/palette/css/catppuccin.css');
@@ -14,23 +16,46 @@
   /* I used this (--failure) when I couldn't find the variables within the
    * site to know what to do with them. Please file a bug report if you
    * see this color.
-  */ --failure: blue;
+  */
+  
+  /* Colour variables */
+  --accent1: light-dark(var(--ctp-latte-mauve), var(--ctp-frappe-mauve));
+  --accent2: light-dark(var(--ctp-latte-sky), var(--ctp-frappe-sky));
+  --accent3: light-dark(var(--ctp-latte-rosewater), var(--ctp-frappe-rosewater));
+  --tags: light-dark(var(--ctp-latte-blue), var(--ctp-frappe-blue));
+  --failure: light-dark(var(--ctp-latte-red), var(--ctp-frappe-red));
+  
+  /* Text variables */
+  --text: light-dark(var(--ctp-latte-text), var(--ctp-frappe-text));
+  --subtext0: light-dark(var(--ctp-latte-subtext0), var(--ctp-frappe-subtext0));
+  --subtext1: light-dark(var(--ctp-latte-subtext1), var(--ctp-frappe-subtext1));
+  
+  /* Panel variables */
+  --crust: light-dark(var(--ctp-latte-crust), var(--ctp-frappe-crust));
+  --mantle: light-dark(var(--ctp-latte-mantle), var(--ctp-frappe-mantle));
+  --base: light-dark(var(--ctp-latte-base), var(--ctp-frappe-base));
+  --surface0: light-dark(var(--ctp-latte-surface0), var(--ctp-frappe-surface0));
+  --surface1: light-dark(var(--ctp-latte-surface1), var(--ctp-frappe-surface1));
+  --surface2: light-dark(var(--ctp-latte-surface2), var(--ctp-frappe-surface2));
+  --overlay0: light-dark(var(--ctp-latte-overlay0), var(--ctp-frappe-overlay0));
+  --overlay1: light-dark(var(--ctp-latte-overlay1), var(--ctp-frappe-overlay1));
+  --overlay2: light-dark(var(--ctp-latte-overlay2), var(--ctp-frappe-overlay2));
   
   /* Primary palette variables */
-  --mat-sys-primary: var(--ctp-frappe-blue);
-  --mat-sys-on-primary: var(--ctp-frappe-base);
-  --mat-sys-primary-container: var(--ctp-frappe-surface1);
-  --mat-sys-on-primary-container: var(--ctp-frappe-subtext1);
-  --mat-sys-inverse-primary: var(--ctp-frappe-overlay2);
+  --mat-sys-primary: var(--text);
+  --mat-sys-on-primary: var(--base);
+  --mat-sys-primary-container: var(--surface0);
+  --mat-sys-on-primary-container: var(--subtext1);
+  --mat-sys-inverse-primary: var(--overlay2);
   --mat-sys-primary-fixed: var(--failure);
-  --mat-sys-primary-fixed-dim: var(--ctp-frappe-yellow);
+  --mat-sys-primary-fixed-dim: var(--tags);
   --mat-sys-on-primary-fixed: var(--failure);
   --mat-sys-on-primary-fixed-variant: var(--failure);
 
   /* Secondary palette variables */
   --mat-sys-secondary: var(--failure);
   --mat-sys-on-secondary: var(--failure);
-  --mat-sys-secondary-container: var(--ctp-frappe-surface1);
+  --mat-sys-secondary-container: var(--surface1);
   --mat-sys-on-secondary-container: var(--failure);
   --mat-sys-secondary-fixed: var(--failure);
   --mat-sys-secondary-fixed-dim: var(--failure);
@@ -48,24 +73,24 @@
   --mat-sys-on-tertiary-fixed-variant: var(--failure);
 
   /* Neutral palette variables */
-  --mat-sys-background: var(--ctp-frappe-base);
-  --mat-sys-on-background: var(--ctp-frappe-text);
-  --mat-sys-surface: var(--ctp-frappe-surface0);
+  --mat-sys-background: var(--crust);
+  --mat-sys-on-background: var(--text);
+  --mat-sys-surface: var(--surface0);
   --mat-sys-surface-dim: var(--failure);
   --mat-sys-surface-bright: var(--failure);
-  --mat-sys-surface-container-lowest: var(--failure);
-  --mat-sys-surface-container-low: var(--ctp-frappe-mantle);
-  --mat-sys-surface-container: var(--ctp-frappe-base);
-  --mat-sys-surface-container-high: var(--ctp-frappe-overlay0);
-  --mat-sys-surface-container-highest: var(--ctp-frappe-overlay1);
-  --mat-sys-on-surface: var(--ctp-frappe-subtext1);
-  --mat-sys-shadow: var(--failure);
+  --mat-sys-surface-container-lowest: var(--crust);
+  --mat-sys-surface-container-low: var(--mantle);
+  --mat-sys-surface-container: var(--base);
+  --mat-sys-surface-container-high: var(--surface0);
+  --mat-sys-surface-container-highest: var(--surface1);
+  --mat-sys-on-surface: var(--subtext1);
+  --mat-sys-shadow: var(--crust);
   --mat-sys-scrim: var(--failure);
   --mat-sys-surface-tint: var(--failure);
-  --mat-sys-inverse-surface: var(--ctp-frappe-rosewater);
-  --mat-sys-inverse-on-surface: var(--ctp-frappe-crust);
-  --mat-sys-outline: var(--ctp-frappe-mauve);
-  --mat-sys-outline-variant: var(--ctp-frappe-yellow);
+  --mat-sys-inverse-surface: var(--accent1);
+  --mat-sys-inverse-on-surface: var(--crust);
+  --mat-sys-outline: var(--subtext0);
+  --mat-sys-outline-variant: var(--accent2);
   --mat-sys-neutral10: var(--failure); /* Variable used for the form field native select option text color */
 
   /* Error palette variables */
@@ -75,9 +100,9 @@
   --mat-sys-on-error-container: var(--failure);
 
   /* Neutral variant palette variables */
-  --mat-sys-surface-variant: var(--ctp-frappe-surface1);
-  --mat-sys-on-surface-variant: var(--ctp-frappe-green);
-  --mat-sys-neutral-variant20: var(--ctp-frappe-surface1); /* Variable used for the sidenav scrim (container background shadow when opened) */
+  --mat-sys-surface-variant: var(--surface1);
+  --mat-sys-on-surface-variant: var(--accent3);
+  --mat-sys-neutral-variant20: var(--surface1); /* Variable used for the sidenav scrim (container background shadow when opened) */
   
   /* other */
   --mat-badge-text-color: var(--mat-sys-on-primary);
