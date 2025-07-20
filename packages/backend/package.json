@@ -1,6 +1,6 @@
 {
   "name": "wafrn-backend",
-  "version": "2025.7.1",
+  "version": "2025.7.2-dev",
   "description": "wafrn backend",
   "main": "index.js",
   "type": "module",
