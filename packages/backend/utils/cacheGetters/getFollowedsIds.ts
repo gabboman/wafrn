@@ -3,20 +3,32 @@ import { Blocks, Follows, User } from '../../models/index.js'
 import getBlockedIds from './getBlockedIds.js'
 import { redisCache } from '../redis.js'
 
-export default async function getFollowedsIds(userId: string, local = false): Promise<string[]> {
-  const cacheResult = await redisCache.get(local ? 'follows:local:' + userId : 'follows:full:' + userId)
+export default async function getFollowedsIds(
+  userId: string,
+  local = false,
+  options = { getFollowersInstead: false }
+): Promise<string[]> {
+  const baseCacheNameString = !options.getFollowersInstead ? 'follows' : 'followers'
+  const cacheResult = await redisCache.get(
+    local ? baseCacheNameString + ':local:' + userId : baseCacheNameString + ':full:' + userId
+  )
   if (cacheResult) {
     return JSON.parse(cacheResult)
   }
   try {
     const usersWithBlocks = await getBlockedIds(userId)
-    const whereObject: any = {
-      followerId: userId,
-      accepted: true,
-      followedId: {
-        [Op.notIn]: usersWithBlocks
-      }
-    }
+    const whereObject: any = options.getFollowersInstead
+      ? {
+          followedId: userId,
+          accepted: true
+        }
+      : {
+          followerId: userId,
+          accepted: true,
+          followedId: {
+            [Op.notIn]: usersWithBlocks
+          }
+        }
     const followed = await Follows.findAll({
       attributes: ['followedId'],
       include: [
@@ -50,7 +62,12 @@ export default async function getFollowedsIds(userId: string, local = false): Pr
       })
       result = localUsers.map((usr) => usr.id)
     }
-    redisCache.set(local ? 'follows:local:' + userId : 'follows:full:' + userId, JSON.stringify(result), 'EX', 600)
+    redisCache.set(
+      local ? baseCacheNameString + ':local:' + userId : baseCacheNameString + ':full:' + userId,
+      JSON.stringify(result),
+      'EX',
+      600
+    )
     return result as string[]
   } catch (error) {
     return []

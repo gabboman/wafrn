@@ -23,7 +23,7 @@ import getPosstGroupDetails from './getPostGroupDetails.js'
 import getFollowedsIds from './cacheGetters/getFollowedsIds.js'
 import { Queue } from 'bullmq'
 import { completeEnvironment } from './backendOptions.js'
-import { Privacy } from '../models/post.js'
+import { InteractionControl, InteractionControlType, Privacy } from '../models/post.js'
 
 const updateMediaDataQueue = new Queue('processRemoteMediaData', {
   connection: completeEnvironment.bullmqConnection,
@@ -194,6 +194,7 @@ async function getEmojis(input: { userIds: string[]; postIds: string[] }): Promi
   }
 }
 
+// TODO optimization: make more promise all and less await dothing await dothing
 async function getUnjointedPosts(postIdsInput: string[], posterId: string, doNotFullyHide = false) {
   // we need a list of all the userId we just got from the post
   let userIds: string[] = []
@@ -335,7 +336,14 @@ async function getUnjointedPosts(postIdsInput: string[], posterId: string, doNot
   const bannedUserIds = (await users)
     .filter((elem) => elem.banned || (elem.federatedHostId && blockedHostsIds.includes(elem.federatedHostId)))
     .map((elem) => elem.id)
-  const usersFollowedByPoster = await getFollowedsIds(posterId)
+  let usersFollowedByPoster: string[] | Promise<string[]> = getFollowedsIds(posterId)
+  let usersFollowingPoster: string[] | Promise<string[]> = getFollowedsIds(posterId, false, {
+    getFollowersInstead: true
+  })
+
+  await Promise.all([usersFollowedByPoster, usersFollowingPoster, tags, medias])
+  usersFollowedByPoster = await usersFollowedByPoster
+  usersFollowingPoster = await usersFollowingPoster
   const tagsAwaited = await tags
   const mediasAwaited = await medias
 
@@ -374,7 +382,7 @@ async function getUnjointedPosts(postIdsInput: string[], posterId: string, doNot
   const postIdsToFullySend: string[] = postsToFullySend
     .filter((elem) => !blockedUsersSet.has(elem.userId))
     .map((post: any) => post.id)
-  const postsToSend = (await postWithNotes)
+  const postsToSendFiltered = (await postWithNotes)
     .map((post: any) => filterPost(post, postIdsToFullySend, doNotFullyHide))
     .filter((elem: any) => !!elem)
   const mediasToSend = (await medias).filter((elem: any) => {
@@ -383,9 +391,55 @@ async function getUnjointedPosts(postIdsInput: string[], posterId: string, doNot
   const tagsFiltered = (await tags).filter((tag: any) => postIdsToFullySend.includes(tag.postId))
   const quotesFiltered = quotes.filter((quote: any) => postIdsToFullySend.includes(quote.quoterPostId))
   const pollsFiltered = (await polls).filter((poll: any) => postIdsToFullySend.includes(poll.postId))
+  // we edit posts so we add the interactionPolicies
+  const postsToSend = postsToSendFiltered
+    .filter((elem) => !!elem)
+    .map(async (elem) => {
+      let canReply = canInteract(
+        elem.replyControl,
+        posterId,
+        elem.id,
+        usersFollowingPoster,
+        usersFollowedByPoster,
+        mentions
+      )
+      let canLike = canInteract(
+        elem.likeControl,
+        posterId,
+        elem.id,
+        usersFollowingPoster,
+        usersFollowedByPoster,
+        mentions
+      )
+      let canReblog = canInteract(
+        elem.reblogControl,
+        posterId,
+        elem.id,
+        usersFollowingPoster,
+        usersFollowedByPoster,
+        mentions
+      )
+      let canQuote = canInteract(
+        elem.quoteControl,
+        posterId,
+        elem.id,
+        usersFollowingPoster,
+        usersFollowedByPoster,
+        mentions
+      )
+      await Promise.all([canReply, canReblog, canQuote, canLike])
+      return {
+        ...elem,
+        canReply: await canReply,
+        canReblog: await canReblog,
+        canQuote: await canQuote,
+        canLike: await canLike
+      }
+    })
+
   return {
     rewootIds: finalRewootIds.filter((elem) => !!elem),
-    posts: postsToSend.filter((elem) => !!elem),
+    posts: await Promise.all(postsToSend),
     emojiRelations: await emojis,
     mentions: mentions.postMentionRelation.filter((elem) => !!elem),
     users: (await users).filter((elem) => !!elem),
@@ -415,6 +469,79 @@ function filterPost(postToBeFilter: any, postIdsToFullySend: string[], donotHide
     res.ancestors = res.ancestors.filter((elem: any) => !(elem == undefined))
     if (ancestorsLength != res.ancestors.length && !donotHide) {
       res = undefined
+    }
+  }
+
+  return res
+}
+
+// we are gona do this for likes, quotes, replies and rewoots... and we may will this function too when user interacts with a post!
+async function canInteract(
+  level: InteractionControlType,
+  userId: string,
+  postId: string,
+  userFollowersInput?: string[],
+  userFollowingInput?: string[],
+  mentionsInput?: { usersMentioned: string[]; postMentionRelation: any[] }
+): Promise<boolean> {
+  if (level == InteractionControl.Anyone) {
+    return true
+  }
+  let usersFollowing = userFollowingInput ? userFollowingInput : getFollowedsIds(userId)
+  let userFollowers = userFollowersInput
+    ? userFollowersInput
+    : getFollowedsIds(userId, false, {
+        getFollowersInstead: true
+      })
+  let mentions = mentionsInput ? mentionsInput : getMentionedUserIds([postId])
+  let post: Promise<Post | null> | Post | null = Post.findByPk(postId)
+  await Promise.all([usersFollowing, userFollowers, mentions, post])
+  usersFollowing = await usersFollowing
+  userFollowers = await userFollowers
+  mentions = await mentions
+  post = await post
+  let res = false
+  if (post) {
+    if (post.userId == userId) {
+      return true
+    }
+    switch (level) {
+      case InteractionControl.Anyone: {
+        res = false
+        break
+      }
+      case InteractionControl.Followers: {
+        res = usersFollowing.includes(post.userId)
+        break
+      }
+      case InteractionControl.Following: {
+        // post creator follows you
+        res = userFollowers.includes(post.userId)
+        break
+      }
+      case InteractionControl.FollowersAndMentioned: {
+        // post creator follows you
+        res =
+          usersFollowing.includes(post.userId) ||
+          mentions.postMentionRelation.find((elem) => elem.postId == postId && elem.userId == userId)
+        break
+      }
+      case InteractionControl.FollowingAndMentioned: {
+        // post creator follows you
+        res =
+          userFollowers.includes(post.userId) ||
+          mentions.postMentionRelation.find((elem) => elem.postId == postId && elem.userId == userId)
+        break
+      }
+      case InteractionControl.MentionedUsersOnly: {
+        // post creator follows you
+        res = mentions.postMentionRelation.find((elem) => elem.postId == postId && elem.userId == userId)
+        break
+      }
+      case InteractionControl.NoOne: {
+        // post creator follows you
+        res = false
+      }
     }
   }
 

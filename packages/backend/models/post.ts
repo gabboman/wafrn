@@ -49,7 +49,21 @@ export const Privacy = {
   DirectMessage: 10
 } as const
 
+export const InteractionControl = {
+  Anyone: 0,
+  Followers: 1,
+  Following: 2,
+  FollowersAndFollowing: 3,
+  FollowersAndMentioned: 4,
+  FollowingAndMentioned: 5,
+  FollowersFollowersAndMentioned: 6,
+  MentionedUsersOnly: 7,
+  NoOne: 8
+}
+
 export type PrivacyType = (typeof Privacy)[keyof typeof Privacy]
+
+export type InteractionControlType = (typeof InteractionControl)[keyof typeof InteractionControl]
 
 export interface PostAttributes {
   id?: string
@@ -69,6 +83,10 @@ export interface PostAttributes {
   userId?: string
   hierarchyLevel?: number
   parentId?: string
+  replyControl?: InteractionControlType
+  likeControl?: InteractionControlType
+  reblogControl?: InteractionControlType
+  quoteControl?: InteractionControlType
 }
 
 @Table({
@@ -172,6 +190,34 @@ export class Post extends Model<PostAttributes, PostAttributes> implements PostA
     type: DataType.UUID
   })
   declare parentId: string
+
+  @Column({
+    allowNull: true,
+    type: DataType.INTEGER,
+    defaultValue: 0
+  })
+  declare replyControl: InteractionControlType
+
+  @Column({
+    allowNull: true,
+    type: DataType.INTEGER,
+    defaultValue: 0
+  })
+  declare likeControl: InteractionControlType
+
+  @Column({
+    allowNull: true,
+    type: DataType.INTEGER,
+    defaultValue: 0
+  })
+  declare reblogControl: InteractionControlType
+
+  @Column({
+    allowNull: true,
+    type: DataType.INTEGER,
+    defaultValue: 0
+  })
+  declare quoteControl: InteractionControlType
 
   @BelongsTo(() => Post, 'parentId')
   declare parent: Post
