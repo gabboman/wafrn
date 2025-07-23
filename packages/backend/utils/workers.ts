@@ -11,6 +11,7 @@ import { sendPushNotification } from './queueProcessors/sendPushNotification.js'
 import { checkPushNotificationDelivery } from './queueProcessors/checkPushNotificationDelivery.js'
 import { generateUserKeyPair } from './queueProcessors/generateUserKeyPair.js'
 import { completeEnvironment } from './backendOptions.js'
+import { sendPostBsky } from './queueProcessors/sendPostBsky.js'
 
 logger.info('started worker')
 const workerInbox = new Worker('inbox', (job: Job) => inboxWorker(job), {
@@ -22,6 +23,15 @@ const workerInbox = new Worker('inbox', (job: Job) => inboxWorker(job), {
 })
 
 const workerPrepareSendPost = new Worker('prepareSendPost', (job: Job) => prepareSendRemotePostWorker(job), {
+  connection: completeEnvironment.bullmqConnection,
+  metrics: {
+    maxDataPoints: MetricsTime.ONE_WEEK * 2
+  },
+  concurrency: completeEnvironment.workers.high,
+  lockDuration: 60000
+})
+
+const workerSendPostBsky = new Worker('sendPostBsky', (job: Job) => sendPostBsky(job), {
   connection: completeEnvironment.bullmqConnection,
   metrics: {
     maxDataPoints: MetricsTime.ONE_WEEK * 2
@@ -146,6 +156,7 @@ const workers = [
 ]
 if (completeEnvironment.enableBsky) {
   workers.push(workerProcessFirehose as Worker)
+  workers.push(workerSendPostBsky as Worker)
 }
 
 workers.forEach((worker) => {
@@ -173,6 +184,10 @@ const workersToLogFail = [
   workerSendPushNotification,
   workerGenerateUserKeyPair
 ]
+if (completeEnvironment.enableBsky) {
+  workersToLogFail.push(workerProcessFirehose as Worker)
+  workersToLogFail.push(workerSendPostBsky as Worker)
+}
 
 workersToLogFail.forEach((worker) =>
   worker.on('failed', (err) => {
@@ -194,5 +209,6 @@ export {
   workerProcessFirehose,
   workerSendPushNotification,
   workerCheckPushNotificationDelivery,
-  workerGenerateUserKeyPair
+  workerGenerateUserKeyPair,
+  workerSendPostBsky
 }

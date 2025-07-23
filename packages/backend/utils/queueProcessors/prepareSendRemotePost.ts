@@ -48,9 +48,20 @@ const sendPostQueue = new Queue('sendPostToInboxes', {
     removeOnFail: true
   }
 })
+
+const sendPostBskyQueue = new Queue('sendPostBsky', {
+  connection: completeEnvironment.bullmqConnection,
+  defaultJobOptions: {
+    removeOnComplete: true,
+    attempts: 3,
+    backoff: {
+      type: 'fixed',
+      delay: 25000
+    },
+    removeOnFail: true
+  }
+})
 async function prepareSendRemotePostWorker(job: Job) {
-  // TODO fix this! this is dirtier than my unwashed gim clothes
-  await wait(1500)
   //async function sendRemotePost(localUser: any, post: any) {
   const post = await Post.findByPk(job.id)
   if (!post) {
@@ -61,50 +72,7 @@ async function prepareSendRemotePostWorker(job: Job) {
   const parentPoster = parent ? await User.findByPk(parent.userId) : undefined
   const localUser = await User.findByPk(post.userId)
   if (post.privacy === Privacy.Public && localUser?.enableBsky && completeEnvironment.enableBsky) {
-    try {
-      // if parent has no bsky data we dont reblog
-      if (!parent || parent.bskyUri) {
-        // ok the user has bluesky time to send the post
-        const agent = await getAtProtoSession(localUser)
-        let isReblog = false
-        if (post.content == '' && post.content_warning == '' && post.parentId) {
-          const mediaCount = await Media.count({
-            where: {
-              postId: post.id
-            }
-          })
-          const quotesCount = await Quotes.count({
-            where: {
-              quoterPostId: post.id
-            }
-          })
-          const tagsCount = await PostTag.count({
-            where: {
-              postId: post.id
-            }
-          })
-          if (mediaCount + quotesCount + tagsCount === 0) {
-            isReblog = true
-            if (parent?.bskyUri) {
-              const { uri } = await agent.repost(parent.bskyUri, parent.bskyCid as string)
-              post.bskyUri = uri
-              await post.save()
-            }
-          }
-        }
-        if (!isReblog) {
-          const bskyPost = await agent.post(await postToAtproto(post, agent))
-          post.bskyUri = bskyPost.uri
-          post.bskyCid = bskyPost.cid
-          await post.save()
-        }
-      }
-    } catch (error) {
-      logger.warn({
-        message: 'Error while posting to bsky',
-        error: error
-      })
-    }
+    await sendPostBskyQueue.add('sendPostBsky', job.data)
   }
   // we check if we need to send the post to fedi
   if (localUser && (!parent || !parent.bskyUri || !parentPoster?.url.startsWith('@'))) {
