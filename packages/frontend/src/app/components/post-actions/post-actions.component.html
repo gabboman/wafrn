@@ -49,7 +49,7 @@
     </button>
   }
   @if (userLoggedIn) {
-    <button [disabled]="!content.canReply" (click)="replyPost()" mat-menu-item>
+    <button (click)="replyPost()" mat-menu-item>
       <span class="post-actions-menu-span-content">
         <fa-icon class="mr-2" [icon]="reblogIcon"></fa-icon>
         Reply woot
@@ -64,7 +64,7 @@
       </button>
     } @else {
       @if (content.privacy !== 10 && content.privacy !== 1) {
-        <button [disabled]="!content.canReblog" (click)="quickReblog()" mat-menu-item>
+        <button (click)="quickReblog()" mat-menu-item>
           <span class="post-actions-menu-span-content">
             <fa-icon class="mr-2" [icon]="quickReblogIcon"></fa-icon>
             Rewoot
@@ -73,7 +73,7 @@
       }
     }
     @if (content.privacy !== 10 && content.privacy !== 1 && content.privacy !== 2) {
-      <button [disabled]="!content.canQuote" (click)="quoteWoot()" mat-menu-item>
+      <button (click)="quoteWoot()" mat-menu-item>
         <span class="post-actions-menu-span-content">
           <fa-icon class="mr-2" [icon]="quoteIcon"></fa-icon>
           Quote woot
@@ -104,7 +104,7 @@
           </span>
         </button>
       } @else {
-        <button [disabled]="!content.canLike" (click)="likePost()" mat-menu-item>
+        <button (click)="likePost()" mat-menu-item>
           <span class="post-actions-menu-span-content">
             <fa-icon class="mr-2" [icon]="solidHeartIcon"></fa-icon>
             Like woot

@@ -16,7 +16,6 @@
     <div class="flex gap-1 action-list" aria-label="Action list">
       @if (fragment.privacy !== 10 && fragment.privacy !== 1 && fragment.privacy !== 2) {
         <button
-          [disabled]="!fragment.canQuote"
           aria-label="Quote woot"
           mat-button
           color="accent"
@@ -41,7 +40,6 @@
       @if (!myRewootsIncludePost && fragment.privacy !== 10 && fragment.privacy !== 1) {
         <button
           aria-label="Rewoot"
-          [disabled]="!fragment.canReblog"
           mat-button
           color="accent"
           (click)="quickReblog(fragment)"
@@ -53,7 +51,6 @@
       }
       <button
         aria-label="Reply woot"
-        [disabled]="!fragment.canReply"
         mat-button
         color="accent"
         (click)="replyPost(fragment)"
@@ -96,7 +93,6 @@
         } @else {
           <button
             aria-label="Like woot"
-            [disabled]="!fragment.canLike"
             mat-button
             color="accent"
             (click)="likePost(fragment)"
