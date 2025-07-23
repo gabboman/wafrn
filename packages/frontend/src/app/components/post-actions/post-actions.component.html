@@ -5,7 +5,7 @@
     class="split-button-left"
     (click)="sharePost()"
     matTooltip="Copy Wafrn link"
-    >
+  >
     <fa-icon [icon]="shareIcon"></fa-icon>
   </button>
   <button
@@ -14,7 +14,7 @@
     class="split-button-right"
     [matMenuTriggerFor]="menu"
     matTooltip="Post actions"
-    >
+  >
     <fa-icon [icon]="expandDownIcon"></fa-icon>
   </button>
 </div>
@@ -41,10 +41,7 @@
     </button>
   }
   @if (content.user.url.startsWith('@') && content.privacy !== 1 && content.privacy !== 10) {
-    <button
-      (click)="viewOriginalPost()"
-      mat-menu-item
-      >
+    <button (click)="viewOriginalPost()" mat-menu-item>
       <span class="post-actions-menu-span-content">
         <fa-icon class="mr-2" [icon]="goExternalPost"></fa-icon>
         View original post
@@ -52,7 +49,7 @@
     </button>
   }
   @if (userLoggedIn) {
-    <button (click)="replyPost()" mat-menu-item>
+    <button [disabled]="!content.canReply" (click)="replyPost()" mat-menu-item>
       <span class="post-actions-menu-span-content">
         <fa-icon class="mr-2" [icon]="reblogIcon"></fa-icon>
         Reply woot
@@ -67,7 +64,7 @@
       </button>
     } @else {
       @if (content.privacy !== 10 && content.privacy !== 1) {
-        <button (click)="quickReblog()" mat-menu-item>
+        <button [disabled]="!content.canReblog" (click)="quickReblog()" mat-menu-item>
           <span class="post-actions-menu-span-content">
             <fa-icon class="mr-2" [icon]="quickReblogIcon"></fa-icon>
             Rewoot
@@ -76,10 +73,7 @@
       }
     }
     @if (content.privacy !== 10 && content.privacy !== 1 && content.privacy !== 2) {
-      <button
-        (click)="quoteWoot()"
-        mat-menu-item
-        >
+      <button [disabled]="!content.canQuote" (click)="quoteWoot()" mat-menu-item>
         <span class="post-actions-menu-span-content">
           <fa-icon class="mr-2" [icon]="quoteIcon"></fa-icon>
           Quote woot
@@ -110,7 +104,7 @@
           </span>
         </button>
       } @else {
-        <button (click)="likePost()" mat-menu-item>
+        <button [disabled]="!content.canLike" (click)="likePost()" mat-menu-item>
           <span class="post-actions-menu-span-content">
             <fa-icon class="mr-2" [icon]="solidHeartIcon"></fa-icon>
             Like woot

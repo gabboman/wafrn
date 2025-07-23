@@ -37,4 +37,8 @@ export interface ProcessedPost {
   isRewoot: boolean
   hierarchyLevel: number
   bookmarkers: string[]
+  canReply: boolean
+  canQuote: boolean
+  canLike: boolean
+  canReblog: boolean
 }
