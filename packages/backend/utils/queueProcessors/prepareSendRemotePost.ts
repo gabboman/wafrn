@@ -15,11 +15,6 @@ import {
   PostTag
 } from '../../models/index.js'
 import { Job, Queue } from 'bullmq'
-import { Agent, BskyAgent, CredentialSession } from '@atproto/api'
-import { wait } from '../wait.js'
-import dompurify from 'isomorphic-dompurify'
-import { postToAtproto } from '../../atproto/utils/postToAtproto.js'
-import { getAtProtoSession } from '../../atproto/utils/getAtProtoSession.js'
 import { Privacy } from '../../models/post.js'
 import { completeEnvironment } from '../backendOptions.js'
 

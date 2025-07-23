@@ -394,48 +394,7 @@ async function getUnjointedPosts(postIdsInput: string[], posterId: string, doNot
   // we edit posts so we add the interactionPolicies
   const postsToSend = postsToSendFiltered
     .filter((elem) => !!elem)
-    .map(async (elem) => {
-      let canReply = canInteract(
-        elem.replyControl,
-        posterId,
-        elem.id,
-        usersFollowingPoster,
-        usersFollowedByPoster,
-        mentions
-      )
-      let canLike = canInteract(
-        elem.likeControl,
-        posterId,
-        elem.id,
-        usersFollowingPoster,
-        usersFollowedByPoster,
-        mentions
-      )
-      let canReblog = canInteract(
-        elem.reblogControl,
-        posterId,
-        elem.id,
-        usersFollowingPoster,
-        usersFollowedByPoster,
-        mentions
-      )
-      let canQuote = canInteract(
-        elem.quoteControl,
-        posterId,
-        elem.id,
-        usersFollowingPoster,
-        usersFollowedByPoster,
-        mentions
-      )
-      await Promise.all([canReply, canReblog, canQuote, canLike])
-      return {
-        ...elem,
-        canReply: await canReply,
-        canReblog: await canReblog,
-        canQuote: await canQuote,
-        canLike: await canLike
-      }
-    })
+    .map(async (elem) => addPostCanInteract(posterId, elem, usersFollowingPoster, usersFollowedByPoster, mentions))
 
   return {
     rewootIds: finalRewootIds.filter((elem) => !!elem),
@@ -501,7 +460,7 @@ async function canInteract(
   mentions = await mentions
   post = await post
   // TMP hack
-  let res = true
+  let res = false
   if (post) {
     if (post.userId == userId) {
       return true
@@ -547,6 +506,42 @@ async function canInteract(
   }
 
   return res
+}
+
+async function addPostCanInteract(
+  userId: string,
+  postInput: any,
+  userFollowersInput?: string[],
+  userFollowingInput?: string[],
+  mentionsInput?: { usersMentioned: string[]; postMentionRelation: any[] }
+) {
+  let post: any = { ...postInput }
+  let canReply = canInteract(post.replyControl, userId, post.id, userFollowersInput, userFollowingInput, mentionsInput)
+  let canLike = canInteract(post.likeControl, userId, post.id, userFollowersInput, userFollowingInput, mentionsInput)
+  let canReblog = canInteract(
+    post.reblogControl,
+    userId,
+    post.id,
+    userFollowersInput,
+    userFollowingInput,
+    mentionsInput
+  )
+  let canQuote = canInteract(post.quoteControl, userId, post.id, userFollowersInput, userFollowingInput, mentionsInput)
+
+  await Promise.all([canReblog, canReply, canQuote, canLike])
+  post.canReply = await canReply
+  post.canLike = await canLike
+  post.canReblog = await canReblog
+  post.canQuote = await canQuote
+  if (post.ancestors) {
+    post.ancestors = await Promise.all(
+      post.ancestors.map((elem: Post) =>
+        addPostCanInteract(userId, elem.dataValues, userFollowersInput, userFollowingInput, mentionsInput)
+      )
+    )
+  }
+
+  return post
 }
 
 export { getUnjointedPosts, getMedias, getQuotes, getMentionedUserIds, getTags, getLikes, getBookmarks, getEmojis }
