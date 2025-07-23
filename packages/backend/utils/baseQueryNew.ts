@@ -500,7 +500,8 @@ async function canInteract(
   userFollowers = await userFollowers
   mentions = await mentions
   post = await post
-  let res = false
+  // TMP hack
+  let res = true
   if (post) {
     if (post.userId == userId) {
       return true
