@@ -60,7 +60,6 @@ import { follow } from '../utils/follow.js'
 import { activityPubObject } from '../interfaces/fediverse/activityPubObject.js'
 import { getFollowedHashtags } from '../utils/getFollowedHashtags.js'
 import { completeEnvironment } from '../utils/backendOptions.js'
-import { environment } from '../environment.js'
 
 const markdownConverter = new showdown.Converter({
   simplifiedAutoLink: true,
