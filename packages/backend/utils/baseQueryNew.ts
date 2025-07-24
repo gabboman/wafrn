@@ -544,4 +544,14 @@ async function addPostCanInteract(
   return post
 }
 
-export { getUnjointedPosts, getMedias, getQuotes, getMentionedUserIds, getTags, getLikes, getBookmarks, getEmojis }
+export {
+  getUnjointedPosts,
+  getMedias,
+  getQuotes,
+  getMentionedUserIds,
+  getTags,
+  getLikes,
+  getBookmarks,
+  getEmojis,
+  addPostCanInteract
+}

@@ -5,6 +5,7 @@ import { Application, Request, Response } from 'express'
 import { Post, QuestionPoll, QuestionPollAnswer, QuestionPollQuestion, User, sequelize } from '../models/index.js'
 import { Model, Op, QueryTypes } from 'sequelize'
 import {
+  addPostCanInteract,
   getBookmarks,
   getEmojis,
   getLikes,
@@ -37,7 +38,6 @@ export default function forumRoutes(app: Application) {
         )
       ).map((elem: any) => elem.postsId)
       const fullPostsToGet = await Post.findAll({
-        /* TODO this
         include: [
           {
             model: User,
@@ -55,24 +55,23 @@ export default function forumRoutes(app: Application) {
                 },
                 {
                   federatedHostId: {
-                    [Op.eq]: undefined
+                    [Op.eq]: null
                   }
                 }
               ]
             }
           }
         ],
-        */
         where: {
           id: {
             [Op.in]: [...new Set(postIds.concat([postId]))]
           },
-          privacy: {
-            [Op.ne]: Privacy.DirectMessage
-          },
           [Op.or]: [
             {
-              userId: userId
+              userId: userId,
+              privacy: {
+                [Op.ne]: Privacy.DirectMessage
+              }
             },
             {
               privacy: Privacy.FollowersOnly,
@@ -142,10 +141,22 @@ export default function forumRoutes(app: Application) {
           }
         }
       })
-      await Promise.all([emojis, users, polls, medias, tags])
-
+      let usersFollowedByPoster: string[] | Promise<string[]> = getFollowedsIds(userId)
+      let usersFollowingPoster: string[] | Promise<string[]> = getFollowedsIds(userId, false, {
+        getFollowersInstead: true
+      })
+      await Promise.all([emojis, users, polls, medias, tags, usersFollowedByPoster, usersFollowingPoster])
+      usersFollowedByPoster = await usersFollowedByPoster
+      usersFollowingPoster = await usersFollowingPoster
+      const mentionsAwaited = await mentions
       res.send({
-        posts: (await fullPostsToGet).filter((elem: any) => elem.id !== postId),
+        posts: await Promise.all(
+          (await fullPostsToGet)
+            .filter((elem: any) => elem.id !== postId)
+            .map((elem) =>
+              addPostCanInteract(userId, elem.dataValues, usersFollowingPoster, usersFollowedByPoster, mentionsAwaited)
+            )
+        ),
         emojiRelations: await emojis,
         mentions: mentions.postMentionRelation,
         users: await users,

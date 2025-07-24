@@ -439,3 +439,13 @@ mat-tab-header {
     bottom: calc(56px + 1em);
   }
 }
+
+/* by girl-man-and-the-boy-woman https://app.wafrn.net/fediverse/post/992f735d-8451-40b0-877b-a0c03fbf2fac  */
+.wafrn-container:has(.content-warning-text:first-of-type:not(:empty)) {
+    filter: blur(2px) grayscale(100%);
+    max-height: 200px;
+}
+.wafrn-container:has(.content-warning-text:first-of-type:not(:empty)):hover {
+    filter: none;
+    max-height: none;
+}
