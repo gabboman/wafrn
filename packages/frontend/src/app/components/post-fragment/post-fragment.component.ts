@@ -210,6 +210,14 @@ export class PostFragmentComponent implements OnChanges, OnDestroy {
       this.emojiCollection.set([])
       return
     }
+
+    // Evil fix for bsky emoji text heart reactions
+    this.fragment().emojiReactions.forEach((reaction) => {
+      if (reaction.content === '❤') {
+        reaction.content = '♥️'
+      }
+    })
+
     this.fragment().emojiReactions.forEach((reaction) => {
       const hasReaction = !!emojiReactions[reaction.content]
       if (!hasReaction) {
