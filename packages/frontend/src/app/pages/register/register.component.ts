@@ -254,7 +254,7 @@ export class RegisterComponent {
     'DELTARUNE spoilers',
     'ON SALE 50% OFF PICK THIS GENDER NOW AND GET ONE FREE',
     'No one ever would pick this one',
-    'all of the above'
+    'None of the above'
   ]
 
   loginForm = new UntypedFormGroup({
