@@ -139,6 +139,9 @@ export class ColorSchemeSwitcherComponent {
 
   async setColorScheme(scheme: ColorScheme, forceUpdate = false) {
     this.colorScheme.set(scheme)
+    if (typeof localStorage !== 'undefined') {
+      localStorage.setItem('colorScheme', scheme)
+    }
     const forceDarkModeThemes = ['wafrn98', 'unwafrn']
     const forceLightModeThemes: string[] = []
     if (forceDarkModeThemes.includes(scheme)) {
