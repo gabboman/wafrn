@@ -48,3 +48,12 @@
 .carousel-media {
   max-width: 75% !important;
 }
+
+
+.post-contains-muted-words {
+    filter: blur(2px) grayscale(100%);
+}
+
+.post-contains-muted-words:hover {
+  filter: none;
+}
