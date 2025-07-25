@@ -6,4 +6,5 @@ export interface statsReply {
   deletePostAwaiting: number
   atProtoAwaiting: number
   createKeyPairWaiting: number
+  sendPostBskyAwaiting: number
 }

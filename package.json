@@ -1,6 +1,6 @@
 {
   "name": "wafrn",
-  "version": "2025.7.1",
+  "version": "2025.7.2",
   "description": "wafrn",
   "main": "index.ts",
   "scripts": {
@@ -45,6 +45,7 @@
     "typescript-eslint": "^8.12.2"
   },
   "dependencies": {
+    "cheerio": "^1.1.0",
     "tsx": "^4.19.1"
   }
 }

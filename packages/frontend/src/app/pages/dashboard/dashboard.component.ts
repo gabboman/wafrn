@@ -266,7 +266,11 @@ export class DashboardComponent implements OnInit, OnDestroy, SnappyCreate, Snap
           emojis: [],
           descendents: [],
           bookmarkers: [],
-          parentCollection: []
+          parentCollection: [],
+          canReblog: false,
+          canLike: false,
+          canQuote: false,
+          canReply: false
         }
       ])
     }

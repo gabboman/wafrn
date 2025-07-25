@@ -20,8 +20,8 @@ export interface unlinkedPosts {
 }
 
 export interface PostBookmark {
-  userId: string;
-  postId: string;
+  userId: string
+  postId: string
 }
 
 export interface basicPost {
@@ -43,6 +43,10 @@ export interface basicPost {
   quotes?: basicPost[]
   markdownContent: string
   isRewoot: boolean
+  canReply: boolean
+  canQuote: boolean
+  canLike: boolean
+  canReblog: boolean
 }
 
 export interface EmojiRelations {

@@ -722,7 +722,7 @@ export default function postsRoutes(app: Application) {
             await prepareSendPostQueue.add(
               'prepareSendPost',
               { postId: post.id, petitionBy: posterId },
-              { jobId: post.id }
+              { jobId: post.id, delay: 1500 }
             )
           }
         }

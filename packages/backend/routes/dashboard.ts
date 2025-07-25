@@ -96,7 +96,17 @@ export default function dashboardRoutes(app: Application) {
           whereObject = {
             privacy: Privacy.Public,
             isReblog: false,
-            '$user.federatedHost.bubbleTimeline$': true
+            [Op.or]: [
+              {
+                '$user.federatedHost.bubbleTimeline$': true
+              },
+              {
+                '$user.federatedHostId$': null,
+                '$user.email$': {
+                  [Op.ne]: null
+                }
+              }
+            ]
           }
           break
         }
@@ -173,7 +183,10 @@ export default function dashboardRoutes(app: Application) {
                 model: FederatedHost,
                 required: false
               }
-            ]
+            ],
+            where: {
+              banned: false
+            }
           }
         ],
         order: [['createdAt', 'DESC']],

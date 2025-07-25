@@ -60,7 +60,6 @@ import { follow } from '../utils/follow.js'
 import { activityPubObject } from '../interfaces/fediverse/activityPubObject.js'
 import { getFollowedHashtags } from '../utils/getFollowedHashtags.js'
 import { completeEnvironment } from '../utils/backendOptions.js'
-import { environment } from '../environment.js'
 
 const markdownConverter = new showdown.Converter({
   simplifiedAutoLink: true,
@@ -910,6 +909,8 @@ export default function userRoutes(app: Application) {
   app.get('/api/my-ui-options', authenticateToken, async (req: AuthorizedRequest, res: Response) => {
     const userId = req.jwtData?.userId as string
     const followedUsers = getFollowedsIds(userId)
+    const myFollowers = getFollowedsIds(userId, false, { getFollowersInstead: true })
+
     const blockedUsers = getBlockedIds(userId)
     const notAcceptedFollows = getNotYetAcceptedFollowedids(userId)
     const options = getUserOptions(userId)
@@ -929,13 +930,15 @@ export default function userRoutes(app: Application) {
       silencedPosts,
       localEmojis,
       mutedUsers,
-      followedHashtags
+      followedHashtags,
+      myFollowers
     ])
     const user = await userPromise
     if (!user || user.banned) {
       res.sendStatus(401)
     } else {
       res.send({
+        myFollowers: await myFollowers,
         followedUsers: await followedUsers,
         blockedUsers: await blockedUsers,
         notAcceptedFollows: await notAcceptedFollows,

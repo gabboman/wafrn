@@ -69,6 +69,10 @@ export default function statusRoutes(app: Application) {
         removeOnFail: true
       }
     })
+
+    const sendPostBskyQueue = new Queue('sendPostBsky', {
+      connection: completeEnvironment.bullmqConnection
+    })
     const workerGenerateUserKeyPair = new Queue('generateUserKeyPair', {
       connection: completeEnvironment.bullmqConnection
     })
@@ -84,6 +88,7 @@ export default function statusRoutes(app: Application) {
     const inboxSuccess = inboxQueue.getMetrics('completed')
     const inboxAwaiting = inboxQueue.count()
     const deletePostAwaiting = deletePostQueue.count()
+    const sendPostBskyAwaiting = sendPostBskyQueue.count()
 
     await Promise.allSettled([
       sendPostFailed,
@@ -96,7 +101,8 @@ export default function statusRoutes(app: Application) {
       prepareSendPostAwaiting,
       inboxAwaiting,
       atProtoAwaiting,
-      createKeyPairWaiting
+      createKeyPairWaiting,
+      sendPostBskyAwaiting
     ])
 
     res.send({
@@ -105,7 +111,8 @@ export default function statusRoutes(app: Application) {
       prepareSendPostAwaiting: await prepareSendPostAwaiting,
       inboxAwaiting: await inboxAwaiting,
       deletePostAwaiting: await deletePostAwaiting,
-      atProtoAwaiting: await atProtoAwaiting
+      atProtoAwaiting: await atProtoAwaiting,
+      sendPostBskyAwaiting: await sendPostBskyAwaiting
     })
   })
 

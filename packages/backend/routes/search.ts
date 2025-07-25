@@ -261,9 +261,16 @@ export default function searchRoutes(app: Application) {
       searchTermSplitted.length === 2 &&
       searchTermSplitted[0] == ''
     ) {
-      const bskySearchResult = await getAtprotoUser(searchTerm.split('@')[1], usr)
-      if (bskySearchResult && bskySearchResult.url != completeEnvironment.deletedUser) {
-        result = bskySearchResult
+      try {
+        const bskySearchResult = await getAtprotoUser(searchTerm.split('@')[1], usr)
+        if (bskySearchResult && bskySearchResult.url != completeEnvironment.deletedUser) {
+          result = bskySearchResult
+        }
+      } catch (error) {
+        logger.debug({
+          message: `Error in search of bsky user: searchTerm`,
+          error
+        })
       }
     }
 
