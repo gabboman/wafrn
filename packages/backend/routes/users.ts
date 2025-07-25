@@ -993,7 +993,7 @@ export default function userRoutes(app: Application) {
             message: `Bsky account created? ${user.url}`,
             response: accountCreation
           })
-          if (typeof inviteCode !== 'string') {
+          if (typeof inviteCode !== 'string' && !inviteCode.masterCode) {
             // This is a regular invitecode and not a MASTER INVITE CODE with 1 million usages.
             // If for some reason we got there
             // what the fuck
