@@ -25,9 +25,7 @@
         <fa-icon [icon]="isPasswordVisible ? faEyeSlash : faEye"></fa-icon>
       </button>
       @if (loginForm.get('password')?.invalid && loginForm.get('password')?.touched) {
-        <mat-error>
-          Password is required
-        </mat-error>
+        <mat-error> Password is required </mat-error>
       }
     </mat-form-field>
 
@@ -35,6 +33,9 @@
       <mat-label>Your username</mat-label>
       <input formControlName="url" type="text" matInput />
       <mat-hint>Right now we do not allow special characters nor spaces</mat-hint>
+      @if (loginForm.get('url')?.value.length > 18) {
+        <mat-error> You will probably have issues enabling bluesky, try a shorter username </mat-error>
+      }
     </mat-form-field>
 
     <mat-form-field class="w-full mb-3" subscriptSizing="dynamic">
@@ -51,51 +52,51 @@
         [min]="minDate"
         [max]="minimumRegistrationDate"
         [matDatepicker]="picker"
-        />
+      />
       <mat-hint
         >MM/DD/YYYY - Your birthday date is required for legal reasons in the european union and USA. Its not shared
         with anyone. Minimum registration age is 18</mat-hint
-        >
-        <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
-        <mat-datepicker #picker></mat-datepicker>
-      </mat-form-field>
-      <mat-form-field class="w-full mb-3" subscriptSizing="dynamic">
-        <mat-label>Gender</mat-label>
-        <mat-hint>This actually does not do anything at all</mat-hint>
-        <mat-select>
-          @for (gender of genders; track $index) {
-            <mat-option [value]="gender" [innerHTML]="gender">{{ gender }}</mat-option>
-          }
-        </mat-select>
-      </mat-form-field>
-      <div class="pt-2 px-3 pb-2 border-round-md" style="border: 1px solid #999">
-        <label for="avatar" class="block font-medium mb-2">Upload your avatar</label>
-        <div class="flex flex-row align-content-center">
-          <button type="button" mat-stroked-button color="primary" (click)="avatarInput.click()">
-            <fa-icon [icon]="faUpload" class="m-1"></fa-icon>Choose File
-          </button>
-          <input
-            #avatarInput
-            formControlName="avatar"
-            id="avatar"
-            type="file"
-            accept="image/jpeg,image/png,image/webp,image/gif"
-            hidden
-            (change)="imgSelected($event)"
-            />
-          <p class="m-auto ml-1">{{ selectedFileName }}</p>
-        </div>
+      >
+      <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+      <mat-datepicker #picker></mat-datepicker>
+    </mat-form-field>
+    <mat-form-field class="w-full mb-3" subscriptSizing="dynamic">
+      <mat-label>Gender</mat-label>
+      <mat-hint>This actually does not do anything at all</mat-hint>
+      <mat-select>
+        @for (gender of genders; track $index) {
+          <mat-option [value]="gender" [innerHTML]="gender">{{ gender }}</mat-option>
+        }
+      </mat-select>
+    </mat-form-field>
+    <div class="pt-2 px-3 pb-2 border-round-md" style="border: 1px solid #999">
+      <label for="avatar" class="block font-medium mb-2">Upload your avatar</label>
+      <div class="flex flex-row align-content-center">
+        <button type="button" mat-stroked-button color="primary" (click)="avatarInput.click()">
+          <fa-icon [icon]="faUpload" class="m-1"></fa-icon>Choose File
+        </button>
+        <input
+          #avatarInput
+          formControlName="avatar"
+          id="avatar"
+          type="file"
+          accept="image/jpeg,image/png,image/webp,image/gif"
+          hidden
+          (change)="imgSelected($event)"
+        />
+        <p class="m-auto ml-1">{{ selectedFileName }}</p>
       </div>
+    </div>
 
-      <button
-        color="primary"
-        mat-flat-button
-        extended
-        [disabled]="loading || !loginForm.valid"
-        class="w-full border-round-md mt-4"
-        >
-        <fa-icon [icon]="faUser"></fa-icon>
-        Register
-      </button>
-    </form>
-  </mat-card>
+    <button
+      color="primary"
+      mat-flat-button
+      extended
+      [disabled]="loading || !loginForm.valid"
+      class="w-full border-round-md mt-4"
+    >
+      <fa-icon [icon]="faUser"></fa-icon>
+      Register
+    </button>
+  </form>
+</mat-card>
