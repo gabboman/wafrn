@@ -128,7 +128,7 @@ function wellKnownRoutes(app: Application) {
         ]
       }
     })
-    const packageJsonFile = JSON.parse(fs.readFileSync('../../package.json').toString())
+    const packageJsonFile = JSON.parse(fs.readFileSync('package.json').toString())
 
     res.send({
       version: '2.0',
