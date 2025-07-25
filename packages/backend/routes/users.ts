@@ -973,7 +973,7 @@ export default function userRoutes(app: Application) {
           const agent = new AtpAgent({
             service: serviceUrl
           })
-          const sanitizedUrl = user.url.replaceAll('_', '-').replaceAll('.', '-')
+          const sanitizedUrl = user.url.replaceAll('_', '-').replaceAll('.', '-').substring(0, 18)
           const bskyPassword = generateRandomString()
           let accountCreation = await agent
             .createAccount({
