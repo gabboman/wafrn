@@ -115,7 +115,7 @@ async function postToJSONLD(postId: string): Promise<activityPubObject | undefin
   for await (const tag of post.postTags) {
     const externalTagName = tag.tagName.replaceAll('"', "'").replaceAll(' ', '-')
     const link = `${completeEnvironment.frontendUrl}/dashboard/search/${encodeURIComponent(tag.tagName)}`
-    tagsAndQuotes = `${tagsAndQuotes}  <a class="hashtag" data-tag="post" href="${link}" rel="tag ugc">#${externalTagName}</a>`
+    tagsAndQuotes = `${tagsAndQuotes}  <small><a class="hashtag" data-tag="post" href="${link}" rel="tag ugc">#${externalTagName}</a></small>`
     fediTags.push({
       type: 'Hashtag',
       name: `#${externalTagName}`,
