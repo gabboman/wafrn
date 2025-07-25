@@ -39,7 +39,7 @@
 }
 
 .instance-logo {
-    content: url("https://easterman.neocities.org/images/wafflern.png");
+    content: url("/assets/wafflern.png");
 	aspect-ratio: 2 / 1 !important;
 }
 
@@ -57,7 +57,7 @@ a {
 }
 
 .mat-drawer-content {
-    background-image: url("https://easterman.neocities.org/images/pgprix.png");
+    background-image: url("/assets/pgprix.png");
     background-size: 100%;
 }
 
@@ -81,7 +81,7 @@ a {
 }
 
 .side-menu {
-	background-image: url("https://textures.world/wp-content/uploads/2018/10/Aluminum-Brushed-Metal-Seamless-Background-Textures-5-copy.jpg");
+	background-image: url("/assets/brushed-metal.jpg");
 }
 
 .mdc-list-item, .mat-drawer-inner-container, .mdc-list-item__content {
