@@ -1006,32 +1006,24 @@ export default function userRoutes(app: Application) {
           message: `Invalid password`
         })
       }
-  
-      const inviteCodeRecord = await BskyInviteCodes.findOne()
+
+      const inviteCodeRecord = await BskyInviteCodes.findOne({
+        where: {
+          masterCode: true
+        }
+      })
       const inviteCode = inviteCodeRecord?.code
-  
+
       if (!inviteCode) {
         return res.status(400).send({
           error: true,
-          message: `Contact the administrator: no invite code available`
+          message: `Contact the administrator: no master invite code available`
         })
       }
-  
-      if (!inviteCodeRecord?.masterCode) {
-        // This is a regular invitecode and not a MASTER INVITE CODE with 1 million usages.
-        // If for some reason we got there
-        // what the fuck
-        await inviteCodeRecord.destroy()
-        return res.status(500).send({
-          error: true,
-          message: `Contact the administrator: the bluesky invite code is not a master code`
-        })
-      }
-  
       const serviceUrl = completeEnvironment.bskyPds.startsWith('http')
         ? completeEnvironment.bskyPds
         : 'https://' + completeEnvironment.bskyPds
-  
+
       const pdsHandleUrl = completeEnvironment.bskyPdsUrl.startsWith('http')
         ? completeEnvironment.bskyPdsUrl.replace('https://', '').replace('http://', '')
         : completeEnvironment.bskyPdsUrl
