@@ -24,18 +24,14 @@
       <button mat-icon-button matSuffix type="button" (click)="togglePasswordVisibility()">
         <fa-icon [icon]="isPasswordVisible ? faEyeSlash : faEye"></fa-icon>
       </button>
-      @if (loginForm.get('password')?.invalid && loginForm.get('password')?.touched) {
-        <mat-error> Password is required </mat-error>
-      }
+      <mat-error> Password is required </mat-error>
     </mat-form-field>
 
     <mat-form-field class="w-full mb-3" subscriptSizing="dynamic">
       <mat-label>Your username</mat-label>
       <input formControlName="url" type="text" matInput />
       <mat-hint>Right now we do not allow special characters nor spaces</mat-hint>
-      @if (loginForm.get('url')?.value.length > 18) {
-        <mat-error> You will probably have issues enabling bluesky, try a shorter username </mat-error>
-      }
+      <mat-error>Your username contains invalid characters</mat-error>
     </mat-form-field>
 
     <mat-form-field class="w-full mb-3" subscriptSizing="dynamic">
