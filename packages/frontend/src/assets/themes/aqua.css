@@ -1,7 +1,7 @@
 /* theme by @easterman@app.wafrn.net */
 :root {
     --mat-sys-on-primary-container: teal;
-    --mat-sys-primary: white;
+    --mat-sys-primary: light-dark(black, white);
 }
 
 @keyframes cursor {
@@ -12,7 +12,6 @@
 * {
     font-family: "Lucida Grande", "Lucida Sans Unicode", Helvetica, sans-serif !important;
     font-feature-settings: normal !important;
-    background-image: inherit;
 	animation-name: cursor;
 	animation-duration: 5s;
 	animation-iteration-count: infinite;
