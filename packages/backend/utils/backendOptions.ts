@@ -10,6 +10,10 @@ export const completeEnvironment: Environment = {
   bskyPdsUrl: baseEnvironment.bskyPdsUrl ? baseEnvironment.bskyPdsUrl : baseEnvironment.bskyPds,
   frontendEnvironment: {
     ...baseEnvironment.frontendEnvironment,
-    enableBsky: baseEnvironment.enableBsky
+    enableBsky: baseEnvironment.enableBsky,
+    baseUrl:
+      baseEnvironment.frontendEnvironment.baseUrl === '/api'
+        ? `${baseEnvironment.frontendUrl}/api`
+        : baseEnvironment.frontendEnvironment.baseUrl
   }
 }
