@@ -144,6 +144,9 @@ async function processSinglePost(
   if (!post) {
     return undefined
   }
+  // added a pause of 100 miliseconds for each petition. Will things explode? only ONE way to figure out.
+  // if this works means that there is something here that is too much for the PDS
+  await wait(100)
   if (!forceUpdate) {
     const existingPost = await Post.findOne({
       where: {
