@@ -70,7 +70,7 @@ export const baseEnvironment: Environment = {
     targets: [
       {
         target: 'pino/file',
-        level: 0,
+        level: '${{LOG_LEVEL:-debug}}',
         options: {
           destination: ${{LOG_DESTINATION:-'logs/backendlog.log'}} // set to 1 to log to stdout
         }

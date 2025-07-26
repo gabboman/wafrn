@@ -42,9 +42,9 @@ export interface Environment {
   pinoTransportOptions: {
     targets: {
       target: string
-      level: number
+      level: 'trace' | 'debug' | 'info' | 'warn' | 'error' | string
       options: {
-        destination: number
+        destination: number | string
       }
     }[]
   }
@@ -55,6 +55,9 @@ export interface Environment {
       user: string
       pass: string
       from: string
+    }
+    tls?: {
+      rejectUnauthorized: boolean
     }
   }
   disableRequireSendEmail: boolean
