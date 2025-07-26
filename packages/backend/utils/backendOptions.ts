@@ -7,5 +7,9 @@ import { Environment } from '../interfaces/environment.js'
 
 export const completeEnvironment: Environment = {
   ...baseEnvironment,
-  bskyPdsUrl: baseEnvironment.bskyPdsUrl ? baseEnvironment.bskyPdsUrl : baseEnvironment.bskyPds
+  bskyPdsUrl: baseEnvironment.bskyPdsUrl ? baseEnvironment.bskyPdsUrl : baseEnvironment.bskyPds,
+  frontendEnvironment: {
+    ...baseEnvironment.frontendEnvironment,
+    enableBsky: baseEnvironment.enableBsky
+  }
 }

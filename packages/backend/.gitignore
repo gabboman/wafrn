@@ -6,7 +6,7 @@
 
 node_modules
 
-environment.ts
+/environment.ts
 public
 uploads
 logs
