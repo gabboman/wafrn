@@ -951,6 +951,160 @@ export default function userRoutes(app: Application) {
     }
   })
 
+  app.post('/api/v2/enable-bluesky', authenticateToken, async (req: AuthorizedRequest, res: Response) => {
+    if (!completeEnvironment.enableBsky) {
+      return res.status(500).send({
+        error: true,
+        message: `This instance does not have bluesky enabled at this moment`
+      })
+    }
+
+    const password = req.body.password
+    const userId = req.jwtData?.userId as string
+
+    let user: User | null = null
+    try {
+      user = await User.findByPk(userId)
+    } catch (error) {
+      logger.error({
+        message: `Error finding current user`,
+        error: error
+      })
+      return res.status(500).send({
+        error: true,
+        message: `Error finding current user`
+      })
+    }
+
+    if (!user) {
+      return res.status(404).send({
+        error: true,
+        message: `Current user not found in database`
+      })
+    }
+
+    if (user.enableBsky) {
+      return res.status(400).send({
+        error: true,
+        message: `You already have bluesky enabled`
+      })
+    }
+
+    if (!password) {
+      return res.status(400).send({
+        error: true,
+        message: `Password is required`
+      })
+    }
+
+    try {
+      // ensure that the received password is the same as the password for the wafrn account of this user.
+      const correctPassword = await bcrypt.compare(password, user.password)
+      if (!correctPassword) {
+        return res.status(400).send({
+          error: true,
+          message: `Invalid password`
+        })
+      }
+  
+      const inviteCodeRecord = await BskyInviteCodes.findOne()
+      const inviteCode = inviteCodeRecord?.code
+  
+      if (!inviteCode) {
+        return res.status(400).send({
+          error: true,
+          message: `Contact the administrator: no invite code available`
+        })
+      }
+  
+      if (!inviteCodeRecord?.masterCode) {
+        // This is a regular invitecode and not a MASTER INVITE CODE with 1 million usages.
+        // If for some reason we got there
+        // what the fuck
+        await inviteCodeRecord.destroy()
+        return res.status(500).send({
+          error: true,
+          message: `Contact the administrator: the bluesky invite code is not a master code`
+        })
+      }
+  
+      const serviceUrl = completeEnvironment.bskyPds.startsWith('http')
+        ? completeEnvironment.bskyPds
+        : 'https://' + completeEnvironment.bskyPds
+  
+      const pdsHandleUrl = completeEnvironment.bskyPdsUrl.startsWith('http')
+        ? completeEnvironment.bskyPdsUrl.replace('https://', '').replace('http://', '')
+        : completeEnvironment.bskyPdsUrl
+
+      const agent = new AtpAgent({
+        service: serviceUrl
+      })
+      const sanitizedUrl = user.url.replaceAll('_', '-').replaceAll('.', '-')
+
+      // this try-catch block does not catch very much, it is only used to add the error to the logger.
+      try {
+        // the createAccount method will also login as the newly created user.
+        const accountCreation = await agent.createAccount({
+          email: `${user.url}@${completeEnvironment.instanceUrl}`,
+          handle: `${sanitizedUrl}.${pdsHandleUrl}`,
+          password,
+          inviteCode
+        })
+        logger.info({
+          message: `Bsky account created for ${user.url}`,
+          response: accountCreation
+        })
+      } catch (error) {
+        logger.error({
+          message: `Bsky account creation failed for ${user.url}`,
+          error: error
+        })
+        throw error
+      }
+
+      // create an app password for the newly created user.
+      const appPasswordResponse = await agent.com.atproto.server.createAppPassword({
+        name: 'wafrn app password'
+      })
+
+      if (!appPasswordResponse.success) {
+        logger.error({
+          message: `Error creating bluesky app password for user ${user.url}`,
+          response: appPasswordResponse
+        })
+        return res.status(500).send({
+          error: true,
+          message: `Failed to create app password`
+        })
+      }
+
+      const appPassword = appPasswordResponse.data.password
+      const userDid = agent.assertDid
+
+      user.bskyDid = userDid
+      user.bskyAuthData = appPassword
+      user.enableBsky = true
+      await user.save()
+
+      // now we have to update the profile of the bluesky user coping from the wafrn user profile.
+      await updateBlueskyProfile(agent, user)
+      res.send({
+        success: true,
+        did: userDid
+      })
+    } catch (error) {
+      res.status(500)
+      res.send({
+        error: true,
+        message: `There was an error! Contact an admin for this`
+      })
+      logger.error({
+        message: `Error activating bluesky for user ${user.url}`,
+        error: error
+      })
+    }
+  })
+
   app.post('/api/enable-bluesky', authenticateToken, async (req: AuthorizedRequest, res: Response) => {
     if (!completeEnvironment.enableBsky) {
       res.status(500)

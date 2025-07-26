@@ -69,7 +69,7 @@ export const baseEnvironment: Environment = {
     targets: [
       {
         target: 'pino/file',
-        level: 0,
+        level: 'debug',
         options: {
           destination: 1
         }
