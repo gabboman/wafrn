@@ -325,14 +325,19 @@
         </mat-card>
         -->
 
-  <button
-    (click)="onSubmit()"
-    [disabled]="!editProfileForm.valid"
-    mat-raised-button
-    color="primary"
-    icon="pi pi-user"
-    class="w-full mt-4"
-  >
-    {{ 'profile.updateButton' | translate }}
-  </button>
+  <div class="flex">
+    <button
+      (click)="onSubmit()"
+      [disabled]="!editProfileForm.valid || loading"
+      mat-raised-button
+      color="primary"
+      icon="pi pi-user"
+      class="w-full mt-4"
+    >
+      {{ 'profile.updateButton' | translate }}
+    </button>
+    @if (loading) {
+      <mat-spinner diameter="24" class="mt-5 mx-3"></mat-spinner>
+    }
+  </div>
 </mat-card>

@@ -14,6 +14,7 @@ import { EmojiCollectionsComponent } from 'src/app/components/emoji-collections/
 import { MatExpansionModule } from '@angular/material/expansion'
 import { TranslateModule } from '@ngx-translate/core'
 import { UserSelectorComponent } from 'src/app/components/user-selector/user-selector.component'
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner'
 
 const routes: Routes = [
   {
@@ -39,7 +40,8 @@ const routes: Routes = [
     MatExpansionModule,
     TranslateModule,
     MatTabsModule,
-    UserSelectorComponent
+    UserSelectorComponent,
+    MatProgressSpinnerModule
   ]
 })
 export class EditProfileModule {}
