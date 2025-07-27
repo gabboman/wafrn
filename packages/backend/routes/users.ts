@@ -1036,8 +1036,8 @@ function userRoutes(app: Application) {
       if (user.enableBsky && user.bskyDid && user.bskyAuthData) {
         try {
           const authString = Buffer.from('admin:' + completeEnvironment.bskyPdsAdminPassword).toString('base64')
-          await axios.post(
-            'https://' + completeEnvironment.bskyPds + '/xrpc/com.atproto.admin.updateAccountPassword',
+          const bskyChangePassword = await axios.post(
+            'https://' + completeEnvironment.bskyPdsUrl + '/xrpc/com.atproto.admin.updateAccountPassword',
             { did: user.bskyDid, password: password },
             {
               headers: {
