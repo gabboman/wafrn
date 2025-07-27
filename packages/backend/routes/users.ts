@@ -1568,7 +1568,10 @@ async function updateBlueskyProfile(agent: BskyAgent, user: User) {
     const fullProfileString = `\n\nView full profile at ${completeEnvironment.frontendUrl}/blog/${user.url}`
     profile.displayName = user.name.substring(0, 63)
     profile.description =
-      dompurify.sanitize(user.descriptionMarkdown.substring(0, 248 - fullProfileString.length), { ALLOWED_TAGS: [] }) +
+      dompurify.sanitize(
+        user.descriptionMarkdown ? user.descriptionMarkdown.substring(0, 248 - fullProfileString.length) : '',
+        { ALLOWED_TAGS: [] }
+      ) +
       '[...]' +
       fullProfileString
     if (user.avatar) {
