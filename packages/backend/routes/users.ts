@@ -98,7 +98,7 @@ const deletePostQueue = new Queue('deletePostQueue', {
   }
 })
 
-export default function userRoutes(app: Application) {
+function userRoutes(app: Application) {
   app.post(
     '/api/register',
 
@@ -1646,3 +1646,5 @@ async function updateProfileOptions(optionsJSON: string, posterId: string) {
     }
   }
 }
+
+export { userRoutes, updateBlueskyProfile }
