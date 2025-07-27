@@ -26,7 +26,10 @@
           "/*.css",
           "/*.js",
           "/assets/logo.png",
-          "/assets/logo_mascot.png"
+          "/assets/logo_mascot.png",
+          "/assets/i18n/*",
+          "/assets/fonts/*",
+          "/assets/sounds/*"
         ]
       }
     },
