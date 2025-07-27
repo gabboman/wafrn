@@ -259,7 +259,7 @@
             />
           </mat-form-field>
           @if (editProfileForm.value.mutedWords.split(',').length > 0) {
-            <div class="taglist flex flex-wrap mb-2">
+            <div class="flex flex-wrap gap-2 tag-list">
               @for (tag of editProfileForm.value.mutedWords.split(','); track $index) {
                 @if (tag && tag !== '' && tag.trim() !== '') {
                   <div class="tag">
