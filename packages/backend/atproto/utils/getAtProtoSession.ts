@@ -27,7 +27,7 @@ async function getAtProtoSession(user?: User): Promise<AtpAgent> {
       await redisCache.del('bskySession:' + user.id)
       await agent.sessionManager.login({
         identifier: user.url + '@' + completeEnvironment.instanceUrl,
-        password: user.bskyAppPassword
+        password: user.bskyAppPassword || user.bskyAuthData
       })
     }
   }
