@@ -71,8 +71,8 @@ export interface UserAttributes {
   followingCount?: number
   disableEmailNotifications?: boolean
   enableBsky?: boolean
-  bskyAuthData?: string
-  bskyAppPassword?: string
+  bskyAuthData?: string | null
+  bskyAppPassword?: string | null
   bskyDid?: string | null
   lastActiveAt?: Date
   hideFollows?: Boolean
@@ -306,13 +306,13 @@ export class User extends Model<UserAttributes, UserAttributes> implements UserA
     allowNull: true,
     type: DataType.STRING
   })
-  declare bskyAuthData: string
+  declare bskyAuthData: string | null
 
   @Column({
     allowNull: true,
     type: DataType.STRING
   })
-  declare bskyAppPassword: string
+  declare bskyAppPassword: string | null
 
   @Column({
     allowNull: true,

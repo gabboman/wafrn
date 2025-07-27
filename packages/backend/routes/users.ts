@@ -986,7 +986,7 @@ function userRoutes(app: Application) {
       })
     }
 
-    if (user.enableBsky) {
+    if (user.enableBsky && user.bskyAppPassword) {
       return res.status(400).send({
         error: true,
         message: `You already have bluesky enabled`
@@ -996,7 +996,7 @@ function userRoutes(app: Application) {
     if (!password) {
       return res.status(400).send({
         error: true,
-        message: `Password is required`
+        message: `A "password" field is required in the body`
       })
     }
 
@@ -1035,26 +1035,34 @@ function userRoutes(app: Application) {
         service: serviceUrl
       })
       const sanitizedUrl = user.url.replaceAll('_', '-').replaceAll('.', '-')
-
-      // this try-catch block does not catch very much, it is only used to add the error to the logger.
-      try {
-        // the createAccount method will also login as the newly created user.
-        const accountCreation = await agent.createAccount({
-          email: `${user.url}@${completeEnvironment.instanceUrl}`,
-          handle: `${sanitizedUrl}.${pdsHandleUrl}`,
-          password,
-          inviteCode
-        })
-        logger.info({
-          message: `Bsky account created for ${user.url}`,
-          response: accountCreation
-        })
-      } catch (error) {
-        logger.error({
-          message: `Bsky account creation failed for ${user.url}`,
-          error: error
-        })
-        throw error
+    
+      if (user.enableBsky && user.bskyDid && user.bskyAuthData) {
+        // TODO for @gabboman: login as admin here before this call
+        // await agent.com.atproto.admin.updateAccountPassword({
+        //   did: user.bskyDid,
+        //   password
+        // })
+      } else {
+        // this try-catch block does not catch very much, it is only used to add the error to the logger.
+        try {
+          // the createAccount method will also login as the newly created user.
+          const accountCreation = await agent.createAccount({
+            email: `${user.url}@${completeEnvironment.instanceUrl}`,
+            handle: `${sanitizedUrl}.${pdsHandleUrl}`,
+            password,
+            inviteCode
+          })
+          logger.info({
+            message: `Bsky account created for ${user.url}`,
+            response: accountCreation
+          })
+        } catch (error) {
+          logger.error({
+            message: `Bsky account creation failed for ${user.url}`,
+            error: error
+          })
+          throw error
+        }
       }
 
       // create an app password for the newly created user.
@@ -1648,6 +1656,7 @@ async function createBskyPassword(user: User, agent: AtpAgent) {
   const userDid = agent.assertDid
 
   user.bskyDid = userDid
+  user.bskyAuthData = null
   user.bskyAppPassword = appPassword
   user.enableBsky = true
   await user.save()
