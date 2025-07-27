@@ -1058,34 +1058,18 @@ function userRoutes(app: Application) {
       }
 
       // create an app password for the newly created user.
-      const appPasswordResponse = await agent.com.atproto.server.createAppPassword({
-        name: 'wafrn app password'
-      })
-
-      if (!appPasswordResponse.success) {
-        logger.error({
-          message: `Error creating bluesky app password for user ${user.url}`,
-          response: appPasswordResponse
-        })
+      const bskyPasswordCreated = await createBskyPassword(user, agent)
+      if (!bskyPasswordCreated) {
         return res.status(500).send({
           error: true,
           message: `Failed to create app password`
         })
       }
-
-      const appPassword = appPasswordResponse.data.password
-      const userDid = agent.assertDid
-
-      user.bskyDid = userDid
-      user.bskyAuthData = appPassword
-      user.enableBsky = true
-      await user.save()
-
       // now we have to update the profile of the bluesky user coping from the wafrn user profile.
       await updateBlueskyProfile(agent, user)
       res.send({
         success: true,
-        did: userDid
+        did: agent.assertDid
       })
     } catch (error) {
       res.status(500)
@@ -1645,6 +1629,29 @@ async function updateProfileOptions(optionsJSON: string, posterId: string) {
       }
     }
   }
+}
+
+async function createBskyPassword(user: User, agent: AtpAgent) {
+  const appPasswordResponse = await agent.com.atproto.server.createAppPassword({
+    name: 'wafrn app password DO NOT DELETE'
+  })
+
+  if (!appPasswordResponse.success) {
+    logger.error({
+      message: `Error creating bluesky app password for user ${user.url}`,
+      response: appPasswordResponse
+    })
+    return false
+  }
+
+  const appPassword = appPasswordResponse.data.password
+  const userDid = agent.assertDid
+
+  user.bskyDid = userDid
+  user.bskyAuthData = appPassword
+  user.enableBsky = true
+  await user.save()
+  return true
 }
 
 export { userRoutes, updateBlueskyProfile }
