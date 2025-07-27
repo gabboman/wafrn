@@ -18,3 +18,32 @@
 :root {
   --mat-list-list-item-one-line-container-height: 2rem;
 }
+
+// Basic element adjustments
+
+:root .mat-typography {
+  h1 {
+    font-size: 2rem;
+    line-height: 1.125;
+  }
+  h2 {
+    font-size: 1.625rem;
+    line-height: 1.125;
+  }
+  h3 {
+    font-size: 1.25rem;
+    line-height: 1.125;
+  }
+  h4 {
+    font-size: 1.15rem;
+    line-height: 1.125;
+  }
+  h5 {
+    font-size: 1rem;
+    line-height: 1.125;
+  }
+  h6 {
+    font-size: 0.875rem;
+    line-height: 1.125;
+  }
+}
