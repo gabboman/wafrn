@@ -105,6 +105,8 @@ export const baseEnvironment: Environment = {
   },
   enableBsky: ${{ENABLE_BSKY:-false}},
   bskyPds: '${{PDS_DOMAIN_NAME}}',
+  bskyPdsJwtSecret: '${{PDS_JWT_SECRET}}',
+  bskyPdsAdminPassword: '${{PDS_ADMIN_PASSWORD}}',
   // to generate these keys use the following command: `npx web-push generate-vapid-keys`. Remember to do the environment one too!!
   webpushPrivateKey: '${{WEBPUSH_PRIVATE}}',
   webpushPublicKey: '${{WEBPUSH_PUBLIC}}',
