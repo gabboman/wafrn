@@ -1561,47 +1561,55 @@ function userRoutes(app: Application) {
 }
 
 async function updateBlueskyProfile(agent: BskyAgent, user: User) {
-  await forceUpdateCacheDidsAtThread()
-  await getCacheAtDids(true)
-  return await agent.upsertProfile(async (existingProfile) => {
-    const profile = existingProfile ?? {}
-    const fullProfileString = `\n\nView full profile at ${completeEnvironment.frontendUrl}/blog/${user.url}`
-    profile.displayName = user.name.substring(0, 63)
-    profile.description =
-      dompurify.sanitize(
-        user.descriptionMarkdown ? user.descriptionMarkdown.substring(0, 248 - fullProfileString.length) : '',
-        { ALLOWED_TAGS: [] }
-      ) +
-      '[...]' +
-      fullProfileString
-    if (user.avatar) {
-      let pngAvatar = await optimizeMedia('uploads' + user.avatar, {
-        forceImageExtension: 'png',
-        maxSize: 256,
-        keep: true
-      })
-      const userAvatarFile = Buffer.from(await fs.readFile(pngAvatar))
-      const avatarUpload = await agent.uploadBlob(userAvatarFile, { encoding: 'image/png' })
-      const avatarData = avatarUpload.data.blob
-      profile.avatar = avatarData
-      await fs.unlink(pngAvatar)
-    }
-    // TODO fix this it does not work
-    if (user.headerImage && false) {
-      let jpegHeader = await optimizeMedia('uploads/' + user.headerImage, {
-        forceImageExtension: 'jpg',
-        maxSize: 256,
-        keep: true
-      })
-      const userHeaderFile = Buffer.from(jpegHeader)
-      const headerUpload = await agent.uploadBlob(userHeaderFile, { encoding: 'image/jpeg' })
-      const headerData = headerUpload.data.blob
-      profile.banner = headerData
-      await fs.unlink(userHeaderFile)
-    }
+  try {
+    await forceUpdateCacheDidsAtThread()
+    await getCacheAtDids(true)
+    return await agent.upsertProfile(async (existingProfile) => {
+      const profile = existingProfile ?? {}
+      const fullProfileString = `\n\nView full profile at ${completeEnvironment.frontendUrl}/blog/${user.url}`
+      profile.displayName = user.name.substring(0, 63)
+      profile.description =
+        dompurify.sanitize(
+          user.descriptionMarkdown ? user.descriptionMarkdown.substring(0, 248 - fullProfileString.length) : '',
+          { ALLOWED_TAGS: [] }
+        ) +
+        '[...]' +
+        fullProfileString
+      if (user.avatar) {
+        let pngAvatar = await optimizeMedia('uploads' + user.avatar, {
+          forceImageExtension: 'png',
+          maxSize: 256,
+          keep: true
+        })
+        const userAvatarFile = Buffer.from(await fs.readFile(pngAvatar))
+        const avatarUpload = await agent.uploadBlob(userAvatarFile, { encoding: 'image/png' })
+        const avatarData = avatarUpload.data.blob
+        profile.avatar = avatarData
+        await fs.unlink(pngAvatar)
+      }
+      // TODO fix this it does not work
+      if (user.headerImage && false) {
+        let jpegHeader = await optimizeMedia('uploads/' + user.headerImage, {
+          forceImageExtension: 'jpg',
+          maxSize: 256,
+          keep: true
+        })
+        const userHeaderFile = Buffer.from(jpegHeader)
+        const headerUpload = await agent.uploadBlob(userHeaderFile, { encoding: 'image/jpeg' })
+        const headerData = headerUpload.data.blob
+        profile.banner = headerData
+        await fs.unlink(userHeaderFile)
+      }
 
-    return profile
-  })
+      return profile
+    })
+  } catch (error) {
+    logger.error({
+      message: `Error updatig bsky profile: ${user.url}`,
+      error
+    })
+  }
+  return {}
 }
 
 async function updateProfileOptions(optionsJSON: string, posterId: string) {
