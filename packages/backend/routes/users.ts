@@ -1043,26 +1043,12 @@ function userRoutes(app: Application) {
         //   password
         // })
       } else {
-        // this try-catch block does not catch very much, it is only used to add the error to the logger.
-        try {
-          // the createAccount method will also login as the newly created user.
-          const accountCreation = await agent.createAccount({
-            email: `${user.url}@${completeEnvironment.instanceUrl}`,
-            handle: `${sanitizedUrl}.${pdsHandleUrl}`,
-            password,
-            inviteCode
-          })
-          logger.info({
-            message: `Bsky account created for ${user.url}`,
-            response: accountCreation
-          })
-        } catch (error) {
-          logger.error({
-            message: `Bsky account creation failed for ${user.url}`,
-            error: error
-          })
-          throw error
-        }
+        await createBskyAccount({
+          agent,
+          user,
+          password,
+          inviteCode
+        })
       }
 
       // create an app password for the newly created user.
@@ -1636,6 +1622,45 @@ async function updateProfileOptions(optionsJSON: string, posterId: string) {
             })
       }
     }
+  }
+}
+
+async function createBskyAccount({
+  agent,
+  user,
+  password,
+  inviteCode,
+}: {
+  agent: AtpAgent
+  user: User
+  password: string
+  inviteCode: string
+}) {
+  const pdsHandleUrl = completeEnvironment.bskyPdsUrl.startsWith('http')
+    ? completeEnvironment.bskyPdsUrl.replace('https://', '').replace('http://', '')
+    : completeEnvironment.bskyPdsUrl
+
+  const sanitizedUrl = user.url.replaceAll('_', '-').replaceAll('.', '-')
+
+  // this try-catch block does not catch very much, it is only used to add the error to the logger.
+  try {
+    // the createAccount method will also login as the newly created user.
+    const accountCreation = await agent.createAccount({
+      email: `${user.url}@${completeEnvironment.instanceUrl}`,
+      handle: `${sanitizedUrl}.${pdsHandleUrl}`,
+      password,
+      inviteCode
+    })
+    logger.info({
+      message: `Bsky account created for ${user.url}`,
+      response: accountCreation
+    })
+  } catch (error) {
+    logger.error({
+      message: `Bsky account creation failed for ${user.url}`,
+      error: error
+    })
+    throw error
   }
 }
 
