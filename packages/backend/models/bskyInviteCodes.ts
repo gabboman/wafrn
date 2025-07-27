@@ -9,7 +9,7 @@ export interface BskyInviteCodesAttributes {
 @Table({
   tableName: 'bskyInviteCodes',
   modelName: 'bskyInviteCodes',
-  timestamps: true
+  timestamps: false
 })
 export class BskyInviteCodes
   extends Model<BskyInviteCodesAttributes, BskyInviteCodesAttributes>

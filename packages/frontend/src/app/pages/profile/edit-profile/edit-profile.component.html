@@ -288,7 +288,7 @@
         {{ 'profile.bsky.psa2_3' | translate }}
       </p>
       <p>{{ 'profile.bsky.psa3' | translate }}</p>
-      <button [disabled]="loading" (click)="enableBluesky()" mat-flat-button class="w-full">Enable bluesky</button>
+      <p>To enable bluesky, please <a [routerLink]="'/profile/enable-bluesky'">click here</a></p>
     </mat-tab>
     <mat-tab label="Migrate out">
       <p>

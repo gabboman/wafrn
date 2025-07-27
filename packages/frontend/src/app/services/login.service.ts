@@ -323,9 +323,11 @@ export class LoginService {
     return success
   }
 
-  async enableBluesky() {
+  async enableBluesky(password: string) {
     try {
-      let result = await firstValueFrom(this.http.post(`${EnvironmentService.environment.baseUrl}/enable-bluesky`, {}))
+      let result = await firstValueFrom(
+        this.http.post(`${EnvironmentService.environment.baseUrl}/v2/enable-bluesky`, { password })
+      )
       this.messagesService.add({ severity: 'success', summary: 'Bluesky is enabled for you!' })
     } catch (error: any) {
       const tmp = error as HttpErrorResponse

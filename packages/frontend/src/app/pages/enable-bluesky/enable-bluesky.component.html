@@ -1,6 +1,6 @@
-<mat-card class="wafrn-container post-card">
+<mat-card class="wafrn-container post-card" *ngIf="environment().enableBsky">
   <h1>Enable bluesky</h1>
-  <p>Read this! There is some jank still!</p>
+  <p>Read this!</p>
   <ul>
     <li>Only posts marked as <b>public</b> will go to bluesky</li>
     <li>By default, <b>all bluesky posts are public</b> wich means there is no unlisted post</li>
@@ -14,10 +14,25 @@
       blocks on bluesky public in the future
     </li>
     <li>
-      Some posts may be marked as "only people i follow can reply" and stuff like that. Some jank we havent finished
+      Some posts may be marked as "only people i follow can reply" and stuff like that. We are still working on this
     </li>
     <li>Like on fedi, not every post of every account gets saved in wafrn. We only save as much as we need</li>
-    <li>At the moment of writing this, your header image may not federate with bluesky still :(</li>
+    <li>At the moment of writing this, your header image does not federate with bluesky still :(</li>
   </ul>
-  <button [disabled]="loading" (click)="enableBluesky()" mat-flat-button class="w-full">Enable bluesky</button>
+  <p>You can now enable bluesky login too!</p>
+  <ul>
+    <li>this is JANKY. We do not officialy recommend it</li>
+    <li *ngIf="environment().bskyPDSUrl">When loging in to bluesky, your server is {{ environment().bskyPDSUrl }}</li>
+    <li>
+      Your email is YOURUSERNAME&#64;{{ environment().instanceName }} and your password is your current wafrn password
+    </li>
+    <li>No, this password DOES NOT GET SYNCRONINZED. You have total control over the account</li>
+  </ul>
+  <mat-form-field class="w-full">
+    <mat-label>Your current wafrn password</mat-label>
+    <input [(ngModel)]="password" type="password" matInput />
+  </mat-form-field>
+  <button [disabled]="loading || password.length == 0" (click)="enableBluesky()" mat-flat-button class="w-full">
+    Enable bluesky
+  </button>
 </mat-card>

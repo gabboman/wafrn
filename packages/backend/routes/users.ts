@@ -1023,7 +1023,7 @@ function userRoutes(app: Application) {
           message: `Contact the administrator: no master invite code available`
         })
       }
-      
+
       const serviceUrl = completeEnvironment.bskyPds.startsWith('http')
         ? completeEnvironment.bskyPds
         : 'https://' + completeEnvironment.bskyPds
@@ -1031,8 +1031,12 @@ function userRoutes(app: Application) {
       const agent = new AtpAgent({
         service: serviceUrl
       })
-    
+
       if (user.enableBsky && user.bskyDid && user.bskyAuthData) {
+        return res.status(400).send({
+          error: true,
+          message: `We are working on allowing old bsky accounts in the server`
+        })
         // TODO for @gabboman: login as admin here before this call
         // await agent.com.atproto.admin.updateAccountPassword({
         //   did: user.bskyDid,
@@ -1625,7 +1629,7 @@ async function createBskyAccount({
   agent,
   user,
   password,
-  inviteCode,
+  inviteCode
 }: {
   agent: AtpAgent
   user: User
