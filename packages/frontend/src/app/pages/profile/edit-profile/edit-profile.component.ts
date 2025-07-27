@@ -9,6 +9,7 @@ import { LoginService } from 'src/app/services/login.service'
 import { MediaService } from 'src/app/services/media.service'
 import { MessageService } from 'src/app/services/message.service'
 import { ThemeService } from 'src/app/services/theme.service'
+import { faPlus, faXmark } from '@fortawesome/free-solid-svg-icons'
 
 @Component({
   selector: 'app-edit-profile',
@@ -32,10 +33,13 @@ export class EditProfileComponent implements OnInit {
     { level: 3, name: 'Disable asks' }
   ]
   rssOptions = [
-    {level: 0, name: 'No'},
-    {level: 1, name: 'Only articles (Feature still in the works)'},
-    {level: 2, name: 'Yes for all my posts'}
+    { level: 0, name: 'No' },
+    { level: 1, name: 'Only articles (Feature still in the works)' },
+    { level: 2, name: 'Yes for all my posts' }
   ]
+
+  faPlus = faPlus
+  faMinus = faXmark
 
   fediAttachments: { name: string; value: string }[] = [{ name: '', value: '' }]
   editProfileForm = new UntypedFormGroup({
@@ -103,9 +107,7 @@ export class EditProfileComponent implements OnInit {
         this.loginService.getUserDefaultPostPrivacyLevel()
       )
       let rssOptionValue = localStorage.getItem('enableRSS')
-      this.editProfileForm.controls['rssOptions'].patchValue(
-        rssOptionValue ? parseInt(rssOptionValue) : 0
-      )
+      this.editProfileForm.controls['rssOptions'].patchValue(rssOptionValue ? parseInt(rssOptionValue) : 0)
       this.editProfileForm.controls['forceClassicLogo'].patchValue(this.loginService.getForceClassicLogo())
       const federateWithThreads = localStorage.getItem('federateWithThreads')
       this.editProfileForm.controls['federateWithThreads'].patchValue(federateWithThreads === 'true')
@@ -127,7 +129,9 @@ export class EditProfileComponent implements OnInit {
         this.mediaService.checkForceClassicVideoPlayer()
       )
       this.editProfileForm.controls['disableConfetti'].patchValue(localStorage.getItem('disableConfetti') == 'true')
-      this.editProfileForm.controls['enableConfettiRecivingLike'].patchValue(localStorage.getItem('enableConfettiRecivingLike') == 'true')
+      this.editProfileForm.controls['enableConfettiRecivingLike'].patchValue(
+        localStorage.getItem('enableConfettiRecivingLike') == 'true'
+      )
       this.editProfileForm.controls['disableSounds'].patchValue(localStorage.getItem('disableSounds') == 'true')
 
       this.editProfileForm.controls['forceClassicMediaView'].patchValue(
@@ -251,6 +255,10 @@ export class EditProfileComponent implements OnInit {
 
   addFediAttachment() {
     this.fediAttachments.push({ name: '', value: '' })
+  }
+
+  removeFediAttachment(index: number) {
+    this.fediAttachments.splice(index, 1)
   }
 
   getAttachmentValue() {

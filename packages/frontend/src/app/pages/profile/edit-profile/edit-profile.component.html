@@ -38,22 +38,46 @@
           ></textarea>
         </mat-form-field>
         <hr />
-        <p [hidden]="loading" class="w-full">{{ 'profile.profile.extraInfoHead' | translate }}</p>
+        <p>{{ 'profile.profile.extraInfoHead' | translate }}</p>
         @for (attachment of fediAttachments; track $index) {
-          <form [hidden]="loading">
-            <div class="w-full">
-              <mat-form-field class="w-50">
+          <form>
+            <div class="flex align-items-center fedi-attachment-list">
+              <mat-form-field class="fedi-attachment">
                 <mat-label>{{ 'profile.profile.fieldPropertyName' | translate }}</mat-label>
-                <input [ngModelOptions]="{ standalone: true }" [(ngModel)]="fediAttachments[$index].name" matInput />
+                <input
+                  [ngModelOptions]="{ standalone: true }"
+                  [disabled]="loading"
+                  [(ngModel)]="fediAttachments[$index].name"
+                  required
+                  matInput
+                />
               </mat-form-field>
-              <mat-form-field class="w-50">
+              <mat-form-field class="fedi-attachment">
                 <mat-label>{{ 'profile.profile.fieldPropertyValue' | translate }}</mat-label>
-                <input [ngModelOptions]="{ standalone: true }" [(ngModel)]="fediAttachments[$index].value" matInput />
+                <input
+                  [ngModelOptions]="{ standalone: true }"
+                  [disabled]="loading"
+                  [(ngModel)]="fediAttachments[$index].value"
+                  required
+                  matInput
+                />
               </mat-form-field>
+              <!-- EVIL CENTERING (evil) -->
+              <button
+                (click)="removeFediAttachment($index)"
+                [disabled]="loading"
+                mat-button
+                class="mb-4 remove-fedi-attachment"
+              >
+                <fa-icon [icon]="faMinus" class="m-1"></fa-icon>
+              </button>
             </div>
           </form>
         }
-        <div [hidden]="loading" (click)="addFediAttachment()">+</div>
+        <button (click)="addFediAttachment()" [disabled]="loading" mat-stroked-button class="add-fedi-attachment">
+          <fa-icon [icon]="faPlus" class="m-1"></fa-icon>
+          {{ 'profile.profile.addAttachment' | translate }}
+        </button>
       </mat-tab>
       <mat-tab label="{{ 'profile.tabHeaders.preferences' | translate }}">
         <h5 class="w-full">{{ 'profile.preferences.notificationFilters' | translate }}</h5>

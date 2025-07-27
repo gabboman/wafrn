@@ -15,6 +15,7 @@ import { MatExpansionModule } from '@angular/material/expansion'
 import { TranslateModule } from '@ngx-translate/core'
 import { UserSelectorComponent } from 'src/app/components/user-selector/user-selector.component'
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner'
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome'
 
 const routes: Routes = [
   {
@@ -41,7 +42,8 @@ const routes: Routes = [
     TranslateModule,
     MatTabsModule,
     UserSelectorComponent,
-    MatProgressSpinnerModule
+    MatProgressSpinnerModule,
+    FontAwesomeModule
   ]
 })
 export class EditProfileModule {}
