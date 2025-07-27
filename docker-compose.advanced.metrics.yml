@@ -105,6 +105,7 @@ services:
       context: monitoring/database
       dockerfile: Dockerfile
     restart: unless-stopped
+    shm_size: '2gb'
     environment:
       POSTGRES_USER: ${POSTGRES_USER}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
