@@ -56,7 +56,7 @@
         <div [hidden]="loading" (click)="addFediAttachment()">+</div>
       </mat-tab>
       <mat-tab label="{{ 'profile.tabHeaders.preferences' | translate }}">
-        <h5 class="w-full">{{ 'profile.preferences.notificationFilters' | translate }}</h5>
+        <h2 class="preference-subheader">{{ 'profile.preferences.notificationFilters' | translate }}</h2>
         <mat-form-field class="w-full">
           <mat-label>{{ 'profile.preferences.showNotificationsFrom' | translate }}</mat-label>
           <mat-select formControlName="showNotificationsFrom">
@@ -161,7 +161,7 @@
         </mat-accordion>
       </mat-tab>
       <mat-tab label="{{ 'profile.tabHeaders.privacySecurity' | translate }}">
-        <p>Options</p>
+        <h2 class="preference-subheader">Options</h2>
         <mat-form-field class="w-full" appearance="outline">
           <mat-label>{{ 'profile.privacy.defaultPostPrivacy' | translate }}</mat-label>
           <mat-select [required]="true" formControlName="defaultPostEditorPrivacy">
