@@ -459,6 +459,11 @@ function userRoutes(app: Application) {
             }
           })
 
+          // also update the bluesky password
+          if (user.enableBsky && user.bskyDid) {
+            await updateBskyPassword(user, req.body.password)
+          }
+
           success = true
         }
       }
@@ -1035,17 +1040,7 @@ function userRoutes(app: Application) {
 
       if (user.enableBsky && user.bskyDid && user.bskyAuthData) {
         try {
-          const authString = Buffer.from('admin:' + completeEnvironment.bskyPdsAdminPassword).toString('base64')
-          const bskyChangePassword = await axios.post(
-            'https://' + completeEnvironment.bskyPdsUrl + '/xrpc/com.atproto.admin.updateAccountPassword',
-            { did: user.bskyDid, password: password },
-            {
-              headers: {
-                'Content-Type': 'application/json',
-                Authorization: 'Basic ' + authString
-              }
-            }
-          )
+          await updateBskyPassword(user, password)
           await agent.login({
             identifier: user.bskyDid as string,
             password: password
@@ -1711,6 +1706,20 @@ async function createBskyPassword(user: User, agent: AtpAgent) {
   user.enableBsky = true
   await user.save()
   return true
+}
+
+async function updateBskyPassword(user: User, password: string) {
+  const authString = Buffer.from('admin:' + completeEnvironment.bskyPdsAdminPassword).toString('base64')
+  return await axios.post(
+    'https://' + completeEnvironment.bskyPdsUrl + '/xrpc/com.atproto.admin.updateAccountPassword',
+    { did: user.bskyDid, password: password },
+    {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: 'Basic ' + authString
+      }
+    }
+  )
 }
 
 export { userRoutes, updateBlueskyProfile }
