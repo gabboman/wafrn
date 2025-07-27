@@ -1023,18 +1023,14 @@ function userRoutes(app: Application) {
           message: `Contact the administrator: no master invite code available`
         })
       }
+      
       const serviceUrl = completeEnvironment.bskyPds.startsWith('http')
         ? completeEnvironment.bskyPds
         : 'https://' + completeEnvironment.bskyPds
 
-      const pdsHandleUrl = completeEnvironment.bskyPdsUrl.startsWith('http')
-        ? completeEnvironment.bskyPdsUrl.replace('https://', '').replace('http://', '')
-        : completeEnvironment.bskyPdsUrl
-
       const agent = new AtpAgent({
         service: serviceUrl
       })
-      const sanitizedUrl = user.url.replaceAll('_', '-').replaceAll('.', '-')
     
       if (user.enableBsky && user.bskyDid && user.bskyAuthData) {
         // TODO for @gabboman: login as admin here before this call
