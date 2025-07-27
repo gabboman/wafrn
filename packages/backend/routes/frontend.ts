@@ -173,25 +173,6 @@ function frontend(app: Application) {
     }
   })
 
-  app.get('/disableEmailNotifications/:id/:code', async (req: Request, res: Response) => {
-    let result = false
-    let userId = req.params.id
-    let code = req.params.code
-    if (userId && code) {
-      let user = await User.findByPk(userId)
-      if (user && user.activationCode == code) {
-        user.disableEmailNotifications = true
-        await user.save()
-        result = true
-      }
-    }
-    res.send(
-      result
-        ? `You successfuly disabled email notifications`
-        : `Something went wrong! Please do send an email to the instance admin! Do reply to the email`
-    )
-  })
-
   app.get(
     ['/fediverse/post/:id', '/fediverse/activity/post/:id'],
     getCheckFediverseSignatureFunction(false),
@@ -220,6 +201,25 @@ function frontend(app: Application) {
   )
   // serve static angular files
   app.get('*.*', express.static(completeEnvironment.frontedLocation, cacheOptions))
+
+  app.get('/disableEmailNotifications/:id/:code', async (req: Request, res: Response) => {
+    let result = false
+    let userId = req.params.id
+    let code = req.params.code
+    if (userId && code) {
+      let user = await User.findByPk(userId)
+      if (user && user.activationCode == code) {
+        user.disableEmailNotifications = true
+        await user.save()
+        result = true
+      }
+    }
+    res.send(
+      result
+        ? `You successfuly disabled email notifications`
+        : `Something went wrong! Please do send an email to the instance admin! Do reply to the email`
+    )
+  })
 }
 
 function sanitizeStringForSEO(unsanitized: string): string {
