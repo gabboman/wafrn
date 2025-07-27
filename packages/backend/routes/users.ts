@@ -1047,7 +1047,7 @@ function userRoutes(app: Application) {
             }
           )
           await agent.login({
-            identifier: user.url + '@' + completeEnvironment.instanceUrl,
+            identifier: user.bskyDid as string,
             password: password
           })
         } catch (error) {
