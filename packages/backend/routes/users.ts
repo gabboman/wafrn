@@ -60,6 +60,7 @@ import { follow } from '../utils/follow.js'
 import { activityPubObject } from '../interfaces/fediverse/activityPubObject.js'
 import { getFollowedHashtags } from '../utils/getFollowedHashtags.js'
 import { completeEnvironment } from '../utils/backendOptions.js'
+import { sendUpdateProfile } from '../utils/activitypub/sendUpdateProfile.js'
 
 const markdownConverter = new showdown.Converter({
   simplifiedAutoLink: true,
@@ -303,8 +304,10 @@ export default function userRoutes(app: Application) {
             const bskySession = await getAtProtoSession(user)
             await updateBlueskyProfile(bskySession, user)
           }
-          success = true
+          // force update fedi profile
           await redisCache.del('fediverse:user:base:' + posterId)
+          await sendUpdateProfile(user)
+          success = true
         }
       } catch (error) {
         logger.error(error)
