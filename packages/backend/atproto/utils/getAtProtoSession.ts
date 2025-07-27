@@ -2,6 +2,7 @@ import { AtpAgent } from '@atproto/api'
 import { User } from '../../models/index.js'
 import { redisCache } from '../../utils/redis.js'
 import { completeEnvironment } from '../../utils/backendOptions.js'
+import { logger } from '../../utils/logger.js'
 
 async function getAtProtoSession(user?: User): Promise<AtpAgent> {
   const serviceUrl = completeEnvironment.bskyPds.startsWith('http')
@@ -22,13 +23,21 @@ async function getAtProtoSession(user?: User): Promise<AtpAgent> {
     if (existingSession) {
       loggedIn = (await agent.sessionManager.resumeSession(JSON.parse(existingSession))).success
     }
-
-    if (!loggedIn) {
-      await redisCache.del('bskySession:' + user.id)
-      await agent.sessionManager.login({
-        identifier: user.url + '@' + completeEnvironment.instanceUrl,
-        password: (user.bskyAppPassword || user.bskyAuthData) as string
+    try {
+      if (!loggedIn) {
+        await redisCache.del('bskySession:' + user.id)
+        await agent.sessionManager.login({
+          identifier: user.url + '@' + completeEnvironment.instanceUrl,
+          password: (user.bskyAppPassword || user.bskyAuthData) as string
+        })
+      }
+    } catch (error) {
+      logger.error({
+        message: `Error logging in with bsky user`,
+        user: user.url,
+        error: error
       })
+      throw new Error(`Error login with bluesky`)
     }
   }
 
