@@ -72,6 +72,7 @@ export interface UserAttributes {
   disableEmailNotifications?: boolean
   enableBsky?: boolean
   bskyAuthData?: string
+  bskyAppPassword?: string
   bskyDid?: string | null
   lastActiveAt?: Date
   hideFollows?: Boolean
