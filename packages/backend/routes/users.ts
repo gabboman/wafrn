@@ -61,6 +61,7 @@ import { activityPubObject } from '../interfaces/fediverse/activityPubObject.js'
 import { getFollowedHashtags } from '../utils/getFollowedHashtags.js'
 import { completeEnvironment } from '../utils/backendOptions.js'
 import { sendUpdateProfile } from '../utils/activitypub/sendUpdateProfile.js'
+import axios from 'axios'
 
 const markdownConverter = new showdown.Converter({
   simplifiedAutoLink: true,
@@ -1033,15 +1034,28 @@ function userRoutes(app: Application) {
       })
 
       if (user.enableBsky && user.bskyDid && user.bskyAuthData) {
-        return res.status(400).send({
-          error: true,
-          message: `We are working on allowing old bsky accounts in the server`
-        })
-        // TODO for @gabboman: login as admin here before this call
-        // await agent.com.atproto.admin.updateAccountPassword({
-        //   did: user.bskyDid,
-        //   password
-        // })
+        try {
+          const authString = Buffer.from('admin:' + completeEnvironment.bskyPdsAdminPassword).toString('base64')
+          await axios.post(
+            'https://' + completeEnvironment.bskyPds + '/xrpc/com.atproto.admin.updateAccountPassword',
+            { did: user.bskyDid, password: password },
+            {
+              headers: {
+                'Content-Type': 'application/json',
+                Authorization: 'Basic ' + authString
+              }
+            }
+          )
+          await agent.login({
+            identifier: user.url + '@' + completeEnvironment.instanceUrl,
+            password: password
+          })
+        } catch (error) {
+          logger.error({
+            message: `Failed to update bsky to new type to ${user.url}`,
+            error: error
+          })
+        }
       } else {
         await createBskyAccount({
           agent,
