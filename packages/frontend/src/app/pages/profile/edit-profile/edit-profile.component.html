@@ -1,5 +1,11 @@
 <mat-card class="p-3 mb-6 lg:mx-4 wafrn-container">
-  <mat-tab-group mat-stretch-tabs="false" mat-align-tabs="start" dynamicHeight preserveContent>
+  <mat-tab-group
+    mat-stretch-tabs="false"
+    mat-align-tabs="start"
+    dynamicHeight
+    preserveContent
+    (selectedIndexChange)="selectedIndex.set($event)"
+  >
     <form [hidden]="loading" [formGroup]="editProfileForm" (ngSubmit)="onSubmit()">
       <hr />
       <mat-tab label="{{ 'profile.tabHeaders.profile' | translate }}">
@@ -349,19 +355,21 @@
         </mat-card>
         -->
 
-  <div class="flex">
-    <button
-      (click)="onSubmit()"
-      [disabled]="!editProfileForm.valid || loading"
-      mat-raised-button
-      color="primary"
-      icon="pi pi-user"
-      class="w-full mt-4"
-    >
-      {{ 'profile.updateButton' | translate }}
-    </button>
-    @if (loading) {
-      <mat-spinner diameter="24" class="mt-5 mx-3"></mat-spinner>
-    }
-  </div>
+  @if (showUpdateButton()) {
+    <div class="flex">
+      <button
+        (click)="onSubmit()"
+        [disabled]="!editProfileForm.valid || loading"
+        mat-raised-button
+        color="primary"
+        icon="pi pi-user"
+        class="w-full mt-4"
+      >
+        {{ 'profile.updateButton' | translate }}
+      </button>
+      @if (loading) {
+        <mat-spinner diameter="24" class="mt-5 mx-3"></mat-spinner>
+      }
+    </div>
+  }
 </mat-card>

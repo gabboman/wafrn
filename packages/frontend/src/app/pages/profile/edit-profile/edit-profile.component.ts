@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core'
+import { Component, computed, OnInit, signal, Signal, WritableSignal } from '@angular/core'
 import { FormControl, UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms'
 import { BlogDetails } from 'src/app/interfaces/blogDetails'
 import { Emoji } from 'src/app/interfaces/emoji'
@@ -37,6 +37,10 @@ export class EditProfileComponent implements OnInit {
     { level: 1, name: 'Only articles (Feature still in the works)' },
     { level: 2, name: 'Yes for all my posts' }
   ]
+
+  selectedIndex: WritableSignal<number> = signal<number>(0)
+  tabsToHideUpdateButton = [4, 5, 6] // we do a little trolling
+  showUpdateButton: Signal<boolean> = computed(() => this.tabsToHideUpdateButton.indexOf(this.selectedIndex()) === -1)
 
   faPlus = faPlus
   faMinus = faXmark
