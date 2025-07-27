@@ -1648,7 +1648,7 @@ async function createBskyPassword(user: User, agent: AtpAgent) {
   const userDid = agent.assertDid
 
   user.bskyDid = userDid
-  user.bskyAuthData = appPassword
+  user.bskyAppPassword = appPassword
   user.enableBsky = true
   await user.save()
   return true

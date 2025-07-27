@@ -309,6 +309,12 @@ export class User extends Model<UserAttributes, UserAttributes> implements UserA
 
   @Column({
     allowNull: true,
+    type: DataType.STRING
+  })
+  declare bskyAppPassword: string
+
+  @Column({
+    allowNull: true,
     type: DataType.STRING(768)
   })
   declare bskyDid: string | null
