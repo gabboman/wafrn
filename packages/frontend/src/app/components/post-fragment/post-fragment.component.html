@@ -1,6 +1,6 @@
 <div [ngClass]="{ 'post-contains-muted-words': !!fragment().muted_words_cw && !showSensitiveContent() }">
   @if (fragment().title) {
-    <h3 [innerText]="fragment().title && !showSensitiveContent()"></h3>
+    <h1 [innerText]="fragment().title && !showSensitiveContent()"></h1>
   }
   @if (fragment().ask) {
     <app-single-ask [ask]="fragment().ask!"></app-single-ask>
