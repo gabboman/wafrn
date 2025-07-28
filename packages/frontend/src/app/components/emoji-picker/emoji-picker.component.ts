@@ -1,9 +1,9 @@
-import { Component, inject } from '@angular/core';
-import { DialogRef } from '@angular/cdk/dialog';
-import { EmojiCollectionsComponent } from '../emoji-collections/emoji-collections.component';
-import { Emoji } from 'src/app/interfaces/emoji';
+import { Component, inject } from '@angular/core'
+import { DialogRef } from '@angular/cdk/dialog'
+import { EmojiCollectionsComponent } from '../emoji-collections/emoji-collections.component'
+import { Emoji } from 'src/app/interfaces/emoji'
 
-import { MatButtonModule } from '@angular/material/button';
+import { MatButtonModule } from '@angular/material/button'
 
 @Component({
   selector: 'app-emoji-picker',
@@ -12,16 +12,17 @@ import { MatButtonModule } from '@angular/material/button';
     MatButtonModule
 ],
   styleUrl: './emoji-picker.component.scss',
-  templateUrl: './emoji-picker.component.html',
+  templateUrl: './emoji-picker.component.html'
 })
 export class EmojiPickerComponent {
-  dialogRef = inject<DialogRef<Emoji>>(DialogRef<Emoji>);
+  dialogRef = inject<DialogRef<Emoji>>(DialogRef<Emoji>)
+  faClose = faXmark
 
   reactToPost(e: Emoji) {
-    this.dialogRef.close(e);
+    this.dialogRef.close(e)
   }
 
   closeDialog() {
-    this.dialogRef.close();
+    this.dialogRef.close()
   }
 }
