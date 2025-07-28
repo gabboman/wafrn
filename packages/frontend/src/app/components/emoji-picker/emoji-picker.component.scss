@@ -1,4 +1,9 @@
 $narrow: 800px;
+
+.emoji-picker-close {
+  padding-inline: 14px;
+}
+
 .emojireact-overlay-header {
   display: flex;
   flex-direction: row;
@@ -16,7 +21,7 @@ $narrow: 800px;
   padding: 8px 16px;
   overflow-x: hidden;
   overflow-y: hidden;
-  background-color: var(--mat-sys-surface-container-high);
+  background-color: var(--mat-sys-surface-container);
   border-radius: var(--mat-sys-corner-small);
   box-shadow: var(--mat-sys-level3);
   overscroll-behavior: contain;

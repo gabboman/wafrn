@@ -8,6 +8,11 @@
   min-width: unset !important;
 }
 
+// Allow padding-less mat-form-field inputs
+.mat-form-field-no-padding .mat-mdc-form-field-bottom-align::before {
+  content: unset !important;
+}
+
 // Fix drawer border radius without requiring themes to use !important, though uses 0 2 0 specificity
 :root .mat-drawer {
   border-top-right-radius: 0;

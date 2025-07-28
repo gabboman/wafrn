@@ -301,7 +301,7 @@
         <hr />
         <mat-accordion>
           <mat-expansion-panel hideToggle>
-            <mat-expansion-panel-header>
+            <mat-expansion-panel-header (click)="forceFixEmoji()">
               <mat-panel-title> {{ 'profile.other.availableEmoji' | translate }} </mat-panel-title>
             </mat-expansion-panel-header>
             <app-emoji-collections (emoji)="emojiClicked($event)"></app-emoji-collections>
