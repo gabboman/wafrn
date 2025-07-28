@@ -1,6 +1,6 @@
 @if (title) {
   <div class="mx-3 lg:mx-4 wafrn-container">
-    <h3 class="mb-2 text-3xl dashboard-title">{{ title }}</h3>
+    <h2 class="mb-2 text-3xl dashboard-title">{{ title }}</h2>
   </div>
 }
 @for (post of posts; track $index) {
@@ -11,12 +11,12 @@
 }
 
 @if (noMorePosts) {
-  <mat-card class="mx-3 lg:mx-4 wafrn-container">
+  <mat-card class="p-3 mb-6 lg:mx-4 wafrn-container">
     <h2>You dont seem to be following anyone yet!</h2>
-    <h3>
+    <p>
       Consider taking a look at the <a [routerLink]="'/dashboard/exploreLocal'">local dashboard</a> or
       <a [routerLink]="'/dashboard/explore'">explore the fediverse</a>
-    </h3>
+    </p>
   </mat-card>
 }
 

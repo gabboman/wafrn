@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core'
+import { Component, computed, OnInit, signal, Signal, WritableSignal } from '@angular/core'
 import { FormControl, UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms'
 import { BlogDetails } from 'src/app/interfaces/blogDetails'
 import { Emoji } from 'src/app/interfaces/emoji'
@@ -9,6 +9,7 @@ import { LoginService } from 'src/app/services/login.service'
 import { MediaService } from 'src/app/services/media.service'
 import { MessageService } from 'src/app/services/message.service'
 import { ThemeService } from 'src/app/services/theme.service'
+import { faPlus, faXmark } from '@fortawesome/free-solid-svg-icons'
 
 @Component({
   selector: 'app-edit-profile',
@@ -36,6 +37,13 @@ export class EditProfileComponent implements OnInit {
     { level: 1, name: 'Only articles (Feature still in the works)' },
     { level: 2, name: 'Yes for all my posts' }
   ]
+
+  selectedIndex: WritableSignal<number> = signal<number>(0)
+  tabsToHideUpdateButton = [4, 5, 6] // we do a little trolling
+  showUpdateButton: Signal<boolean> = computed(() => this.tabsToHideUpdateButton.indexOf(this.selectedIndex()) === -1)
+
+  faPlus = faPlus
+  faMinus = faXmark
 
   fediAttachments: { name: string; value: string }[] = [{ name: '', value: '' }]
   editProfileForm = new UntypedFormGroup({
@@ -251,6 +259,10 @@ export class EditProfileComponent implements OnInit {
 
   addFediAttachment() {
     this.fediAttachments.push({ name: '', value: '' })
+  }
+
+  removeFediAttachment(index: number) {
+    this.fediAttachments.splice(index, 1)
   }
 
   getAttachmentValue() {
