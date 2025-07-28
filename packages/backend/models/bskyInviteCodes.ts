@@ -3,12 +3,13 @@ import { Model, Table, Column, DataType } from 'sequelize-typescript'
 export interface BskyInviteCodesAttributes {
   id?: number
   code?: string
+  masterCode?: boolean
 }
 
 @Table({
   tableName: 'bskyInviteCodes',
   modelName: 'bskyInviteCodes',
-  timestamps: true
+  timestamps: false
 })
 export class BskyInviteCodes
   extends Model<BskyInviteCodesAttributes, BskyInviteCodesAttributes>
@@ -19,4 +20,11 @@ export class BskyInviteCodes
     type: DataType.STRING(512)
   })
   declare code: string
+
+  @Column({
+    allowNull: true,
+    type: DataType.BOOLEAN,
+    defaultValue: false
+  })
+  declare masterCode: boolean
 }

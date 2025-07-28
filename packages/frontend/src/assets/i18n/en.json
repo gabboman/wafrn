@@ -106,6 +106,7 @@
       "changeDisplayName": "Display name (can contain emoji codes)",
       "changeBio": "Your bio/description. You can put emoji codes here too. You can use markdown here",
       "extraInfoHead": "Extra information (Fediverse exclusive)",
+      "addAttachment": "Add attachment",
       "fieldPropertyName": "Property name",
       "fieldPropertyValue": "Property value"
     },

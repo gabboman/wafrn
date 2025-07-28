@@ -1,7 +1,7 @@
 /* theme by @easterman@app.wafrn.net */
 :root {
     --mat-sys-on-primary-container: teal;
-    --mat-sys-primary: white;
+    --mat-sys-primary: light-dark(black, white);
 }
 
 @keyframes cursor {
@@ -12,7 +12,6 @@
 * {
     font-family: "Lucida Grande", "Lucida Sans Unicode", Helvetica, sans-serif !important;
     font-feature-settings: normal !important;
-    background-image: inherit;
 	animation-name: cursor;
 	animation-duration: 5s;
 	animation-iteration-count: infinite;
@@ -39,7 +38,7 @@
 }
 
 .instance-logo {
-    content: url("https://easterman.neocities.org/images/wafflern.png");
+    content: url("/assets/wafflern.png");
 	aspect-ratio: 2 / 1 !important;
 }
 
@@ -57,7 +56,7 @@ a {
 }
 
 .mat-drawer-content {
-    background-image: url("https://easterman.neocities.org/images/pgprix.png");
+    background-image: url("/assets/pgprix.png");
     background-size: 100%;
 }
 
@@ -81,7 +80,7 @@ a {
 }
 
 .side-menu {
-	background-image: url("https://textures.world/wp-content/uploads/2018/10/Aluminum-Brushed-Metal-Seamless-Background-Textures-5-copy.jpg");
+	background-image: url("/assets/brushed-metal.jpg");
 }
 
 .mdc-list-item, .mat-drawer-inner-container, .mdc-list-item__content {

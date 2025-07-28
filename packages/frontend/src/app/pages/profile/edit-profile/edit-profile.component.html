@@ -1,5 +1,11 @@
 <mat-card class="p-3 mb-6 lg:mx-4 wafrn-container">
-  <mat-tab-group mat-stretch-tabs="false" mat-align-tabs="start" dynamicHeight preserveContent>
+  <mat-tab-group
+    mat-stretch-tabs="false"
+    mat-align-tabs="start"
+    dynamicHeight
+    preserveContent
+    (selectedIndexChange)="selectedIndex.set($event)"
+  >
     <form [hidden]="loading" [formGroup]="editProfileForm" (ngSubmit)="onSubmit()">
       <hr />
       <mat-tab label="{{ 'profile.tabHeaders.profile' | translate }}">
@@ -38,25 +44,49 @@
           ></textarea>
         </mat-form-field>
         <hr />
-        <p [hidden]="loading" class="w-full">{{ 'profile.profile.extraInfoHead' | translate }}</p>
+        <p>{{ 'profile.profile.extraInfoHead' | translate }}</p>
         @for (attachment of fediAttachments; track $index) {
-          <form [hidden]="loading">
-            <div class="w-full">
-              <mat-form-field class="w-50">
+          <form>
+            <div class="flex align-items-center fedi-attachment-list">
+              <mat-form-field class="fedi-attachment">
                 <mat-label>{{ 'profile.profile.fieldPropertyName' | translate }}</mat-label>
-                <input [ngModelOptions]="{ standalone: true }" [(ngModel)]="fediAttachments[$index].name" matInput />
+                <input
+                  [ngModelOptions]="{ standalone: true }"
+                  [disabled]="loading"
+                  [(ngModel)]="fediAttachments[$index].name"
+                  required
+                  matInput
+                />
               </mat-form-field>
-              <mat-form-field class="w-50">
+              <mat-form-field class="fedi-attachment">
                 <mat-label>{{ 'profile.profile.fieldPropertyValue' | translate }}</mat-label>
-                <input [ngModelOptions]="{ standalone: true }" [(ngModel)]="fediAttachments[$index].value" matInput />
+                <input
+                  [ngModelOptions]="{ standalone: true }"
+                  [disabled]="loading"
+                  [(ngModel)]="fediAttachments[$index].value"
+                  required
+                  matInput
+                />
               </mat-form-field>
+              <!-- EVIL CENTERING (evil) -->
+              <button
+                (click)="removeFediAttachment($index)"
+                [disabled]="loading"
+                mat-button
+                class="mb-4 remove-fedi-attachment"
+              >
+                <fa-icon [icon]="faMinus" class="m-1"></fa-icon>
+              </button>
             </div>
           </form>
         }
-        <div [hidden]="loading" (click)="addFediAttachment()">+</div>
+        <button (click)="addFediAttachment()" [disabled]="loading" mat-stroked-button class="add-fedi-attachment">
+          <fa-icon [icon]="faPlus" class="m-1"></fa-icon>
+          {{ 'profile.profile.addAttachment' | translate }}
+        </button>
       </mat-tab>
       <mat-tab label="{{ 'profile.tabHeaders.preferences' | translate }}">
-        <h5 class="w-full">{{ 'profile.preferences.notificationFilters' | translate }}</h5>
+        <h2 class="preference-subheader">{{ 'profile.preferences.notificationFilters' | translate }}</h2>
         <mat-form-field class="w-full">
           <mat-label>{{ 'profile.preferences.showNotificationsFrom' | translate }}</mat-label>
           <mat-select formControlName="showNotificationsFrom">
@@ -161,7 +191,7 @@
         </mat-accordion>
       </mat-tab>
       <mat-tab label="{{ 'profile.tabHeaders.privacySecurity' | translate }}">
-        <p>Options</p>
+        <h2 class="preference-subheader">Options</h2>
         <mat-form-field class="w-full" appearance="outline">
           <mat-label>{{ 'profile.privacy.defaultPostPrivacy' | translate }}</mat-label>
           <mat-select [required]="true" formControlName="defaultPostEditorPrivacy">
@@ -235,7 +265,7 @@
             />
           </mat-form-field>
           @if (editProfileForm.value.mutedWords.split(',').length > 0) {
-            <div class="taglist flex flex-wrap mb-2">
+            <div class="flex flex-wrap gap-2 tag-list">
               @for (tag of editProfileForm.value.mutedWords.split(','); track $index) {
                 @if (tag && tag !== '' && tag.trim() !== '') {
                   <div class="tag">
@@ -271,7 +301,7 @@
         <hr />
         <mat-accordion>
           <mat-expansion-panel hideToggle>
-            <mat-expansion-panel-header>
+            <mat-expansion-panel-header (click)="forceFixEmoji()">
               <mat-panel-title> {{ 'profile.other.availableEmoji' | translate }} </mat-panel-title>
             </mat-expansion-panel-header>
             <app-emoji-collections (emoji)="emojiClicked($event)"></app-emoji-collections>
@@ -288,7 +318,7 @@
         {{ 'profile.bsky.psa2_3' | translate }}
       </p>
       <p>{{ 'profile.bsky.psa3' | translate }}</p>
-      <button [disabled]="loading" (click)="enableBluesky()" mat-flat-button class="w-full">Enable bluesky</button>
+      <p>To enable bluesky, please <a [routerLink]="'/profile/enable-bluesky'">click here</a></p>
     </mat-tab>
     <mat-tab label="Migrate out">
       <p>
@@ -325,14 +355,21 @@
         </mat-card>
         -->
 
-  <button
-    (click)="onSubmit()"
-    [disabled]="!editProfileForm.valid"
-    mat-raised-button
-    color="primary"
-    icon="pi pi-user"
-    class="w-full mt-4"
-  >
-    {{ 'profile.updateButton' | translate }}
-  </button>
+  @if (showUpdateButton()) {
+    <div class="flex">
+      <button
+        (click)="onSubmit()"
+        [disabled]="!editProfileForm.valid || loading"
+        mat-raised-button
+        color="primary"
+        icon="pi pi-user"
+        class="w-full mt-4"
+      >
+        {{ 'profile.updateButton' | translate }}
+      </button>
+      @if (loading) {
+        <mat-spinner diameter="24" class="mt-5 mx-3"></mat-spinner>
+      }
+    </div>
+  }
 </mat-card>

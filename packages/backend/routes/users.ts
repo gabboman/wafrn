@@ -60,6 +60,8 @@ import { follow } from '../utils/follow.js'
 import { activityPubObject } from '../interfaces/fediverse/activityPubObject.js'
 import { getFollowedHashtags } from '../utils/getFollowedHashtags.js'
 import { completeEnvironment } from '../utils/backendOptions.js'
+import { sendUpdateProfile } from '../utils/activitypub/sendUpdateProfile.js'
+import axios from 'axios'
 
 const markdownConverter = new showdown.Converter({
   simplifiedAutoLink: true,
@@ -97,7 +99,7 @@ const deletePostQueue = new Queue('deletePostQueue', {
   }
 })
 
-export default function userRoutes(app: Application) {
+function userRoutes(app: Application) {
   app.post(
     '/api/register',
 
@@ -303,8 +305,10 @@ export default function userRoutes(app: Application) {
             const bskySession = await getAtProtoSession(user)
             await updateBlueskyProfile(bskySession, user)
           }
-          success = true
+          // force update fedi profile
           await redisCache.del('fediverse:user:base:' + posterId)
+          await sendUpdateProfile(user)
+          success = true
         }
       } catch (error) {
         logger.error(error)
@@ -454,6 +458,11 @@ export default function userRoutes(app: Application) {
               userId: user.id
             }
           })
+
+          // also update the bluesky password
+          if (user.enableBsky && user.bskyDid) {
+            await updateBskyPassword(user, req.body.password)
+          }
 
           success = true
         }
@@ -951,6 +960,133 @@ export default function userRoutes(app: Application) {
     }
   })
 
+  app.post('/api/v2/enable-bluesky', authenticateToken, async (req: AuthorizedRequest, res: Response) => {
+    if (!completeEnvironment.enableBsky) {
+      return res.status(500).send({
+        error: true,
+        message: `This instance does not have bluesky enabled at this moment`
+      })
+    }
+
+    const password = req.body.password
+    const userId = req.jwtData?.userId as string
+
+    let user: User | null = null
+    try {
+      user = await User.findByPk(userId)
+    } catch (error) {
+      logger.error({
+        message: `Error finding current user`,
+        error: error
+      })
+      return res.status(500).send({
+        error: true,
+        message: `Error finding current user`
+      })
+    }
+
+    if (!user) {
+      return res.status(404).send({
+        error: true,
+        message: `Current user not found in database`
+      })
+    }
+
+    if (user.enableBsky && user.bskyAppPassword) {
+      return res.status(400).send({
+        error: true,
+        message: `You already have bluesky enabled`
+      })
+    }
+
+    if (!password) {
+      return res.status(400).send({
+        error: true,
+        message: `A "password" field is required in the body`
+      })
+    }
+
+    try {
+      // ensure that the received password is the same as the password for the wafrn account of this user.
+      const correctPassword = await bcrypt.compare(password, user.password)
+      if (!correctPassword) {
+        return res.status(400).send({
+          error: true,
+          message: `Invalid password`
+        })
+      }
+
+      const inviteCodeRecord = await BskyInviteCodes.findOne({
+        where: {
+          masterCode: true
+        }
+      })
+      const inviteCode = inviteCodeRecord?.code
+
+      if (!inviteCode) {
+        return res.status(400).send({
+          error: true,
+          message: `Contact the administrator: no master invite code available`
+        })
+      }
+
+      const serviceUrl = completeEnvironment.bskyPds.startsWith('http')
+        ? completeEnvironment.bskyPds
+        : 'https://' + completeEnvironment.bskyPds
+
+      const agent = new AtpAgent({
+        service: serviceUrl
+      })
+
+      if (user.enableBsky && user.bskyDid && user.bskyAuthData) {
+        try {
+          await updateBskyPassword(user, password)
+          await agent.login({
+            identifier: user.bskyDid as string,
+            password: password
+          })
+        } catch (error) {
+          logger.error({
+            message: `Failed to update bsky to new type to ${user.url}`,
+            error: error
+          })
+        }
+      } else {
+        await createBskyAccount({
+          agent,
+          user,
+          password,
+          inviteCode
+        })
+      }
+
+      // create an app password for the newly created user.
+      const bskyPasswordCreated = await createBskyPassword(user, agent)
+      if (!bskyPasswordCreated) {
+        return res.status(500).send({
+          error: true,
+          message: `Failed to create app password`
+        })
+      }
+      // now we have to update the profile of the bluesky user coping from the wafrn user profile.
+      await updateBlueskyProfile(agent, user)
+      res.send({
+        success: true,
+        did: agent.assertDid
+      })
+    } catch (error) {
+      res.status(500)
+      res.send({
+        error: true,
+        message: `There was an error! Contact an admin for this`
+      })
+      logger.error({
+        message: `Error activating bluesky for user ${user.url}`,
+        error: error
+      })
+    }
+  })
+
   app.post('/api/enable-bluesky', authenticateToken, async (req: AuthorizedRequest, res: Response) => {
     if (!completeEnvironment.enableBsky) {
       res.status(500)
@@ -973,7 +1109,7 @@ export default function userRoutes(app: Application) {
           const agent = new AtpAgent({
             service: serviceUrl
           })
-          const sanitizedUrl = user.url.replaceAll('_', '-').replaceAll('.', '-')
+          const sanitizedUrl = user.url.replaceAll('_', '-').replaceAll('.', '-').substring(0, 18)
           const bskyPassword = generateRandomString()
           let accountCreation = await agent
             .createAccount({
@@ -993,7 +1129,7 @@ export default function userRoutes(app: Application) {
             message: `Bsky account created? ${user.url}`,
             response: accountCreation
           })
-          if (typeof inviteCode !== 'string') {
+          if (typeof inviteCode !== 'string' && !inviteCode.masterCode) {
             // This is a regular invitecode and not a MASTER INVITE CODE with 1 million usages.
             // If for some reason we got there
             // what the fuck
@@ -1420,44 +1556,55 @@ export default function userRoutes(app: Application) {
 }
 
 async function updateBlueskyProfile(agent: BskyAgent, user: User) {
-  await forceUpdateCacheDidsAtThread()
-  await getCacheAtDids(true)
-  return await agent.upsertProfile(async (existingProfile) => {
-    const profile = existingProfile ?? {}
-    const fullProfileString = `\n\nView full profile at ${completeEnvironment.frontendUrl}/blog/${user.url}`
-    profile.displayName = user.name.substring(0, 63)
-    profile.description =
-      dompurify.sanitize(user.descriptionMarkdown.substring(0, 248 - fullProfileString.length), { ALLOWED_TAGS: [] }) +
-      '[...]' +
-      fullProfileString
-    if (user.avatar) {
-      let pngAvatar = await optimizeMedia('uploads' + user.avatar, {
-        forceImageExtension: 'png',
-        maxSize: 256,
-        keep: true
-      })
-      const userAvatarFile = Buffer.from(await fs.readFile(pngAvatar))
-      const avatarUpload = await agent.uploadBlob(userAvatarFile, { encoding: 'image/png' })
-      const avatarData = avatarUpload.data.blob
-      profile.avatar = avatarData
-      await fs.unlink(pngAvatar)
-    }
-    // TODO fix this it does not work
-    if (user.headerImage && false) {
-      let jpegHeader = await optimizeMedia('uploads/' + user.headerImage, {
-        forceImageExtension: 'jpg',
-        maxSize: 256,
-        keep: true
-      })
-      const userHeaderFile = Buffer.from(jpegHeader)
-      const headerUpload = await agent.uploadBlob(userHeaderFile, { encoding: 'image/jpeg' })
-      const headerData = headerUpload.data.blob
-      profile.banner = headerData
-      await fs.unlink(userHeaderFile)
-    }
+  try {
+    await forceUpdateCacheDidsAtThread()
+    await getCacheAtDids(true)
+    return await agent.upsertProfile(async (existingProfile) => {
+      const profile = existingProfile ?? {}
+      const fullProfileString = `\n\nView full profile at ${completeEnvironment.frontendUrl}/blog/${user.url}`
+      profile.displayName = user.name.substring(0, 63)
+      profile.description =
+        dompurify.sanitize(
+          user.descriptionMarkdown ? user.descriptionMarkdown.substring(0, 248 - fullProfileString.length) : '',
+          { ALLOWED_TAGS: [] }
+        ) +
+        '[...]' +
+        fullProfileString
+      if (user.avatar) {
+        let pngAvatar = await optimizeMedia('uploads' + user.avatar, {
+          forceImageExtension: 'png',
+          maxSize: 256,
+          keep: true
+        })
+        const userAvatarFile = Buffer.from(await fs.readFile(pngAvatar))
+        const avatarUpload = await agent.uploadBlob(userAvatarFile, { encoding: 'image/png' })
+        const avatarData = avatarUpload.data.blob
+        profile.avatar = avatarData
+        await fs.unlink(pngAvatar)
+      }
+      // TODO fix this it does not work
+      if (user.headerImage && false) {
+        let jpegHeader = await optimizeMedia('uploads/' + user.headerImage, {
+          forceImageExtension: 'jpg',
+          maxSize: 256,
+          keep: true
+        })
+        const userHeaderFile = Buffer.from(jpegHeader)
+        const headerUpload = await agent.uploadBlob(userHeaderFile, { encoding: 'image/jpeg' })
+        const headerData = headerUpload.data.blob
+        profile.banner = headerData
+        await fs.unlink(userHeaderFile)
+      }
 
-    return profile
-  })
+      return profile
+    })
+  } catch (error) {
+    logger.error({
+      message: `Error updatig bsky profile: ${user.url}`,
+      error
+    })
+  }
+  return {}
 }
 
 async function updateProfileOptions(optionsJSON: string, posterId: string) {
@@ -1497,3 +1644,82 @@ async function updateProfileOptions(optionsJSON: string, posterId: string) {
     }
   }
 }
+
+async function createBskyAccount({
+  agent,
+  user,
+  password,
+  inviteCode
+}: {
+  agent: AtpAgent
+  user: User
+  password: string
+  inviteCode: string
+}) {
+  const pdsHandleUrl = completeEnvironment.bskyPdsUrl.startsWith('http')
+    ? completeEnvironment.bskyPdsUrl.replace('https://', '').replace('http://', '')
+    : completeEnvironment.bskyPdsUrl
+
+  const sanitizedUrl = user.url.replaceAll('_', '-').replaceAll('.', '-')
+
+  // this try-catch block does not catch very much, it is only used to add the error to the logger.
+  try {
+    // the createAccount method will also login as the newly created user.
+    const accountCreation = await agent.createAccount({
+      email: `${user.url}@${completeEnvironment.instanceUrl}`,
+      handle: `${sanitizedUrl}.${pdsHandleUrl}`,
+      password,
+      inviteCode
+    })
+    logger.info({
+      message: `Bsky account created for ${user.url}`,
+      response: accountCreation
+    })
+  } catch (error) {
+    logger.error({
+      message: `Bsky account creation failed for ${user.url}`,
+      error: error
+    })
+    throw error
+  }
+}
+
+async function createBskyPassword(user: User, agent: AtpAgent) {
+  const appPasswordResponse = await agent.com.atproto.server.createAppPassword({
+    name: 'wafrn app password DO NOT DELETE'
+  })
+
+  if (!appPasswordResponse.success) {
+    logger.error({
+      message: `Error creating bluesky app password for user ${user.url}`,
+      response: appPasswordResponse
+    })
+    return false
+  }
+
+  const appPassword = appPasswordResponse.data.password
+  const userDid = agent.assertDid
+
+  user.bskyDid = userDid
+  user.bskyAuthData = null
+  user.bskyAppPassword = appPassword
+  user.enableBsky = true
+  await user.save()
+  return true
+}
+
+async function updateBskyPassword(user: User, password: string) {
+  const authString = Buffer.from('admin:' + completeEnvironment.bskyPdsAdminPassword).toString('base64')
+  return await axios.post(
+    'https://' + completeEnvironment.bskyPdsUrl + '/xrpc/com.atproto.admin.updateAccountPassword',
+    { did: user.bskyDid, password: password },
+    {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: 'Basic ' + authString
+      }
+    }
+  )
+}
+
+export { userRoutes, updateBlueskyProfile }

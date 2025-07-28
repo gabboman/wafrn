@@ -129,7 +129,8 @@ async function processFirehose(job: Job) {
             const postToBeRewooted = await getAtProtoThread(record.subject.uri)
             if (postToBeRewooted) {
               try {
-                let [post, created] = await Post.findOrCreate({
+                const parent = await Post.findByPk(postToBeRewooted)
+                await Post.findOrCreate({
                   where: {
                     [Op.or]: [
                       {
@@ -150,6 +151,18 @@ async function processFirehose(job: Job) {
                     privacy: Privacy.Public
                   }
                 })
+                await createNotification(
+                  {
+                    notificationType: 'REWOOT',
+                    postId: parent?.id,
+                    notifiedUserId: parent?.userId as string,
+                    userId: remoteUser.id,
+                  },
+                  {
+                    postContent: parent?.content,
+                    userUrl: remoteUser.url
+                  }
+                )
               } catch (error) {
                 logger.info({
                   message: `Error with bsky rewoot`,

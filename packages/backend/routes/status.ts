@@ -66,7 +66,7 @@ export default function statusRoutes(app: Application) {
           type: 'exponential',
           delay: 25000
         },
-        removeOnFail: true
+        removeOnFail: false
       }
     })
 

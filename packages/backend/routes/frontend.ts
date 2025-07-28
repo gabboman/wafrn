@@ -21,6 +21,25 @@ const cacheOptions = {
 function frontend(app: Application) {
   const defaultSeoData = completeEnvironment.defaultSEOData
 
+  app.get('/api/disableEmailNotifications/:id/:code', async (req: Request, res: Response) => {
+    let result = false
+    let userId = req.params.id
+    let code = req.params.code
+    if (userId && code) {
+      let user = await User.findByPk(userId)
+      if (user && user.activationCode == code) {
+        user.disableEmailNotifications = true
+        await user.save()
+        result = true
+      }
+    }
+    res.send(
+      result
+        ? `You successfuly disabled email notifications`
+        : `Something went wrong! Please do send an email to the instance admin! Do reply to the email`
+    )
+  })
+
   // serve default angular application
   app.get(
     [
@@ -171,25 +190,6 @@ function frontend(app: Application) {
     } else {
       res.send(getIndexSeo(defaultSeoData.title, defaultSeoData.description, defaultSeoData.img))
     }
-  })
-
-  app.get('/disableEmailNotifications/:id/:code', async (req: Request, res: Response) => {
-    let result = false
-    let userId = req.params.id
-    let code = req.params.code
-    if (userId && code) {
-      let user = await User.findByPk(userId)
-      if (user && user.activationCode == code) {
-        user.disableEmailNotifications = true
-        await user.save()
-        result = true
-      }
-    }
-    res.send(
-      result
-        ? `You successfuly disabled email notifications`
-        : `Something went wrong! Please do send an email to the instance admin! Do reply to the email`
-    )
   })
 
   app.get(

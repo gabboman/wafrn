@@ -1,5 +1,6 @@
-import { Component, OnInit } from '@angular/core'
+import { Component, computed, OnInit, signal, Signal, ViewChild, WritableSignal } from '@angular/core'
 import { FormControl, UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms'
+import { EmojiCollectionsComponent } from 'src/app/components/emoji-collections/emoji-collections.component'
 import { BlogDetails } from 'src/app/interfaces/blogDetails'
 import { Emoji } from 'src/app/interfaces/emoji'
 import { SimplifiedUser } from 'src/app/interfaces/simplified-user'
@@ -9,6 +10,7 @@ import { LoginService } from 'src/app/services/login.service'
 import { MediaService } from 'src/app/services/media.service'
 import { MessageService } from 'src/app/services/message.service'
 import { ThemeService } from 'src/app/services/theme.service'
+import { faPlus, faXmark } from '@fortawesome/free-solid-svg-icons'
 
 @Component({
   selector: 'app-edit-profile',
@@ -32,10 +34,18 @@ export class EditProfileComponent implements OnInit {
     { level: 3, name: 'Disable asks' }
   ]
   rssOptions = [
-    {level: 0, name: 'No'},
-    {level: 1, name: 'Only articles (Feature still in the works)'},
-    {level: 2, name: 'Yes for all my posts'}
+    { level: 0, name: 'No' },
+    { level: 1, name: 'Only articles (Feature still in the works)' },
+    { level: 2, name: 'Yes for all my posts' }
   ]
+
+  selectedIndex: WritableSignal<number> = signal<number>(0)
+  tabsToHideUpdateButton = [4, 5, 6] // we do a little trolling
+  showUpdateButton: Signal<boolean> = computed(() => this.tabsToHideUpdateButton.indexOf(this.selectedIndex()) === -1)
+
+  faPlus = faPlus
+  faMinus = faXmark
+  @ViewChild(EmojiCollectionsComponent) emojiCollections!: EmojiCollectionsComponent
 
   fediAttachments: { name: string; value: string }[] = [{ name: '', value: '' }]
   editProfileForm = new UntypedFormGroup({
@@ -103,9 +113,7 @@ export class EditProfileComponent implements OnInit {
         this.loginService.getUserDefaultPostPrivacyLevel()
       )
       let rssOptionValue = localStorage.getItem('enableRSS')
-      this.editProfileForm.controls['rssOptions'].patchValue(
-        rssOptionValue ? parseInt(rssOptionValue) : 0
-      )
+      this.editProfileForm.controls['rssOptions'].patchValue(rssOptionValue ? parseInt(rssOptionValue) : 0)
       this.editProfileForm.controls['forceClassicLogo'].patchValue(this.loginService.getForceClassicLogo())
       const federateWithThreads = localStorage.getItem('federateWithThreads')
       this.editProfileForm.controls['federateWithThreads'].patchValue(federateWithThreads === 'true')
@@ -127,7 +135,9 @@ export class EditProfileComponent implements OnInit {
         this.mediaService.checkForceClassicVideoPlayer()
       )
       this.editProfileForm.controls['disableConfetti'].patchValue(localStorage.getItem('disableConfetti') == 'true')
-      this.editProfileForm.controls['enableConfettiRecivingLike'].patchValue(localStorage.getItem('enableConfettiRecivingLike') == 'true')
+      this.editProfileForm.controls['enableConfettiRecivingLike'].patchValue(
+        localStorage.getItem('enableConfettiRecivingLike') == 'true'
+      )
       this.editProfileForm.controls['disableSounds'].patchValue(localStorage.getItem('disableSounds') == 'true')
 
       this.editProfileForm.controls['forceClassicMediaView'].patchValue(
@@ -253,15 +263,12 @@ export class EditProfileComponent implements OnInit {
     this.fediAttachments.push({ name: '', value: '' })
   }
 
-  getAttachmentValue() {
-    return this.fediAttachments.filter((elem) => elem.name && elem.value)
+  removeFediAttachment(index: number) {
+    this.fediAttachments.splice(index, 1)
   }
 
-  enableBluesky() {
-    this.loading = true
-    this.loginService.enableBluesky().then(() => {
-      this.loading = false
-    })
+  getAttachmentValue() {
+    return this.fediAttachments.filter((elem) => elem.name && elem.value)
   }
 
   async requestDeleteAccount() {
@@ -278,5 +285,9 @@ export class EditProfileComponent implements OnInit {
 
   userAliasSelected(data: string) {
     this.editProfileForm.controls['alsoKnownAs'].patchValue(data)
+  }
+
+  forceFixEmoji() {
+    this.emojiCollections.updateDimensions()
   }
 }

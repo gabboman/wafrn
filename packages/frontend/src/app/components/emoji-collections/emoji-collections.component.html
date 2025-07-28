@@ -1,51 +1,43 @@
-<mat-form-field class="w-full mt-2">
-  <mat-label>Search available emojis</mat-label>
-  <input [(ngModel)]="filterText" matInput />
-</mat-form-field>
+<div class="emoji-collections">
+  <mat-form-field class="w-full mat-form-field-no-padding emoji-search">
+    <mat-label>Search available emojis</mat-label>
+    <input [(ngModel)]="filterText" matInput />
+  </mat-form-field>
 
-<div>
   <div #emojiContainer class="emoji-container">
-    <div>
-      <div class="emoji-sidebar">
-        <button
-          [class.emoji-active-collection]="this.collectionHas(-1)"
-          class="emoji-sidebar-child p-2 flex align-content-center justify-content-center cursor-pointer bg-transparent emoji-collection-button"
-          (click)="this.toggleCollection(-1)"
+    <div class="emoji-sidebar">
+      <button
+        mat-button
+        class="emoji-sidebar-child emoji-collection-button"
+        [class.emoji-active-collection]="this.collectionHas(-2)"
+        (click)="this.toggleCollection(-2)"
+      >
+        <span><fa-icon title="Recent emojis" [icon]="clockIcon"></fa-icon></span>
+      </button>
+      @for (emojiCollection of emojiCollections; track $index) {
+        @if (emojiCollection.emojis.length > 0) {
+          @let emoji = emojiCollection.emojis[0];
+          <button
+            mat-button
+            class="emoji-sidebar-child emoji-collection-button"
+            [class.emoji-active-collection]="this.collectionHas($index)"
+            (click)="toggleCollection($index)"
           >
-          <span title="All emojis">*</span>
-        </button>
-        <button
-          [class.emoji-active-collection]="this.collectionHas(-2)"
-          class="emoji-sidebar-child p-2 flex align-content-center justify-content-center cursor-pointer bg-transparent emoji-collection-button"
-          (click)="this.toggleCollection(-2)"
-          >
-          <span><fa-icon title="Recent emojis" [icon]="clockIcon"></fa-icon></span>
-        </button>
-        @for (emojiCollection of emojiCollections; track $index) {
-          @if (emojiCollection.emojis.length > 0) {
-            @let emoji = emojiCollection.emojis[0];
-            <button
-              [class.emoji-active-collection]="this.collectionHas($index)"
-              class="emoji-sidebar-child p-2 flex align-content-center justify-content-center cursor-pointer bg-transparent emoji-collection-button"
-              (click)="toggleCollection($index)"
-              >
-              @if (!emoji.url) {
-                {{ emoji.id }}
-              }
-              @if (emoji.url) {
-                <img
-                  loading="lazy"
-                  class="mr-2 ml-2"
-                  [src]="baseMediaUrl + emoji.url"
-                  [alt]="emojiCollection.name"
-                  [title]="emojiCollection.name"
-                  />
-              }
-            </button>
-          }
+            @if (!emoji.url) {
+              {{ emoji.id }}
+            }
+            @if (emoji.url) {
+              <img
+                loading="lazy"
+                class="mr-2 ml-2"
+                [src]="baseMediaUrl + emoji.url"
+                [alt]="emojiCollection.name"
+                [title]="emojiCollection.name"
+              />
+            }
+          </button>
         }
-      </div>
-      <hr />
+      }
     </div>
 
     <cdk-virtual-scroll-viewport
@@ -54,10 +46,15 @@
       minBufferPx="200"
       maxBufferPx="300"
       [style.height.px]="this.virtualHeight()"
-      >
+    >
       <div *cdkVirtualFor="let row of this.vcRows()" class="emoji-row" [class.emoji-header]="row.tag === 0">
         @if (row.tag == 0) {
-          <span>{{ row.name }}</span>
+          <h3 class="m-0 text-xl line-height-3 flex-1 emoji-header-text">
+            {{ row.name }}
+            @if (row.count) {
+              <span class="emoji-header-count">({{ row.count }})</span>
+            }
+          </h3>
         } @else {
           @for (e of this.rowIterable(); track $index) {
             @if (row.index + $index < row.array.length) {
@@ -67,7 +64,7 @@
                 [title]="emoji.name"
                 (click)="click(emoji)"
                 class="flex align-content-center justify-content-center cursor-pointer bg-transparent emoji-item"
-                >
+              >
                 @if (!emoji.url) {
                   {{ emoji.id }}
                 } @else {
@@ -76,7 +73,7 @@
                     loading="lazy"
                     [alt]="emoji.name"
                     [src]="this.baseMediaUrl + emoji.url"
-                    />
+                  />
                 }
               </button>
             }

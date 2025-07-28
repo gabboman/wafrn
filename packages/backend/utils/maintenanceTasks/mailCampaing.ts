@@ -49,30 +49,26 @@ async function sendMail() {
         }
       }
     })
-    const subject =
-      notificationsCount != 0
-        ? `Hello ${user.url}, you have ${notificationsCount} unread notifications in wafrn!`
-        : `Hello ${user.url}, you have ${notificationsCount} unread notifications in wafrn! Wow thats zero notifications`
+    const subject = `New wafrn feature: follow tags, the homestuck update! ${user.url} come back. Its realy cool. You have ${notificationsCount} notifications btw`
     const body = `
     <h1>${user.url}, We miss you at <a href="https://app.wafrn.net">wafrn</a>!</h1>
     <p>As you can see, other people also misses you, as you have ${notificationsCount} unread notifications!</p>
-    We added a few emojis of waffy made by blakeana_00. <a href="https://ko-fi.com/c/96311eda24">You can comission him new emojis!</a><br />
-<a href="https://ko-fi.com/c/96311eda24"><img alt="" src="https://media.wafrn.net/1750800172033_31a8ffb58f2a8ca5d67e3992c94a1da8815c6c5d_processed.webp" style="width: 100%;" /></a><br />
+    ${
+      notificationsCount == 0
+        ? '<p>Wow, zero. You should come back and make this number bigger next time we send you an email</p>'
+        : ''
+    }
 <br />
-<br />
-So some of the changelog for last few months:
+So some of the changelog for last month:
 <ul>
-	<li>A cool mascot</li>
-	<li>A cool emoji pack for every wafrn instance by&nbsp;blakeana_00</li>
+	<li>FOLLOW TAGS. Wafrn is now the perfect place for homestuck for some reason, as we get all posts from bluesky with homestuck. What a mistery</li>
+  <li>Improved bluesky integration: now you can log in into your bluesky account hosted in wafrn! (this one is very janky but that has never stopped us)</li>
+	<li>Updated the UI a lot on mobile!</li>
 	<li>Replace AI with cocaine</li>
 	<li>Performance improvements</li>
-	<li>Migrations OUT of wafrn working! Your account is not attached to us! You can move your wafrn account to any other fedi server!</li>
-	<li>We have migrations from the fedi to wafrn working! You can move your mastodon/*oma/*key account to wafrn!</li>
 	<li>We have added a delete account button. No longer asking on a email to a mod to nuke your account. Sorry for that one!</li>
-	<li>Added herobrine</li>
-	<li>We have fixed a lot of bugs</li>
-	<li>We have fixed some bugs that you havent seen because they were new and they were fixed quickly!</li>
-	<li>Self hosting wafrn is now more viable!</li>
+	<li>DOOM is still working</li>
+	<li>We have added new bugs</li>
 </ul>
 And finaly, the part of the email where I say "give me money". Well, first, give money to the team, and then me
 
@@ -83,7 +79,10 @@ And finaly, the part of the email where I say "give me money". Well, first, give
 	<li>And finaly... we have to link the wafrn <a href="https://patreon.com/wafrn" target="_blank">patreon</a> and <a href="https://ko-fi.com/wafrn" target="_blank">kofi</a>. This money goes to gabbo for fried chicken and to the wafrn servers. Give me money! please :3</li>
 </ul>
 
-<p>If you no longer desire to get these emails, please <a href="${completeEnvironment.frontendUrl}/disableEmailNotifications/${user.id}/${user.activationCode}">click here</a>.</p>
+<p>If you no longer desire to get these emails, please <a href="${
+      completeEnvironment.frontendUrl
+    }/api/disableEmailNotifications/${user.id}/${user.activationCode}">click here</a>.</p>
+<p>Apologies if last time link did not work. Sorry</p>
     `
     console.log(`mailing ${user.url}`)
     await sendActivationEmail(user.email, '', subject, body)

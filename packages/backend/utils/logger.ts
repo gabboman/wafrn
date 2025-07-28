@@ -1,7 +1,7 @@
 import { pino } from 'pino'
 import { completeEnvironment } from './backendOptions.js'
 
-const transport = pino.transport(completeEnvironment.pinoTransportOptions as any)
+const transport = pino.transport(completeEnvironment.pinoTransportOptions)
 
 export const logger = pino(
   {

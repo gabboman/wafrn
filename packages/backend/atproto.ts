@@ -19,7 +19,7 @@ const firehoseQueue = new Queue('firehoseQueue', {
       type: 'exponential',
       delay: 25000
     },
-    removeOnFail: true
+    removeOnFail: false
   }
 })
 
