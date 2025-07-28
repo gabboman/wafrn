@@ -4,13 +4,12 @@ import { EmojiCollectionsComponent } from '../emoji-collections/emoji-collection
 import { Emoji } from 'src/app/interfaces/emoji'
 
 import { MatButtonModule } from '@angular/material/button'
+import { faXmark } from '@fortawesome/free-solid-svg-icons'
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome'
 
 @Component({
   selector: 'app-emoji-picker',
-  imports: [
-    EmojiCollectionsComponent,
-    MatButtonModule
-],
+  imports: [EmojiCollectionsComponent, MatButtonModule, FontAwesomeModule],
   styleUrl: './emoji-picker.component.scss',
   templateUrl: './emoji-picker.component.html'
 })

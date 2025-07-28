@@ -2,6 +2,8 @@ $narrow: 800px;
 
 .emoji-collections {
   background-color: var(--mat-sys-surface-container-low);
+  box-shadow: 0 0 6px var(--mat-sys-outline-variant);
+  border-radius: 4px;
 }
 
 .post-emoji-preview {
