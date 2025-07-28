@@ -48,10 +48,11 @@ export class EmojiCollectionsComponent implements AfterViewInit, OnDestroy {
   emojiElement!: ElementRef<HTMLElement>
 
   readonly emojiWidth = 55
+  readonly rowMargin = 16
   readonly maxRecents = 32
   readonly narrow = 800
 
-  virtualHeight = signal(300)
+  virtualHeight = signal(400)
 
   vcRows = computed<VirtualRows>(() => {
     let recentEmoji: Emoji[] = []
@@ -97,8 +98,11 @@ export class EmojiCollectionsComponent implements AfterViewInit, OnDestroy {
       }
     }
 
-    for (let i = 0; i < 5; i++) {
-      filteredCollections.push({ name: '', comment: '', emojis: [] })
+    // Force load collections (optimization or something)
+    if (this.includedCollections.size > 1) {
+      for (let i = 0; i < 5; i++) {
+        filteredCollections.push({ name: '', comment: '', emojis: [] })
+      }
     }
     return new VirtualRows(filteredRecents, filteredCollections, this.emojiPerRow())
   })
@@ -128,6 +132,7 @@ export class EmojiCollectionsComponent implements AfterViewInit, OnDestroy {
   }
   ngAfterViewInit(): void {
     this.updateDimensions()
+    this.toggleCollection(-1)
   }
 
   ngOnDestroy(): void {
@@ -169,14 +174,14 @@ export class EmojiCollectionsComponent implements AfterViewInit, OnDestroy {
       this.includedCollectionsSize.set(this.includedCollections.size)
       return
     }
-
-    // Otherwise, toggle the included collection. We explicitly track the size
-    // as we do not mutate the reference to the hashmap.
+    // me when I delete code
     if (this.includedCollections.has(index)) {
       this.includedCollections.delete(index)
       this.includedCollectionsSize.set(this.includedCollections.size)
       return
     }
+    this.includedCollections.clear()
+    this.includedCollectionsSize.set(this.includedCollections.size)
     this.includedCollections.add(index)
     this.includedCollectionsSize.set(this.includedCollections.size)
   }
@@ -194,8 +199,9 @@ export class EmojiCollectionsComponent implements AfterViewInit, OnDestroy {
   }
 
   updateDimensions() {
-    this.emojiPerRow.set(Math.max(Math.floor(this.emojiElement.nativeElement.offsetWidth / this.emojiWidth) - 1, 1))
-    this.virtualHeight.set(window.innerWidth < this.narrow ? 700 : 300)
+    const emojiFreeWidth = this.emojiElement.nativeElement.offsetWidth - 2 * this.rowMargin
+    this.emojiPerRow.set(Math.max(Math.floor(emojiFreeWidth / this.emojiWidth) - 1, 1))
+    this.virtualHeight.set(window.innerWidth < this.narrow ? 700 : 400)
   }
 
   @HostListener('window:resize', ['$event'])
@@ -209,6 +215,7 @@ interface EmojiRenderable {
   index: number
   array: Emoji[]
   name: string
+  count?: number
 }
 
 // I can't believe all solutions to this problem online are "Make and populate a new array!"
@@ -271,9 +278,13 @@ class VirtualRows implements Iterable<EmojiRenderable> {
               name:
                 collection == -1
                   ? 'Recent emojis'
-                  : this.collections[Math.min(collection, this.collections.length - 1)].name,
+                  : this.collections[Math.min(collection, this.collections.length - 1)]?.name,
               index: 0,
-              array: []
+              array: [],
+              count:
+                collection == -1
+                  ? undefined
+                  : this.collections[Math.min(collection, this.collections.length - 1)]?.emojis.length
             }
           }
         }

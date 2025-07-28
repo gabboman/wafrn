@@ -1,5 +1,9 @@
 $narrow: 800px;
 
+.emoji-collections {
+  background-color: var(--mat-sys-surface-container-low);
+}
+
 .post-emoji-preview {
   width: 32px;
   height: 32px;
@@ -7,16 +11,17 @@ $narrow: 800px;
 
 .emoji-container {
   height: 100%;
-  justify-content: space-between;
   display: flex;
+  justify-content: space-between;
   flex-direction: row;
+
   @media (max-width: $narrow) {
     flex-direction: column-reverse;
   }
 }
 
 .emoji-viewport {
-  height: 300px;
+  height: 400px;
   width: 100%;
   display: flex;
   flex-direction: column;
@@ -26,15 +31,6 @@ $narrow: 800px;
   display: flex;
   flex-direction: column;
   row-gap: 5px;
-  padding-bottom: 500px;
-}
-
-.emoji-header {
-  text-align: left;
-  justify-content: end !important;
-  align-items: center;
-  padding-left: 1em;
-  padding-right: 1em;
 }
 
 .emoji-row {
@@ -42,26 +38,43 @@ $narrow: 800px;
   flex-direction: row;
   column-gap: 5px;
   height: 50px;
-  justify-content: center;
+  justify-content: flex-start;
+  padding-inline: 16px;
+}
+
+.emoji-header {
+  height: 3.5rem;
+  align-items: center;
+}
+
+.emoji-header-text {
+  border-bottom: 2px solid var(--mat-sys-outline-variant);
+}
+
+.emoji-header-count {
+  color: var(--mat-sys-outline);
+  font-size: 0.8em;
 }
 
 .emoji-item {
   width: 50px;
   height: 50px;
   font-size: 1rem;
+  box-shadow: 0 0 4px var(--mat-sys-outline-variant);
 }
 
 .emoji-sidebar {
-  display: flex;
   padding-left: 0.2rem;
   padding-right: 0.2rem;
-  height: 300px;
+  height: 400px;
   flex-direction: column;
   overflow-x: hidden;
   overflow-y: scroll;
   text-align: center;
   align-items: center;
   row-gap: 0.5rem;
+  background-color: var(--mat-sys-surface-container-highest);
+
   @media (max-width: $narrow) {
     flex-direction: row;
     height: 64px;
@@ -75,13 +88,12 @@ $narrow: 800px;
     z-index: 99;
   }
 }
+
 .emoji-sidebar-child {
   text-align: center;
   font-size: 1.3em;
 }
-.emoji-active-collection {
-  background-color: var(--mat-sys-inverse-primary) !important;
-}
+
 .emoji-collection-button {
   width: 42px;
   height: 42px;
@@ -99,4 +111,7 @@ $narrow: 800px;
     width: 25px;
     height: 25px;
   }
+}
+.emoji-active-collection {
+  background-color: var(--mat-sys-inverse-primary) !important;
 }
