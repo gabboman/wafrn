@@ -32,9 +32,9 @@ export class EditProfileComponent implements OnInit {
     { level: 3, name: 'Disable asks' }
   ]
   rssOptions = [
-    {level: 0, name: 'No'},
-    {level: 1, name: 'Only articles (Feature still in the works)'},
-    {level: 2, name: 'Yes for all my posts'}
+    { level: 0, name: 'No' },
+    { level: 1, name: 'Only articles (Feature still in the works)' },
+    { level: 2, name: 'Yes for all my posts' }
   ]
 
   fediAttachments: { name: string; value: string }[] = [{ name: '', value: '' }]
@@ -103,9 +103,7 @@ export class EditProfileComponent implements OnInit {
         this.loginService.getUserDefaultPostPrivacyLevel()
       )
       let rssOptionValue = localStorage.getItem('enableRSS')
-      this.editProfileForm.controls['rssOptions'].patchValue(
-        rssOptionValue ? parseInt(rssOptionValue) : 0
-      )
+      this.editProfileForm.controls['rssOptions'].patchValue(rssOptionValue ? parseInt(rssOptionValue) : 0)
       this.editProfileForm.controls['forceClassicLogo'].patchValue(this.loginService.getForceClassicLogo())
       const federateWithThreads = localStorage.getItem('federateWithThreads')
       this.editProfileForm.controls['federateWithThreads'].patchValue(federateWithThreads === 'true')
@@ -127,7 +125,9 @@ export class EditProfileComponent implements OnInit {
         this.mediaService.checkForceClassicVideoPlayer()
       )
       this.editProfileForm.controls['disableConfetti'].patchValue(localStorage.getItem('disableConfetti') == 'true')
-      this.editProfileForm.controls['enableConfettiRecivingLike'].patchValue(localStorage.getItem('enableConfettiRecivingLike') == 'true')
+      this.editProfileForm.controls['enableConfettiRecivingLike'].patchValue(
+        localStorage.getItem('enableConfettiRecivingLike') == 'true'
+      )
       this.editProfileForm.controls['disableSounds'].patchValue(localStorage.getItem('disableSounds') == 'true')
 
       this.editProfileForm.controls['forceClassicMediaView'].patchValue(
