@@ -1,5 +1,6 @@
-import { Component, OnInit } from '@angular/core'
+import { Component, OnInit, ViewChild } from '@angular/core'
 import { FormControl, UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms'
+import { EmojiCollectionsComponent } from 'src/app/components/emoji-collections/emoji-collections.component'
 import { BlogDetails } from 'src/app/interfaces/blogDetails'
 import { Emoji } from 'src/app/interfaces/emoji'
 import { SimplifiedUser } from 'src/app/interfaces/simplified-user'
@@ -36,6 +37,8 @@ export class EditProfileComponent implements OnInit {
     { level: 1, name: 'Only articles (Feature still in the works)' },
     { level: 2, name: 'Yes for all my posts' }
   ]
+
+  @ViewChild(EmojiCollectionsComponent) emojiCollections!: EmojiCollectionsComponent
 
   fediAttachments: { name: string; value: string }[] = [{ name: '', value: '' }]
   editProfileForm = new UntypedFormGroup({
@@ -278,5 +281,9 @@ export class EditProfileComponent implements OnInit {
 
   userAliasSelected(data: string) {
     this.editProfileForm.controls['alsoKnownAs'].patchValue(data)
+  }
+
+  forceFixEmoji() {
+    this.emojiCollections.updateDimensions()
   }
 }
