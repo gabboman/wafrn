@@ -77,7 +77,8 @@ async function prepareSendRemotePostWorker(job: Job) {
     ]
   })
   // we check if we need to send the post to fedi
-  if (localUser && parents.every((elem) => !(elem.bskyUri && elem.user.url.startsWith('@')))) {
+  const isBskyPost = !(parents.length > 0 && parents.every((elem) => !(elem.bskyUri && elem.user.url.startsWith('@'))))
+  if (localUser && !isBskyPost) {
     // servers with shared inbox
     let serversToSendThePost: FederatedHost[] = []
     const localUserFollowers = await localUser.getFollower()
