@@ -114,7 +114,8 @@ export class EmojiCollectionsComponent implements AfterViewInit, OnDestroy {
   filterText = model<string>('')
 
   rowIterable = computed<AngularFor>(() => {
-    return new AngularFor(this.emojiPerRow() - 1)
+    const emojiModifier = window.innerWidth < this.narrow ? 0 : -1
+    return new AngularFor(this.emojiPerRow() + emojiModifier)
   })
 
   copyIcon = faCopy
