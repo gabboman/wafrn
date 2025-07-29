@@ -88,9 +88,8 @@ async function getPostAndUserFromPostId(postId: string): Promise<{ found: boolea
           }
         ]
       })
-      const isBskyPost = !(
-        parents.length > 0 && parents.every((elem) => !(elem.bskyUri && elem.user.url.startsWith('@')))
-      )
+      const isBskyPost =
+        parents.length > 0 && !parents.every((elem) => !(elem.bskyUri && elem.user.url.startsWith('@')))
       if (isBskyPost) {
         res = { found: false }
         return res
