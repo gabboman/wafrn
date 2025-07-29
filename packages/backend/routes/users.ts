@@ -199,15 +199,22 @@ function userRoutes(app: Application) {
             forbidChar: !forbiddenCharacters.some((char) => req.body.url.includes(char)),
             emailValid: validateEmail(req.body.email)
           })
-          res.status(400).send({ success: false })
+          res.status(400).send({
+            success: false,
+            message: 'Failed registration',
+            email: req.body?.email,
+            url: req.body.url,
+            forbidChar: !forbiddenCharacters.some((char) => req.body.url.includes(char)),
+            emailValid: validateEmail(req.body.email)
+          })
           return
         }
         if (!success) {
-          res.status(401).send({ success: false })
+          res.status(401).send({ success: false, message: 'Got to final part with success false' })
         }
       } catch (error) {
         logger.error(error)
-        res.status(500).send({ success: false })
+        res.status(500).send({ success: false, error })
       }
     }
   )
