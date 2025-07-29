@@ -304,7 +304,9 @@ const postSearchAttributes = async function (options?: { id?: string; onlyArticl
         as: 'user',
         required: true,
         where: {
-          hideProfileNotLoggedIn: false,
+          hideProfileNotLoggedIn: {
+            [Op.ne]: true
+          },
           banned: {
             [Op.ne]: true
           },
