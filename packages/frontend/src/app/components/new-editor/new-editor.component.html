@@ -177,11 +177,11 @@
     }
 
     <section id="uploaded-media">
-      <div class="grid">
+      <div class="grid gap-3">
         @for (media of uploadedMedias; track media; let i = $index) {
-          <div class="col-12 md:col-6 my-2 relative">
+          <div class="col-12 md:col relative">
             <app-media-preview [media]="media"></app-media-preview>
-            <mat-form-field class="w-full" appearance="outline">
+            <mat-form-field class="w-full mat-form-field-no-padding mb-1" appearance="outline">
               <mat-label>{{ 'editor.altTextFieldLabel' | translate }}</mat-label>
               <textarea
                 placeholder="{{ 'editor.altTextFieldPlaceholder' | translate }}"
@@ -196,7 +196,8 @@
               <mat-checkbox [(ngModel)]="media.NSFW" class="w-full">{{
                 'editor.isNSFWToggle' | translate
               }}</mat-checkbox>
-              <button mat-mini-fab class="delete-btn" (click)="deleteImage(i)">
+
+              <button mat-stroked-button class="delete-btn mat-close-button" (click)="deleteImage(i)">
                 <fa-icon size="lg" [icon]="closeIcon"></fa-icon>
               </button>
             </div>

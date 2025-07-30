@@ -8,6 +8,12 @@
   min-width: unset !important;
 }
 
+// Close button boilerplate style
+.mat-close-button {
+  aspect-ratio: 1/1;
+  padding: unset !important;
+}
+
 // Allow padding-less mat-form-field inputs
 .mat-form-field-no-padding .mat-mdc-form-field-bottom-align::before {
   content: unset !important;
