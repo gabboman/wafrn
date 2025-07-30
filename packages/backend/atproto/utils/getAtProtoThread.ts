@@ -30,7 +30,6 @@ const adminUser = User.findOne({
     url: completeEnvironment.adminUser
   }
 })
-const agent = completeEnvironment.enableBsky ? await getAtProtoSession((await adminUser) || undefined) : undefined
 
 async function getAtProtoThread(
   uri: string,
@@ -68,6 +67,7 @@ async function getAtProtoThread(
         if (parentFound) {
           return (await processSinglePost(postObject, parentFound.id)) as string
         } else {
+          const agent = await getAtProtoSession((await adminUser) as User)
           const thread = await getPostThreadSafe(agent, {
             uri: record.reply.parent.uri,
             depth: 0,
@@ -88,6 +88,7 @@ async function getAtProtoThread(
   }
 
   // TODO optimize this a bit if post is not in reply to anything that we dont have
+  const agent = await getAtProtoSession((await adminUser) as User)
   const preThread = await getPostThreadSafe(agent, { uri: uri, depth: 50, parentHeight: 1000 })
   if (preThread) {
     const thread: ThreadViewPost = preThread.data.thread as ThreadViewPost
@@ -141,9 +142,11 @@ async function processSinglePost(
   parentId?: string,
   forceUpdate?: boolean
 ): Promise<string | undefined> {
-  if (!post) {
+  if (!post || !completeEnvironment.enableBsky) {
     return undefined
   }
+  const agent = await getAtProtoSession((await adminUser) as User)
+
   // added a pause of 100 miliseconds for each petition. Will things explode? only ONE way to figure out.
   // if this works means that there is something here that is too much for the PDS
   await wait(100)
@@ -457,12 +460,12 @@ function getPostLabels(post: PostView): string {
   return res
 }
 
-async function getPostThreadSafe(agent: BskyAgent | undefined, options: any) {
+async function getPostThreadSafe(agent: BskyAgent, options: any) {
   if (agent) {
     try {
       return await agent.getPostThread(options)
     } catch (error) {
-      logger.trace({
+      logger.debug({
         message: `Error trying to get atproto thread`,
         options: options,
         error: error
