@@ -553,12 +553,21 @@ export class NewEditorComponent implements OnDestroy {
 
   calculateBskyPostLength() {
     // TODO do things in a better way
-    const inputText = `[${this.contentWarning}]\n${this.removeMarkdown(this.postCreatorForm.controls['content'].value as string)}\n${this.tags
-      .split(',')
-      .map((elem) => '#' + elem)
-      .join(' ')}`
+    const cwText = this.contentWarning.length > 0 ? `[${this.contentWarning}]\n` : ''
+    const tagText =
+      this.tags.length > 0
+        ? `\n${this.tags
+            .split(',')
+            .map((elem) => '#' + elem)
+            .join(' ')}`
+        : ''
+    const inputText = `${cwText}${this.removeMarkdown(this.postCreatorForm.controls['content'].value as string)}${tagText}`
 
     return inputText.length
+  }
+
+  calculateBskyPostLengthPercent() {
+    return this.calculateBskyPostLength() / 300 // max characters
   }
 
   removeMarkdown(text: string) {
