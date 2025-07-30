@@ -1,4 +1,4 @@
-import { Location } from '@angular/common';
+import { Location } from '@angular/common'
 import { Component, HostListener, inject, OnDestroy, ViewChild } from '@angular/core'
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms'
 import { MatButtonModule } from '@angular/material/button'
@@ -54,6 +54,7 @@ import { EmojiPickerComponent } from '../emoji-picker/emoji-picker.component'
 import { Emoji } from 'src/app/interfaces/emoji'
 import { Dialog } from '@angular/cdk/dialog'
 import { Router } from '@angular/router'
+import { RichText } from '@atproto/api'
 
 @Component({
   selector: 'app-new-editor',
@@ -79,7 +80,7 @@ import { Router } from '@angular/router'
     TranslateModule,
     MatBadgeModule,
     MatChipsModule
-],
+  ],
   templateUrl: './new-editor.component.html',
   styleUrl: './new-editor.component.scss'
 })
@@ -439,11 +440,9 @@ export class NewEditorComponent implements OnDestroy {
       this.tags = ''
       if (this.data?.ask) {
         // super dirty but we take you to your homepage after an ask
-        this.router.navigate(["/"])
-      }
-      else {
-      this.closeEditor()
-
+        this.router.navigate(['/'])
+      } else {
+        this.closeEditor()
       }
     }
     this.postBeingSubmitted = false
@@ -550,5 +549,45 @@ export class NewEditorComponent implements OnDestroy {
         )
       }
     })
+  }
+
+  calculateBskyPostLength() {
+    /**
+ * Removes markdown formatting that Bluesky doesn't support
+ * this code is under MIT
+ * The MIT License (MIT)
+
+  Copyright (c) 2015 Stian Grytøyr
+  */
+    function removeMarkdown(text: string) {
+      return (
+        text
+          // Remove setext-style headers
+          .replaceAll(/^[=\-]{2,}\s*$/g, '')
+          // Remove footnotes?
+          .replaceAll(/\[\^.+?\](\: .*?$)?/g, '')
+          .replaceAll(/\s{0,2}\[.*?\]: .*?$/g, '')
+          // Remove images
+          .replaceAll(/\!\[(.*?)\][\[\(].*?[\]\)]/g, '')
+          // Remove blockquotes
+          .replaceAll(/^(\n)?\s{0,3}>\s?/gm, '$1')
+          // Remove reference-style links?
+          .replaceAll(/^\s{1,2}\[(.*?)\]: (\S+)( ".*?")?\s*$/g, '')
+          // Remove atx-style headers
+          .replaceAll(/^(\n)?\s{0,}#{1,6}\s*( (.+))? +#+$|^(\n)?\s{0,}#{1,6}\s*( (.+))?$/gm, '$1$3$4$6')
+          // Remove code blocks
+          .replaceAll(/(`{3,})(.*?)\1/gms, '$2')
+          .replaceAll(/(`{3,})(md)(.*?)\1/gms, '$3')
+          // Remove inline code
+          .replaceAll(/`(.+?)`/gs, '$1')
+      )
+    }
+
+    const inputText = `[${this.contentWarning}]\n${removeMarkdown(this.postCreatorForm.controls['content'].value as string)}\n${this.tags
+      .split(',')
+      .map((elem) => '#' + elem)
+      .join(' ')}`
+    const tmpRichText = new RichText({ text: inputText })
+    return tmpRichText.length
   }
 }
