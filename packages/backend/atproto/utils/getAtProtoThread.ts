@@ -7,7 +7,7 @@ import { PostView, ThreadViewPost } from '@atproto/api/dist/client/types/app/bsk
 import { getAtprotoUser, forcePopulateUsers } from './getAtprotoUser.js'
 import { CreateOrUpdateOp } from '@skyware/firehose'
 import { logger } from '../../utils/logger.js'
-import { BskyAgent, RichText } from '@atproto/api'
+import { RichText } from '@atproto/api'
 import showdown from 'showdown'
 import { bulkCreateNotifications, createNotification } from '../../utils/pushNotifications.js'
 import { getAllLocalUserIds } from '../../utils/cacheGetters/getAllLocalUserIds.js'
@@ -67,8 +67,7 @@ async function getAtProtoThread(
         if (parentFound) {
           return (await processSinglePost(postObject, parentFound.id)) as string
         } else {
-          const agent = await getAtProtoSession((await adminUser) as User)
-          const thread = await getPostThreadSafe(agent, {
+          const thread = await getPostThreadSafe({
             uri: record.reply.parent.uri,
             depth: 0,
             parentHeight: 1000
@@ -88,8 +87,7 @@ async function getAtProtoThread(
   }
 
   // TODO optimize this a bit if post is not in reply to anything that we dont have
-  const agent = await getAtProtoSession((await adminUser) as User)
-  const preThread = await getPostThreadSafe(agent, { uri: uri, depth: 50, parentHeight: 1000 })
+  const preThread = await getPostThreadSafe({ uri: uri, depth: 50, parentHeight: 1000 })
   if (preThread) {
     const thread: ThreadViewPost = preThread.data.thread as ThreadViewPost
     //const tmpDids = getDidsFromThread(thread)
@@ -145,8 +143,6 @@ async function processSinglePost(
   if (!post || !completeEnvironment.enableBsky) {
     return undefined
   }
-  const agent = await getAtProtoSession((await adminUser) as User)
-
   // added a pause of 100 miliseconds for each petition. Will things explode? only ONE way to figure out.
   // if this works means that there is something here that is too much for the PDS
   await wait(100)
@@ -191,7 +187,7 @@ async function processSinglePost(
     let mentions: string[] = []
     let record = post.record as any
     let postText = record.text
-    if (record.facets && record.facets.length > 0 && agent) {
+    if (record.facets && record.facets.length > 0) {
       // lets get mentions
       const mentionedDids = record.facets
         .flatMap((elem: any) => elem.features)
@@ -460,17 +456,16 @@ function getPostLabels(post: PostView): string {
   return res
 }
 
-async function getPostThreadSafe(agent: BskyAgent, options: any) {
-  if (agent) {
-    try {
-      return await agent.getPostThread(options)
-    } catch (error) {
-      logger.debug({
-        message: `Error trying to get atproto thread`,
-        options: options,
-        error: error
-      })
-    }
+async function getPostThreadSafe(options: any) {
+  try {
+    const agent = await getAtProtoSession((await adminUser) as User)
+    return await agent.getPostThread(options)
+  } catch (error) {
+    logger.debug({
+      message: `Error trying to get atproto thread`,
+      options: options,
+      error: error
+    })
   }
 }
 
