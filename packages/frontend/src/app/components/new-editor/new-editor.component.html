@@ -154,7 +154,7 @@
     }
 
     <form [formGroup]="postCreatorForm">
-      <mat-form-field class="w-full" appearance="outline">
+      <mat-form-field class="w-full mat-form-field-no-padding" appearance="outline">
         <mat-label>{{ 'editor.wootTextLabel' | translate }}</mat-label>
         <textarea
           id="postCreatorContent"
@@ -168,6 +168,22 @@
         ></textarea>
       </mat-form-field>
     </form>
+    <mat-progress-bar
+      mode="determinate"
+      [class.length-overflow]="calculateBskyPostLengthPercent() > 1"
+      [value]="calculateBskyPostLengthPercent() * 100"
+    >
+    </mat-progress-bar>
+    <div class="post-length-note">
+      <div class="post-length-text">
+        <p>{{ calculateBskyPostLength() }}/300 {{ 'common.characters' | translate }}</p>
+        @if (calculateBskyPostLength() > 300) {
+          <p class="post-length-warning">{{ 'editor.bskyLengthWarning' | translate }}</p>
+        } @else {
+          <p class="post-length-warning">{{ 'editor.bskyLengthNotice' | translate }}</p>
+        }
+      </div>
+    </div>
 
     @if (false && uploadedMedias.length === 0) {
       <!-- Polls are not available yet :( -->

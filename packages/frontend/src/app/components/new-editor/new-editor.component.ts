@@ -54,6 +54,7 @@ import { EmojiPickerComponent } from '../emoji-picker/emoji-picker.component'
 import { Emoji } from 'src/app/interfaces/emoji'
 import { Dialog } from '@angular/cdk/dialog'
 import { Router } from '@angular/router'
+import { MatProgressBarModule } from '@angular/material/progress-bar'
 @Component({
   selector: 'app-new-editor',
   imports: [
@@ -77,7 +78,8 @@ import { Router } from '@angular/router'
     InfoCardComponent,
     TranslateModule,
     MatBadgeModule,
-    MatChipsModule
+    MatChipsModule,
+    MatProgressBarModule
   ],
   templateUrl: './new-editor.component.html',
   styleUrl: './new-editor.component.scss'
