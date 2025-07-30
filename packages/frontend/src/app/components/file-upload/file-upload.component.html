@@ -1,4 +1,11 @@
-<input type="file" [accept]="config().formats" class="file-input" (change)="onFileSelected($event)" #fileUpload hidden />
+<input
+  type="file"
+  [accept]="config().formats"
+  class="file-input"
+  (change)="onFileSelected($event)"
+  #fileUpload
+  hidden
+/>
 
 @if (uploadStatus !== UploadStatus.Uploading) {
   <div class="file-upload">
