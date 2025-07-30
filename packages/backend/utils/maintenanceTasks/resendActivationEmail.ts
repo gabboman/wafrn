@@ -20,9 +20,9 @@ await wait(500)
 for await (const user of usersNotVerified.filter((elem) => !!elem)) {
   console.log(`Sending email to user ${user.url} with email ${user.email}`)
   const mailHeader = `Helo ${user.url}, your email is still not verified!`
-  const mailBody = `<h1>We maaaay have commited a small whoopsie on ${
+  const mailBody = `<h1>Hello ${user.url} you registred on ${
     completeEnvironment.instanceUrl
-  } regarding the previous email verification email</h1>
+  } but never activated your account</h1>
   <p>Please click here to verify your email <a href="${completeEnvironment.instanceUrl}/activate/${encodeURIComponent(
     user.email as string
   )}/${user.activationCode}">click here!</a>. If you can not see the link correctly please copy this link:
@@ -30,6 +30,6 @@ for await (const user of usersNotVerified.filter((elem) => !!elem)) {
     user.activationCode
   }
              </p> 
-             <p>And by "may" we mean for sure. Please do reply to this email if you did and we dont get back to you in 24 hours</p>`
+             <p>Please do reply to this email if you did and we dont get back to you after 24 hours</p>`
   const emailSent = await sendActivationEmail(user.email as string, user.activationCode, mailHeader, mailBody)
 }
