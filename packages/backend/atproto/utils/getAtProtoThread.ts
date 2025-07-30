@@ -143,9 +143,6 @@ async function processSinglePost(
   if (!post || !completeEnvironment.enableBsky) {
     return undefined
   }
-  // added a pause of 100 miliseconds for each petition. Will things explode? only ONE way to figure out.
-  // if this works means that there is something here that is too much for the PDS
-  await wait(100)
   if (!forceUpdate) {
     const existingPost = await Post.findOne({
       where: {
@@ -458,6 +455,9 @@ function getPostLabels(post: PostView): string {
 
 async function getPostThreadSafe(options: any) {
   try {
+    // added a pause of 100 miliseconds for each petition. Will things explode? only ONE way to figure out.
+    // if this works means that there is something here that is too much for the PDS
+    await wait(100)
     const agent = await getAtProtoSession((await adminUser) as User)
     return await agent.getPostThread(options)
   } catch (error) {
