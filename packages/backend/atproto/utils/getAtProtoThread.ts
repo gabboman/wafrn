@@ -58,6 +58,10 @@ async function getAtProtoThread(
           displayName: operation.remoteUser.name
         }
       }
+      if (operation.remoteUser.description == null) {
+        // wait this user bio is empty
+        await getAtprotoUser(operation.remoteUser.bskyDid as string, (await adminUser) as User)
+      }
       if (record.reply) {
         const parentFound = await Post.findOne({
           where: {
