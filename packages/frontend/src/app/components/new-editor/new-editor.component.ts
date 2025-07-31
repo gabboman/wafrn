@@ -298,6 +298,13 @@ export class NewEditorComponent implements OnDestroy {
     this.disableImageUploadButton = false
   }
 
+  async uploadCanceled() {
+    this.messages.add({
+      severity: 'info',
+      summary: 'Upload canceled'
+    })
+  }
+
   async loadQuote() {
     const urlString = this.urlPostToQuote
     this.quoteLoading = true

@@ -16,7 +16,13 @@
 }
 
 @if (uploadStatus === UploadStatus.Uploading) {
-  <div class="flex align-items-center justify-content-center file-upload-spinner-wrapper">
-    <mat-spinner color="accent" diameter="24"></mat-spinner>
+  <div class="flex align-items-center justify-content-center file-upload-spinner-wrapper" (click)="cancelUpload()">
+    <mat-spinner
+      class="mat-spinner-outline"
+      color="accent"
+      diameter="24"
+      mode="determinate"
+      [value]="uploadProgress"
+    ></mat-spinner>
   </div>
 }

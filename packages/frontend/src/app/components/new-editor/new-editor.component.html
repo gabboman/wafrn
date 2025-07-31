@@ -26,7 +26,7 @@
       </button>
       @if (pollQuestions.length === 0) {
         <div matTooltip="{{ 'editor.uploadMediaTooltip' | translate }}">
-          <app-file-upload (fileUpload)="uploadImage($event)"></app-file-upload>
+          <app-file-upload (fileUpload)="uploadImage($event)" (uploadCanceled)="uploadCanceled()"></app-file-upload>
         </div>
       }
       <button

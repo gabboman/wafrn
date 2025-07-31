@@ -1,9 +1,11 @@
+import { HttpEventType } from '@angular/common/http'
 import { Component, EventEmitter, Output, input } from '@angular/core'
 import { FormsModule } from '@angular/forms'
 import { MatButtonModule } from '@angular/material/button'
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner'
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome'
 import { faFileUpload } from '@fortawesome/free-solid-svg-icons'
+import { Subscription } from 'rxjs'
 import { WafrnMedia } from 'src/app/interfaces/wafrn-media'
 import { EnvironmentService } from 'src/app/services/environment.service'
 import { FileUploadService } from 'src/app/services/file-upload.service'
@@ -30,11 +32,14 @@ export class FileUploadComponent {
     buttonText: ``
   })
   @Output() fileUpload = new EventEmitter<WafrnMedia>()
+  @Output() uploadCanceled = new EventEmitter()
 
   uploading = false
   uploadIcon = faFileUpload
   uploadStatus = UploadStatus.Pending
   UploadStatus = UploadStatus
+  uploadProgress = 0
+  uploadSubscription: Subscription | undefined
 
   constructor(private fileUploadService: FileUploadService) {}
 
@@ -47,18 +52,32 @@ export class FileUploadComponent {
       return
     }
 
-    this.fileUploadService
+    this.uploadSubscription = this.fileUploadService
       .uploadFile(EnvironmentService.environment.baseUrl + this.config().url, el.files[0], this.config().formdataName)
       .subscribe({
-        next: (response) => {
-          this.uploadStatus = UploadStatus.Success
-          if (response && response[0]) {
-            this.fileUpload.emit(response[0])
+        next: (event) => {
+          if (event.type === HttpEventType.UploadProgress) {
+            if (event.total === undefined) return
+            this.uploadProgress = Math.round(100 * (event.loaded / event.total))
+          }
+          if (event.type === HttpEventType.Response) {
+            const response = event.body
+            this.uploadStatus = UploadStatus.Success
+            if (response && response[0]) {
+              this.fileUpload.emit(response[0])
+              this.uploadProgress = 0
+            }
           }
         },
         error: () => {
           this.uploadStatus = UploadStatus.Error
         }
       })
+  }
+
+  cancelUpload() {
+    this.uploadSubscription?.unsubscribe()
+    this.uploadStatus = UploadStatus.Pending
+    this.uploadCanceled.emit()
   }
 }
