@@ -38,9 +38,9 @@
   border-radius: var(--mat-button-protected-container-shape, var(--mat-sys-corner-full));
 }
 
-@media (pointer: coarse),
-(hover: none) {
-  .post-emoji, .external-emoji {
+@media (pointer: coarse), (hover: none) {
+  .post-emoji,
+  .external-emoji {
     pointer-events: none;
   }
 }
@@ -49,9 +49,8 @@
   max-width: 75% !important;
 }
 
-
 .post-contains-muted-words {
-    filter: blur(2px) grayscale(100%);
+  filter: blur(2px) grayscale(100%);
 }
 
 .post-contains-muted-words:hover {

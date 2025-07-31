@@ -1,132 +1,156 @@
 <div [ngClass]="{ 'post-contains-muted-words': !!fragment().muted_words_cw && !showSensitiveContent() }">
   @if (fragment().title) {
-  <h1 [innerText]="fragment().title"></h1>
-  } @if (fragment().ask) {
-  <app-single-ask [ask]="fragment().ask!"></app-single-ask>
-  } @if (fragment().content_warning || fragment().muted_words_cw) {
-  <div class="content-warning-text" [innerHTML]="fragment().muted_words_cw"></div>
-  <div class="content-warning-text" [innerHTML]="fragment().content_warning"></div>
-  <button class="toggle-cw-button" mat-raised-button color="primary" (click)="cwClick()" class="w-full my-2">
-    @if (showSensitiveContent()) { Hide } @else { Show
-    <span class="text-xs"
-      >({{ wordCount() }} word{{ wordCount() === 1 ? '' : 's' }}, {{ characterCount() }} character{{
-        characterCount() === 1 ? '' : 's'
-      }})</span
-    >
-    }
-  </button>
+    <h1 [innerText]="fragment().title"></h1>
+  }
+  @if (fragment().ask) {
+    <app-single-ask [ask]="fragment().ask!"></app-single-ask>
+  }
+  @if (fragment().content_warning || fragment().muted_words_cw) {
+    <div class="content-warning-text" [innerHTML]="fragment().muted_words_cw"></div>
+    <div class="content-warning-text" [innerHTML]="fragment().content_warning"></div>
+    <button class="toggle-cw-button" mat-raised-button color="primary" (click)="cwClick()" class="w-full my-2">
+      @if (showSensitiveContent()) {
+        Hide
+      } @else {
+        Show
+        <span class="text-xs"
+          >({{ wordCount() }} word{{ wordCount() === 1 ? '' : 's' }}, {{ characterCount() }} character{{
+            characterCount() === 1 ? '' : 's'
+          }})</span
+        >
+      }
+    </button>
   }
   <div
     class="flex flex-column gap-3 post-content"
     [ngClass]="{ hidden: (fragment().content_warning || fragment().muted_words_cw) && !showSensitiveContent() }"
   >
     @for (block of wafrnFormattedContent(); track $index) {
-    <!-- The thing that I really struggled at here is giving this @if a condition that made sense
+      <!-- The thing that I really struggled at here is giving this @if a condition that made sense
          for posts which already have the mentions in the body of the post. I failed to find one.
     -->
-    @if (mentionPosts.length != 0) {
-    <section style="border-bottom: 1px solid var(--mat-sys-surface-container-highest); width: fit-content">
-      <span
-        ><small
-          ><span style="color: var(--mat-sys-outline)">{{ 'post-fragment.replyingTo' | translate }}</span
-          ><a [routerLink]="['/blog/' + url]" *ngFor="let url of mentionPosts">{{ url }} </a></small
-        ></span
-      >
-    </section>
-    }
-    <div #mediaInline class="fragment-content overflow-hidden">
-      <div [injectHTML]="block" class="post-text"></div>
-      @if (typeof block !== 'string') {
-      <app-wafrn-media [data]="$any(block)"></app-wafrn-media>
+      @if (mentionPosts.length != 0) {
+        <section style="border-bottom: 1px solid var(--mat-sys-surface-container-highest); width: fit-content">
+          <span
+            ><small
+              ><span style="color: var(--mat-sys-outline)">{{ 'post-fragment.replyingTo' | translate }}</span
+              ><a [routerLink]="['/blog/' + url]" *ngFor="let url of mentionPosts">{{ url }} </a></small
+            ></span
+          >
+        </section>
       }
-    </div>
-    } @if (fragment().questionPoll) {
-    <div>
-      <app-poll [poll]="fragment().questionPoll!"></app-poll>
-    </div>
+      <div #mediaInline class="fragment-content overflow-hidden">
+        <div [injectHTML]="block" class="post-text"></div>
+        @if (typeof block !== 'string') {
+          <app-wafrn-media [data]="$any(block)"></app-wafrn-media>
+        }
+      </div>
+    }
+    @if (fragment().questionPoll) {
+      <div>
+        <app-poll [poll]="fragment().questionPoll!"></app-poll>
+      </div>
     }
     <section
       #mediaEnd
       [ngClass]="{ 'media-carousel': !forceOldMediaStyle && nonLinkMediaCount > 1 }"
       class="flex flex-column gap-3 media-gallery"
     >
-      @for (media of fragment().medias; track $index) { @if (media.mediaType != 'text/html') { @if
-      (!seenMedia.includes($index)) {
-      <app-wafrn-media
-        [ngClass]="{
-          'carousel-media': !forceOldMediaStyle && nonLinkMediaCount > 1
-        }"
-        [data]="media"
-      ></app-wafrn-media>
-      } } }
+      @for (media of fragment().medias; track $index) {
+        @if (media.mediaType != 'text/html') {
+          @if (!seenMedia.includes($index)) {
+            <app-wafrn-media
+              [ngClass]="{
+                'carousel-media': !forceOldMediaStyle && nonLinkMediaCount > 1
+              }"
+              [data]="media"
+            ></app-wafrn-media>
+          }
+        }
+      }
     </section>
     <section #mediaEnd class="flex flex-column gap-3">
-      @for (media of fragment().medias; track $index) { @if (media.mediaType == 'text/html') { @if
-      (!seenMedia.includes($index)) {
-      <app-wafrn-media [data]="media"></app-wafrn-media>
-      } } }
+      @for (media of fragment().medias; track $index) {
+        @if (media.mediaType == 'text/html') {
+          @if (!seenMedia.includes($index)) {
+            <app-wafrn-media [data]="media"></app-wafrn-media>
+          }
+        }
+      }
     </section>
     @if (fragment().tags && fragment().tags.length) {
-    <div class="flex flex-wrap gap-2 tag-list">
-      @for (tag of fragment().tags; track $index) {
-      <a class="tag" [routerLink]="'/dashboard/search/' + tag.tagName"> #{{ tag.tagName }} </a>
+      <div class="flex flex-wrap gap-2 tag-list">
+        @for (tag of fragment().tags; track $index) {
+          <a class="tag" [routerLink]="'/dashboard/search/' + tag.tagName"> #{{ tag.tagName }} </a>
+        }
+      </div>
+    }
+    @for (quote of fragment().quotes; track $index) {
+      <!-- We use routerlink instead of the data because quoted posts are incomplete in the frontend!-->
+      @if (quote) {
+        <div
+          [routerLink]="'/fediverse/post/' + quote.id"
+          class="quoted-post cursor-pointer"
+          [ngClass]="{ 'quote-collapsed': !expandQuotes }"
+        >
+          <div class="flex">
+            <app-post-header
+              class="w-full"
+              [fragment]="quote"
+              [simplified]="true"
+              [disableLink]="true"
+            ></app-post-header>
+          </div>
+          <div class="cursor-pointer">
+            <app-post-fragment [fragment]="quote"></app-post-fragment>
+          </div>
+        </div>
       }
-    </div>
-    } @for (quote of fragment().quotes; track $index) {
-    <!-- We use routerlink instead of the data because quoted posts are incomplete in the frontend!-->
-    @if (quote) {
-    <div
-      [routerLink]="'/fediverse/post/' + quote.id"
-      class="quoted-post cursor-pointer"
-      [ngClass]="{ 'quote-collapsed': !expandQuotes }"
-    >
-      <div class="flex">
-        <app-post-header class="w-full" [fragment]="quote" [simplified]="true" [disableLink]="true"></app-post-header>
-      </div>
-      <div class="cursor-pointer">
-        <app-post-fragment [fragment]="quote"></app-post-fragment>
-      </div>
-    </div>
-    } }
+    }
     <section class="mt-3" class="flex flex-wrap gap-1 emoji-reactions">
-      @for (emoji of emojiCollection(); track $index) { @if (availableEmojiNames.includes(emoji.name) || !emoji.img) {
-      <!--TODO fix this! The function gettooltipusers gets called on every event
+      @for (emoji of emojiCollection(); track $index) {
+        @if (availableEmojiNames.includes(emoji.name) || !emoji.img) {
+          <!--TODO fix this! The function gettooltipusers gets called on every event
           which slows down the app when there are too many emojis
           solution: rework the emojis part so its processed only on load with all data there
           -->
-      <button
-        [disabled]="reactionLoading()"
-        [ngClass]="{
-          reacted: emoji.includesMe
-        }"
-        (click)="toggleEmojiReact(emoji)"
-        mat-raised-button
-        matTooltipTouchGestures="on"
-        [matTooltip]="emoji.tooltip"
-        class="emojireact-button"
-      >
-        @if (emoji.img) {
-        <img class="post-emoji" [src]="emoji.img" [alt]="emoji.content" />
+          <button
+            [disabled]="reactionLoading()"
+            [ngClass]="{
+              reacted: emoji.includesMe
+            }"
+            (click)="toggleEmojiReact(emoji)"
+            mat-raised-button
+            matTooltipTouchGestures="on"
+            [matTooltip]="emoji.tooltip"
+            class="emojireact-button"
+          >
+            @if (emoji.img) {
+              <img class="post-emoji" [src]="emoji.img" [alt]="emoji.content" />
+            } @else {
+              <span class="force-comic-sans"> {{ emoji.content }}</span>
+            }
+            @if (emoji.users.length > 0) {
+              <span> {{ emoji.users.length }}</span>
+            }
+          </button>
         } @else {
-        <span class="force-comic-sans"> {{ emoji.content }}</span>
-        } @if (emoji.users.length > 0) {
-        <span> {{ emoji.users.length }}</span>
+          <div [matTooltip]="emoji.tooltip" class="external-emoji">
+            <span>
+              @if (emoji.img) {
+                <img class="post-emoji" [src]="emoji.img" [alt]="emoji.content" />
+              } @else {
+                <span class="force-comic-sans"> {{ emoji.content }}</span>
+              }
+              @if (emoji.users.length > 1) {
+                <span> {{ emoji.users.length }}</span>
+              }
+            </span>
+          </div>
         }
-      </button>
-      } @else {
-      <div [matTooltip]="emoji.tooltip" class="external-emoji">
-        <span>
-          @if (emoji.img) {
-          <img class="post-emoji" [src]="emoji.img" [alt]="emoji.content" />
-          } @else {
-          <span class="force-comic-sans"> {{ emoji.content }}</span>
-          } @if (emoji.users.length > 1) {
-          <span> {{ emoji.users.length }}</span>
-          }
-        </span>
-      </div>
-      } } @if (!(userId === '' || userId === fragment().userId)) {
-      <app-emoji-react [postId]="fragment().id"></app-emoji-react>
+      }
+      @if (!(userId === '' || userId === fragment().userId)) {
+        <app-emoji-react [postId]="fragment().id"></app-emoji-react>
       }
     </section>
   </div>
