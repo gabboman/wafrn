@@ -39,6 +39,10 @@
   border-radius: var(--mat-button-protected-container-shape, var(--mat-sys-corner-full));
 }
 
+.post-emoji {
+  min-width: 24px;
+}
+
 @media (pointer: coarse), (hover: none) {
   .post-emoji,
   .external-emoji {
