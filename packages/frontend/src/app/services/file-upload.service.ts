@@ -16,7 +16,7 @@ export class FileUploadService {
   uploadFile(url: string, file: File, formdataName: string) {
     const formData = new FormData()
     formData.append(formdataName, file)
-    return this.http.post<WafrnMedia[]>(url, formData).pipe(
+    return this.http.post<WafrnMedia[]>(url, formData, { reportProgress: true, observe: 'events' }).pipe(
       catchError((error) => {
         this.messageService.add({ severity: 'error', summary: 'Failed to upload.' })
         return throwError(error)

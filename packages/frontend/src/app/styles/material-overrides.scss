@@ -8,6 +8,20 @@
   min-width: unset !important;
 }
 
+// Circle button boilerplate style
+.mat-circle-button {
+  aspect-ratio: 1/1;
+  padding: unset !important;
+}
+
+.mat-spinner-outline {
+  border: 2px solid var(--mat-sys-outline-variant);
+  border-radius: 100%;
+  ::ng-deep & circle {
+    transition: stroke 100ms linear;
+  }
+}
+
 // Allow padding-less mat-form-field inputs
 .mat-form-field-no-padding .mat-mdc-form-field-bottom-align::before {
   content: unset !important;

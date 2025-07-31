@@ -1,6 +1,7 @@
 {
   "common": {
-    "commaSeparation": "Separated with commas"
+    "commaSeparation": "Separated with commas",
+    "characters": "characters"
   },
   "login": {
     "welcomeBack": "Welcome back!",
@@ -83,7 +84,10 @@
     "wootQuoteConfirmButton": "Add woot as quote",
     "wootTextLabel": "Woot text",
     "wootTextPlaceholder": "Start writing...",
+    "bskyLengthWarning": "Text above 300 characters will be cut off when viewed on Bluesky",
+    "bskyLengthNotice": "This only affects Bluesky, currently only a simulation",
     "altTextFieldLabel": "Image Description",
+    "altTextFieldLabelVideo": "Video Description",
     "altTextFieldPlaceholder": "Description. Please FILL THIS",
     "isNSFWToggle": "NSFW",
     "mediaCountMastodonWarning": "ATTENTION! ANY FURTHER MEDIA UPLOADED WILL NOT BE DISPLAYED ON MASTODON",

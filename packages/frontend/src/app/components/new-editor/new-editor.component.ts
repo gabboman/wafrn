@@ -54,6 +54,7 @@ import { EmojiPickerComponent } from '../emoji-picker/emoji-picker.component'
 import { Emoji } from 'src/app/interfaces/emoji'
 import { Dialog } from '@angular/cdk/dialog'
 import { Router } from '@angular/router'
+import { MatProgressBarModule } from '@angular/material/progress-bar'
 @Component({
   selector: 'app-new-editor',
   imports: [
@@ -77,7 +78,8 @@ import { Router } from '@angular/router'
     InfoCardComponent,
     TranslateModule,
     MatBadgeModule,
-    MatChipsModule
+    MatChipsModule,
+    MatProgressBarModule
   ],
   templateUrl: './new-editor.component.html',
   styleUrl: './new-editor.component.scss'
@@ -294,6 +296,13 @@ export class NewEditorComponent implements OnDestroy {
       })
     }
     this.disableImageUploadButton = false
+  }
+
+  async uploadCanceled() {
+    this.messages.add({
+      severity: 'info',
+      summary: 'Upload canceled'
+    })
   }
 
   async loadQuote() {
@@ -553,12 +562,21 @@ export class NewEditorComponent implements OnDestroy {
 
   calculateBskyPostLength() {
     // TODO do things in a better way
-    const inputText = `[${this.contentWarning}]\n${this.removeMarkdown(this.postCreatorForm.controls['content'].value as string)}\n${this.tags
-      .split(',')
-      .map((elem) => '#' + elem)
-      .join(' ')}`
+    const cwText = this.contentWarning.length > 0 ? `[${this.contentWarning}]\n` : ''
+    const tagText =
+      this.tags.length > 0
+        ? `\n${this.tags
+            .split(',')
+            .map((elem) => '#' + elem)
+            .join(' ')}`
+        : ''
+    const inputText = `${cwText}${this.removeMarkdown(this.postCreatorForm.controls['content'].value as string)}${tagText}`
 
     return inputText.length
+  }
+
+  calculateBskyPostLengthPercent() {
+    return this.calculateBskyPostLength() / 300 // max characters
   }
 
   removeMarkdown(text: string) {
@@ -583,5 +601,9 @@ export class NewEditorComponent implements OnDestroy {
         // Remove inline code
         .replaceAll(/`(.+?)`/gs, '$1')
     )
+  }
+
+  mediaIsVideo(media: WafrnMedia) {
+    return media.url.endsWith('mp4') // technology
   }
 }
