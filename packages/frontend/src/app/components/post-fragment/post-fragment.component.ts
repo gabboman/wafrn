@@ -396,7 +396,6 @@ export class PostFragmentComponent implements OnChanges, OnDestroy {
           this.emojiCollection.update((ec) => {
             const index = ec.findIndex((e) => e.content === emojiReaction.content)
             const userIndex = ec[index].users.filter((usr) => usr.id !== this.userId)
-            console.log('removing', ec, index, userIndex)
             return ec
           })
         }
