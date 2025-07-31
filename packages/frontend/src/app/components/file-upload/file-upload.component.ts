@@ -1,4 +1,3 @@
-
 import { Component, EventEmitter, Output, input } from '@angular/core'
 import { FormsModule } from '@angular/forms'
 import { MatButtonModule } from '@angular/material/button'
@@ -23,13 +22,13 @@ enum UploadStatus {
   imports: [FormsModule, FontAwesomeModule, MatButtonModule, MatProgressSpinnerModule]
 })
 export class FileUploadComponent {
-  readonly disabled = input(false);
+  readonly disabled = input(false)
   readonly config = input({
     url: `/uploadMedia`,
     formdataName: 'image',
     formats: `image/*, video/*, audio/*`,
     buttonText: ``
-});
+  })
   @Output() fileUpload = new EventEmitter<WafrnMedia>()
 
   uploading = false
