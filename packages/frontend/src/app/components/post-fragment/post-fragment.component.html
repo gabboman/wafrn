@@ -114,26 +114,27 @@
           which slows down the app when there are too many emojis
           solution: rework the emojis part so its processed only on load with all data there
           -->
-          <button
-            [disabled]="reactionLoading()"
-            [ngClass]="{
-              reacted: emoji.includesMe
-            }"
-            (click)="toggleEmojiReact(emoji)"
-            mat-raised-button
-            matTooltipTouchGestures="on"
-            [matTooltip]="emoji.tooltip"
-            class="emojireact-button"
-          >
-            @if (emoji.img) {
-              <img class="post-emoji" [src]="emoji.img" [alt]="emoji.content" />
-            } @else {
-              <span class="force-comic-sans"> {{ emoji.content }}</span>
-            }
-            @if (emoji.users.length > 0) {
-              <span> {{ emoji.users.length }}</span>
-            }
-          </button>
+          <div [matTooltip]="emoji.tooltip">
+            <button
+              [disabled]="userCannotReact() && !emoji.includesMe"
+              [ngClass]="{
+                reacted: emoji.includesMe
+              }"
+              (click)="toggleEmojiReact(emoji)"
+              mat-raised-button
+              matTooltipTouchGestures="on"
+              class="emojireact-button"
+            >
+              @if (emoji.img) {
+                <img class="post-emoji" [src]="emoji.img" [alt]="emoji.content" />
+              } @else {
+                <span class="force-comic-sans"> {{ emoji.content }}</span>
+              }
+              @if (emoji.users.length > 0) {
+                <span> {{ emoji.users.length }}</span>
+              }
+            </button>
+          </div>
         } @else {
           <div [matTooltip]="emoji.tooltip" class="external-emoji">
             <span>

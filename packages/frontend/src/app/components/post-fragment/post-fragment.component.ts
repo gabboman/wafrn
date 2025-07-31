@@ -69,6 +69,12 @@ export class PostFragmentComponent implements OnChanges, OnDestroy {
   mentionPosts: string[] = []
   availableEmojiNames: string[] = []
 
+  userCannotReact = computed<boolean>(() => {
+    const userHasReacted = this.emojiCollection().some((e) => e.users.find((u) => u.id === this.userId) !== undefined)
+    const ownPost = this.fragment().userId === this.userId
+    return this.reactionLoading() || userHasReacted || ownPost
+  })
+
   reactionLoading = signal<boolean>(false)
   sanitizedContent = ''
   noTagsContent = ''
@@ -250,8 +256,17 @@ export class PostFragmentComponent implements OnChanges, OnDestroy {
       }
     })
 
+    this.emojiCollection.set(Object.values(emojiReactions))
+    this.processEmojis()
+  }
+
+  processEmojis() {
+    for (let emoji of this.emojiCollection()) {
+      emoji.tooltip = (this.isLike(emoji) ? 'Liked' : emoji.content) + ' by ' + this.getTooltipUsers(emoji.users)
+      emoji.includesMe = this.emojiReactionIncludesMe(emoji)
+    }
     this.emojiCollection.set(
-      Object.values(emojiReactions)
+      this.emojiCollection()
         .sort(
           (a, b) =>
             +(this.availableEmojiNames.includes(b.name) || !b.img) -
@@ -259,11 +274,6 @@ export class PostFragmentComponent implements OnChanges, OnDestroy {
         )
         .sort((a, b) => b.users.length - a.users.length)
     )
-
-    for (let emoji of this.emojiCollection()) {
-      emoji.tooltip = (this.isLike(emoji) ? 'Liked' : emoji.content) + ' by ' + this.getTooltipUsers(emoji.users)
-      emoji.includesMe = this.emojiReactionIncludesMe(emoji)
-    }
   }
 
   getTooltipUsers(users: SimplifiedUser[]): string {
@@ -313,7 +323,7 @@ export class PostFragmentComponent implements OnChanges, OnDestroy {
   }
 
   renderEmojiReact({ emoji, type }: { postId: string; emoji: Emoji; type: 'react' | 'undo_react' }) {
-    const collection = this.emojiCollection().find((e) => e.id === emoji.id)
+    const collection = this.emojiCollection().find((e) => (e?.id ? e.id === emoji.id : e.content === emoji.name))
     if (type === 'react') {
       this.fragment().emojiReactions.push({
         emojiId: emoji.id,
@@ -321,12 +331,7 @@ export class PostFragmentComponent implements OnChanges, OnDestroy {
         userId: this.loginService.getLoggedUserUUID(),
         postId: this.fragment().id,
         content: emoji.name,
-        user: {
-          url: this.jwtService.getTokenData()['url'],
-          name: this.jwtService.getTokenData()['url'],
-          id: this.loginService.getLoggedUserUUID(),
-          avatar: ''
-        }
+        user: this.createUserObject()
       })
     } else {
       if (collection) {
@@ -382,13 +387,9 @@ export class PostFragmentComponent implements OnChanges, OnDestroy {
 
           // Remove user id from user list, giving visual response.
           this.emojiCollection.update((ec) => {
-            let index = ec.indexOf(emojiReaction)
-            if (index > -1) {
-              let userIndex = ec[index].users.findIndex((usr) => {
-                return usr.id === this.userId
-              })
-              ec[index].users.slice(userIndex, 1)
-            }
+            const index = ec.findIndex((e) => e.content === emojiReaction.content)
+            const userIndex = ec[index].users.filter((usr) => usr.id !== this.userId)
+            console.log('removing', ec, index, userIndex)
             return ec
           })
         }
@@ -404,13 +405,8 @@ export class PostFragmentComponent implements OnChanges, OnDestroy {
 
         // Add user id to user list, giving visual response.
         this.emojiCollection.update((ec) => {
-          let index = ec.indexOf(emojiReaction)
-          ec[index].users.push({
-            name: 'You',
-            avatar: '',
-            id: this.userId,
-            url: ''
-          })
+          const index = ec.findIndex((e) => e.content === emojiReaction.content)
+          ec[index].users.push(this.createUserObject())
           return ec
         })
       }
@@ -424,6 +420,7 @@ export class PostFragmentComponent implements OnChanges, OnDestroy {
     }
 
     this.reactionLoading.set(false)
+    this.processEmojis()
   }
 
   emojiReactionIncludesMe(emoji: EmojiReaction) {
@@ -467,5 +464,14 @@ export class PostFragmentComponent implements OnChanges, OnDestroy {
       },
       toggleOnDblclick: false
     })
+  }
+
+  createUserObject() {
+    return {
+      url: this.jwtService.getTokenData()['url'],
+      name: this.jwtService.getTokenData()['url'],
+      id: this.loginService.getLoggedUserUUID(),
+      avatar: ''
+    }
   }
 }
