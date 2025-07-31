@@ -65,7 +65,7 @@ export class PostFragmentComponent implements OnChanges, OnDestroy {
   likeSubscription!: Subscription
   emojiSubscription!: Subscription
   followsSubscription!: Subscription
-  userId!: string
+  userId: string
   mentionPosts: string[] = []
   availableEmojiNames: string[] = []
 
@@ -147,7 +147,9 @@ export class PostFragmentComponent implements OnChanges, OnDestroy {
     private loginService: LoginService,
     private jwtService: JwtService,
     private readonly messages: MessageService
-  ) {}
+  ) {
+    this.userId = this.loginService.getLoggedUserUUID()
+  }
 
   ngOnDestroy(): void {
     this.likeSubscription.unsubscribe()
@@ -164,7 +166,6 @@ export class PostFragmentComponent implements OnChanges, OnDestroy {
       )
       this.availableEmojiNames.push('❤️')
     })
-    this.userId = this.loginService.getLoggedUserUUID()
     this.likeSubscription = this.postService.postLiked.subscribe((likeEvent) => {
       if (likeEvent.id === this.fragment()?.id) {
         this.renderLikeDislike(likeEvent)
