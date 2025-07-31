@@ -272,6 +272,7 @@ export class PostFragmentComponent implements OnChanges, OnDestroy {
             +(this.availableEmojiNames.includes(b.name) || !b.img) -
             +(this.availableEmojiNames.includes(a.name) || !a.img)
         )
+        .sort((a, b) => +(b.id === 'Like') - +(a.id === 'Like'))
         .sort((a, b) => b.users.length - a.users.length)
     )
   }
