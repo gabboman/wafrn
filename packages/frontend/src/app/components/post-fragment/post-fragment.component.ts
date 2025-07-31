@@ -282,49 +282,21 @@ export class PostFragmentComponent implements OnChanges, OnDestroy {
   }
 
   renderLikeDislike({ like }: { id: string; like: boolean }) {
-    let likesCollection = this.emojiCollection().find((elem) => elem.id === 'Like')
     if (like) {
-      // CODE TO ADD LIKE
-      if (!likesCollection) {
-        likesCollection = {
-          id: '=',
-          content: '❤️',
-          external: false,
-          img: undefined,
-          name: '❤️',
-          users: [],
-          tooltip: '',
-          includesMe: false
-        }
-        this.emojiCollection.update((ec) => {
-          ec.push(likesCollection!)
-          return ec
-        })
-      }
-      likesCollection.users.push({
-        url: this.jwtService.getTokenData()['url'],
-        name: this.jwtService.getTokenData()['url'],
-        id: this.loginService.getLoggedUserUUID(),
-        avatar: ''
+      this.fragment().emojiReactions.push({
+        content: '♥️',
+        emojiId: 'Like',
+        postId: this.fragment().id,
+        user: this.createUserObject(),
+        userId: this.userId
       })
     } else {
-      // CODE TO REMOVE LIKE
-      if (likesCollection) {
-        if (likesCollection.users.length === 1) {
-          this.emojiCollection.update((ec) => {
-            return ec.filter((col) => col.id !== 'Like')
-          })
-        } else {
-          likesCollection.users = likesCollection.users.filter(
-            (usr) => usr.id !== this.loginService.getLoggedUserUUID()
-          )
-        }
-        // Remove it from the fragment
-        this.fragment().emojiReactions = this.fragment().emojiReactions.filter((e) => {
-          return !(e.emojiId === 'Like' && e.userId === this.userId)
-        })
-      }
+      // Remove it from the fragment
+      this.fragment().emojiReactions = this.fragment().emojiReactions.filter((e) => {
+        return !(e.emojiId === 'Like' && e.userId === this.userId)
+      })
     }
+    this.initializeEmojis()
   }
 
   renderEmojiReact({ emoji, type }: { postId: string; emoji: Emoji; type: 'react' | 'undo_react' }) {
