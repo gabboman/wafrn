@@ -250,7 +250,7 @@ export class PostFragmentComponent implements OnChanges, OnDestroy {
 
       // at this point the current reaction is always defined on the map
       // so we can always access it to increment the users array
-      if (reaction.user?.avatar) {
+      if (reaction.user !== undefined) {
         emojiReactions[reaction.content].users.push(reaction.user)
       }
     })
