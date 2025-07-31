@@ -4,12 +4,13 @@ import { MatButtonModule } from '@angular/material/button'
 import { MatCardModule } from '@angular/material/card'
 import { MatInputModule } from '@angular/material/input'
 import { Router } from '@angular/router'
+import { TranslateModule } from '@ngx-translate/core'
 import { MessageService } from 'src/app/services/message.service'
 import { ThemeService } from 'src/app/services/theme.service'
 
 @Component({
   selector: 'app-css-editor',
-  imports: [MatCardModule, FormsModule, MatInputModule, MatButtonModule],
+  imports: [MatCardModule, FormsModule, MatInputModule, MatButtonModule, TranslateModule],
   templateUrl: './css-editor.component.html',
   styleUrl: './css-editor.component.scss'
 })
