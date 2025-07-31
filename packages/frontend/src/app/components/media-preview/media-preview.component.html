@@ -9,7 +9,12 @@
       <img alt="loading" style="max-height: 25vh; max-width: 100%" [src]="elemUrl" (error)="imageLoadFailed($event)" />
     }
     @if (media.url.endsWith('mp4')) {
-      <video style="max-height: 25vh; max-width: 100%" [src]="elemUrl" (error)="imageLoadFailed($event)"></video>
+      <video
+        style="max-height: 25vh; max-width: 100%"
+        [src]="elemUrl"
+        (error)="imageLoadFailed($event)"
+        controls
+      ></video>
     }
   </div>
 }
