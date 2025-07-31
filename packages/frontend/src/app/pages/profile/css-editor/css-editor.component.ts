@@ -24,7 +24,7 @@ export class CssEditorComponent {
     this.themeService
       .getMyThemeAsSting()
       .then((theme) => {
-        this.myCSS = theme
+        this.myCSS = theme.trim()
         this.ready = true
       })
       .catch((error) => {
