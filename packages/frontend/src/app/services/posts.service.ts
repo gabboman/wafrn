@@ -248,13 +248,24 @@ export class PostsService {
     }
     let allEmojis: Emoji[] = []
     this.emojiCollections.forEach((col) => (allEmojis = allEmojis.concat(col.emojis)))
+    const emoji = allEmojis.find((elem) => elem.name === emojiName || elem.id === emojiName) as Emoji
+    const emojiIsUnicode = emoji.url.length === 0
     this.emojiReacted.next({
-      type: 'react',
+      type: undo ? 'undo_react' : 'react',
       postId: postId,
-      emoji: allEmojis.find((elem) => elem.name === emojiName) as Emoji
+      emoji: emojiIsUnicode ? this.convertUnicodeEmoji(emoji) : emoji
     })
 
     return res
+  }
+
+  convertUnicodeEmoji(unicodeEmoji: Emoji): Emoji {
+    return {
+      id: '',
+      name: unicodeEmoji.id,
+      url: '',
+      external: unicodeEmoji.external
+    }
   }
 
   processPostNew(unlinked: unlinkedPosts): ProcessedPost[][] {
