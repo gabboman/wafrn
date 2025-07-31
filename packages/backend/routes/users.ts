@@ -933,7 +933,7 @@ function userRoutes(app: Application) {
     const localEmojis = getAvaiableEmojisCache()
     const mutedUsers = getMutedUsers(userId)
     let userPromise = User.findByPk(req.jwtData?.userId, {
-      attributes: ['banned']
+      attributes: ['banned', 'enableBsky']
     })
     const silencedPosts = getMutedPosts(userId)
     const followedHashtags = getFollowedHashtags(userId)
@@ -953,6 +953,7 @@ function userRoutes(app: Application) {
     if (!user || user.banned) {
       res.sendStatus(401)
     } else {
+      const user = (await userPromise) as User
       res.send({
         myFollowers: await myFollowers,
         followedUsers: await followedUsers,
@@ -963,7 +964,7 @@ function userRoutes(app: Application) {
         emojis: await localEmojis,
         mutedUsers: await mutedUsers,
         followedHashtags: await followedHashtags,
-        enableBluesky: (await userPromise)?.enableBsky
+        enableBluesky: user.enableBsky
       })
     }
   })
