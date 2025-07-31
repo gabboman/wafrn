@@ -251,7 +251,7 @@ export class PostsService {
     const emoji = allEmojis.find((elem) => elem.name === emojiName || elem.id === emojiName) as Emoji
     const emojiIsUnicode = emoji.url.length === 0
     this.emojiReacted.next({
-      type: 'react',
+      type: undo ? 'undo_react' : 'react',
       postId: postId,
       emoji: emojiIsUnicode ? this.convertUnicodeEmoji(emoji) : emoji
     })

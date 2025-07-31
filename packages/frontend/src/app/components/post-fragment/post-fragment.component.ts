@@ -323,7 +323,10 @@ export class PostFragmentComponent implements OnChanges, OnDestroy {
   }
 
   renderEmojiReact({ emoji, type }: { postId: string; emoji: Emoji; type: 'react' | 'undo_react' }) {
-    const collection = this.emojiCollection().find((e) => (e?.id ? e.id === emoji.id : e.content === emoji.name))
+    const collectionIndex = this.emojiCollection().findIndex((e) =>
+      e?.id ? e.id === emoji.id : e.content === emoji.name
+    )
+    const collection = this.emojiCollection()[collectionIndex]
     if (type === 'react') {
       this.fragment().emojiReactions.push({
         emojiId: emoji.id,
@@ -340,9 +343,13 @@ export class PostFragmentComponent implements OnChanges, OnDestroy {
             return ec.filter((col) => col.id !== emoji.id)
           })
         } else {
-          collection.users = collection.users.filter((usr) => usr.id !== this.loginService.getLoggedUserUUID())
+          collection.users = collection.users.filter((usr) => usr.id !== this.userId)
         }
       }
+      // Remove it from the fragment
+      this.fragment().emojiReactions = this.fragment().emojiReactions.filter((e) => {
+        return !(e.emojiId === emoji.id && e.userId === this.userId)
+      })
     }
     this.emojiCollection.update((e) => {
       return e
@@ -395,7 +402,7 @@ export class PostFragmentComponent implements OnChanges, OnDestroy {
           // Remove user id from user list, giving visual response.
           this.emojiCollection.update((ec) => {
             const index = ec.findIndex((e) => e.content === emojiReaction.content)
-            const userIndex = ec[index].users.filter((usr) => usr.id !== this.userId)
+            ec[index].users = ec[index].users.filter((usr) => usr.id !== this.userId)
             return ec
           })
         }
@@ -408,13 +415,6 @@ export class PostFragmentComponent implements OnChanges, OnDestroy {
             soundUrl: '/assets/sounds/1.ogg'
           })
         }
-
-        // Add user id to user list, giving visual response.
-        this.emojiCollection.update((ec) => {
-          const index = ec.findIndex((e) => e.content === emojiReaction.content)
-          ec[index].users.push(this.createUserObject())
-          return ec
-        })
       }
 
       if (!response) {
