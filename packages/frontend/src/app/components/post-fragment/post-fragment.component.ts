@@ -70,9 +70,8 @@ export class PostFragmentComponent implements OnChanges, OnDestroy {
   availableEmojiNames: string[] = []
 
   userCannotReact = computed<boolean>(() => {
-    const userHasReacted = this.emojiCollection().some((e) => e.users.find((u) => u.id === this.userId) !== undefined)
     const ownPost = this.fragment().userId === this.userId
-    return this.reactionLoading() || userHasReacted || ownPost
+    return this.reactionLoading() || ownPost
   })
 
   reactionLoading = signal<boolean>(false)

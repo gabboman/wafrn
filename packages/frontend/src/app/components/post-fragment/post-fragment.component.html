@@ -116,7 +116,7 @@
           -->
           <div [matTooltip]="emoji.tooltip">
             <button
-              [disabled]="userCannotReact() && !emoji.includesMe"
+              [disabled]="userCannotReact()"
               [ngClass]="{
                 reacted: emoji.includesMe
               }"
