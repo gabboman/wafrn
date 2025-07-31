@@ -36,7 +36,7 @@ export class CssEditorComponent {
   submit() {
     this.ready = false
     this.themeService
-      .updateTheme(this.myCSS)
+      .updateTheme(this.myCSS || ' ') // Backend doesn't like empty strings
       .then(() => {
         this.ready = true
         this.messages.add({
