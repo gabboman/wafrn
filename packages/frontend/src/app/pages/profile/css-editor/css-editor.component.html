@@ -5,7 +5,13 @@
   </h2>
   <mat-form-field class="w-full">
     <mat-label>Edit your CSS theme</mat-label>
-    <textarea style="min-height: 50vh" matInput placeholder="Write down your own css..." [(ngModel)]="myCSS">
+    <textarea
+      style="min-height: 50vh"
+      matInput
+      placeholder="Write down your own css..."
+      [(ngModel)]="myCSS"
+      [disabled]="!ready"
+    >
     </textarea>
   </mat-form-field>
   <button mat-flat-button color="primary" (click)="submit()" class="w-full" [disabled]="!ready">
