@@ -571,8 +571,11 @@ export class NewEditorComponent implements OnDestroy {
             .map((elem) => '#' + elem)
             .join(' ')}`
         : ''
-    const inputText = `${cwText}${this.removeMarkdown(this.postCreatorForm.controls['content'].value as string)}${tagText}`
-
+    const askText = this.data?.ask
+      ? (this.data.ask.user ? this.data.ask.user.url : 'anonymous') + ' asked ' + this.data.ask.question
+      : ''
+    const fediQuoteText = this.data?.quote && this.data.quote.remotePostId ? 'RE: ' + this.data.quote.remotePostId : ''
+    const inputText = `${askText}\n${cwText}${this.removeMarkdown(this.postCreatorForm.controls['content'].value as string)}${tagText}\n${fediQuoteText}`
     return inputText.length
   }
 
