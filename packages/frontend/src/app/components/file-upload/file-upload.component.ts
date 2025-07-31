@@ -41,20 +41,24 @@ export class FileUploadComponent {
   async onFileSelected(event: Event) {
     this.uploadStatus = UploadStatus.Uploading
     const el = event.target as HTMLInputElement
-    if (el.files && el.files[0]) {
-      this.fileUploadService
-        .uploadFile(EnvironmentService.environment.baseUrl + this.config().url, el.files[0], this.config().formdataName)
-        .subscribe(
-          (response) => {
-            this.uploadStatus = UploadStatus.Success
-            if (response && response[0]) {
-              this.fileUpload.emit(response[0])
-            }
-          },
-          () => {
-            this.uploadStatus = UploadStatus.Error
-          }
-        )
+
+    if (el.files === null || el.files.length === 0) {
+      this.uploadStatus = UploadStatus.Pending
+      return
     }
+
+    this.fileUploadService
+      .uploadFile(EnvironmentService.environment.baseUrl + this.config().url, el.files[0], this.config().formdataName)
+      .subscribe({
+        next: (response) => {
+          this.uploadStatus = UploadStatus.Success
+          if (response && response[0]) {
+            this.fileUpload.emit(response[0])
+          }
+        },
+        error: () => {
+          this.uploadStatus = UploadStatus.Error
+        }
+      })
   }
 }
