@@ -199,7 +199,11 @@
             <div class="col-12 md:col relative">
               <app-media-preview [media]="media"></app-media-preview>
               <mat-form-field class="w-full mat-form-field-no-padding mb-1" appearance="outline">
-                <mat-label>{{ 'editor.altTextFieldLabel' | translate }}</mat-label>
+                @if (mediaIsVideo(media)) {
+                  <mat-label>{{ 'editor.altTextFieldLabelVideo' | translate }}</mat-label>
+                } @else {
+                  <mat-label>{{ 'editor.altTextFieldLabel' | translate }}</mat-label>
+                }
                 <textarea
                   placeholder="{{ 'editor.altTextFieldPlaceholder' | translate }}"
                   [(ngModel)]="media.description"

@@ -602,4 +602,8 @@ export class NewEditorComponent implements OnDestroy {
         .replaceAll(/`(.+?)`/gs, '$1')
     )
   }
+
+  mediaIsVideo(media: WafrnMedia) {
+    return media.url.endsWith('mp4') // technology
+  }
 }
