@@ -267,6 +267,9 @@ export class NewEditorComponent implements OnDestroy {
   }
 
   getPrivacyIcon() {
+    if (Number.isNaN(this.privacy)) {
+      this.privacy = 0
+    }
     const res = this.privacyOptions.find((elem) => elem.level === this.privacy)?.icon as IconDefinition
     return res
   }
