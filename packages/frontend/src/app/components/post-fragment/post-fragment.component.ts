@@ -219,7 +219,7 @@ export class PostFragmentComponent implements OnChanges, OnDestroy {
 
     // Evil fix for bsky emoji text heart reactions
     this.fragment().emojiReactions.forEach((reaction) => {
-      if (reaction.content === '❤') {
+      if (this.isLike(reaction.content)) {
         reaction.content = '♥️'
       }
     })
@@ -261,7 +261,8 @@ export class PostFragmentComponent implements OnChanges, OnDestroy {
 
   processEmojis() {
     for (let emoji of this.emojiCollection()) {
-      emoji.tooltip = (this.isLike(emoji) ? 'Liked' : emoji.content) + ' by ' + this.getTooltipUsers(emoji.users)
+      emoji.tooltip =
+        (this.isLike(emoji.content) ? 'Liked' : emoji.content) + ' by ' + this.getTooltipUsers(emoji.users)
       emoji.includesMe = this.emojiReactionIncludesMe(emoji)
     }
     this.emojiCollection.set(
@@ -349,8 +350,8 @@ export class PostFragmentComponent implements OnChanges, OnDestroy {
     this.initializeEmojis()
   }
 
-  isLike(emojiReaction: EmojiReaction) {
-    return ['♥️', '❤'].includes(emojiReaction.content)
+  isLike(emojiReaction: string) {
+    return ['♥️', '❤', '♥'].includes(emojiReaction)
   }
 
   async toggleEmojiReact(emojiReaction: EmojiReaction) {
@@ -368,7 +369,7 @@ export class PostFragmentComponent implements OnChanges, OnDestroy {
 
     this.reactionLoading.set(true)
     const reactionIsToggled = emojiReaction.users.some((usr) => usr.id === this.userId)
-    if (this.isLike(emojiReaction)) {
+    if (this.isLike(emojiReaction.content)) {
       if (reactionIsToggled) {
         await this.postService.unlikePost(postId)
       } else {
