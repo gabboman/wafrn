@@ -4,12 +4,13 @@ import { MatButtonModule } from '@angular/material/button'
 import { MatCardModule } from '@angular/material/card'
 import { MatInputModule } from '@angular/material/input'
 import { Router } from '@angular/router'
+import { TranslateModule } from '@ngx-translate/core'
 import { MessageService } from 'src/app/services/message.service'
 import { ThemeService } from 'src/app/services/theme.service'
 
 @Component({
   selector: 'app-css-editor',
-  imports: [MatCardModule, FormsModule, MatInputModule, MatButtonModule],
+  imports: [MatCardModule, FormsModule, MatInputModule, MatButtonModule, TranslateModule],
   templateUrl: './css-editor.component.html',
   styleUrl: './css-editor.component.scss'
 })
@@ -24,7 +25,7 @@ export class CssEditorComponent {
     this.themeService
       .getMyThemeAsSting()
       .then((theme) => {
-        this.myCSS = theme
+        this.myCSS = theme.trim()
         this.ready = true
       })
       .catch((error) => {
@@ -36,7 +37,7 @@ export class CssEditorComponent {
   submit() {
     this.ready = false
     this.themeService
-      .updateTheme(this.myCSS)
+      .updateTheme(this.myCSS || ' ') // Backend doesn't like empty strings
       .then(() => {
         this.ready = true
         this.messages.add({

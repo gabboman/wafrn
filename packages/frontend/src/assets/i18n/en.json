@@ -71,6 +71,14 @@
       "awaitingAproval": "Awaiting approval"
     }
   },
+  "theme-editor": {
+    "title": "Theme Editor",
+    "templateNote": "You can see a base template and some advice in the",
+    "themeTextLabel": "Edit your CSS theme",
+    "themeTextPlaceholder": "Write down your own css...",
+    "themeGuideName": "Theme Guide",
+    "updateButton": "Update Theme"
+  },
   "editor": {
     "inReplyTo": "In reply to:",
     "quoteButton": "Quote a woot",
