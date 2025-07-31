@@ -318,6 +318,10 @@ export class PostFragmentComponent implements OnChanges, OnDestroy {
             (usr) => usr.id !== this.loginService.getLoggedUserUUID()
           )
         }
+        // Remove it from the fragment
+        this.fragment().emojiReactions = this.fragment().emojiReactions.filter((e) => {
+          return !(e.emojiId === 'Like' && e.userId === this.userId)
+        })
       }
     }
   }
@@ -397,13 +401,6 @@ export class PostFragmentComponent implements OnChanges, OnDestroy {
           this.messages.add({
             severity: 'success',
             summary: `Reaction removed successfully`
-          })
-
-          // Remove user id from user list, giving visual response.
-          this.emojiCollection.update((ec) => {
-            const index = ec.findIndex((e) => e.content === emojiReaction.content)
-            ec[index].users = ec[index].users.filter((usr) => usr.id !== this.userId)
-            return ec
           })
         }
       } else {
