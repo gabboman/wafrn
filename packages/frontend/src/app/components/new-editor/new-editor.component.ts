@@ -1,4 +1,4 @@
-import { Location } from '@angular/common'
+import { CommonModule, Location } from '@angular/common'
 import { Component, HostListener, inject, OnDestroy, ViewChild } from '@angular/core'
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms'
 import { MatButtonModule } from '@angular/material/button'
@@ -58,6 +58,7 @@ import { MatProgressBarModule } from '@angular/material/progress-bar'
 @Component({
   selector: 'app-new-editor',
   imports: [
+    CommonModule,
     FormsModule,
     ReactiveFormsModule,
     MatCardModule,
@@ -149,7 +150,7 @@ export class NewEditorComponent implements OnDestroy {
     private dashboardService: DashboardService,
     private editorService: EditorService,
     private loginService: LoginService,
-    private postService: PostsService,
+    public postService: PostsService,
     private jwtService: JwtService,
     private router: Router,
     private location: Location

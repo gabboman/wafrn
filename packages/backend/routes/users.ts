@@ -962,7 +962,8 @@ function userRoutes(app: Application) {
         silencedPosts: await silencedPosts,
         emojis: await localEmojis,
         mutedUsers: await mutedUsers,
-        followedHashtags: await followedHashtags
+        followedHashtags: await followedHashtags,
+        enableBluesky: (await userPromise)?.enableBsky
       })
     }
   })
