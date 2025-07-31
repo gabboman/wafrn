@@ -374,6 +374,13 @@ export class PostFragmentComponent implements OnChanges, OnDestroy {
         await this.postService.unlikePost(postId)
       } else {
         await this.postService.likePost(postId)
+        const disableConfetti = localStorage.getItem('disableConfetti') == 'true'
+        this.messages.add({
+          severity: 'success',
+          summary: 'You successfully liked this woot',
+          confettiEmojis: disableConfetti ? [] : ['❤️', '💚', '💙'],
+          soundUrl: '/assets/sounds/1.ogg'
+        })
       }
     } else {
       let response = false
