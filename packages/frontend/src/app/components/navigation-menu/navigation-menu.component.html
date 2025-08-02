@@ -49,8 +49,15 @@
       <fa-icon [icon]="reloadIcon" />
     </button>
     <main id="main-content" class="wafrn-content">
-      @if (maintenanceMode) {
-        <div [innerHtml]="maintenanceMessage"></div>
+      @if (true) {
+        <div>
+          <h1>WHOOPS WE ARE ON MAINTENANCE</h1>
+          <h2>We should be back in the next few hours</h2>
+          <h3>
+            Meanwhile, you can join us on the <a href="https://discord.gg/bgCWaKRR" target="_blank">discord</a>. Yes I
+            hate it too, I know, but its what we have for now. We will create a discord killer another day
+          </h3>
+        </div>
       }
       <snappy-router> </snappy-router>
     </main>
