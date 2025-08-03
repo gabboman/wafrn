@@ -14,10 +14,15 @@ export class WafrnAuthInterceptor implements HttpInterceptor {
     const token = localStorage.getItem('authToken')
     if (token != null && req.url.indexOf(EnvironmentService.environment.baseUrl) !== -1) {
       authReq = req.clone({ headers: req.headers.set('Authorization', `Bearer ${token}`) })
+    } else {
+      console.log({
+        baseUrl: EnvironmentService.environment.baseUrl,
+        petitionUr: req.url
+      })
     }
     return next.handle(authReq).pipe(
       catchError((error: HttpErrorResponse) => {
-        console.log('ERROR UNAUTHORIZED. Todken: ' + token)
+        console.log('ERROR UNAUTHORIZED. Token: ' + token)
         if (error.status === 401) {
           localStorage.clear()
           this.router.navigate(['/register'])
