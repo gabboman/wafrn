@@ -169,13 +169,16 @@
       </mat-form-field>
     </form>
     <mat-progress-bar
-      *ngIf="postService.enableBluesky && (!data?.post || data?.post?.bskyUri)"
+      *ngIf="postService.enableBluesky && (!data?.post || data?.post?.bskyUri) && privacy === 0"
       mode="determinate"
       [class.length-overflow]="calculateBskyPostLengthPercent() > 1"
       [value]="calculateBskyPostLengthPercent() * 100"
     >
     </mat-progress-bar>
-    <div class="post-length-note" *ngIf="postService.enableBluesky && (!data?.post || data?.post?.bskyUri)">
+    <div
+      class="post-length-note"
+      *ngIf="postService.enableBluesky && (!data?.post || data?.post?.bskyUri) && privacy === 0"
+    >
       <div class="post-length-text">
         <p>{{ calculateBskyPostLength() }}/300 {{ 'common.characters' | translate }}</p>
         @if (calculateBskyPostLength() > 300) {
