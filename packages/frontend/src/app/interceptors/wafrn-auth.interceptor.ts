@@ -22,6 +22,7 @@ export class WafrnAuthInterceptor implements HttpInterceptor {
     }
     return next.handle(authReq).pipe(
       catchError((error: HttpErrorResponse) => {
+        console.log(authReq.headers)
         console.log('ERROR UNAUTHORIZED. Token: ' + token)
         if (error.status === 401) {
           localStorage.clear()
