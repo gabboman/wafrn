@@ -17,6 +17,7 @@ export class WafrnAuthInterceptor implements HttpInterceptor {
     }
     return next.handle(authReq).pipe(
       catchError((error: HttpErrorResponse) => {
+        console.log('ERROR UNAUTHORIZED. Todken: ' + token)
         if (error.status === 401) {
           localStorage.clear()
           this.router.navigate(['/register'])
