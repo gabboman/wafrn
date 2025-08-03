@@ -3,7 +3,6 @@ FROM postgres:17
 RUN apt update && apt install postgresql-plpython3-17 -y && rm -rf /var/lib/apt/lists/*
 
 COPY pgwatch.sql /pgwatch.sql
-COPY postgresql.conf /tmp/postgresql.conf
 COPY updateConfig.sh      /docker-entrypoint-initdb.d/_updateConfig.sh
 
 
