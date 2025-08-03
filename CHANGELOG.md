@@ -1,5 +1,9 @@
-
 # Changelog
+
+## 2025-06-19
+
+Update your docker compose file
+https://github.com/gabboman/wafrn/releases/tag/2025.07.1
 
 ## 2025-05-19
 
@@ -24,9 +28,9 @@ Once you run `docker compose up --build -d` you should be able to check your met
 
 If you're self hosting and wish to update from before `2025-05-13` please do the following updates:
 
-* Make sure your DNS is configured so `*.<your_domain>` points to your Wafrn instance as well.,
-* After pulling the latest changes the `docker-compose.yml` file will be removed. You will need to manually copy over `docker-compose.simple.yml` in it's place,
-* You will also need to make the following changes in your `.env` file:
+- Make sure your DNS is configured so `*.<your_domain>` points to your Wafrn instance as well.,
+- After pulling the latest changes the `docker-compose.yml` file will be removed. You will need to manually copy over `docker-compose.simple.yml` in it's place,
+- You will also need to make the following changes in your `.env` file:
 
 ```sh
 DOMAIN_NAME=<your_domain>
