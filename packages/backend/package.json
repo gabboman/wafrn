@@ -1,6 +1,6 @@
 {
   "name": "wafrn-backend",
-  "version": "2025.7.3",
+  "version": "2025.08.0",
   "description": "wafrn backend",
   "main": "index.js",
   "type": "module",
@@ -20,7 +20,7 @@
   "dependencies": {
     "@atcute/bluesky-richtext-builder": "^1.0.2",
     "@atcute/bluesky-richtext-parser": "^1.0.7",
-    "@atproto/api": "^0.13.14",
+    "@atproto/api": "^0.13.35",
     "@atproto/identity": "^0.4.2",
     "@atproto/sync": "^0.1.4",
     "@opera7133/mfmp": "^1.0.2-5",

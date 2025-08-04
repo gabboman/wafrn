@@ -199,15 +199,22 @@ function userRoutes(app: Application) {
             forbidChar: !forbiddenCharacters.some((char) => req.body.url.includes(char)),
             emailValid: validateEmail(req.body.email)
           })
-          res.status(400).send({ success: false })
+          res.status(400).send({
+            success: false,
+            message: 'Failed registration',
+            email: req.body?.email,
+            url: req.body.url,
+            forbidChar: !forbiddenCharacters.some((char) => req.body.url.includes(char)),
+            emailValid: validateEmail(req.body.email)
+          })
           return
         }
         if (!success) {
-          res.status(401).send({ success: false })
+          res.status(401).send({ success: false, message: 'Got to final part with success false' })
         }
       } catch (error) {
         logger.error(error)
-        res.status(500).send({ success: false })
+        res.status(500).send({ success: false, error })
       }
     }
   )
@@ -926,7 +933,7 @@ function userRoutes(app: Application) {
     const localEmojis = getAvaiableEmojisCache()
     const mutedUsers = getMutedUsers(userId)
     let userPromise = User.findByPk(req.jwtData?.userId, {
-      attributes: ['banned']
+      attributes: ['banned', 'enableBsky']
     })
     const silencedPosts = getMutedPosts(userId)
     const followedHashtags = getFollowedHashtags(userId)
@@ -946,6 +953,7 @@ function userRoutes(app: Application) {
     if (!user || user.banned) {
       res.sendStatus(401)
     } else {
+      const user = (await userPromise) as User
       res.send({
         myFollowers: await myFollowers,
         followedUsers: await followedUsers,
@@ -955,7 +963,8 @@ function userRoutes(app: Application) {
         silencedPosts: await silencedPosts,
         emojis: await localEmojis,
         mutedUsers: await mutedUsers,
-        followedHashtags: await followedHashtags
+        followedHashtags: await followedHashtags,
+        enableBluesky: user.enableBsky
       })
     }
   })
@@ -1083,93 +1092,6 @@ function userRoutes(app: Application) {
       logger.error({
         message: `Error activating bluesky for user ${user.url}`,
         error: error
-      })
-    }
-  })
-
-  app.post('/api/enable-bluesky', authenticateToken, async (req: AuthorizedRequest, res: Response) => {
-    if (!completeEnvironment.enableBsky) {
-      res.status(500)
-      res.send({
-        error: true,
-        message: `This instance does not have bluesky enabled at this moment`
-      })
-    }
-    const userId = req.jwtData?.userId as string
-    const user = await User.findByPk(userId)
-    if (user && !user.enableBsky) {
-      const inviteCode = completeEnvironment.bskyMasterInviteCode
-        ? completeEnvironment.bskyMasterInviteCode
-        : await BskyInviteCodes.findOne()
-      if (inviteCode) {
-        const serviceUrl = completeEnvironment.bskyPds.startsWith('http')
-          ? completeEnvironment.bskyPds
-          : 'https://' + completeEnvironment.bskyPds
-        try {
-          const agent = new AtpAgent({
-            service: serviceUrl
-          })
-          const sanitizedUrl = user.url.replaceAll('_', '-').replaceAll('.', '-').substring(0, 18)
-          const bskyPassword = generateRandomString()
-          let accountCreation = await agent
-            .createAccount({
-              email: `${user.url}@${completeEnvironment.instanceUrl}`,
-              password: bskyPassword,
-              handle: `${sanitizedUrl}.${completeEnvironment.bskyPdsUrl as string}`,
-              inviteCode: typeof inviteCode === 'string' ? inviteCode : inviteCode.code
-            })
-            .catch((error) => {
-              logger.error({
-                message: `Bsky account creation failed for ${user.url}`,
-                error: error
-              })
-              throw new Error(error.message)
-            })
-          logger.info({
-            message: `Bsky account created? ${user.url}`,
-            response: accountCreation
-          })
-          if (typeof inviteCode !== 'string' && !inviteCode.masterCode) {
-            // This is a regular invitecode and not a MASTER INVITE CODE with 1 million usages.
-            // If for some reason we got there
-            // what the fuck
-            await inviteCode.destroy()
-          }
-          const userDid = agent.assertDid
-          user.bskyDid = userDid
-          user.bskyAuthData = bskyPassword
-          user.enableBsky = true
-          await user.save()
-          // now we have to set the profile user and stuff
-          await updateBlueskyProfile(await getAtProtoSession(user), user)
-          res.send({
-            success: true,
-            did: userDid
-          })
-        } catch (error) {
-          res.status(500)
-          res.send({
-            error: true,
-            message: `There was an error! Contact an admin for this`
-          })
-          logger.error({
-            message: `Error activating bluesky for user ${user.url}`,
-            error: error
-          })
-        }
-      } else {
-        //oh no no invite codes avaiable!!!!!!
-        res.status(500)
-        res.send({
-          error: true,
-          message: `Contact the administrator: no invite codes avaiable`
-        })
-      }
-    } else {
-      res.status(500)
-      res.send({
-        error: true,
-        message: `You already have bluesky enabled`
       })
     }
   })

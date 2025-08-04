@@ -1,7 +1,7 @@
 import { Op } from 'sequelize'
 import { Ask, Emoji, EmojiReaction, Media, Post, PostTag, User, UserLikesPostRelations } from '../../models/index.js'
 import { redisCache } from '../redis.js'
-import { Privacy } from '../../models/post.js';
+import { Privacy } from '../../models/post.js'
 
 async function getPostAndUserFromPostId(postId: string): Promise<{ found: boolean; data?: any }> {
   const cacheResult = await redisCache.get('postAndUser:' + postId)
@@ -79,6 +79,22 @@ async function getPostAndUserFromPostId(postId: string): Promise<{ found: boolea
       }
     })
     if (dbQuery) {
+      // check if its a bsky post because we dont enjoy bsky posts going to fedi!
+      const parents = await dbQuery.getAncestors({
+        include: [
+          {
+            model: User,
+            as: 'user'
+          }
+        ]
+      })
+      const isBskyPost =
+        parents.length > 0 && !parents.every((elem) => !(elem.bskyUri && elem.user.url.startsWith('@')))
+      if (isBskyPost) {
+        res = { found: false }
+        return res
+      }
+
       let likes = UserLikesPostRelations.findAll({
         where: {
           postId: postId

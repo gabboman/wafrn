@@ -1,14 +1,23 @@
 <mat-card class="p-3 mb-6 lg:mx-4 wafrn-container">
-  <h2>
-    You can see a base template and some advice
-    <a href="https://github.com/gabboman/wafrn/blob/main/THEMING.md" target="_blank">in this guide</a>
-  </h2>
+  <h2>{{ 'theme-editor.title' | translate }}</h2>
+  <p>
+    {{ 'theme-editor.templateNote' | translate }}
+    <a href="https://github.com/gabboman/wafrn/blob/main/THEMING.md" target="_blank">{{
+      'theme-editor.themeGuideName' | translate
+    }}</a>
+  </p>
   <mat-form-field class="w-full">
-    <mat-label>Edit your CSS theme</mat-label>
-    <textarea style="min-height: 50vh" matInput placeholder="Write down your own css..." [(ngModel)]="myCSS">
+    <mat-label>{{ 'theme-editor.themeTextLabel' | translate }}</mat-label>
+    <textarea
+      style="min-height: 50vh"
+      matInput
+      placeholder="{{ 'theme-editor.themeTextLabel' | translate }}"
+      [(ngModel)]="myCSS"
+      [disabled]="!ready"
+    >
     </textarea>
   </mat-form-field>
-  @if (ready) {
-    <button mat-flat-button color="primary" (click)="submit()" class="w-full">Update your theme</button>
-  }
+  <button mat-flat-button color="primary" (click)="submit()" class="w-full" [disabled]="!ready">
+    {{ 'theme-editor.updateButton' | translate }}
+  </button>
 </mat-card>

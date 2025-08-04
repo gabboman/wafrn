@@ -5,6 +5,7 @@ import AuthorizedRequest from '../interfaces/authorizedRequest.js'
 import { User } from '../models/index.js'
 import { Op } from 'sequelize'
 import { redisCache } from './redis.js'
+import { logger } from './logger.js'
 
 function authenticateToken(req: Request, res: Response, next: NextFunction) {
   const authHeader = req.headers.authorization
@@ -14,9 +15,16 @@ function authenticateToken(req: Request, res: Response, next: NextFunction) {
   // TODO make this code "a bit better" and less duplicate. Not big deal because this code should not be touched.... but you know
   jwt.verify(token, completeEnvironment.jwtSecret, async (err: any, jwtData: any) => {
     if (err) {
+      logger.debug({
+        message: `Error on token`,
+        err
+      })
       return res.sendStatus(401)
     }
     if (!jwtData?.userId) {
+      logger.debug({
+        message: `No token on id`
+      })
       return res.sendStatus(401)
     }
     const userCacheHit = await redisCache.get('auth:' + jwtData.userId)
@@ -38,6 +46,10 @@ function authenticateToken(req: Request, res: Response, next: NextFunction) {
         ;(req as AuthorizedRequest).jwtData = jwtData
         next()
       } else {
+        logger.debug({
+          message: `User not found: ${jwtData.userId}`,
+          err
+        })
         return res.sendStatus(401)
       }
     }

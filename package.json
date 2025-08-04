@@ -1,6 +1,6 @@
 {
   "name": "wafrn",
-  "version": "2025.7.3",
+  "version": "2025.08.0",
   "description": "wafrn",
   "main": "index.ts",
   "scripts": {

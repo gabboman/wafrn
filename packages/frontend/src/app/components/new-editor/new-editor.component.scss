@@ -15,6 +15,31 @@
   border-radius: 8px;
 }
 
+.post-length-note {
+  display: flex;
+  align-items: center;
+  justify-content: right;
+  text-align: right;
+  gap: 0.5rem;
+  margin-top: 0.25rem;
+  margin-bottom: 1.25rem;
+
+  p {
+    margin: 0;
+  }
+}
+
+.post-length-warning {
+  font-size: 0.7em;
+  line-height: 1.1;
+  color: var(--mat-sys-outline);
+}
+
+.length-overflow {
+  --mat-progress-bar-active-indicator-color: var(--mat-sys-error);
+  --mat-progress-spinner-active-indicator-color: var(--mat-sys-error);
+}
+
 .below-editor-toolbar {
   display: flex;
   justify-content: space-between;
@@ -32,19 +57,19 @@
 
 .below-editor-toolbar-leftside,
 .below-editor-toolbar-rightside {
-	display: flex;
-	flex-wrap: wrap;
-	align-items: flex-start;
-	justify-content: flex-start;
-	gap: 0.5rem;
-	margin-bottom: 0.5rem;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 0.5rem;
+  margin-bottom: 0.5rem;
 }
 
 .below-editor-toolbar-divider {
-	border: 1px solid var(--mat-sys-outline-variant);
-	width: 1px;
-	min-height: 40px;
-	max-height: max-content;
+  border: 1px solid var(--mat-sys-outline-variant);
+  width: 1px;
+  min-height: 40px;
+  max-height: max-content;
 }
 
 .cw-wrapper {
@@ -75,24 +100,24 @@ app-media-preview {
 }
 
 .delete-btn.mdc-icon-button .ng-fa-icon {
-	display: block;
-	transform: translateY(-5px);
+  display: block;
+  transform: translateY(-5px);
 }
 
 .fucked-wrapper {
-	display: flex;
-	align-items: center;
-	justify-content: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 @media screen and (max-width: 380px) {
-	.post-text {
-		display: none;
-	}
-	
-	.post-btn {
-		width: 24px;
-	}
+  .post-text {
+    display: none;
+  }
+
+  .post-btn {
+    width: 24px;
+  }
 }
 
 .quote-container {
@@ -127,5 +152,3 @@ app-media-preview {
 svg {
   display: block;
 }
-
-

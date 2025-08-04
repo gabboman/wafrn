@@ -65,6 +65,8 @@ export class PostsService {
   public notYetAcceptedFollowedUsersIds: Array<string> = []
   public blockedUserIds: Array<string> = []
   public followedHashtags: string[] = []
+  public myFollowers: string[] = []
+  public enableBluesky: boolean = false
   constructor(
     private mediaService: MediaService,
     private http: HttpClient,
@@ -79,6 +81,7 @@ export class PostsService {
       const followsAndBlocks = await firstValueFrom(
         this.http.get<{
           followedUsers: string[]
+          myFollowers: string[]
           blockedUsers: string[]
           notAcceptedFollows: string[]
           options: UserOptions[]
@@ -86,6 +89,7 @@ export class PostsService {
           emojis: EmojiCollection[]
           mutedUsers: string[]
           followedHashtags: string[]
+          enableBluesky: boolean
         }>(`${EnvironmentService.environment.baseUrl}/my-ui-options`)
       )
       this.followedHashtags = followsAndBlocks.followedHashtags
@@ -99,6 +103,8 @@ export class PostsService {
       this.blockedUserIds = followsAndBlocks.blockedUsers
       this.notYetAcceptedFollowedUsersIds = followsAndBlocks.notAcceptedFollows
       this.mutedUsers = followsAndBlocks.mutedUsers
+      this.enableBluesky = followsAndBlocks.enableBluesky
+      this.myFollowers = followsAndBlocks.myFollowers
       // Here we check user options
       if (followsAndBlocks.options?.length > 0) {
         // frontend options start with wafrn.
@@ -248,13 +254,24 @@ export class PostsService {
     }
     let allEmojis: Emoji[] = []
     this.emojiCollections.forEach((col) => (allEmojis = allEmojis.concat(col.emojis)))
+    const emoji = allEmojis.find((elem) => elem.name === emojiName || elem.id === emojiName) as Emoji
+    const emojiIsUnicode = emoji.url.length === 0
     this.emojiReacted.next({
-      type: 'react',
+      type: undo ? 'undo_react' : 'react',
       postId: postId,
-      emoji: allEmojis.find((elem) => elem.name === emojiName) as Emoji
+      emoji: emojiIsUnicode ? this.convertUnicodeEmoji(emoji) : emoji
     })
 
     return res
+  }
+
+  convertUnicodeEmoji(unicodeEmoji: Emoji): Emoji {
+    return {
+      id: '',
+      name: unicodeEmoji.id,
+      url: '',
+      external: unicodeEmoji.external
+    }
   }
 
   processPostNew(unlinked: unlinkedPosts): ProcessedPost[][] {

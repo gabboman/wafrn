@@ -1,6 +1,6 @@
 <div [ngClass]="{ 'post-contains-muted-words': !!fragment().muted_words_cw && !showSensitiveContent() }">
   @if (fragment().title) {
-    <h1 [innerText]="fragment().title && !showSensitiveContent()"></h1>
+    <h1 [innerText]="fragment().title"></h1>
   }
   @if (fragment().ask) {
     <app-single-ask [ask]="fragment().ask!"></app-single-ask>
@@ -46,7 +46,6 @@
         }
       </div>
     }
-
     @if (fragment().questionPoll) {
       <div>
         <app-poll [poll]="fragment().questionPoll!"></app-poll>
@@ -115,26 +114,27 @@
           which slows down the app when there are too many emojis
           solution: rework the emojis part so its processed only on load with all data there
           -->
-          <button
-            [disabled]="reactionLoading()"
-            [ngClass]="{
-              reacted: emoji.includesMe
-            }"
-            (click)="toggleEmojiReact(emoji)"
-            mat-raised-button
-            matTooltipTouchGestures="on"
-            [matTooltip]="emoji.tooltip"
-            class="emojireact-button"
-          >
-            @if (emoji.img) {
-              <img class="post-emoji" [src]="emoji.img" [alt]="emoji.content" />
-            } @else {
-              <span class="force-comic-sans"> {{ emoji.content }}</span>
-            }
-            @if (emoji.users.length > 0) {
-              <span> {{ emoji.users.length }}</span>
-            }
-          </button>
+          <div [matTooltip]="emoji.tooltip">
+            <button
+              [disabled]="userCannotReact()"
+              [ngClass]="{
+                reacted: emoji.includesMe
+              }"
+              (click)="toggleEmojiReact(emoji)"
+              mat-raised-button
+              matTooltipTouchGestures="on"
+              class="emojireact-button"
+            >
+              @if (emoji.img) {
+                <img class="post-emoji" [src]="emoji.img" [alt]="emoji.content" />
+              } @else {
+                <span class="force-comic-sans"> {{ emoji.content }}</span>
+              }
+              @if (emoji.users.length > 0) {
+                <span> {{ emoji.users.length }}</span>
+              }
+            </button>
+          </div>
         } @else {
           <div [matTooltip]="emoji.tooltip" class="external-emoji">
             <span>

@@ -1,4 +1,11 @@
-<input type="file" [accept]="config().formats" class="file-input" (change)="onFileSelected($event)" #fileUpload hidden />
+<input
+  type="file"
+  [accept]="config().formats"
+  class="file-input"
+  (change)="onFileSelected($event)"
+  #fileUpload
+  hidden
+/>
 
 @if (uploadStatus !== UploadStatus.Uploading) {
   <div class="file-upload">
@@ -9,7 +16,17 @@
 }
 
 @if (uploadStatus === UploadStatus.Uploading) {
-  <div class="flex mt-3 align-items-center justify-content-center w-full">
-    <mat-spinner color="accent" diameter="24"></mat-spinner>
-  </div>
+  <button
+    mat-button
+    class="flex align-items-center justify-content-center file-upload-spinner-wrapper"
+    (click)="cancelUpload()"
+  >
+    <mat-spinner
+      class="mat-spinner-outline"
+      color="accent"
+      diameter="24"
+      mode="determinate"
+      [value]="uploadProgress"
+    ></mat-spinner>
+  </button>
 }

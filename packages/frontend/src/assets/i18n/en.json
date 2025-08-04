@@ -1,6 +1,7 @@
 {
   "common": {
-    "commaSeparation": "Separated with commas"
+    "commaSeparation": "Separated with commas",
+    "characters": "characters"
   },
   "login": {
     "welcomeBack": "Welcome back!",
@@ -70,6 +71,14 @@
       "awaitingAproval": "Awaiting approval"
     }
   },
+  "theme-editor": {
+    "title": "Theme Editor",
+    "templateNote": "You can see a base template and some advice in the",
+    "themeTextLabel": "Edit your CSS theme",
+    "themeTextPlaceholder": "Write down your own css...",
+    "themeGuideName": "Theme Guide",
+    "updateButton": "Update Theme"
+  },
   "editor": {
     "inReplyTo": "In reply to:",
     "quoteButton": "Quote a woot",
@@ -83,7 +92,10 @@
     "wootQuoteConfirmButton": "Add woot as quote",
     "wootTextLabel": "Woot text",
     "wootTextPlaceholder": "Start writing...",
+    "bskyLengthWarning": "Text above 300 characters will be cut off and instead a link to wafrn will be shown",
+    "bskyLengthNotice": "This only affects Bluesky, currently only an approximation!",
     "altTextFieldLabel": "Image Description",
+    "altTextFieldLabelVideo": "Video Description",
     "altTextFieldPlaceholder": "Description. Please FILL THIS",
     "isNSFWToggle": "NSFW",
     "mediaCountMastodonWarning": "ATTENTION! ANY FURTHER MEDIA UPLOADED WILL NOT BE DISPLAYED ON MASTODON",

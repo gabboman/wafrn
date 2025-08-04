@@ -35,34 +35,43 @@ export default async function optimizeMedia(
       // eslint-disable-next-line no-unused-vars
       const videoPromise = await new Promise((resolve: any, reject: any) => {
         FfmpegCommand(inputPath).ffprobe(function (err: any, data: any) {
-          const stream = data.streams.find((stream: any) => stream.coded_height)
-          let horizontalResolution = stream ? stream.coded_width : 1280
-          let verticalResolution = stream ? stream.coded_height : 1280
-          horizontalResolution = Math.min(horizontalResolution, 1280)
-          verticalResolution = Math.min(verticalResolution, 1280)
-          const resolutionString =
-            horizontalResolution > verticalResolution ? `${horizontalResolution}x?` : `?x${verticalResolution}`
-          const videoCodec = stream.codec_name == 'h264' ? 'copy' : 'libx264'
-          const command = FfmpegCommand(inputPath)
-          if (videoCodec != 'copy') {
-            command.size(resolutionString)
-            command.videoBitrate('3500')
-          }
-          command
-            .audioCodec('aac')
-            .videoCodec(videoCodec)
-            .renice(20)
-            .save(outputPath)
-            .on('end', () => {
-              try {
-                fs.unlinkSync(inputPath)
-                logger.trace('media converted')
-                resolve()
-              } catch (exc) {
-                logger.warn(exc)
-                reject(exc)
+          if (data) {
+            {
+              const stream = data.streams.find((stream: any) => stream.coded_height)
+              let horizontalResolution = stream ? stream.coded_width : 1280
+              let verticalResolution = stream ? stream.coded_height : 1280
+              horizontalResolution = Math.min(horizontalResolution, 1280)
+              verticalResolution = Math.min(verticalResolution, 1280)
+              const resolutionString =
+                horizontalResolution > verticalResolution ? `${horizontalResolution}x?` : `?x${verticalResolution}`
+              const videoCodec = stream.codec_name == 'h264' ? 'copy' : 'libx264'
+              const command = FfmpegCommand(inputPath)
+              if (videoCodec != 'copy') {
+                command.size(resolutionString)
+                command.videoBitrate('3500')
               }
+              command
+                .audioCodec('aac')
+                .videoCodec(videoCodec)
+                .renice(20)
+                .save(outputPath)
+                .on('end', () => {
+                  try {
+                    fs.unlinkSync(inputPath)
+                    logger.trace('media converted')
+                    resolve()
+                  } catch (exc) {
+                    logger.warn(exc)
+                    reject(exc)
+                  }
+                })
+            }
+          } else {
+            logger.warn({
+              message: `Error on optimizemedia`,
+              error: err
             })
+          }
         })
       })
 

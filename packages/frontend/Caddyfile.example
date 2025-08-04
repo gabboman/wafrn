@@ -31,14 +31,15 @@ ${{CACHE_DOMAIN}} {
 }
 
 ${{DOMAIN_NAME}} {
+
+    header * {
+                ccess-Control-Allow-Origin: "*"
+                Service-Worker-Allowed: "/",
+                Cache-Control: no-cache, no-store, must-revalidate
+        }
     @api path /api* /fediverse* /contexts* /post* /blog* /.well-known*
 
     handle @api {
-        header {
-            Access-Control-Allow-Origin *
-            Content-Security-Policy default-src 'self' 'unsafe-inline' 'unsafe-eval' ${{DOMAIN_NAME}} ${{CACHE_DOMAIN}} ${{MEDIA_DOMAIN}}; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' ${{DOMAIN_NAME}}; img-src 'self' ${{CACHE_DOMAIN}} ${{MEDIA_DOMAIN}}; font-src 'self' ${{CACHE_DOMAIN}} ${{MEDIA_DOMAIN}}; object-src 'none'; frame-src 'none'; frame-ancestors 'none'; upgrade-insecure-requests; block-all-mixed-content
-        }
-
         reverse_proxy backend:9000
     }
 

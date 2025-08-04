@@ -3,8 +3,7 @@ FROM postgres:17
 RUN apt update && apt install postgresql-plpython3-17 -y && rm -rf /var/lib/apt/lists/*
 
 COPY pgwatch.sql /pgwatch.sql
-COPY postgresql.conf      /tmp/postgresql.conf
-COPY updateConfig.sh      /docker-entrypoint-initdb.d/_updateConfig.sh
+# COPY updateConfig.sh      /docker-entrypoint-initdb.d/_updateConfig.sh
 
 
 HEALTHCHECK --interval=10s --timeout=5s --start-period=5s --retries=5 CMD cat /initialised.txt && pg_isready -U $POSTGRES_USER -d postgres

@@ -12,7 +12,7 @@
         [class.emoji-active-collection]="this.collectionHas(-2)"
         (click)="this.toggleCollection(-2)"
       >
-        <span><fa-icon title="Recent emojis" [icon]="clockIcon"></fa-icon></span>
+        <span><fa-icon title="Recent emojis" [icon]="clockIcon" class="vertical-align-middle"></fa-icon></span>
       </button>
       @for (emojiCollection of emojiCollections; track $index) {
         @if (emojiCollection.emojis.length > 0) {

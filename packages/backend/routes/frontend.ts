@@ -1,6 +1,6 @@
 import express, { Request, Application, Response } from 'express'
 import { Op } from 'sequelize'
-import { Emoji, Media, Post, User, UserOptions, sequelize } from '../models/index.js'
+import { Emoji, FederatedHost, Media, Post, User, UserOptions, sequelize } from '../models/index.js'
 import fs from 'fs'
 import dompurify from 'isomorphic-dompurify'
 import { redisCache } from '../utils/redis.js'
@@ -12,6 +12,7 @@ import { getPostHtml } from '../utils/getPostHtml.js'
 import { logger } from '../utils/logger.js'
 import { Feed } from 'feed'
 import { completeEnvironment } from '../utils/backendOptions.js'
+import { getallBlockedServers } from '../utils/cacheGetters/getAllBlockedServers.js'
 
 const cacheOptions = {
   etag: false,
@@ -118,7 +119,7 @@ function frontend(app: Application) {
           posts = await blog.getPosts({
             order: [['createdAt', 'DESC']],
             limit: 10,
-            ...postSearchAttributes({ onlyArticles: rssOption.optionValue == '1' })
+            ...(await postSearchAttributes({ onlyArticles: rssOption.optionValue == '1' }))
           })
         }
         posts = posts.reverse()
@@ -282,7 +283,7 @@ function getBlogMicroformat(user: User): string {
           </div>`
 }
 
-const postSearchAttributes = function (options?: { id?: string; onlyArticles?: boolean }) {
+const postSearchAttributes = async function (options?: { id?: string; onlyArticles?: boolean }) {
   const result: any = {
     attributes: ['content', 'id', 'privacy', 'content_warning', 'createdAt'],
     where: {
@@ -301,6 +302,25 @@ const postSearchAttributes = function (options?: { id?: string; onlyArticles?: b
       {
         model: User,
         as: 'user',
+        required: true,
+        where: {
+          hideProfileNotLoggedIn: {
+            [Op.ne]: true
+          },
+          banned: {
+            [Op.ne]: true
+          },
+          [Op.or]: [
+            {
+              federatedHostId: {
+                [Op.notIn]: await getallBlockedServers()
+              }
+            },
+            {
+              federatedHostId: null
+            }
+          ]
+        },
         attributes: ['url', 'name', 'avatar', 'headerImage']
       },
       {
@@ -325,7 +345,7 @@ async function getPostSEOCache(
   const resData = await redisCache.get('postSeoCache:' + id)
   let res: any = { ...completeEnvironment.defaultSEOData }
   if (!resData) {
-    const post = await Post.findOne(postSearchAttributes({ id }))
+    const post = await Post.findOne(await postSearchAttributes({ id }))
     if (post && post.user) {
       res.title = `${post.user.url.startsWith('@') ? 'External' : 'Wafrn'} post by ${sanitizeStringForSEO(
         post.user.url
@@ -384,7 +404,7 @@ async function getBlogSEOCache(
         posts = await blog.getPosts({
           order: [['createdAt', 'DESC']],
           limit: 10,
-          ...postSearchAttributes({ onlyArticles: rssOption.optionValue == '1' })
+          ...(await postSearchAttributes({ onlyArticles: rssOption.optionValue == '1' }))
         })
       }
 

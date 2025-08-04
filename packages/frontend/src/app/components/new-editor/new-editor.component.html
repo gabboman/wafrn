@@ -26,7 +26,7 @@
       </button>
       @if (pollQuestions.length === 0) {
         <div matTooltip="{{ 'editor.uploadMediaTooltip' | translate }}">
-          <app-file-upload (fileUpload)="uploadImage($event)"></app-file-upload>
+          <app-file-upload (fileUpload)="uploadImage($event)" (uploadCanceled)="uploadCanceled()"></app-file-upload>
         </div>
       }
       <button
@@ -154,7 +154,7 @@
     }
 
     <form [formGroup]="postCreatorForm">
-      <mat-form-field class="w-full" appearance="outline">
+      <mat-form-field class="w-full mat-form-field-no-padding" appearance="outline">
         <mat-label>{{ 'editor.wootTextLabel' | translate }}</mat-label>
         <textarea
           id="postCreatorContent"
@@ -168,6 +168,26 @@
         ></textarea>
       </mat-form-field>
     </form>
+    <mat-progress-bar
+      *ngIf="postService.enableBluesky && (!data?.post || data?.post?.bskyUri) && privacy === 0"
+      mode="determinate"
+      [class.length-overflow]="calculateBskyPostLengthPercent() > 1"
+      [value]="calculateBskyPostLengthPercent() * 100"
+    >
+    </mat-progress-bar>
+    <div
+      class="post-length-note"
+      *ngIf="postService.enableBluesky && (!data?.post || data?.post?.bskyUri) && privacy === 0"
+    >
+      <div class="post-length-text">
+        <p>{{ calculateBskyPostLength() }}/300 {{ 'common.characters' | translate }}</p>
+        @if (calculateBskyPostLength() > 300) {
+          <p class="post-length-warning">{{ 'editor.bskyLengthWarning' | translate }}</p>
+        } @else {
+          <p class="post-length-warning">{{ 'editor.bskyLengthNotice' | translate }}</p>
+        }
+      </div>
+    </div>
 
     @if (false && uploadedMedias.length === 0) {
       <!-- Polls are not available yet :( -->
@@ -176,44 +196,51 @@
       </section>
     }
 
-    <section id="uploaded-media">
-      <div class="grid">
-        @for (media of uploadedMedias; track media; let i = $index) {
-          <div class="col-12 md:col-6 my-2 relative">
-            <app-media-preview [media]="media"></app-media-preview>
-            <mat-form-field class="w-full" appearance="outline">
-              <mat-label>{{ 'editor.altTextFieldLabel' | translate }}</mat-label>
-              <textarea
-                placeholder="{{ 'editor.altTextFieldPlaceholder' | translate }}"
-                [(ngModel)]="media.description"
-                matNativeControl
-                required
-                class="w-full"
-              ></textarea>
-            </mat-form-field>
-            <div>
-              <!-- Yknow, I don't think translating "NSFW" is needed but YOU NEVER KNOW -->
-              <mat-checkbox [(ngModel)]="media.NSFW" class="w-full">{{
-                'editor.isNSFWToggle' | translate
-              }}</mat-checkbox>
-              <button mat-mini-fab class="delete-btn" (click)="deleteImage(i)">
-                <fa-icon size="lg" [icon]="closeIcon"></fa-icon>
-              </button>
+    @if (uploadedMedias.length > 0) {
+      <section id="uploaded-media" [class.mb-3]="allDescriptionsFilled()">
+        <div class="grid gap-3">
+          @for (media of uploadedMedias; track media; let i = $index) {
+            <div class="col-12 md:col relative">
+              <app-media-preview [media]="media"></app-media-preview>
+              <mat-form-field class="w-full mat-form-field-no-padding mb-1" appearance="outline">
+                @if (mediaIsVideo(media)) {
+                  <mat-label>{{ 'editor.altTextFieldLabelVideo' | translate }}</mat-label>
+                } @else {
+                  <mat-label>{{ 'editor.altTextFieldLabel' | translate }}</mat-label>
+                }
+                <textarea
+                  placeholder="{{ 'editor.altTextFieldPlaceholder' | translate }}"
+                  [(ngModel)]="media.description"
+                  matNativeControl
+                  required
+                  class="w-full"
+                ></textarea>
+              </mat-form-field>
+              <div>
+                <!-- Yknow, I don't think translating "NSFW" is needed but YOU NEVER KNOW -->
+                <mat-checkbox [(ngModel)]="media.NSFW" class="w-full">{{
+                  'editor.isNSFWToggle' | translate
+                }}</mat-checkbox>
+
+                <button mat-stroked-button class="delete-btn mat-circle-button" (click)="deleteImage(i)">
+                  <fa-icon size="lg" [icon]="closeIcon"></fa-icon>
+                </button>
+              </div>
             </div>
-          </div>
+          }
+        </div>
+        @if (uploadedMedias.length >= 4) {
+          <p class="my-2">
+            {{ 'editor.mediaCountMastodonWarning' | translate }}
+          </p>
         }
-      </div>
-      @if (uploadedMedias.length >= 4) {
-        <p class="my-2">
-          {{ 'editor.mediaCountMastodonWarning' | translate }}
-        </p>
-      }
-      @if (!allDescriptionsFilled()) {
-        <p class="my-2">
-          {{ 'editor.altTextWarning' | translate }}
-        </p>
-      }
-    </section>
+        @if (!allDescriptionsFilled()) {
+          <p class="my-2">
+            {{ 'editor.altTextWarning' | translate }}
+          </p>
+        }
+      </section>
+    }
 
     <section id="tags" class="w-full flex-row">
       <mat-form-field class="w-full" appearance="outline">

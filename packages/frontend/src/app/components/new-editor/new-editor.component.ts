@@ -1,4 +1,4 @@
-import { Location } from '@angular/common';
+import { CommonModule, Location } from '@angular/common'
 import { Component, HostListener, inject, OnDestroy, ViewChild } from '@angular/core'
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms'
 import { MatButtonModule } from '@angular/material/button'
@@ -54,10 +54,11 @@ import { EmojiPickerComponent } from '../emoji-picker/emoji-picker.component'
 import { Emoji } from 'src/app/interfaces/emoji'
 import { Dialog } from '@angular/cdk/dialog'
 import { Router } from '@angular/router'
-
+import { MatProgressBarModule } from '@angular/material/progress-bar'
 @Component({
   selector: 'app-new-editor',
   imports: [
+    CommonModule,
     FormsModule,
     ReactiveFormsModule,
     MatCardModule,
@@ -78,8 +79,9 @@ import { Router } from '@angular/router'
     InfoCardComponent,
     TranslateModule,
     MatBadgeModule,
-    MatChipsModule
-],
+    MatChipsModule,
+    MatProgressBarModule
+  ],
   templateUrl: './new-editor.component.html',
   styleUrl: './new-editor.component.scss'
 })
@@ -141,12 +143,14 @@ export class NewEditorComponent implements OnDestroy {
   mentionedUsers: SimplifiedUser[] = []
   showMentionedUsersList = true
 
+  parser = new DOMParser()
+
   constructor(
     private messages: MessageService,
     private dashboardService: DashboardService,
     private editorService: EditorService,
     private loginService: LoginService,
-    private postService: PostsService,
+    public postService: PostsService,
     private jwtService: JwtService,
     private router: Router,
     private location: Location
@@ -263,6 +267,9 @@ export class NewEditorComponent implements OnDestroy {
   }
 
   getPrivacyIcon() {
+    if (Number.isNaN(this.privacy)) {
+      this.privacy = 0
+    }
     const res = this.privacyOptions.find((elem) => elem.level === this.privacy)?.icon as IconDefinition
     return res
   }
@@ -293,6 +300,13 @@ export class NewEditorComponent implements OnDestroy {
       })
     }
     this.disableImageUploadButton = false
+  }
+
+  async uploadCanceled() {
+    this.messages.add({
+      severity: 'info',
+      summary: 'Upload canceled'
+    })
   }
 
   async loadQuote() {
@@ -439,11 +453,9 @@ export class NewEditorComponent implements OnDestroy {
       this.tags = ''
       if (this.data?.ask) {
         // super dirty but we take you to your homepage after an ask
-        this.router.navigate(["/"])
-      }
-      else {
-      this.closeEditor()
-
+        this.router.navigate(['/'])
+      } else {
+        this.closeEditor()
       }
     }
     this.postBeingSubmitted = false
@@ -550,5 +562,55 @@ export class NewEditorComponent implements OnDestroy {
         )
       }
     })
+  }
+
+  calculateBskyPostLength() {
+    // TODO do things in a better way
+    const cwText = this.contentWarning.length > 0 ? `[${this.contentWarning}]\n` : ''
+    const tagText =
+      this.tags.length > 0
+        ? `\n${this.tags
+            .split(',')
+            .map((elem) => '#' + elem)
+            .join(' ')}`
+        : ''
+    const askText = this.data?.ask
+      ? (this.data.ask.user ? this.data.ask.user.url : 'anonymous') + ' asked ' + this.data.ask.question + '\n'
+      : ''
+    const fediQuoteText = this.data?.quote && !this.data.quote.bskyUri ? '\nRE: ' + 'link20extracharacterssssss' : ''
+    const inputText = `${askText}${cwText}${this.removeMarkdown(this.postCreatorForm.controls['content'].value as string)}${tagText}${fediQuoteText}`
+    return inputText.length
+  }
+
+  calculateBskyPostLengthPercent() {
+    return this.calculateBskyPostLength() / 300 // max characters
+  }
+
+  removeMarkdown(text: string) {
+    return (
+      text
+        // Remove setext-style headers
+        .replaceAll(/^[=\-]{2,}\s*$/g, '')
+        // Remove footnotes?
+        .replaceAll(/\[\^.+?\](\: .*?$)?/g, '')
+        .replaceAll(/\s{0,2}\[.*?\]: .*?$/g, '')
+        // Remove images
+        .replaceAll(/\!\[(.*?)\][\[\(].*?[\]\)]/g, '')
+        // Remove blockquotes
+        .replaceAll(/^(\n)?\s{0,3}>\s?/gm, '$1')
+        // Remove reference-style links?
+        .replaceAll(/^\s{1,2}\[(.*?)\]: (\S+)( ".*?")?\s*$/g, '')
+        // Remove atx-style headers
+        .replaceAll(/^(\n)?\s{0,}#{1,6}\s*( (.+))? +#+$|^(\n)?\s{0,}#{1,6}\s*( (.+))?$/gm, '$1$3$4$6')
+        // Remove code blocks
+        .replaceAll(/(`{3,})(.*?)\1/gms, '$2')
+        .replaceAll(/(`{3,})(md)(.*?)\1/gms, '$3')
+        // Remove inline code
+        .replaceAll(/`(.+?)`/gs, '$1')
+    )
+  }
+
+  mediaIsVideo(media: WafrnMedia) {
+    return media.url.endsWith('mp4') // technology
   }
 }
