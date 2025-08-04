@@ -2,7 +2,7 @@
 FROM node:24-alpine AS build
 
 # include important binaries
-RUN apk add --no-cache perl curl tini bash
+RUN apk add --no-cache perl curl tini bash ffmpeg
 
 # set working directory
 WORKDIR /wafrn
@@ -43,6 +43,8 @@ ARG SMTP_FROM
 
 ARG ENABLE_BSKY
 ARG PDS_DOMAIN_NAME
+ARG PDS_JWT_SECRET
+ARG PDS_ADMIN_PASSWORD
 
 ARG LOG_SQL_QUERIES
 ARG UPLOAD_LIMIT
