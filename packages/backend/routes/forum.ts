@@ -2,7 +2,15 @@ import optionalAuthentication from '../utils/optionalAuthentication.js'
 import checkIpBlocked from '../utils/checkIpBlocked.js'
 import AuthorizedRequest from '../interfaces/authorizedRequest.js'
 import { Application, Request, Response } from 'express'
-import { Post, QuestionPoll, QuestionPollAnswer, QuestionPollQuestion, User, sequelize } from '../models/index.js'
+import {
+  Post,
+  QuestionPoll,
+  QuestionPollAnswer,
+  QuestionPollQuestion,
+  ServerBlock,
+  User,
+  sequelize
+} from '../models/index.js'
 import { Model, Op, QueryTypes } from 'sequelize'
 import {
   addPostCanInteract,
@@ -49,9 +57,20 @@ export default function forumRoutes(app: Application) {
               },
               [Op.or]: [
                 {
-                  federatedHostId: {
-                    [Op.notIn]: await getallBlockedServers()
-                  }
+                  [Op.and]: [
+                    {
+                      federatedHostId: {
+                        [Op.notIn]: await getallBlockedServers()
+                      }
+                    },
+                    {
+                      federatedHostId: {
+                        [Op.notIn]: (
+                          await ServerBlock.findAll({ where: { userBlockerId: userId } })
+                        ).map((elem) => elem.blockedServerId)
+                      }
+                    }
+                  ]
                 },
                 {
                   federatedHostId: {

@@ -13,6 +13,7 @@ import {
   PostTag,
   PushNotificationToken,
   Quotes,
+  ServerBlock,
   UnifiedPushData,
   User,
   UserEmojiRelation,
@@ -27,6 +28,7 @@ import { forceUpdateLastActive } from '../utils/forceUpdateLastActive.js'
 import { logger } from '../utils/logger.js'
 import { UserAttributes } from '../models/user.js'
 import { completeEnvironment } from '../utils/backendOptions.js'
+import { getallBlockedServers } from '../utils/cacheGetters/getAllBlockedServers.js'
 
 function notificationRoutes(app: Application) {
   app.get(
@@ -59,15 +61,48 @@ function notificationRoutes(app: Application) {
             }
           ]
         },
-        userId: {
-          [Op.notIn]: blockedUsers.concat([userId])
-        },
         notifiedUserId: userId,
         createdAt: {
           [Op.lt]: scrollDate
         }
       }
       const notifications = await Notification.findAll({
+        include: [
+          {
+            model: User,
+            as: 'user',
+            required: true,
+            where: {
+              id: {
+                [Op.notIn]: blockedUsers.concat([userId])
+              },
+              banned: false,
+              [Op.or]: [
+                {
+                  [Op.and]: [
+                    {
+                      federatedHostId: {
+                        [Op.notIn]: await getallBlockedServers()
+                      }
+                    },
+                    {
+                      federatedHostId: {
+                        [Op.notIn]: (
+                          await ServerBlock.findAll({ where: { userBlockerId: userId } })
+                        ).map((elem) => elem.blockedServerId)
+                      }
+                    }
+                  ]
+                },
+                {
+                  federatedHostId: {
+                    [Op.eq]: null
+                  }
+                }
+              ]
+            }
+          }
+        ],
         where: whereObject,
         order: [['createdAt', 'DESC']],
         limit: 20
@@ -200,6 +235,42 @@ function notificationRoutes(app: Application) {
     const startCountDate = user?.lastTimeNotificationsCheck
     const mutedPostIds = (await getMutedPosts(userId)).concat(await getMutedPosts(userId, true))
     const notificationsCount = await Notification.count({
+      include: [
+        {
+          model: User,
+          as: 'user',
+          required: true,
+          where: {
+            id: {
+              [Op.notIn]: blockedUsers.concat([userId])
+            },
+            banned: false,
+            [Op.or]: [
+              {
+                [Op.and]: [
+                  {
+                    federatedHostId: {
+                      [Op.notIn]: await getallBlockedServers()
+                    }
+                  },
+                  {
+                    federatedHostId: {
+                      [Op.notIn]: (
+                        await ServerBlock.findAll({ where: { userBlockerId: userId } })
+                      ).map((elem) => elem.blockedServerId)
+                    }
+                  }
+                ]
+              },
+              {
+                federatedHostId: {
+                  [Op.eq]: null
+                }
+              }
+            ]
+          }
+        }
+      ],
       where: {
         notifiedUserId: userId,
         [Op.or]: [await getNotificationOptions(userId)],

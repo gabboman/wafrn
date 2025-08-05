@@ -14,6 +14,7 @@ import {
   QuestionPollAnswer,
   QuestionPollQuestion,
   Quotes,
+  ServerBlock,
   User,
   UserBookmarkedPosts,
   UserEmojiRelation,
@@ -296,13 +297,17 @@ async function getUnjointedPosts(postIdsInput: string[], posterId: string, doNot
   const bookmarks = await getBookmarks(postIds, posterId)
   userIds = userIds.concat(likes.map((like: any) => like.userId))
   const users = User.findAll({
-    attributes: ['url', 'avatar', 'id', 'name', 'remoteId', 'banned', 'bskyDid'],
+    attributes: ['url', 'avatar', 'id', 'name', 'remoteId', 'banned', 'bskyDid', 'federatedHostId'],
     where: {
       id: {
         [Op.in]: userIds
       }
     }
   })
+  const usersMap: Map<string, User> = new Map()
+  for (const usr of await users) {
+    usersMap.set(usr.id, usr)
+  }
   const postWithNotes = getPosstGroupDetails(posts)
   await Promise.all([emojis, users, polls, medias, tags, postWithNotes])
   const hostsIds = (await users).filter((elem) => elem.federatedHostId).map((elem) => elem.federatedHostId)
@@ -357,7 +362,9 @@ async function getUnjointedPosts(postIdsInput: string[], posterId: string, doNot
   }
 
   const finalRewootIds = rewootedPosts.filter((r: any) => !invalidRewoots.includes(r.id)).map((r: any) => r.parentId)
-
+  const blockedServers = (await ServerBlock.findAll({ where: { userBlockerId: posterId } })).map(
+    (elem) => elem.blockedServerId
+  )
   const postsMentioningUser: string[] = mentions.postMentionRelation
     .filter((mention: any) => mention.userMentioned === posterId)
     .map((mention: any) => mention.post)
@@ -374,8 +381,10 @@ async function getUnjointedPosts(postIdsInput: string[], posterId: string, doNot
     const validPrivacy = [Privacy.Public, Privacy.LocalOnly, Privacy.Unlisted].includes(post.privacy)
     const userFollowsPoster = usersFollowedByPoster.includes(post.userId) && post.privacy === Privacy.FollowersOnly
     const userIsMentioned = postsMentioningUser.includes(post.id)
+    const posterIsInBlockedServer = blockedServers.includes(usersMap.get(post.userId)?.federatedHostId as string)
     return (
       !bannedUserIds.includes(post.userId) &&
+      !posterIsInBlockedServer &&
       (postIsPostedByUser || validPrivacy || userFollowsPoster || userIsMentioned || isReblog)
     )
   })
@@ -409,7 +418,7 @@ async function getUnjointedPosts(postIdsInput: string[], posterId: string, doNot
     bookmarks: bookmarks,
     quotes: quotesFiltered.filter((elem) => !!elem),
     quotedPosts: (await quotedPosts)
-      .map((elem: any) => filterPost(elem, postIdsToFullySend), doNotFullyHide)
+      .map((elem: any) => filterPost(elem, postIdsToFullySend, doNotFullyHide, blockedServers))
       .filter((elem) => !!elem),
     asks: asks.filter((elem) => !!elem)
   }
