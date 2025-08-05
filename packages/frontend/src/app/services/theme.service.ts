@@ -1,22 +1,192 @@
-import { Injectable } from '@angular/core'
+import { Injectable, signal, WritableSignal } from '@angular/core'
 import { LoginService } from './login.service'
 import { HttpClient } from '@angular/common/http'
-import { UtilsService } from './utils.service'
 import { firstValueFrom } from 'rxjs'
 import { EnvironmentService } from './environment.service'
+
+// !! NOTE FOR ADDING THEMES !! //
+//
+// If you want to add a theme, you must:
+// - Update the list colorSchemeVariants
+// - Fill out its colorSchemeData (name data and if the theme forces light/dark) entry
+// - Add the theme as a CSS file in `/assets/themes/name.css`
+// - Add a link file to it in this component's HTML file
+//
+// Once you do this, the theme is now usable. To actually be able to select it,
+// navigate to color-scheme-switcher.component.ts and add it under one of the theme lists.
+
+// !! NOTE FOR ADDING MODES !! //
+// (like top toolbar mode)
+
+const colorSchemeVariants = [
+  'default',
+  'tan',
+  'green',
+  'gold',
+  'red',
+  'pink',
+  'purple',
+  'blue',
+  'rizzler',
+  'contrastWater',
+  'wafrn98',
+  'aqua',
+  'unwafrn',
+  'wafrnverse',
+  'dracula',
+  'fan',
+  'catppuccin_frappe',
+  'catppuccin_latte',
+  'catppuccin_macchiato',
+  'catppuccin_mocha'
+] as const
+type ColorSchemeTuple = typeof colorSchemeVariants
+export type ColorScheme = ColorSchemeTuple[number]
+
+type ColorSchemeData = {
+  [key in ColorScheme]: {
+    name: string
+    compatibility: 'light' | 'dark' | 'both'
+    autoReset?: boolean
+  }
+}
+export const colorSchemeData: ColorSchemeData = {
+  default: { name: 'Default', compatibility: 'both' },
+  tan: { name: 'Tan', compatibility: 'both' },
+  green: { name: 'Green', compatibility: 'both' },
+  gold: { name: 'Gold', compatibility: 'both' },
+  red: { name: 'Red', compatibility: 'both' },
+  pink: { name: 'Pink', compatibility: 'both' },
+  purple: { name: 'Purple', compatibility: 'both' },
+  blue: { name: 'Blue', compatibility: 'both' },
+  rizzler: { name: 'Rizzler', compatibility: 'both', autoReset: true },
+  contrastWater: { name: 'Contrast Water', compatibility: 'both', autoReset: true },
+  wafrn98: { name: 'Wafrn98', compatibility: 'dark' },
+  aqua: { name: 'Aqua', compatibility: 'both' },
+  unwafrn: { name: 'Unwafrn', compatibility: 'dark' },
+  wafrnverse: { name: 'Wafrnverse', compatibility: 'both' },
+  dracula: { name: 'Dracula', compatibility: 'both' },
+  fan: { name: 'Fan', compatibility: 'both' },
+  catppuccin_frappe: { name: 'Catppuccin Frappe', compatibility: 'both' },
+  catppuccin_latte: { name: 'Catppuccin Latte', compatibility: 'both' },
+  catppuccin_macchiato: { name: 'Catppuccin Macchiato', compatibility: 'both' },
+  catppuccin_mocha: { name: 'Catppuccin Mocha', compatibility: 'both' }
+}
+
+const colorThemeVariants = ['light', 'dark', 'auto'] as const
+type ColorThemeTuple = typeof colorThemeVariants
+export type ColorTheme = ColorThemeTuple[number]
+
+type ColorThemeData = { [key in ColorTheme]: string }
+export const colorThemeData: ColorThemeData = {
+  light: 'Light',
+  dark: 'Dark',
+  auto: 'Auto'
+}
+
+// Verifying that a theme/scheme is real
+function isColorTheme(value: string): value is ColorTheme {
+  return colorThemeVariants.includes(value as ColorTheme)
+}
+
+function isColorScheme(value: string): value is ColorScheme {
+  return colorSchemeVariants.includes(value as ColorScheme)
+}
+
+// More styles!
+const additionalStyleModeVariants = ['centerLayout', 'topToolbar', 'horizontalMenu'] as const
+type AdditionalStyleModeTuple = typeof additionalStyleModeVariants
+export type AdditionalStyleMode = AdditionalStyleModeTuple[number]
+
+type AdditionalStyleModeData = {
+  [key in AdditionalStyleMode]: {
+    name: string
+  }
+}
+
+export const additionalStyleModesData: AdditionalStyleModeData = {
+  centerLayout: { name: 'Center Layout' },
+  topToolbar: { name: 'Top Toolbar' },
+  horizontalMenu: { name: 'Horizontal Menu' }
+}
 
 @Injectable({
   providedIn: 'root'
 })
 export class ThemeService {
+  public colorScheme = signal<ColorScheme>('default')
+  public theme = signal<ColorTheme>('auto')
+  public additionalStyleModes: { [key in AdditionalStyleMode]: WritableSignal<boolean> } = {
+    centerLayout: signal(false),
+    topToolbar: signal(false),
+    horizontalMenu: signal(false)
+  }
+
   constructor(
     private loginService: LoginService,
-    private http: HttpClient,
-    private utils: UtilsService
-  ) { }
+    private http: HttpClient
+  ) {
+    const savedScheme = localStorage?.getItem('colorScheme') ?? ''
+    if (isColorScheme(savedScheme)) this.setColorScheme(savedScheme)
 
+    const savedTheme = localStorage?.getItem('theme') ?? ''
+    if (isColorTheme(savedTheme)) this.setTheme(savedTheme)
+
+    Object.entries(this.additionalStyleModes).forEach(([mode, value]) => {
+      const savedMode = localStorage?.getItem(mode) ?? 'false'
+      value.set(savedMode === 'true')
+    })
+
+    // Fan theme fallback for old browsers
+    const chromeVersionForCompatibilityReasons = this.getChromeVersion()
+    if (chromeVersionForCompatibilityReasons && chromeVersionForCompatibilityReasons < 122) {
+      // we force the fan theme on old browsers
+      this.setColorScheme('fan', true)
+    }
+  }
+
+  public async setColorScheme(scheme: ColorScheme, doNotSavePreference = false) {
+    this.colorScheme.set(scheme)
+    localStorage?.setItem('colorScheme', scheme)
+
+    // Forced theme
+    if (colorSchemeData[scheme]?.compatibility === 'light') await this.setTheme('light')
+    if (colorSchemeData[scheme]?.compatibility === 'dark') await this.setTheme('dark')
+
+    // User settings
+    if (doNotSavePreference) return
+    await this.loginService.updateUserOptions([{ name: 'wafrn.colorScheme', value: scheme }])
+  }
+
+  public async setTheme(theme: ColorTheme, doNotSavePreference = false) {
+    this.theme.set(theme)
+    document.documentElement.setAttribute('data-theme', theme)
+    localStorage?.setItem('theme', theme)
+
+    // User settings
+    if (doNotSavePreference) return
+    await this.loginService.updateUserOptions([{ name: 'wafrn.theme', value: theme }])
+  }
+
+  public async toggleAdditionalStyleMode(mode: AdditionalStyleMode, doNotSavePreference = false) {
+    this.additionalStyleModes[mode].update((val) => !val)
+    const modeEnabled = this.additionalStyleModes[mode]().toString()
+    localStorage?.setItem(mode, modeEnabled.toString())
+
+    // User settings
+    if (doNotSavePreference) return
+    await this.loginService.updateUserOptions([{ name: `wafrn.${mode}`, value: modeEnabled }])
+  }
+
+  getChromeVersion() {
+    var raw = navigator.userAgent.match(/Chrom(e|ium)\/([0-9]+)\./)
+
+    return raw ? parseInt(raw[2], 10) : false
+  }
+
+  // CUSTOM CSS STUFF
   setMyTheme() {
-    this.setTheme(this.loginService.getLoggedUserUUID())
+    this.setCustomCSS(this.loginService.getLoggedUserUUID())
   }
 
   updateTheme(newTheme: string) {
@@ -29,7 +199,7 @@ export class ThemeService {
     try {
       const storedResponse = localStorage.getItem('acceptsCustomThemes')
       res = storedResponse ? parseInt(storedResponse) : 0
-    } catch (error) { }
+    } catch (error) {}
     return res
   }
 
@@ -44,7 +214,7 @@ export class ThemeService {
       if (response && response.length > 0) {
         res = true
       }
-    } catch (error) { }
+    } catch (error) {}
     return res
   }
 
@@ -59,14 +229,14 @@ export class ThemeService {
       if (themeResponse && themeResponse.length > 0) {
         res = themeResponse
       }
-    } catch (error) { }
+    } catch (error) {}
     return res
   }
 
-  setTheme(themeToSet: string) {
+  setCustomCSS(themeToSet: string) {
     try {
       this.setStyle('customUserTheme', `${EnvironmentService.environment.baseUrl}/uploads/themes/${themeToSet}.css`)
-    } catch (error) { }
+    } catch (error) {}
   }
 
   private getLinkElementForKey(key: string) {

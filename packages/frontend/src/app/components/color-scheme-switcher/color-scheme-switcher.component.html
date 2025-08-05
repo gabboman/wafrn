@@ -5,7 +5,7 @@
   title="Change color scheme"
   aria-label="Change color scheme"
   [ngClass]="iconClass"
-  matTooltip="{{ themeText() }} mode"
+  matTooltip="{{ colorThemeData[theme()] }} mode"
 >
   <svg
     xmlns="http://www.w3.org/2000/svg"
@@ -35,9 +35,16 @@
   </svg>
 </button>
 <mat-menu #themeMenu="matMenu">
-  <button class="theme-selector-button" mat-menu-item (click)="setTheme('light', true)">Light</button>
-  <button class="theme-selector-button" mat-menu-item (click)="setTheme('dark', true)">Dark</button>
-  <button class="theme-selector-button" mat-menu-item (click)="setTheme('auto', true)">Auto</button>
+  @for (themeItem of colorThemeOrder; track $index) {
+    <button
+      class="theme-selector-button"
+      [class.selected]="theme() === themeItem[0]"
+      mat-menu-item
+      (click)="setTheme(themeItem[0])"
+    >
+      {{ themeItem[1] }}
+    </button>
+  }
 </mat-menu>
 
 <button
@@ -46,7 +53,7 @@
   class="theme-toggle"
   title="Toggle theme"
   aria-label="Toggle theme"
-  matTooltip="{{ colorSchemeText() }} theme"
+  matTooltip="{{ colorSchemeData[colorScheme()].name }} theme"
 >
   <fa-icon [icon]="paletteIcon"></fa-icon>
 </button>
@@ -57,21 +64,14 @@
   <button mat-menu-item [matMenuTriggerFor]="programmerThemesMenu">Programmer's favourites</button>
 
   <hr class="my-0" />
-  <button mat-menu-item class="pl-1">
-    <mat-checkbox [checked]="centerLayoutMode" (click)="updateCenterLayout(true)"
-      ><span class="theme-selector-button">Center layout</span></mat-checkbox
-    >
-  </button>
-  <button mat-menu-item class="pl-1">
-    <mat-checkbox [checked]="topToolbarMode" (click)="updateTopToolbar(true)"
-      ><span class="theme-selector-button">Top Toolbar</span></mat-checkbox
-    >
-  </button>
-  <button mat-menu-item class="pl-1">
-    <mat-checkbox [checked]="horizontalMenuMode" (click)="updateHorizontalMenu(true)"
-      ><span class="theme-selector-button">Horizontal Menu</span></mat-checkbox
-    >
-  </button>
+
+  @for (entry of additionalStyleModesOrder; track $index) {
+    <button mat-menu-item class="pl-1">
+      <mat-checkbox [checked]="entry[1]()" (click)="toggleAdditionalStyleMode(entry[0])"
+        ><span class="theme-selector-button">{{ additionalStyleModesData[entry[0]].name }}</span></mat-checkbox
+      >
+    </button>
+  }
 </mat-menu>
 
 <mat-menu #defaultThemesMenu="matMenu">
@@ -79,10 +79,10 @@
     <button
       class="theme-selector-button"
       mat-menu-item
-      (click)="setColorScheme(variant, true)"
-      [ngClass]="{ selected: variant == colorScheme() }"
+      (click)="setColorScheme(variant)"
+      [class.selected]="colorScheme() === variant"
     >
-      {{ variant | titlecase }}
+      {{ colorSchemeData[variant].name }}
     </button>
   }
 </mat-menu>
@@ -92,10 +92,10 @@
     <button
       class="theme-selector-button"
       mat-menu-item
-      (click)="setColorScheme(variant, true)"
-      [ngClass]="{ selected: variant == colorScheme() }"
+      (click)="setColorScheme(variant)"
+      [class.selected]="colorScheme() === variant"
     >
-      {{ variant | titlecase }}
+      {{ colorSchemeData[variant].name }}
     </button>
   }
 </mat-menu>
@@ -105,10 +105,10 @@
     <button
       class="theme-selector-button"
       mat-menu-item
-      (click)="setColorScheme(variant, true)"
-      [ngClass]="{ selected: variant == colorScheme() }"
+      (click)="setColorScheme(variant)"
+      [class.selected]="colorScheme() === variant"
     >
-      {{ variant | titlecase }}
+      {{ colorSchemeData[variant].name }}
     </button>
   }
 </mat-menu>
@@ -118,78 +118,10 @@
     <button
       class="theme-selector-button"
       mat-menu-item
-      (click)="setColorScheme(variant, true)"
-      [ngClass]="{ selected: variant == colorScheme() }"
+      (click)="setColorScheme(variant)"
+      [class.selected]="colorScheme() === variant"
     >
-      {{ variant | titlecase }}
+      {{ colorSchemeData[variant].name }}
     </button>
   }
 </mat-menu>
-
-@switch (colorScheme()) {
-  @case ('default') {}
-  @case ('tan') {
-    <link href="/assets/themes/tan.css" rel="stylesheet" />
-  }
-  @case ('green') {
-    <link href="/assets/themes/green.css" rel="stylesheet" />
-  }
-  @case ('gold') {
-    <link href="/assets/themes/gold.css" rel="stylesheet" />
-  }
-  @case ('red') {
-    <link href="/assets/themes/red.css" rel="stylesheet" />
-  }
-  @case ('pink') {
-    <link href="/assets/themes/pink.css" rel="stylesheet" />
-  }
-  @case ('purple') {
-    <link href="/assets/themes/purple.css" rel="stylesheet" />
-  }
-  @case ('blue') {
-    <link href="/assets/themes/blue.css" rel="stylesheet" />
-  }
-  @case ('rizzler') {
-    <link href="/assets/themes/rizzler.css" rel="stylesheet" />
-  }
-  @case ('contrastWater') {
-    <link href="/assets/themes/contrastWater.css" rel="stylesheet" />
-  }
-  @case ('wafrn98') {
-    <link href="/assets/themes/wafrn98.css" rel="stylesheet" />
-  }
-  @case ('aqua') {
-    <link href="/assets/themes/aqua.css" rel="stylesheet" />
-  }
-  @case ('unwafrn') {
-    <link href="/assets/themes/unwafrn.css" rel="stylesheet" />
-  }
-  @case ('wafrnverse') {
-    <link href="/assets/themes/wafrnverse.css" rel="stylesheet" />
-  }
-  @case ('dracula') {
-    <link href="/assets/themes/dracula.css" rel="stylesheet" />
-  }
-  @case ('fan') {
-    <link href="/assets/themes/fan.css" rel="stylesheet" />
-  }
-  @case ('catppuccin_frappe') {
-    <link href="/assets/themes/catppuccin_frappe.css" rel="stylesheet" />
-  }
-  @case ('catppuccin_latte') {
-    <link href="/assets/themes/catppuccin_latte.css" rel="stylesheet" />
-  }
-  @case ('catppuccin_macchiato') {
-    <link href="/assets/themes/catppuccin_macchiato.css" rel="stylesheet" />
-  }
-  @case ('catppuccin_mocha') {
-    <link href="/assets/themes/catppuccin_mocha.css" rel="stylesheet" />
-  }
-}
-
-@if (centerLayoutMode) {
-  <link href="/assets/themes/center-column.css" rel="stylesheet" />
-}
-@if (topToolbarMode) {
-  <link href="/assets/themes/top-toolbar.css" rel="stylesheet" />
-}

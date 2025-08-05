@@ -11,6 +11,7 @@ import { MediaService } from 'src/app/services/media.service'
 import { MessageService } from 'src/app/services/message.service'
 import { ThemeService } from 'src/app/services/theme.service'
 import { faPlus, faXmark } from '@fortawesome/free-solid-svg-icons'
+import { ColorSchemeSwitcherComponent } from 'src/app/components/color-scheme-switcher/color-scheme-switcher.component'
 
 @Component({
   selector: 'app-edit-profile',
@@ -98,7 +99,7 @@ export class EditProfileComponent implements OnInit {
     private messages: MessageService,
     private themeService: ThemeService
   ) {
-    this.themeService.setTheme('')
+    this.themeService.setCustomCSS('')
   }
 
   ngOnInit(): void {
