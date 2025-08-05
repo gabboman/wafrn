@@ -73,6 +73,40 @@ export const colorSchemeData: ColorSchemeData = {
   catppuccin_mocha: { name: 'Catppuccin Mocha', compatibility: 'both' }
 }
 
+const colorSchemeGroupVariants = [
+  'defaultThemes',
+  'computeryThemes',
+  'experimentalThemes',
+  'programmersThemes'
+] as const
+type ColorSchemeGroupTuple = typeof colorSchemeGroupVariants
+export type ColorSchemeGroup = ColorSchemeGroupTuple[number]
+export type ColorSchemeGroupList = {
+  [key in ColorSchemeGroup]: {
+    name: string
+    entries: ColorScheme[]
+  }
+}
+
+export const colorSchemeGroupList: ColorSchemeGroupList = {
+  defaultThemes: {
+    name: 'Default theme variants',
+    entries: ['default', 'tan', 'green', 'gold', 'red', 'pink', 'purple', 'blue']
+  },
+  computeryThemes: {
+    name: 'Computery themes',
+    entries: ['unwafrn', 'wafrnverse', 'wafrn98', 'aqua', 'fan']
+  },
+  experimentalThemes: {
+    name: 'Experimental themes',
+    entries: ['rizzler', 'contrastWater']
+  },
+  programmersThemes: {
+    name: "Programmer's Favourites",
+    entries: ['dracula', 'catppuccin_latte', 'catppuccin_frappe', 'catppuccin_macchiato', 'catppuccin_mocha']
+  }
+}
+
 const colorThemeVariants = ['light', 'dark', 'auto'] as const
 type ColorThemeTuple = typeof colorThemeVariants
 export type ColorTheme = ColorThemeTuple[number]

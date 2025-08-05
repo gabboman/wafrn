@@ -35,14 +35,14 @@
   </svg>
 </button>
 <mat-menu #themeMenu="matMenu">
-  @for (themeItem of colorThemeOrder; track $index) {
+  @for (entry of colorThemeData | keyvalue: null; track entry.key) {
     <button
       class="theme-selector-button"
-      [class.selected]="theme() === themeItem[0]"
+      [class.selected]="theme() === entry.key"
       mat-menu-item
-      (click)="setTheme(themeItem[0])"
+      (click)="setTheme(entry.key)"
     >
-      {{ themeItem[1] }}
+      {{ entry.value }}
     </button>
   }
 </mat-menu>
@@ -58,70 +58,32 @@
   <fa-icon [icon]="paletteIcon"></fa-icon>
 </button>
 <mat-menu #colorSchemeMenu="matMenu">
-  <button mat-menu-item [matMenuTriggerFor]="defaultThemesMenu">Default theme variants</button>
-  <button mat-menu-item [matMenuTriggerFor]="computeryThemesMenu">Computery themes</button>
-  <button mat-menu-item [matMenuTriggerFor]="experimentalThemesMenu">Experimental themes</button>
-  <button mat-menu-item [matMenuTriggerFor]="programmerThemesMenu">Programmer's favourites</button>
-
+  @for (group of colorSchemeGroupList | keyvalue: null; track group.key) {
+    <button mat-menu-item [matMenuTriggerFor]="secondaryThemesMenu" [matMenuTriggerData]="group.value">
+      {{ group.value.name }}
+    </button>
+  }
   <hr class="my-0" />
-
-  @for (entry of additionalStyleModesOrder; track $index) {
+  @for (entry of additionalStyleModes | keyvalue: null; track entry.key) {
     <button mat-menu-item class="pl-1">
-      <mat-checkbox [checked]="entry[1]()" (click)="toggleAdditionalStyleMode(entry[0])"
-        ><span class="theme-selector-button">{{ additionalStyleModesData[entry[0]].name }}</span></mat-checkbox
+      <mat-checkbox [checked]="entry.value()" (click)="toggleAdditionalStyleMode(entry.key)"
+        ><span class="theme-selector-button">{{ $any(additionalStyleModesData)[entry.key].name }}</span></mat-checkbox
       >
     </button>
   }
 </mat-menu>
 
-<mat-menu #defaultThemesMenu="matMenu">
-  @for (variant of defaultThemes; track $index) {
-    <button
-      class="theme-selector-button"
-      mat-menu-item
-      (click)="setColorScheme(variant)"
-      [class.selected]="colorScheme() === variant"
-    >
-      {{ colorSchemeData[variant].name }}
-    </button>
-  }
-</mat-menu>
-
-<mat-menu #computeryThemesMenu="matMenu">
-  @for (variant of computeryThemes; track $index) {
-    <button
-      class="theme-selector-button"
-      mat-menu-item
-      (click)="setColorScheme(variant)"
-      [class.selected]="colorScheme() === variant"
-    >
-      {{ colorSchemeData[variant].name }}
-    </button>
-  }
-</mat-menu>
-
-<mat-menu #experimentalThemesMenu="matMenu">
-  @for (variant of experimentalThemes; track $index) {
-    <button
-      class="theme-selector-button"
-      mat-menu-item
-      (click)="setColorScheme(variant)"
-      [class.selected]="colorScheme() === variant"
-    >
-      {{ colorSchemeData[variant].name }}
-    </button>
-  }
-</mat-menu>
-
-<mat-menu #programmerThemesMenu="matMenu">
-  @for (variant of programmersThemes; track $index) {
-    <button
-      class="theme-selector-button"
-      mat-menu-item
-      (click)="setColorScheme(variant)"
-      [class.selected]="colorScheme() === variant"
-    >
-      {{ colorSchemeData[variant].name }}
-    </button>
-  }
+<mat-menu #secondaryThemesMenu="matMenu">
+  <ng-template matMenuContent let-name="name" let-entries="entries">
+    @for (variant of entries; track $index) {
+      <button
+        class="theme-selector-button"
+        mat-menu-item
+        (click)="setColorScheme(variant)"
+        [class.selected]="colorScheme() === variant"
+      >
+        {{ $any(colorSchemeData)[variant].name }}
+      </button>
+    }
+  </ng-template>
 </mat-menu>

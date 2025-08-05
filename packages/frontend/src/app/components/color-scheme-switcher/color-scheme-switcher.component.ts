@@ -1,18 +1,18 @@
 import { CommonModule, NgClass } from '@angular/common'
-import { Component, linkedSignal, Signal, signal, WritableSignal } from '@angular/core'
+import { Component, Signal, WritableSignal } from '@angular/core'
 import { MatButtonModule } from '@angular/material/button'
 import { MatCheckboxModule } from '@angular/material/checkbox'
 import { MatMenuModule } from '@angular/material/menu'
 import { MatTooltipModule } from '@angular/material/tooltip'
 import { FaIconComponent } from '@fortawesome/angular-fontawesome'
 import { faPalette } from '@fortawesome/free-solid-svg-icons'
-import { TranslateService } from '@ngx-translate/core'
-import { LoginService } from 'src/app/services/login.service'
 import {
   AdditionalStyleMode,
   additionalStyleModesData,
   ColorScheme,
   colorSchemeData,
+  colorSchemeGroupList,
+  ColorSchemeGroupList,
   ColorTheme,
   colorThemeData,
   ThemeService
@@ -47,9 +47,7 @@ export class ColorSchemeSwitcherComponent {
   // Data copies
   colorSchemeData = colorSchemeData
   colorThemeData = colorThemeData
-  colorThemeOrder = Object.entries(colorThemeData)
   additionalStyleModesData = additionalStyleModesData
-  additionalStyleModesOrder: [AdditionalStyleMode, WritableSignal<boolean>][]
 
   // Function copies
   setColorScheme: Function
@@ -57,16 +55,7 @@ export class ColorSchemeSwitcherComponent {
   toggleAdditionalStyleMode: Function
 
   // Theme categories
-  defaultThemes: ColorScheme[] = ['default', 'tan', 'green', 'gold', 'red', 'pink', 'purple', 'blue']
-  computeryThemes: ColorScheme[] = ['unwafrn', 'wafrnverse', 'wafrn98', 'aqua', 'fan']
-  experimentalThemes: ColorScheme[] = ['rizzler', 'contrastWater']
-  programmersThemes: ColorScheme[] = [
-    'dracula',
-    'catppuccin_latte',
-    'catppuccin_frappe',
-    'catppuccin_macchiato',
-    'catppuccin_mocha'
-  ]
+  colorSchemeGroupList: ColorSchemeGroupList
 
   // Icons
   paletteIcon = faPalette
@@ -78,14 +67,12 @@ export class ColorSchemeSwitcherComponent {
     this.colorScheme = themeService.colorScheme
     this.theme = themeService.theme
     this.additionalStyleModes = themeService.additionalStyleModes
-    this.additionalStyleModesOrder = Object.entries(this.additionalStyleModes) as [
-      AdditionalStyleMode,
-      WritableSignal<boolean>
-    ][]
 
     this.setColorScheme = themeService.setColorScheme.bind(themeService)
     this.setTheme = themeService.setTheme.bind(themeService)
     this.toggleAdditionalStyleMode = themeService.toggleAdditionalStyleMode.bind(themeService)
+
+    this.colorSchemeGroupList = colorSchemeGroupList
 
     window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', this.updateIconTheme.bind(this))
   }
