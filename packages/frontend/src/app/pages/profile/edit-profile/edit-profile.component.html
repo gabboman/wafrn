@@ -86,6 +86,36 @@
         </button>
       </mat-tab>
       <mat-tab label="{{ 'profile.tabHeaders.preferences' | translate }}">
+        <h2 class="preference-subheader">{{ 'profile.preferences.appearance' | translate }}</h2>
+        <mat-form-field class="w-full">
+          <mat-label>{{ 'profile.preferences.colorScheme' | translate }}</mat-label>
+          <mat-select [(value)]="colorSchemeSelect" (selectionChange)="syncColorScheme()">
+            @for (group of colorSchemeGroupList | keyvalue: null; track $index) {
+              <mat-optgroup [label]="group.value.name">
+                @for (entry of group.value.entries; track $index) {
+                  <mat-option [value]="entry">{{ colorSchemeData[entry].name }}</mat-option>
+                }
+              </mat-optgroup>
+            }
+          </mat-select>
+        </mat-form-field>
+        <mat-form-field class="w-full">
+          <mat-label>{{ 'profile.preferences.theme' | translate }}</mat-label>
+          <mat-select [(value)]="themeSelect" (selectionChange)="syncTheme()">
+            @for (entry of colorThemeData | keyvalue: null; track $index) {
+              <mat-option [value]="entry.key">{{ entry.value }}</mat-option>
+            }
+          </mat-select>
+        </mat-form-field>
+        <mat-form-field class="w-full">
+          <mat-label>{{ 'profile.preferences.additionalStyleModes' | translate }}</mat-label>
+          <mat-select [(value)]="additionalStyleModesSelect" (selectionChange)="syncAdditionalStyleModes()" multiple>
+            @for (entry of additionalStyleModesData | keyvalue: null; track $index) {
+              <mat-option [value]="entry.key">{{ entry.value.name }}</mat-option>
+            }
+          </mat-select>
+        </mat-form-field>
+        <hr />
         <h2 class="preference-subheader">{{ 'profile.preferences.notificationFilters' | translate }}</h2>
         <mat-form-field class="w-full">
           <mat-label>{{ 'profile.preferences.showNotificationsFrom' | translate }}</mat-label>

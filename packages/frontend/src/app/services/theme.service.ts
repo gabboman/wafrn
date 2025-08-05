@@ -209,14 +209,17 @@ export class ThemeService {
     await this.loginService.updateUserOptions([{ name: 'wafrn.theme', value: theme }])
   }
 
-  public async toggleAdditionalStyleMode(mode: AdditionalStyleMode, doNotSavePreference = false) {
-    this.additionalStyleModes[mode].update((val) => !val)
-    const modeEnabled = this.additionalStyleModes[mode]().toString()
-    localStorage?.setItem(mode, modeEnabled.toString())
+  public async setAdditionalStyleMode(mode: AdditionalStyleMode, value: boolean, doNotSavePreference = false) {
+    this.additionalStyleModes[mode].set(value)
+    localStorage?.setItem(mode, value.toString())
 
     // User settings
     if (doNotSavePreference) return
-    await this.loginService.updateUserOptions([{ name: `wafrn.${mode}`, value: modeEnabled }])
+    await this.loginService.updateUserOptions([{ name: `wafrn.${mode}`, value: value.toString() }])
+  }
+
+  public async toggleAdditionalStyleMode(mode: AdditionalStyleMode, doNotSavePreference = false) {
+    this.setAdditionalStyleMode(mode, !this.additionalStyleModes[mode](), doNotSavePreference)
   }
 
   getChromeVersion() {

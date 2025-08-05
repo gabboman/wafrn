@@ -9,9 +9,18 @@ import { JwtService } from 'src/app/services/jwt.service'
 import { LoginService } from 'src/app/services/login.service'
 import { MediaService } from 'src/app/services/media.service'
 import { MessageService } from 'src/app/services/message.service'
-import { ThemeService } from 'src/app/services/theme.service'
+import {
+  AdditionalStyleMode,
+  additionalStyleModesData,
+  ColorScheme,
+  colorSchemeData,
+  ColorSchemeGroupList,
+  colorSchemeGroupList,
+  ColorTheme,
+  colorThemeData,
+  ThemeService
+} from 'src/app/services/theme.service'
 import { faPlus, faXmark } from '@fortawesome/free-solid-svg-icons'
-import { ColorSchemeSwitcherComponent } from 'src/app/components/color-scheme-switcher/color-scheme-switcher.component'
 
 @Component({
   selector: 'app-edit-profile',
@@ -91,6 +100,26 @@ export class EditProfileComponent implements OnInit {
 
   password = ''
 
+  colorScheme: Signal<ColorScheme>
+  colorSchemeSelect = ''
+  theme: Signal<ColorTheme>
+  themeSelect = ''
+  additionalStyleModes: { [key in AdditionalStyleMode]: WritableSignal<boolean> }
+  additionalStyleModesSelect: AdditionalStyleMode[]
+
+  // Data copies
+  colorSchemeData = colorSchemeData
+  colorThemeData = colorThemeData
+  additionalStyleModesData = additionalStyleModesData
+
+  // Function copies
+  setColorScheme: Function
+  setTheme: Function
+  setAdditionalStyleMode: Function
+
+  // Theme categories
+  colorSchemeGroupList: ColorSchemeGroupList
+
   constructor(
     private jwtService: JwtService,
     private dashboardService: DashboardService,
@@ -99,7 +128,38 @@ export class EditProfileComponent implements OnInit {
     private messages: MessageService,
     private themeService: ThemeService
   ) {
+    this.colorScheme = themeService.colorScheme
+    this.colorSchemeSelect = this.colorScheme()
+    this.theme = themeService.theme
+    this.themeSelect = this.theme()
+    this.additionalStyleModes = themeService.additionalStyleModes
+    this.additionalStyleModesSelect = Object.entries(this.additionalStyleModes)
+      .filter(([_, enabled]) => enabled())
+      .map(([val, _]) => val) as AdditionalStyleMode[]
+
+    this.setColorScheme = themeService.setColorScheme.bind(themeService)
+    this.setTheme = themeService.setTheme.bind(themeService)
+    this.setAdditionalStyleMode = themeService.setAdditionalStyleMode.bind(themeService)
+
+    this.colorSchemeGroupList = colorSchemeGroupList
+
     this.themeService.setCustomCSS('')
+  }
+
+  syncColorScheme() {
+    this.setColorScheme(this.colorSchemeSelect)
+  }
+
+  syncTheme() {
+    this.setTheme(this.themeSelect)
+  }
+
+  syncAdditionalStyleModes() {
+    const allModes = Object.keys(this.additionalStyleModesData) as AdditionalStyleMode[]
+    const enabledModes = this.additionalStyleModesSelect
+    const disabledModes = allModes.filter((mode) => !this.additionalStyleModesSelect.includes(mode))
+    enabledModes.forEach((mode) => this.setAdditionalStyleMode(mode, true))
+    disabledModes.forEach((mode) => this.setAdditionalStyleMode(mode, false))
   }
 
   ngOnInit(): void {
