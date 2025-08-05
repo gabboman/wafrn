@@ -90,7 +90,7 @@ export class ViewBlogComponent implements OnInit, OnDestroy, SnappyHide, SnappyS
     if (this.userLoggedIn) {
       this.themeService.setMyTheme()
     } else {
-      this.themeService.setTheme('')
+      this.themeService.setCustomCSS('')
     }
   }
 
@@ -191,7 +191,7 @@ export class ViewBlogComponent implements OnInit, OnDestroy, SnappyHide, SnappyS
       let userResponseToCustomThemes = this.themeService.hasUserAcceptedCustomThemes()
 
       if (userResponseToCustomThemes === 2) {
-        this.themeService.setTheme(blogDetails.id)
+        this.themeService.setCustomCSS(blogDetails.id)
       }
 
       if (userResponseToCustomThemes === 0) {
@@ -201,12 +201,12 @@ export class ViewBlogComponent implements OnInit, OnDestroy, SnappyHide, SnappyS
         dialogRef.afterClosed().subscribe(() => {
           userResponseToCustomThemes = this.themeService.hasUserAcceptedCustomThemes()
           if (userResponseToCustomThemes === 2) {
-            this.themeService.setTheme(blogDetails.id)
+            this.themeService.setCustomCSS(blogDetails.id)
           }
         })
       }
     } else {
-      this.themeService.setTheme('')
+      this.themeService.setCustomCSS('')
     }
   }
 

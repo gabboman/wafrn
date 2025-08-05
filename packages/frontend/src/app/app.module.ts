@@ -14,6 +14,7 @@ import { MatSnackBarModule } from '@angular/material/snack-bar'
 import { TranslateHttpLoader } from '@ngx-translate/http-loader'
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core'
 import { HttpClient } from '@angular/common/http'
+import { ThemeManagerComponent } from './theme-manager/theme-manager.component'
 
 const globalRippleConfig: RippleGlobalOptions = {
   disabled: true,
@@ -48,7 +49,8 @@ const globalRippleConfig: RippleGlobalOptions = {
         useFactory: HttpLoaderFactory,
         deps: [HttpClient]
       }
-    })
+    }),
+    ThemeManagerComponent
   ],
   providers: [
     provideHttpClient(withInterceptorsFromDi()),

@@ -123,6 +123,10 @@
       "fieldPropertyValue": "Property value"
     },
     "preferences": {
+      "appearance": "Appearance",
+      "colorScheme": "Color Scheme",
+      "theme": "Theme",
+      "additionalStyleModes": "Additional Style Modes",
       "notificationFilters": "Notification filtering",
       "showNotificationsFrom": "Show notifications from",
       "notifyFrom": {
