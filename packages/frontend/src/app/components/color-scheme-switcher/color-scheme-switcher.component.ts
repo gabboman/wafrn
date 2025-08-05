@@ -20,10 +20,7 @@ import {
 
 // !! NOTE FOR ADDING THEMES !! //
 //
-// Themes have been moved to theme-manager.component.ts though you will
-// have to add them into a category in this file to actually select them
-//
-// See theme-manager.component.ts for full instruction
+// Themes have been moved to theme-manager.component.ts and are now fully data!
 
 @Component({
   selector: 'app-color-scheme-switcher',

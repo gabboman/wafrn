@@ -7,16 +7,22 @@ import { EnvironmentService } from './environment.service'
 // !! NOTE FOR ADDING THEMES !! //
 //
 // If you want to add a theme, you must:
-// - Update the list colorSchemeVariants
-// - Fill out its colorSchemeData (name data and if the theme forces light/dark) entry
+// - Add it to `colorSchemeVariants`
+// - Fill out its `colorSchemeData` (name data and if the theme forces light/dark) entry
+//   - Compatibility allows you to force dark/light if you need.
+//   - Auto Reset makes the theme be reset to default on reload
 // - Add the theme as a CSS file in `/assets/themes/name.css`
-// - Add a link file to it in this component's HTML file
-//
-// Once you do this, the theme is now usable. To actually be able to select it,
-// navigate to color-scheme-switcher.component.ts and add it under one of the theme lists.
+// - Add a link file to it in theme-manager.component.html
+// - Add your theme to a group in `colorSchemeGroupList`
 
 // !! NOTE FOR ADDING MODES !! //
-// (like top toolbar mode)
+//
+// If you want to add a style mode, you must:
+// - Add it to `additionalStyleModeVariants`
+// - Fill out its `additionalStyleModesData`
+//
+// Note: This uses the raw names of the mode setting.
+// DO NOT OVERRIDE OTHER LOCAL STORAGE ENTRIES! There is no check :3
 
 const colorSchemeVariants = [
   'default',
@@ -50,6 +56,7 @@ type ColorSchemeData = {
     autoReset?: boolean
   }
 }
+
 export const colorSchemeData: ColorSchemeData = {
   default: { name: 'Default', compatibility: 'both' },
   tan: { name: 'Tan', compatibility: 'both' },
