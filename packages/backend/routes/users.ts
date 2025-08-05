@@ -221,6 +221,7 @@ function userRoutes(app: Application) {
 
   app.post('/api/updateCSS', authenticateToken, async (req: AuthorizedRequest, res: Response) => {
     const posterId = req.jwtData?.userId
+    const cssContent = req.body.css ? req.body.css.trim() : undefined
     if (req.body.css) {
       try {
         await fs.writeFile(`uploads/themes/${posterId}.css`, req.body.css)
@@ -231,7 +232,14 @@ function userRoutes(app: Application) {
         res.send({ error: true })
       }
     } else {
-      res.sendStatus(500)
+      try {
+        await fs.unlink(`uploads/themes/${posterId}.css`)
+        res.send({ success: true })
+      } catch (error) {
+        logger.warn(error)
+        res.status(500)
+        res.send({ error: true })
+      }
     }
   })
 
