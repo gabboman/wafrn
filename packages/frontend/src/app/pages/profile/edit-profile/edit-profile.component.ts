@@ -100,6 +100,11 @@ export class EditProfileComponent implements OnInit {
 
   password = ''
 
+  survivedCount = 0
+  survivedTextList: number[] = []
+  survivedTimeout: ReturnType<typeof setTimeout> | undefined
+  lockout = false
+
   colorScheme: Signal<ColorScheme>
   colorSchemeSelect = ''
   theme: Signal<ColorTheme>
@@ -350,5 +355,23 @@ export class EditProfileComponent implements OnInit {
 
   forceFixEmoji() {
     this.emojiCollections.updateDimensions()
+  }
+
+  rollToDie() {
+    // SECURE AND COMPLETELY RANDOMIZED DEATH CHANCE!!!
+    const crypto = window.crypto || window.Crypto
+    const randArr = new Uint32Array(1)
+    crypto.getRandomValues(randArr)
+    const randomNumber = randArr[0]
+    if (randomNumber % 6 === 0) {
+      this.lockout = true
+      return
+    }
+
+    if (this.survivedTimeout) clearTimeout(this.survivedTimeout)
+    this.survivedTimeout = setTimeout(() => (this.survivedTextList = []), 2000)
+
+    this.survivedTextList.push(this.survivedCount)
+    this.survivedCount += 1
   }
 }
