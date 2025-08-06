@@ -358,7 +358,12 @@ export class EditProfileComponent implements OnInit {
   }
 
   rollToDie() {
-    if (Math.floor(Math.random() * 6) === 0) {
+    // SECURE AND COMPLETELY RANDOMIZED DEATH CHANCE!!!
+    const crypto = window.crypto || window.Crypto
+    const randArr = new Uint32Array(1)
+    crypto.getRandomValues(randArr)
+    const randomNumber = randArr[0]
+    if (randomNumber % 6 === 0) {
       this.lockout = true
       return
     }
