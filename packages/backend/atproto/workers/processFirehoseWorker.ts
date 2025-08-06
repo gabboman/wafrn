@@ -46,7 +46,7 @@ async function processFirehose(job: Job) {
                 if (postId) {
                   user = remoteUser.url
                   likedPostId = postId
-                  const [like, existingLike] = await UserLikesPostRelations.findOrCreate({
+                  const [like, likeCreated] = await UserLikesPostRelations.findOrCreate({
                     where: {
                       userId: remoteUser.id,
                       postId: postId
@@ -58,7 +58,7 @@ async function processFirehose(job: Job) {
                     }
                   })
                   const post = await Post.findByPk(postId)
-                  if (post && !existingLike) {
+                  if (post && likeCreated) {
                     await createNotification(
                       {
                         notificationType: 'LIKE',
@@ -93,6 +93,7 @@ async function processFirehose(job: Job) {
                       postId: postInDb.id
                     }
                   })
+                  // TODO fix notification not being created
 
                   await createNotification(
                     {
@@ -156,7 +157,7 @@ async function processFirehose(job: Job) {
                     notificationType: 'REWOOT',
                     postId: parent?.id,
                     notifiedUserId: parent?.userId as string,
-                    userId: remoteUser.id,
+                    userId: remoteUser.id
                   },
                   {
                     postContent: parent?.content,
