@@ -337,6 +337,15 @@
             <app-emoji-collections (emoji)="emojiClicked($event)"></app-emoji-collections>
           </mat-expansion-panel>
         </mat-accordion>
+        <hr />
+        <div class="relative">
+          <button mat-stroked-button (click)="rollToDie()">{{ 'profile.other.rollToCrash' | translate }}</button>
+          @for (text of survivedTextList; track text) {
+            <div class="top-0 mx-4 text-xl pointer-events-none survived-text">
+              {{ 'profile.other.rollSurvived' | translate }}
+            </div>
+          }
+        </div>
       </mat-tab>
     </form>
     <mat-tab label="Bluesky">
@@ -403,3 +412,9 @@
     </div>
   }
 </mat-card>
+@if (lockout) {
+  <div class="flex flex-column align-items-center justify-content-center pointer-events-none killscreen">
+    <div class="killscreen-title">{{ 'profile.other.rollDied' | translate }}</div>
+    <div class="killscreen-subtitle">{{ 'profile.other.rollDiedCountPrefix' | translate }} {{ survivedCount }}</div>
+  </div>
+}
