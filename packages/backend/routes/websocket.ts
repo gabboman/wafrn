@@ -3,7 +3,7 @@ import { WebSocket } from 'ws'
 import { Response, Request } from 'express'
 import { logger } from '../utils/logger.js'
 import jwt from 'jsonwebtoken'
-import { Job, Worker } from 'bullmq'
+import { Job, Queue, Worker } from 'bullmq'
 // forgive me @javascript@app.wafrn.net
 import { BehaviorSubject, debounceTime, filter, Subscription } from 'rxjs'
 import { completeEnvironment } from '../utils/backendOptions.js'
@@ -17,7 +17,11 @@ export default function websocketRoutes(app: Application) {
     'updateNotificationsSocket',
     async (job: Job) => {
       // TODO send notifications!
+
       const userId = job.data.userId ? job.data.userId : ''
+      logger.debug({
+        message: `Notification to be sent to user ${userId}: ${job.data.type}`
+      })
       notificationEmitter.next({ userId, type: job.data.type })
     },
     {
@@ -31,7 +35,6 @@ export default function websocketRoutes(app: Application) {
     let procesingAuth = false
     let userId: string | undefined
     let subscriptions: Subscription[] = []
-
     ws.on('message', (msg: string) => {
       let msgAsObject: { type: 'auth' | 'NOTVALID'; object: any } = { type: 'NOTVALID', object: null }
       // we try to convert the object to something valid
