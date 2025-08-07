@@ -243,11 +243,7 @@ async function processSinglePost(
       delete newData.parentId
     }
 
-    // very dirty thing but at times somehting can happen that a post gets through the firehose before than the db.
-    // this is dirty but we dont get the bsky uri until we post there...
-    // so as a temporary hack, if user is local we wait 2 seconds
     if ((await getAllLocalUserIds()).includes(newData.userId)) {
-      await wait(2000)
     }
     let [postToProcess, created] = await Post.findOrCreate({ where: { bskyUri: post.uri }, defaults: newData })
     // do not update existing posts. But what if local user creates a post through bsky? then we force updte i guess
@@ -459,9 +455,6 @@ function getPostLabels(post: PostView): string {
 
 async function getPostThreadSafe(options: any) {
   try {
-    // added a pause of 100 miliseconds for each petition. Will things explode? only ONE way to figure out.
-    // if this works means that there is something here that is too much for the PDS
-    await wait(100)
     const agent = await getAtProtoSession((await adminUser) as User)
     return await agent.getPostThread(options)
   } catch (error) {
@@ -472,5 +465,7 @@ async function getPostThreadSafe(options: any) {
     })
   }
 }
+
+function getPostInteractionLevels() {}
 
 export { getAtProtoThread }

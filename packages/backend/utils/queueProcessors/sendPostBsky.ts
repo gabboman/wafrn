@@ -4,6 +4,7 @@ import { completeEnvironment } from '../backendOptions.js'
 import { Privacy } from '../../models/post.js'
 import { getAtProtoSession } from '../../atproto/utils/getAtProtoSession.js'
 import { postToAtproto } from '../../atproto/utils/postToAtproto.js'
+import { wait } from '../wait.js'
 
 async function sendPostBsky(job: Job) {
   const post = await Post.findByPk(job.data.postId)
@@ -48,6 +49,15 @@ async function sendPostBsky(job: Job) {
         const bskyPost = await agent.post(await postToAtproto(post, agent))
         post.bskyUri = bskyPost.uri
         post.bskyCid = bskyPost.cid
+        await wait(2500)
+        const duplicatedPost = await Post.findOne({
+          where: {
+            bskyCid: bskyPost.cid
+          }
+        })
+        if (duplicatedPost) {
+          duplicatedPost.destroy()
+        }
         await post.save()
       }
     }
