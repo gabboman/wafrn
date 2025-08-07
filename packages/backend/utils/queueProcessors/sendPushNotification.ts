@@ -232,7 +232,6 @@ function scheduleNotificationCheck(ticketIds: string[]) {
 }
 
 async function sendWsNotifications(notifications: NotificationBody[], context?: NotificationContext) {
-  logger.debug({ message: `Notification websocket added`, notifications })
   await websocketQueue.addBulk(
     notifications.map((elem) => {
       // we just tell the user to update the notifications

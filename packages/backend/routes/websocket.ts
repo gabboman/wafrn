@@ -15,9 +15,6 @@ export default function websocketRoutes(app: Application) {
     'updateNotificationsSocket',
     async (job: Job) => {
       const userId = job.data.userId ? job.data.userId : ''
-      logger.debug({
-        message: `Notification to be sent to user ${userId}: ${job.data.type}.`
-      })
       notificationEmitter.emit(userId, { type: job.data.type })
     },
     {
