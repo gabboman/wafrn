@@ -5,6 +5,7 @@ import { Privacy } from '../../models/post.js'
 import { getAtProtoSession } from '../../atproto/utils/getAtProtoSession.js'
 import { postToAtproto } from '../../atproto/utils/postToAtproto.js'
 import { wait } from '../wait.js'
+import { logger } from '../logger.js'
 
 async function sendPostBsky(job: Job) {
   const post = await Post.findByPk(job.data.postId)
@@ -47,8 +48,6 @@ async function sendPostBsky(job: Job) {
       }
       if (!isReblog) {
         const bskyPost = await agent.post(await postToAtproto(post, agent))
-        post.bskyUri = bskyPost.uri
-        post.bskyCid = bskyPost.cid
         await wait(2500)
         const duplicatedPost = await Post.findOne({
           where: {
@@ -56,8 +55,13 @@ async function sendPostBsky(job: Job) {
           }
         })
         if (duplicatedPost) {
+          logger.debug({
+            message: `Bluesky duplicated post in database already. Cleaning up`
+          })
           duplicatedPost.destroy()
         }
+        post.bskyUri = bskyPost.uri
+        post.bskyCid = bskyPost.cid
         await post.save()
       }
     }
