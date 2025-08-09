@@ -502,6 +502,13 @@ async function canInteract(
           mentions.postMentionRelation.find((elem) => elem.postId == postId && elem.userId == userId)
         break
       }
+      case InteractionControl.FollowersFollowersAndMentioned: {
+        res =
+          userFollowers.includes(post.userId) ||
+          userFollowingInput?.includes(post.userId) ||
+          mentions.postMentionRelation.find((elem) => elem.postId == postId && elem.userId == userId)
+        break
+      }
       case InteractionControl.MentionedUsersOnly: {
         // post creator follows you
         res = mentions.postMentionRelation.find((elem) => elem.postId == postId && elem.userId == userId)
