@@ -11,10 +11,11 @@ import { RichText } from '@atproto/api'
 import showdown from 'showdown'
 import { bulkCreateNotifications, createNotification } from '../../utils/pushNotifications.js'
 import { getAllLocalUserIds } from '../../utils/cacheGetters/getAllLocalUserIds.js'
-import { Privacy } from '../../models/post.js'
+import { InteractionControl, InteractionControlType, Privacy } from '../../models/post.js'
 import { wait } from '../../utils/wait.js'
 import { UpdatedAt } from 'sequelize-typescript'
 import { completeEnvironment } from '../../utils/backendOptions.js'
+import { include } from 'underscore'
 
 const markdownConverter = new showdown.Converter({
   simplifiedAutoLink: true,
@@ -237,7 +238,8 @@ async function processSinglePost(
       createdAt: new Date((post.record as any).createdAt),
       privacy: Privacy.Public,
       parentId: parentId,
-      content_warning: getPostLabels(post)
+      content_warning: getPostLabels(post),
+      ...getPostInteractionLevels(post)
     }
     if (!parentId) {
       delete newData.parentId
@@ -466,6 +468,53 @@ async function getPostThreadSafe(options: any) {
   }
 }
 
-function getPostInteractionLevels() {}
+function getPostInteractionLevels(post: PostView): {
+  replyControl: InteractionControlType
+  likeControl: InteractionControlType
+  reblogControl: InteractionControlType
+  quoteControl: InteractionControlType
+} {
+  let canQuote = true
+  let canReply: InteractionControlType = InteractionControl.Anyone
+  if (post.viewer && post.viewer.embeddingDisabled) {
+    canQuote = false
+  }
+  if (post.threadgate && post.threadgate.record && (post.threadgate.record as any).allow) {
+    const allowList = (post.threadgate.record as any).allow
+    if (allowList.length == 0) {
+      canReply = InteractionControl.NoOne
+    } else {
+      const mentiontypes: string[] = allowList
+        .map((elem: any) => elem['$type'])
+        .map((elem: string) => elem.split('app.bsky.feed.threadgate#')[1])
+      if (mentiontypes.includes('mentionRule')) {
+        if (mentiontypes.includes('followingRule')) {
+          canReply = mentiontypes.includes('followerRule')
+            ? InteractionControl.FollowersFollowersAndMentioned
+            : InteractionControl.FollowingAndMentioned
+        } else {
+          canReply = mentiontypes.includes('followerRule')
+            ? InteractionControl.FollowersAndMentioned
+            : InteractionControl.MentionedUsersOnly
+        }
+      } else {
+        if (mentiontypes.includes('followingRule')) {
+          canReply = mentiontypes.includes('followerRule')
+            ? InteractionControl.FollowersAndFollowing
+            : InteractionControl.Following
+        } else {
+          canReply = mentiontypes.includes('followerRule') ? InteractionControl.Followers : InteractionControl.NoOne
+        }
+      }
+    }
+  }
+
+  return {
+    quoteControl: canQuote ? InteractionControl.Anyone : InteractionControl.NoOne,
+    replyControl: canReply,
+    likeControl: InteractionControl.Anyone,
+    reblogControl: InteractionControl.Anyone
+  }
+}
 
 export { getAtProtoThread }
