@@ -47,7 +47,7 @@ async function sendPostBsky(job: Job) {
       }
       if (!isReblog) {
         const bskyPost = await agent.post(await postToAtproto(post, agent))
-        await wait(2500)
+        await wait(750)
         const duplicatedPost = await Post.findOne({
           where: {
             bskyCid: bskyPost.cid

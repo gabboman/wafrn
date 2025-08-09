@@ -152,8 +152,6 @@ async function getAtprotoUser(
       try {
         userFound = await User.create(newData)
       } catch (error) {
-        // not the best solution but yeah that should work
-        await wait(1500)
         userFound = await internalGetDBUser(newData.bskyDid, newData.url)
       }
     }
