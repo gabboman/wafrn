@@ -239,7 +239,7 @@ async function processSinglePost(
       privacy: Privacy.Public,
       parentId: parentId,
       content_warning: getPostLabels(post),
-      ...getPostInteractionLevels(post)
+      ...getPostInteractionLevels(post, parentId)
     }
     if (!parentId) {
       delete newData.parentId
@@ -468,7 +468,10 @@ async function getPostThreadSafe(options: any) {
   }
 }
 
-function getPostInteractionLevels(post: PostView): {
+function getPostInteractionLevels(
+  post: PostView,
+  parentId: string | undefined
+): {
   replyControl: InteractionControlType
   likeControl: InteractionControlType
   reblogControl: InteractionControlType
@@ -479,7 +482,9 @@ function getPostInteractionLevels(post: PostView): {
   if (post.viewer && post.viewer.embeddingDisabled) {
     canQuote = false
   }
-  if (post.threadgate && post.threadgate.record && (post.threadgate.record as any).allow) {
+  if (parentId) {
+    canReply = InteractionControl.SameAsOp
+  } else if (post.threadgate && post.threadgate.record && (post.threadgate.record as any).allow) {
     const allowList = (post.threadgate.record as any).allow
     if (allowList.length == 0) {
       canReply = InteractionControl.NoOne

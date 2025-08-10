@@ -1,4 +1,4 @@
-import { Op } from 'sequelize'
+import { Op, QueryTypes } from 'sequelize'
 import {
   Ask,
   Blocks,
@@ -14,6 +14,7 @@ import {
   QuestionPollAnswer,
   QuestionPollQuestion,
   Quotes,
+  sequelize,
   ServerBlock,
   User,
   UserBookmarkedPosts,
@@ -515,8 +516,40 @@ async function canInteract(
         break
       }
       case InteractionControl.NoOne: {
-        // post creator follows you
+        // we already check if user is from poster himself. This is a special one for bsky
         res = false
+        break
+      }
+      case InteractionControl.SameAsOp: {
+        // special one for bsky too
+        // ok we need to check for the initial post and to the calculations with it.
+        // we look for op post
+        const parentsIds = (
+          await sequelize.query(`SELECT DISTINCT "ancestorId" FROM "postsancestors" where "postsId" = '${post.id}'`, {
+            type: QueryTypes.SELECT
+          })
+        ).map((elem: any) => elem.ancestorId as string)
+        const originalPost = await Post.findOne({
+          where: {
+            hierarchyLevel: 1,
+            id: {
+              [Op.in]: parentsIds
+            }
+          }
+        })
+        if (!originalPost || originalPost?.id === post.id) {
+          return res
+        } else {
+          // this will only be used for REPLIES
+          res = await canInteract(
+            originalPost.replyControl,
+            userId,
+            originalPost.id,
+            userFollowersInput,
+            userFollowingInput,
+            mentionsInput
+          )
+        }
       }
     }
   }
