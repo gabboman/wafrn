@@ -208,9 +208,13 @@ function notificationRoutes(app: Application) {
 
       // not including emoji promises here as they were already awaited above
       await Promise.all([users, posts, asks, tags, medias])
+      const awaitedPostsIds = (await posts).map((post) => post.id)
+      const notificationsFiltered = notifications.filter(
+        (elem) => elem.notificationType === 'FOLLOW' || (elem.postId && awaitedPostsIds.includes(elem.postId))
+      )
 
       res.send({
-        notifications,
+        notifications: notificationsFiltered,
         users: await users,
         posts: await posts,
         medias: await medias,
