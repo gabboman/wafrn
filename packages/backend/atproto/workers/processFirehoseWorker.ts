@@ -21,6 +21,7 @@ import { likePostRemote } from '../../utils/activitypub/likePost.js'
 import { createNotification } from '../../utils/pushNotifications.js'
 import { Privacy } from '../../models/post.js'
 import { completeEnvironment } from '../../utils/backendOptions.js'
+import { wait } from '../../utils/wait.js'
 
 const adminUser = User.findOne({
   where: {
@@ -212,6 +213,13 @@ async function processFirehose(job: Job) {
             }
             break
           }
+          case 'app.bsky.feed.threadgate': {
+            const postBskyUri = (operation.record as any).post
+            if (postBskyUri) {
+              await getAtProtoThread(postBskyUri, undefined, true)
+            }
+            break
+          }
           default: {
             logger.warn({ message: `Bsky create type not implemented: ${record['$type']}`, record: record })
           }
@@ -344,7 +352,19 @@ async function processFirehose(job: Job) {
         }
         break
       }
+      case 'update': {
+      }
       default: {
+        const operationType = (operation.record as any)['$type']
+        switch (operationType) {
+          case 'app.bsky.feed.threadgate': {
+            const postBskyUri = (operation.record as any).post
+            if (postBskyUri) {
+              await getAtProtoThread(postBskyUri, undefined, true)
+            }
+            break
+          }
+        }
         logger.warn({ message: `Bsky action not implemented: ${operation.action}`, operation: operation })
       }
     }
