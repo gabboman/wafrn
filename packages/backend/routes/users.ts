@@ -1503,8 +1503,9 @@ async function updateBlueskyProfile(agent: BskyAgent, user: User) {
       if (user.avatar) {
         let pngAvatar = await optimizeMedia('uploads' + user.avatar, {
           forceImageExtension: 'png',
-          maxSize: 256,
-          keep: true
+          maxSize: 512,
+          keep: true,
+          disableAnimation: true
         })
         const userAvatarFile = Buffer.from(await fs.readFile(pngAvatar))
         const avatarUpload = await agent.uploadBlob(userAvatarFile, { encoding: 'image/png' })

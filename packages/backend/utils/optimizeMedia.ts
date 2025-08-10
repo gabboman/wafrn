@@ -8,7 +8,13 @@ import FfmpegCommand from 'fluent-ffmpeg'
 
 export default async function optimizeMedia(
   inputPath: string,
-  options?: { outPath?: string; maxSize?: number; keep?: boolean; forceImageExtension?: string }
+  options?: {
+    outPath?: string
+    maxSize?: number
+    keep?: boolean
+    forceImageExtension?: string
+    disableAnimation?: boolean
+  }
 ): Promise<string> {
   const fileAndExtension = options?.outPath ? [options.outPath, ''] : inputPath.split('.')
   const originalExtension = fileAndExtension[1].toLowerCase()
@@ -82,12 +88,12 @@ export default async function optimizeMedia(
         fileAndExtension[0] = fileAndExtension[0] + '_processed'
         outputPath = fileAndExtension.join('.')
       }
-      if (metadata.delay) {
+      if (metadata.delay && !(options?.forceImageExtension && options.forceImageExtension == 'png')) {
         fileAndExtension[1] = 'webp'
         outputPath = fileAndExtension.join('.')
       }
 
-      let conversion = sharp(inputPath, { animated: true, failOnError: false }).rotate()
+      let conversion = sharp(inputPath, { animated: !options?.disableAnimation, failOnError: false }).rotate()
       if (options?.maxSize) {
         const imageMetadata = await conversion.metadata()
         if (
