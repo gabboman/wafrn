@@ -71,6 +71,9 @@ async function sendPostBsky(job: Job) {
         }
         post.bskyUri = bskyPost.uri
         post.bskyCid = bskyPost.cid
+        if (post.parentId) {
+          post.replyControl = 100
+        }
         await post.save()
       }
     }
