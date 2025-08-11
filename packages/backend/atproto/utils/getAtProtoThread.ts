@@ -479,13 +479,14 @@ function getPostInteractionLevels(
   reblogControl: InteractionControlType
   quoteControl: InteractionControlType
 } {
-  let canQuote = true
+  let canQuote = InteractionControl.Anyone
   let canReply: InteractionControlType = InteractionControl.Anyone
   if (post.viewer && post.viewer.embeddingDisabled) {
-    canQuote = false
+    canQuote = InteractionControl.NoOne
   }
   if (parentId) {
     canReply = InteractionControl.SameAsOp
+    canQuote = InteractionControl.SameAsOp
   } else if (post.threadgate && post.threadgate.record && (post.threadgate.record as any).allow) {
     const allowList = (post.threadgate.record as any).allow
     if (allowList.length == 0) {
@@ -516,8 +517,12 @@ function getPostInteractionLevels(
     }
   }
 
+  if (canQuote === InteractionControl.Anyone && canReply != InteractionControl.Anyone) {
+    canQuote = canReply
+  }
+
   return {
-    quoteControl: canQuote ? InteractionControl.Anyone : InteractionControl.NoOne,
+    quoteControl: canQuote,
     replyControl: canReply,
     likeControl: InteractionControl.Anyone,
     reblogControl: InteractionControl.Anyone
