@@ -468,6 +468,20 @@ export class PostsService {
     if (cwedWords.length > 0) {
       newPost.muted_words_cw = `Post includes muted words: ${cwedWords}`
     }
+    const hideQuotesLevel = localStorage.getItem('hideQuotes')
+      ? parseInt(localStorage.getItem('hideQuotes') as string)
+      : 1
+    if (newPost.quotes && newPost.quotes.length) {
+      if (
+        this.usersQuotesDisabled.includes(newPost.userId) ||
+        (hideQuotesLevel == 2 && !this.followedUserIds.includes(newPost.userId))
+      ) {
+        newPost.muted_words_cw = newPost.muted_words_cw
+          ? `${newPost.muted_words_cw}<br> Post includes quote by not allowed user`
+          : `Post includes quote by not allowed user`
+      }
+    }
+
     return newPost
   }
 

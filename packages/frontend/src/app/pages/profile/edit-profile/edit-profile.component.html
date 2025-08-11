@@ -277,6 +277,16 @@
         </div>
       </mat-tab>
       <mat-tab label="{{ 'profile.tabHeaders.misc' | translate }}">
+        <mat-form-field class="w-full">
+          <mat-label>Hide quotes</mat-label>
+          <mat-select formControlName="hideQuotes">
+            <mat-option [value]="1">CW from users you disabled quotes</mat-option>
+            <mat-option [value]="2">CW from anyone you dont follow and disabled quotes in the profile</mat-option>
+            <mat-option [value]="3"
+              >Hide posts containing quotes from users you dont follow and users who you disabled quotes</mat-option
+            >
+          </mat-select>
+        </mat-form-field>
         <section id="tags" class="mt-2 w-full flex-row">
           <!-- TODO replace text here with variable that can be translated -->
           <app-user-selector

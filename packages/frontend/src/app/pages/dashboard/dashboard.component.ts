@@ -32,6 +32,7 @@ export class DashboardComponent implements OnInit, OnDestroy, SnappyCreate, Snap
   updateFollowersSubscription?: Subscription
   navigationSubscription!: Subscription
   scroll = 0
+  hideQuotesLevel = localStorage.getItem('hideQuotes') ? parseInt(localStorage.getItem('hideQuotes') as string) : 1
 
   // I don't think this is actually needed, but just in case!
   // Would like to have this a bit more cleanly integrated though
@@ -188,7 +189,17 @@ export class DashboardComponent implements OnInit, OnDestroy, SnappyCreate, Snap
         } catch (error) {
           this.messages.add({ severity: 'error', summary: 'Something wrong with your supermuted words!' })
         }
-
+        // if quote level = 3 & post has quotes
+        if (this.hideQuotesLevel == 3) {
+          if (
+            post.some((elem) => {
+              !this.postService.followedUserIds.includes(elem.userId) ||
+                (this.postService.usersQuotesDisabled.includes(elem.userId) && elem.quotes && elem.quotes.length)
+            })
+          ) {
+            return true
+          }
+        }
         // textOfPosts
         let textOfPosts = post
           .map((elem) => {

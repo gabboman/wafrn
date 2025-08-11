@@ -13,12 +13,12 @@
                 mat-stroked-button
                 [color]="postService.followedUserIds.indexOf(blogDetails().id) === -1 ? 'primary' : 'warn'"
                 class="split-button-left"
-            (click)="
-              postService.followedUserIds.indexOf(blogDetails().id) === -1
-                ? followUser(blogDetails().id)
-                : unfollowUser(blogDetails().id)
-            "
-                >
+                (click)="
+                  postService.followedUserIds.indexOf(blogDetails().id) === -1
+                    ? followUser(blogDetails().id)
+                    : unfollowUser(blogDetails().id)
+                "
+              >
                 {{ postService.followedUserIds.indexOf(blogDetails().id) === -1 ? 'Follow' : 'Unfollow' }}
               </button>
             }
@@ -28,7 +28,7 @@
                 color="accent"
                 class="split-button-left"
                 (click)="unfollowUser(blogDetails().id)"
-                >
+              >
                 Awaiting approval
               </button>
             }
@@ -38,7 +38,7 @@
               mat-stroked-button
               [color]="postService.followedUserIds.indexOf(blogDetails().id) === -1 ? 'primary' : 'warn'"
               class="split-button-right"
-              >
+            >
               <fa-icon [icon]="expandDownIcon"></fa-icon>
             </button>
           </div>
@@ -70,14 +70,35 @@
                 </button>
               } @else {
                 @if (blogDetails().federatedHost) {
-                  <button
-                    mat-menu-item
-                    (click)="blockService.unblockServer(this.blogDetails().federatedHost!.id)"
-                    >
+                  <button mat-menu-item (click)="blockService.unblockServer(this.blogDetails().federatedHost!.id)">
                     <fa-icon class="mr-2" [icon]="unblockServerIcon"></fa-icon>Unblock server
                   </button>
                 }
               }
+            }
+          }
+          @if (
+            !isMe &&
+            (postService.notYetAcceptedFollowedUsersIds.includes(blogDetails().id) ||
+              postService.followedUserIds.includes(blogDetails().id))
+          ) {
+            @if (postService.usersRewootsDisabled.includes(blogDetails().id)) {
+              <button mat-menu-item (click)="updateDisableRewoots()">
+                <fa-icon class="mr-2" [icon]="disableRewootIcon"></fa-icon>Re-enable rewoots of this user
+              </button>
+            } @else {
+              <button mat-menu-item (click)="updateDisableRewoots()">
+                <fa-icon class="mr-2" [icon]="disableRewootIcon"></fa-icon>Disable rewoots of this user
+              </button>
+            }
+            @if (postService.usersQuotesDisabled.includes(blogDetails().id)) {
+              <button mat-menu-item (click)="updateDisableQuotes()">
+                <fa-icon class="mr-2" [icon]="disableQuotesIcon"></fa-icon>Re-enable quotes for this user
+              </button>
+            } @else {
+              <button mat-menu-item (click)="updateDisableQuotes()">
+                <fa-icon class="mr-2" [icon]="disableQuotesIcon"></fa-icon>Disable quotes for this user
+              </button>
             }
           }
           <button mat-menu-item (click)="reportService.openReportPostDialog({ userId: this.blogDetails().id })">
@@ -95,21 +116,19 @@
       }
       <div class="flex gap-2 mt-2 mb-0 text-sm line-height-3 profile-badges">
         @if (blogDetails().isBlueskyUser) {
-          <span class="badge bsky-badge">
-            <fa-icon class="mr-2" [icon]="bskyIcon"></fa-icon>Bluesky
-          </span>
+          <span class="badge bsky-badge"> <fa-icon class="mr-2" [icon]="bskyIcon"></fa-icon>Bluesky </span>
         }
         @if (blogDetails().followers / blogDetails().followed > 5) {
           <span
             class="badge ratio-badge"
-          matTooltip="{{
-            'For every ' +
-              (blogDetails().followers / blogDetails().followed | number: '1.0-0') +
-              ' followers ' +
-              blogDetails().url +
-              ' follows 1 user.'
-          }}"
-            >
+            matTooltip="{{
+              'For every ' +
+                (blogDetails().followers / blogDetails().followed | number: '1.0-0') +
+                ' followers ' +
+                blogDetails().url +
+                ' follows 1 user.'
+            }}"
+          >
             <fa-icon class="mr-2" [icon]="usersIcon"></fa-icon>Follower Ratio:
             {{ blogDetails().followers / blogDetails().followed | number: '1.0-0' }}:1
           </span>
@@ -141,7 +160,7 @@
       <summary class="text-center">Send ask from outside Wafrn</summary>
       <p class="m-0">
         You can send this user a non-anonymous ask from your fedi instance with the following structure: " !ask &#64;{{
-        blogDetails().url
+          blogDetails().url
         }}
         YOUR QUESTION HERE". The medias and emojis you attach will be ignored, and you can only send one mention on the
         post. If it goes wrong, the user will receive it as a regular DM. Also, the content of the DM will be published
@@ -152,9 +171,9 @@
   @if (blogDetails().url.startsWith('@')) {
     <app-info-card [type]="userLoggedIn ? 'info' : 'caution'">
       {{
-      userLoggedIn
-      ? 'As this user is from a remote instance, the shown information may be incomplete.'
-      : 'To see external users you need to be logged in. You can view their profile on their actual instance.'
+        userLoggedIn
+          ? 'As this user is from a remote instance, the shown information may be incomplete.'
+          : 'To see external users you need to be logged in. You can view their profile on their actual instance.'
       }}
       <a
         [href]="
@@ -164,31 +183,31 @@
         "
         target="_blank"
         >View on remote instance</a
-        >
-      </app-info-card>
-    }
-    @if (!blogDetails().url.startsWith('@') || (blogDetails().followers && blogDetails().followed)) {
-      <footer class="mt-4 py-3 flex justify-content-evenly follow-counts">
-        <div class="flex flex-column justify-content-center">
-          <a [routerLink]="['/blog', blogDetails().url]" class="flex flex-column justify-content-center subtle-link">
-            <b class="m-0 text-lg text-center">{{ formatBigNumber(blogDetails().postCount) }}</b>
-            <p class="m-0 text-xs">Post Count</p>
-          </a>
-        </div>
-        <a
-          [routerLink]="['/blog', blogDetails().url, 'following']"
-          class="flex flex-column justify-content-center subtle-link"
-          >
-          <b class="m-0 text-lg text-center">{{ formatBigNumber(blogDetails().followed) }}</b>
-          <p class="m-0 text-xs">Following</p>
+      >
+    </app-info-card>
+  }
+  @if (!blogDetails().url.startsWith('@') || (blogDetails().followers && blogDetails().followed)) {
+    <footer class="mt-4 py-3 flex justify-content-evenly follow-counts">
+      <div class="flex flex-column justify-content-center">
+        <a [routerLink]="['/blog', blogDetails().url]" class="flex flex-column justify-content-center subtle-link">
+          <b class="m-0 text-lg text-center">{{ formatBigNumber(blogDetails().postCount) }}</b>
+          <p class="m-0 text-xs">Post Count</p>
         </a>
-        <a
-          [routerLink]="['/blog', blogDetails().url, 'followers']"
-          class="flex flex-column justify-content-center subtle-link"
-          >
-          <b class="m-0 text-lg text-center">{{ formatBigNumber(blogDetails().followers) }}</b>
-          <p class="m-0 text-xs">Followers</p>
-        </a>
-      </footer>
-    }
-  </mat-card>
+      </div>
+      <a
+        [routerLink]="['/blog', blogDetails().url, 'following']"
+        class="flex flex-column justify-content-center subtle-link"
+      >
+        <b class="m-0 text-lg text-center">{{ formatBigNumber(blogDetails().followed) }}</b>
+        <p class="m-0 text-xs">Following</p>
+      </a>
+      <a
+        [routerLink]="['/blog', blogDetails().url, 'followers']"
+        class="flex flex-column justify-content-center subtle-link"
+      >
+        <b class="m-0 text-lg text-center">{{ formatBigNumber(blogDetails().followers) }}</b>
+        <p class="m-0 text-xs">Followers</p>
+      </a>
+    </footer>
+  }
+</mat-card>

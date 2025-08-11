@@ -95,7 +95,8 @@ export class EditProfileComponent implements OnInit {
     notifyFollows: new FormControl(true),
     notifyRewoots: new FormControl(true),
     replaceAIWithCocaine: new FormControl(false),
-    replaceAIWord: new FormControl('cocaine')
+    replaceAIWord: new FormControl('cocaine'),
+    hideQuotes: new FormControl(1)
   })
 
   password = ''
@@ -276,6 +277,11 @@ export class EditProfileComponent implements OnInit {
       const localStorageNotifyRewoots = localStorage.getItem('notifyRewoots')
       if (localStorageNotifyRewoots) {
         this.editProfileForm.controls['notifyRewoots'].patchValue(localStorageNotifyRewoots == 'true')
+      }
+
+      const localStorageHideQuotes = localStorage.getItem('hideQuotes')
+      if (localStorageHideQuotes) {
+        this.editProfileForm.controls['hideQuotes'].patchValue(parseInt(localStorageHideQuotes))
       }
 
       this.loading = false
