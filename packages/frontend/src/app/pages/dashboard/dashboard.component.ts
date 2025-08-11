@@ -225,7 +225,7 @@ export class DashboardComponent implements OnInit, OnDestroy, SnappyCreate, Snap
           superMutedWords.length > 0 &&
           superMutedWords.some((supermuteWord) => textOfPosts.includes(supermuteWord))
         ) {
-          return true
+          return false
         }
         // we set the scroll date to the oldest post we got here
         const postDate = new Date(post[post.length - 1].createdAt).getTime()
