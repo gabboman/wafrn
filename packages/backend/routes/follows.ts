@@ -128,4 +128,35 @@ export default function followsRoutes(app: Application) {
       success
     })
   })
+
+  app.post('/api/muteRewoots', authenticateToken, async (req: AuthorizedRequest, res: Response) => {
+    let success = false
+
+    const posterId = req.jwtData?.userId
+    const muteQuotes = req.body?.muteQuotes
+    const userId = req.body?.userId
+    if (posterId && userId) {
+      const existingFollow = await Follows.findOne({
+        where: {
+          followerId: posterId,
+          followedId: userId
+        }
+      })
+      if (existingFollow) {
+        success = true
+        if (!muteQuotes) {
+          existingFollow.muteRewoots = !existingFollow.muteRewoots
+        } else {
+          existingFollow.muteQuotes = !existingFollow.muteQuotes
+        }
+        await existingFollow.save()
+      }
+    }
+    if (!success) {
+      res.status(400)
+    }
+    res.send({
+      success
+    })
+  })
 }

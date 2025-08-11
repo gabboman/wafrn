@@ -962,6 +962,23 @@ function userRoutes(app: Application) {
       res.sendStatus(401)
     } else {
       const user = (await userPromise) as User
+      const mutedQuotes = (
+        await Follows.findAll({
+          where: {
+            followerId: userId,
+            muteQuotes: true
+          }
+        })
+      ).map((elem) => elem.followedId)
+
+      const mutedRewoots = (
+        await Follows.findAll({
+          where: {
+            followerId: userId,
+            muteRewoots: true
+          }
+        })
+      ).map((elem) => elem.followedId)
       res.send({
         myFollowers: await myFollowers,
         followedUsers: await followedUsers,
@@ -972,7 +989,9 @@ function userRoutes(app: Application) {
         emojis: await localEmojis,
         mutedUsers: await mutedUsers,
         followedHashtags: await followedHashtags,
-        enableBluesky: user.enableBsky
+        enableBluesky: user.enableBsky,
+        mutedRewoots,
+        mutedQuotes
       })
     }
   })

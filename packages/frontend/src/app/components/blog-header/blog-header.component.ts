@@ -14,7 +14,9 @@ import {
   faVolumeMute,
   faVolumeUp,
   faUsers,
-  faTriangleExclamation
+  faTriangleExclamation,
+  faRepeat,
+  faQuoteRight
 } from '@fortawesome/free-solid-svg-icons'
 import { BlogDetails } from 'src/app/interfaces/blogDetails'
 import { BlocksService } from 'src/app/services/blocks.service'
@@ -58,6 +60,8 @@ export class BlogHeaderComponent implements OnChanges, OnDestroy {
   muteUserIcon = faVolumeMute
   unmuteUserIcon = faVolumeUp
   reportUserIcon = faTriangleExclamation
+  disableRewootIcon = faRepeat
+  disableQuotesIcon = faQuoteRight
 
   userIcon = faUser
   bskyIcon = faBluesky
@@ -175,5 +179,13 @@ export class BlogHeaderComponent implements OnChanges, OnDestroy {
       notation: 'compact',
       compactDisplay: 'short'
     }).format(n)
+  }
+
+  async updateDisableRewoots() {
+    await this.postService.updateDisableRewoots(this.blogDetails().id)
+  }
+
+  async updateDisableQuotes() {
+    await this.postService.updateDisableQuotes(this.blogDetails().id)
   }
 }
