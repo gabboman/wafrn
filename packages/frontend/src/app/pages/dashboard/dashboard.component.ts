@@ -231,6 +231,17 @@ export class DashboardComponent implements OnInit, OnDestroy, SnappyCreate, Snap
         const postDate = new Date(post[post.length - 1].createdAt).getTime()
         this.timestamp = postDate < this.timestamp ? postDate : this.timestamp
         let allFragmentsSeen = true
+        const finalPost = post[post.length - 1]
+        if (
+          finalPost.content === '' &&
+          finalPost.medias.length == 0 &&
+          finalPost.tags.length == 0 &&
+          !finalPost.quotes.length &&
+          !finalPost.content_warning &&
+          this.postService.usersRewootsDisabled.includes(finalPost.userId)
+        ) {
+          return false
+        }
         post.forEach((component) => {
           const thisFragmentSeen =
             this.viewedPostsIds.includes(component.id) ||
