@@ -96,6 +96,12 @@ app-blog-header, app-post {
     border-radius: 2px 2px 0px 0px !important;
 }
 
+.media-container {
+    /* pixelated is set for app-post for the background, but actual
+       post images shouldn't be rendered that way */
+    image-rendering: auto;
+}
+
 app-dashboard {
     background-color: rgb(200, 200, 200);
     background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAAECAIAAAAmkwkpAAAAJklEQVQIW2P4jwQYPgLBBxACEgyvgOD1q9evQRTDJ6DQJyAESQIArr4thzvyUt4AAAAASUVORK5CYII=");
