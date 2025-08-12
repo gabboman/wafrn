@@ -68,10 +68,13 @@ export default function followsRoutes(app: Application) {
     } catch (error) {
       logger.error(error)
     }
-
-    res.send({
-      success
-    })
+    try {
+      res.send({
+        success
+      })
+    } catch (error) {
+      logger.info({ message: `Error on follow`, error })
+    }
   })
 
   app.post('/api/unfollow', authenticateToken, async (req: AuthorizedRequest, res: Response) => {
