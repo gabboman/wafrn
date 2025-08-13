@@ -11,22 +11,11 @@
 
 </div>
 
-# Wafrn
+# REPO MOVED TO CODEBERG
 
-Wafrn is an open source social network that connects with the Fediverse. The frontend is Tumblr-inspired.
+Due github idiotic's AI pushes, we do not feel comfortable here.
 
-The "main" wafrn app is located at [app.wafrn.net](https://app.wafrn.net).
-
-## Documentation
-
-* [Development documentation](./docs/development.md)
-* [Deployment documentation](./docs/deployment.md)
-* [Wafrn Management](./docs/management.md)
-* [Importing external backups](./docs/import.md)
-
-If you need support you can also always find the latest Discord invite [on our website](https://wafrn.net)
-
-## License
+New repo: [https://codeberg.org/wafrn/wafrn](https://codeberg.org/wafrn/wafrn)
 
 The frontend uses [Apache License 2.0](https://choosealicense.com/licenses/apache-2.0/).
 
