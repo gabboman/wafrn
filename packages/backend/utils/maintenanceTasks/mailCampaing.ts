@@ -49,25 +49,23 @@ async function sendMail() {
         }
       }
     })
-    const subject = `New wafrn feature: follow tags, the homestuck update! ${user.url} come back. Its realy cool. You have ${notificationsCount} notifications btw`
+    const subject = `Hello ${user.url}, we have added a button that fucking kills you.`
     const body = `
     <h1>${user.url}, We miss you at <a href="https://app.wafrn.net">wafrn</a>!</h1>
     <p>As you can see, other people also misses you, as you have ${notificationsCount} unread notifications!</p>
     ${
       notificationsCount == 0
-        ? '<p>Wow, zero. You should come back and make this number bigger next time we send you an email</p>'
+        ? '<p>Wow, still zero. You should come back and make this number bigger next time we send you an email</p>'
         : ''
     }
 <br />
 So some of the changelog for last month:
 <ul>
-	<li>FOLLOW TAGS. Wafrn is now the perfect place for homestuck for some reason, as we get all posts from bluesky with homestuck. What a mistery</li>
+	<li>The button that fucking kills you: on edit profile -> misceaneous we have added a button that rolls a dice and if you are unlucky we crash your browser</li>
   <li>Improved bluesky integration: now you can log in into your bluesky account hosted in wafrn! (this one is very janky but that has never stopped us)</li>
-	<li>Updated the UI a lot on mobile!</li>
+	<li>Disable rewoots from other users</li>
 	<li>Replace AI with cocaine</li>
 	<li>Performance improvements</li>
-	<li>We have added a delete account button. No longer asking on a email to a mod to nuke your account. Sorry for that one!</li>
-	<li>DOOM is still working</li>
 	<li>We have added new bugs</li>
 </ul>
 And finaly, the part of the email where I say "give me money". Well, first, give money to the team, and then me

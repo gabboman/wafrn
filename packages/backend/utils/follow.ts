@@ -35,7 +35,7 @@ async function follow(
     })
     if (blocksExisting > 0) {
       if (petition) {
-        petition.sendStatus(500)
+        petition.status(500)
         petition.send({
           error: true,
           message: 'You can not follow someone who you have blocked, nor who has blocked you'
@@ -44,12 +44,14 @@ async function follow(
       res = false
       return res
     }
-    const existingFollow = userFollowed && await Follows.findOne({
-      where: {
-        followerId: followerId,
-        followedId: userFollowed.id
-      }
-    })
+    const existingFollow =
+      userFollowed &&
+      (await Follows.findOne({
+        where: {
+          followerId: followerId,
+          followedId: userFollowed.id
+        }
+      }))
     if (userFollowed && !existingFollow) {
       const follow = await Follows.create({
         followerId: followerId,
@@ -61,13 +63,16 @@ async function follow(
       })
       if (follow.accepted) {
         // if user does this manualy you dont want to give them a notification after accepting lol
-        await createNotification({
-          notificationType: 'FOLLOW',
-          userId: followerId,
-          notifiedUserId: userFollowed?.id
-        }, {
-          userUrl: (await User.findByPk(followerId))?.url
-        })
+        await createNotification(
+          {
+            notificationType: 'FOLLOW',
+            userId: followerId,
+            notifiedUserId: userFollowed?.id
+          },
+          {
+            userUrl: (await User.findByPk(followerId))?.url
+          }
+        )
       }
       if (userFollowed.remoteId) {
         res = true
