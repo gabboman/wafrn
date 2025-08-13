@@ -17,3 +17,68 @@
 .preference-subheader {
   margin-bottom: 1rem;
 }
+
+.survived-text {
+  position: absolute;
+  animation: floatup 2000ms ease-out forwards;
+  font-weight: 800;
+  color: greenyellow;
+  text-shadow: 0 0 4px var(--mat-sys-on-surface);
+  z-index: 1;
+}
+
+@keyframes floatup {
+  from {
+    translate: 0 0;
+    opacity: 1;
+  }
+  to {
+    translate: 0 -80px;
+    opacity: 0;
+  }
+}
+
+.killscreen {
+  position: absolute;
+  inset: 0;
+  z-index: 10000000;
+  background-color: black;
+
+  & .killscreen-title {
+    color: red;
+    font-family: serif;
+    font-size: max(7vw, 3rem);
+    line-height: 1.2;
+    text-align: center;
+
+    animation: deathscreen 2000ms ease-out;
+  }
+
+  & .killscreen-subtitle {
+    color: #aaa;
+    font-size: max(1.2vw, 1rem);
+
+    opacity: 0;
+    animation: deathscreen-subtitle 1000ms 2000ms ease-out forwards;
+  }
+}
+
+@keyframes deathscreen {
+  from {
+    scale: 0.95;
+    opacity: 0;
+  }
+  to {
+    scale: 1;
+    opacity: 1;
+  }
+}
+
+@keyframes deathscreen-subtitle {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}

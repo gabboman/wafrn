@@ -1,10 +1,11 @@
 import { Job } from 'bullmq'
-import { Media, Post, PostTag, Quotes, User } from '../../models/index.js'
+import { Media, Post, PostTag, Quotes, User, Notification } from '../../models/index.js'
 import { completeEnvironment } from '../backendOptions.js'
 import { Privacy } from '../../models/post.js'
 import { getAtProtoSession } from '../../atproto/utils/getAtProtoSession.js'
 import { postToAtproto } from '../../atproto/utils/postToAtproto.js'
-
+import { wait } from '../wait.js'
+import { logger } from '../logger.js'
 async function sendPostBsky(job: Job) {
   const post = await Post.findByPk(job.data.postId)
   if (!post || post.bskyUri) {
@@ -46,8 +47,33 @@ async function sendPostBsky(job: Job) {
       }
       if (!isReblog) {
         const bskyPost = await agent.post(await postToAtproto(post, agent))
+        await wait(750)
+        const duplicatedPost = await Post.findOne({
+          where: {
+            bskyCid: bskyPost.cid
+          }
+        })
+        if (duplicatedPost) {
+          logger.debug({
+            message: `Bluesky duplicated post in database already. Cleaning up`
+          })
+          await Notification.destroy({
+            where: {
+              postId: duplicatedPost.id
+            }
+          })
+          try {
+            await duplicatedPost.destroy()
+          } catch (err) {
+            duplicatedPost.isDeleted = true
+            await duplicatedPost.save()
+          }
+        }
         post.bskyUri = bskyPost.uri
         post.bskyCid = bskyPost.cid
+        if (post.parentId) {
+          post.replyControl = 100
+        }
         await post.save()
       }
     }

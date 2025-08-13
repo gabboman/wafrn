@@ -252,7 +252,8 @@ export class LoginService {
       notifyRewoots: 'wafrn.notifyRewoots',
       disableSounds: 'wafrn.disableSounds',
       replaceAIWithCocaine: 'wafrn.replaceAIWithCocaine',
-      replaceAIWord: 'wafrn.replaceAIWord'
+      replaceAIWord: 'wafrn.replaceAIWord',
+      hideQuotes: 'wafrn.hideQuotes'
     }
 
     try {

@@ -2,7 +2,7 @@
   <mat-card-content>
     @switch (step) {
       @case (0) {
-        <h2>Import your followers from another instance</h2>
+        <h2>Import your follows from another instance</h2>
         <span>Let's upload a CSV</span>
         <input
           [hidden]="true"
@@ -11,7 +11,7 @@
           class="file-input"
           (change)="onFileSelected($event)"
           #fileUpload
-          />
+        />
 
         @if (!uploading) {
           <div class="file-upload">

@@ -6,7 +6,7 @@
     </mat-form-field>
 
     <mat-autocomplete
-      (optionSelected)="optionSelected.emit({ remoteId: $event.option.value, url: $event.option.getLabel() })"
+      (optionSelected)="optionSelected.emit({ remoteId: $event.option.value.remoteId, url: $event.option.getLabel() })"
       [displayWith]="autoCompleteDisplay"
       #auto="matAutocomplete"
     >

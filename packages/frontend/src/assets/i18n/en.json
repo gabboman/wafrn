@@ -123,6 +123,10 @@
       "fieldPropertyValue": "Property value"
     },
     "preferences": {
+      "appearance": "Appearance",
+      "colorScheme": "Color Scheme",
+      "theme": "Theme",
+      "additionalStyleModes": "Additional Style Modes",
       "notificationFilters": "Notification filtering",
       "showNotificationsFrom": "Show notifications from",
       "notifyFrom": {
@@ -196,7 +200,11 @@
       "movingFromAccount": "'Moving from a different account (without the @)'",
       "wordsThatWillAutoCwPosts": "Words that will add cw to post",
       "superMutedWords": "Phrases that will not show a post with them (BE CAREFUL WITH THESE)",
-      "availableEmoji": "Available emojis"
+      "availableEmoji": "Available emojis",
+      "rollToCrash": "Roll a dice to crash your browser",
+      "rollSurvived": "Survived!",
+      "rollDied": "YOU FUCKEN DIED",
+      "rollDiedCountPrefix": "Roll count:"
     },
     "bsky": {
       "psa1": "Bluesky integration is still very experimental! Things will absolutely break!",

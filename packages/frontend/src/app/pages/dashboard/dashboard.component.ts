@@ -32,6 +32,7 @@ export class DashboardComponent implements OnInit, OnDestroy, SnappyCreate, Snap
   updateFollowersSubscription?: Subscription
   navigationSubscription!: Subscription
   scroll = 0
+  hideQuotesLevel = localStorage.getItem('hideQuotes') ? parseInt(localStorage.getItem('hideQuotes') as string) : 1
 
   // I don't think this is actually needed, but just in case!
   // Would like to have this a bit more cleanly integrated though
@@ -188,7 +189,17 @@ export class DashboardComponent implements OnInit, OnDestroy, SnappyCreate, Snap
         } catch (error) {
           this.messages.add({ severity: 'error', summary: 'Something wrong with your supermuted words!' })
         }
-
+        // if quote level = 3 & post has quotes
+        if (this.hideQuotesLevel == 3) {
+          if (
+            post.some((elem) => {
+              !this.postService.followedUserIds.includes(elem.userId) ||
+                (this.postService.usersQuotesDisabled.includes(elem.userId) && elem.quotes && elem.quotes.length)
+            })
+          ) {
+            return true
+          }
+        }
         // textOfPosts
         let textOfPosts = post
           .map((elem) => {
@@ -214,12 +225,23 @@ export class DashboardComponent implements OnInit, OnDestroy, SnappyCreate, Snap
           superMutedWords.length > 0 &&
           superMutedWords.some((supermuteWord) => textOfPosts.includes(supermuteWord))
         ) {
-          return true
+          return false
         }
         // we set the scroll date to the oldest post we got here
         const postDate = new Date(post[post.length - 1].createdAt).getTime()
         this.timestamp = postDate < this.timestamp ? postDate : this.timestamp
         let allFragmentsSeen = true
+        const finalPost = post[post.length - 1]
+        if (
+          finalPost.content === '' &&
+          finalPost.medias.length == 0 &&
+          finalPost.tags.length == 0 &&
+          !finalPost.quotes.length &&
+          !finalPost.content_warning &&
+          this.postService.usersRewootsDisabled.includes(finalPost.userId)
+        ) {
+          return false
+        }
         post.forEach((component) => {
           const thisFragmentSeen =
             this.viewedPostsIds.includes(component.id) ||

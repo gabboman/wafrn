@@ -30,7 +30,6 @@ export default async function getFollowedsIds(
           }
         }
     const followed = await Follows.findAll({
-      attributes: ['followedId'],
       include: [
         {
           model: User,
@@ -45,8 +44,12 @@ export default async function getFollowedsIds(
       ],
       where: whereObject
     })
-    let result = followed.map((followed: any) => followed.followedId)
-    result.push(userId)
+    let result = followed.map((followed: any) =>
+      options.getFollowersInstead ? followed.followerId : followed.followedId
+    )
+    if (!options.getFollowersInstead) {
+      result.push(userId)
+    }
     // TODO this is sub optimal. I mean we do two queries instead of one EVERY 10 MINUTES OH MY GOD
     // obviously is not the end of the world. but its still suboptimal
     if (local) {

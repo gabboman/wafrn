@@ -6,6 +6,8 @@ import { provideHttpClientTesting } from '@angular/common/http/testing'
 import { WafrnMediaComponent } from '../wafrn-media/wafrn-media.component'
 import { MockComponent, MockModule } from 'ng-mocks'
 import { WafrnMediaModule } from '../wafrn-media/wafrn-media.module'
+import { signal } from '@angular/core'
+import { ProcessedPost } from 'src/app/interfaces/processed-post'
 
 describe('PostFragmentComponent', () => {
   let component: PostFragmentComponent
@@ -37,7 +39,7 @@ describe('PostFragmentComponent', () => {
 
   it('should process fragment blocks appropiately', () => {
     // Initial test, the simple one
-    component.fragment = {
+    component.fragment = signal<ProcessedPost>({
       ask: undefined,
       createdAt: new Date(),
       descendents: [],
@@ -60,7 +62,7 @@ describe('PostFragmentComponent', () => {
       id: '1',
       content: 'No medias attached and ![media-1] string',
       content_warning: ''
-    }
+    })
     component.initializeContent()
     fixture.detectChanges()
     expect(JSON.stringify(component.wafrnFormattedContent)).toBe(

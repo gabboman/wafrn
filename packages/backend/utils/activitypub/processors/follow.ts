@@ -19,7 +19,9 @@ async function FollowActivity(body: activityPubObject, remoteUser: User, user: U
         followerId: remoteUser.id,
         followedId: userToBeFollowed.id,
         remoteFollowId: apObject.id,
-        accepted: userToBeFollowed.url.startsWith('@') ? true : !userToBeFollowed.manuallyAcceptsFollows
+        accepted: userToBeFollowed.url.startsWith('@') ? true : !userToBeFollowed.manuallyAcceptsFollows,
+        muteQuotes: false,
+        muteRewoots: false
       }
     })
     // we accept it if user accepts follows automaticaly

@@ -86,6 +86,36 @@
         </button>
       </mat-tab>
       <mat-tab label="{{ 'profile.tabHeaders.preferences' | translate }}">
+        <h2 class="preference-subheader">{{ 'profile.preferences.appearance' | translate }}</h2>
+        <mat-form-field class="w-full">
+          <mat-label>{{ 'profile.preferences.colorScheme' | translate }}</mat-label>
+          <mat-select [(value)]="colorSchemeSelect" (selectionChange)="syncColorScheme()">
+            @for (group of colorSchemeGroupList | keyvalue: null; track $index) {
+              <mat-optgroup [label]="group.value.name">
+                @for (entry of group.value.entries; track $index) {
+                  <mat-option [value]="entry">{{ colorSchemeData[entry].name }}</mat-option>
+                }
+              </mat-optgroup>
+            }
+          </mat-select>
+        </mat-form-field>
+        <mat-form-field class="w-full">
+          <mat-label>{{ 'profile.preferences.theme' | translate }}</mat-label>
+          <mat-select [(value)]="themeSelect" (selectionChange)="syncTheme()">
+            @for (entry of colorThemeData | keyvalue: null; track $index) {
+              <mat-option [value]="entry.key">{{ entry.value }}</mat-option>
+            }
+          </mat-select>
+        </mat-form-field>
+        <mat-form-field class="w-full">
+          <mat-label>{{ 'profile.preferences.additionalStyleModes' | translate }}</mat-label>
+          <mat-select [(value)]="additionalStyleModesSelect" (selectionChange)="syncAdditionalStyleModes()" multiple>
+            @for (entry of additionalStyleModesData | keyvalue: null; track $index) {
+              <mat-option [value]="entry.key">{{ entry.value.name }}</mat-option>
+            }
+          </mat-select>
+        </mat-form-field>
+        <hr />
         <h2 class="preference-subheader">{{ 'profile.preferences.notificationFilters' | translate }}</h2>
         <mat-form-field class="w-full">
           <mat-label>{{ 'profile.preferences.showNotificationsFrom' | translate }}</mat-label>
@@ -247,6 +277,16 @@
         </div>
       </mat-tab>
       <mat-tab label="{{ 'profile.tabHeaders.misc' | translate }}">
+        <mat-form-field class="w-full">
+          <mat-label>Hide quotes</mat-label>
+          <mat-select formControlName="hideQuotes">
+            <mat-option [value]="1">CW from users you disabled quotes</mat-option>
+            <mat-option [value]="2">CW from anyone you dont follow and disabled quotes in the profile</mat-option>
+            <mat-option [value]="3"
+              >Hide posts containing quotes from users you dont follow and users who you disabled quotes</mat-option
+            >
+          </mat-select>
+        </mat-form-field>
         <section id="tags" class="mt-2 w-full flex-row">
           <!-- TODO replace text here with variable that can be translated -->
           <app-user-selector
@@ -307,6 +347,15 @@
             <app-emoji-collections (emoji)="emojiClicked($event)"></app-emoji-collections>
           </mat-expansion-panel>
         </mat-accordion>
+        <hr />
+        <div class="relative">
+          <button mat-stroked-button (click)="rollToDie()">{{ 'profile.other.rollToCrash' | translate }}</button>
+          @for (text of survivedTextList; track text) {
+            <div class="top-0 mx-4 text-xl pointer-events-none survived-text">
+              {{ 'profile.other.rollSurvived' | translate }}
+            </div>
+          }
+        </div>
       </mat-tab>
     </form>
     <mat-tab label="Bluesky">
@@ -373,3 +422,9 @@
     </div>
   }
 </mat-card>
+@if (lockout) {
+  <div class="flex flex-column align-items-center justify-content-center pointer-events-none killscreen">
+    <div class="killscreen-title">{{ 'profile.other.rollDied' | translate }}</div>
+    <div class="killscreen-subtitle">{{ 'profile.other.rollDiedCountPrefix' | translate }} {{ survivedCount }}</div>
+  </div>
+}

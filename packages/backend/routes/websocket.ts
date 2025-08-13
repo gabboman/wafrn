@@ -3,22 +3,19 @@ import { WebSocket } from 'ws'
 import { Response, Request } from 'express'
 import { logger } from '../utils/logger.js'
 import jwt from 'jsonwebtoken'
-import { Job, Worker } from 'bullmq'
+import { Job, Queue, Worker } from 'bullmq'
 // forgive me @javascript@app.wafrn.net
-import { BehaviorSubject, debounceTime, filter, Subscription } from 'rxjs'
 import { completeEnvironment } from '../utils/backendOptions.js'
+import EventEmitter from 'events'
 
 export default function websocketRoutes(app: Application) {
-  const notificationEmitter: BehaviorSubject<{ type: string; userId: string }> = new BehaviorSubject({
-    type: '',
-    userId: ''
-  })
+  const notificationEmitter: EventEmitter = new EventEmitter()
+  notificationEmitter.setMaxListeners(1000)
   new Worker(
     'updateNotificationsSocket',
     async (job: Job) => {
-      // TODO send notifications!
       const userId = job.data.userId ? job.data.userId : ''
-      notificationEmitter.next({ userId, type: job.data.type })
+      notificationEmitter.emit(userId, { type: job.data.type })
     },
     {
       connection: completeEnvironment.bullmqConnection,
@@ -30,8 +27,6 @@ export default function websocketRoutes(app: Application) {
     let authorized = false
     let procesingAuth = false
     let userId: string | undefined
-    let subscriptions: Subscription[] = []
-
     ws.on('message', (msg: string) => {
       let msgAsObject: { type: 'auth' | 'NOTVALID'; object: any } = { type: 'NOTVALID', object: null }
       // we try to convert the object to something valid
@@ -60,15 +55,10 @@ export default function websocketRoutes(app: Application) {
                   ws.close()
                 } else {
                   authorized = true
-                  userId = jwtData.userId
-                  const myNotifications = notificationEmitter.pipe(
-                    filter((notification) => userId === notification.userId)
-                  )
-                  subscriptions.push(
-                    myNotifications.subscribe((elem) => {
-                      ws.send(JSON.stringify({ message: 'update_notifications', type: elem.type }))
-                    })
-                  )
+                  userId = jwtData.userId as string
+                  notificationEmitter.on(userId, (data) => {
+                    ws.send(JSON.stringify({ message: 'update_notifications', type: data.type }))
+                  })
                 }
               })
             } else {
@@ -86,11 +76,7 @@ export default function websocketRoutes(app: Application) {
       }
     })
 
-    ws.on('close', (msg: string) => {
-      for (const subscription of subscriptions) {
-        subscription.unsubscribe()
-      }
-    })
+    ws.on('close', (msg: string) => {})
 
     // if it has been one second and user has not started the auth process, time to kill this process
     // if user failed auth and for any destiny's reason we are still on it

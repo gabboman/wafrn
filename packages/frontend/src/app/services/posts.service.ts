@@ -67,6 +67,8 @@ export class PostsService {
   public followedHashtags: string[] = []
   public myFollowers: string[] = []
   public enableBluesky: boolean = false
+  public usersQuotesDisabled: string[] = []
+  public usersRewootsDisabled: string[] = []
   constructor(
     private mediaService: MediaService,
     private http: HttpClient,
@@ -89,6 +91,8 @@ export class PostsService {
           emojis: EmojiCollection[]
           mutedUsers: string[]
           followedHashtags: string[]
+          mutedRewoots: string[]
+          mutedQuotes: string[]
           enableBluesky: boolean
         }>(`${EnvironmentService.environment.baseUrl}/my-ui-options`)
       )
@@ -105,6 +109,8 @@ export class PostsService {
       this.mutedUsers = followsAndBlocks.mutedUsers
       this.enableBluesky = followsAndBlocks.enableBluesky
       this.myFollowers = followsAndBlocks.myFollowers
+      this.usersQuotesDisabled = followsAndBlocks.mutedQuotes
+      this.usersRewootsDisabled = followsAndBlocks.mutedRewoots
       // Here we check user options
       if (followsAndBlocks.options?.length > 0) {
         // frontend options start with wafrn.
@@ -462,6 +468,20 @@ export class PostsService {
     if (cwedWords.length > 0) {
       newPost.muted_words_cw = `Post includes muted words: ${cwedWords}`
     }
+    const hideQuotesLevel = localStorage.getItem('hideQuotes')
+      ? parseInt(localStorage.getItem('hideQuotes') as string)
+      : 1
+    if (newPost.quotes && newPost.quotes.length) {
+      if (
+        this.usersQuotesDisabled.includes(newPost.userId) ||
+        (hideQuotesLevel == 2 && !this.followedUserIds.includes(newPost.userId))
+      ) {
+        newPost.muted_words_cw = newPost.muted_words_cw
+          ? `${newPost.muted_words_cw}<br> Post includes quote by not allowed user`
+          : `Post includes quote by not allowed user`
+      }
+    }
+
     return newPost
   }
 
@@ -863,6 +883,28 @@ export class PostsService {
         res = true
       }
     })
+    return res
+  }
+
+  async updateDisableRewoots(userId: string) {
+    const res = await firstValueFrom(
+      this.http.post(`${EnvironmentService.environment.baseUrl}/muteRewoots`, {
+        userId: userId
+      })
+    )
+    console.log(res)
+    this.loadFollowers()
+    return res
+  }
+
+  async updateDisableQuotes(userId: string) {
+    const res = await firstValueFrom(
+      this.http.post(`${EnvironmentService.environment.baseUrl}/muteRewoots`, {
+        userId: userId,
+        muteQuotes: true
+      })
+    )
+    this.loadFollowers()
     return res
   }
 }

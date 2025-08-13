@@ -221,6 +221,7 @@ function userRoutes(app: Application) {
 
   app.post('/api/updateCSS', authenticateToken, async (req: AuthorizedRequest, res: Response) => {
     const posterId = req.jwtData?.userId
+    const cssContent = req.body.css ? req.body.css.trim() : undefined
     if (req.body.css) {
       try {
         await fs.writeFile(`uploads/themes/${posterId}.css`, req.body.css)
@@ -231,7 +232,14 @@ function userRoutes(app: Application) {
         res.send({ error: true })
       }
     } else {
-      res.sendStatus(500)
+      try {
+        await fs.unlink(`uploads/themes/${posterId}.css`)
+        res.send({ success: true })
+      } catch (error) {
+        logger.warn(error)
+        res.status(500)
+        res.send({ error: true })
+      }
     }
   })
 
@@ -954,6 +962,23 @@ function userRoutes(app: Application) {
       res.sendStatus(401)
     } else {
       const user = (await userPromise) as User
+      const mutedQuotes = (
+        await Follows.findAll({
+          where: {
+            followerId: userId,
+            muteQuotes: true
+          }
+        })
+      ).map((elem) => elem.followedId)
+
+      const mutedRewoots = (
+        await Follows.findAll({
+          where: {
+            followerId: userId,
+            muteRewoots: true
+          }
+        })
+      ).map((elem) => elem.followedId)
       res.send({
         myFollowers: await myFollowers,
         followedUsers: await followedUsers,
@@ -964,7 +989,9 @@ function userRoutes(app: Application) {
         emojis: await localEmojis,
         mutedUsers: await mutedUsers,
         followedHashtags: await followedHashtags,
-        enableBluesky: user.enableBsky
+        enableBluesky: user.enableBsky,
+        mutedRewoots,
+        mutedQuotes
       })
     }
   })
@@ -1495,8 +1522,9 @@ async function updateBlueskyProfile(agent: BskyAgent, user: User) {
       if (user.avatar) {
         let pngAvatar = await optimizeMedia('uploads' + user.avatar, {
           forceImageExtension: 'png',
-          maxSize: 256,
-          keep: true
+          maxSize: 512,
+          keep: true,
+          disableAnimation: true
         })
         const userAvatarFile = Buffer.from(await fs.readFile(pngAvatar))
         const avatarUpload = await agent.uploadBlob(userAvatarFile, { encoding: 'image/png' })

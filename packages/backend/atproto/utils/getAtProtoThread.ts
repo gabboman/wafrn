@@ -11,10 +11,11 @@ import { RichText } from '@atproto/api'
 import showdown from 'showdown'
 import { bulkCreateNotifications, createNotification } from '../../utils/pushNotifications.js'
 import { getAllLocalUserIds } from '../../utils/cacheGetters/getAllLocalUserIds.js'
-import { Privacy } from '../../models/post.js'
+import { InteractionControl, InteractionControlType, Privacy } from '../../models/post.js'
 import { wait } from '../../utils/wait.js'
 import { UpdatedAt } from 'sequelize-typescript'
 import { completeEnvironment } from '../../utils/backendOptions.js'
+import { include } from 'underscore'
 
 const markdownConverter = new showdown.Converter({
   simplifiedAutoLink: true,
@@ -237,17 +238,16 @@ async function processSinglePost(
       createdAt: new Date((post.record as any).createdAt),
       privacy: Privacy.Public,
       parentId: parentId,
-      content_warning: getPostLabels(post)
+      content_warning: getPostLabels(post),
+      ...getPostInteractionLevels(post, parentId)
     }
     if (!parentId) {
       delete newData.parentId
     }
 
-    // very dirty thing but at times somehting can happen that a post gets through the firehose before than the db.
-    // this is dirty but we dont get the bsky uri until we post there...
-    // so as a temporary hack, if user is local we wait 2 seconds
     if ((await getAllLocalUserIds()).includes(newData.userId)) {
-      await wait(2000)
+      // dirty as hell but this should stop the duplication
+      await wait(10000)
     }
     let [postToProcess, created] = await Post.findOrCreate({ where: { bskyUri: post.uri }, defaults: newData })
     // do not update existing posts. But what if local user creates a post through bsky? then we force updte i guess
@@ -459,9 +459,6 @@ function getPostLabels(post: PostView): string {
 
 async function getPostThreadSafe(options: any) {
   try {
-    // added a pause of 100 miliseconds for each petition. Will things explode? only ONE way to figure out.
-    // if this works means that there is something here that is too much for the PDS
-    await wait(100)
     const agent = await getAtProtoSession((await adminUser) as User)
     return await agent.getPostThread(options)
   } catch (error) {
@@ -470,6 +467,65 @@ async function getPostThreadSafe(options: any) {
       options: options,
       error: error
     })
+  }
+}
+
+function getPostInteractionLevels(
+  post: PostView,
+  parentId: string | undefined
+): {
+  replyControl: InteractionControlType
+  likeControl: InteractionControlType
+  reblogControl: InteractionControlType
+  quoteControl: InteractionControlType
+} {
+  let canQuote = InteractionControl.Anyone
+  let canReply: InteractionControlType = InteractionControl.Anyone
+  if (post.viewer && post.viewer.embeddingDisabled) {
+    canQuote = InteractionControl.NoOne
+  }
+  if (parentId) {
+    canReply = InteractionControl.SameAsOp
+    canQuote = InteractionControl.SameAsOp
+  } else if (post.threadgate && post.threadgate.record && (post.threadgate.record as any).allow) {
+    const allowList = (post.threadgate.record as any).allow
+    if (allowList.length == 0) {
+      canReply = InteractionControl.NoOne
+    } else {
+      const mentiontypes: string[] = allowList
+        .map((elem: any) => elem['$type'])
+        .map((elem: string) => elem.split('app.bsky.feed.threadgate#')[1])
+      if (mentiontypes.includes('mentionRule')) {
+        if (mentiontypes.includes('followingRule')) {
+          canReply = mentiontypes.includes('followerRule')
+            ? InteractionControl.FollowersFollowersAndMentioned
+            : InteractionControl.FollowingAndMentioned
+        } else {
+          canReply = mentiontypes.includes('followerRule')
+            ? InteractionControl.FollowersAndMentioned
+            : InteractionControl.MentionedUsersOnly
+        }
+      } else {
+        if (mentiontypes.includes('followingRule')) {
+          canReply = mentiontypes.includes('followerRule')
+            ? InteractionControl.FollowersAndFollowing
+            : InteractionControl.Following
+        } else {
+          canReply = mentiontypes.includes('followerRule') ? InteractionControl.Followers : InteractionControl.NoOne
+        }
+      }
+    }
+  }
+
+  if (canQuote === InteractionControl.Anyone && canReply != InteractionControl.Anyone) {
+    canQuote = canReply
+  }
+
+  return {
+    quoteControl: canQuote,
+    replyControl: canReply,
+    likeControl: InteractionControl.Anyone,
+    reblogControl: InteractionControl.Anyone
   }
 }
 

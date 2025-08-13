@@ -11,6 +11,7 @@ import {
   User,
   UserBookmarkedPosts,
   UserEmojiRelation,
+  UserFollowHashtags,
   UserLikesPostRelations
 } from '../../models/index.js'
 import { activityPubObject } from '../../interfaces/fediverse/activityPubObject.js'
@@ -49,6 +50,15 @@ const usersToNukeIds = users.map((elem) => elem.id)
 // if users, we prepare
 
 if (users.length > 0) {
+  // nuke hashtags
+  console.log(`--- nuking subscribed hashtags---`)
+  await UserFollowHashtags.destroy({
+    where: {
+      userId: {
+        [Op.in]: usersToNukeIds
+      }
+    }
+  })
   console.log(`---- deleting inactive users: ${users.length}----`)
   console.log(`Obtainign list of all fedi inboxes`)
   const serversToSendThePost = await FederatedHost.findAll({

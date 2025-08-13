@@ -21,6 +21,7 @@ import { likePostRemote } from '../../utils/activitypub/likePost.js'
 import { createNotification } from '../../utils/pushNotifications.js'
 import { Privacy } from '../../models/post.js'
 import { completeEnvironment } from '../../utils/backendOptions.js'
+import { wait } from '../../utils/wait.js'
 
 const adminUser = User.findOne({
   where: {
@@ -46,7 +47,7 @@ async function processFirehose(job: Job) {
                 if (postId) {
                   user = remoteUser.url
                   likedPostId = postId
-                  const [like, existingLike] = await UserLikesPostRelations.findOrCreate({
+                  const [like, likeCreated] = await UserLikesPostRelations.findOrCreate({
                     where: {
                       userId: remoteUser.id,
                       postId: postId
@@ -58,7 +59,7 @@ async function processFirehose(job: Job) {
                     }
                   })
                   const post = await Post.findByPk(postId)
-                  if (post && !existingLike) {
+                  if (post && likeCreated) {
                     await createNotification(
                       {
                         notificationType: 'LIKE',
@@ -93,6 +94,7 @@ async function processFirehose(job: Job) {
                       postId: postInDb.id
                     }
                   })
+                  // TODO fix notification not being created
 
                   await createNotification(
                     {
@@ -156,7 +158,7 @@ async function processFirehose(job: Job) {
                     notificationType: 'REWOOT',
                     postId: parent?.id,
                     notifiedUserId: parent?.userId as string,
-                    userId: remoteUser.id,
+                    userId: remoteUser.id
                   },
                   {
                     postContent: parent?.content,
@@ -208,6 +210,13 @@ async function processFirehose(job: Job) {
                 blockerId: remoteUser.id,
                 bskyPath: operation.path
               })
+            }
+            break
+          }
+          case 'app.bsky.feed.threadgate': {
+            const postBskyUri = (operation.record as any).post
+            if (postBskyUri) {
+              await getAtProtoThread(postBskyUri, undefined, true)
             }
             break
           }
@@ -343,7 +352,19 @@ async function processFirehose(job: Job) {
         }
         break
       }
+      case 'update': {
+      }
       default: {
+        const operationType = (operation.record as any)['$type']
+        switch (operationType) {
+          case 'app.bsky.feed.threadgate': {
+            const postBskyUri = (operation.record as any).post
+            if (postBskyUri) {
+              await getAtProtoThread(postBskyUri, undefined, true)
+            }
+            break
+          }
+        }
         logger.warn({ message: `Bsky action not implemented: ${operation.action}`, operation: operation })
       }
     }

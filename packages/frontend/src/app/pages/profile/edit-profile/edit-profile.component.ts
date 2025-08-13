@@ -9,7 +9,17 @@ import { JwtService } from 'src/app/services/jwt.service'
 import { LoginService } from 'src/app/services/login.service'
 import { MediaService } from 'src/app/services/media.service'
 import { MessageService } from 'src/app/services/message.service'
-import { ThemeService } from 'src/app/services/theme.service'
+import {
+  AdditionalStyleMode,
+  additionalStyleModesData,
+  ColorScheme,
+  colorSchemeData,
+  ColorSchemeGroupList,
+  colorSchemeGroupList,
+  ColorTheme,
+  colorThemeData,
+  ThemeService
+} from 'src/app/services/theme.service'
 import { faPlus, faXmark } from '@fortawesome/free-solid-svg-icons'
 
 @Component({
@@ -85,10 +95,36 @@ export class EditProfileComponent implements OnInit {
     notifyFollows: new FormControl(true),
     notifyRewoots: new FormControl(true),
     replaceAIWithCocaine: new FormControl(false),
-    replaceAIWord: new FormControl('cocaine')
+    replaceAIWord: new FormControl('cocaine'),
+    hideQuotes: new FormControl(1)
   })
 
   password = ''
+
+  survivedCount = 0
+  survivedTextList: number[] = []
+  survivedTimeout: ReturnType<typeof setTimeout> | undefined
+  lockout = false
+
+  colorScheme: Signal<ColorScheme>
+  colorSchemeSelect = ''
+  theme: Signal<ColorTheme>
+  themeSelect = ''
+  additionalStyleModes: { [key in AdditionalStyleMode]: WritableSignal<boolean> }
+  additionalStyleModesSelect: AdditionalStyleMode[]
+
+  // Data copies
+  colorSchemeData = colorSchemeData
+  colorThemeData = colorThemeData
+  additionalStyleModesData = additionalStyleModesData
+
+  // Function copies
+  setColorScheme: Function
+  setTheme: Function
+  setAdditionalStyleMode: Function
+
+  // Theme categories
+  colorSchemeGroupList: ColorSchemeGroupList
 
   constructor(
     private jwtService: JwtService,
@@ -98,7 +134,38 @@ export class EditProfileComponent implements OnInit {
     private messages: MessageService,
     private themeService: ThemeService
   ) {
-    this.themeService.setTheme('')
+    this.colorScheme = themeService.colorScheme
+    this.colorSchemeSelect = this.colorScheme()
+    this.theme = themeService.theme
+    this.themeSelect = this.theme()
+    this.additionalStyleModes = themeService.additionalStyleModes
+    this.additionalStyleModesSelect = Object.entries(this.additionalStyleModes)
+      .filter(([_, enabled]) => enabled())
+      .map(([val, _]) => val) as AdditionalStyleMode[]
+
+    this.setColorScheme = themeService.setColorScheme.bind(themeService)
+    this.setTheme = themeService.setTheme.bind(themeService)
+    this.setAdditionalStyleMode = themeService.setAdditionalStyleMode.bind(themeService)
+
+    this.colorSchemeGroupList = colorSchemeGroupList
+
+    this.themeService.setCustomCSS('')
+  }
+
+  syncColorScheme() {
+    this.setColorScheme(this.colorSchemeSelect)
+  }
+
+  syncTheme() {
+    this.setTheme(this.themeSelect)
+  }
+
+  syncAdditionalStyleModes() {
+    const allModes = Object.keys(this.additionalStyleModesData) as AdditionalStyleMode[]
+    const enabledModes = this.additionalStyleModesSelect
+    const disabledModes = allModes.filter((mode) => !this.additionalStyleModesSelect.includes(mode))
+    enabledModes.forEach((mode) => this.setAdditionalStyleMode(mode, true))
+    disabledModes.forEach((mode) => this.setAdditionalStyleMode(mode, false))
   }
 
   ngOnInit(): void {
@@ -212,6 +279,11 @@ export class EditProfileComponent implements OnInit {
         this.editProfileForm.controls['notifyRewoots'].patchValue(localStorageNotifyRewoots == 'true')
       }
 
+      const localStorageHideQuotes = localStorage.getItem('hideQuotes')
+      if (localStorageHideQuotes) {
+        this.editProfileForm.controls['hideQuotes'].patchValue(parseInt(localStorageHideQuotes))
+      }
+
       this.loading = false
     })
   }
@@ -289,5 +361,23 @@ export class EditProfileComponent implements OnInit {
 
   forceFixEmoji() {
     this.emojiCollections.updateDimensions()
+  }
+
+  rollToDie() {
+    // SECURE AND COMPLETELY RANDOMIZED DEATH CHANCE!!!
+    const crypto = window.crypto || window.Crypto
+    const randArr = new Uint32Array(1)
+    crypto.getRandomValues(randArr)
+    const randomNumber = randArr[0]
+    if (randomNumber % 6 === 0) {
+      this.lockout = true
+      return
+    }
+
+    if (this.survivedTimeout) clearTimeout(this.survivedTimeout)
+    this.survivedTimeout = setTimeout(() => (this.survivedTextList = []), 2000)
+
+    this.survivedTextList.push(this.survivedCount)
+    this.survivedCount += 1
   }
 }

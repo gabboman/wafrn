@@ -5,7 +5,7 @@
   title="Change color scheme"
   aria-label="Change color scheme"
   [ngClass]="iconClass"
-  matTooltip="{{ themeText() }} mode"
+  matTooltip="{{ colorThemeData[theme()] }} mode"
 >
   <svg
     xmlns="http://www.w3.org/2000/svg"
@@ -35,9 +35,16 @@
   </svg>
 </button>
 <mat-menu #themeMenu="matMenu">
-  <button class="theme-selector-button" mat-menu-item (click)="setTheme('light', true)">Light</button>
-  <button class="theme-selector-button" mat-menu-item (click)="setTheme('dark', true)">Dark</button>
-  <button class="theme-selector-button" mat-menu-item (click)="setTheme('auto', true)">Auto</button>
+  @for (entry of colorThemeData | keyvalue: null; track entry.key) {
+    <button
+      class="theme-selector-button"
+      [class.selected]="theme() === entry.key"
+      mat-menu-item
+      (click)="setTheme(entry.key)"
+    >
+      {{ entry.value }}
+    </button>
+  }
 </mat-menu>
 
 <button
@@ -46,150 +53,37 @@
   class="theme-toggle"
   title="Toggle theme"
   aria-label="Toggle theme"
-  matTooltip="{{ colorSchemeText() }} theme"
+  matTooltip="{{ colorSchemeData[colorScheme()].name }} theme"
 >
   <fa-icon [icon]="paletteIcon"></fa-icon>
 </button>
 <mat-menu #colorSchemeMenu="matMenu">
-  <button mat-menu-item [matMenuTriggerFor]="defaultThemesMenu">Default theme variants</button>
-  <button mat-menu-item [matMenuTriggerFor]="computeryThemesMenu">Computery themes</button>
-  <button mat-menu-item [matMenuTriggerFor]="experimentalThemesMenu">Experimental themes</button>
-  <button mat-menu-item [matMenuTriggerFor]="programmerThemesMenu">Programmer's favourites</button>
-
+  @for (group of colorSchemeGroupList | keyvalue: null; track group.key) {
+    <button mat-menu-item [matMenuTriggerFor]="secondaryThemesMenu" [matMenuTriggerData]="group.value">
+      {{ group.value.name }}
+    </button>
+  }
   <hr class="my-0" />
-  <button mat-menu-item class="pl-1">
-    <mat-checkbox [checked]="centerLayoutMode" (click)="updateCenterLayout(true)"
-      ><span class="theme-selector-button">Center layout</span></mat-checkbox
-    >
-  </button>
-  <button mat-menu-item class="pl-1">
-    <mat-checkbox [checked]="topToolbarMode" (click)="updateTopToolbar(true)"
-      ><span class="theme-selector-button">Top Toolbar</span></mat-checkbox
-    >
-  </button>
-  <button mat-menu-item class="pl-1">
-    <mat-checkbox [checked]="horizontalMenuMode" (click)="updateHorizontalMenu(true)"
-      ><span class="theme-selector-button">Horizontal Menu</span></mat-checkbox
-    >
-  </button>
-</mat-menu>
-
-<mat-menu #defaultThemesMenu="matMenu">
-  @for (variant of defaultThemes; track $index) {
-    <button
-      class="theme-selector-button"
-      mat-menu-item
-      (click)="setColorScheme(variant, true)"
-      [ngClass]="{ selected: variant == colorScheme() }"
-    >
-      {{ variant | titlecase }}
+  @for (entry of additionalStyleModes | keyvalue: null; track entry.key) {
+    <button mat-menu-item class="pl-1">
+      <mat-checkbox [checked]="entry.value()" (click)="toggleAdditionalStyleMode(entry.key)"
+        ><span class="theme-selector-button">{{ $any(additionalStyleModesData)[entry.key].name }}</span></mat-checkbox
+      >
     </button>
   }
 </mat-menu>
 
-<mat-menu #computeryThemesMenu="matMenu">
-  @for (variant of computeryThemes; track $index) {
-    <button
-      class="theme-selector-button"
-      mat-menu-item
-      (click)="setColorScheme(variant, true)"
-      [ngClass]="{ selected: variant == colorScheme() }"
-    >
-      {{ variant | titlecase }}
-    </button>
-  }
+<mat-menu #secondaryThemesMenu="matMenu">
+  <ng-template matMenuContent let-name="name" let-entries="entries">
+    @for (variant of entries; track $index) {
+      <button
+        class="theme-selector-button"
+        mat-menu-item
+        (click)="setColorScheme(variant)"
+        [class.selected]="colorScheme() === variant"
+      >
+        {{ $any(colorSchemeData)[variant].name }}
+      </button>
+    }
+  </ng-template>
 </mat-menu>
-
-<mat-menu #experimentalThemesMenu="matMenu">
-  @for (variant of experimentalThemes; track $index) {
-    <button
-      class="theme-selector-button"
-      mat-menu-item
-      (click)="setColorScheme(variant, true)"
-      [ngClass]="{ selected: variant == colorScheme() }"
-    >
-      {{ variant | titlecase }}
-    </button>
-  }
-</mat-menu>
-
-<mat-menu #programmerThemesMenu="matMenu">
-  @for (variant of programmersThemes; track $index) {
-    <button
-      class="theme-selector-button"
-      mat-menu-item
-      (click)="setColorScheme(variant, true)"
-      [ngClass]="{ selected: variant == colorScheme() }"
-    >
-      {{ variant | titlecase }}
-    </button>
-  }
-</mat-menu>
-
-@switch (colorScheme()) {
-  @case ('default') {}
-  @case ('tan') {
-    <link href="/assets/themes/tan.css" rel="stylesheet" />
-  }
-  @case ('green') {
-    <link href="/assets/themes/green.css" rel="stylesheet" />
-  }
-  @case ('gold') {
-    <link href="/assets/themes/gold.css" rel="stylesheet" />
-  }
-  @case ('red') {
-    <link href="/assets/themes/red.css" rel="stylesheet" />
-  }
-  @case ('pink') {
-    <link href="/assets/themes/pink.css" rel="stylesheet" />
-  }
-  @case ('purple') {
-    <link href="/assets/themes/purple.css" rel="stylesheet" />
-  }
-  @case ('blue') {
-    <link href="/assets/themes/blue.css" rel="stylesheet" />
-  }
-  @case ('rizzler') {
-    <link href="/assets/themes/rizzler.css" rel="stylesheet" />
-  }
-  @case ('contrastWater') {
-    <link href="/assets/themes/contrastWater.css" rel="stylesheet" />
-  }
-  @case ('wafrn98') {
-    <link href="/assets/themes/wafrn98.css" rel="stylesheet" />
-  }
-  @case ('aqua') {
-    <link href="/assets/themes/aqua.css" rel="stylesheet" />
-  }
-  @case ('unwafrn') {
-    <link href="/assets/themes/unwafrn.css" rel="stylesheet" />
-  }
-  @case ('wafrnverse') {
-    <link href="/assets/themes/wafrnverse.css" rel="stylesheet" />
-  }
-  @case ('dracula') {
-    <link href="/assets/themes/dracula.css" rel="stylesheet" />
-  }
-  @case ('fan') {
-    <link href="/assets/themes/fan.css" rel="stylesheet" />
-  }
-  @case ('catppuccin_frappe') {
-    <link href="/assets/themes/catppuccin_frappe.css" rel="stylesheet" />
-  }
-  @case ('catppuccin_latte') {
-    <link href="/assets/themes/catppuccin_latte.css" rel="stylesheet" />
-  }
-  @case ('catppuccin_macchiato') {
-    <link href="/assets/themes/catppuccin_macchiato.css" rel="stylesheet" />
-  }
-  @case ('catppuccin_mocha') {
-    <link href="/assets/themes/catppuccin_mocha.css" rel="stylesheet" />
-  }
-}
-
-@if (centerLayoutMode) {
-  <link href="/assets/themes/center-column.css" rel="stylesheet" />
-}
-@if (topToolbarMode) {
-  <link href="/assets/themes/top-toolbar.css" rel="stylesheet" />
-}
