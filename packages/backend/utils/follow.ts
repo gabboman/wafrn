@@ -59,7 +59,9 @@ async function follow(
         accepted:
           (!!userFollowed.bskyDid && userFollowed.url.startsWith('@')) ||
           (userFollowed.url.startsWith('@') ? false : !userFollowed.manuallyAcceptsFollows),
-        bskyUri: bskyResult?.uri
+        bskyUri: bskyResult?.uri,
+        muteQuotes: false,
+        muteRewoots: false
       })
       if (follow.accepted) {
         // if user does this manualy you dont want to give them a notification after accepting lol

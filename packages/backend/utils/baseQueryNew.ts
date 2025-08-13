@@ -419,7 +419,7 @@ async function getUnjointedPosts(postIdsInput: string[], posterId: string, doNot
     bookmarks: bookmarks,
     quotes: quotesFiltered.filter((elem) => !!elem),
     quotedPosts: (await quotedPosts)
-      .map((elem: any) => filterPost(elem, postIdsToFullySend, doNotFullyHide, blockedServers))
+      .map((elem: any) => filterPost(elem, postIdsToFullySend, doNotFullyHide))
       .filter((elem) => !!elem),
     asks: asks.filter((elem) => !!elem)
   }
