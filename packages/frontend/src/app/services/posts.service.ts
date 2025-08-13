@@ -722,7 +722,6 @@ export class PostsService {
           link.classList.add('local-user-link')
         }
       }
-      link.target = '_blank'
       sanitized = parsedAsHTML.documentElement.innerHTML
     })
 
